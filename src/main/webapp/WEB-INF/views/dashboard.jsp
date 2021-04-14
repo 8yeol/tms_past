@@ -9,9 +9,6 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
-
-<script src="static/js/apexcharts.min.js"></script>
-
 <div class="container">
     <div class="row m-3">
         <div class="col fs-4 fw-bold">대시보드</div>
@@ -43,7 +40,7 @@
         </div>
         <div class="row mt-2">
             <div class="col-3">
-                <div id="chart"></div>
+                1
             </div>
             <div class="col-3">
                 2
@@ -70,7 +67,4 @@
     </div>
 </div>
 
-<script>
-
-</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
