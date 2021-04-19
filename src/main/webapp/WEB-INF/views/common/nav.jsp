@@ -25,7 +25,7 @@
                 <li><a href="#" class="nav-link px-2 text-white">모니터링</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">분석 및 통계</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">알림</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">환경설정</a></li>
+                <li><a href="/stationManagement" class="nav-link px-2 text-white">환경설정</a></li>
             </ul>
 
             <div class="text-end">
