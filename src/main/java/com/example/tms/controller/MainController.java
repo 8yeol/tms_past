@@ -11,4 +11,9 @@ public class MainController {
 
         return "dashboard";
     }
+    @RequestMapping("stationManagement")
+    public String stationManagement(){
+
+        return "stationManagement";
+    }
 }
