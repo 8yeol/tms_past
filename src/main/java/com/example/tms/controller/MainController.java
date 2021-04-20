@@ -29,6 +29,12 @@ public class MainController {
         return "monitoring";
     }
 
+    @RequestMapping("/statistics")
+    public String statistics(){
+        return "statistics";
+    }
+    @RequestMapping("stationManagement")
+
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model){
 

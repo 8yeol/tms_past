@@ -82,6 +82,7 @@
         width: 450px;
         background: skyblue;
         border-radius: 50px;
+        z-index: 500;
     }
 
     .submenuLink:hover { /* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
@@ -117,6 +118,9 @@
                             <ul class="submenu">
                                 <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
                                 <li><a href="" class="submenuLink ">통계자료 조회</a></li>
+                                <li><a href="" class="submenuLink ">subItem 1</a></li>
+                                <li><a href="/statistics" class="submenuLink ">통계자료 조회</a></li>
+                                <li><a href="" class="submenuLink ">subItem 3</a></li>
                             </ul>
                         </li>
                     </ul>
