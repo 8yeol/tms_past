@@ -8,7 +8,6 @@ public class MainController {
 
     @RequestMapping("/")
     public String index(){
-
         return "dashboard";
     }
     @RequestMapping("stationManagement")
