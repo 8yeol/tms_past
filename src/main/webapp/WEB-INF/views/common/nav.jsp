@@ -95,16 +95,16 @@
     <div class="container">
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-around">
-                <a href="#" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5">
+                <a href="/" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5">
                     대기 TMS 관제 시스템
                 </a>
 
 
                 <nav id="topMenu">
                     <ul>
-                        <li class="topMenuLi"><a class="menuLink" href="">대시보드</a>
+                        <li class="topMenuLi"><a class="menuLink" href="/">대시보드</a>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="">모니터링</a>
+                        <li class="topMenuLi"><a class="menuLink" href="/monitoring">모니터링</a>
                             <ul class="submenu">
                                 <li><a href="" class="submenuLink">subItem 1</a></li>
                                 <li><a href="" class="submenuLink">subItem 2</a></li>

@@ -10,6 +10,11 @@ public class MainController {
     public String index(){
         return "dashboard";
     }
+
+    @RequestMapping("/monitoring")
+    public String monitoring(){
+        return "monitoring";
+    }
     @RequestMapping("stationManagement")
     public String stationManagement(){
 
