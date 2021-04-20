@@ -113,9 +113,8 @@
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="">분석 및 통계</a>
                             <ul class="submenu">
-                                <li><a href="" class="submenuLink ">subItem 1</a></li>
-                                <li><a href="" class="submenuLink ">subItem 2</a></li>
-                                <li><a href="" class="submenuLink ">subItem 3</a></li>
+                                <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
+                                <li><a href="" class="submenuLink ">통계자료 조회</a></li>
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="">알림</a>
