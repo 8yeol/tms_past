@@ -29,9 +29,9 @@
                     선택
                 </button>
 
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="place">
                     <c:forEach var="place" items="${place}" varStatus="status">
-                        <li><a class="dropdown-item" id="${place}" href="#">${place}</a></li>
+                        <li class="dropdown-item" value="${place}">${place}</li>
                     </c:forEach>
                 </ul>
             </div>
@@ -64,7 +64,7 @@
             <label class="ms-3 me-3">-</label>
             <input type="text" id="date_end" class="text-center p-1" disabled>
 
-            <button type="button" class="btn btn-primary ms-3">검색</button>
+            <button type="button" class="btn btn-primary ms-3" onClick="search()">검색</button>
         </div>
     </div>
 
@@ -95,13 +95,14 @@
             <div class="border p-2 bg-white">
 
                 <div class="form-check mb-2">
-                    <input class="form-check-input" type="radio" name="item" id="flexCheckDefault" checked>
+                    <%--value 에 컬렉션 값 매핑 시켜줄 것--%>
+                    <input class="form-check-input" type="radio" name="item" id="flexCheckDefault" value="먼지" checked>
                     <label class="form-check-label" for="flexCheckDefault">
                         먼지
                     </label>
                 </div>
                 <div class="form-check mb-2">
-                    <input class="form-check-input" type="radio" name="item" id="flexCheckChecked">
+                    <input class="form-check-input" type="radio" name="item"  value="황산화물" id="flexCheckChecked">
                     <label class="form-check-label" for="flexCheckChecked">
                         황산화물
                     </label>
@@ -238,8 +239,8 @@
             async: false,
             cache: false,
             data: {"name":placeName},
-            success : function(result) { // 결과 성공 콜백함수
-                console.log(result);
+            success : function(data) { // 결과 성공 콜백함수
+                console.log(data);
             },
             error : function(request, status, error) { // 결과 에러 콜백함수
                 console.log(error)
@@ -247,6 +248,33 @@
         })
 
     });
+
+    function search(){
+        const date_start =  $('#date_start').val();
+        const date_end = $('#date_end').val();
+        const item = 'tmsWP001_dust_01'; // $('input:radio[name="item"]:checked').val();
+        const off = $('#off').is(":checked"); // false : 선택안됨(표시X) , true : 선택(표시)
+
+        $.ajax({
+            url: '<%=cp%>/scarchChart',
+            type: 'POST',
+            dataType: 'text',
+            async: false,
+            cache: false,
+            data: {"date_start":date_start,
+                "date_end":date_end,
+                "item":item,
+                "off":off,
+            },
+            success : function(data) { // 결과 성공 콜백함수
+                console.log(data);
+            },
+            error : function(request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+
+    }
 
     function getToday(){
         const date = new Date();
