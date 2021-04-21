@@ -104,14 +104,14 @@
                     <ul>
                         <li class="topMenuLi"><a class="menuLink" href="/">대시보드</a>
                         </li>
+                        <li class="topMenuLi"><a class="menuLink" href="">알림</a>
+
+                        </li>
                         <li class="topMenuLi"><a class="menuLink" href="/monitoring">모니터링</a>
                             <ul class="submenu">
                                 <li><a href="#" class="submenuLink">실시간 모니터링</a></li>
                                 <li><a href="/sensor" class="submenuLink" id="sensor">상세화면</a></li>
                             </ul>
-                        </li>
-                        <li class="topMenuLi"><a class="menuLink" href="">알림</a>
-
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="">분석 및 통계</a>
                             <ul class="submenu">
