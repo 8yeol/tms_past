@@ -8,9 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+
     body {
         background-color: #EDF2F8;
-        font-family: "Century Gothic";
+        font-family: 'Noto Sans KR', sans-serif;
     }
 
     #topMenu {
@@ -45,7 +47,7 @@
         display: block;
         width: 150px;
         font-size: 12px;
-        font-weight: bold;
+        font-weight: normal;
     }
 
     .menuLink { /* 상위 메뉴의 글씨색을 흰색으로 설정 */
@@ -53,7 +55,8 @@
     }
 
     .topMenuLi:hover .menuLink { /* 상위 메뉴의 li에 마우스오버 되었을 때 스타일 설정 */
-        color: greenyellow;
+        color: #F7C259;
+        font-weight: bold;
     }
 
     .shortLink { /* 좀 더 긴 메뉴 스타일 설정 */
@@ -67,6 +70,7 @@
 
     .submenu { /* 하위 메뉴 스타일 설정 */
         position: absolute;
+        top: 50px;
         height: 0px;
         overflow: hidden;
         transition: height .3s;
@@ -83,13 +87,14 @@
     .topMenuLi:hover .submenu { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
         height: 50px; /* [변경] 높이를 32px로 설정 */
         width: 450px;
-        background: skyblue;
-        border-radius: 50px;
+        background: #75ACFF;
+        border-radius: 5px;
         z-index: 500;
     }
 
     .submenuLink:hover { /* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
-        color: greenyellow;
+        color: #F7C259;
+        font-weight: bold;
     }
 
 
@@ -99,7 +104,7 @@
     <div class="container">
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-around">
-                <a href="/" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5">
+                <a href="/" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
                     대기 TMS 관제 시스템
                 </a>
 
