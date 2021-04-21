@@ -56,8 +56,8 @@
         color: greenyellow;
     }
 
-    .longLink { /* 좀 더 긴 메뉴 스타일 설정 */
-        width: 190px;
+    .shortLink { /* 좀 더 긴 메뉴 스타일 설정 */
+        width: 100px;
     }
 
     .submenuLink { /* 하위 메뉴의 a 태그 스타일 설정 */
@@ -108,7 +108,7 @@
                     <ul>
                         <li class="topMenuLi"><a class="menuLink" href="/">대시보드</a>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="/alarm">알림</a>
+                        <li class="topMenuLi"><a class="menuLink shortLink" href="/alarm">알림</a>
 
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="/monitoring">모니터링</a>
@@ -124,6 +124,14 @@
                                 <li><a href="" class="submenuLink ">subItem 3</a></li>
                             </ul>
                         </li>
+                        <li class="topMenuLi"><a class="menuLink" href="">환경설정</a>
+                            <ul class="submenu">
+                                <li><a href="" class="submenuLink ">측정소 관리</a></li>
+                                <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
+                                <li><a href="" class="submenuLink ">subItem 3</a></li>
+                            </ul>
+                        </li>
+
                     </ul>
                 </nav>
 

@@ -11,11 +11,6 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
 <style>
-    h1 {
-        text-align: left;
-    }
-
-
 </style>
 
 <div class="container">
