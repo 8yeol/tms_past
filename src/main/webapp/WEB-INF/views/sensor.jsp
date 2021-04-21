@@ -16,19 +16,21 @@
 
 <div class="container">
     <%-- ************************************************************************************************************** --%>
-    <div class="row bg-secondary offset-md-9">
-        마지막 업데이트 :
+    <div class="row offset-md-9 mt-2 mb-1">
+        업데이트 :
     </div>
-    <div class="row p-5">
-        ${param.place}
+    <div class="row bg-info bg-gradient p-4">
+        <div class="col-md-12 text-center">
+            ${param.place}
+        </div>
 <%--        <c:forEach var="place" items="${place}">--%>
 <%--            <c:out value="${place.name}"/>--%>
 <%--        </c:forEach>--%>
     </div>
-    <div class="row bg-warning h-75">
+    <div class="row h-75 mt-4">
         <div class="col-md-6">
             <%-- 센서 최근 테이블--%>
-            <div class="table-responsive bg-secondary col-md-12">
+            <div class="table-responsive bg-success bg-gradient col-md-12">
                 <table id="sensor-table">
                     <thead>
                     <tr>
@@ -41,11 +43,13 @@
             </div>
         </div>
         <%-- 차트 --%>
-        <div class="bg-secondary col-md-6">
-            <div id="chart" class="col-md-12">
+        <div class="col-md-6">
+            <div id="chart" class="col-md-12 mb-4">
             </div>
-            <%-- 차트에 해당하는 테이블 --%>
-            <table id="sensor-table-time" class="table-responsive col-md-12">
+
+            <hr>
+            <%-- 차트의 데이터 테이블 --%>
+            <table id="sensor-table-time" class="table-responsive bg-success bg-gradient col-md-12 mt-1">
                 <thead>
                 <tr>
                     <th>측정시간</th>
@@ -61,10 +65,12 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    var warning, hazard;
+    var warning, danger;
     var min, max;
     var table1, table2, chart1;
     var data = [];
+    var interval;
+    var warning, danger;
     $(document).ready(function () {
         table1 = draw_sensor_table(getSensorData());
         table2 = draw_sensor_time_table();
@@ -75,6 +81,7 @@
 
     $("#sensor-table").on('click', 'tr', function(){
         var limit = 10;
+
 
         /* table 1 - get Sensor Name */
         var sensor_data = table1.row(this).data();
@@ -90,8 +97,10 @@
         var table2 = $("#sensor-table-time").DataTable();
         table2.destroy();
         table2 = draw_sensor_time_table(sensor_data);
-
-        setInterval(function () {
+        // 실시간 데이터 처리 (setInterval)
+        // interval 변수 - 처음 클릭 시 underfined / 두번째 부터 number type으로 변수 저장되어 clear 후에 interval 실행
+        clearInterval(interval);
+        interval = setInterval(function () {
             /* 최근 데이터 조회 */
             var sensor_data_recent = getSensor(name, 1);
             if(sensor_data[0].x != sensor_data_recent[0].x){
@@ -108,11 +117,29 @@
                 table2.destroy();
                 table2 = draw_sensor_time_table(sensor_data);
             }
-        }, 1000);
+        }, 5000);
 
     });
 
-    /* select * from sensor where name = ? order by up_time desc limit = ? */
+    /* place name에 해당하는 data(센서이름과 센서별 측정값, 업데이트일)들을
+    * - model로 부터 전달받아 가공후에 data 변수에 저장
+    */
+    function getSensorData() {
+        var data = new Array();
+        <c:forEach items="${sensors}" var="sName" varStatus="status">
+            <c:set var="sIndex" value="sensor${status.index}"/>
+            <c:forEach var="sensor" items="${requestScope[sIndex]}">
+                <fmt:formatNumber value="${sensor.value}" var="sValue" pattern=".00"/>
+                <fmt:formatDate value="${sensor.up_time}" var="sUp_time" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
+                data.push({name: "${sName}", value: "${sValue}", up_time: "${sUp_time}"});
+            </c:forEach>
+        </c:forEach>
+        return data;
+    }
+
+
+    /* sensor name에 해당하는 테이블에 접근하여 chart에 사용하는 data 생성
+    * select * from sensor where name = ? order by up_time desc limit = ? */
     function getSensor(name, limit) {
         var getData = new Array();
         $.ajax({
@@ -145,19 +172,6 @@
     }
 
 
-    function getSensorData() {
-        var data = new Array();
-        <c:forEach items="${sensors}" var="sName" varStatus="status">
-            <c:set var="sIndex" value="sensor${status.index}"/>
-            <c:forEach var="sensor" items="${requestScope[sIndex]}">
-                <fmt:formatNumber value="${sensor.value}" var="sValue" pattern=".00"/>
-                <fmt:formatDate value="${sensor.up_time}" var="sUp_time" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
-                data.push({name: "${sName}", value: "${sValue}", up_time: "${sUp_time}"});
-            </c:forEach>
-        </c:forEach>
-        return data;
-    }
-
     /* draw sensor table */
     function draw_sensor_table(data){
         var table = $('#sensor-table').DataTable({
@@ -178,6 +192,8 @@
 
     /* draw sensor time table */
     function draw_sensor_time_table(data) {
+        var warning = 15;
+        var danger = 30;
         $('#sensor-table-time').dataTable({
             data: data,
             columns:[
@@ -194,8 +210,11 @@
             'rowCallback': function(row, data, index){
                 // console.log(row);
                 // console.log(data.y);
-                if(data.y>=hazard){
+                if(data.y>=danger){
                     $(row).find('td:eq(1)').css('color', 'red');
+                }
+                if(data.y>=warning){
+                    $(row).find('td:eq(1)').css('color', 'yellow');
                 }
             },
             "language": {
@@ -232,9 +251,9 @@
     /* chart Option Setting */
     function setChartOption(data){
         var warning = 15;
-        var hazard = 30;
+        var danger = 30;
         var min = 0;
-        var max = hazard*2;
+        var max = danger*2;
         var options = {
             series: [{
                 name: name,
@@ -268,10 +287,10 @@
                             color: '#0015c4'
                         },{
                             from: warning,
-                            to: hazard-0.001,
+                            to: danger-0.001,
                             color: '#f5dc48'
                         }, {
-                            from: hazard,
+                            from: danger,
                             to: max,
                             color: '#eb7170'
                         }]
@@ -332,7 +351,7 @@
         return options;
     }
 
-    /* yyyy-mm-dd hh:mm:ss 포맷 변경*/
+    /* 시간 포맷 변경*/
     function format_time(time) {
         var f_time = time;
         var year = f_time.getFullYear();

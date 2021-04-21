@@ -1,5 +1,6 @@
 package com.example.tms.entity;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,17 +10,27 @@ import java.util.Date;
 public class Sensor {
 
     @Id
-    private String id;
+    private ObjectId _id;
     private float value;
     private boolean status;
     private Date up_time;
 
-    public String getId() {
-        return id;
+    @Override
+    public String toString() {
+        return "Sensor{" +
+                "_id=" + _id +
+                ", value=" + value +
+                ", status=" + status +
+                ", up_time='" + up_time + '\'' +
+                '}';
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
     }
 
     public float getValue() {
@@ -44,15 +55,5 @@ public class Sensor {
 
     public void setUp_time(Date up_time) {
         this.up_time = up_time;
-    }
-
-    @Override
-    public String toString() {
-        return "Sensor{" +
-                "id='" + id + '\'' +
-                ", value=" + value +
-                ", status=" + status +
-                ", up_time=" + up_time +
-                '}';
     }
 }
