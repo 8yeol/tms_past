@@ -33,6 +33,10 @@ public class MainController {
     public String statistics(){
         return "statistics";
     }
+    @RequestMapping("/alarm")
+    public String alarm(){
+        return "alarm";
+    }
     /*@RequestMapping("stationManagement")*/
 
     @RequestMapping("/dataInquiry")
