@@ -188,6 +188,7 @@
                 sdp.selectDate(new Date(sDay.replace(/-/g, "/"))); //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
             }
 
+
             sDate.datepicker({
                 language: 'ko',
                 autoClose: true
