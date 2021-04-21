@@ -33,7 +33,7 @@ public class MainController {
     public String statistics(){
         return "statistics";
     }
-    @RequestMapping("stationManagement")
+    /*@RequestMapping("stationManagement")*/
 
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model){

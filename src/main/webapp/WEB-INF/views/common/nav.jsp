@@ -10,7 +10,7 @@
 <style>
     body {
         background-color: #EDF2F8;
-        font-family: "Lucida Fax";
+        font-family: "Century Gothic";
     }
 
     #topMenu {
@@ -35,6 +35,9 @@
     #topMenu ul li a {
         font-size: 1.4rem;
         margin-top: 10px;
+    }
+    #topMenu ul li ul li a{
+        font-size: 1.1rem;
     }
 
     .menuLink, .submenuLink { /* 상위 메뉴와 하위 메뉴의 a 태그에 공통으로 설정할 스타일 */
@@ -117,8 +120,6 @@
                         <li class="topMenuLi"><a class="menuLink" href="">분석 및 통계</a>
                             <ul class="submenu">
                                 <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
-                                <li><a href="" class="submenuLink ">통계자료 조회</a></li>
-                                <li><a href="" class="submenuLink ">subItem 1</a></li>
                                 <li><a href="/statistics" class="submenuLink ">통계자료 조회</a></li>
                                 <li><a href="" class="submenuLink ">subItem 3</a></li>
                             </ul>

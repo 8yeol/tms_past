@@ -11,48 +11,32 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
 <style>
-    div {
-        padding: 1px;
-    }
-
     h1 {
         text-align: left;
     }
 
-    .col-md-6 {
-        text-align: center;
-    }
+
 </style>
 
 
-<div class="container bg-white border border-dark">
+<div class="container">
 
-    <div class="row d-flex justify-content-around border border-dark">
+    <div class="row d-flex justify-content-center">
 
         <div class="col-xs-12 d-flex justify-content-center">
-            <div class="dropdown pe-5">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    측정소1
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </div>
 
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    먼지
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </div>
+            <select name="dropdown1" class="btn-primary rounded-3 p-2 m-2">
+                <option value="1">측정소1</option>
+                <option value="2">측정소2</option>
+                <option value="3">측정소3</option>
+            </select>
+
+            <select name="dropdown2" class="btn-primary rounded-3 p-2 m-2">
+                <option value="dust">먼지</option>
+                <option value="bad">나쁜거</option>
+                <option value="rad">방사능</option>
+            </select>
+
         </div>
 
     </div>
@@ -60,31 +44,31 @@
 
     <div class="row" >
 
-        <div class="col-md-6 border border-dark">
+        <div class="col-md-6 bg-light rounded">
             <h1>최근 24시간 자료</h1>
-            <hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
+            <hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
         </div>
 
-        <div class="col-md-6 border border-dark">
+        <div class="col-md-6 bg-light rounded">
             <h1>최근 24시간 상세정보</h1>
             <hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
-            <h4 class="text-end">페이징처리</h4>
+            <h4 class="text-end">①②③④⑤</h4>
         </div>
 
     </div>
 
 
-    <div class="row">
+    <div class="row mt-1">
 
-        <div class="col-md-6 border border-dark">
+        <div class="col-md-6 bg-light rounded">
             <h1>연도별 통계</h1>
-            <hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
+            <hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
         </div>
 
-        <div class="col-md-6 border border-dark">
+        <div class="col-md-6 bg-light rounded">
             <h1>연도별 통계</h1>
             <hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr><hr>
-            <h4 class="text-end">페이징처리</h4>
+            <h4 class="text-end">①②③④⑤</h4>
         </div>
 
     </div>
