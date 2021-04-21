@@ -40,6 +40,16 @@ public class MainController {
         return "monitoring";
     }
 
+    @RequestMapping("/statistics")
+    public String statistics(){
+        return "statistics";
+    }
+    @RequestMapping("/alarm")
+    public String alarm(){
+        return "alarm";
+    }
+    /*@RequestMapping("stationManagement")*/
+
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model){
 

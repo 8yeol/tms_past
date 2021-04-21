@@ -10,7 +10,7 @@
 <style>
     body {
         background-color: #EDF2F8;
-        font-family: "Lucida Fax";
+        font-family: "Century Gothic";
     }
 
     #topMenu {
@@ -35,6 +35,9 @@
     #topMenu ul li a {
         font-size: 1.4rem;
         margin-top: 10px;
+    }
+    #topMenu ul li ul li a{
+        font-size: 1.1rem;
     }
 
     .menuLink, .submenuLink { /* 상위 메뉴와 하위 메뉴의 a 태그에 공통으로 설정할 스타일 */
@@ -82,6 +85,7 @@
         width: 450px;
         background: skyblue;
         border-radius: 50px;
+        z-index: 500;
     }
 
     .submenuLink:hover { /* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
@@ -104,21 +108,21 @@
                     <ul>
                         <li class="topMenuLi"><a class="menuLink" href="/">대시보드</a>
                         </li>
+                        <li class="topMenuLi"><a class="menuLink" href="/alarm">알림</a>
+
+                        </li>
                         <li class="topMenuLi"><a class="menuLink" href="/monitoring">모니터링</a>
                             <ul class="submenu">
-                                <li><a href="" class="submenuLink">subItem 1</a></li>
-                                <li><a href="" class="submenuLink">subItem 2</a></li>
-                                <li><a href="" class="submenuLink">subItem 3</a></li>
+                                <li><a href="/monitoring" class="submenuLink">실시간 모니터링</a></li>
+                                <li><a href="/sensor" class="submenuLink" id="sensor">상세화면</a></li>
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="">분석 및 통계</a>
                             <ul class="submenu">
                                 <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
-                                <li><a href="" class="submenuLink ">통계자료 조회</a></li>
+                                <li><a href="/statistics" class="submenuLink ">통계자료 조회</a></li>
+                                <li><a href="" class="submenuLink ">subItem 3</a></li>
                             </ul>
-                        </li>
-                        <li class="topMenuLi"><a class="menuLink" href="">알림</a>
-
                         </li>
                     </ul>
                 </nav>
@@ -141,5 +145,20 @@
         </div>
     </div>
 
+    <form id="actionForm"  action="" method="get">
 
+    </form>
 </header>
+
+
+<script>
+    var actionForm = $("#actionForm");
+    $("#sensor").click(function (e) {
+        var place = "point1";
+        e.preventDefault();
+        actionForm.append("<input type='text' name='place' value='"+ place +"'>");
+        actionForm.attr("action", "/sensor");
+        actionForm.submit();
+    })
+
+</script>
