@@ -29,15 +29,11 @@
         <div class="col-3">
             <span class="fs-5 fw-bold">측정소</span>
             <div class="btn-group w-50 ms-3">
-                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" id="placeName">
-                    선택
-                </button>
-
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="place">
+                <select name="place" id="place" class="btn btn-light" onchange="placeChange()">
                     <c:forEach var="place" items="${place}" varStatus="status">
-                        <li class="dropdown-item" value="${place}">${place}</li>
+                        <option value="${place}">${place}</option>
                     </c:forEach>
-                </ul>
+                </select>
             </div>
 
         </div>
@@ -111,21 +107,8 @@
         <div class="col-lg-2">
             <div class="mt-4 p-2 bg-white text-center">차트 항목 선택</div>
 
-            <div class="border p-2 bg-white">
+            <div class="border p-2 bg-white" id="items">
 
-                <div class="form-check mb-2">
-                    <%--value 에 컬렉션 값 매핑 시켜줄 것--%>
-                    <input class="form-check-input" type="radio" name="item" id="flexCheckDefault" value="먼지" checked>
-                    <label class="form-check-label" for="flexCheckDefault">
-                        먼지
-                    </label>
-                </div>
-                <div class="form-check mb-2">
-                    <input class="form-check-input" type="radio" name="item"  value="황산화물" id="flexCheckChecked">
-                    <label class="form-check-label" for="flexCheckChecked">
-                        황산화물
-                    </label>
-                </div>
 
             </div>
 
@@ -136,8 +119,11 @@
 <script charset="UTF-8">
 
     $( document ).ready(function() {
-        $("#date_start").val(getDays('week'));
+        //$("#date_start").val(getDays('week'));
+        $("#date_start").val(getDays());
         $("#date_end").val(getDays());
+        placeChange();
+        search();
     });
 
     $("#date_start").datepicker({
@@ -243,36 +229,66 @@
         }
     });
 
-    // 수정
-    $('#placeName').click(function(){
-        const placeName = 'point1';
-        // $(this).val();
+    function placeChange(){
+        const place = $("#place").val();
+
+        $("#items").empty();
 
         $.ajax({
-            url: '<%=cp%>/getPalceSensor',
+            url: '<%=cp%>/getPlaceSensor',
             type: 'POST',
-            dataType: 'text',
+            dataType: 'json',
             async: false,
             cache: false,
-            data: {"name":placeName},
+            data: {"name":place},
             success : function(data) { // 결과 성공 콜백함수
-                console.log(data);
+                for(let i=0;i<data.length;i++){
+                    const tableName = data[i];
+                    const category = findSensorCategory(tableName);
+
+                    const innerHtml = "<div class='form-check mb-2'>" +
+                        "<input class='form-check-input' type='radio' name='item' id='"+tableName+"' value='"+tableName+"'>" +
+                        "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
+                        "</div>"
+
+                    const elem = document.createElement('div');
+                    elem.innerHTML = innerHtml
+                    document.getElementById('items').append(elem);
+                }
+                const item = $("input[name='item']").eq(0).val();
+                $("#"+item).prop("checked",true);
             },
             error : function(request, status, error) { // 결과 에러 콜백함수
                 console.log(error)
             }
         })
+    }
 
-    });
+    function findSensorCategory(tableName){
+        if(tableName.includes('dust')==true){
+            return "먼지";
+        } else if(tableName.includes('NOx')==true){
+            return "질소산화물";
+        } else if(tableName.includes('CO')==true){
+            return "일산화탄소";
+        } else if(tableName.includes('HCL')==true){
+            return "염산";
+        } else if(tableName.includes('SOx')==true){
+            return "황산화물";
+        }
+    }
 
     function search(){
         const date_start =  $('#date_start').val();
         const date_end = $('#date_end').val();
-        const item = 'tmsWP001_dust_01'; // $('input:radio[name="item"]:checked').val();
+        const item = $('input[name="item"]:checked').val();
         const off = $('#off').is(":checked"); // false : 선택안됨(표시X) , true : 선택(표시)
 
+        $('#chart-line2').empty();
+        $('#chart-line').empty();
+
         $.ajax({
-            url: '<%=cp%>/scarchChart',
+            url: '<%=cp%>/searchChart',
             type: 'POST',
             dataType: 'json',
             async: false,
@@ -283,10 +299,17 @@
                 "off":off,
             },
             success : function(data) { // 결과 성공 콜백함수
-                console.log(data);
-
-                var options = {
+                //console.log(data);
+                /*
+                const times = [],values = [];
+                for(let i=0; i<data.length; i++){
+                    times.push(data[i].time);
+                    values.push(data[i].value.toFixed(2));
+                }
+                */
+                const options = {
                     series: [{
+                        name:"먼지",
                         data: data
                     }],
                     chart: {
@@ -316,10 +339,10 @@
                     }
                 };
 
-                var chart = new ApexCharts(document.querySelector("#chart-line2"), options);
+                const chart = new ApexCharts(document.querySelector("#chart-line2"), options);
                 chart.render();
 
-                var optionsLine = {
+                const optionsLine = {
                     series: [{
                         data: data
                     }],
@@ -334,8 +357,7 @@
                         selection: {
                             enabled: true,
                             xaxis: {
-                                min: new Date('19 Jun 2017').getTime(),
-                                max: new Date('14 Aug 2017').getTime()
+                                type: 'datetime'
                             }
                         },
                     },
@@ -357,8 +379,7 @@
                         tickAmount: 2
                     }
                 };
-
-                var chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
+                const chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
                 chartLine.render();
 
             },

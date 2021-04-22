@@ -52,6 +52,10 @@ public class MainController {
     public String sensorManagement(){
         return "sensorManagement";
     }
+    @RequestMapping("/alarmSetting")
+    public String alarmSetting(){
+        return "alarmSetting";
+    }
 
     /*@RequestMapping("stationManagement")*/
 
@@ -71,26 +75,12 @@ public class MainController {
         return "dataInquiry";
     }
 
-    @RequestMapping(value = "/getPalceSensor", method = RequestMethod.POST)
-    public void getPalceSensor(HttpServletResponse response, String name) throws Exception {
-        Place place = placeRepository.findByName(name);
-        List sensorList = place.getSensor();
-
-        response.setCharacterEncoding("UTF-8");
-
-        PrintWriter out = response.getWriter();
-        out.print(sensorList);
-        out.flush();
-        out.close();
-    }
-
-    @RequestMapping(value = "/scarchChart", method = RequestMethod.POST)
+    @RequestMapping(value = "/searchChart", method = RequestMethod.POST)
     @ResponseBody
-    public List<ChartData> scarchChart(String date_start, String date_end, String item, boolean off) {
+    public List<ChartData> searchChart(String date_start, String date_end, String item, boolean off) {
         ProjectionOperation dateProjection = Aggregation.project()
-                .and("up_time").as("up_time")
-                .and("_id").as("id")
-                .and("value").as("value")
+                .and("up_time").as("x")
+                .and("value").as("y")
                 .and("status").as("status");
 
         MatchOperation where;
@@ -99,7 +89,7 @@ public class MainController {
             // 모든 데이터 표시
             where = Aggregation.match(
                     new Criteria().andOperator(
-                            Criteria.where("up_time")
+                            Criteria.where("x")
                                     .gte(LocalDateTime.parse(date_start + "T00:00:00"))
                                     .lte(LocalDateTime.parse(date_end + "T23:59:59"))
                     )
@@ -110,14 +100,14 @@ public class MainController {
                     new Criteria().andOperator(
                             Criteria.where("status")
                                     .is(true)
-                                    .and("up_time")
+                                    .and("x")
                                     .gte(LocalDateTime.parse(date_start + "T00:00:00"))
                                     .lte(LocalDateTime.parse(date_end + "T23:59:59"))
                     )
             );
         }
 
-        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "up_time");
+        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "x");
 
         Aggregation agg = Aggregation.newAggregation(
                 dateProjection,
