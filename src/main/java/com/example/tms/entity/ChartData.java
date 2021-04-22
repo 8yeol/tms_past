@@ -1,11 +1,13 @@
 package com.example.tms.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
 public class ChartData {
-    private float value;
-    private Date up_time;
+    @JsonFormat(timezone = "Asia/Seoul")
+    private Date x;
+    private float y;
 }

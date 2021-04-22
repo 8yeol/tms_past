@@ -3,6 +3,7 @@ package com.example.tms.controller;
 
 import com.example.tms.entity.Sensor;
 import com.example.tms.repository.PlaceQueryDslRepository;
+import com.example.tms.repository.PlaceRepository;
 import com.example.tms.repository.SensorQueryDslRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +22,9 @@ public class JsonController {
 
     @Autowired
     SensorQueryDslRepository sensorRepository;
+
+    @Autowired
+    PlaceRepository placeRepository2;
 
 // *********************************************************************************************************************
 // Place
@@ -67,4 +71,16 @@ public class JsonController {
         return sensorRepository.getSensor(sensor_name, limit_amount);
     }
 
+
+    // =================================================================================================================
+    // 김규아 추가
+    /**
+     * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
+     * @param name 측정소 이름
+     * @return 해당 측정소의 센서 값 (테이블 명)
+     */
+    @RequestMapping(value = "/getPlaceSensor", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getPlaceSensor(@RequestParam("name") String name){
+        return placeRepository2.findByName(name).getSensor();
+    }
 }
