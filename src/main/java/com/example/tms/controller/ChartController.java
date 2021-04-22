@@ -1,9 +1,8 @@
 package com.example.tms.controller;
 
 import com.example.tms.repository.PlaceQueryDslRepository;
-import com.example.tms.repository.SensorQueryDslRepository;
+import com.example.tms.repository.SensorCustomRepository;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,19 +15,23 @@ import java.util.List;
 @Log4j2
 public class ChartController {
 
-    @Autowired
+    final
     PlaceQueryDslRepository placeRepository;
 
-    @Autowired
-    SensorQueryDslRepository sensorRepository;
+    final
+    SensorCustomRepository sensorRepository;
 
-// =====================================================================================================================
+    public ChartController(PlaceQueryDslRepository placeRepository, SensorCustomRepository sensorRepository) {
+        this.placeRepository = placeRepository;
+        this.sensorRepository = sensorRepository;
+    }
+
+    // =====================================================================================================================
 // 측정소 별 센서 상세 페이지 (ppt-4페이지)
 // param # key : String place (place.name)
 // =====================================================================================================================
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
     public String sensor(@RequestParam("place") String place, Model model){
-
 //        1. place.name(place 테이블의 name 컬럼)
         model.addAttribute("place", placeRepository.getPlaceInfo());
 
@@ -38,7 +41,7 @@ public class ChartController {
 
 //        3. sensor (sensor 테이블)
         for(int i=0; i<sensors.size(); i++){
-            model.addAttribute("sensor"+i, sensorRepository.getSensor(sensors.get(i), "1"));
+            model.addAttribute("sensor"+i, sensorRepository.getSenor(sensors.get(i), "","", "1"));
         }
         return "sensor";
     }

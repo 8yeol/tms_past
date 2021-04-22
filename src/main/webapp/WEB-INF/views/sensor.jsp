@@ -23,9 +23,6 @@
         <div class="col-md-12 text-center">
             ${param.place}
         </div>
-<%--        <c:forEach var="place" items="${place}">--%>
-<%--            <c:out value="${place.name}"/>--%>
-<%--        </c:forEach>--%>
     </div>
     <div class="row h-75 mt-4">
         <div class="col-md-6">
@@ -71,23 +68,22 @@
     var data = [];
     var interval;
     var warning, danger;
+
     $(document).ready(function () {
+        data = getSensor("tmsWP0004_NOx_01", "", "", 60);
         table1 = draw_sensor_table(getSensorData());
-        table2 = draw_sensor_time_table();
         chart1 = draw_chart(data);
         chart1.render();
+        table2 = draw_sensor_time_table(data);
     }); //ready
 
 
     $("#sensor-table").on('click', 'tr', function(){
-        var limit = 10;
-
-
         /* table 1 - get Sensor Name */
         var sensor_data = table1.row(this).data();
-        var name = sensor_data.name;
+        var sensor = sensor_data.name;
         /* get Sensor Data */
-        var sensor_data = getSensor(name, limit);
+        var sensor_data = getSensor(sensor, "", "", 60);
 
         /* chart 1 draw */
         chart1.destroy();
@@ -102,7 +98,7 @@
         clearInterval(interval);
         interval = setInterval(function () {
             /* 최근 데이터 조회 */
-            var sensor_data_recent = getSensor(name, 1);
+            var sensor_data_recent = getSensor(sensor, "", "", 60);
             if(sensor_data[0].x != sensor_data_recent[0].x){
                 sensor_data.unshift(sensor_data_recent[0]); //배열의 0번째로 삽입
                 sensor_data.pop(); //배열의 마지막 삭제
@@ -138,14 +134,13 @@
     }
 
 
-    /* sensor name에 해당하는 테이블에 접근하여 chart에 사용하는 data 생성
-    * select * from sensor where name = ? order by up_time desc limit = ? */
-    function getSensor(name, limit) {
+    /* sensor name에 해당하는 테이블에 접근하여 chart에 사용하는 data 생성 */
+    function getSensor(sensor, from_date, to_date, minute) {
         var getData = new Array();
         $.ajax({
-            url:'getSensorL',
+            url:'getSensor',
             dataType: 'json',
-            data: {"sensor": name, "limit": limit},
+            data: {"sensor": sensor, "from_date": from_date, "to_date": to_date, "minute": minute},
             async: false,
             before: function(){
 
@@ -213,7 +208,7 @@
                 if(data.y>=danger){
                     $(row).find('td:eq(1)').css('color', 'red');
                 }
-                if(data.y>=warning){
+                if(data.y <= danger && data.y>=warning){
                     $(row).find('td:eq(1)').css('color', 'yellow');
                 }
             },
