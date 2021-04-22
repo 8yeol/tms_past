@@ -66,6 +66,13 @@ public class MainController {
         return "alarmSetting";
     }
 
+    @RequestMapping("/setting")
+    public String setting(){
+        return "setting";
+    }
+
+
+
     /*@RequestMapping("stationManagement")*/
 
     @RequestMapping("/dataInquiry")
