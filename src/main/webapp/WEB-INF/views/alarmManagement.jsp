@@ -118,9 +118,10 @@
             <div class="text-center" style="margin-top: 50px;">
                 <table style="width: 100%;">
                     <form>
-                        <c:forEach var="station" items="${station}">
+                        <c:forEach var="station" items="${station}" varStatus="status">
+
                         <tr style="border-bottom: 2px solid black;">
-                            <td style="font-size: 35px; font-weight: bold; padding-bottom: 10px; padding-left: 50px;"><c:out value="${station.name}"/></td>
+                            <td id="station${status.index}"style="font-size: 35px; font-weight: bold; padding-bottom: 10px; padding-left: 50px;"><c:out value="${station.name}"/></td>
                         </tr>
                         </c:forEach>
                     </form>
@@ -131,8 +132,8 @@
             <span class="fw-bold">센서 목록</span>
             <input id="chk_all" class="form-check-input" type = checkbox style="width: 20px; height: 20px;">
             <span>전체선택</span>
-            <input type="button" value="ON">
-            <input type="button" value="OFF">
+            <input id="bOn" type="button" value="ON">
+            <input id="bOff" type="button" value="OFF">
             <div class="text-center">
                 <table style="width: 100%;">
 
@@ -141,11 +142,11 @@
 
                         <c:if test = "${sensorInfo[sIndex].naming ne null}">
                             <tr style="border-bottom: 2px solid darkgray;">
-                            <td style="width: 10px; padding: 0px"><input id="chk" class="form-check-input" type = checkbox style="width: 20px; height: 20px; margin: 0px 10px"></td>
+                            <td style="width: 10px; padding: 0px"><input id="chk${sIndex}" class="form-check-input" type = checkbox style="width: 20px; height: 20px; margin: 0px 10px"></td>
                             <td style="font-size: 25px; font-weight: bold; padding-bottom: 10px; padding-top: 10px; padding-left: 10px;"><c:out value="${sensorInfo[sIndex].naming}"/></td>
                             <td>
                                 <label class="switch">
-                                    <input type="checkbox">
+                                    <input id="slider${sIndex}" class="slider" type="checkbox">
                                     <span class="slider round"></span>
                                 </label>
                             </td>
@@ -192,7 +193,21 @@
          $(".form-check-input").prop("checked", false);
      }
 
- })
+ });
+ $('#bOn').click(function () {
+     if($('#chk_all').is(":checked")){
+         $(".slider").prop("checked",true);
+     }else if($('.form-check-input').each(function () {
+
+         if($(this).is(":checked")){
+            $().prop("checked",true);
+         }
+
+     })){
+
+     }
+
+ });
 /*    $('#placeName').click(function(){
      //const placeName = $('#placeName').val();
      var placeName = $(this).text();

@@ -170,6 +170,8 @@
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="">환경설정</a>
+                            <ul class="submenu">
+                                <li><a href="/alarmManagement?place=point1" class="submenuLink " id="alarmManagement">알림 설정</a></li>
                             <ul class="longSubmenu">
                                 <li><a href="" class="submenuLink ">측정소 관리</a></li>
                                 <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
