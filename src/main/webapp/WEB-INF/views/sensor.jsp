@@ -60,7 +60,6 @@
 </div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-
 <script>
     var warning, danger;
     var min, max;
@@ -123,12 +122,12 @@
     function getSensorData() {
         var data = new Array();
         <c:forEach items="${sensors}" var="sName" varStatus="status">
-            <c:set var="sIndex" value="sensor${status.index}"/>
-            <c:forEach var="sensor" items="${requestScope[sIndex]}">
-                <fmt:formatNumber value="${sensor.value}" var="sValue" pattern=".00"/>
-                <fmt:formatDate value="${sensor.up_time}" var="sUp_time" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
-                data.push({name: "${sName}", value: "${sValue}", up_time: "${sUp_time}"});
-            </c:forEach>
+        <c:set var="sIndex" value="sensor${status.index}"/>
+        <c:forEach var="sensor" items="${requestScope[sIndex]}">
+        <fmt:formatNumber value="${sensor.value}" var="sValue" pattern=".00"/>
+        <fmt:formatDate value="${sensor.up_time}" var="sUp_time" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
+        data.push({name: "${sName}", value: "${sValue}", up_time: "${sUp_time}"});
+        </c:forEach>
         </c:forEach>
         return data;
     }
