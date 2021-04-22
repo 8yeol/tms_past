@@ -29,12 +29,12 @@
 
 <style>
     .mg1 {
-        margin-right: 22px;
+        margin-right: 50px;
     }
 
     .mdd {
         text-align-last: center;
-        width: 181px;
+        width: 223px;
         height: 31px;
     }
 
@@ -59,7 +59,7 @@
 
             <div>
                 <div class="d-flex justify-content-center my-2 ">
-                    <h4 class="me-3 ms-5">분류</h4>
+                    <h4 class="me-3 ms-5 ">분류</h4>
                     <select name="dropdown1" class="btn-secondary rounded-3 dd">
                         <option value="1">전체</option>
                         <option value="2">먼지</option>
@@ -76,10 +76,10 @@
 
                 <div class="d-flex justify-content-center my-2">
                     <h4 class="me-3">센서관리ID</h4>
-                    <input type="text" class="text-secondary rounded-3 mg1">
+                    <input type="text" class="text-secondary rounded-3  dd mg1">
 
                     <h4 class="me-3">테이블명</h4>
-                    <input type="text" class="text-secondary rounded-3">
+                    <input type="text" class="text-secondary rounded-3 dd">
                 </div>
 
                 <div class="d-flex justify-content-center my-2">
@@ -141,7 +141,7 @@
                     <td><i class="fas fa-circle ms-4 text-success"></i></td>
                     <td>
                         <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#checkModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -155,7 +155,7 @@
                     <td><i class="fas fa-circle ms-4 text-danger"></i></td>
                     <td>
                         <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#checkModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -168,7 +168,7 @@
                     <td><i class="fas fa-circle ms-4 text-success"></i></td>
                     <td>
                         <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#checkModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -181,7 +181,7 @@
                     <td><i class="fas fa-circle ms-4 text-success"></i></td>
                     <td>
                         <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#checkModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -301,6 +301,24 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-success">수정</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- checkModal -->
+<div class="modal" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">센서 삭제</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <h3>정말 삭제하시겠습니까?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger">삭제</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
             </div>
         </div>
     </div>

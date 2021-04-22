@@ -133,7 +133,7 @@
                             <ul class="submenu">
                                 <li><a href="" class="submenuLink ">측정소 관리</a></li>
                                 <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
-                                <li><a href="" class="submenuLink ">subItem 3</a></li>
+                                <li><a href="/alarmSetting" class="submenuLink ">알림 설정</a></li>
                             </ul>
                         </li>
 

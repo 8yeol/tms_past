@@ -52,6 +52,10 @@ public class MainController {
     public String sensorManagement(){
         return "sensorManagement";
     }
+    @RequestMapping("/alarmSetting")
+    public String alarmSetting(){
+        return "alarmSetting";
+    }
 
     /*@RequestMapping("stationManagement")*/
 
