@@ -125,7 +125,7 @@
 
     .topMenuLi:hover .longSubmenu { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
         height: 50px; /* [변경] 높이를 32px로 설정 */
-        width: 600px;
+        width: 750px;
         background: #75ACFF;
         border-radius: 5px;
         z-index: 500;
@@ -170,12 +170,11 @@
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="">환경설정</a>
-                            <ul class="submenu">
-                                <li><a href="/alarmManagement" class="submenuLink " id="alarmManagement">알림 설정</a></li>
                             <ul class="longSubmenu">
                                 <li><a href="" class="submenuLink ">측정소 관리</a></li>
                                 <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
-                                <li><a href="/alarmSetting" class="submenuLink ">알림 설정</a></li>
+                                <li><a href="/alarmSetting" class="submenuLink ">알림 설정ver2</a></li>
+                                <li><a href="/alarmManagement" class="submenuLink " id="alarmManagement">알림 설정ver3</a></li>
                                 <li><a href="/setting" class="submenuLink ">설정</a></li>
                             </ul>
                         </li>

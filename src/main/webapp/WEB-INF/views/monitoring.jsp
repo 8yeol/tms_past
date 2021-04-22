@@ -10,7 +10,7 @@
 <%
     String Date = new java.text.SimpleDateFormat("yyyy년 MM월 dd일 hh:mm:ss").format(new java.util.Date());
 %>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
 <style>
@@ -22,15 +22,15 @@
     }
 </style>
 
-<div class="container bg-white">
+<div class="container">
     <div class="row">
-        <div class="col-xs-12 border border-dark d-flex justify-content-between">
+        <div class="col-xs-12 d-flex justify-content-between bg-light rounded mt-3">
             <div class="flex-fill d-flex justify-content-around">
-                <h3>장비정상 ㅁ</h3>
-                <h3>교정중 ㅁ</h3>
-                <h3>경고 ㅁ</h3>
-                <h3>위험 ㅁ</h3>
-                <h3>장비이상 ㅁ</h3>
+                <h3> <i class="fas fa-square text-dark"></i> 장비정상</h3>
+                <h3> <i class="fas fa-square text-secondary"></i> 교정중</h3>
+                <h3> <i class="fas fa-square text-warning"></i> 경고</h3>
+                <h3> <i class="fas fa-square text-danger"></i> 위험</h3>
+                <h3> <i class="fas fa-square text-success"></i> 장비이상</h3>
             </div>
             <div>
                 <h4>현재시간 : <%=Date%></h4>
@@ -38,10 +38,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-4 border border-dark">
-            <div class="row">
+        <div class="col-md-4 p-3">
+            <div class="row bg-light rounded">
                 <div class="col-xs-12">
-                    <h1>측정소1</h1>
+                    <h1 class="bg-secondary rounded mt-1">측정소1</h1>
                 </div>
                 <div class="col-md-6">
                     리스트 들어올곳1
@@ -55,10 +55,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 border border-dark">
-            <div class="row">
+        <div class="col-md-4 p-3">
+            <div class="row bg-light rounded">
                 <div class="col-xs-12">
-                    <h1>측정소2</h1>
+                    <h1 class="bg-secondary rounded mt-1">측정소2</h1>
                 </div>
                 <div class="col-md-6">
                     리스트 들어올곳1
@@ -72,10 +72,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4 border border-dark">
-            <div class="row">
+        <div class="col-md-4 p-3">
+            <div class="row bg-light rounded">
                 <div class="col-xs-12">
-                    <h1>측정소3</h1>
+                    <h1 class="bg-secondary rounded mt-1">측정소3w</h1>
                 </div>
                 <div class="col-md-6">
                     리스트 들어올곳1
