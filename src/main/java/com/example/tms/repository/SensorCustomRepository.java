@@ -16,13 +16,11 @@ import java.util.List;
 @Log4j2
 public class SensorCustomRepository {
 
-
     final MongoTemplate mongoTemplate;
 
     public SensorCustomRepository(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
-
 
 
     /**
@@ -97,8 +95,8 @@ public class SensorCustomRepository {
         return null;
     }
 
-    /* String typ */
-    public LocalDateTime format_time(String datetime){
+    /* String type -> LocalDateTime format  */
+    private LocalDateTime format_time(String datetime){
         LocalDateTime newDateTime = null;
         // length : 2021-04-22T01:33:00 - 19, 2021-04-22 01:33:00 - 19, 2021-04-22 - 10, 01:33:00 - 8, 01:33 - 5
         if(datetime.length() == 19){

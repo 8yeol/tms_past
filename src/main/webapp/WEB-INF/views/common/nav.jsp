@@ -79,8 +79,31 @@
         -o-transition: height .3s;
         width: 5000px; /* [변경] 가로 드랍다운 메뉴의 넓이 */
     }
+    .shortSubmenu{
+        position: absolute;
+        top: 50px;
+        height: 0px;
+        overflow: hidden;
+        transition: height .3s;
+        -webkit-transition: height .3s;
+        -moz-transition: height .3s;
+        -o-transition: height .3s;
+        width: 5000px; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+    }
 
-    .submenu li {
+    .longSubmenu{
+        position: absolute;
+        top: 50px;
+        height: 0px;
+        overflow: hidden;
+        transition: height .3s;
+        -webkit-transition: height .3s;
+        -moz-transition: height .3s;
+        -o-transition: height .3s;
+        width: 5000px; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+    }
+
+    .submenu li .customSubmenu li{
         display: inline-block; /* [변경] 가로로 펼쳐지도록 설정 */
     }
 
@@ -91,6 +114,23 @@
         border-radius: 5px;
         z-index: 500;
     }
+
+    .topMenuLi:hover .shortSubmenu { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+        height: 50px; /* [변경] 높이를 32px로 설정 */
+        width: 300px;
+        background: #75ACFF;
+        border-radius: 5px;
+        z-index: 500;
+    }
+
+    .topMenuLi:hover .longSubmenu { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+        height: 50px; /* [변경] 높이를 32px로 설정 */
+        width: 600px;
+        background: #75ACFF;
+        border-radius: 5px;
+        z-index: 500;
+    }
+
 
     .submenuLink:hover { /* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
         color: #F7C259;
@@ -117,7 +157,7 @@
 
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="/monitoring">모니터링</a>
-                            <ul class="submenu">
+                            <ul class="shortSubmenu">
                                 <li><a href="/monitoring" class="submenuLink">실시간 모니터링</a></li>
                                 <li><a href="/sensor" class="submenuLink" id="sensor">상세화면</a></li>
                             </ul>
@@ -131,9 +171,12 @@
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="">환경설정</a>
                             <ul class="submenu">
+                                <li><a href="/alarmManagement" class="submenuLink " id="alarmManagement">알림 설정</a></li>
+                            <ul class="longSubmenu">
                                 <li><a href="" class="submenuLink ">측정소 관리</a></li>
                                 <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
                                 <li><a href="/alarmSetting" class="submenuLink ">알림 설정</a></li>
+                                <li><a href="/setting" class="submenuLink ">설정</a></li>
                             </ul>
                         </li>
 
