@@ -24,6 +24,14 @@
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/vue-apexcharts.js"></script>
 
+<style>
+    div.search {
+        position: relative;
+        left: 250px;
+        top: -38px;
+    }
+</style>
+
 <div class="container">
     <div class="row m-3 mt-4">
         <div class="col-3">
@@ -37,7 +45,7 @@
             </div>
 
         </div>
-        <div class="col">
+        <div class="search">
             <span class="fs-5 fw-bold p-3">측정기간</span>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="day" id="week" checked>

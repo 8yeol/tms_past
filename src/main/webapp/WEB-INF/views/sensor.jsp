@@ -14,12 +14,24 @@
 <script src="static/js/dataTables.buttons.min.js"></script>
 <script src="static/js/buttons.html5.min.js"></script>
 
+<style>
+    table#sensor-table thead, table#sensor-table-time thead { /* 테이블 제목 셀 배경, 글자색 설정 */
+        background-color: #5390EC;
+        color: #fff;
+    }
+
+    div.bg-skyblue { /* param.place 배경, 글자색 설정 */
+        background-color: #094EB5;
+        color: #fff;
+    }
+</style>
+
 <div class="container">
     <%-- ************************************************************************************************************** --%>
     <div class="row offset-md-9 mt-2 mb-1">
         업데이트 :
     </div>
-    <div class="row bg-info bg-gradient p-4">
+    <div class="row bg-gradient p-4 bg-skyblue">
         <div class="col-md-12 text-center">
             ${param.place}
         </div>
@@ -205,10 +217,10 @@
                 // console.log(row);
                 // console.log(data.y);
                 if(data.y>=danger){
-                    $(row).find('td:eq(1)').css('color', 'red');
+                    $(row).find('td:eq(1)').css('color', '#f54264');
                 }
                 if(data.y <= danger && data.y>=warning){
-                    $(row).find('td:eq(1)').css('color', 'yellow');
+                    $(row).find('td:eq(1)').css('color', '#ffb607');
                 }
             },
             "language": {
@@ -282,11 +294,11 @@
                         },{
                             from: warning,
                             to: danger-0.001,
-                            color: '#f5dc48'
+                            color: '#ffb607'
                         }, {
                             from: danger,
                             to: max,
-                            color: '#eb7170'
+                            color: '#f54264'
                         }]
                     },
                     columnWidth: '30%'
