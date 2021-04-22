@@ -4,16 +4,19 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "sensor_info")
-public class Sensor_Info {
+import java.util.Date;
+
+@Document(collection = "sensor_alarm")
+public class Sensor_Alarm {
 
     @Id
     private ObjectId _id;
     private String name;
     private String naming;
-    private float warning;
-    private float danger;
-    private float substituion; //교정값
+    private Date start;
+    private Date end;
+    private boolean status;
+    private Date up_time;
 
     public ObjectId get_id() {
         return _id;
@@ -39,39 +42,48 @@ public class Sensor_Info {
         this.naming = naming;
     }
 
-    public float getWarning() {
-        return warning;
+    public Date getStart() {
+        return start;
     }
 
-    public void setWarning(float warning) {
-        this.warning = warning;
+    public void setStart(Date start) {
+        this.start = start;
     }
 
-    public float getDanger() {
-        return danger;
+    public Date getEnd() {
+        return end;
     }
 
-    public void setDanger(float danger) {
-        this.danger = danger;
+    public void setEnd(Date end) {
+        this.end = end;
     }
 
-    public float getSubstituion() {
-        return substituion;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setSubstituion(float substituion) {
-        this.substituion = substituion;
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public Date getUp_time() {
+        return up_time;
+    }
+
+    public void setUp_time(Date up_time) {
+        this.up_time = up_time;
     }
 
     @Override
     public String toString() {
-        return "Sensor_Info{" +
+        return "Sensor_alarm{" +
                 "_id=" + _id +
                 ", name='" + name + '\'' +
                 ", naming='" + naming + '\'' +
-                ", warning=" + warning +
-                ", danger=" + danger +
-                ", substituion=" + substituion +
+                ", start=" + start +
+                ", end=" + end +
+                ", status=" + status +
+                ", up_time=" + up_time +
                 '}';
     }
 }

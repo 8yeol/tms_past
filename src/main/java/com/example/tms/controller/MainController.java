@@ -2,7 +2,9 @@ package com.example.tms.controller;
 
 import com.example.tms.entity.ChartData;
 import com.example.tms.entity.Place;
+import com.example.tms.entity.Sensor_Info;
 import com.example.tms.repository.PlaceRepository;
+import com.example.tms.repository.Sensor_InfoRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -11,9 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -21,12 +25,17 @@ import java.util.*;
 @Controller
 public class MainController {
 
+
+
     final PlaceRepository placeRepository;
+
+    final Sensor_InfoRepository sensor_infoRepository;
 
     final MongoTemplate mongoTemplate;
 
-    public MainController(PlaceRepository placeRepository, MongoTemplate mongoTemplate) {
+    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate) {
         this.placeRepository = placeRepository;
+        this.sensor_infoRepository = sensor_infoRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -62,7 +71,7 @@ public class MainController {
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model){
 
-        List<Place> places = placeRepository.findAll();
+        List<Place> places = (List<Place>) placeRepository.findAll();
 
         List<String> placelist = new ArrayList<>();
 
@@ -109,6 +118,12 @@ public class MainController {
 
         SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "x");
 
+        //그룹함수
+        /*
+        GroupOperation groupBy = Aggregation.group("conv_date","type1","type2").count().as("count")
+                .sum("number").as("num_sum");
+        */
+
         Aggregation agg = Aggregation.newAggregation(
                 dateProjection,
                 where,
@@ -122,6 +137,43 @@ public class MainController {
         return result;
     }
 
+// =====================================================================================================================
+// 알림 설정페이지 (ppt-8페이지)
+// param # key : String place (place.name)
+// =====================================================================================================================
+    @RequestMapping(value = "/alarmManagement", method = RequestMethod.GET)
+    public String alarmManagement(@RequestParam("place") String name, Model model, HttpServletResponse response) throws IOException {
+        List<Place> places = placeRepository.findAll();
+        Place place = placeRepository.findByName(name);
+        System.out.println(place);
+        List<String> sensors = place.getSensor();
+        List sensorInfo = new ArrayList();
+
+        for(int i=0;i<sensors.size();i++){
+            sensorInfo.add(sensor_infoRepository.findByName(sensors.get(i)));
+            System.out.println("sensor"+i+", "+sensor_infoRepository.findByName(sensors.get(i)));
+        }
+        model.addAttribute("sensorInfo",sensorInfo);
+        model.addAttribute("station", places);
+
+        return "alarmManagement";
+    }
+//    @RequestMapping(value = "/getSensorInfo", method = RequestMethod.POST)
+//    public String getSensorInfo(String name, Model model){
+//        Place place = placeRepository.findByName(name);
+//        System.out.println("111111111111");
+//        System.out.println(place);
+//        List<String> sensorList = place.getSensor();
+//        for(int i=1;i<sensorList.size();i++){
+//            model.addAttribute("sensorInfo"+i, sensor_infoRepository.findByName(sensorList.get(i)));
+//        }
+//        return "alarmManagement";
+//    }
+
+// =====================================================================================================================
+// 측정소 관리페이지 (ppt-9페이지)
+//
+// =====================================================================================================================
     @RequestMapping("/stationManagement")
     public String stationManagement(){
 
