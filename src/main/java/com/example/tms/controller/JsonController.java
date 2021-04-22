@@ -15,38 +15,38 @@ import java.util.List;
 @RestController
 public class JsonController {
 
-    @Autowired
-    PlaceQueryDslRepository placeRepository;
+    final
+    PlaceRepository placeRepository;
+    final
+    PlaceCustomRepository placeCustomRepository;
 
-    @Autowired
-    SensorCustomRepository sensorRepository;
+    final
+    SensorRepository sensorRepository;
+    final
+    SensorCustomRepository sensorCustomRepository;
 
-    @Autowired
-    PlaceRepository placeRepository2;
-
-
+    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository) {
+        this.placeRepository = placeRepository;
+        this.placeCustomRepository = placeCustomRepository;
+        this.sensorRepository = sensorRepository;
+        this.sensorCustomRepository = sensorCustomRepository;
+    }
 
 // *********************************************************************************************************************
 // Place
 // *********************************************************************************************************************
 
-    // =====================================================================================================================
-// return # Place(name, group, power, sensor) List (select * from place)
-// =====================================================================================================================
-    @RequestMapping(value = "/getPlaceInfo", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getPlaceList(){
-        return placeRepository.getPlaceInfo();
+    // =================================================================================================================
+    // 김규아 추가
+    /**
+     * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
+     * @param name 측정소 이름
+     * @return 해당 측정소의 센서 값 (테이블 명)
+     */
+    @RequestMapping(value = "/getPlaceSensor", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getPlaceSensor(@RequestParam("name") String name){
+        return placeRepository.findByName(name).getSensor();
     }
-
-    // =====================================================================================================================
-// param # key : Place.name
-// return # Place.Sensor List (select sensor from place where name = ? )
-// =====================================================================================================================
-    @RequestMapping(value = "/getSensorList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getSensorList(@RequestParam("name") String name){
-        return placeRepository.getSensorList(name);
-    }
-
 
 // *********************************************************************************************************************
 // Sensor
@@ -63,23 +63,12 @@ public class JsonController {
                                   @RequestParam("from_date") String from_date,
                                   @RequestParam("to_date") String to_date,
                                   @RequestParam("minute") String minute){
-        return sensorRepository.getSenor(sensor, from_date, to_date, minute);
+        return sensorCustomRepository.getSenor(sensor, from_date, to_date, minute);
     }
 
 
 
 
-    // =================================================================================================================
-    // 김규아 추가
-    /**
-     * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
-     * @param name 측정소 이름
-     * @return 해당 측정소의 센서 값 (테이블 명)
-     */
-    @RequestMapping(value = "/getPlaceSensor", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getPlaceSensor(@RequestParam("name") String name){
-        return placeRepository2.findByName(name).getSensor();
-    }
 
 
 }
