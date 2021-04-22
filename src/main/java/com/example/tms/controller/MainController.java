@@ -2,6 +2,7 @@ package com.example.tms.controller;
 
 import com.example.tms.entity.ChartData;
 import com.example.tms.entity.Place;
+import com.example.tms.entity.Sensor;
 import com.example.tms.entity.Sensor_Info;
 import com.example.tms.repository.PlaceRepository;
 import com.example.tms.repository.Sensor_InfoRepository;
@@ -140,6 +141,53 @@ public class MainController {
         AggregationResults<ChartData> results = mongoTemplate.aggregate(agg, item, ChartData.class);
 
         List<ChartData> result = results.getMappedResults();
+
+        return result;
+    }
+
+    @RequestMapping(value = "/searchInformatin", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Sensor> searchInformatin(String date_start, String date_end, String item, boolean off) {
+        ProjectionOperation dateProjection = Aggregation.project()
+                .and("up_time").as("up_time")
+                .and("value").as("value")
+                .and("status").as("status");
+
+        MatchOperation where;
+
+        if( off == true ) {
+            // 모든 데이터 표시
+            where = Aggregation.match(
+                    new Criteria().andOperator(
+                            Criteria.where("x")
+                                    .gte(LocalDateTime.parse(date_start + "T00:00:00"))
+                                    .lte(LocalDateTime.parse(date_end + "T23:59:59"))
+                    )
+            );
+        } else {
+            // status true ( off 아닌 데이터 ) 표시
+            where = Aggregation.match(
+                    new Criteria().andOperator(
+                            Criteria.where("status")
+                                    .is(true)
+                                    .and("x")
+                                    .gte(LocalDateTime.parse(date_start + "T00:00:00"))
+                                    .lte(LocalDateTime.parse(date_end + "T23:59:59"))
+                    )
+            );
+        }
+
+        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "up_time");
+
+        Aggregation agg = Aggregation.newAggregation(
+                dateProjection,
+                where,
+                sort
+        );
+
+        AggregationResults<Sensor> results = mongoTemplate.aggregate(agg, item, Sensor.class);
+
+        List<Sensor> result = results.getMappedResults();
 
         return result;
     }

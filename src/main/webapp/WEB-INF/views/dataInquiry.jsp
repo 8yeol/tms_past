@@ -17,12 +17,13 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <link rel="stylesheet" href="static/css/datepicker.min.css">
+<link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
 <script src="static/js/datepicker.min.js"></script>
 <script src="static/js/datepicker.ko.js"></script>
-
 <script src="static/js/vue.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/vue-apexcharts.js"></script>
+<script src="static/js/jquery.dataTables.min.js"></script>
 
 <style>
     div.search {
@@ -30,10 +31,17 @@
         left: 250px;
         top: -38px;
     }
+    .toolbar {
+        float: left;
+    }
 </style>
 
+
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<script src="static/js/sweetalert2.min.js"></script>
+
 <div class="container">
-    <div class="row m-3 mt-4">
+    <div class="row ms-3 mx-3 mt-4">
         <div class="col-3">
             <span class="fs-5 fw-bold">측정소</span>
             <div class="btn-group w-50 ms-3">
@@ -81,8 +89,14 @@
 
             <div class="row">
                 <div class="col">
+                    <div class="float-start">
+                        <div class="fs-5 fw-bold mb-2" id="title"> </div>
+                    </div>
+                </div>
+
+                <div class="col">
                     <div class="float-end">
-                        <div class="form-check mb-2">
+                        <div class="form-check pt-2">
                             <input class="form-check-input" type="checkbox" value="" id="off">
                             <label class="form-check-label fw-bold small" for="off">
                                 Off 데이터 표시
@@ -93,20 +107,23 @@
             </div>
 
             <div class="row bg-white">
-                <div class="fs-6 fw-bold pt-3"> 측정소 1 - 먼지 </div>
-                <div id="chart-line2"></div>
+
+                <div id="chart-line2" class="mt-3"></div>
                 <div id="chart-line"></div>
 
-                <div class="row">
-                    <div class="col">
-                        <div class="float-end">
-                            <button class="btn btn-outline-secondary">Download Excel</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col text-center">
-                        table 영역
+                <div class="row mt-3 border-top">
+                    <div class="col mt-3">
+                        <table id="information" class="table table-striped table-bordered table-hover text-center" >
+                            <thead>
+                            <tr>
+                                <th>순번</th>
+                                <th>값</th>
+                                <th>상태</th>
+                                <th>시간</th>
+                            </tr>
+                            </thead>
+                            <!-- tbody 태그 필요 없다. -->
+                        </table>
                     </div>
                 </div>
             </div>
@@ -115,23 +132,20 @@
         <div class="col-lg-2">
             <div class="mt-4 p-2 bg-white text-center">차트 항목 선택</div>
 
-            <div class="border p-2 bg-white" id="items">
-
-
+            <div class="border p-2 bg-white h-100" id="items">
+                <%-- script --%>
             </div>
-
         </div>
     </div>
 </div>
 
 <script charset="UTF-8">
-
     $( document ).ready(function() {
         //$("#date_start").val(getDays('week'));
         $("#date_start").val(getDays());
         $("#date_end").val(getDays());
         placeChange();
-        search();
+        $("#information").DataTable();
     });
 
     $("#date_start").datepicker({
@@ -146,6 +160,15 @@
         //timepicker: true,
         //timeFormat: "hh:ii AA"
     });
+
+    const table = $('#information').dataTable({
+        dom: '<"toolbar">Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
+
+    $("div.toolbar").html('<b>상세보기</b>');
 
     datePickerSet($("#date_start"), $("#date_end"), true); // 시작하는 달력 , 끝달력
 
@@ -214,6 +237,10 @@
         }
     }
 
+    $('#off').click(function(){
+        search();
+    });
+
     $("input:radio[name=day]").click(function() {
         $("#date_start").val("");
         $("#date_end").val("");
@@ -249,13 +276,13 @@
             async: false,
             cache: false,
             data: {"name":place},
-            success : function(data) { // 결과 성공 콜백함수
+            success : function(data) {
                 for(let i=0;i<data.length;i++){
                     const tableName = data[i];
                     const category = findSensorCategory(tableName);
 
                     const innerHtml = "<div class='form-check mb-2'>" +
-                        "<input class='form-check-input' type='radio' name='item' id='"+tableName+"' value='"+tableName+"'>" +
+                        "<input class='form-check-input' type='radio' name='item' id='"+tableName+"' value='"+tableName+"' onclick='changeItem()'>" +
                         "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
                         "</div>"
 
@@ -266,10 +293,16 @@
                 const item = $("input[name='item']").eq(0).val();
                 $("#"+item).prop("checked",true);
             },
-            error : function(request, status, error) { // 결과 에러 콜백함수
+            error : function(request, status, error) {
                 console.log(error)
             }
         })
+
+        search();
+    }
+
+    function changeItem(){
+        search();
     }
 
     function findSensorCategory(tableName){
@@ -292,6 +325,19 @@
         const item = $('input[name="item"]:checked').val();
         const off = $('#off').is(":checked"); // false : 선택안됨(표시X) , true : 선택(표시)
 
+        const place = $("#place").val();
+        const category = findSensorCategory(item);
+        $('#title').text(place + " - " + category);
+
+        if(date_start==""||date_end==""){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '검색 날짜를 입력해주세요.'
+            })
+            return false;
+        }
+
         $('#chart-line2').empty();
         $('#chart-line').empty();
 
@@ -306,18 +352,10 @@
                 "item":item,
                 "off":off,
             },
-            success : function(data) { // 결과 성공 콜백함수
-                //console.log(data);
-                /*
-                const times = [],values = [];
-                for(let i=0; i<data.length; i++){
-                    times.push(data[i].time);
-                    values.push(data[i].value.toFixed(2));
-                }
-                */
+            success : function(data) {
                 const options = {
                     series: [{
-                        name:"먼지",
+                        name:category,
                         data: data
                     }],
                     chart: {
@@ -325,8 +363,10 @@
                         type: 'line',
                         height: 350,
                         toolbar: {
-                            autoSelected: 'pan',
-                            show: false
+                            show: true,
+                            tools: {
+                                download:true
+                            }
                         }
                     },
                     colors: ['#546E7A'],
@@ -343,13 +383,24 @@
                         size: 0
                     },
                     xaxis: {
-                        type: 'datetime'
+                        type: 'datetime',
+                        labels:{
+                            datetimeUTC:false
+                        }
+                    },
+                    yaxis:{
+                        labels:{
+                            formatter: function(value){
+                                return value.toFixed(2);
+                            }
+                        }
                     }
                 };
 
                 const chart = new ApexCharts(document.querySelector("#chart-line2"), options);
                 chart.render();
 
+                // 여기 문제
                 const optionsLine = {
                     series: [{
                         data: data
@@ -365,7 +416,10 @@
                         selection: {
                             enabled: true,
                             xaxis: {
-                                type: 'datetime'
+                                type: 'datetime',
+                                labels:{
+                                    datetimeUTC:false
+                                }
                             }
                         },
                     },
@@ -379,19 +433,27 @@
                     },
                     xaxis: {
                         type: 'datetime',
+                        labels:{
+                            datetimeUTC:false
+                        },
                         tooltip: {
                             enabled: false
                         }
                     },
                     yaxis: {
-                        tickAmount: 2
+                        tickAmount: 2,
+                        labels:{
+                            formatter: function(value){
+                                return value.toFixed(2);
+                            }
+                        }
                     }
                 };
                 const chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
                 chartLine.render();
 
             },
-            error : function(request, status, error) { // 결과 에러 콜백함수
+            error : function(request, status, error) {
                 console.log(error)
             }
         })
