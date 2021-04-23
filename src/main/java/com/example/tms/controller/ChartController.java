@@ -1,5 +1,7 @@
 package com.example.tms.controller;
 
+import com.example.tms.entity.Sensor;
+import com.example.tms.entity.Sensor_Info;
 import com.example.tms.repository.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -8,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.util.*;
 
 @Controller
 @Log4j2
@@ -24,11 +26,15 @@ public class ChartController {
     final
     SensorCustomRepository sensorCustomRepository;
 
-    public ChartController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository) {
+    final
+    Sensor_InfoRepository sensor_infoRepository;
+
+    public ChartController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Sensor_InfoRepository sensor_infoRepository) {
         this.placeRepository = placeRepository;
         this.placeCustomRepository = placeCustomRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
+        this.sensor_infoRepository = sensor_infoRepository;
     }
 
 
@@ -45,10 +51,15 @@ public class ChartController {
         List<String> sensors = placeRepository.findByName(place).getSensor();
         model.addAttribute("sensors", sensors);
 
+        List<Sensor> sensor = new ArrayList<>();
+        List<Sensor_Info> sensor_info = new ArrayList<>();
 //        3. sensor (sensor 테이블)
         for(int i=0; i<sensors.size(); i++){
-            model.addAttribute("sensor"+i, sensorCustomRepository.getSenor(sensors.get(i), "","", "1"));
+            sensor.add(sensorCustomRepository.getSensorRecent(sensors.get(i)) );
+            sensor_info.add(sensor_infoRepository.findByName(sensors.get(i)) );
         }
+        model.addAttribute("sensor", sensor);
+        model.addAttribute("sensor_info", sensor_info);
         return "sensor";
     }
 }

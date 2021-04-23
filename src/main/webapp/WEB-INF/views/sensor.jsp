@@ -16,7 +16,7 @@
 
 <style>
     table#sensor-table thead, table#sensor-table-time thead { /* 테이블 제목 셀 배경, 글자색 설정 */
-        background-color: #5390EC;
+        background-color: #97bef8;
         color: #fff;
     }
 
@@ -29,7 +29,7 @@
 <div class="container">
     <%-- ************************************************************************************************************** --%>
     <div class="row offset-md-9 mt-2 mb-1">
-        업데이트 :
+        업데이트 :<div id="update"></div>
     </div>
     <div class="row bg-gradient p-4 bg-skyblue">
         <div class="col-md-12 text-center">
@@ -81,7 +81,7 @@
     var warning, danger;
 
     $(document).ready(function () {
-        data = getSensor("tmsWP0004_NOx_01", "", "", 60);
+        data = getSensor("tmsWP0005_CO_01", "", "", 60);
         table1 = draw_sensor_table(getSensorData());
         chart1 = draw_chart(data);
         chart1.render();
@@ -94,12 +94,9 @@
         var sensor_data = table1.row(this).data();
         var sensor = sensor_data.name;
         /* get Sensor Data */
+        var place_data = getPlace(sensor);
         var sensor_data = getSensor(sensor, "", "", 60);
 
-        /* chart 1 draw */
-        chart1.destroy();
-        chart1 = draw_chart(sensor_data);
-        chart1.render();
         /* table 2 draw */
         var table2 = $("#sensor-table-time").DataTable();
         table2.destroy();
@@ -108,11 +105,14 @@
         // interval 변수 - 처음 클릭 시 underfined / 두번째 부터 number type으로 변수 저장되어 clear 후에 interval 실행
         clearInterval(interval);
         interval = setInterval(function () {
+            console.log("TIMER");
             /* 최근 데이터 조회 */
             var sensor_data_recent = getSensor(sensor, "", "", 60);
+            var sensor_data_recent2 = getPlace(sensor);
             if(sensor_data[0].x != sensor_data_recent[0].x){
                 sensor_data.unshift(sensor_data_recent[0]); //배열의 0번째로 삽입
                 sensor_data.pop(); //배열의 마지막 삭제
+
 
                 /* chart 1 draw */
                 chart1.destroy();
@@ -123,6 +123,7 @@
                 var table2 = $("#sensor-table-time").DataTable();
                 table2.destroy();
                 table2 = draw_sensor_time_table(sensor_data);
+
             }
         }, 5000);
 
@@ -134,16 +135,52 @@
     function getSensorData() {
         var data = new Array();
         <c:forEach items="${sensors}" var="sName" varStatus="status">
-        <c:set var="sIndex" value="sensor${status.index}"/>
-        <c:forEach var="sensor" items="${requestScope[sIndex]}">
-        <fmt:formatNumber value="${sensor.value}" var="sValue" pattern=".00"/>
-        <fmt:formatDate value="${sensor.up_time}" var="sUp_time" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
-        data.push({name: "${sName}", value: "${sValue}", up_time: "${sUp_time}"});
-        </c:forEach>
+        <c:set var="Index">${status.index}</c:set>
+        <fmt:formatNumber value="${sensor[Index].value}" var="sValue" pattern=".00"/>
+        <fmt:formatDate value="${sensor[Index].up_time}" var="sUp_time" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
+            <c:if test="${not empty sensor_info[Index].naming}">
+            data.push({naming: "${sensor_info[Index].naming}", name:"${sName}", value:"${sValue}", up_time: "${sUp_time}"});
+            </c:if>
+            <c:if test="${empty sensor_info[Index].naming}">
+            data.push({naming: "${sName}", name:"${sName}", value:"${sValue}", up_time: "${sUp_time}"});
+            </c:if>
         </c:forEach>
         return data;
     }
 
+    function getPlace(sensor){
+        var getData = new Array();
+        $.ajax({
+            url:'getSensorRecent',
+            dataType: 'json',
+            data:  {"sensor": sensor},
+            async: false,
+            success: function (data) {
+                console.log(data.value);
+                console.log(format_time(new Date(data.up_time)));
+               <c:forEach items="${sensors}" var="sName" varStatus="status">
+                <c:set var="Index">${status.index}</c:set>
+                <fmt:formatNumber value="${sensor[Index].value}" var="sValue" pattern=".00"/>
+                <fmt:formatDate value="${sensor[Index].up_time}" var="sUp_time" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>
+                <c:if test="${not empty sensor_info[Index].naming}">
+                getData.push({naming: "${sensor_info[Index].naming}", name:"${sName}", value:data.value, up_time: format_time(new Date(data.up_time))});
+                </c:if>
+                <c:if test="${empty sensor_info[Index].naming}">
+                getData.push({naming: "${sName}", name:"${sName}", value:"${sValue}", up_time: "${sUp_time}"});
+                </c:if>
+                </c:forEach>
+                $("#update").html(format_time(new Date(data.up_time)));
+            },
+            fail: function(){
+
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        }); //ajax
+        console.log(getData);
+        return getData;
+    }
 
     /* sensor name에 해당하는 테이블에 접근하여 chart에 사용하는 data 생성 */
     function getSensor(sensor, from_date, to_date, minute) {
@@ -160,12 +197,9 @@
 
             },
             success: function (data) {
-                var result = data;
-                for(var i=0; i<result.length; i++){
-                    var s_uptime = format_time(new Date(Date.parse(result[i].up_time)));
-                    var s_value = Number(result[i].value).toFixed(2);
-                    getData.push({x: s_uptime, y: s_value}); //chart data
-                }
+                $.each(data, function (index, item) {
+                    getData.push({x: format_time(new Date(item.up_time)), y: item.value.toFixed(2)});
+                })
             },
             fail: function(){
 
@@ -188,7 +222,7 @@
             bPaginate: false,
             bInfo: false,
             columns: [
-                {"data": "name"},
+                {"data": "naming"},
                 {"data": "value"},
                 {"data": "up_time"}
             ]

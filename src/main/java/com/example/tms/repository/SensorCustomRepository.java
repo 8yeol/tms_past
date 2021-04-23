@@ -36,25 +36,24 @@ public class SensorCustomRepository {
             if (minute.isEmpty()){ //from, to, minute 미입력 : 24시간 전 ~ 현재
                 A = LocalDateTime.now().minusMinutes(Long.parseLong("1440"));
                 B = LocalDateTime.now();
-            }else{ ////from, to 미입력, minute 입력 :  현재(-minute) ~ 현재
+            }else{ //from, to 미입력, minute 입력 :  현재(-minute) ~ 현재
                 A = LocalDateTime.now().minusMinutes(Long.parseLong(minute));
                 B = LocalDateTime.now();
             }
-        }else{
+        }else{ // from, to 입력
             if(!from_date.isEmpty() && !to_date.isEmpty()){ // from ~ to
                 A = format_time(from_date);
                 B = format_time(to_date);
-
-            }else{
-                if(!minute.isEmpty()){
-                    if(!to_date.isEmpty()){ // from(-minute) ~ to
+            }else{ // from, to 둘 중 하나만 입력
+                if(!minute.isEmpty()){ // minute 입력
+                    if(!to_date.isEmpty()){ // to 입력, from(-minute) ~ to
                         A = format_time(to_date).minusMinutes(Long.parseLong(minute));
                         B = format_time(to_date);
-                    }else if(!from_date.isEmpty()){ //from ~ to(+minute)
+                    }else if(!from_date.isEmpty()){ //from 입력, from ~ to(+minute)
                         A = format_time(from_date);
                         B = format_time(from_date).plusMinutes(Long.parseLong(minute));
                     }
-                }else{
+                }else{ // minute 미입력
                     if(!to_date.isEmpty()){ // 하루전 ~ 현재
                         A = format_time(to_date).minusDays(1);
                         B = format_time(to_date);
@@ -111,4 +110,28 @@ public class SensorCustomRepository {
         }
         return newDateTime; /* Year-Month-Day + T + Hours:Minutes:Seconds */
     }
+
+    public Sensor getSensorRecent(String sensor){
+        try {
+            ProjectionOperation projectionOperation = Aggregation.project()
+                    .andInclude("value")
+                    .andInclude("status")
+                    .andInclude("up_time");
+            /* sort */
+            SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
+            /* limit */
+            LimitOperation limitOperation = Aggregation.limit(1);
+            /* fetch */
+            Aggregation aggregation = Aggregation.newAggregation(projectionOperation, sortOperation, limitOperation);
+
+            AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
+            List<Sensor> result = results.getMappedResults();
+            return result.get(0);
+        }catch (Exception e){
+            log.info(e.getMessage());
+            return null;
+        }
+    }
+
+
 }
