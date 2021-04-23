@@ -74,7 +74,7 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <div class="container">
-    <div class="ms-3 mt-4 add-bg">
+    <div class="ms-3 mt-3 add-bg">
         <div class="col-3 picker">
             <span class="fs-5 fw-bold add-margin">측정소</span>
             <div class="btn-group w-50 ms-3">
@@ -117,7 +117,7 @@
         </div>
     </div>
 
-    <hr>
+    <hr class="mt-2 mb-2">
 
     <div class="row">
         <div class="col">
@@ -153,15 +153,16 @@
 
 <%--                <hr class="mt-1 mb-1">--%>
 
-                <div class="row">
+                <div class="row ms-2">
                     <div class="col">
                         <table id="information" class="table table-striped table-bordered table-hover text-center" >
                             <thead class="add-bg-color">
                             <tr>
-                                <th>순번</th>
-                                <th>값</th>
-                                <th>모니터링</th>
-                                <th>시간</th>
+                                <th width="10%">순번</th>
+                                <th width="20%">측정 값</th>
+                                <th width="20%">관리등급</th>
+                                <th width="20%">모니터링</th>
+                                <th width="30%">시간</th>
                             </tr>
                             </thead>
                             <tbody id="informationBody">
@@ -214,10 +215,21 @@
                     const cell2 = row.insertCell(1);
                     const cell3 = row.insertCell(2);
                     const cell4 = row.insertCell(3);
+                    const cell5 = row.insertCell(4);
                     cell1.innerHTML = i+1;
                     cell2.innerHTML = data[i].value.toFixed(2);
-                    cell3.innerHTML = (data[i].status?"ON":"OFF");
-                    cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
+
+                    // 정상, 위험, 경고 값 관리해주는 테이블 만들어서 테이블에서 값 읽어와서 계산하는걸로 수정
+                    let grade = '정상';
+                    if(data[i].value>=18){
+                        grade = '<div class="text-warning">경고</div>';
+                    } else if(data[i].value>=15){
+                        grade = '<div class="text-danger">위험</div>';
+                    }
+
+                    cell3.innerHTML = grade;
+                    cell4.innerHTML = (data[i].status?"ON":"OFF");
+                    cell5.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
                 }
             },
             error : function(request, status, error) {
@@ -398,7 +410,6 @@
                 title: '경고',
                 text: '검색 날짜를 입력해주세요.'
             })
-            return false;
         }
 
         $('#chart-line2').empty();
@@ -416,6 +427,15 @@
                 "off":off,
             },
             success : function(data) {
+                if(data.length==0){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '검색 결과가 없습니다.'
+                    })
+                    return false;
+                }
+
                 const options = {
                     series: [{
                         name:category,

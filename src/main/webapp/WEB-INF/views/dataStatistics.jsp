@@ -87,7 +87,7 @@
 
     <div class="row">
         <div class="col bg-white re-height">
-            <span class="fs-5 fw-bold add-margin title-span">Test</span>
+            <span class="fs-5 fw-bold add-margin title-span">월별 배출량 추이 </span>
             <div id="chart" class="p-3"></div>
         </div>
     </div>
@@ -95,7 +95,7 @@
     <hr class="mt-4 mb-4">
 
     <div class="row bg-white table-height">
-        <span class="fs-5 fw-bold add-margin title-span">Test</span>
+        <span class="fs-5 fw-bold add-margin title-span">월별 배출량 통계 </span>
         <div class="col p-3">
             <table id="information" class="table table-bordered table-hover text-center" >
                 <thead class="add-bg-color">
@@ -139,15 +139,15 @@
                         <td>11</td>
                         <td>11</td>
                         <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -157,15 +157,15 @@
                     <td>11</td>
                     <td>11</td>
                     <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 </tfoot>
             </table>
