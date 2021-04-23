@@ -1,7 +1,6 @@
 package com.example.tms.controller;
 
-import com.example.tms.entity.Sensor;
-import com.example.tms.entity.Sensor_Info;
+import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -43,16 +42,17 @@ public class ChartController {
 // param # key : String place (place.name)
 // =====================================================================================================================
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
-    public String sensor(@RequestParam("place") String place, Model model){
+    public String sensor(Model model){
 //        1. place.name(place 테이블의 name 컬럼)
         model.addAttribute("place", placeRepository.findAll());
+        String place = placeRepository.findAll().get(0).getName();
 
 //        2. place.sensor (입력 받은 place 의 sensor 컬럼)
         List<String> sensors = placeRepository.findByName(place).getSensor();
         model.addAttribute("sensors", sensors);
 
-        List<Sensor> sensor = new ArrayList<>();
-        List<Sensor_Info> sensor_info = new ArrayList<>();
+        List<Object> sensor = new ArrayList<>();
+        List<Object> sensor_info = new ArrayList<>();
 //        3. sensor (sensor 테이블)
         for(int i=0; i<sensors.size(); i++){
             sensor.add(sensorCustomRepository.getSensorRecent(sensors.get(i)) );
