@@ -19,7 +19,8 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css" />
-
+<%--공통코드--%>
+<script src="static/js/common/common.js"></script>
 <style>
     /* The switch - the box around the slider */
     .switch {
@@ -192,6 +193,7 @@
              for(let i=0;i<data.length;i++){
                  const tableName = data[i];
                  const category = findSensorCategory(tableName);
+                 const status = findSensorAlarm(tableName);
 
                  const innerHtml = "<div class='form-check mb-2'>" +
                      "<input class='form-check-input' type='checkbox' name='item' id='"+tableName+"' value='"+tableName+"' >" +
@@ -232,20 +234,6 @@
          }
      })
  }
-
-    function findSensorCategory(tableName){
-        if(tableName.includes('dust')==true){
-            return "먼지";
-        } else if(tableName.includes('NOx')==true){
-            return "질소산화물";
-        } else if(tableName.includes('CO')==true){
-            return "일산화탄소";
-        } else if(tableName.includes('HCL')==true){
-            return "염산";
-        } else if(tableName.includes('SOx')==true){
-            return "황산화물";
-        }
-    }
 
 function insert() {
 
