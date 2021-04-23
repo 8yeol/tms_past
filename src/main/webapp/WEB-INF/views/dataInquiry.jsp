@@ -27,13 +27,34 @@
 <script src="static/js/moment.min.js"></script>
 
 <style>
-    div.search {
+    .search {
         position: relative;
-        left: 250px;
-        top: -38px;
+        left: 285px;
+        top: -18px;
+    }
+    .picker {
+        position: relative;
+        top: 20px;
     }
     .toolbar {
         float: left;
+    }
+    .add-bg {
+        background-color: #fff;
+        width: 1300px;
+        position: relative;
+        left: -20px;
+        top: -3px;
+    }
+    .add-margin {
+        margin-left: 28px;
+    }
+    .down {
+        margin-top: 14px;
+    }
+    .add-bg-color {
+        background-color: #97bef8;
+        color: #fff;
     }
 </style>
 
@@ -42,9 +63,9 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <div class="container">
-    <div class="row ms-3 mt-4">
-        <div class="col-3">
-            <span class="fs-5 fw-bold">측정소</span>
+    <div class="ms-3 mt-4 add-bg">
+        <div class="col-3 picker">
+            <span class="fs-5 fw-bold add-margin">측정소</span>
             <div class="btn-group w-50 ms-3">
                 <select name="place" id="place" class="btn btn-light" onchange="placeChange()">
                     <c:forEach var="place" items="${place}" varStatus="status">
@@ -119,7 +140,7 @@
                 <div class="row">
                     <div class="col">
                         <table id="information" class="table table-striped table-bordered table-hover text-center" >
-                            <thead>
+                            <thead class="add-bg-color">
                             <tr>
                                 <th>순번</th>
                                 <th>값</th>
@@ -136,7 +157,7 @@
             </div>
 
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 down">
             <div class="mt-4 p-2 bg-white text-center">차트 항목 선택</div>
 
             <div class="border p-2 bg-white h-75" id="items">
