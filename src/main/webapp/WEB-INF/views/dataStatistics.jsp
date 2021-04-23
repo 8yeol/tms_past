@@ -32,6 +32,27 @@
         background-color: #97bef8;
         color: #fff;
     }
+    .add-margin-right {
+        margin-right: 15px;
+    }
+    .re-height {
+        height: 700px;
+    }
+    .title-span {
+        margin-left: 28px;
+        position: relative;
+        top: 30px;
+    }
+    #chart {
+        margin-top: 80px;
+    }
+    .table-height {
+        height: 290px;
+    }
+
+    #information {
+        margin-top: 35px;
+    }
 </style>
 
 <div class="container">
@@ -42,7 +63,7 @@
     </div>
     <div class="row ms-3 mt-2 p-3 add-bg">
         <div class="col text-center">
-            <span class="fs-5 fw-bold add-margin">측정소</span>
+            <span class="fs-5 fw-bold">측정소</span>
             <div class="btn-group w-50 ms-3">
                 <select name="place" id="place" class="btn btn-light" onchange="placeChange()">
                     <c:forEach var="place" items="${place}" varStatus="status">
@@ -52,8 +73,8 @@
             </div>
         </div>
 
-        <div class="col text-center">
-            <span class="fs-5 fw-bold add-margin">측정 항목</span>
+        <div class="col text-center add-margin-right">
+            <span class="fs-5 fw-bold">측정 항목</span>
             <div class="btn-group w-50 ms-3">
                 <select name="items" id="items" class="btn btn-light">
                     <%--script--%>
@@ -65,14 +86,16 @@
     <hr>
 
     <div class="row">
-        <div class="col bg-white">
+        <div class="col bg-white re-height">
+            <span class="fs-5 fw-bold add-margin title-span">Test</span>
             <div id="chart" class="p-3"></div>
         </div>
     </div>
 
     <hr class="mt-4 mb-4">
 
-    <div class="row bg-white">
+    <div class="row bg-white table-height">
+        <span class="fs-5 fw-bold add-margin title-span">Test</span>
         <div class="col p-3">
             <table id="information" class="table table-bordered table-hover text-center" >
                 <thead class="add-bg-color">
