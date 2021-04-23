@@ -24,15 +24,37 @@
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/vue-apexcharts.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
+<script src="static/js/moment.min.js"></script>
 
 <style>
-    div.search {
+    .search {
         position: relative;
-        left: 250px;
-        top: -38px;
+        left: 285px;
+        top: -18px;
+    }
+    .picker {
+        position: relative;
+        top: 20px;
     }
     .toolbar {
         float: left;
+    }
+    .add-bg {
+        background-color: #fff;
+        width: 1300px;
+        position: relative;
+        left: -20px;
+        top: -3px;
+    }
+    .add-margin {
+        margin-left: 28px;
+    }
+    .down {
+        margin-top: 14px;
+    }
+    .add-bg-color {
+        background-color: #97bef8;
+        color: #fff;
     }
 </style>
 
@@ -41,9 +63,9 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <div class="container">
-    <div class="row ms-3 mx-3 mt-4">
-        <div class="col-3">
-            <span class="fs-5 fw-bold">측정소</span>
+    <div class="ms-3 mt-4 add-bg">
+        <div class="col-3 picker">
+            <span class="fs-5 fw-bold add-margin">측정소</span>
             <div class="btn-group w-50 ms-3">
                 <select name="place" id="place" class="btn btn-light" onchange="placeChange()">
                     <c:forEach var="place" items="${place}" varStatus="status">
@@ -56,7 +78,7 @@
         <div class="search">
             <span class="fs-5 fw-bold p-3">측정기간</span>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="day" id="week" checked>
+                <input class="form-check-input" type="radio" name="day" id="week">
                 <label class="form-check-label" for="week">
                     일주일
                 </label>
@@ -83,6 +105,8 @@
             <button type="button" class="btn btn-primary ms-3" onClick="search()">검색</button>
         </div>
     </div>
+
+    <hr>
 
     <div class="row">
         <div class="col">
@@ -111,10 +135,12 @@
                 <div id="chart-line2" class="mt-3"></div>
                 <div id="chart-line"></div>
 
-                <div class="row mt-3 border-top">
-                    <div class="col mt-3">
+                <hr class="mt-3 mb-3">
+
+                <div class="row">
+                    <div class="col">
                         <table id="information" class="table table-striped table-bordered table-hover text-center" >
-                            <thead>
+                            <thead class="add-bg-color">
                             <tr>
                                 <th>순번</th>
                                 <th>값</th>
@@ -122,17 +148,19 @@
                                 <th>시간</th>
                             </tr>
                             </thead>
-                            <!-- tbody 태그 필요 없다. -->
+                            <tbody id="informationBody">
+
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
         </div>
-        <div class="col-lg-2">
+        <div class="col-lg-2 down">
             <div class="mt-4 p-2 bg-white text-center">차트 항목 선택</div>
 
-            <div class="border p-2 bg-white h-100" id="items">
+            <div class="border p-2 bg-white h-75" id="items">
                 <%-- script --%>
             </div>
         </div>
@@ -141,12 +169,56 @@
 
 <script charset="UTF-8">
     $( document ).ready(function() {
-        //$("#date_start").val(getDays('week'));
         $("#date_start").val(getDays());
         $("#date_end").val(getDays());
         placeChange();
-        $("#information").DataTable();
+        search();
+        addTable();
     });
+
+    function addTable(){
+        $.ajax({
+            url: '<%=cp%>/searchInformatin',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"date_start":$('#date_start').val(),
+                "date_end":$('#date_end').val(),
+                "item":$('input[name="item"]:checked').val(),
+                "off":$('#off').is(":checked")
+            },
+            success : function(data) {
+                const tbody = document.getElementById('informationBody');
+                for(let i=0; i<data.length; i++){
+                    const row = tbody.insertRow( tbody.rows.length ); // 하단에 추가
+                    const cell1 = row.insertCell(0);
+                    const cell2 = row.insertCell(1);
+                    const cell3 = row.insertCell(2);
+                    const cell4 = row.insertCell(3);
+                    cell1.innerHTML = i+1;
+                    cell2.innerHTML = data[i].value.toFixed(2);
+                    cell3.innerHTML = (data[i].status?"정상":"비정상");
+                    cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
+                }
+            },
+            error : function(request, status, error) {
+                console.log(error)
+            }
+        })
+    }
+
+    window.onload = function () {
+        const table = $('#information').dataTable({
+            dom: '<"toolbar">Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
+            "pageLength": 8
+        });
+
+        $("div.toolbar").html('<b>상세보기</b>');
+    }
 
     $("#date_start").datepicker({
         language:'ko',
@@ -160,15 +232,6 @@
         //timepicker: true,
         //timeFormat: "hh:ii AA"
     });
-
-    const table = $('#information').dataTable({
-        dom: '<"toolbar">Bfrtip',
-        buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-    });
-
-    $("div.toolbar").html('<b>상세보기</b>');
 
     datePickerSet($("#date_start"), $("#date_end"), true); // 시작하는 달력 , 끝달력
 
@@ -297,8 +360,6 @@
                 console.log(error)
             }
         })
-
-        search();
     }
 
     function changeItem(){

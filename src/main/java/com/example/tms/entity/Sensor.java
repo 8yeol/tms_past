@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Document
 public class Sensor {
 
     @Id
@@ -16,7 +15,6 @@ public class Sensor {
     private boolean status;
     @JsonFormat(timezone = "Asia/Seoul")
     private Date up_time;
-
 
     @Override
     public String toString() {
