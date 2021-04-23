@@ -51,10 +51,7 @@ public class MainController {
         return "monitoring";
     }
 
-    @RequestMapping("/statistics")
-    public String statistics(){
-        return "statistics";
-    }
+
     @RequestMapping("/alarm")
     public String alarm(){
         return "alarm";
@@ -73,17 +70,27 @@ public class MainController {
         return "setting";
     }
 
+    @RequestMapping("/dataStatistics")
+    public String statistics(Model model){
 
+        List<Place> places = placeRepository.findAll();
 
-    /*@RequestMapping("stationManagement")*/
+        List<String> placelist = new ArrayList<>();
+        for(Place place : places){
+            placelist.add(place.getName());
+        }
+
+        model.addAttribute("place", placelist);
+
+        return "dataStatistics";
+    }
 
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model){
 
-        List<Place> places = (List<Place>) placeRepository.findAll();
+        List<Place> places = placeRepository.findAll();
 
         List<String> placelist = new ArrayList<>();
-
         for(Place place : places){
             placelist.add(place.getName());
         }

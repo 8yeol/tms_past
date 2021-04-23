@@ -20,11 +20,11 @@
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
 <script src="static/js/datepicker.min.js"></script>
 <script src="static/js/datepicker.ko.js"></script>
-<script src="static/js/vue.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
-<script src="static/js/vue-apexcharts.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
 <script src="static/js/moment.min.js"></script>
+<%--공통코드--%>
+<script src="static/js/common/common.js"></script>
 
 <style>
     .search {
@@ -116,11 +116,7 @@
 
     <div class="row">
         <div class="col">
-
-
-
             <div class="row bg-white height">
-
                 <div class="row add-margin-top">
                     <div class="col add-margin">
                         <div class="float-start">
@@ -139,10 +135,10 @@
                         </div>
                     </div>
                 </div>
-                <div id="chart-line2" class="mt-3"></div>
+                <div id="chart-line2"></div>
                 <div id="chart-line"></div>
 
-                <hr class="mt-3 mb-3">
+                <hr class="mt-1 mb-1">
 
                 <div class="row">
                     <div class="col">
@@ -373,20 +369,6 @@
         search();
     }
 
-    function findSensorCategory(tableName){
-        if(tableName.includes('dust')==true){
-            return "먼지";
-        } else if(tableName.includes('NOx')==true){
-            return "질소산화물";
-        } else if(tableName.includes('CO')==true){
-            return "일산화탄소";
-        } else if(tableName.includes('HCL')==true){
-            return "염산";
-        } else if(tableName.includes('SOx')==true){
-            return "황산화물";
-        }
-    }
-
     function search(){
         const date_start =  $('#date_start').val();
         const date_end = $('#date_end').val();
@@ -529,19 +511,12 @@
     }
 
     function getDays(dayType){
-        let date = new Date();
-
         if(dayType == 'week'){
-            date = new Date(date.setDate(date.getDate()-7));
+            return moment(new Date()).subtract(7, 'd').format('YYYY-MM-DD');
         } else if(dayType == 'month'){
-            date = new Date(date.setMonth(date.getMonth()-1));
+            return moment(new Date()).subtract(1, 'M').format('YYYY-MM-DD');
         }
-
-        const year = date.getFullYear();
-        const month = ("0" + (1 + date.getMonth())).slice(-2);
-        const day = ("0" + date.getDate()).slice(-2);
-
-        return year + "-" + month + "-" + day;
+        return moment(new Date).format('YYYY-MM-DD');
     }
 
 </script>
