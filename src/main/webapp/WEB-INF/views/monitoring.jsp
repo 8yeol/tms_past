@@ -75,7 +75,7 @@
         <div class="col-md-4 p-3">
             <div class="row bg-light rounded">
                 <div class="col-xs-12">
-                    <h1 class="bg-secondary rounded mt-1">측정소3w</h1>
+                    <h1 class="bg-secondary rounded mt-1">측정소3</h1>
                 </div>
                 <div class="col-md-6">
                     리스트 들어올곳1
