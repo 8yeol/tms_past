@@ -9,6 +9,12 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <style>
 
@@ -48,8 +54,8 @@
                     <td>2021-04-22 00:00:00</td>
                     <td>2021-04-22 00:00:00</td>
                     <td>
-                        <button class="btn btn-success">승인</button>
-                        <button class="btn btn-danger">거절</button>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#okModal">승인</button>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#noModal">거절</button>
                     </td>
                 </tr>
                 <tr>
@@ -62,8 +68,8 @@
                     <td>2021-04-22 00:00:00</td>
                     <td>2021-04-22 00:00:00</td>
                     <td>
-                        <button class="btn btn-success">승인</button>
-                        <button class="btn btn-danger">거절</button>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#okModal">승인</button>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#noModal">거절</button>
                     </td>
                 </tr>
                 <tr>
@@ -76,8 +82,8 @@
                     <td>2021-04-22 00:00:00</td>
                     <td>2021-04-22 00:00:00</td>
                     <td>
-                        <button class="btn btn-success">승인</button>
-                        <button class="btn btn-danger">거절</button>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#okModal">승인</button>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#noModal">거절</button>
                     </td>
                 </tr>
                 <tr>
@@ -90,8 +96,8 @@
                     <td>2021-04-22 00:00:00</td>
                     <td>2021-04-22 00:00:00</td>
                     <td>
-                        <button class="btn btn-success">승인</button>
-                        <button class="btn btn-danger">거절</button>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#okModal">승인</button>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#noModal">거절</button>
                     </td>
                 </tr>
                 <tr>
@@ -104,8 +110,8 @@
                     <td>2021-04-22 00:00:00</td>
                     <td>2021-04-22 00:00:00</td>
                     <td>
-                        <button class="btn btn-success">승인</button>
-                        <button class="btn btn-danger">거절</button>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#okModal">승인</button>
+                        <button class="btn btn-danger" data-toggle="modal" data-target="#noModal">거절</button>
                     </td>
                 </tr>
                 </tbody>
@@ -140,8 +146,8 @@
                     <td>15</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -152,8 +158,8 @@
                     <td>50</td>
                     <td>일일유량x배출허용기준초과농도x10⁶x76%22.4</td>
                     <td>
-                        <i class="fas fa-edit me-2"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -164,8 +170,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶x46%22.4</td>
                     <td>
-                        <i class="fas fa-edit me-2"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -176,8 +182,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -188,8 +194,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -200,8 +206,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -212,8 +218,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -224,8 +230,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2"></i>
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
+                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
                     </td>
                 </tr>
                 </tbody>
@@ -233,13 +239,101 @@
             </table>
         </div>
     </div>
+</div>
 
+<!-- okModal -->
+<div class="modal" id="okModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">가입 승인</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <h3>@@@님 가입 승인하시겠습니까?</h3>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success me-5">승인</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- noModal -->
+<div class="modal" id="noModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">가입 거절</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <h3>@@@님 가입 거절하시겠습니까?</h3>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-danger me-5">거절</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- editModal -->
+<div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">센서 수정</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-evenly">
+                <div>
+                    <h4>코드</h4>
+                    <h4>항목명</h4>
+                    <h4>연간배출 허용기준</h4>
+                    <h4>배출허용 기준농도</h4>
+                    <h4>산출식</h4>
+                </div>
+                <div>
+                    <input type="text" class="text-secondary d-block mb-2">
+                    <input type="text" class="text-secondary d-block mb-2">
+                    <input type="text" class="text-secondary d-block mb-2">
+                    <input type="text" class="text-secondary d-block mb-2">
+                    <input type="text" class="text-secondary d-block ">
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success me-5">수정</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- deleteModal -->
+<div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">항목 삭제</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <h3>@@@ 정말 삭제하시겠습니까?</h3>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-danger me-5">삭제</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 </body>
 
-<script charset="UTF-8">
+<script>
+    $(function () {
+        $('.modal-dialog').draggable({handle: ".modal-header"});
+    });
 </script>
 
 

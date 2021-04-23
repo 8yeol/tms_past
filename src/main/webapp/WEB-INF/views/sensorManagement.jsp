@@ -242,7 +242,7 @@
 
 <!-- addModal -->
 <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
                 <h5 class="modal-title">센서 추가</h5>
@@ -265,8 +265,8 @@
                     <input type="text" class="text-secondary d-block ">
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success">추가</button>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success me-5">추가</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
             </div>
         </div>
@@ -275,10 +275,10 @@
 
 <!-- editModal -->
 <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">센서 수정</h5>
+                <h5 class="modal-title">@@@ 센서 수정</h5>
             </div>
             <div class="modal-body d-flex justify-content-evenly">
                 <div>
@@ -298,8 +298,8 @@
                     <input type="text" class="text-secondary d-block ">
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success">수정</button>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success me-5">수정</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
             </div>
         </div>
@@ -308,16 +308,16 @@
 
 <!-- checkModal -->
 <div class="modal" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
                 <h5 class="modal-title">센서 삭제</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
-                <h3>정말 삭제하시겠습니까?</h3>
+                <h3>@@@ 정말 삭제하시겠습니까?</h3>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger">삭제</button>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-danger me-5">삭제</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
             </div>
         </div>

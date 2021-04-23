@@ -151,7 +151,7 @@
                             <tr>
                                 <th>순번</th>
                                 <th>값</th>
-                                <th>상태</th>
+                                <th>모니터링</th>
                                 <th>시간</th>
                             </tr>
                             </thead>
@@ -180,10 +180,12 @@
         $("#date_end").val(getDays());
         placeChange();
         search();
-        addTable();
     });
 
     function addTable(){
+        $('#information').DataTable().clear();
+        $('#information').DataTable().destroy();
+
         $.ajax({
             url: '<%=cp%>/searchInformatin',
             type: 'POST',
@@ -198,14 +200,14 @@
             success : function(data) {
                 const tbody = document.getElementById('informationBody');
                 for(let i=0; i<data.length; i++){
-                    const row = tbody.insertRow( tbody.rows.length ); // 하단에 추가
+                    const row = tbody.insertRow( tbody.rows.length );
                     const cell1 = row.insertCell(0);
                     const cell2 = row.insertCell(1);
                     const cell3 = row.insertCell(2);
                     const cell4 = row.insertCell(3);
                     cell1.innerHTML = i+1;
                     cell2.innerHTML = data[i].value.toFixed(2);
-                    cell3.innerHTML = (data[i].status?"정상":"비정상");
+                    cell3.innerHTML = (data[i].status?"ON":"OFF");
                     cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
                 }
             },
@@ -213,10 +215,8 @@
                 console.log(error)
             }
         })
-    }
 
-    window.onload = function () {
-        const table = $('#information').dataTable({
+        $('#information').dataTable({
             dom: '<"toolbar">Bfrtip',
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'
@@ -525,7 +525,7 @@
                 console.log(error)
             }
         })
-
+        addTable();
     }
 
     function getDays(dayType){

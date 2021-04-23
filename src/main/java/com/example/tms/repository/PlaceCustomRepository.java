@@ -21,31 +21,4 @@ public class PlaceCustomRepository {
     }
 
 
-    public List<Place> getSensorNames(String place){
-        try {
-        log.info(place);
-            ProjectionOperation projectionOperation = Aggregation.project()
-                    .andInclude("name")
-                    .andInclude("group")
-                    .andInclude("power")
-                    .and("sensor").as("sensor");
-            log.info(projectionOperation);
-            /* match - gt:>, gte:>=, lt:<, lte:<=, ne:!*/
-            MatchOperation matchOperation = Aggregation.match(new Criteria().andOperator(Criteria.where("name")
-                    .is(place)
-            ));
-            /* fetch */
-            Aggregation aggregation = Aggregation.newAggregation(projectionOperation);
-
-            AggregationResults<Place> results = mongoTemplate.aggregate(aggregation, place, Place.class);
-            log.info(results);
-            List<Place> result = results.getMappedResults();
-            log.info(result);
-            return result;
-        }catch (Exception e){
-            log.info(e.getMessage());
-        }
-        return null;
-    }
-
 }
