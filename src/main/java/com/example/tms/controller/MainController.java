@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -159,7 +160,7 @@ public class MainController {
             // 모든 데이터 표시
             where = Aggregation.match(
                     new Criteria().andOperator(
-                            Criteria.where("x")
+                            Criteria.where("up_time")
                                     .gte(LocalDateTime.parse(date_start + "T00:00:00"))
                                     .lte(LocalDateTime.parse(date_end + "T23:59:59"))
                     )
@@ -170,7 +171,7 @@ public class MainController {
                     new Criteria().andOperator(
                             Criteria.where("status")
                                     .is(true)
-                                    .and("x")
+                                    .and("up_time")
                                     .gte(LocalDateTime.parse(date_start + "T00:00:00"))
                                     .lte(LocalDateTime.parse(date_end + "T23:59:59"))
                     )

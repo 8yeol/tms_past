@@ -1,18 +1,19 @@
 package com.example.tms.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Document(collection = "tmsWP0004_NOx_01")
 public class Sensor {
 
     @Id
     private ObjectId _id;
     private float value;
     private boolean status;
+    @JsonFormat(timezone = "Asia/Seoul")
     private Date up_time;
 
     @Override
