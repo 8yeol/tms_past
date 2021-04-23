@@ -1,9 +1,6 @@
 package com.example.tms.controller;
 
-import com.example.tms.entity.ChartData;
-import com.example.tms.entity.Place;
-import com.example.tms.entity.Sensor;
-import com.example.tms.entity.Sensor_Info;
+import com.example.tms.entity.*;
 import com.example.tms.repository.PlaceRepository;
 import com.example.tms.repository.Sensor_InfoRepository;
 import org.springframework.data.domain.Sort;
@@ -51,10 +48,7 @@ public class MainController {
         return "monitoring";
     }
 
-    @RequestMapping("/statistics")
-    public String statistics(){
-        return "statistics";
-    }
+
     @RequestMapping("/alarm")
     public String alarm(){
         return "alarm";
@@ -73,17 +67,27 @@ public class MainController {
         return "setting";
     }
 
+    @RequestMapping("/dataStatistics")
+    public String statistics(Model model){
 
+        List<Place> places = placeRepository.findAll();
 
-    /*@RequestMapping("stationManagement")*/
+        List<String> placelist = new ArrayList<>();
+        for(Place place : places){
+            placelist.add(place.getName());
+        }
+
+        model.addAttribute("place", placelist);
+
+        return "dataStatistics";
+    }
 
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model){
 
-        List<Place> places = (List<Place>) placeRepository.findAll();
+        List<Place> places = placeRepository.findAll();
 
         List<String> placelist = new ArrayList<>();
-
         for(Place place : places){
             placelist.add(place.getName());
         }
@@ -197,34 +201,21 @@ public class MainController {
 // 알림 설정페이지 (ppt-8페이지)
 // param # key : String place (place.name)
 // =====================================================================================================================
-    @RequestMapping(value = "/alarmManagement", method = RequestMethod.GET)
-    public String alarmManagement(@RequestParam("place") String name, Model model, HttpServletResponse response) throws IOException {
-        List<Place> places = placeRepository.findAll();
-        Place place = placeRepository.findByName(name);
-        System.out.println(place);
-        List<String> sensors = place.getSensor();
-        List sensorInfo = new ArrayList();
 
-        for(int i=0;i<sensors.size();i++){
-            sensorInfo.add(sensor_infoRepository.findByName(sensors.get(i)));
-            System.out.println("sensor"+i+", "+sensor_infoRepository.findByName(sensors.get(i)));
+    @RequestMapping(value = "/alarmManagement", method = RequestMethod.GET)
+    public String alarmManagement(Model model){
+        List<Place> places = placeRepository.findAll();
+
+        List<String> placelist = new ArrayList<>();
+
+        for(Place place : places){
+            placelist.add(place.getName());
         }
-        model.addAttribute("sensorInfo",sensorInfo);
-        model.addAttribute("station", places);
+
+        model.addAttribute("place", placelist);
 
         return "alarmManagement";
     }
-//    @RequestMapping(value = "/getSensorInfo", method = RequestMethod.POST)
-//    public String getSensorInfo(String name, Model model){
-//        Place place = placeRepository.findByName(name);
-//        System.out.println("111111111111");
-//        System.out.println(place);
-//        List<String> sensorList = place.getSensor();
-//        for(int i=1;i<sensorList.size();i++){
-//            model.addAttribute("sensorInfo"+i, sensor_infoRepository.findByName(sensorList.get(i)));
-//        }
-//        return "alarmManagement";
-//    }
 
 // =====================================================================================================================
 // 측정소 관리페이지 (ppt-9페이지)

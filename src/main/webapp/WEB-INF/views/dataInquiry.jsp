@@ -20,11 +20,11 @@
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
 <script src="static/js/datepicker.min.js"></script>
 <script src="static/js/datepicker.ko.js"></script>
-<script src="static/js/vue.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
-<script src="static/js/vue-apexcharts.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
 <script src="static/js/moment.min.js"></script>
+<%--공통코드--%>
+<script src="static/js/common/common.js"></script>
 
 <style>
     .search {
@@ -50,7 +50,8 @@
         margin-left: 28px;
     }
     .down {
-        margin-top: -25px;
+        position: relative;
+        top:-663px;
     }
     .add-bg-color {
         background-color: #97bef8;
@@ -60,7 +61,11 @@
         height: 1085px;
     }
     .add-margin-top {
-        margin-top: 5px;
+        margin-top: 10px;
+    }
+    .sizing {
+        width: 1100px;
+        height: 638px;
     }
 </style>
 
@@ -69,7 +74,7 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <div class="container">
-    <div class="ms-3 mt-4 add-bg">
+    <div class="ms-3 mt-3 add-bg">
         <div class="col-3 picker">
             <span class="fs-5 fw-bold add-margin">측정소</span>
             <div class="btn-group w-50 ms-3">
@@ -112,15 +117,11 @@
         </div>
     </div>
 
-    <hr>
+    <hr class="mt-2 mb-2">
 
     <div class="row">
         <div class="col">
-
-
-
-            <div class="row bg-white height">
-
+            <div class="row bg-white sizing">
                 <div class="row add-margin-top">
                     <div class="col add-margin">
                         <div class="float-start">
@@ -139,20 +140,29 @@
                         </div>
                     </div>
                 </div>
-                <div id="chart-line2" class="mt-3"></div>
+                <div id="chart-line2"></div>
                 <div id="chart-line"></div>
+            </div>
+        </div>
 
-                <hr class="mt-3 mb-3">
+    </div>
 
-                <div class="row">
+    <div class="row">
+        <div class="col">
+            <div class="row bg-white">
+
+<%--                <hr class="mt-1 mb-1">--%>
+
+                <div class="row ms-2">
                     <div class="col">
                         <table id="information" class="table table-striped table-bordered table-hover text-center" >
                             <thead class="add-bg-color">
                             <tr>
-                                <th>순번</th>
-                                <th>값</th>
-                                <th>모니터링</th>
-                                <th>시간</th>
+                                <th width="10%">순번</th>
+                                <th width="20%">측정 값</th>
+                                <th width="20%">관리등급</th>
+                                <th width="20%">모니터링</th>
+                                <th width="30%">시간</th>
                             </tr>
                             </thead>
                             <tbody id="informationBody">
@@ -205,10 +215,21 @@
                     const cell2 = row.insertCell(1);
                     const cell3 = row.insertCell(2);
                     const cell4 = row.insertCell(3);
+                    const cell5 = row.insertCell(4);
                     cell1.innerHTML = i+1;
                     cell2.innerHTML = data[i].value.toFixed(2);
-                    cell3.innerHTML = (data[i].status?"ON":"OFF");
-                    cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
+
+                    // 정상, 위험, 경고 값 관리해주는 테이블 만들어서 테이블에서 값 읽어와서 계산하는걸로 수정
+                    let grade = '정상';
+                    if(data[i].value>=18){
+                        grade = '<div class="text-warning">경고</div>';
+                    } else if(data[i].value>=15){
+                        grade = '<div class="text-danger">위험</div>';
+                    }
+
+                    cell3.innerHTML = grade;
+                    cell4.innerHTML = (data[i].status?"ON":"OFF");
+                    cell5.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
                 }
             },
             error : function(request, status, error) {
@@ -373,20 +394,6 @@
         search();
     }
 
-    function findSensorCategory(tableName){
-        if(tableName.includes('dust')==true){
-            return "먼지";
-        } else if(tableName.includes('NOx')==true){
-            return "질소산화물";
-        } else if(tableName.includes('CO')==true){
-            return "일산화탄소";
-        } else if(tableName.includes('HCL')==true){
-            return "염산";
-        } else if(tableName.includes('SOx')==true){
-            return "황산화물";
-        }
-    }
-
     function search(){
         const date_start =  $('#date_start').val();
         const date_end = $('#date_end').val();
@@ -403,7 +410,6 @@
                 title: '경고',
                 text: '검색 날짜를 입력해주세요.'
             })
-            return false;
         }
 
         $('#chart-line2').empty();
@@ -421,6 +427,15 @@
                 "off":off,
             },
             success : function(data) {
+                if(data.length==0){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '검색 결과가 없습니다.'
+                    })
+                    return false;
+                }
+
                 const options = {
                     series: [{
                         name:category,
@@ -529,19 +544,12 @@
     }
 
     function getDays(dayType){
-        let date = new Date();
-
         if(dayType == 'week'){
-            date = new Date(date.setDate(date.getDate()-7));
+            return moment(new Date()).subtract(7, 'd').format('YYYY-MM-DD');
         } else if(dayType == 'month'){
-            date = new Date(date.setMonth(date.getMonth()-1));
+            return moment(new Date()).subtract(1, 'M').format('YYYY-MM-DD');
         }
-
-        const year = date.getFullYear();
-        const month = ("0" + (1 + date.getMonth())).slice(-2);
-        const day = ("0" + date.getDate()).slice(-2);
-
-        return year + "-" + month + "-" + day;
+        return moment(new Date).format('YYYY-MM-DD');
     }
 
 </script>
