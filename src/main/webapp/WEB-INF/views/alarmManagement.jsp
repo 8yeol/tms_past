@@ -194,20 +194,27 @@
      }
 
  });
+
  $('#bOn').click(function () {
-     if($('#chk_all').is(":checked")){
-         $(".slider").prop("checked",true);
-     }else if($('.form-check-input').each(function () {
+     var num = $(".switch").size();
 
-         if($(this).is(":checked")){
-            $().prop("checked",true);
+     for (var i = 0; i <num; i++) {
+         if($('#chk'+i).is(":checked")){
+             $('#slider'+i).prop("checked", true);
          }
-
-     })){
-
-     }
-
+     };
  });
+
+ $('#bOff').click(function () {
+     var num = $(".switch").size();
+
+     for (var i = 0; i <num; i++) {
+         if($('#chk'+i).is(":checked")){
+             $('#slider'+i).prop("checked", false);
+         }
+     };
+ });
+
 /*    $('#placeName').click(function(){
      //const placeName = $('#placeName').val();
      var placeName = $(this).text();

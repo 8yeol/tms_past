@@ -36,8 +36,6 @@
 
 <div class="container">
 
-
-
     <div class="d-flex justify-content-end m-2">
 
         <h4 class="my-3 me-4">알림시간</h4>
@@ -67,80 +65,100 @@
                 <h2>알림 목록</h2>
 
                 <div class="bg-light p-1">
-                    <input type="checkbox" class="check-box p-5">
-                    전체선택
-                    <button class="btn btn-primary px-3">ON</button>
-                    <button class="btn btn-primary">OFF</button>
+                    <label class="label me-1">센서목록</label>
+                    <input type="checkbox" class="check-box position-relative me-2" style="zoom: 1.5; top:3px;" id="chkAll">
+                    <label class="label me-1">전체선택</label>
+                    <button class="btn btn-primary px-3" id="bOn">ON</button>
+                    <button class="btn btn-primary" id="bOff">OFF</button>
                 </div>
             </div>
 
-            <div class="border border-dark-1 bg-light">
-                <table class="table">
+            <div class="border border-dark-1 bg-light d-flex justify-content-between">
+                <table class="table border border-end-1 w-50">
                     <tbody>
                     <tr>
                         <td><input type="checkbox" class="checkBox"></td>
                         <td class="fs-5">먼지</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
-                        <td><input type="checkbox" class="checkBox"></td>
-                        <td class="fs-5">온도</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
+                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" class="checkBox"></td>
                         <td class="fs-5">질소산화물</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
-                        <td><input type="checkbox" class="checkBox"></td>
-                        <td class="fs-5">온도</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
+                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" class="checkBox"></td>
                         <td class="fs-5">염화수소</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
-                        <td><input type="checkbox" class="checkBox"></td>
-                        <td class="fs-5">노내온도1</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
+                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" class="checkBox"></td>
                         <td class="fs-5">불화수소</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
-                        <td><input type="checkbox" class="checkBox"></td>
-                        <td class="fs-5">노내온도2</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
+                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" class="checkBox"></td>
                         <td class="fs-5">암모니아</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
-                        <td><input type="checkbox" class="checkBox"></td>
-                        <td class="fs-5">노내온도3</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
+                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" class="checkBox"></td>
                         <td class="fs-5">일산화탄소</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
-                        <td><input type="checkbox" class="checkBox"></td>
-                        <td class="fs-5">노내온도4</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
+                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" class="checkBox"></td>
                         <td class="fs-5">산소</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
-                        <td><input type="checkbox" class="checkBox"></td>
-                        <td class="fs-5">온도</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
+                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" class="checkBox"></td>
                         <td class="fs-5">아황산가스</td>
-                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input" type="checkbox"></div></td>
-                        <td></td><td></td><td></td>
+                        <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
                     </tr>
                     </tbody>
                 </table>
+
+                    <table class="table w-50">
+                        <tbody>
+                        <tr>
+                            <td><input type="checkbox" class="checkBox"></td>
+                            <td class="fs-5">온도</td>
+                            <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="checkBox"></td>
+                            <td class="fs-5">온도</td>
+                            <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="checkBox"></td>
+                            <td class="fs-5">노내온도1</td>
+                            <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="checkBox"></td>
+                            <td class="fs-5">노내온도2</td>
+                            <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="checkBox"></td>
+                            <td class="fs-5">노내온도3</td>
+                            <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="checkBox"></td>
+                            <td class="fs-5">노내온도4</td>
+                            <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" class="checkBox"></td>
+                            <td class="fs-5">온도</td>
+                            <td><div class="form-check form-switch fs-4"> <input class="form-check-input alarmSlide" type="checkbox"></div></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
             </div>
         </div>
     </div>
@@ -211,6 +229,29 @@
 
 
 <script charset="UTF-8">
+
+    //체크박스 전체 선택, 해제
+    $('#chkAll').click(function () {
+        if($('#chkAll').is(":checked")){
+            $(".checkBox").prop("checked", true);
+        }
+        else{
+            $(".checkBox").prop("checked", false);
+        }
+
+    });
+
+    $('#bOn').click(function () {
+        if( $(".checkBox").is(":checked")){
+            $(".alarmSlide").prop("checked", true);
+        }
+    });
+
+    $('#bOff').click(function () {
+        if( $(".checkBox").is(":checked")){
+            $(".alarmSlide").prop("checked", false);
+        }
+    });
 </script>
 
 
