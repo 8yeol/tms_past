@@ -50,7 +50,8 @@
         margin-left: 28px;
     }
     .down {
-        margin-top: -25px;
+        position: relative;
+        top:-663px;
     }
     .add-bg-color {
         background-color: #97bef8;
@@ -60,7 +61,11 @@
         height: 1085px;
     }
     .add-margin-top {
-        margin-top: 5px;
+        margin-top: 10px;
+    }
+    .sizing {
+        width: 1100px;
+        height: 638px;
     }
 </style>
 
@@ -116,7 +121,7 @@
 
     <div class="row">
         <div class="col">
-            <div class="row bg-white height">
+            <div class="row bg-white sizing">
                 <div class="row add-margin-top">
                     <div class="col add-margin">
                         <div class="float-start">
@@ -137,8 +142,16 @@
                 </div>
                 <div id="chart-line2"></div>
                 <div id="chart-line"></div>
+            </div>
+        </div>
 
-                <hr class="mt-1 mb-1">
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="row bg-white">
+
+<%--                <hr class="mt-1 mb-1">--%>
 
                 <div class="row">
                     <div class="col">
