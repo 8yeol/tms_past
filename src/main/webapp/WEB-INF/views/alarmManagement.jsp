@@ -19,7 +19,8 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css" />
-
+<%--공통코드--%>
+<script src="static/js/common/common.js"></script>
 <style>
     /* The switch - the box around the slider */
     .switch {
@@ -31,9 +32,7 @@
 
     /* Hide default HTML checkbox */
     .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
+        display: none;
     }
 
     /* The slider */
@@ -76,6 +75,7 @@
     }
 
     /* Rounded sliders */
+
     .slider.round {
         border-radius: 34px;
     }
@@ -106,8 +106,8 @@
             <span style="margin-right: 18%;">End Time</span></div>
 
         <div class="a1"><span style="font-weight: bold; margin-top: 7px; margin-right: 10px;  font-size: 18px;">알림 시간</span>
-            <input type="text" id="stime" name="stime" class="timepicker" placeholder="00:00 AM">&nbsp;&nbsp;&nbsp;
-            <input type="text" name="etime" id="etime" class="timepicker" placeholder="00:00 AM">
+            <input type="text" id="stime" name="start" class="timepicker" placeholder="00:00 AM">&nbsp;&nbsp;&nbsp;
+            <input type="text" id="etime" name="end"  class="timepicker" placeholder="00:00 AM">
             <button type="button" class="btn btn-primary ms-3" onClick="insert()">설정</button>
         </div>
 
@@ -116,16 +116,13 @@
     <div class="row p-3 bg-light rounded" style="height: 70%">
         <div class="col-3 border-end" style="width: 25%; background: lightgray;">
             <div class="text-center" style="margin-top: 50px;">
-                <table style="width: 100%;">
-                    <form>
-                        <c:forEach var="station" items="${station}" varStatus="status">
 
-                        <tr style="border-bottom: 2px solid black;">
-                            <td id="station${status.index}"style="font-size: 35px; font-weight: bold; padding-bottom: 10px; padding-left: 50px;"><c:out value="${station.name}"/></td>
-                        </tr>
-                        </c:forEach>
-                    </form>
-                </table>
+                <c:forEach var="place" items="${place}" varStatus="status">
+                    <div name="place" id="${place}" onclick="placeChange('${place}')">
+                    ${place}
+                    </div>
+                </c:forEach>
+
             </div>
         </div>
         <div class="col-3" style="width: 75%;">
@@ -135,28 +132,10 @@
             <input id="bOn" type="button" value="ON">
             <input id="bOff" type="button" value="OFF">
             <div class="text-center">
-                <table style="width: 100%;">
+                <div class="border p-2 bg-white h-75" id="items">
+                    <%-- script --%>
+                </div>
 
-                    <c:forEach items="${sensorInfo}" varStatus="status">
-                        <c:set var="sIndex" value="${status.index}"/>
-
-                        <c:if test = "${sensorInfo[sIndex].naming ne null}">
-                            <tr style="border-bottom: 2px solid darkgray;">
-                            <td style="width: 10px; padding: 0px"><input id="chk${sIndex}" class="form-check-input" type = checkbox style="width: 20px; height: 20px; margin: 0px 10px"></td>
-                            <td style="font-size: 25px; font-weight: bold; padding-bottom: 10px; padding-top: 10px; padding-left: 10px;"><c:out value="${sensorInfo[sIndex].naming}"/></td>
-                            <td>
-                                <label class="switch">
-                                    <input id="slider${sIndex}" class="slider" type="checkbox">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                            </tr>
-                        </c:if>
-
-                    </c:forEach>
-
-
-                </table>
             </div>
         </div>
     </div>
@@ -164,6 +143,10 @@
     <h6>* 웹 페이지 또는 다운받은 앱에서 알림을 받을 측정항목을 선택해주세요. [측정소 관리]에서 설정된 항목의 기준 값 미달 혹은 초과하는 경우 알림이 발생합니다.</h6>
 </div>
 <script>
+
+    $( document ).ready(function() {
+        //placeChange();
+    });
  //시작시간 설정
  $('#stime').timepicker({
         timeFormat:'h:i A',
@@ -174,7 +157,7 @@
         'dropdown':false
     }) //stime 시작 기본 설정
         .on('changeTime',function() {                           //stime 을 선택한 후 동작
-            var from_time = $("input[name='stime']").val(); //stime 값을 변수에 저장
+            var from_time = $("input[name='start']").val(); //stime 값을 변수에 저장
             $('#etime').timepicker('option','minTime', from_time);//etime의 mintime 지정
             if ($('#etime').val() && $('#etime').val() < from_time) {
                 $('#etime').timepicker('setTime', from_time);
@@ -192,49 +175,68 @@
      else{
          $(".form-check-input").prop("checked", false);
      }
-
  });
+//측정소 변경
+ function placeChange(name){
+     const place = name;
 
- $('#bOn').click(function () {
-     var num = $(".switch").size();
-
-     for (var i = 0; i <num; i++) {
-         if($('#chk'+i).is(":checked")){
-             $('#slider'+i).prop("checked", true);
-         }
-     };
- });
-
- $('#bOff').click(function () {
-     var num = $(".switch").size();
-
-     for (var i = 0; i <num; i++) {
-         if($('#chk'+i).is(":checked")){
-             $('#slider'+i).prop("checked", false);
-         }
-     };
- });
-
-/*    $('#placeName').click(function(){
-     //const placeName = $('#placeName').val();
-     var placeName = $(this).text();
-     // $(this).val();
+     $("#items").empty();
 
      $.ajax({
-         url: '<%=cp%>/getSensorInfo',
+         url: '<%=cp%>/getPlaceSensor',
          type: 'POST',
-         dataType: 'text',
+         dataType: 'json',
          async: false,
          cache: false,
-         data: {"name":placeName},
-         success : function(data) { // 결과 성공 콜백함수
-             console.log(data);
+         data: {"name":place},
+         success : function(data) {
+             for(let i=0;i<data.length;i++){
+                 const tableName = data[i];
+                 const category = findSensorCategory(tableName);
+                 const status = findSensorAlarm(tableName);
+
+                 const innerHtml = "<div class='form-check mb-2'>" +
+                     "<input class='form-check-input' type='checkbox' name='item' id='"+tableName+"' value='"+tableName+"' >" +
+                     "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
+                     "<label class='switch'>"+
+                     "<input id='slider"+i+"'type='checkbox' name='status'>"+
+                     "<div class='slider round'></div>"+
+                     "</label>"+
+                     "</div>"
+
+                 const elem = document.createElement('div');
+                 elem.innerHTML = innerHtml
+                 document.getElementById('items').append(elem);
+                 //Off 버튼 클릭
+                 $('#bOff').click(function () {
+                     var num = $(".switch").size();
+                     for (var i = 0; i <num; i++) {
+                         if($('#'+data[i]).is(":checked")){
+                             $('#slider'+i).prop("checked", false);
+
+                         }
+                     };
+                 });
+                 //On 버튼 클릭
+                 $('#bOn').click(function () {
+                     var num = $(".switch").size();
+                     for (var i = 0; i <num; i++) {
+                         if($('#'+data[i]).is(":checked")){
+                             $('#slider'+i).prop("checked", true);
+                         }
+                     };
+                 });
+             }
+
          },
          error : function(request, status, error) { // 결과 에러 콜백함수
              console.log(error)
          }
      })
+ }
 
- });*/
+function insert() {
+
+}
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
