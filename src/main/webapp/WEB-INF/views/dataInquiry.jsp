@@ -57,7 +57,7 @@
         color: #fff;
     }
     .height {
-        height: 1130px;
+        height: 1085px;
     }
     .add-margin-top {
         margin-top: 5px;
