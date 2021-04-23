@@ -50,11 +50,17 @@
         margin-left: 28px;
     }
     .down {
-        margin-top: 14px;
+        margin-top: -25px;
     }
     .add-bg-color {
         background-color: #97bef8;
         color: #fff;
+    }
+    .height {
+        height: 1130px;
+    }
+    .add-margin-top {
+        margin-top: 5px;
     }
 </style>
 
@@ -111,27 +117,28 @@
     <div class="row">
         <div class="col">
 
-            <div class="row">
-                <div class="col">
-                    <div class="float-start">
-                        <div class="fs-5 fw-bold mb-2" id="title"> </div>
-                    </div>
-                </div>
 
-                <div class="col">
-                    <div class="float-end">
-                        <div class="form-check pt-2">
-                            <input class="form-check-input" type="checkbox" value="" id="off">
-                            <label class="form-check-label fw-bold small" for="off">
-                                Off 데이터 표시
-                            </label>
+
+            <div class="row bg-white height">
+
+                <div class="row add-margin-top">
+                    <div class="col add-margin">
+                        <div class="float-start">
+                            <div class="fs-5 fw-bold mb-2" id="title"> </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="float-end">
+                            <div class="form-check pt-2">
+                                <input class="form-check-input" type="checkbox" value="" id="off">
+                                <label class="form-check-label fw-bold small" for="off">
+                                    Off 데이터 표시
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row bg-white">
-
                 <div id="chart-line2" class="mt-3"></div>
                 <div id="chart-line"></div>
 
