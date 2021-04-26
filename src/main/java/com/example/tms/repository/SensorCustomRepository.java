@@ -115,21 +115,26 @@ public class SensorCustomRepository {
     }
 
     public Sensor getSensorRecent(String sensor){
-        ProjectionOperation projectionOperation = Aggregation.project()
-                .andInclude("value")
-                .andInclude("status")
-                .andInclude("up_time");
-        /* sort */
-        SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
-        /* limit */
-        LimitOperation limitOperation = Aggregation.limit(1);
-        /* fetch */
-        Aggregation aggregation = Aggregation.newAggregation(projectionOperation, sortOperation, limitOperation);
+        try{
+            ProjectionOperation projectionOperation = Aggregation.project()
+                    .andInclude("value")
+                    .andInclude("status")
+                    .andInclude("up_time");
+            /* sort */
+            SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
+            /* limit */
+            LimitOperation limitOperation = Aggregation.limit(1);
+            /* fetch */
+            Aggregation aggregation = Aggregation.newAggregation(projectionOperation, sortOperation, limitOperation);
 
-        AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
-        List<Sensor> result = results.getMappedResults();
-        return result.get(0);
-
+            AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
+            List<Sensor> result = results.getMappedResults();
+            return result.get(0); //-> Json -> sensor 타입으로 변경 필요
+        }catch (Exception e){
+            log.info("getSensorRecent error");
+            log.info(e.getMessage());
+        }
+        return null;
     }
 
 
