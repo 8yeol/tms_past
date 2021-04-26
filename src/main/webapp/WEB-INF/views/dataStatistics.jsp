@@ -47,10 +47,6 @@
     .table-height {
         height: 290px;
     }
-
-    #information {
-        margin-top: 35px;
-    }
 </style>
 
 <div class="container">
@@ -94,6 +90,7 @@
 
     <div class="row bg-white table-height">
         <span class="fs-5 fw-bold add-margin title-span"><span class="placeAndItem"></span>월별 배출량 통계 </span>
+        <span class="small fw-bold text-end mt-4"> * 소수점은 반올림되어 계산됩니다. <br>[단위 : kg]</span>
         <div class="col p-3">
             <table id="information" class="table table-bordered table-hover text-center" >
                 <thead class="add-bg-color">
@@ -114,57 +111,11 @@
                     <th>합계</th>
                 </tr>
                 </thead>
-                <tbody id="informationBody">
-                    <tr>
-                        <td>2020</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                    </tr>
-                    <tr>
-                        <td>2020</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                <tbody>
+                    <%--script--%>
                 </tbody>
                 <tfoot>
-                <tr>
-                    <td>증감률</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td>11</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                    <%--script--%>
                 </tfoot>
             </table>
         </div>
@@ -208,9 +159,7 @@
     function itemChange(){
         //const place = $("#place").val();
         const item = $("#items").val();
-
         //$(".placeAndItem").text("["+place + " - " + findSensorCategory(item) +"] ");
-
         const thisYear = new Date().getFullYear();
         const previousYear = thisYear-1;
 
@@ -304,7 +253,67 @@
     }
 
     function addTable(previousYear, thisYear, previousYearData, thisYearData){
-        console.log('addTable');
+        $('#information > tbody').empty();
+        let thisYearSum = 0 , previousYearSum = 0 ;
+
+        // 전년도
+        let innerHtml = "";
+        innerHtml += '<tr>'
+        innerHtml += '<td>' + previousYear+ '</td>';
+        for(let i = 0 ;i <previousYearData.length;i++){
+            let data = previousYearData[i]!=null?Math.round(previousYearData[i]):0;
+            innerHtml += '<td>' + numberWithCommas(data) + '</td>';
+            previousYearSum = previousYearSum + data;
+        }
+        innerHtml += '<td>' + numberWithCommas(previousYearSum) + '</td>';
+
+        //올해
+        innerHtml += '</tr>';
+        innerHtml += '<tr>'
+        innerHtml += '<td>' + thisYear+ '</td>';
+        for(let i = 0 ;i <thisYearData.length;i++){
+            let data = thisYearData[i]!=null?Math.round(thisYearData[i]):0;
+            innerHtml += '<td>' + numberWithCommas(data) + '</td>';
+            thisYearSum = thisYearSum + data;
+        }
+        innerHtml += '<td>' + numberWithCommas(thisYearSum) + '</td>';
+        innerHtml += '</tr>';
+
+        $('#information > tbody:last').append(innerHtml);
+
+        // 증감률 계산
+        $('#information > tfoot').empty();
+        innerHtml = "";
+        innerHtml += '<tr>'
+        innerHtml += '<td>증감률</td>';
+        for(let i = 0 ;i <thisYearData.length;i++){
+            if(previousYearData[i] != null || thisYearData[i] == null){
+                let data = (Math.ceil(((thisYearData[i] - previousYearData[i])/previousYearData[i]))*100).toFixed(2)
+                if(isNaN(data)){
+                    data = 0 ;
+                }
+                innerHtml += '<td>' + data + ' %</td>'
+            } else{
+                innerHtml += '<td> 100 % </td>';
+            }
+        }
+
+        // 합계 증감률 계산
+        console.log(previousYearSum);
+        console.log(thisYearSum);
+
+        if( previousYearSum != 0 || thisYearSum == 0){
+            let data = (Math.ceil(((thisYearSum - previousYearSum)/previousYearSum))*100).toFixed(2);
+            if(isNaN(data)){
+                data = 0 ;
+            }
+            innerHtml += '<td>' + data + ' % </td>';
+        }else{
+            innerHtml += '<td> 100 % </td>';
+        }
+
+        innerHtml += '</tr>';
+        $('#information > tfoot:last').append(innerHtml);
     }
 </script>
 
