@@ -3,6 +3,7 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.repository.MemberRepository;
 import com.example.tms.repository.PlaceRepository;
+import com.example.tms.repository.Sensor_AlarmRepository;
 import com.example.tms.repository.Sensor_InfoRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -20,6 +22,7 @@ import java.util.*;
 
 @Controller
 public class MainController {
+
     final PlaceRepository placeRepository;
 
     final Sensor_InfoRepository sensor_infoRepository;
@@ -28,11 +31,14 @@ public class MainController {
 
     final MemberRepository memberRepository;
 
-    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate, MemberRepository memberRepository, MemberRepository memberRepository1) {
+    final Sensor_AlarmRepository sensor_alarmRepository;
+
+    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate, Sensor_AlarmRepository sensor_alarmRepository, MemberRepository memberRepository) {
         this.placeRepository = placeRepository;
         this.sensor_infoRepository = sensor_infoRepository;
         this.mongoTemplate = mongoTemplate;
-        this.memberRepository = memberRepository1;
+        this.memberRepository = memberRepository;
+        this.sensor_alarmRepository = sensor_alarmRepository;
     }
 
     @RequestMapping("/")
@@ -307,6 +313,25 @@ public class MainController {
         model.addAttribute("place", placelist);
 
         return "alarmManagement";
+    }
+    //알림 설정값 저장
+    @RequestMapping("/saveAlarm")
+    public void saveAlarm(String item, String stime, String etime, String status) {
+
+        Date up_time = new Date();
+
+        boolean status1 = Boolean.parseBoolean(status);
+        Sensor_Alarm info = sensor_alarmRepository.findByName(item);
+
+        Sensor_Alarm entity = new Sensor_Alarm(item, stime, etime, status1, up_time);
+        try{
+            entity.set_id(info.get_id());
+            sensor_alarmRepository.save(entity);
+
+        } catch (NullPointerException e){
+            sensor_alarmRepository.save(entity);
+        }
+
     }
 
 // =====================================================================================================================
