@@ -11,7 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -26,10 +29,13 @@ public class MainController {
 
     final MongoTemplate mongoTemplate;
 
-    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate) {
+    final MemberRepository memberRepository;
+
+    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate, MemberRepository memberRepository) {
         this.placeRepository = placeRepository;
         this.sensor_infoRepository = sensor_infoRepository;
         this.mongoTemplate = mongoTemplate;
+        this.memberRepository = memberRepository;
     }
 
     @RequestMapping("/")
@@ -57,7 +63,9 @@ public class MainController {
     }
 
     @RequestMapping("/setting")
-    public String setting(){
+    public String setting(Model model){
+        List<Member> members = memberRepository.findByState("0");
+        model.addAttribute("members" , members);
         return "setting";
     }
 
@@ -75,6 +83,40 @@ public class MainController {
 
         return "dataStatistics";
     }
+
+    @RequestMapping(value = "/memberJoin", method = RequestMethod.GET)
+    public String memberJoinGet(){
+        return "memberJoin";
+    }
+
+    @RequestMapping(value = "/memberJoin", method = RequestMethod.POST)
+    @ResponseBody
+    public void memberJoinPost(@RequestBody Member member,HttpServletResponse response) throws Exception {
+        PrintWriter out = response.getWriter();
+        if(member == null)
+        if (!memberRepository.existsById(member.getId())) {
+            memberRepository.save(member);
+            out.print("true");
+        }else{
+            out.print("false");
+        }
+    }           // memberJoinPost
+
+    @RequestMapping(value = "/signUpOk", method = RequestMethod.POST)
+    @ResponseBody
+    public void memberSignUpOk(@RequestBody Member member){
+        Member newMember = memberRepository.findById(member.getId());
+        newMember.setState("1");  //0: 대기, 1: 승인 , 2: 거절
+        memberRepository.save(newMember);
+    }           // memberSignUpOk
+
+    @RequestMapping(value = "/signUpNo", method = RequestMethod.POST)
+    @ResponseBody
+    public void memberSignUpNo(@RequestBody Member member){
+        Member newMember = memberRepository.findById(member.getId());
+        newMember.setState("2");  //0: 대기, 1: 승인 , 2: 거절
+        memberRepository.save(newMember);
+    }           // memberSignUpNo
 
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model){
@@ -193,67 +235,40 @@ public class MainController {
 
     @RequestMapping(value = "/addStatisticsData", method = RequestMethod.POST)
     @ResponseBody
-    public List addStatisticsData(int year, String item){
-        int[] months = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        List data = new ArrayList();
+    public List<Map> addStatisticsData(String place, String item){
+        ProjectionOperation dateProjection = Aggregation.project()
+                .and("up_time").as("up_time")
+                .and("value").as("value")
+                .and("status").as("status");
 
-        for(int i = 0 ; i <months.length; i++){
-            Map<String, String> map = getLastDay(year,months[i]);
-            String from = map.get("from");
-            String to = map.get("to");
-            ProjectionOperation dateProjection = Aggregation.project()
-                    .and("up_time").as("up_time")
-                    .and("value").as("value")
-                    .and("status").as("status");
-
-            MatchOperation where = Aggregation.match(
+        MatchOperation where = Aggregation.match(
                     new Criteria().andOperator(
                             Criteria.where("up_time")
-                                    .gte(LocalDateTime.parse( from + "T00:00:00"))
-                                    .lte(LocalDateTime.parse( to + "T23:59:59"))
+                                    .gte(LocalDateTime.parse("2021-04-01" + "T00:00:00"))
+                                    .lte(LocalDateTime.parse("2021-04-30" + "T23:59:59"))
                     )
             );
 
-            GroupOperation groupBy = Aggregation.group().sum("value").as("sum_value");
+        GroupOperation groupBy = Aggregation.group().sum("value").as("april");
 
-            Aggregation agg = Aggregation.newAggregation(
-                    dateProjection,
-                    where,
-                    groupBy
-            );
+        Aggregation agg = Aggregation.newAggregation(
+                dateProjection,
+                where,
+                groupBy
+        );
 
-            AggregationResults<Map> results = mongoTemplate.aggregate(agg, item, Map.class);
-            List<Map> result = results.getMappedResults();
-            if( result.size() != 0){
-                data.add(result.get(0).get("sum_value"));
-            } else{
-                data.add(null);
-            }
-        }
+        AggregationResults<Map> results = mongoTemplate.aggregate(agg, item, Map.class);
 
-        return data;
-    }
+        List<Map> result = results.getMappedResults();
 
-    public Map<String, String> getLastDay(int year, int month) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Map<String, String> dayList = new HashMap<>();
-
-        Calendar from = Calendar.getInstance();
-        Calendar to = Calendar.getInstance();
-        from.set(year,  month-1, 1); //월은 -1해줘야 해당월로 인식
-
-        to.set(from.get(Calendar.YEAR), from.get(Calendar.MONTH), from.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-        dayList.put("from", dateFormat.format(from.getTime()));
-        dayList.put("to", dateFormat.format(to.getTime()));
-
-        return dayList;
+        return result;
     }
 
 // =====================================================================================================================
 // 알림 설정페이지 (ppt-8페이지)
 // param # key : String place (place.name)
 // =====================================================================================================================
+
     @RequestMapping(value = "/alarmManagement", method = RequestMethod.GET)
     public String alarmManagement(Model model){
         List<Place> places = placeRepository.findAll();
