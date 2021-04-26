@@ -131,8 +131,7 @@ public class SensorCustomRepository {
             List<Sensor> result = results.getMappedResults();
             return result.get(0); //-> Json -> sensor 타입으로 변경 필요
         }catch (Exception e){
-            log.info("getSensorRecent error");
-            log.info(e.getMessage());
+            log.info("getSensorRecent error" + e.getMessage());
         }
         return null;
     }
