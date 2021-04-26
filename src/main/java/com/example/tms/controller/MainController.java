@@ -1,5 +1,10 @@
 package com.example.tms.controller;
 
+import com.example.tms.entity.ChartData;
+import com.example.tms.entity.Member;
+import com.example.tms.entity.Place;
+import com.example.tms.entity.Sensor;
+import com.example.tms.repository.MemberRepository;
 import com.example.tms.entity.*;
 import com.example.tms.repository.PlaceRepository;
 import com.example.tms.repository.Sensor_InfoRepository;
@@ -12,9 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -29,10 +32,13 @@ public class MainController {
 
     final MongoTemplate mongoTemplate;
 
-    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate) {
+    final MemberRepository memberRepository;
+
+    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate, MemberRepository memberRepository) {
         this.placeRepository = placeRepository;
         this.sensor_infoRepository = sensor_infoRepository;
         this.mongoTemplate = mongoTemplate;
+        this.memberRepository = memberRepository;
     }
 
     @RequestMapping("/")
@@ -60,7 +66,9 @@ public class MainController {
     }
 
     @RequestMapping("/setting")
-    public String setting(){
+    public String setting(Model model){
+        List<Member> members = memberRepository.findByState("0");
+        model.addAttribute("members" , members);
         return "setting";
     }
 
@@ -78,6 +86,40 @@ public class MainController {
 
         return "dataStatistics";
     }
+
+    @RequestMapping(value = "/memberJoin", method = RequestMethod.GET)
+    public String memberJoinGet(){
+        return "memberJoin";
+    }
+
+    @RequestMapping(value = "/memberJoin", method = RequestMethod.POST)
+    @ResponseBody
+    public void memberJoinPost(@RequestBody Member member,HttpServletResponse response) throws Exception {
+        PrintWriter out = response.getWriter();
+        if(member == null)
+        if (!memberRepository.existsById(member.getId())) {
+            memberRepository.save(member);
+            out.print("true");
+        }else{
+            out.print("false");
+        }
+    }           // memberJoinPost
+
+    @RequestMapping(value = "/signUpOk", method = RequestMethod.POST)
+    @ResponseBody
+    public void memberSignUpOk(@RequestBody Member member){
+        Member newMember = memberRepository.findById(member.getId());
+        newMember.setState("1");  //0: 대기, 1: 승인 , 2: 거절
+        memberRepository.save(newMember);
+    }           // memberSignUpOk
+
+    @RequestMapping(value = "/signUpNo", method = RequestMethod.POST)
+    @ResponseBody
+    public void memberSignUpNo(@RequestBody Member member){
+        Member newMember = memberRepository.findById(member.getId());
+        newMember.setState("2");  //0: 대기, 1: 승인 , 2: 거절
+        memberRepository.save(newMember);
+    }           // memberSignUpNo
 
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model){
