@@ -19,7 +19,6 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css" />
-<%--공통코드--%>
 <script src="static/js/common/common.js"></script>
 <style>
     /* The switch - the box around the slider */
@@ -193,7 +192,7 @@
              for(let i=0;i<data.length;i++){
                  const tableName = data[i];
                  const category = findSensorCategory(tableName);
-                 const status = findSensorAlarm(tableName);
+                 // const status = findSensorAlarm(tableName);
 
                  const innerHtml = "<div class='form-check mb-2'>" +
                      "<input class='form-check-input' type='checkbox' name='item' id='"+tableName+"' value='"+tableName+"' >" +
@@ -234,6 +233,18 @@
          }
      })
  }
+<%--function findSensorAlarm(tableName) {--%>
+<%--     const sensor = tableName;--%>
+<%--    $.ajax({--%>
+<%--        url: '<%=cp%>/getPlaceSensor',--%>
+<%--        type: 'POST',--%>
+<%--        dataType: 'json',--%>
+<%--        async: false,--%>
+<%--        cache: false,--%>
+<%--        data: {"name":place},--%>
+<%--        success : function(data) {--%>
+
+<%--}--%>
 
 function insert() {
 

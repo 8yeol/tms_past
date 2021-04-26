@@ -83,5 +83,11 @@ public class JsonController {
         return sensorCustomRepository.getSenor(sensor, from_date, to_date, minute);
     }
 
+//    @RequestMapping(value = "/getSensorAlarm")
+//    public Object getSensorAlarm(@RequestParam("name") String name){
+//        return sensor_alarmRepository.findByName(name).getStatus();
+//    }
+//
+
 
 }
