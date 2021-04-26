@@ -43,12 +43,12 @@ public class JsonController {
     // 김규아 추가
     /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
-     * @param name 측정소 이름
+     * @param place 측정소 이름
      * @return 해당 측정소의 센서 값 (테이블 명)
      */
     @RequestMapping(value = "/getPlaceSensor", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getPlaceSensor(@RequestParam("name") String name){
-        return placeRepository.findByName(name).getSensor();
+    public Object getPlaceSensor(@RequestParam("place") String place){
+        return placeRepository.findByName(place).getSensor();
     }
 
     /**

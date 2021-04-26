@@ -188,7 +188,7 @@
          dataType: 'json',
          async: false,
          cache: false,
-         data: {"name":place},
+         data: {"place":place},
          success : function(data) {
              for(let i=0;i<data.length;i++){
                  const tableName = data[i];

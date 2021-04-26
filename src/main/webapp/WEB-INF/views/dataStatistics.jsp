@@ -28,24 +28,22 @@
         left: -20px;
         top: -3px;
     }
+
     .add-bg-color {
         background-color: #97bef8;
         color: #fff;
     }
+
     .add-margin-right {
         margin-right: 15px;
     }
-    .re-height {
-        height: 700px;
-    }
+
     .title-span {
         margin-left: 28px;
         position: relative;
         top: 30px;
     }
-    #chart {
-        margin-top: 80px;
-    }
+
     .table-height {
         height: 290px;
     }
@@ -76,7 +74,7 @@
         <div class="col text-center add-margin-right">
             <span class="fs-5 fw-bold">측정 항목</span>
             <div class="btn-group w-50 ms-3">
-                <select name="items" id="items" class="btn btn-light">
+                <select name="items" id="items" class="btn btn-light" onchange="itemChange()">
                     <%--script--%>
                 </select>
             </div>
@@ -86,16 +84,16 @@
     <hr>
 
     <div class="row">
-        <div class="col bg-white re-height">
-            <span class="fs-5 fw-bold add-margin title-span">월별 배출량 추이 </span>
-            <div id="chart" class="p-3"></div>
+        <div class="col bg-white">
+            <span class="fs-5 fw-bold add-margin title-span"><span class="placeAndItem"></span>월별 배출량 추이 </span>
+            <div id="chart" class="p-3 mt-5 mb-5"></div>
         </div>
     </div>
 
     <hr class="mt-4 mb-4">
 
     <div class="row bg-white table-height">
-        <span class="fs-5 fw-bold add-margin title-span">월별 배출량 통계 </span>
+        <span class="fs-5 fw-bold add-margin title-span"><span class="placeAndItem"></span>월별 배출량 통계 </span>
         <div class="col p-3">
             <table id="information" class="table table-bordered table-hover text-center" >
                 <thead class="add-bg-color">
@@ -191,7 +189,7 @@
             dataType: 'json',
             async: false,
             cache: false,
-            data: {"name":place},
+            data: {"place":place},
             success : function(data) {
                 for(let i=0;i<data.length;i++){
                     const tableName = data[i];
@@ -204,9 +202,33 @@
                 console.log(error)
             }
         })
+        itemChange();
     }
 
-    var options = {
+    function itemChange(){
+        const place = $("#place").val();
+        const item = $("#items").val();
+
+        $(".placeAndItem").text("["+place + " - " + findSensorCategory(item) +"] ");
+        //쿼리문 결과 넣어주기
+        $.ajax({
+            url: '<%=cp%>/addStatisticsData',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"place":place,
+            "item":item},
+            success : function(data) {
+                console.log(data);
+            },
+            error : function(request, status, error) {
+                console.log(error)
+            }
+        })
+    }
+
+    const options = {
         series: [{
             name: '2020',
             data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 63, 60, 66]
@@ -253,7 +275,7 @@
         }
     };
 
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    const chart = new ApexCharts(document.querySelector("#chart"), options);
     chart.render();
 
 </script>

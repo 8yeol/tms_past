@@ -9,10 +9,7 @@ import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -193,6 +190,37 @@ public class MainController {
         AggregationResults<Sensor> results = mongoTemplate.aggregate(agg, item, Sensor.class);
 
         List<Sensor> result = results.getMappedResults();
+
+        return result;
+    }
+
+    @RequestMapping(value = "/addStatisticsData", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Map> addStatisticsData(String place, String item){
+        ProjectionOperation dateProjection = Aggregation.project()
+                .and("up_time").as("up_time")
+                .and("value").as("value")
+                .and("status").as("status");
+
+        MatchOperation where = Aggregation.match(
+                    new Criteria().andOperator(
+                            Criteria.where("up_time")
+                                    .gte(LocalDateTime.parse("2021-04-01" + "T00:00:00"))
+                                    .lte(LocalDateTime.parse("2021-04-30" + "T23:59:59"))
+                    )
+            );
+
+        GroupOperation groupBy = Aggregation.group().sum("value").as("april");
+
+        Aggregation agg = Aggregation.newAggregation(
+                dateProjection,
+                where,
+                groupBy
+        );
+
+        AggregationResults<Map> results = mongoTemplate.aggregate(agg, item, Map.class);
+
+        List<Map> result = results.getMappedResults();
 
         return result;
     }
