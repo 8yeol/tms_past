@@ -206,78 +206,106 @@
     }
 
     function itemChange(){
-        const place = $("#place").val();
+        //const place = $("#place").val();
         const item = $("#items").val();
 
-        $(".placeAndItem").text("["+place + " - " + findSensorCategory(item) +"] ");
-        //쿼리문 결과 넣어주기
-        $.ajax({
-            url: '<%=cp%>/addStatisticsData',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"place":place,
-            "item":item},
-            success : function(data) {
-                console.log(data);
-            },
-            error : function(request, status, error) {
-                console.log(error)
-            }
-        })
+        //$(".placeAndItem").text("["+place + " - " + findSensorCategory(item) +"] ");
+
+        const thisYear = new Date().getFullYear();
+        const previousYear = thisYear-1;
+
+        let thisYearData = [],previousYearData = [];
+
+        for(let i=1; i>=0; i--){
+            let year = thisYear;
+            year = year-i;
+
+            $.ajax({
+                url: '<%=cp%>/addStatisticsData',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                cache: false,
+                data: {"item":item,
+                    "year":year},
+                success : function(data) {
+                    if(i==0){
+                        thisYearData.push(data);
+                    } else {
+                        previousYearData.push(data);
+                    }
+                },
+                error : function(request, status, error) {
+                    console.log(error)
+                }
+            })
+        }
+        addChart(previousYear, thisYear, previousYearData[0], thisYearData[0]);
+        addTable(previousYear, thisYear, previousYearData[0], thisYearData[0]);
     }
 
-    const options = {
-        series: [{
-            name: '2020',
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 63, 60, 66]
-        }, {
-            name: '2021',
-            data: [76, 85, 101, 98, null, null, null, null, null, null, null, null]
-        }],
-        chart: {
-            type: 'bar',
-            height: 500
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
+    function addChart(previousYear, thisYear, previousYearData, thisYearData){
+        $('#chart').empty();
+
+        const options = {
+            series: [{
+                name: previousYear,
+                data: previousYearData
+            }, {
+                name: thisYear,
+                data: thisYearData
+            }],
+            chart: {
+                type: 'bar',
+                height: 500
             },
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent']
-        },
-        xaxis: {
-            categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-        },
-        yaxis: {
-            title: {
-                text: '$ (thousands)'
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return "$ " + val + " thousands"
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            },
+            yaxis: {
+                title: {
+                    text: '(kg/월)'
+                },
+                labels:{
+                    formatter: function(value){
+                        return Math.round(value);
+                    }
+                }
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (value) {
+                        return Math.round(value) + " kg"
+                    }
                 }
             }
-        }
-    };
+        };
 
-    const chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
+        const chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+    }
 
+    function addTable(previousYear, thisYear, previousYearData, thisYearData){
+        console.log('addTable');
+    }
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
