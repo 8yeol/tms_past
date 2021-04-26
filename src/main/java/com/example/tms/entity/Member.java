@@ -13,7 +13,6 @@ public class Member {
     private ObjectId _id;
     private String id;
     private String name;
-    private String level;
     private String email;
     private String tel;
     private Date joined;
@@ -42,14 +41,6 @@ public class Member {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLevel() {
-        return level;
-    }
-
-    public void setLevel(String level) {
-        this.level = level;
     }
 
     public String getEmail() {
@@ -98,7 +89,6 @@ public class Member {
                 "_id=" + _id +
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", level='" + level + '\'' +
                 ", email='" + email + '\'' +
                 ", tel='" + tel + '\'' +
                 ", joined=" + joined +

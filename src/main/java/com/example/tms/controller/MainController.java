@@ -51,7 +51,6 @@ public class MainController {
         return "monitoring";
     }
 
-
     @RequestMapping("/alarm")
     public String alarm(){
         return "alarm";
@@ -67,7 +66,7 @@ public class MainController {
 
     @RequestMapping("/setting")
     public String setting(Model model){
-        List<Member> members = memberRepository.findByState("0");
+        List<Member> members = memberRepository.findAll();
         model.addAttribute("members" , members);
         return "setting";
     }
@@ -96,8 +95,20 @@ public class MainController {
     @ResponseBody
     public void memberJoinPost(@RequestBody Member member,HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
-        if(member == null)
+
+/*        memberRepository.deleteAll();
+        for(int i=0;i < 51; i++){
+            Member member1 = new Member();
+            member1.setId("testId"+i);
+            member1.setTel("010-"+"12"+i+"-123"+i);
+            member1.setName("testName"+i);
+            member1.setEmail("testEmail"+i+"@dot.com");
+            member1.setState("0");
+            memberRepository.save(member1);
+        }*/
+
         if (!memberRepository.existsById(member.getId())) {
+            member.setState("0");
             memberRepository.save(member);
             out.print("true");
         }else{
@@ -110,6 +121,8 @@ public class MainController {
     public void memberSignUpOk(@RequestBody Member member){
         Member newMember = memberRepository.findById(member.getId());
         newMember.setState("1");  //0: 대기, 1: 승인 , 2: 거절
+        Date time = new Date();
+        newMember.setJoined(time);
         memberRepository.save(newMember);
     }           // memberSignUpOk
 
