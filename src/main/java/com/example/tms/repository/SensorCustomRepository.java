@@ -1,6 +1,9 @@
 package com.example.tms.repository;
 
 import com.example.tms.entity.*;
+
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import jdk.nashorn.internal.parser.JSONParser;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -112,25 +115,21 @@ public class SensorCustomRepository {
     }
 
     public Sensor getSensorRecent(String sensor){
-        try {
-            ProjectionOperation projectionOperation = Aggregation.project()
-                    .andInclude("value")
-                    .andInclude("status")
-                    .andInclude("up_time");
-            /* sort */
-            SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
-            /* limit */
-            LimitOperation limitOperation = Aggregation.limit(1);
-            /* fetch */
-            Aggregation aggregation = Aggregation.newAggregation(projectionOperation, sortOperation, limitOperation);
+        ProjectionOperation projectionOperation = Aggregation.project()
+                .andInclude("value")
+                .andInclude("status")
+                .andInclude("up_time");
+        /* sort */
+        SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
+        /* limit */
+        LimitOperation limitOperation = Aggregation.limit(1);
+        /* fetch */
+        Aggregation aggregation = Aggregation.newAggregation(projectionOperation, sortOperation, limitOperation);
 
-            AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
-            List<Sensor> result = results.getMappedResults();
-            return result.get(0);
-        }catch (Exception e){
-            log.info(e.getMessage());
-            return null;
-        }
+        AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
+        List<Sensor> result = results.getMappedResults();
+        return result.get(0);
+
     }
 
 

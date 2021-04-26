@@ -95,98 +95,114 @@
 </div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
 <script>
-    var warning, danger;
-    var min, max;
     var table1, table2, chart1;
-    var data = [];
     var interval;
 
-    var place, sensor;
-    var update;
-
     $(document).ready(function () {
-        place = $("#place").val();
-        sensor = "tmsWP0005_CO_01";
-        $('#title').text(place + " - " + sensor);
+        var place = $("#place").val();
 
-        table1 = draw_sensor_table(getReadyData());
-
-        data = getSensor(sensor, "", "", 60);
-
-        chart1 = draw_chart(data);
-        chart1.render();
-
-        // $("#sensor-table-time").DataTable().clear();
-        // $("#sensor-table-time").DataTable().destroy();
-        table2 = draw_sensor_time_table(data);
-    }); //ready
-
-    function changePlace() {
-        place = $("#place").val();
-
-        var chageData = getPlaceChangeData(place);
-        var sensor = chageData[0].name;
-        console.log(sensor);
-        $('#title').text(place + " - " + chageData[0].naming);
-
+        var place_data =getPlaceChangeData(place);
         $("#sensor-table").DataTable().clear();
         $("#sensor-table").DataTable().destroy();
-        table1 = draw_sensor_table(getPlaceChangeData(place));
+        table1 = draw_sensor_table(place_data);
 
-        var sensor_data = getSensor(sensor, "", "", 60);
-        console.log(sensor_data)
-        $("#chart").empty();
+        var sensor_data = table1.row(0).data(); //테이블1의 첫번째 행 센서데이터 정보
+        var sensor_naming = sensor_data.naming; //테이블1의 첫번째 행 센서데이터 이름
+        var sensor_name = sensor_data.name; //테이블1의 첫번째 행 센서명
+        $('#title').text(place + " - " + sensor_naming); //선택되어있는 값 출력
+
+        var sensor_data = getSensor(sensor_name, "", "", 60);
         chart1 = draw_chart(sensor_data);
         chart1.render();
 
         $("#sensor-table-time").DataTable().clear();
         $("#sensor-table-time").DataTable().destroy();
         table2 = draw_sensor_time_table(sensor_data);
-    }
 
-
-    $("#sensor-table").on('click', 'tr', function(){
-        /* table 1 - get Sensor Name */
-        var sensor_data = table1.row(this).data();
-        var sensor = sensor_data.name;
-        $('#title').text(place + " - " + sensor_data.naming);
-        /* get Sensor Data */
-
-        var sensor_data = getSensor(sensor, "", "", 60);
-
-        /* chart 1 draw */
-        $("#chart").empty();
-        chart1 = draw_chart(sensor_data);
-        chart1.render();
-
-        /* table 2 draw */
-        $("#sensor-table-time").DataTable().clear();
-        $("#sensor-table-time").DataTable().destroy();
-        table2 = draw_sensor_time_table(sensor_data);
-        // 실시간 데이터 처리 (setInterval)
-        // interval 변수 - 처음 클릭 시 underfined / 두번째 부터 number type으로 변수 저장되어 clear 후에 interval 실행
         clearInterval(interval);
-        interval = setInterval(function () {
-                console.log("-");
-            /* 최근 데이터 조회 */
-            var sensor_data_recent = getSensor(sensor, "", "", 60);
+        interval = intervalStart(place_data, sensor_data);
+
+    }); //ready
+
+    function intervalStart(place_data, sensor_data){
+        var interval = setInterval(function () {
+            var place_data_recent = getPlaceChangeData(place);
+            //최신데이터와 데이터 비교
+            for(var i=0; i<place_data.length; i++) {
+                //같지않다면
+                if(place_data[i].value != place_data_recent[i].value) {
+                    place_data[i].value = place_data_recent[i].value;
+                    place_data[i].up_time = place_data_recent[i].up_time;
+                }
+            }
+
+            /* 최근 센서 데이터 조회 */
+            var sensor_data_recent = getSensor(sensor_name, "", "", 60);
             if(sensor_data[0].x != sensor_data_recent[0].x){
-                console.log("Interver excute");
+                $("#sensor-table").DataTable().clear();
+                $("#sensor-table").DataTable().destroy();
+                table1 = draw_sensor_table(place_data);
+
                 sensor_data.unshift(sensor_data_recent[0]); //배열의 0번째로 삽입
                 sensor_data.pop(); //배열의 마지막 삭제
-
                 /* chart 1 draw */
                 $("#chart").empty();
-                chart1 = draw_chart(sensor_data_recent);
+                chart1 = draw_chart(sensor_data);
                 chart1.render();
 
                 /* table 2 draw */
                 $("#sensor-table-time").DataTable().clear();
                 $("#sensor-table-time").DataTable().destroy();
-                table2 = draw_sensor_time_table(sensor_data_recent);
+                table2 = draw_sensor_time_table(sensor_data);
+
             }
         }, 5000);
+        return  interval;
+    }
+
+    function changePlace() {
+        clearInterval(interval);
+        var place = $("#place").val();
+        var place_data = getPlaceChangeData(place);
+        var sensor_naming = place_data[0].naming; //테이블1의 첫번째 행 센서데이터 이름
+        var sensor_name = place_data[0].name; //테이블1의 첫번째 행 센서명
+        $('#title').text(place + " - " + sensor_naming); //선택되어있는 값 출력
+
+        var sensor_data = getSensor(sensor_name, "", "", 60);
+        $("#chart").empty();
+        chart1 = draw_chart(sensor_data);
+        chart1.render();
+
+        $("#sensor-table-time").DataTable().clear();
+        $("#sensor-table-time").DataTable().destroy();
+        table2 = draw_sensor_time_table(sensor_data);
+
+        interval = intervalStart(place_data, sensor_data);
+    }
+
+
+    $("#sensor-table").on('click', 'tr', function(){
+        clearInterval(interval);
+        var place = $("#place").val();
+        var place_data = getPlaceChangeData(place);
+
+        var sensor_data = table1.row(this).data();
+        var sensor_naming = sensor_data.naming; //테이블1의 첫번째 행 센서데이터 이름
+        var sensor_name = sensor_data.name; //테이블1의 첫번째 행 센서명
+        $('#title').text(place + " - " + sensor_naming); //선택되어있는 값 출력
+
+        var sensor_data = getSensor(sensor_name, "", "", 60);
+        $("#chart").empty();
+        chart1 = draw_chart(sensor_data);
+        chart1.render();
+
+        $("#sensor-table-time").DataTable().clear();
+        $("#sensor-table-time").DataTable().destroy();
+        table2 = draw_sensor_time_table(sensor_data);
+
+        interval = intervalStart(place_data, sensor_data);
     });
 
     /* 처음 로딩시 model 로 넘겨받은 센서 데이터 가져옴 - table1의 데이터*/
@@ -207,7 +223,6 @@
     }
 
 
-
     /* 측정소가 바뀐 데이터 조회*/
     function getPlaceChangeData(place){
         var getData = new Array();
@@ -215,14 +230,14 @@
         $.ajax({
             url:'getPlaceSensor',
             dataType: 'json',
-            data:  {"name": place},
+            data:  {"place": place},
             async: false,
             success: function (data) {
                 $.each(data, function (index, item) {
                     var sensor = getSensorRecent(item);
                     var sensorInfo = getSensorInfo(item);
                     if(sensorInfo == null && sensor == null){
-                        getData.push({naming: item, value: "", up_time: ""});
+                        getData.push({naming: item, name: item, value: "", up_time: ""});
                     }else if (sensorInfo == null && sensor != null){
                         getData.push({naming: item, name:item, value:sensor.value.toFixed(2), up_time: moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss')});
                     }else if(sensorInfo != null && sensor != null){
@@ -230,10 +245,6 @@
                             warning: sensorInfo.warning, danger: sensorInfo.danger, substitution: sensorInfo.substitution});
                     }
                 })
-            },
-            error: function (e) {
-                console.log(e);
-                getData.push({naming: "", value: "", up_time: ""});
             }
         }); //ajax
         return getData;
@@ -249,12 +260,12 @@
             async: false,
             success: function (data) {
                 getData = data;
-            },
-            fail: function(){
-
+                if(data == null){
+                    console.log("data null");
+                }
             },
             error: function (e) {
-                console.log(e);
+                getData = null;
             }
         }); //ajax
         return getData;
@@ -272,7 +283,7 @@
                 getData = data;
             },
             error: function (e) {
-                console.log(e);
+                getData = null;
             }
         }); //ajax
         return getData;
@@ -318,7 +329,7 @@
             data: data,
             bPaginate: false,
             bInfo: false,
-            order:[[0, 'desc']],
+            order:[[0, 'asc']],
             columns: [
                 {"data": "naming"},
                 {"data": "value"},
