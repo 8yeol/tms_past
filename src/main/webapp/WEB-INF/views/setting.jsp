@@ -25,7 +25,24 @@
 
 <script type="text/javascript">
     jQuery(function ($) {
-        $("#member-Table").DataTable();
+        $("#member-Table").DataTable({
+            "language": {
+                "emptyTable": "데이터가 없어요.",
+                "lengthMenu": "페이지당 _MENU_ 개씩 보기",
+                "info": "현재 _START_ - _END_ / _TOTAL_건",
+                "infoEmpty": "데이터 없음",
+                "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
+                "search": "전체검색 : ",
+                "zeroRecords": "일치하는 데이터가 없어요.",
+                "loadingRecords": "로딩중...",
+                "processing": "잠시만 기다려 주세요...",
+                "paginate": {
+                    "next": "다음",
+                    "previous": "이전"
+                },
+            },
+            pageLength: 10
+        });
     });
 </script>
 <body>
@@ -39,15 +56,16 @@
 
                 <thead>
                 <tr>
-                    <th>회원번호</th>
+                    <th>번호</th>
                     <th>ID</th>
                     <th>이름</th>
-                    <th>등급</th>
+                    <th>상태</th>
                     <th>이메일</th>
                     <th>연락처</th>
                     <th>가입신청일</th>
+                    <th>가입승인일</th>
                     <th>최종 로그인</th>
-                    <th>가입승인</th>
+                    <th>가입관리</th>
                 </tr>
                 </thead>
 
@@ -57,17 +75,47 @@
                         <td>${cnt.index+1}</td>
                         <td>${mList.id}</td>
                         <td>${mList.name}</td>
-                        <c:if test="${mList.level eq '1'}">
-                            <td>일반회원</td>
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${mList.state eq '0'}">
+                                <td>가입대기</td>
+                            </c:when>
+                            <c:when test="${mList.state eq '1'}">
+                                <td class="text-success">승인</td>
+                            </c:when>
+                            <c:when test="${mList.state eq '2'}">
+                                <td class="text-danger">거절</td>
+                            </c:when>
+                        </c:choose>
                         <td>${mList.email}</td>
                         <td>${mList.tel}</td>
-                        <td><fmt:formatDate value="${mList._id.date}" pattern="yyyy년 MM월 dd일 hh시mm분"/></td>
-                        <td>temp</td>
-                        <td>
-                            <button class="btn btn-success" data-toggle="modal" data-target="#okModal" onclick="sign_Set('${mList.id}')">승인</button>
-                            <button class="btn btn-danger" data-toggle="modal" data-target="#noModal" onclick="sign_Set('${mList.id}')">거절</button>
-                        </td>
+                        <td><fmt:formatDate value="${mList._id.date}" pattern="yyyy년 MM월 dd일 hh시"/></td>
+
+
+                        <c:choose>
+                            <c:when test="${mList.joined != null}">
+                                <td><fmt:formatDate value="${mList.joined}" pattern="yyyy년 MM월 dd일 hh시"/></td>
+                            </c:when>
+                            <c:otherwise>
+                                <td></td>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <td><%--최종로그인--%></td>
+                        <c:choose>
+                            <c:when test="${mList.state eq '0'}">
+                                <td>
+                                    <button class="btn btn-success" data-toggle="modal" data-target="#okModal"
+                                            onclick="sign_Set('${mList.id}')">승인
+                                    </button>
+                                    <button class="btn btn-danger" data-toggle="modal" data-target="#noModal"
+                                            onclick="sign_Set('${mList.id}')">거절
+                                    </button>
+                                </td>
+                            </c:when>
+                            <c:otherwise>
+                                <td></td>
+                            </c:otherwise>
+                        </c:choose>
                     </tr>
                 </c:forEach>
                 </tbody>
@@ -205,10 +253,11 @@
                 <h5 class="modal-title">가입 승인</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
-                <h3 id="okModal_Body">해당회원 가입승인 하시겠습니까?</h3>
+                <h3 id="okModal_Body">가입승인 하시겠습니까?</h3>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" data-dismiss="modal" onclick="sing_Up_Ok()">승인</button>
+                <button type="button" class="btn btn-success me-5" data-dismiss="modal" onclick="sing_Up_Ok()">승인
+                </button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
             </div>
         </div>
@@ -223,10 +272,11 @@
                 <h5 class="modal-title">가입 거절</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
-                <h3>@@@님 가입 거절하시겠습니까?</h3>
+                <h3>가입거절 하시겠습니까?</h3>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-danger me-5" data-dismiss="modal" onclick="sing_Up_No()">거절</button>
+                <button type="button" class="btn btn-danger me-5" data-dismiss="modal" onclick="sing_Up_No()">거절
+                </button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
             </div>
         </div>
@@ -288,6 +338,7 @@
 
 <script>
     var ID = "";
+
     function sign_Set(str_id) {
         ID = str_id;
     }          // row 의 승인 및 거절 버튼 클릭시 전역변수 ID에 해당row 의 ID가 저장됨
@@ -300,7 +351,7 @@
                 "accept": "application/json",
                 "content-type": "application/json;charset=UTF-8"
             },
-            "data": "{\r\n    \"id\": \""+ID+"\"\r\n}",
+            "data": "{\r\n    \"id\": \"" + ID + "\"\r\n}",
         };
         $.ajax(settings).done(function (response) {
             alert("가입 승인 되었습니다.");
@@ -310,14 +361,14 @@
 
     function sing_Up_No() {
         var settings = {
-            "url": "http://localhost:8090/signUpOk",
+            "url": "http://localhost:8090/signUpNo",
             "method": "POST",
             "timeout": 0,
             "headers": {
                 "accept": "application/json",
                 "content-type": "application/json;charset=UTF-8"
             },
-            "data": "{\r\n    \"id\": \""+ID+"\"\r\n}",
+            "data": "{\r\n    \"id\": \"" + ID + "\"\r\n}",
         };
         $.ajax(settings).done(function (response) {
             alert("가입 거절 되었습니다.");

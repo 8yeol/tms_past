@@ -105,8 +105,8 @@
             <span style="margin-right: 18%;">End Time</span></div>
 
         <div class="a1"><span style="font-weight: bold; margin-top: 7px; margin-right: 10px;  font-size: 18px;">알림 시간</span>
-            <input type="text" id="stime" name="start" class="timepicker" placeholder="00:00 AM">&nbsp;&nbsp;&nbsp;
-            <input type="text" id="etime" name="end"  class="timepicker" placeholder="00:00 AM">
+            <input type="text" id="stime" name="start" class="timepicker" placeholder="00:00">&nbsp;&nbsp;&nbsp;
+            <input type="text" id="etime" name="end"  class="timepicker" placeholder="00:00">
             <button type="button" class="btn btn-primary ms-3" onClick="insert()">설정</button>
         </div>
 
@@ -130,12 +130,14 @@
             <span>전체선택</span>
             <input id="bOn" type="button" value="ON">
             <input id="bOff" type="button" value="OFF">
-            <div class="text-center">
-                <div class="border p-2 bg-white h-75" id="items">
-                    <%-- script --%>
-                </div>
+            <form id="alarmform" action="" method="post">
+                <div class="text-center">
+                    <div class="border p-2 bg-white h-75" id="items">
+                        <%-- script --%>
+                    </div>
 
-            </div>
+                </div>
+            </form>
         </div>
     </div>
     <br>
@@ -144,14 +146,16 @@
 <script>
 
     $( document ).ready(function() {
-        //placeChange();
+        placeChange('point1');
+        //insert();
+
     });
  //시작시간 설정
  $('#stime').timepicker({
-        timeFormat:'h:i A',
+        timeFormat:'H:i',
         'interval' : 30,
-        'minTime':'00:00am',
-        'maxTime':'11:30pm',
+        'minTime':'00:00',
+        'maxTime':'23:30',
         'scrollbar': true,
         'dropdown':false
     }) //stime 시작 기본 설정
@@ -164,7 +168,7 @@
             }
         });
  //종료시간 설정
-  $('#etime').timepicker({timeFormat:'h:i A','interval' : '30','minTime':'00:00am','maxTime':'11:30pm','scrollbar': true});//etime 시간 기본 설정
+  $('#etime').timepicker({timeFormat:'H:i','interval' : 30,'minTime':'00:00','maxTime':'23:30','scrollbar': true});//etime 시간 기본 설정
 
  //체크박스 전체 선택, 해제
  $('#chk_all').click(function () {
@@ -195,10 +199,12 @@
                  // const status = findSensorAlarm(tableName);
 
                  const innerHtml = "<div class='form-check mb-2'>" +
-                     "<input class='form-check-input' type='checkbox' name='item' id='"+tableName+"' value='"+tableName+"' >" +
+                     "<input class='form-check-input' type='checkbox' id='"+tableName+"' name='item' value='"+tableName+"' >" +
                      "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
                      "<label class='switch'>"+
-                     "<input id='slider"+i+"'type='checkbox' name='status'>"+
+                     //"<input id='slider"+i+"'type='checkbox' name='status'>"+
+
+                     "<input id='"+tableName+"' type='checkbox' name='status'>"+
                      "<div class='slider round'></div>"+
                      "</label>"+
                      "</div>"
@@ -212,7 +218,6 @@
                      for (var i = 0; i <num; i++) {
                          if($('#'+data[i]).is(":checked")){
                              $('#slider'+i).prop("checked", false);
-
                          }
                      };
                  });
@@ -233,20 +238,71 @@
          }
      })
  }
-<%--function findSensorAlarm(tableName) {--%>
-<%--     const sensor = tableName;--%>
-<%--    $.ajax({--%>
-<%--        url: '<%=cp%>/getPlaceSensor',--%>
-<%--        type: 'POST',--%>
-<%--        dataType: 'json',--%>
-<%--        async: false,--%>
-<%--        cache: false,--%>
-<%--        data: {"name":place},--%>
-<%--        success : function(data) {--%>
-
-<%--}--%>
 
 function insert() {
+    var checkedItem = new Array();
+    var uncheckItem = new Array();
+    $("input:checkbox[name=status]:checked").each(function(){
+        checkedItem.push($(this).attr('id'));
+    });
+    $("input:checkbox[name=status]:not(:checked)").each(function(){
+        uncheckItem.push($(this).attr('id'));
+    });
+
+    const stime = $("#stime").val();
+    const etime = $("#etime").val();
+
+    console.log(stime);
+    console.log(etime);
+    console.log(checkedItem);
+    console.log(uncheckItem);
+    console.log(status);
+
+    for(let i=0; i<checkedItem.length; i++){
+            let item = checkedItem[i];
+
+            $.ajax({
+                url: '<%=cp%>/saveAlarm',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                cache: false,
+                data: {"item":item,
+                    "stime":stime,
+                    "etime":etime,
+                    "status":"true"
+                },
+                success : function(data) {
+                    console.log(data);
+                },
+                error : function(request, status, error) {
+                    console.log(error)
+                }
+            })
+    }
+    for(let i=0; i<uncheckItem.length; i++){
+        let item = uncheckItem[i];
+
+        $.ajax({
+            url: '<%=cp%>/saveAlarm',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"item":item,
+                "stime":stime,
+                "etime":etime,
+                "status":"false"
+            },
+            success : function(data) {
+                console.log(data);
+            },
+            error : function(request, status, error) {
+                console.log(error)
+            }
+        })
+    }
+
 
 }
 </script>
