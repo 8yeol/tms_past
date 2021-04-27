@@ -106,75 +106,7 @@
         var place_data =getPlaceData(place); //측정소 정보 조회
         place_table = draw_sensor_table(place_data);
         var sensor_data = place_table.row(0).data(); //테이블1의 첫번째 행 센서데이터 정보
-        if(sensor_data == null){
-            $('#title').text(place);
-
-            $("#sensor-table").DataTable().clear();
-            $("#sensor-table").DataTable().destroy();
-            $("#chart").empty();
-            $("#sensor-table-time").DataTable().clear();
-            $("#sensor-table-time").DataTable().destroy();
-
-            place_table = draw_sensor_table(place_data);
-            sensor_chart = draw_chart(null);
-            sensor_table = draw_sensor_time_table(null);
-        }else{
-            var sensor_naming = sensor_data.naming; //테이블1의 선택된 행 센서데이터 이름
-            var sensor_name = sensor_data.name; //테이블1의 선택된 행 센서명
-            var warning = sensor_data.warning;
-            var danger = sensor_data.danger;
-            var substitution = sensor_data.substitution;
-            $('#title').text(place + " - " + sensor_naming + " (기준값 - 경고:"+warning + "/ 위험:"+danger + ")");
-
-            var sensor_data = getSensor(sensor_name, "", "", 60); //한시간 전의 센서 데이터 조회
-            $('#update').text("업데이트일 : "+ sensor_data[0].x);
-
-            /* 센서에 대한 차트, 테이블 삭제 */
-            $("#chart").empty();
-            $("#sensor-table-time").DataTable().clear();
-            $("#sensor-table-time").DataTable().destroy();
-
-            /* 센서에 대한 차트, 테이블 생성 */
-            sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
-            sensor_chart.render();
-            sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
-
-            interval = setInterval(function () {
-                /* 최근 센서의 데이터 조회 */
-                var place_data_recent = getPlaceData(place);
-                for(var i=0; i<place_data.length; i++) {
-                    //최신데이터, 생성시 데이터 비교
-                    if (place_data[i].value != place_data_recent[i].value) {
-                        /* 측정소 데이터 업데이트 */
-                        place_data[i].value = place_data_recent[i].value;
-                        place_data[i].up_time = place_data_recent[i].up_time;
-                    }
-                }
-
-                /* 최근 센서의 데이터 조회 */
-                var sensor_data_recent = getSensor(sensor_name, "", "", 60);
-                if (sensor_data[0].x != sensor_data_recent[0].x) {
-                    /* sensor_data 업데이트 */
-                    sensor_data.unshift(sensor_data_recent[0]); //배열의 0번째로 삽입
-                    sensor_data.pop(); //배열의 마지막 삭제
-
-                    $('#update').text("업데이트일 : " + sensor_data_recent[0].x); //업데이트일
-
-                    /* 테이블, 차트 삭제 */
-                    $("#sensor-table").DataTable().clear();
-                    $("#sensor-table").DataTable().destroy();
-                    $("#chart").empty();
-                    $("#sensor-table-time").DataTable().clear();
-                    $("#sensor-table-time").DataTable().destroy();
-
-                    /* 테이블, 차트 생성*/
-                    place_table = draw_sensor_table(place_data);
-                    sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
-                    sensor_chart.render();
-                    sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
-                }
-            }, 3000);
-        }
+        addChartTable(place, place_data, sensor_data);
     }); //ready
 
 
@@ -188,6 +120,22 @@
         place_table = draw_sensor_table(place_data);
 
         var sensor_data = place_table.row(0).data(); //테이블1의 첫번째 행 센서데이터 정보
+        addChartTable(place, place_data, sensor_data);
+    }
+
+
+    $("#sensor-table").on('click', 'tr', function(){
+        clearInterval(interval)
+        var place = $("#place").val();
+        var place_data = getPlaceData(place);
+
+        var sensor_data = place_table.row(this).data();
+        addChartTable(place, place_data, sensor_data);
+    });
+
+    function addChartTable(place, place_data, sensor_data) {
+        // console.log(place_data);
+        // console.log(sensor_data);
         if(sensor_data == null){
             $('#title').text(place);
 
@@ -258,84 +206,6 @@
             }, 3000);
         }
     }
-
-
-    $("#sensor-table").on('click', 'tr', function(){
-        clearInterval(interval)
-        var place = $("#place").val();
-        var place_data = getPlaceData(place);
-
-        var sensor_data = place_table.row(this).data();
-        if(sensor_data == null){
-            $('#title').text(place);
-
-            $("#sensor-table").DataTable().clear();
-            $("#sensor-table").DataTable().destroy();
-            $("#chart").empty();
-            $("#sensor-table-time").DataTable().clear();
-            $("#sensor-table-time").DataTable().destroy();
-
-            place_table = draw_sensor_table(place_data);
-            sensor_chart = draw_chart(null);
-            sensor_table = draw_sensor_time_table(null);
-        }else{
-            var sensor_naming = sensor_data.naming; //테이블1의 선택된 행 센서데이터 이름
-            var sensor_name = sensor_data.name; //테이블1의 선택된 행 센서명
-            var warning = sensor_data.warning;
-            var danger = sensor_data.danger;
-            var substitution = sensor_data.substitution;
-            $('#title').text(place + " - " + sensor_naming + " (기준값 - 경고:"+warning + "/ 위험:"+danger + ")");
-
-            var sensor_data = getSensor(sensor_name, "", "", 60); //한시간 전의 센서 데이터 조회
-            $('#update').text("업데이트일 : "+ sensor_data[0].x);
-
-            /* 센서에 대한 차트, 테이블 삭제 */
-            $("#chart").empty();
-            $("#sensor-table-time").DataTable().clear();
-            $("#sensor-table-time").DataTable().destroy();
-
-            /* 센서에 대한 차트, 테이블 생성 */
-            sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
-            sensor_chart.render();
-            sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
-
-            interval = setInterval(function () {
-                /* 최근 센서의 데이터 조회 */
-                var place_data_recent = getPlaceData(place);
-                for(var i=0; i<place_data.length; i++) {
-                    //최신데이터, 생성시 데이터 비교
-                    if (place_data[i].value != place_data_recent[i].value) {
-                        /* 측정소 데이터 업데이트 */
-                        place_data[i].value = place_data_recent[i].value;
-                        place_data[i].up_time = place_data_recent[i].up_time;
-                    }
-                }
-
-                /* 최근 센서의 데이터 조회 */
-                var sensor_data_recent = getSensor(sensor_name, "", "", 60);
-                if (sensor_data[0].x != sensor_data_recent[0].x) {
-                    /* sensor_data 업데이트 */
-                    sensor_data.unshift(sensor_data_recent[0]); //배열의 0번째로 삽입
-                    sensor_data.pop(); //배열의 마지막 삭제
-
-                    $('#update').text("업데이트일 : " + sensor_data_recent[0].x); //업데이트일
-
-                    /* 테이블, 차트 삭제 */
-                    $("#sensor-table").DataTable().clear();
-                    $("#sensor-table").DataTable().destroy();
-                    $("#chart").empty();
-                    $("#sensor-table-time").DataTable().clear();
-                    $("#sensor-table-time").DataTable().destroy();
-
-                    /* 테이블, 차트 생성*/
-                    place_table = draw_sensor_table(place_data);
-                    sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
-                    sensor_chart.render();
-                    sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
-                }
-            }, 3000);
-        }
-    });
 
     /* 측정소가 바뀐 데이터 조회*/
     function getPlaceData(place){
