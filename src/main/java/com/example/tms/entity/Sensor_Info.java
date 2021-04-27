@@ -14,6 +14,15 @@ public class Sensor_Info {
     private float warning;
     private float danger;
     private float substituion; //교정값
+    private int division; //구분 (1: 주요 2: 일반 3: 기타)
+
+    public int getDivision() {
+        return division;
+    }
+
+    public void setDivision(int division) {
+        this.division = division;
+    }
 
     public ObjectId get_id() {
         return _id;

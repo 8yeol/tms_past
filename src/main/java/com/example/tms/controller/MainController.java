@@ -47,8 +47,13 @@ public class MainController {
     }
 
     @RequestMapping("/monitoring")
-    public String monitoring(){
-        return "monitoring";
+    public void monitoring(Model model){
+        model.addAttribute("place", placeRepository.findAll());
+    }
+
+    @RequestMapping(value = "/sensor", method = RequestMethod.GET)
+    public void sensorInfo(Model model){
+        model.addAttribute("place", placeRepository.findAll());
     }
 
     @RequestMapping("/alarm")

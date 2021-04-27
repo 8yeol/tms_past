@@ -159,7 +159,7 @@
                         <li class="topMenuLi"><a class="menuLink" href="/monitoring">모니터링</a>
                             <ul class="shortSubmenu">
                                 <li><a href="/monitoring" class="submenuLink">실시간 모니터링</a></li>
-                                <li><a href="/sensor" class="submenuLink" id="sensor">상세화면</a></li>
+                                <li><a href="/sensor" class="submenuLink">상세화면</a></li>
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="">분석 및 통계</a>
@@ -200,20 +200,20 @@
         </div>
     </div>
 
-    <form id="actionForm"  action="" method="get">
+<%--    <form id="actionForm"  action="" method="get">
 
-    </form>
+    </form>--%>
 </header>
 
 
 <script>
-    var actionForm = $("#actionForm");
+/*    var actionForm = $("#actionForm");
     $("#sensor").click(function (e) {
         var place = "point1";
         e.preventDefault();
         actionForm.append("<input type='text' name='place' value='"+ place +"'>");
         actionForm.attr("action", "/sensor");
         actionForm.submit();
-    })
+    })*/
 
 </script>

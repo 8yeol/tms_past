@@ -9,11 +9,11 @@
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/vue-apexcharts.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
+<script src="static/js/moment.min.js"></script>
 <%-- export excel --%>
 <script src="static/js/jszip.min.js"></script>
 <script src="static/js/dataTables.buttons.min.js"></script>
 <script src="static/js/buttons.html5.min.js"></script>
-<script src="static/js/moment.min.js"></script>
 
 <style>
     table#sensor-table thead, table#sensor-table-time thead { /* 테이블 제목 셀 배경, 글자색 설정 */
@@ -29,15 +29,19 @@
 
 <div class="container">
     <%-- ************************************************************************************************************** --%>
-    <div class="bg-gradient p-4 mt-4 ms-3 bg-skyblue">
-        <div class="ms-3 add-bg">
-            <span class="fs-5 fw-bold add-margin">측정소</span>
-            <div class="btn-group w-50 ms-3">
-                <select id="place" class="btn btn-light" onchange="changePlace()">
-                    <c:forEach var="place" items="${place}">
-                        <option value="${place.name}">${place.name}</option>
-                    </c:forEach>
-                </select>
+    <div class="row">
+        <div class="col-12 bg-gradient p-4 mt-4 ms-3 bg-skyblue rounded">
+            <div class="col-6 ms-3 add-bg">
+                <div class="col-md-12">
+                    <span class="fs-5 fw-bold">측정소</span>
+                    <div class="btn-group w-50 ms-3">
+                        <select id="place" class="btn btn-light" onchange="changePlace()">
+                            <c:forEach var="place" items="${place}">
+                                <option value="${place.name}">${place.name}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -68,7 +72,7 @@
             <div class="row h-75 mt-4">
                 <div class="col-md-6">
                     <%-- 센서 최근 테이블--%>
-                    <div class="table-responsive bg-success bg-gradient col-md-12">
+                    <div class="table-responsive bg-gradient col-md-12">
                         <table id="sensor-table">
                             <thead>
                             <tr>
@@ -103,7 +107,6 @@
 </div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-
 <script>
     var place_table, sensor_table, sensor_chart;
     var interval;
@@ -111,7 +114,7 @@
     $(document).ready(function () {
         var place = $("#place").val(); // 측정소명
         var place_data =getPlaceData(place); //측정소 정보 조회
-        place_table = draw_sensor_table(place_data);
+        place_table = draw_place_table(place_data);
         var sensor_data = place_table.row(0).data(); //테이블1의 첫번째 행 센서데이터 정보
         addChartTable(place, place_data, sensor_data);
     }); //ready
@@ -124,7 +127,7 @@
 
         $("#sensor-table").DataTable().clear();
         $("#sensor-table").DataTable().destroy();
-        place_table = draw_sensor_table(place_data);
+        place_table = draw_place_table(place_data);
 
         var sensor_data = place_table.row(0).data(); //테이블1의 첫번째 행 센서데이터 정보
         addChartTable(place, place_data, sensor_data);
@@ -152,9 +155,9 @@
             $("#sensor-table-time").DataTable().clear();
             $("#sensor-table-time").DataTable().destroy();
 
-            place_table = draw_sensor_table(place_data);
+            place_table = draw_place_table(place_data);
             sensor_chart = draw_chart(null);
-            sensor_table = draw_sensor_time_table(null);
+            sensor_table = draw_sensor_table(null);
             $('#sensorInfo1').text("");
             $('#sensorInfo2').text("");
             $('#update').text("");
@@ -178,7 +181,7 @@
             /* 센서에 대한 차트, 테이블 생성 */
             sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
             sensor_chart.render();
-            sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
+            sensor_table = draw_sensor_table(sensor_data, warning, danger, substitution);
 
             interval = setInterval(function () {
                 /* 최근 센서의 데이터 조회 */
@@ -209,10 +212,10 @@
                     $("#sensor-table-time").DataTable().destroy();
 
                     /* 테이블, 차트 생성*/
-                    place_table = draw_sensor_table(place_data);
+                    place_table = draw_place_table(place_data);
                     sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
                     sensor_chart.render();
-                    sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
+                    sensor_table = draw_sensor_table(sensor_data, warning, danger, substitution);
                 }
             }, 3000);
         }
@@ -221,13 +224,13 @@
     /* 측정소가 바뀐 데이터 조회*/
     function getPlaceData(place){
         var getData = new Array();
-        /* 측정소에 따라 센서명을 가져와 data 생성*/
         $.ajax({
             url:'getPlaceSensor',
             dataType: 'json',
             data:  {"place": place},
             async: false,
             success: function (data) {
+                /* 센서명 구함 -> 센서명으로부터 최근데이터, 센서정보 구함 */
                 $.each(data, function (index, item) {
                     var sensor = getSensorRecent(item);
                     var sensorInfo = getSensorInfo(item);
@@ -304,7 +307,7 @@
 
 
     /* draw sensor table */
-    function draw_sensor_table(data){
+    function draw_place_table(data){
         var table = $('#sensor-table').DataTable({
             paging: false,
             searching: false,
@@ -347,7 +350,7 @@
     }
 
     /* draw sensor time table */
-    function draw_sensor_time_table(data, warning, danger, substitution) {
+    function draw_sensor_table(data, warning, danger, substitution) {
         // if(warning == null){
         //     warning = 15;
         // }
@@ -415,17 +418,11 @@
 
     /* chart Option Setting */
     function setChartOption(data, warning, danger, substitution){
-        if(warning == null){
-            warning = 15;
-        }
-        if(danger == null){
-            danger = 30;
-        }
         var min = 0;
         var max = danger*2;
         var options = {
             series: [{
-                name: name,
+                // name: name,
                 data: data
             }],
             chart: {
@@ -442,10 +439,10 @@
                         pan: true,
                         reset: false,
                     },
-                animations:{
+                    animations:{
                         enabled: false,
                         speed:1500
-                }
+                    }
                 },
                 tooltip:{
                     enabled: false
@@ -540,3 +537,4 @@
 
 
 </script>
+
