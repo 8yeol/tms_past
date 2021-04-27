@@ -59,8 +59,8 @@
                     </div>
                 </div>
                 <div class="col-3">
-                    <div class="float-start">
-                        <span> 업데이트 : </span>
+                    <div>
+                        <span class="fs-7 mb-2"> 업데이트 : </span>
                         <span class="fs-5 mb-2" id="update"> </span>
                     </div>
                 </div>
@@ -155,6 +155,9 @@
             place_table = draw_sensor_table(place_data);
             sensor_chart = draw_chart(null);
             sensor_table = draw_sensor_time_table(null);
+            $('#sensorInfo1').text("");
+            $('#sensorInfo2').text("");
+            $('#update').text("");
         }else{
             var sensor_naming = sensor_data.naming; //테이블1의 선택된 행 센서데이터 이름
             var sensor_name = sensor_data.name; //테이블1의 선택된 행 센서명
