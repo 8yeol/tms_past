@@ -27,12 +27,16 @@ public class JsonController {
     final
     Sensor_InfoRepository sensor_infoRepository;
 
-    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Sensor_InfoRepository sensor_infoRepository) {
+    final
+    Sensor_AlarmRepository sensor_alarmRepository;
+
+    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Sensor_InfoRepository sensor_infoRepository, Sensor_AlarmRepository sensor_alarmRepository) {
         this.placeRepository = placeRepository;
         this.placeCustomRepository = placeCustomRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.sensor_infoRepository = sensor_infoRepository;
+        this.sensor_alarmRepository = sensor_alarmRepository;
     }
 
 // *********************************************************************************************************************
@@ -82,12 +86,29 @@ public class JsonController {
                                   @RequestParam("minute") String minute){
         return sensorCustomRepository.getSenor(sensor, from_date, to_date, minute);
     }
+    /**
+     * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
+     * @param name 센서 이름
+     * @return 해당 센서의 status값
+     */
+    @RequestMapping(value = "/getSensorAlarm")
+    public boolean getSensorAlarm(@RequestParam("name") String name){
 
-//    @RequestMapping(value = "/getSensorAlarm")
-//    public Object getSensorAlarm(@RequestParam("name") String name){
-//        return sensor_alarmRepository.findByName(name).getStatus();
-//    }
-//
+        return sensor_alarmRepository.findByName(name).isStatus();
+    }
+    //알림 시작시간
+    @RequestMapping(value = "/getStartTime")
+    public String getStartTime(@RequestParam("name") String name){
+
+        return sensor_alarmRepository.findByName(name).getStart();
+    }
+    //알림 종료시간
+    @RequestMapping(value = "/getEndTime")
+    public String getEndTime(@RequestParam("name") String name){
+
+        return sensor_alarmRepository.findByName(name).getEnd();
+    }
+
 
 
 }

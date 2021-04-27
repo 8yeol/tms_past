@@ -105,8 +105,8 @@
             <span style="margin-right: 18%;">End Time</span></div>
 
         <div class="a1"><span style="font-weight: bold; margin-top: 7px; margin-right: 10px;  font-size: 18px;">알림 시간</span>
-            <input type="text" id="stime" name="start" class="timepicker" placeholder="00:00">&nbsp;&nbsp;&nbsp;
-            <input type="text" id="etime" name="end"  class="timepicker" placeholder="00:00">
+            <input type="text" id="start" name="start" class="timepicker">&nbsp;&nbsp;&nbsp;
+            <input type="text" id="end" name="end"  class="timepicker">
             <button type="button" class="btn btn-primary ms-3" onClick="insert()">설정</button>
         </div>
 
@@ -118,7 +118,7 @@
 
                 <c:forEach var="place" items="${place}" varStatus="status">
                     <div name="place" id="${place}" onclick="placeChange('${place}')">
-                    ${place}
+                        <span id="place${status.index}">${place}</span>
                     </div>
                 </c:forEach>
 
@@ -126,7 +126,7 @@
         </div>
         <div class="col-3" style="width: 75%;">
             <span class="fw-bold">센서 목록</span>
-            <input id="chk_all" class="form-check-input" type = checkbox style="width: 20px; height: 20px;">
+            <input id="chk_all" class="form-check-input" name="selectall" type = checkbox style="width: 20px; height: 20px;" onclick="selectAll(this)">
             <span>전체선택</span>
             <input id="bOn" type="button" value="ON">
             <input id="bOff" type="button" value="OFF">
@@ -146,12 +146,12 @@
 <script>
 
     $( document ).ready(function() {
-        placeChange('point1');
-        //insert();
+
+        placeChange($("#place0").text());
 
     });
  //시작시간 설정
- $('#stime').timepicker({
+ $('#start').timepicker({
         timeFormat:'H:i',
         'interval' : 30,
         'minTime':'00:00',
@@ -161,24 +161,44 @@
     }) //stime 시작 기본 설정
         .on('changeTime',function() {                           //stime 을 선택한 후 동작
             var from_time = $("input[name='start']").val(); //stime 값을 변수에 저장
-            $('#etime').timepicker('option','minTime', from_time);//etime의 mintime 지정
-            if ($('#etime').val() && $('#etime').val() < from_time) {
-                $('#etime').timepicker('setTime', from_time);
+            $('#end').timepicker('option','minTime', from_time);//etime의 mintime 지정
+            if ($('#end').val() && $('#end').val() < from_time) {
+                $('#end').timepicker('setTime', from_time);
 //etime을 먼저 선택한 경우 그리고 etime시간이 stime시간보다 작은경우 etime시간 변경
             }
         });
  //종료시간 설정
-  $('#etime').timepicker({timeFormat:'H:i','interval' : 30,'minTime':'00:00','maxTime':'23:30','scrollbar': true});//etime 시간 기본 설정
+  $('#end').timepicker({timeFormat:'H:i','interval' : 30,'minTime':'00:00','maxTime':'23:30','scrollbar': true});//etime 시간 기본 설정
 
  //체크박스 전체 선택, 해제
- $('#chk_all').click(function () {
-     if($('#chk_all').is(":checked")){
-         $(".form-check-input").prop("checked", true);
-     }
-     else{
-         $(".form-check-input").prop("checked", false);
-     }
- });
+    function checkSelectAll()  {
+        // 전체 체크박스
+        const checkboxes
+            = document.querySelectorAll('input[name="item"]');
+        // 선택된 체크박스
+        const checked
+            = document.querySelectorAll('input[name="item"]:checked');
+        // select all 체크박스
+        const selectAll
+            = document.querySelector('input[name="selectall"]');
+
+        if(checkboxes.length === checked.length)  {
+            selectAll.checked = true;
+        }else {
+            selectAll.checked = false;
+        }
+
+    }
+
+    function selectAll(selectAll)  {
+        const checkboxes
+            = document.getElementsByName('item');
+
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = selectAll.checked
+        })
+    }
+
 //측정소 변경
  function placeChange(name){
      const place = name;
@@ -195,29 +215,31 @@
          success : function(data) {
              for(let i=0;i<data.length;i++){
                  const tableName = data[i];
+
                  const category = findSensorCategory(tableName);
-                 // const status = findSensorAlarm(tableName);
+                 const checked = findSensorAlarm(tableName);
+
 
                  const innerHtml = "<div class='form-check mb-2'>" +
-                     "<input class='form-check-input' type='checkbox' id='"+tableName+"' name='item' value='"+tableName+"' >" +
+                     "<input class='form-check-input' type='checkbox' id='"+tableName+"a' name='item' value='"+tableName+"' onclick='checkSelectAll()'>" +
                      "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
                      "<label class='switch'>"+
-                     //"<input id='slider"+i+"'type='checkbox' name='status'>"+
-
-                     "<input id='"+tableName+"' type='checkbox' name='status'>"+
+                     "<input id='"+tableName+"' type='checkbox' name='status' "+checked+">"+
                      "<div class='slider round'></div>"+
                      "</label>"+
                      "</div>"
 
                  const elem = document.createElement('div');
-                 elem.innerHTML = innerHtml
+                 elem.innerHTML = innerHtml;
                  document.getElementById('items').append(elem);
+
+
                  //Off 버튼 클릭
                  $('#bOff').click(function () {
                      var num = $(".switch").size();
                      for (var i = 0; i <num; i++) {
-                         if($('#'+data[i]).is(":checked")){
-                             $('#slider'+i).prop("checked", false);
+                         if($('#'+data[i]+'a').is(":checked")){
+                             $('#'+data[i]).prop("checked", false);
                          }
                      };
                  });
@@ -225,20 +247,111 @@
                  $('#bOn').click(function () {
                      var num = $(".switch").size();
                      for (var i = 0; i <num; i++) {
-                         if($('#'+data[i]).is(":checked")){
-                             $('#slider'+i).prop("checked", true);
+                         if($('#'+data[i]+'a').is(":checked")){
+                             $('#'+data[i]).prop("checked", true);
                          }
                      };
                  });
              }
+
 
          },
          error : function(request, status, error) { // 결과 에러 콜백함수
              console.log(error)
          }
      })
- }
+     //알림시간 입력
+     $.ajax({
+         url: '<%=cp%>/getPlaceSensor',
+         type: 'POST',
+         dataType: 'json',
+         async: false,
+         cache: false,
+         data: {"place":place},
+         success : function(data) {
+             for (let i = 0; i <1; i++) {
+                 const time = data[0];
+                 const start =  findStartTime(time);
+                 const end = findEndTime(time);
+                 document.getElementById("start").value = start;
+                 document.getElementById("end").value = end;
 
+             }
+         },
+         error : function(request, status, error) { // 결과 에러 콜백함수
+             console.log(error)
+         }
+     })
+
+ }
+    //sensor_alarm status 값 불러오기
+    function findSensorAlarm(tableName) {
+
+     let test;
+        $.ajax({
+            url: '<%=cp%>/getSensorAlarm',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"name":tableName},
+            success : function(data) {
+                if(data == true){
+                    test = "checked";
+                }else{
+                    test = "";
+                }
+
+            },
+            error : function(request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        return test;
+    }
+    //알림 시작시간
+ function findStartTime(time) {
+
+    let test;
+    $.ajax({
+        url: '<%=cp%>/getStartTime',
+        type: 'POST',
+        dataType: 'text',
+        async: false,
+        cache: false,
+        data: {"name":time},
+        success : function(data) {
+            test = data;
+
+        },
+        error : function(request, status, error) { // 결과 에러 콜백함수
+            console.log(error)
+        }
+    })
+    return test;
+ }
+    //알림 종료시간
+    function findEndTime(time) {
+
+        let test;
+        $.ajax({
+            url: '<%=cp%>/getEndTime',
+            type: 'POST',
+            dataType: 'text',
+            async: false,
+            cache: false,
+            data: {"name":time},
+            success : function(data) {
+                test = data;
+            },
+            error : function(request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        return test;
+    }
+
+//알림설정 값 저장
 function insert() {
     var checkedItem = new Array();
     var uncheckItem = new Array();
@@ -249,14 +362,8 @@ function insert() {
         uncheckItem.push($(this).attr('id'));
     });
 
-    const stime = $("#stime").val();
-    const etime = $("#etime").val();
-
-    console.log(stime);
-    console.log(etime);
-    console.log(checkedItem);
-    console.log(uncheckItem);
-    console.log(status);
+    const start = $("#start").val();
+    const end = $("#end").val();
 
     for(let i=0; i<checkedItem.length; i++){
             let item = checkedItem[i];
@@ -268,8 +375,8 @@ function insert() {
                 async: false,
                 cache: false,
                 data: {"item":item,
-                    "stime":stime,
-                    "etime":etime,
+                    "stime":start,
+                    "etime":end,
                     "status":"true"
                 },
                 success : function(data) {
@@ -290,8 +397,8 @@ function insert() {
             async: false,
             cache: false,
             data: {"item":item,
-                "stime":stime,
-                "etime":etime,
+                "stime":start,
+                "etime":end,
                 "status":"false"
             },
             success : function(data) {
@@ -302,8 +409,8 @@ function insert() {
             }
         })
     }
-
-
+    alert("설정 완료");
 }
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
