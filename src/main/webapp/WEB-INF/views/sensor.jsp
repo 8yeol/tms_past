@@ -29,129 +29,98 @@
 
 <div class="container">
     <%-- ************************************************************************************************************** --%>
-        <div class="bg-gradient p-4 mt-4 ms-3 bg-skyblue">
-            <div class="ms-3 add-bg">
-                <span class="fs-5 fw-bold add-margin">측정소</span>
-                <div class="btn-group w-50 ms-3">
-                    <select id="place" class="btn btn-light" onchange="changePlace()">
-                        <c:forEach var="place" items="${place}">
-                            <option value="${place.name}">${place.name}</option>
-                        </c:forEach>
-                    </select>
-                </div>
+    <div class="bg-gradient p-4 mt-4 ms-3 bg-skyblue">
+        <div class="ms-3 add-bg">
+            <span class="fs-5 fw-bold add-margin">측정소</span>
+            <div class="btn-group w-50 ms-3">
+                <select id="place" class="btn btn-light" onchange="changePlace()">
+                    <c:forEach var="place" items="${place}">
+                        <option value="${place.name}">${place.name}</option>
+                    </c:forEach>
+                </select>
             </div>
         </div>
+    </div>
 
-        <hr>
+    <hr>
 
-        <div class="row">
-            <div class="col">
-                <div class="row">
-                    <div class="col-9">
-                        <div class="float-start">
-                            <div class="fs-5 fw-bold mb-2" id="title"> </div>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="float-start">
-                            <div class="fs-5 fw-bold mb-2" id="update"> </div>
-                        </div>
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col-9">
+                    <div class="float-start">
+                        <div class="fs-5 fw-bold mb-2" id="title"> </div>
                     </div>
                 </div>
-                <div class="row h-75 mt-4">
-                    <div class="col-md-6">
-                        <%-- 센서 최근 테이블--%>
-                        <div class="table-responsive bg-success bg-gradient col-md-12">
-                            <table id="sensor-table">
-                                <thead>
-                                <tr>
-                                    <th>항목</th>
-                                    <th>측정값</th>
-                                    <th>업데이트일</th>
-                                </tr>
-                                <thead>
-                            </table>
-                        </div>
+                <div class="col-3">
+                    <div class="float-start">
+                        <div class="fs-5 fw-bold mb-2" id="update"> </div>
                     </div>
-                    <%-- 차트 --%>
-                    <div class="col-md-6">
-                        <div id="chart" class="col-md-12 mb-4">
-                        </div>
-
-                        <hr>
-                        <%-- 차트의 데이터 테이블 --%>
-                        <table id="sensor-table-time" class="table-responsive bg-success bg-gradient col-md-12 mt-1">
+                </div>
+            </div>
+            <div class="row h-75 mt-4">
+                <div class="col-md-6">
+                    <%-- 센서 최근 테이블--%>
+                    <div class="table-responsive bg-success bg-gradient col-md-12">
+                        <table id="sensor-table">
                             <thead>
                             <tr>
-                                <th>측정시간</th>
-                                <th>측정 값</th>
+                                <th>항목</th>
+                                <th>측정값</th>
+                                <th>업데이트일</th>
                             </tr>
-                            </thead>
+                            <thead>
                         </table>
                     </div>
                 </div>
+                <%-- 차트 --%>
+                <div class="col-md-6">
+                    <div id="chart" class="col-md-12 mb-4">
+                    </div>
+
+                    <hr>
+                    <%-- 차트의 데이터 테이블 --%>
+                    <table id="sensor-table-time" class="table-responsive bg-success bg-gradient col-md-12 mt-1">
+                        <thead>
+                        <tr>
+                            <th>측정시간</th>
+                            <th>측정 값</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
+    </div>
     <%-- ************************************************************************************************************** --%>
 </div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    var table1, table2, chart1;
+    var place_table, sensor_table, sensor_chart;
     var interval;
 
     $(document).ready(function () {
         var place = $("#place").val(); // 측정소명
         var place_data =getPlaceData(place); //측정소 정보 조회
-
-        $("#sensor-table").DataTable().clear();
-        $("#sensor-table").DataTable().destroy();
-        table1 = draw_sensor_table(place_data);
-
-        var sensor_data = table1.row(0).data(); //테이블1 첫번째 행 센서데이터 정보
-        addTableChart(sensor_data);
-    }); //ready
-
-    function changePlace() {
-        clearInterval(interval);
-        var place = $("#place").val(); // 측정소명
-        var place_data =getPlaceData(place); //측정소 정보 조회
-
-        $("#sensor-table").DataTable().clear();
-        $("#sensor-table").DataTable().destroy();
-        table1 = draw_sensor_table(place_data);
-        var sensor_data = table1.row(0).data(); //테이블1의 첫번째 행 센서데이터 정보
-        addTableChart(sensor_data);
-
-    }
-
-    $("#sensor-table").on('click', 'tr', function(){
-        clearInterval(interval);
-        var place = $("#place").val(); // 측정소명
-        var place_data =getPlaceData(place); //측정소 정보 조회
-
-        $("#sensor-table").DataTable().clear();
-        $("#sensor-table").DataTable().destroy();
-        table1 = draw_sensor_table(place_data);
-
-        var sensor_data = table1.row(this).data();
-        addTableChart(sensor_data);
-    });
-
-    function addTableChart(sensor_data){
+        place_table = draw_sensor_table(place_data);
+        var sensor_data = place_table.row(0).data(); //테이블1의 첫번째 행 센서데이터 정보
         if(sensor_data == null){
             $('#title').text(place);
 
+            $("#sensor-table").DataTable().clear();
+            $("#sensor-table").DataTable().destroy();
             $("#chart").empty();
-            chart1 = draw_chart(null);
-
             $("#sensor-table-time").DataTable().clear();
             $("#sensor-table-time").DataTable().destroy();
-            table2 = draw_sensor_time_table(null);
+
+            place_table = draw_sensor_table(place_data);
+            sensor_chart = draw_chart(null);
+            sensor_table = draw_sensor_time_table(null);
         }else{
-            var sensor_naming = sensor_data.naming; //테이블1의 첫번째 행 센서데이터 한글명
-            var sensor_name = sensor_data.name; //테이블1의 첫번째 행 센서명(테이블명)
+            var sensor_naming = sensor_data.naming; //테이블1의 선택된 행 센서데이터 이름
+            var sensor_name = sensor_data.name; //테이블1의 선택된 행 센서명
             var warning = sensor_data.warning;
             var danger = sensor_data.danger;
             var substitution = sensor_data.substitution;
@@ -160,53 +129,215 @@
             var sensor_data = getSensor(sensor_name, "", "", 60); //한시간 전의 센서 데이터 조회
             $('#update').text("업데이트일 : "+ sensor_data[0].x);
 
+            /* 센서에 대한 차트, 테이블 삭제 */
             $("#chart").empty();
-            chart1 = draw_chart(sensor_data, warning, danger, substitution);
-            chart1.render();
-
             $("#sensor-table-time").DataTable().clear();
             $("#sensor-table-time").DataTable().destroy();
-            table2 = draw_sensor_time_table(sensor_data, warning, danger, substitution);
+
+            /* 센서에 대한 차트, 테이블 생성 */
+            sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
+            sensor_chart.render();
+            sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
 
             interval = setInterval(function () {
-                console.log(interval);
+                /* 최근 센서의 데이터 조회 */
                 var place_data_recent = getPlaceData(place);
                 for(var i=0; i<place_data.length; i++) {
-                    //최신데이터와 데이터 비교
-                    if(place_data[i].up_time != place_data_recent[i].up_time) {
+                    //최신데이터, 생성시 데이터 비교
+                    if (place_data[i].value != place_data_recent[i].value) {
+                        /* 측정소 데이터 업데이트 */
                         place_data[i].value = place_data_recent[i].value;
                         place_data[i].up_time = place_data_recent[i].up_time;
                     }
                 }
 
-                /* 최근 센서 데이터 조회 */
+                /* 최근 센서의 데이터 조회 */
                 var sensor_data_recent = getSensor(sensor_name, "", "", 60);
-                if(sensor_data[0].x != sensor_data_recent[0].x){
-                    $('#update').text("업데이트일 : "+ sensor_data_recent[0].x);
-                    /* table 1 draw */
-                    $("#sensor-table").DataTable().clear();
-                    $("#sensor-table").DataTable().destroy();
-                    table1 = draw_sensor_table(place_data);
-
+                if (sensor_data[0].x != sensor_data_recent[0].x) {
+                    /* sensor_data 업데이트 */
                     sensor_data.unshift(sensor_data_recent[0]); //배열의 0번째로 삽입
                     sensor_data.pop(); //배열의 마지막 삭제
 
-                    /* chart 1 draw */
-                    $("#chart").empty();
-                    chart1 = draw_chart(sensor_data, warning, danger, substitution);
-                    chart1.render();
+                    $('#update').text("업데이트일 : " + sensor_data_recent[0].x); //업데이트일
 
-                    /* table 2 draw */
+                    /* 테이블, 차트 삭제 */
+                    $("#sensor-table").DataTable().clear();
+                    $("#sensor-table").DataTable().destroy();
+                    $("#chart").empty();
                     $("#sensor-table-time").DataTable().clear();
                     $("#sensor-table-time").DataTable().destroy();
-                    table2 = draw_sensor_time_table(sensor_data, warning, danger, substitution);
+
+                    /* 테이블, 차트 생성*/
+                    place_table = draw_sensor_table(place_data);
+                    sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
+                    sensor_chart.render();
+                    sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
+                }
+            }, 3000);
+        }
+    }); //ready
+
+
+    function changePlace() {
+        clearInterval(interval);
+        var place = $("#place").val(); // 측정소명
+        var place_data =getPlaceData(place); //측정소 정보 조회
+
+        $("#sensor-table").DataTable().clear();
+        $("#sensor-table").DataTable().destroy();
+        place_table = draw_sensor_table(place_data);
+
+        var sensor_data = place_table.row(0).data(); //테이블1의 첫번째 행 센서데이터 정보
+        if(sensor_data == null){
+            $('#title').text(place);
+
+            $("#sensor-table").DataTable().clear();
+            $("#sensor-table").DataTable().destroy();
+            $("#chart").empty();
+            $("#sensor-table-time").DataTable().clear();
+            $("#sensor-table-time").DataTable().destroy();
+
+            place_table = draw_sensor_table(place_data);
+            sensor_chart = draw_chart(null);
+            sensor_table = draw_sensor_time_table(null);
+        }else{
+            var sensor_naming = sensor_data.naming; //테이블1의 선택된 행 센서데이터 이름
+            var sensor_name = sensor_data.name; //테이블1의 선택된 행 센서명
+            var warning = sensor_data.warning;
+            var danger = sensor_data.danger;
+            var substitution = sensor_data.substitution;
+            $('#title').text(place + " - " + sensor_naming + " (기준값 - 경고:"+warning + "/ 위험:"+danger + ")");
+
+            var sensor_data = getSensor(sensor_name, "", "", 60); //한시간 전의 센서 데이터 조회
+            $('#update').text("업데이트일 : "+ sensor_data[0].x);
+
+            /* 센서에 대한 차트, 테이블 삭제 */
+            $("#chart").empty();
+            $("#sensor-table-time").DataTable().clear();
+            $("#sensor-table-time").DataTable().destroy();
+
+            /* 센서에 대한 차트, 테이블 생성 */
+            sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
+            sensor_chart.render();
+            sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
+
+            interval = setInterval(function () {
+                /* 최근 센서의 데이터 조회 */
+                var place_data_recent = getPlaceData(place);
+                for(var i=0; i<place_data.length; i++) {
+                    //최신데이터, 생성시 데이터 비교
+                    if (place_data[i].value != place_data_recent[i].value) {
+                        /* 측정소 데이터 업데이트 */
+                        place_data[i].value = place_data_recent[i].value;
+                        place_data[i].up_time = place_data_recent[i].up_time;
+                    }
+                }
+
+                /* 최근 센서의 데이터 조회 */
+                var sensor_data_recent = getSensor(sensor_name, "", "", 60);
+                if (sensor_data[0].x != sensor_data_recent[0].x) {
+                    /* sensor_data 업데이트 */
+                    sensor_data.unshift(sensor_data_recent[0]); //배열의 0번째로 삽입
+                    sensor_data.pop(); //배열의 마지막 삭제
+
+                    $('#update').text("업데이트일 : " + sensor_data_recent[0].x); //업데이트일
+
+                    /* 테이블, 차트 삭제 */
+                    $("#sensor-table").DataTable().clear();
+                    $("#sensor-table").DataTable().destroy();
+                    $("#chart").empty();
+                    $("#sensor-table-time").DataTable().clear();
+                    $("#sensor-table-time").DataTable().destroy();
+
+                    /* 테이블, 차트 생성*/
+                    place_table = draw_sensor_table(place_data);
+                    sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
+                    sensor_chart.render();
+                    sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
                 }
             }, 3000);
         }
     }
 
 
-    /* 측정소 데이터 조회*/
+    $("#sensor-table").on('click', 'tr', function(){
+        clearInterval(interval)
+        var place = $("#place").val();
+        var place_data = getPlaceData(place);
+
+        var sensor_data = place_table.row(this).data();
+        if(sensor_data == null){
+            $('#title').text(place);
+
+            $("#sensor-table").DataTable().clear();
+            $("#sensor-table").DataTable().destroy();
+            $("#chart").empty();
+            $("#sensor-table-time").DataTable().clear();
+            $("#sensor-table-time").DataTable().destroy();
+
+            place_table = draw_sensor_table(place_data);
+            sensor_chart = draw_chart(null);
+            sensor_table = draw_sensor_time_table(null);
+        }else{
+            var sensor_naming = sensor_data.naming; //테이블1의 선택된 행 센서데이터 이름
+            var sensor_name = sensor_data.name; //테이블1의 선택된 행 센서명
+            var warning = sensor_data.warning;
+            var danger = sensor_data.danger;
+            var substitution = sensor_data.substitution;
+            $('#title').text(place + " - " + sensor_naming + " (기준값 - 경고:"+warning + "/ 위험:"+danger + ")");
+
+            var sensor_data = getSensor(sensor_name, "", "", 60); //한시간 전의 센서 데이터 조회
+            $('#update').text("업데이트일 : "+ sensor_data[0].x);
+
+            /* 센서에 대한 차트, 테이블 삭제 */
+            $("#chart").empty();
+            $("#sensor-table-time").DataTable().clear();
+            $("#sensor-table-time").DataTable().destroy();
+
+            /* 센서에 대한 차트, 테이블 생성 */
+            sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
+            sensor_chart.render();
+            sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
+
+            interval = setInterval(function () {
+                /* 최근 센서의 데이터 조회 */
+                var place_data_recent = getPlaceData(place);
+                for(var i=0; i<place_data.length; i++) {
+                    //최신데이터, 생성시 데이터 비교
+                    if (place_data[i].value != place_data_recent[i].value) {
+                        /* 측정소 데이터 업데이트 */
+                        place_data[i].value = place_data_recent[i].value;
+                        place_data[i].up_time = place_data_recent[i].up_time;
+                    }
+                }
+
+                /* 최근 센서의 데이터 조회 */
+                var sensor_data_recent = getSensor(sensor_name, "", "", 60);
+                if (sensor_data[0].x != sensor_data_recent[0].x) {
+                    /* sensor_data 업데이트 */
+                    sensor_data.unshift(sensor_data_recent[0]); //배열의 0번째로 삽입
+                    sensor_data.pop(); //배열의 마지막 삭제
+
+                    $('#update').text("업데이트일 : " + sensor_data_recent[0].x); //업데이트일
+
+                    /* 테이블, 차트 삭제 */
+                    $("#sensor-table").DataTable().clear();
+                    $("#sensor-table").DataTable().destroy();
+                    $("#chart").empty();
+                    $("#sensor-table-time").DataTable().clear();
+                    $("#sensor-table-time").DataTable().destroy();
+
+                    /* 테이블, 차트 생성*/
+                    place_table = draw_sensor_table(place_data);
+                    sensor_chart = draw_chart(sensor_data, warning, danger, substitution);
+                    sensor_chart.render();
+                    sensor_table = draw_sensor_time_table(sensor_data, warning, danger, substitution);
+                }
+            }, 3000);
+        }
+    });
+
+    /* 측정소가 바뀐 데이터 조회*/
     function getPlaceData(place){
         var getData = new Array();
         /* 측정소에 따라 센서명을 가져와 data 생성*/
@@ -505,22 +636,22 @@
     }
 
 
+    /* 처음 로딩시 model 로 넘겨받은 센서 데이터 가져옴 - table1의 데이터*/
+    <%--function getReadyData() {--%>
+    <%--    var getData = new Array();--%>
+    <%--    <c:forEach items="${sensors}" var="sName" varStatus="status">--%>
+    <%--    <c:set var="Index">${status.index}</c:set>--%>
+    <%--    <fmt:formatNumber value="${sensor[Index].value}" var="sValue" pattern=".00"/>--%>
+    <%--    <fmt:formatDate value="${sensor[Index].up_time}" var="sUp_time" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>--%>
+    <%--        <c:if test="${not empty sensor_info[Index].naming}">--%>
+    <%--    getData.push({naming: "${sensor_info[Index].naming}", name:"${sName}", value:"${sValue}", up_time: "${sUp_time}"});--%>
+    <%--        </c:if>--%>
+    <%--        <c:if test="${empty sensor_info[Index].naming}">--%>
+    <%--    getData.push({naming: "${sName}", name:"${sName}", value:"${sValue}", up_time: "${sUp_time}"});--%>
+    <%--        </c:if>--%>
+    <%--    </c:forEach>--%>
+    <%--    return getData;--%>
+    <%--}--%>
+
+
 </script>
-
-<%-- 처음 로딩시 model 로 넘겨받은 센서 데이터 가져옴 - table1의 데이터 --%>
-<%--function getReadyData() {--%>
-<%--    var getData = new Array();--%>
-<%--    <c:forEach items="${sensors}" var="sName" varStatus="status">--%>
-<%--    <c:set var="Index">${status.index}</c:set>--%>
-<%--    <fmt:formatNumber value="${sensor[Index].value}" var="sValue" pattern=".00"/>--%>
-<%--    <fmt:formatDate value="${sensor[Index].up_time}" var="sUp_time" type="DATE" pattern="yyyy-MM-dd HH:mm:ss"/>--%>
-<%--        <c:if test="${not empty sensor_info[Index].naming}">--%>
-<%--    getData.push({naming: "${sensor_info[Index].naming}", name:"${sName}", value:"${sValue}", up_time: "${sUp_time}"});--%>
-<%--        </c:if>--%>
-<%--        <c:if test="${empty sensor_info[Index].naming}">--%>
-<%--    getData.push({naming: "${sName}", name:"${sName}", value:"${sValue}", up_time: "${sUp_time}"});--%>
-<%--        </c:if>--%>
-<%--    </c:forEach>--%>
-<%--    return getData;--%>
-<%--}--%>
-
