@@ -147,7 +147,6 @@
 
     $( document ).ready(function() {
         placeChange('point1');
-        //insert();
 
     });
  //시작시간 설정
@@ -179,6 +178,7 @@
          $(".form-check-input").prop("checked", false);
      }
  });
+
 //측정소 변경
  function placeChange(name){
      const place = name;
@@ -196,37 +196,37 @@
              for(let i=0;i<data.length;i++){
                  const tableName = data[i];
                  const category = findSensorCategory(tableName);
-                 // const status = findSensorAlarm(tableName);
+                 const checked = findSensorAlarm(tableName);
 
                  const innerHtml = "<div class='form-check mb-2'>" +
-                     "<input class='form-check-input' type='checkbox' id='"+tableName+"' name='item' value='"+tableName+"' >" +
+                     "<input class='form-check-input' type='checkbox' id='"+tableName+"a' name='item' value='"+tableName+"' >" +
                      "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
                      "<label class='switch'>"+
-                     //"<input id='slider"+i+"'type='checkbox' name='status'>"+
-
-                     "<input id='"+tableName+"' type='checkbox' name='status'>"+
+                     "<input id='"+tableName+"' type='checkbox' name='status' "+checked+">"+
                      "<div class='slider round'></div>"+
                      "</label>"+
                      "</div>"
 
                  const elem = document.createElement('div');
-                 elem.innerHTML = innerHtml
+                 elem.innerHTML = innerHtml;
                  document.getElementById('items').append(elem);
                  //Off 버튼 클릭
                  $('#bOff').click(function () {
                      var num = $(".switch").size();
+                     console.log(num);
                      for (var i = 0; i <num; i++) {
-                         if($('#'+data[i]).is(":checked")){
-                             $('#slider'+i).prop("checked", false);
+                         if($('#'+data[i]+'a').is(":checked")){
+                             $('#'+data[i]).prop("checked", false);
                          }
                      };
                  });
                  //On 버튼 클릭
                  $('#bOn').click(function () {
                      var num = $(".switch").size();
+                     console.log(num);
                      for (var i = 0; i <num; i++) {
-                         if($('#'+data[i]).is(":checked")){
-                             $('#slider'+i).prop("checked", true);
+                         if($('#'+data[i]+'a').is(":checked")){
+                             $('#'+data[i]).prop("checked", true);
                          }
                      };
                  });
@@ -238,7 +238,36 @@
          }
      })
  }
+    //sensor_alarm status 값 불러오기
+    function findSensorAlarm(tableName) {
 
+     let test;
+        $.ajax({
+            url: '<%=cp%>/getSensorAlarm',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"name":tableName},
+            success : function(data) {
+                console.log(data);
+                if(data == true){
+                    console.log(1111111);
+                    test = "checked";
+                }else{
+                    console.log(222222);
+                    test = "";
+                }
+
+            },
+            error : function(request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        return test;
+    }
+
+//알림설정 값 저장
 function insert() {
     var checkedItem = new Array();
     var uncheckItem = new Array();
@@ -251,12 +280,6 @@ function insert() {
 
     const stime = $("#stime").val();
     const etime = $("#etime").val();
-
-    console.log(stime);
-    console.log(etime);
-    console.log(checkedItem);
-    console.log(uncheckItem);
-    console.log(status);
 
     for(let i=0; i<checkedItem.length; i++){
             let item = checkedItem[i];
@@ -302,6 +325,7 @@ function insert() {
             }
         })
     }
+    alert("설정 완료");
 
 
 }

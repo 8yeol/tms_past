@@ -27,12 +27,16 @@ public class JsonController {
     final
     Sensor_InfoRepository sensor_infoRepository;
 
-    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Sensor_InfoRepository sensor_infoRepository) {
+    final
+    Sensor_AlarmRepository sensor_alarmRepository;
+
+    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Sensor_InfoRepository sensor_infoRepository, Sensor_AlarmRepository sensor_alarmRepository) {
         this.placeRepository = placeRepository;
         this.placeCustomRepository = placeCustomRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.sensor_infoRepository = sensor_infoRepository;
+        this.sensor_alarmRepository = sensor_alarmRepository;
     }
 
 // *********************************************************************************************************************
@@ -83,11 +87,13 @@ public class JsonController {
         return sensorCustomRepository.getSenor(sensor, from_date, to_date, minute);
     }
 
-//    @RequestMapping(value = "/getSensorAlarm")
-//    public Object getSensorAlarm(@RequestParam("name") String name){
-//        return sensor_alarmRepository.findByName(name).getStatus();
-//    }
-//
+    @RequestMapping(value = "/getSensorAlarm")
+    public boolean getSensorAlarm(@RequestParam("name") String name){
+        System.out.println(sensor_alarmRepository.findByName(name).isStatus());
+
+        return sensor_alarmRepository.findByName(name).isStatus();
+    }
+
 
 
 }
