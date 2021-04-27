@@ -316,7 +316,6 @@ public class MainController {
     @RequestMapping(value = "/alarmManagement", method = RequestMethod.GET)
     public String alarmManagement(Model model){
         List<Place> places = placeRepository.findAll();
-
         List<String> placelist = new ArrayList<>();
 
         for(Place place : places){

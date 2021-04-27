@@ -86,12 +86,25 @@ public class JsonController {
                                   @RequestParam("minute") String minute){
         return sensorCustomRepository.getSenor(sensor, from_date, to_date, minute);
     }
-
+    /**
+     * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
+     * @param name 센서 이름
+     * @return 해당 센서의 status값
+     */
     @RequestMapping(value = "/getSensorAlarm")
     public boolean getSensorAlarm(@RequestParam("name") String name){
-        System.out.println(sensor_alarmRepository.findByName(name).isStatus());
 
         return sensor_alarmRepository.findByName(name).isStatus();
+    }
+    @RequestMapping(value = "/getStartTime")
+    public String getStartTime(@RequestParam("name") String name){
+
+        return sensor_alarmRepository.findByName(name).getStart();
+    }
+    @RequestMapping(value = "/getEndTime")
+    public String getEndTime(@RequestParam("name") String name){
+
+        return sensor_alarmRepository.findByName(name).getEnd();
     }
 
 
