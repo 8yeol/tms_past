@@ -47,14 +47,21 @@
     <div class="row">
         <div class="col">
             <div class="row">
-                <div class="col-9">
+                <div class="col-6">
                     <div class="float-start">
-                        <div class="fs-5 fw-bold mb-2" id="title"> </div>
+                        <span class="fs-5 fw-bold mb-2" id="title"> </span>
                     </div>
                 </div>
                 <div class="col-3">
                     <div class="float-start">
-                        <div class="fs-5 fw-bold mb-2" id="update"> </div>
+                        <span class="fs-5 fw-bold mb-2" id="sensorInfo1"> </span>
+                        <span class="fs-7 mb-2" id="sensorInfo2"> </span>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="float-start">
+                        <span> 업데이트 : </span>
+                        <span class="fs-5 mb-2" id="update"> </span>
                     </div>
                 </div>
             </div>
@@ -67,7 +74,7 @@
                             <tr>
                                 <th>항목</th>
                                 <th>측정값</th>
-                                <th>업데이트일</th>
+                                <th>업데이트</th>
                             </tr>
                             <thead>
                         </table>
@@ -136,8 +143,8 @@
     function addChartTable(place, place_data, sensor_data) {
         // console.log(place_data);
         // console.log(sensor_data);
+        $('#title').text(place);
         if(sensor_data == null){
-            $('#title').text(place);
 
             $("#sensor-table").DataTable().clear();
             $("#sensor-table").DataTable().destroy();
@@ -154,10 +161,11 @@
             var warning = sensor_data.warning;
             var danger = sensor_data.danger;
             var substitution = sensor_data.substitution;
-            $('#title').text(place + " - " + sensor_naming + " (기준값 - 경고:"+warning + "/ 위험:"+danger + ")");
+            $('#sensorInfo1').text(sensor_naming);
+            $('#sensorInfo2').text("(경고:"+warning + "/ 위험:"+danger + ")");
 
             var sensor_data = getSensor(sensor_name, "", "", 60); //한시간 전의 센서 데이터 조회
-            $('#update').text("업데이트일 : "+ sensor_data[0].x);
+            $('#update').text(sensor_data[0].x);
 
             /* 센서에 대한 차트, 테이블 삭제 */
             $("#chart").empty();
@@ -188,7 +196,7 @@
                     sensor_data.unshift(sensor_data_recent[0]); //배열의 0번째로 삽입
                     sensor_data.pop(); //배열의 마지막 삭제
 
-                    $('#update').text("업데이트일 : " + sensor_data_recent[0].x); //업데이트일
+                    $('#update').text(sensor_data[0].x);
 
                     /* 테이블, 차트 삭제 */
                     $("#sensor-table").DataTable().clear();
@@ -431,6 +439,10 @@
                         pan: true,
                         reset: false,
                     },
+                animations:{
+                        enabled: false,
+                        speed:1500
+                }
                 },
                 tooltip:{
                     enabled: false
