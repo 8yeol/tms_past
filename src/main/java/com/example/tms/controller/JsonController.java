@@ -96,11 +96,13 @@ public class JsonController {
 
         return sensor_alarmRepository.findByName(name).isStatus();
     }
+    //알림 시작시간
     @RequestMapping(value = "/getStartTime")
     public String getStartTime(@RequestParam("name") String name){
 
         return sensor_alarmRepository.findByName(name).getStart();
     }
+    //알림 종료시간
     @RequestMapping(value = "/getEndTime")
     public String getEndTime(@RequestParam("name") String name){
 

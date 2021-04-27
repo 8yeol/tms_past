@@ -14,6 +14,7 @@ public class Sensor_Info {
     private float warning;
     private float danger;
     private float substituion; //교정값
+    private String division;
 
     public ObjectId get_id() {
         return _id;
@@ -63,6 +64,14 @@ public class Sensor_Info {
         this.substituion = substituion;
     }
 
+    public String getDivision() {
+        return division;
+    }
+
+    public void setDivision(String division) {
+        this.division = division;
+    }
+
     @Override
     public String toString() {
         return "Sensor_Info{" +
@@ -72,6 +81,7 @@ public class Sensor_Info {
                 ", warning=" + warning +
                 ", danger=" + danger +
                 ", substituion=" + substituion +
+                ", division=" + division +
                 '}';
     }
 }
