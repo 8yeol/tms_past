@@ -148,7 +148,6 @@
                     대기 TMS 관제 시스템
                 </a>
 
-
                 <nav id="topMenu">
                     <ul>
                         <li class="topMenuLi"><a class="menuLink" href="/">대시보드</a>
@@ -166,7 +165,6 @@
                             <ul class="submenu">
                                 <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
                                 <li><a href="/dataStatistics" class="submenuLink ">통계자료 조회</a></li>
-                                <li><a href="" class="submenuLink ">subItem 3</a></li>
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="">환경설정</a>
@@ -178,10 +176,8 @@
                                 <li><a href="/setting" class="submenuLink ">설정</a></li>
                             </ul>
                         </li>
-
                     </ul>
                 </nav>
-
 
             </div>
 

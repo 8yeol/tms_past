@@ -254,66 +254,58 @@
 
     function addTable(previousYear, thisYear, previousYearData, thisYearData){
         $('#information > tbody').empty();
-        let thisYearSum = 0 , previousYearSum = 0 ;
 
-        // 전년도
-        let innerHtml = "";
-        innerHtml += '<tr>'
-        innerHtml += '<td>' + previousYear+ '</td>';
-        for(let i = 0 ;i <previousYearData.length;i++){
-            let data = previousYearData[i]!=null?Math.round(previousYearData[i]):0;
-            innerHtml += '<td>' + numberWithCommas(data) + '</td>';
-            previousYearSum = previousYearSum + data;
-        }
-        innerHtml += '<td>' + numberWithCommas(previousYearSum) + '</td>';
+        const previousYearSum = addMonthlyData(previousYear, previousYearData);
+        const thisYearSum = addMonthlyData(thisYear, thisYearData);
 
-        //올해
-        innerHtml += '</tr>';
-        innerHtml += '<tr>'
-        innerHtml += '<td>' + thisYear+ '</td>';
-        for(let i = 0 ;i <thisYearData.length;i++){
-            let data = thisYearData[i]!=null?Math.round(thisYearData[i]):0;
-            innerHtml += '<td>' + numberWithCommas(data) + '</td>';
-            thisYearSum = thisYearSum + data;
-        }
-        innerHtml += '<td>' + numberWithCommas(thisYearSum) + '</td>';
-        innerHtml += '</tr>';
-
-        $('#information > tbody:last').append(innerHtml);
-
-        // 증감률 계산
+        let innerHtml;
+        // 증감률
         $('#information > tfoot').empty();
         innerHtml = "";
         innerHtml += '<tr>'
         innerHtml += '<td>증감률</td>';
         for(let i = 0 ;i <thisYearData.length;i++){
             if(previousYearData[i] != null || thisYearData[i] == null){
-                let data = (Math.ceil(((thisYearData[i] - previousYearData[i])/previousYearData[i]))*100).toFixed(2)
-                if(isNaN(data)){
-                    data = 0 ;
-                }
-                innerHtml += '<td>' + data + ' %</td>'
+                let increase = addIncrease(previousYearData[i], thisYearData[i]);
+                innerHtml += '<td>' + increase + '</td>'
             } else{
                 innerHtml += '<td> 100 % </td>';
             }
         }
-
-        // 합계 증감률 계산
-        console.log(previousYearSum);
-        console.log(thisYearSum);
-
         if( previousYearSum != 0 || thisYearSum == 0){
-            let data = (Math.ceil(((thisYearSum - previousYearSum)/previousYearSum))*100).toFixed(2);
-            if(isNaN(data)){
-                data = 0 ;
-            }
-            innerHtml += '<td>' + data + ' % </td>';
+            let increase = addIncrease(previousYearSum, thisYearSum);
+            innerHtml += '<td>' + increase + '</td>';
         }else{
             innerHtml += '<td> 100 % </td>';
         }
-
         innerHtml += '</tr>';
         $('#information > tfoot:last').append(innerHtml);
+    }
+
+    // 월별 데이터 add
+    function addMonthlyData(year, yearData){
+        let sum = 0;
+        let innerHtml = "";
+        innerHtml += '<tr>'
+        innerHtml += '<td>' + year+ '</td>';
+        for(let i = 0 ;i <yearData.length;i++){
+            let data = yearData[i]!=null?Math.round(yearData[i]):0;
+            innerHtml += '<td>' + numberWithCommas(data) + '</td>';
+            sum = sum + data;
+        }
+        innerHtml += '<td>' + numberWithCommas(sum) + '</td>';
+        innerHtml += '</tr>';
+        $('#information > tbody:last').append(innerHtml);
+        return sum;
+    }
+
+    //증감률 계산
+    function addIncrease(previousYear, thisYear){
+        let increase = Math.ceil(((thisYear - previousYear)/previousYear))*100;
+        if(isNaN(increase)){
+            return '-';
+        }
+        return increase.toFixed(2) + ' %';
     }
 </script>
 
