@@ -55,6 +55,10 @@ public class JsonController {
         return placeRepository.findByName(place).getSensor();
     }
 
+
+// *********************************************************************************************************************
+// Sensor
+// *********************************************************************************************************************
     /**
      * @param sensor - 센서명
      * @return - 해당 센서의 센서 정보(한글명, 경고값, ...)
@@ -64,9 +68,10 @@ public class JsonController {
         return sensor_infoRepository.findByName(sensor);
     }
 
-// *********************************************************************************************************************
-// Sensor
-// *********************************************************************************************************************
+    @RequestMapping(value = "/getSensorInfo2")
+    public Sensor_Info getSensorInfo2(@RequestParam String sensor, @RequestParam String power){
+        return sensor_infoRepository.findByNameAndPower(sensor, power);
+    }
 
     @RequestMapping(value = "/getSensorRecent")
     public Sensor getSensorRecent(@RequestParam("sensor") String sensor){
@@ -86,6 +91,7 @@ public class JsonController {
                                   @RequestParam("minute") String minute){
         return sensorCustomRepository.getSenor(sensor, from_date, to_date, minute);
     }
+
     /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
      * @param name 센서 이름

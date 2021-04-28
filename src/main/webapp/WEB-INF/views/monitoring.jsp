@@ -58,17 +58,18 @@
         </div>
     </div>
     <div class="row mt-4 h-75">
-        <div class="table-responsive bg-gradient col-md-12">
+        <div class="col-md-12">
             <table id="sensor-table">
                 <thead>
                 <tr>
-                    <th>구분</th>
                     <th>항목</th>
                     <th>실시간</th>
                     <th>5분전</th>
                     <th>증감</th>
-                    <th>경고값</th>
-                    <th>위험값</th>
+                    <th>법적기준</th>
+                    <th>사내기준</th>
+                    <th>관리기준</th>
+                    <th>상태</th>
                     <th>업데이트</th>
                 </tr>
                 <thead>
@@ -95,7 +96,7 @@
         </div>
         </c:forEach>--%>
     </div>
-    <div class="row">
+    <%--<div class="row">
         <div class="col-xs-12 d-flex justify-content-between bg-light rounded mt-3">
             <div class="flex-fill d-flex justify-content-around">
                 <h3> <i class="fas fa-square text-dark"></i> 장비정상</h3>
@@ -106,7 +107,7 @@
             </div>
 
         </div>
-    </div>
+    </div>--%>
 </div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
@@ -115,24 +116,49 @@
 
 <script>
     var interval;
+    var element, shown;
     $(document).ready(function () {
             getData();
+            // flashing();
     }); //ready
 
     function changePlace() {
         getData();
+        // flashing();
+    }
+
+    function flashing(){
+        element = $(".row ");
+        setTimeout(function A() {
+            setTimeout(function () {
+                element.css({"opacity": 0});
+            },0);
+            setTimeout(function () {
+                element.css({"opacity": 1});
+            },200); //0.2초 숨김
+            setTimeout(A, 1000); //0.8초 보여줌
+        }, 0)
     }
 
 
     function getData(){
-        clearInterval(interval);
-        var place = $("#place").val();
+        clearTimeout(interval);
+        var places = new Array();
+        <c:forEach items="${place}" var="place" varStatus="status">
+            places.push("${place.name}");
+        </c:forEach>
+        console.log(places);
+
+        // var place = $("#place").val();
         // console.log(place);
-        var place_data = getPlaceData(place);
+        var place_data = getPlaceData(places[1]);
         draw_place_table(place_data);
         // console.log(place_data);
-        interval = setInterval(function () {
+        interval = setTimeout(function interval_getData() {
             // console.log(interval);
+            var date = new Date();
+            $("#time").text(moment(date).format('YYYY-MM-DD HH:mm:ss'));
+
             var place_data_recent = getPlaceData(place);
             for (var i = 0; i < place_data.length; i++) {
                 if (place_data[i].up_time != place_data_recent[i].up_time) {
@@ -146,61 +172,63 @@
                     draw_place_table(place_data);
                 }
             }
-            var date = new Date();
-            $("#time").text(moment(date).format('YYYY-MM-DD HH:mm:ss'));
-        }, 1000);
+            setTimeout(interval_getData, 100000);
+        }, 0);
     }
 
     function getPlaceData(place) {
         var getData = new Array();
-        var naming, warning, danger, substitution;
-        var b5_value, com_value;
 
-        $.ajax({
+        $.ajax({ /* 측정소의 센서명 획득 */
            url:'getPlaceSensor',
            dataType:'json',
            data: {"place": place},
            async: false,
            success: function (data) {
                $.each(data, function (index, item) {
-                   var sensorInfo = getSensorInfo(item);
+                   console.log(item); //sensor name
                    var sensor = getSensorRecent(item);
+                   console.log(sensor);
                    var b5_sensor = getSensor(item, "", "", 10);
-                   if(sensorInfo == null){
-                       naming = item;
-                       warning = 15;
-                       danger = 30;
-                       substitution = 0;
-                       status = 0;
-                   }else{
-                        naming = sensorInfo.naming;
-                        warning = sensorInfo.warning;
-                        danger = sensorInfo.danger;
-                        substitution = sensorInfo.substitution;
-                        division = sensorInfo.division;
-
-                       if(division == 1){
-                           division = "주요오염물질";
-                       }else if(division == 2){
-                           division = "일반오염물질";
-                       }else if(division == 3){
-                           division = "기타";
-                       }
-                   }
-                   if(b5_sensor != null){
+                   console.log(b5_sensor);
+                   var sensorInfo = getSensorInfo(item);
+                   console.log(sensorInfo);
+                   console.log("-----------------------------------------------------------------");
+                   if(b5_sensor.length != 0){
                        b5_value = b5_sensor[(b5_sensor.length)-1].y;
                        com_value = (sensor.value - b5_value).toFixed(5);
+                   }else{
+                       b5_value = 0;
+                       com_value = 0;
                    }
-
-                   getData.push({
-                       division: division, naming: naming,
-                       name:item, value:sensor.value.toFixed(5), up_time: moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss'),
-                       warning: warning, danger: danger, substitution: substitution,
-                       b5_value: b5_value, com_value: com_value, status: sensor.status
-                   });
+                   if(sensorInfo != null){
+                       naming = sensorInfo.naming;
+                       legal_standard = sensorInfo.legal_standard;
+                       company_standard = sensorInfo.company_standard;
+                       management_standard = sensorInfo.management_standard;
+                       power = sensorInfo.power;
+                   }
+                   if(power == "on"){
+                       getData.push({
+                           naming: naming, name:item,
+                           value:sensor.value.toFixed(5), up_time: moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss'),
+                           legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard, power: power,
+                           b5_value: b5_value, com_value: com_value
+                       });
+                   }
+                   if(power == "off"){
+                       getData.push({
+                           naming: naming, name:item,
+                           value:sensor.value.toFixed(5), up_time: moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss'),
+                           legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard, power: power,
+                           b5_value: b5_value, com_value: com_value
+                       });
+                   }
+                   console.log(getData);
                });
            },
             error: function () {
+               console.log("error");
             }
         });//ajax
         return getData;
@@ -228,15 +256,27 @@
     function getSensorInfo(sensor) {
         var getData;
         $.ajax({
-            url:'getSensorInfo',
+            url:'getSensorInfo2',
             dataType: 'json',
-            data: {"sensor": sensor},
+            data: {"sensor": sensor, "power": "on"},
             async: false,
             success: function (data) {
+                if(data.legal_standard == 0 || data.legal_standard == null){
+                    data.legal_standard = "-";
+                }
+                if(data.company_standard == 0 || data.company_standard == null){
+                    data.company_standard = "-";
+                }
+                if(data.management_standard == 0 || data.management_standard == null){
+                    data.management_standard = "-";
+                }
                 getData = data;
             },
             error: function (e) {
-                getData = {"name": sensor, "naming": sensor, "danger": "", "warning": "", "substituion": "", "division": ""}
+                console.log("getSensorInfo Error");
+                /* data 가 존재하지 않을 경우 */
+                getData = {"name": sensor, "naming": sensor,
+                    "legal_standard": "-", "company_standard": "-", "management_standard": "-", "power": "off"}
             }
         }); //ajax
         return getData;
@@ -256,7 +296,7 @@
                 })
             },
             error: function (e) {
-                console.log("error");
+                console.log("getSensor Error");
             }
         }); //ajax
         return getData;
@@ -274,25 +314,41 @@
             data: data,
             order:[[0, 'desc'], [1, 'desc']],
             columns: [
-                {"data": "division"},
                 {"data": "naming"},
                 {"data": "value"},
                 {"data": "b5_value"},
                 {"data": "com_value"},
-                {"data": "warning"},
-                {"data": "danger"},
-                {"data": "up_time"}
+                {"data": "legal_standard"},
+                {"data": "company_standard"},
+                {"data": "management_standard"},
+                {"data": "power"},
+                {"data": "up_time"},
             ],
             'rowCallback': function(row, data, index){
-                // console.log(data);
-                if(data.value >= data.warning && data.value <= data.danger){
-                    $(row).css('background-color', '#fff390');
-                }else if(data.value >= data.danger){
-                    $(row).css('background-color', '#ff909b');
+                if(data.legal_standard){
+                    $(row).find('td:eq(4)').css('background-color', '#fff390');
+                    if(data.value >= data.legal_standard){
+                        $(row).find('td:eq(1)').css('background-color', '#fff390');
+                    }
                 }
-                if(data.status == false){
-                    $(row).css('background-color', '#9bff90');
+                if(data.company_standard){
+                    $(row).find('td:eq(5)').css('background-color', '#ff909b');
+                    if(data.value >= data.company_standard){
+                        $(row).find('td:eq(1)').css('background-color', '#ff909b');
+                    }
                 }
+                if(data.management_standard){
+                    $(row).find('td:eq(6)').css('background-color', '#fbb333');
+                    if(data.value >= data.management_standard){
+                        $(row).find('td:eq(1)').css('background-color', '#fbb333');
+                    }
+                }
+                if(data.legal_standard == "-" || data.company_standard == "-" || data.management_standard == "-"){
+                    $(row).find('td:eq(1)').css('background-color', '#fefefe');
+                }
+                // if(data.status == false){
+                //     $(row).css('background-color', '#9bff90');
+                // }
                 // if(data.value >= data.warning){
                 //     $(row).find('td:eq(1)').css('color', '#f54264');
                 // }
