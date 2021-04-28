@@ -142,20 +142,17 @@
 
 
     function getData(){
-        clearTimeout(interval);
         var places = new Array();
         <c:forEach items="${place}" var="place" varStatus="status">
             places.push("${place.name}");
         </c:forEach>
         console.log(places);
 
-        // var place = $("#place").val();
-        // console.log(place);
-        var place_data = getPlaceData(places[1]);
+        var place = $("#place").val();
+        var place_data = getPlaceData(place);
         draw_place_table(place_data);
-        // console.log(place_data);
         interval = setTimeout(function interval_getData() {
-            // console.log(interval);
+            console.log(interval);
             var date = new Date();
             $("#time").text(moment(date).format('YYYY-MM-DD HH:mm:ss'));
 
@@ -167,12 +164,10 @@
                     place_data[i].value = place_data_recent[i].value;
                     place_data[i].up_time = place_data_recent[i].up_time;
 
-                    $("#sensor-table").DataTable().clear();
-                    $("#sensor-table").DataTable().destroy();
                     draw_place_table(place_data);
                 }
             }
-            setTimeout(interval_getData, 100000);
+            setTimeout(interval_getData, 1000);
         }, 0);
     }
 
@@ -186,14 +181,14 @@
            async: false,
            success: function (data) {
                $.each(data, function (index, item) {
-                   console.log(item); //sensor name
+                   // console.log(item); //sensor name
                    var sensor = getSensorRecent(item);
-                   console.log(sensor);
+                   // console.log(sensor);
                    var b5_sensor = getSensor(item, "", "", 10);
-                   console.log(b5_sensor);
+                   // console.log(b5_sensor);
                    var sensorInfo = getSensorInfo(item);
-                   console.log(sensorInfo);
-                   console.log("-----------------------------------------------------------------");
+                   // console.log(sensorInfo);
+                   // console.log("-----------------------------------------------------------------");
                    if(b5_sensor.length != 0){
                        b5_value = b5_sensor[(b5_sensor.length)-1].y;
                        com_value = (sensor.value - b5_value).toFixed(5);
@@ -207,6 +202,9 @@
                        company_standard = sensorInfo.company_standard;
                        management_standard = sensorInfo.management_standard;
                        power = sensorInfo.power;
+                   }
+                   if(sensor.value == 0 || sensor.value == null){
+                       sensor.value = 0;
                    }
                    if(power == "on"){
                        getData.push({
@@ -224,7 +222,6 @@
                            b5_value: b5_value, com_value: com_value
                        });
                    }
-                   console.log(getData);
                });
            },
             error: function () {
@@ -247,6 +244,7 @@
             },
             error: function (e) {
                 console.log("getSensorRecent Error");
+                getData.push({value: null, status: false, up_time:null})
             }
         }); //ajax
         return getData;
@@ -273,8 +271,8 @@
                 getData = data;
             },
             error: function (e) {
-                console.log("getSensorInfo Error");
                 /* data 가 존재하지 않을 경우 */
+                // console.log("getSensorInfo Error");
                 getData = {"name": sensor, "naming": sensor,
                     "legal_standard": "-", "company_standard": "-", "management_standard": "-", "power": "off"}
             }
@@ -304,6 +302,10 @@
 
     /* place*/
     function draw_place_table(data){
+
+        clearTimeout(interval);
+        $("#sensor-table").DataTable().clear();
+        $("#sensor-table").DataTable().destroy();
         // console.log(data);
         var table = $('#sensor-table').DataTable({
             paging: false,
@@ -312,7 +314,7 @@
             bPaginate: false,
             bInfo: false,
             data: data,
-            order:[[0, 'desc'], [1, 'desc']],
+            order:[[0, 'desc']],
             columns: [
                 {"data": "naming"},
                 {"data": "value"},
@@ -372,7 +374,6 @@
                 }
             },
         });
-        return table;
     }
 
 </script>
