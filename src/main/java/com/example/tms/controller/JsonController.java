@@ -5,7 +5,6 @@ import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,15 +28,15 @@ public class JsonController {
     Sensor_InfoRepository sensor_infoRepository;
 
     final
-    Sensor_AlarmRepository sensor_alarmRepository;
+    Notification_SettingsRepository notification_settingsRepository;
 
-    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Sensor_InfoRepository sensor_infoRepository, Sensor_AlarmRepository sensor_alarmRepository) {
+    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Sensor_InfoRepository sensor_infoRepository, Notification_SettingsRepository notification_settingsRepository) {
         this.placeRepository = placeRepository;
         this.placeCustomRepository = placeCustomRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.sensor_infoRepository = sensor_infoRepository;
-        this.sensor_alarmRepository = sensor_alarmRepository;
+        this.notification_settingsRepository = notification_settingsRepository;
     }
 
 // *********************************************************************************************************************
@@ -98,22 +97,22 @@ public class JsonController {
      * @param name 센서 이름
      * @return 해당 센서의 status값
      */
-    @RequestMapping(value = "/getSensorAlarm")
+    @RequestMapping(value = "/getNotification")
     public boolean getSensorAlarm(@RequestParam("name") String name){
 
-        return sensor_alarmRepository.findByName(name).isStatus();
+        return notification_settingsRepository.findByName(name).isStatus();
     }
     //알림 시작시간
     @RequestMapping(value = "/getStartTime")
     public String getStartTime(@RequestParam("name") String name){
 
-        return sensor_alarmRepository.findByName(name).getStart();
+        return notification_settingsRepository.findByName(name).getStart();
     }
     //알림 종료시간
     @RequestMapping(value = "/getEndTime")
     public String getEndTime(@RequestParam("name") String name){
 
-        return sensor_alarmRepository.findByName(name).getEnd();
+        return notification_settingsRepository.findByName(name).getEnd();
     }
     //모니터링 on/off 여부
     @RequestMapping(value = "/getPower")

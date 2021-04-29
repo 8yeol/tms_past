@@ -100,7 +100,7 @@
                  const tableName = data[i];
 
                  const category = findSensorCategory(tableName);
-                 const checked = findSensorAlarm(tableName);
+                 const checked = findNotification(tableName);
 
 
                  const innerHtml = "<div class='form-check mb-2'>" +
@@ -147,11 +147,11 @@
 
  }
     //sensor_alarm status 값 불러오기
-    function findSensorAlarm(tableName) {
+    function findNotification(tableName) {
 
      let isChecked;
         $.ajax({
-            url: '<%=cp%>/getSensorAlarm',
+            url: '<%=cp%>/getNotification',
             type: 'POST',
             dataType: 'json',
             async: false,
