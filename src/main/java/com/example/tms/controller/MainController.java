@@ -5,6 +5,7 @@ import com.example.tms.repository.MemberRepository;
 import com.example.tms.repository.PlaceRepository;
 import com.example.tms.repository.Sensor_AlarmRepository;
 import com.example.tms.repository.Sensor_InfoRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
