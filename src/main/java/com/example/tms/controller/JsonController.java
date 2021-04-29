@@ -128,32 +128,32 @@ public class JsonController {
     }
     //법적기준
     @RequestMapping(value = "/getLegal")
-    public Double getLegal(@RequestParam("name") String name){
+    public Float getLegal(@RequestParam("name") String name){
         try{
             return reference_value_settingRepository.findByName(name).getLegal_standard();
 
         }catch (NullPointerException e){
-            return 0.0;
+            return 0.0f;
         }
     }
     //사내기준
     @RequestMapping(value = "/getCompany")
-    public Double getCompany(@RequestParam("name") String name){
+    public Float getCompany(@RequestParam("name") String name){
         try{
             return reference_value_settingRepository.findByName(name).getCompany_standard();
 
         }catch (NullPointerException e){
-            return 0.0;
+            return 0.0f;
         }
     }
     //관리기준
     @RequestMapping(value = "/getManagement")
-    public Double getManagement(@RequestParam("name") String name){
+    public Float getManagement(@RequestParam("name") String name){
         try{
             return reference_value_settingRepository.findByName(name).getManagement_standard();
 
         }catch (NullPointerException e){
-            return 0.0;
+            return 0.0f;
         }
     }
 
