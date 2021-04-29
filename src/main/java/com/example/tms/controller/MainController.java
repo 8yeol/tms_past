@@ -2,6 +2,7 @@ package com.example.tms.controller;
 
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
+import com.example.tms.repository.Reference_Value_SettingRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -21,7 +22,7 @@ public class MainController {
 
     final PlaceRepository placeRepository;
 
-    final Sensor_InfoRepository sensor_infoRepository;
+    final Reference_Value_SettingRepository reference_value_settingRepository;
 
     final MongoTemplate mongoTemplate;
 
@@ -30,9 +31,9 @@ public class MainController {
     final Notification_SettingsRepository notification_settingsRepository;
 
 
-    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate, MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository) {
+    public MainController(PlaceRepository placeRepository, Reference_Value_SettingRepository reference_value_settingRepository, MongoTemplate mongoTemplate, MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository) {
         this.placeRepository = placeRepository;
-        this.sensor_infoRepository = sensor_infoRepository;
+        this.reference_value_settingRepository = reference_value_settingRepository;
         this.mongoTemplate = mongoTemplate;
         this.memberRepository = memberRepository;
         this.notification_settingsRepository = notification_settingsRepository;

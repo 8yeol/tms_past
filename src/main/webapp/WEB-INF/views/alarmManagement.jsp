@@ -59,7 +59,7 @@
 
     $( document ).ready(function() {
 
-        const placeLength = ${place.size()}
+        const placeLength = ${place.size()};
 
         //저장소 DIV 반복 생성
         for(i =0 ; i<placeLength;i++) {
