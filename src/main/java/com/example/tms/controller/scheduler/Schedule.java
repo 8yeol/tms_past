@@ -1,72 +1,59 @@
 package com.example.tms.controller.scheduler;
 
-import com.example.tms.entity.Place;
-import com.example.tms.repository.PlaceRepository;
+import com.example.tms.entity.Notification_Settings;
+import com.example.tms.entity.Reference_Value_Setting;
+import com.example.tms.entity.Sensor;
+import com.example.tms.repository.Notification_SettingsRepository;
+import com.example.tms.repository.Reference_Value_SettingRepository;
 import com.example.tms.repository.SensorCustomRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Component
 public class Schedule {
 
-    final
-    PlaceRepository placeRepository;
+    final SensorCustomRepository sensorCustomRepository;
 
-    final
-    SensorCustomRepository sensorCustomRepository;
+    final Notification_SettingsRepository notification_settingsRepository;
 
-    public Schedule(PlaceRepository placeRepository, SensorCustomRepository sensorCustomRepository) {
-        this.placeRepository = placeRepository;
+    final Reference_Value_SettingRepository reference_value_settingRepository;
+
+    public Schedule(SensorCustomRepository sensorCustomRepository, Notification_SettingsRepository notification_settingsRepository, Reference_Value_SettingRepository reference_value_settingRepository) {
         this.sensorCustomRepository = sensorCustomRepository;
+        this.notification_settingsRepository = notification_settingsRepository;
+        this.reference_value_settingRepository = reference_value_settingRepository;
     }
 
-//    @Scheduled(cron = "0 0/5 * * * *")
-    @Scheduled(cron = "*/3 * * * * *") //3초 마다
+    //@Scheduled(cron = "0/3 * * * * *")
+    //@Scheduled(cron = "0 0/5 * * * *")
     public void scheduling(){
+        List<Notification_Settings> notification = notification_settingsRepository.findByStatusIsTrue();
 
-        /* 측정소 전체 정보 */
-        List<Place> places = placeRepository.findAll();
-//        System.out.println(places);
+        for(int i=0; i<notification.size(); i++){
+            String sensorName = notification.get(i).getName();
+            Reference_Value_Setting reference = reference_value_settingRepository.findByName(sensorName);
 
-        /* 측정소의 센서명 */
-        List<String> sensor_name = new ArrayList<>();
-        for(int i=0; i<places.size(); i++){
-            String place_name = places.get(i).getName();
-            sensor_name.add(String.valueOf(placeRepository.findByName(place_name).getSensor()));
+            // 마지막 센서 값 받아오기
+            Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName);
+            Float value = sensor.getValue();
+
+            Float legal = reference.getLegal_standard(); // 법적기준
+            Float company = reference.getCompany_standard(); //사내기준
+            Float standard = reference.getManagement_standard(); //관리기준
+
+            if(value > legal){
+                System.out.println("legal");
+            }else if(value > company){
+                System.out.println("company");
+            }else if( value >= standard){
+                System.out.println("standard");
+            }
         }
-        System.out.println(sensor_name);
-
-        List<Object> sensor = new ArrayList<>();
-        for (int i=0; i<sensor_name.size(); i++){
-        }
-        /* 센서 리스트 마지막*/
-
-        /*  기준 체크 */
-        /* 엔티티 저장 */
         System.out.println("스케쥴링 테스트 : " + new Date());
     }
 
 
 }
-//        1. place.name(place 테이블의 name 컬럼)
-//        model.addAttribute("place", placeRepository.findAll());
-
-//        2. place.sensor (입력 받은 place 의 sensor 컬럼)
-//        model.addAttribute("sensors", sensors);
-
-//        List<Object> sensor = new ArrayList<>();
-//        List<Object> sensor_info = new ArrayList<>();
-//        3. sensor (sensor 테이블)
-//        for(int i=0; i<sensors.size(); i++){
-//            sensor.add(sensorCustomRepository.getSensorRecent(sensors.get(i)) );
-//            sensor_info.add(sensor_infoRepository.findByName(sensors.get(i)) );
-//        model.addAttribute("sensor", sensor);
-//        model.addAttribute("sensor_info", sensor_info);
-//        return "sensor";
-
-//    }*/

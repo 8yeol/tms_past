@@ -64,7 +64,6 @@ input:checked + .slider:before {
 .a1 {
     display: inline-flex;
     justify-content: flex-end;
-    float: right;
 }
 
 .a2 {
@@ -109,8 +108,6 @@ input:checked + .slider:before {
     color: rgb(99,130,255);
     border: 3px solid rgb(99,130,255);
     border-radius: 5px;
-    margin-left: 10px;
-    margin-right: 20px;
 }
 .cancleBtn:hover{
     background-color: rgba(99,130,255,0.1);
@@ -124,4 +121,9 @@ input:checked + .slider:before {
     margin-top: 3px;
     margin-right: 15px;
     font-size: 18px;
+}
+.label-form{
+    width: 50%;
+    padding:30px;
+    margin-left: 100px;
 }

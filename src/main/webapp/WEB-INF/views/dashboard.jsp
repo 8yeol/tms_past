@@ -14,24 +14,64 @@
     #blue {
         width: 20px;
         height: 15px;
-        background: dodgerblue;
+        background: #0C64E8;
+        display: inline-block;
     }
 
     #yellow {
         width: 20px;
         height: 15px;
-        background: yellow;
+        background: #DB510B;
+        display: inline-block;
     }
 
     #red {
         width: 20px;
         height: 15px;
-        background: orange;
+        background: #D6032B;
+        display: inline-block;
+    }
+    .progress-blue {
+        background-color: #0C64E8;
+    }
+    .progress-yellow {
+        background-color: #DB510B;
+    }
+    .progress-red {
+        background-color: #D6032B;
     }
 
+    .margin-l {
+        margin-left: 0;
+    }
+    .card-body {
+        border-radius: 5px;
+    }
+    .progress-info {
+        width: 200px;
+    }
+    .center-position {
+        position: relative;
+        left: 25%;
+    }
+    .h-px {
+        height: 340px;
+    }
+    @media all and (max-width: 1399px) and (min-width: 1200px) {
+        .center-position {left:20%;}
+        .h-px {height: 365px;}
+    }
+    @media all and (max-width: 1199px) and (min-width: 990px) {
+        .center-position {left:15%;}
+        .h-px {height: 326px;}
+    }
+    @media all and (max-width: 989px) {
+        .center-position {left:3%;}
+    }
 </style>
 
 <div class="container">
+    <%--
     <div class="row m-3 mt-3 bg-light" style="height: 8%">
         <div class="row">
             <div class="col text-end pt-2">
@@ -45,13 +85,12 @@
             </div>
         </div>
     </div>
-    <%--
-     <div class="row m-3 mt-3">
-         <span class="fs-4">대시보드</span>
-     </div>
     --%>
-    <div class="row m-3 mt-3 bg-light h-25">
-        <div class="row p-3 h-25">
+     <div class="row m-3 mt-3 margin-l">
+         <span class="fs-4 fw-bold">대시보드</span>
+     </div>
+    <div class="row m-3 mt-3 bg-light margin-l h-px">
+        <div class="row p-3 h-25 margin-l">
             <div class="col fs-5 fw-bold">
                 측정소 통합 모니터링 (질소산화물)
             </div>
@@ -60,7 +99,7 @@
                 <span class="text-primary" style="font-size: 15%"> * 매월 마지막 날 업데이트 됩니다.</span>
             </div>
         </div>
-        <div class="row pb-3 h-75">
+        <div class="row pb-3 h-75 margin-l">
             <div class="col-3">
                 <div class="card h-100">
                     <div class="card-body">
@@ -98,8 +137,8 @@
             </div>
         </div>
     </div>
-    <div class="row m-3 mt-4 bg-light h-25">
-        <div class="row p-3 h-25">
+    <div class="row m-3 mt-4 bg-light margin-l h-px">
+        <div class="row p-3 h-25 margin-l">
             <div class="col fs-5 fw-bold">
                 연간 배출량 누적 모니터링
             </div>
@@ -108,29 +147,29 @@
                 <span class="text-primary" style="font-size: 15%"> * 매일 자정 업데이트 됩니다.</span>
             </div>
         </div>
-        <div class="row pb-3 px-3">
+        <div class="row pb-3 px-3 margin-l">
             <%--script--%>
             <div class="col">
-                <p class="mb-3 fs-5">측정소 1</p>
-                <div class="row ps-5 pe-5 pb-3">
-                    <div class="col-2">
+                <p class="mb-3 fs-5 fw-bold">측정소 1</p>
+                <div class="row pe-5 pb-3 margin-l">
+                    <div class="">
                         질소산화물
                     </div>
                     <div class="col">
                         <div class="progress h-100">
-                            <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25"
+                            <div class="progress-bar progress-blue" role="progressbar" style="width: 25%;" aria-valuenow="25"
                                  aria-valuemin="0" aria-valuemax="100">25%
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row ps-5 pe-5 pb-3">
-                    <div class="col-2">
+                <div class="row pe-5 pb-3 margin-l">
+                    <div class="">
                         산소
                     </div>
                     <div class="col">
                         <div class="progress h-100">
-                            <div class="progress-bar bg-warning" role="progressbar" style="width: 75%;"
+                            <div class="progress-bar progress-yellow" role="progressbar" style="width: 75%;"
                                  aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">75%
                             </div>
                         </div>
@@ -138,22 +177,22 @@
                 </div>
             </div>
         </div>
-        <div class="row text-center">
-            <hr>
-            <div class="col">
+        <div class="row text-center margin-l center-position">
+<%--            <hr>--%>
+            <div class="progress-info">
                 <div id="blue" class="align-self-center"></div> &emsp;0 ~ 50%
             </div>
-            <div class="col">
+            <div class="progress-info">
                 <div id="yellow" class="align-self-center"></div> &emsp;50 ~ 80%
             </div>
-            <div class="col">
+            <div class="progress-info">
                 <div id="red" class="align-self-center"></div> &emsp;80 ~ 100%
             </div>
         </div>
     </div>
 
-    <div class="row m-3 mt-3 bg-light h-25">
-        <div class="row p-3 pb-0">
+    <div class="row m-3 mt-3 bg-light margin-l h-px">
+        <div class="row p-3 pb-0 margin-l">
             <div class="col fs-5 fw-bold">
                 관리등급 초과 모니터링
             </div>
@@ -162,7 +201,7 @@
                 <span class="text-primary" style="font-size: 15%"> * 5분 단위로 업데이트 됩니다.</span>
             </div>
         </div>
-        <div class="row pb-3 h-75 pb-3">
+        <div class="row pb-3 h-75 pb-3 margin-l">
             <div class="col">
                 <div class="card text-white bg-primary mb-3 h-100">
                     <div class="card-header">정상</div>

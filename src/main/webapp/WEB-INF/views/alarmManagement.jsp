@@ -25,41 +25,38 @@
 
 <div class="container">
 
-    <div class="row m-3">
-        <div class="col fs-4 fw-bold">알림 설정</div>
+    <div class="col" style="font-weight: bolder;margin: 30px 0px; font-size: 27px">
+        환경설정 > 알림설정
     </div>
-
+    <div class="row bg-light rounded" ><span style=";font-size: 23px; font-weight: bolder;padding: 20px 20px 20px 40px;">알림설정</span></div>
   <c:forEach var="place" items="${place}" varStatus="status"> <!--JSTL 반복문 시작 -->
-    <div class="row p-3 bg-light rounded" id="placeDiv${status.index}" style="margin-top: 30px;border:3px solid silver;">
+    <div class="row bg-light rounded" id="placeDiv${status.index}" style="border-bottom:2px solid silver;padding:16px 16px 40px 16px;">
 
-        <div name="place" id="${place}">
-            <span class="placeName" id="place${status.index}">${place}</span>
 
-            <div class="a1" id="alarm${status.index}">
-            </div>
-        </div>
 
-        <div class="col-3" style="width: 75%;height:100%;">
-             <form id="alarmform" action="" method="post">
-                <div class="text-center" style="height: 99%;margin-top: 15px;" id="items${status.index}">
+        <div class="col-3" style="width: 45%;">
+            <span style="font-size: 18px; margin-left: 130px;"class="placeName" id="place${status.index}">${place}</span>
+                <div id="items${status.index}">
                         <%-- script --%>
                 </div>
-            </form>
         </div>
-        <div class="buttonDiv">
+        <div class="col-3" style="width: 30%"><div class="a1" id="alarm${status.index}"></div></div>
+        <div class="col-3 end" style="width: 25%;">
+            <button type="button" class="btn btn-primary" onClick="insert(${status.index})">저장</button>
             <button type="button" class="cancleBtn" onClick="cancle(${status.index})">취소</button>
-            <button type="button" class="btn btn-primary ms-3" onClick="insert(${status.index})">설정</button>
+
         </div>
+
+
     </div>
     </c:forEach> <!--JSTL 반복문 종료 -->
-    <br>
-    <h6>* 웹 페이지 또는 다운받은 앱에서 알림을 받을 측정항목을 선택해주세요. [측정소 관리]에서 설정된 항목의 기준 값 미달 혹은 초과하는 경우 알림이 발생합니다.</h6>
+    <h6>* 알림을 받을 측정항목을 선택해 주세요. [환경설정 > 측정소 관리]에서 설정된 항목의 기준 값 미달 혹은 초과하는 경우 알림이 발생합니다.</h6>
 </div>
 <script>
 
-    $( document ).ready(function() {
+    $(document).ready(function() {
 
-        const placeLength = ${place.size()};
+        let placeLength = ${place.size()};
 
         //저장소 DIV 반복 생성
         for(i =0 ; i<placeLength;i++) {
@@ -81,9 +78,9 @@
      const parentElem = $('#items'+idx);
 
      let innerHTMLTimePicker = "";
-     innerHTMLTimePicker += '<span class="textSpanParent">알림 시간</span>';
-     innerHTMLTimePicker += '<span class="textSpan">From </span><input type="text" id="start'+idx+'" name="start" class="timePicker" readonly/>';
-     innerHTMLTimePicker += '<span class="textSpan">End </span><input type="text" id="end'+idx+'" name="end" class="timePicker" readonly/>';
+     innerHTMLTimePicker += '<div><span class="textSpanParent">알림 시간</span><div>';
+     innerHTMLTimePicker += '<div><span class="textSpan">From </span><input type="text" id="start'+idx+'" name="start" class="timePicker" readonly/><div>';
+     innerHTMLTimePicker += '<div><span class="textSpan">To </span><input type="text" id="end'+idx+'" name="end" class="timePicker" readonly/><div>';
 
 
      $('#alarm'+idx).append(innerHTMLTimePicker);
@@ -103,16 +100,16 @@
                  const checked = findNotification(tableName);
 
 
-                 const innerHtml = "<div class='form-check mb-2'>" +
-                     "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
+                 const innerHtml =
+                     "<label style='font-size: 18px;' class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
                      "<label class='switch'>"+
                      "<input id='"+tableName+"' name='status"+idx+"' type='checkbox'  "+checked+">"+
                      "<div class='slider round'></div>"+
-                     "</label>"+
-                     "</div>"
+                     "</label>"
+
 
                  const elem = document.createElement('div');
-                 elem.setAttribute('class','form-check-div')
+                 elem.setAttribute('class','label-form')
                  elem.innerHTML = innerHtml;
                  parentElem.append(elem);
 
