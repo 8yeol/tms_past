@@ -70,6 +70,9 @@
                 <tr>
                     <th>항목</th>
                     <th>법적기준</th>
+                    <th>사내기준</th>
+                    <th>관리기준</th>
+                    <th>측정값</th>
                     <th>관리등급</th>
                 </tr>
                 <thead>
@@ -123,6 +126,8 @@
         var place_name;
         if(value == null){
             place_name = "point1"; // 기본값
+        }else {
+            place_name = value;
         }
         $('#title').text(place_name);
         getData(place_name);
@@ -148,7 +153,7 @@
                     place_table = draw_place_table(place_data);
                 }
             }
-            interval1 = setTimeout(interval_getData, 2000);
+            interval1 = setTimeout(interval_getData, 10000);
         }, 0);
         var sensor_data = place_table.row(0).data();
         getData2(sensor_data.name);
@@ -171,7 +176,7 @@
                     draw_chart(sensor_data_list);
                 }
             }
-            interval2 = setTimeout(interval_getData2, 2000);
+            interval2 = setTimeout(interval_getData2, 10000);
         }, 0);
 
     }
@@ -186,21 +191,34 @@
             data:  {"place": place},
             async: false,
             success: function (data) {
-                /* 센서명 구함 -> 센서명으로부터 최근데이터, 센서정보 구함 */
-                $.each(data, function (index, item) {
-                    var sensor = getSensorRecent(item);
-                    // console.log(sensor);
-                    var sensorInfo = getSensorInfo(item);
-                    // console.log(sensorInfo);
-                    if(sensorInfo == null && sensor == null){
-                        getData = null;
-                    }else if (sensorInfo == null && sensor != null){
-                        getData.push({naming: item, name:item, value:sensor.value.toFixed(2), up_time: moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss'),
-                            warning: 15, danger: 30, substitution: null});
-                    }else if(sensorInfo != null && sensor != null){
-                        getData.push({naming: sensorInfo.naming, name:item, value:sensor.value.toFixed(2), up_time: moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss'),
-                            warning: sensorInfo.warning, danger: sensorInfo.danger, substitution: sensorInfo.substitution});
+                $.each(data, function (index, item) { //item (센서명)
+                    var sensor = getSensorRecent(item); // item의 최근데이터
+                    if(sensor.value == 0 || sensor.value == null){ //null 일때
+                        sensor_value = "-"; // "-" 출력(datatable)
+                    }else{
+                        sensor_value = sensor.value;
+                        up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
                     }
+
+                    var sensorInfo = getSensorInfo(item); //item의 정보 데이터
+                    naming = sensorInfo.naming;
+                    legal_standard = sensorInfo.legal_standard;
+                    company_standard = sensorInfo.company_standard;
+                    management_standard = sensorInfo.management_standard;
+                    power = sensorInfo.power;
+                    if(sensor.value > management_standard){
+                        standard = "관리기준 초과";
+                    }else if(sensor.value <= management_standard){
+                        standard = "정상";
+                    }else{
+                        standard = "-";
+                    }
+                    getData.push({
+                        naming: naming, name:item,
+                        value:sensor_value, up_time: up_time,
+                        legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard,
+                        power: power, standard : standard
+                    });
                 })
             }
         }); //ajax
@@ -268,8 +286,16 @@
             data: {"sensor": sensor, "from_date": from_date, "to_date": to_date, "minute": minute},
             async: false,
             success: function (data) { // from ~ to 또는 to-minute ~ now 또는 from ~ from+minute 데이터 조회
+                var management_standard = getSensorInfo(sensor).management_standard;
                 $.each(data, function (index, item) {
-                    getData.push({x: moment(item.up_time).format('YYYY-MM-DD HH:mm:ss'), y: item.value});
+                    if(item.value > management_standard){
+                        standard = "관리기준 초과";
+                    }else if(item.value < management_standard){
+                        standard = "정상";
+                    }else{
+                        standard = "-";
+                    }
+                    getData.push({x: moment(item.up_time).format('YYYY-MM-DD HH:mm:ss'), y: item.value, standard:standard });
                 })
             },
             error: function (e) {
@@ -296,17 +322,20 @@
             order:[[0, 'asc']],
             columns: [
                 {"data": "naming"},
+                {"data": "legal_standard"},
+                {"data": "company_standard"},
+                {"data": "management_standard"},
                 {"data": "value"},
-                {"data": "up_time"}
+                {"data": "standard"}
             ],
             'rowCallback': function(row, data, index){
                 // console.log(data.y);
-                if(data.value >= data.warning){
-                    $(row).find('td:eq(1)').css('color', '#f54264');
-                }
-                if(data.value <= data.danger && data.value>=data.warning){
-                    $(row).find('td:eq(1)').css('color', '#ffb607');
-                }
+                // if(data.value >= data.warning){
+                //     $(row).find('td:eq(1)').css('color', '#f54264');
+                // }
+                // if(data.value <= data.danger && data.value>=data.warning){
+                //     $(row).find('td:eq(1)').css('color', '#ffb607');
+                // }
             },
             "language": {
                 "emptyTable": "데이터가 없어요.",
@@ -337,7 +366,8 @@
             data: data,
             columns:[
                 {"data": "x"},
-                {"data": "y"}
+                {"data": "y"},
+                {"data": "standard"}
             ],
             // aLengthMenu: [10, 25, 50],
             search: false,
