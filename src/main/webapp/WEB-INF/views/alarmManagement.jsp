@@ -17,192 +17,76 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
 
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css" />
+<link rel="stylesheet" type="text/css" href="static/css/chung-timepicker.css">
+<link rel="stylesheet" type="text/css" href="static/css/alarmManagement.css">
 <script src="static/js/common/common.js"></script>
-<style>
-    /* The switch - the box around the slider */
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-    }
+<script src="static/js/chung-timepicker.js"></script>
 
-    /* Hide default HTML checkbox */
-    .switch input {
-        display: none;
-    }
-
-    /* The slider */
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
-    }
-
-    input:checked + .slider {
-        background-color: #2196F3;
-    }
-
-    input:focus + .slider {
-        box-shadow: 0 0 1px #2196F3;
-    }
-
-    input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
-    }
-
-    /* Rounded sliders */
-
-    .slider.round {
-        border-radius: 34px;
-    }
-
-    .slider.round:before {
-        border-radius: 50%;
-    }
-    .a1 {
-        display: inline-flex;
-        justify-content: flex-end;
-    }
-
-    .a2 {
-        display: inline-flex;
-        justify-content: flex-end;
-    }
-    .ui-timepicker-wrapper{
-        width: 223px;
-    }
-
-</style>
 
 <div class="container">
 
     <div class="row m-3">
         <div class="col fs-4 fw-bold">알림 설정</div>
-        <div class="a2"><span style="margin-right: 12.8%;">Start Time</span>
-            <span style="margin-right: 18%;">End Time</span></div>
-
-        <div class="a1"><span style="font-weight: bold; margin-top: 7px; margin-right: 10px;  font-size: 18px;">알림 시간</span>
-            <input type="text" id="start" name="start" class="timepicker">&nbsp;&nbsp;&nbsp;
-            <input type="text" id="end" name="end"  class="timepicker">
-            <button type="button" class="btn btn-primary ms-3" onClick="insert()">설정</button>
-        </div>
-
     </div>
 
-    <div class="row p-3 bg-light rounded" style="height: 70%">
-        <div class="col-3 border-end" style="width: 25%; background: lightgray;">
-            <div class="text-center" style="margin-top: 50px;">
+  <c:forEach var="place" items="${place}" varStatus="status"> <!--JSTL 반복문 시작 -->
+    <div class="row p-3 bg-light rounded" id="placeDiv${status.index}" style="margin-top: 30px;border:3px solid silver;">
 
-                <c:forEach var="place" items="${place}" varStatus="status">
-                    <div name="place" id="${place}" onclick="placeChange('${place}')">
-                        <span id="place${status.index}">${place}</span>
-                    </div>
-                </c:forEach>
+        <div name="place" id="${place}">
+            <span class="placeName" id="place${status.index}">${place}</span>
 
+            <div class="a1" id="alarm${status.index}">
             </div>
         </div>
-        <div class="col-3" style="width: 75%;">
-            <span class="fw-bold">센서 목록</span>
-            <input id="chk_all" class="form-check-input" name="selectall" type = checkbox style="width: 20px; height: 20px;" onclick="selectAll(this)">
-            <span>전체선택</span>
-            <input id="bOn" type="button" value="ON">
-            <input id="bOff" type="button" value="OFF">
-                <div class="text-center">
-                    <div class="border p-2 bg-white h-75" id="items">
-                        <%-- script --%>
-                    </div>
 
+        <div class="col-3" style="width: 75%;height:100%;">
+             <form id="alarmform" action="" method="post">
+                <div class="text-center" style="height: 99%;margin-top: 15px;" id="items${status.index}">
+                        <%-- script --%>
                 </div>
+            </form>
+        </div>
+        <div class="buttonDiv">
+            <button type="button" class="cancleBtn" onClick="cancle(${status.index})">취소</button>
+            <button type="button" class="btn btn-primary ms-3" onClick="insert(${status.index})">설정</button>
         </div>
     </div>
+    </c:forEach> <!--JSTL 반복문 종료 -->
     <br>
     <h6>* 웹 페이지 또는 다운받은 앱에서 알림을 받을 측정항목을 선택해주세요. [측정소 관리]에서 설정된 항목의 기준 값 미달 혹은 초과하는 경우 알림이 발생합니다.</h6>
 </div>
-
 <script>
 
     $( document ).ready(function() {
 
-        placeChange($("#place0").text());
+        const placeLength = ${place.size()}
 
-    });
- //시작시간 설정
- $('#start').timepicker({
-        timeFormat:'H:i',
-        'interval' : 30,
-        'minTime':'00:00',
-        'maxTime':'23:30',
-        'scrollbar': true,
-        'dropdown':false
-    }) //stime 시작 기본 설정
-        .on('changeTime',function() {                           //stime 을 선택한 후 동작
-            var from_time = $("input[name='start']").val(); //stime 값을 변수에 저장
-            $('#end').timepicker('option','minTime', from_time);//etime의 mintime 지정
-            if ($('#end').val() && $('#end').val() < from_time) {
-                $('#end').timepicker('setTime', from_time);
-//etime을 먼저 선택한 경우 그리고 etime시간이 stime시간보다 작은경우 etime시간 변경
-            }
-        });
- //종료시간 설정
-  $('#end').timepicker({timeFormat:'H:i','interval' : 30,'minTime':'00:00','maxTime':'23:30','scrollbar': true});//etime 시간 기본 설정
-
- //체크박스 전체 선택, 해제
-    function checkSelectAll()  {
-        // 전체 체크박스
-        const checkboxes
-            = document.querySelectorAll('input[name="item"]');
-        // 선택된 체크박스
-        const checked
-            = document.querySelectorAll('input[name="item"]:checked');
-        // select all 체크박스
-        const selectAll
-            = document.querySelector('input[name="selectall"]');
-
-        if(checkboxes.length === checked.length)  {
-            selectAll.checked = true;
-        }else {
-            selectAll.checked = false;
+        //저장소 DIV 반복 생성
+        for(i =0 ; i<placeLength;i++) {
+            placeMake($("#place"+i).text(), i);
         }
 
-    }
+        //각각 타임피커 셋팅
+        for(i =0 ; i<placeLength;i++) {
+            $('#start' + i).chungTimePicker({ viewType: 1 });
+            $('#end' + i).chungTimePicker({ viewType: 1 });
+        }
 
-    function selectAll(selectAll)  {
-        const checkboxes
-            = document.getElementsByName('item');
+    });
 
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = selectAll.checked
-        })
-    }
+//측정소 생성
+ function placeMake(name,idx){
 
-//측정소 변경
- function placeChange(name){
      const place = name;
+     const parentElem = $('#items'+idx);
 
-     $("#items").empty();
+     let innerHTMLTimePicker = "";
+     innerHTMLTimePicker += '<span class="textSpanParent">알림 시간</span>';
+     innerHTMLTimePicker += '<span class="textSpan">From </span><input type="text" id="start'+idx+'" name="start" class="timePicker" readonly/>';
+     innerHTMLTimePicker += '<span class="textSpan">End </span><input type="text" id="end'+idx+'" name="end" class="timePicker" readonly/>';
+
+
+     $('#alarm'+idx).append(innerHTMLTimePicker);
 
      $.ajax({
          url: '<%=cp%>/getPlaceSensor',
@@ -214,44 +98,25 @@
          success : function(data) {
              for(let i=0;i<data.length;i++){
                  const tableName = data[i];
+
                  const category = findSensorCategory(tableName);
                  const checked = findSensorAlarm(tableName);
 
+
                  const innerHtml = "<div class='form-check mb-2'>" +
-                     "<input class='form-check-input' type='checkbox' id='"+tableName+"a' name='item' value='"+tableName+"' onclick='checkSelectAll()'>" +
-                     "<label class='form-check-label' for='"+tableName+"a'>"+category+"</label>" +
+                     "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
                      "<label class='switch'>"+
-                     "<input id='"+tableName+"' type='checkbox' name='status' "+checked+">"+
+                     "<input id='"+tableName+"' name='status"+idx+"' type='checkbox'  "+checked+">"+
                      "<div class='slider round'></div>"+
                      "</label>"+
                      "</div>"
 
                  const elem = document.createElement('div');
+                 elem.setAttribute('class','form-check-div')
                  elem.innerHTML = innerHtml;
-                 document.getElementById('items').append(elem);
+                 parentElem.append(elem);
 
-
-                 //Off 버튼 클릭
-                 $('#bOff').click(function () {
-                     var num = $(".switch").size();
-                     for (var i = 0; i <num; i++) {
-                         if($('#'+data[i]+'a').is(":checked")){
-                             $('#'+data[i]).prop("checked", false);
-                         }
-                     };
-                 });
-                 //On 버튼 클릭
-                 $('#bOn').click(function () {
-                     var num = $(".switch").size();
-                     for (var i = 0; i <num; i++) {
-                         if($('#'+data[i]+'a').is(":checked")){
-                             $('#'+data[i]).prop("checked", true);
-                         }
-                     };
-                 });
              }
-
-
          },
          error : function(request, status, error) { // 결과 에러 콜백함수
              console.log(error)
@@ -270,8 +135,8 @@
                  const time = data[0];
                  const start =  findStartTime(time);
                  const end = findEndTime(time);
-                 document.getElementById("start").value = start;
-                 document.getElementById("end").value = end;
+                 $("#start"+idx).val(start);
+                 $("#end"+idx).val(end);
 
              }
          },
@@ -284,7 +149,7 @@
     //sensor_alarm status 값 불러오기
     function findSensorAlarm(tableName) {
 
-     let test;
+     let isChecked;
         $.ajax({
             url: '<%=cp%>/getSensorAlarm',
             type: 'POST',
@@ -294,9 +159,9 @@
             data: {"name":tableName},
             success : function(data) {
                 if(data == true){
-                    test = "checked";
+                    isChecked = "checked";
                 }else{
-                    test = "";
+                    isChecked = "";
                 }
 
             },
@@ -304,12 +169,12 @@
                 console.log(error)
             }
         })
-        return test;
+        return isChecked;
     }
     //알림 시작시간
  function findStartTime(time) {
 
-    let test;
+    let sTime;
     $.ajax({
         url: '<%=cp%>/getStartTime',
         type: 'POST',
@@ -318,19 +183,19 @@
         cache: false,
         data: {"name":time},
         success : function(data) {
-            test = data;
-
+            sTime = data;
         },
         error : function(request, status, error) { // 결과 에러 콜백함수
             console.log(error)
         }
     })
-    return test;
+    return sTime;
  }
     //알림 종료시간
     function findEndTime(time) {
 
-        let test;
+        let eTime;
+
         $.ajax({
             url: '<%=cp%>/getEndTime',
             type: 'POST',
@@ -339,28 +204,28 @@
             cache: false,
             data: {"name":time},
             success : function(data) {
-                test = data;
+                eTime = data;
             },
             error : function(request, status, error) { // 결과 에러 콜백함수
                 console.log(error)
             }
         })
-        return test;
+        return eTime;
     }
 
 //알림설정 값 저장
-function insert() {
+function insert(idx) {
     var checkedItem = new Array();
     var uncheckItem = new Array();
-    $("input:checkbox[name=status]:checked").each(function(){
+    $("input:checkbox[name=status"+idx+"]:checked").each(function(){
         checkedItem.push($(this).attr('id'));
     });
-    $("input:checkbox[name=status]:not(:checked)").each(function(){
+    $("input:checkbox[name=status"+idx+"]:not(:checked)").each(function(){
         uncheckItem.push($(this).attr('id'));
     });
 
-    const start = $("#start").val();
-    const end = $("#end").val();
+    const start = $("#start"+idx).val();
+    const end = $("#end"+idx).val();
 
     for(let i=0; i<checkedItem.length; i++){
             let item = checkedItem[i];
@@ -408,6 +273,28 @@ function insert() {
     }
     alert("설정 완료");
 }
+    //시작 시간이 종료시간보다 클때 endTime 변경
+    //TimePicker 객체에서 아이디->인덱스 추출
+    function changeEndTime(obj){
+        let objId = obj.ele[0].id;               //console.log(objId) -> start0
+        let idx = objId.replace(/[^0-9]/g,''); //console.log(idx) -> 0
 
+        let stime = $('#start'+idx).val();
+        let etime = $('#end'+idx).val();
+
+        if(stime>etime){
+            $('#end'+idx).val(stime);
+        }
+    }
+
+    //임시로 설정한값 삭제후 다시 생성
+    function cancle(idx){
+        $('#alarm'+idx).empty();
+        $('#items'+idx).empty();
+
+        placeMake($("#place"+idx).text(), idx);
+        $('#start' + idx).chungTimePicker({ viewType: 1 });
+        $('#end' + idx).chungTimePicker({ viewType: 1 });
+    }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
