@@ -104,9 +104,9 @@
                         </tr>
 
                         <c:forEach var="place" items="${place}" varStatus="status">
-                         <tr>
+                         <tr onclick="placeChange('${place.name}')">
                             <td><input class="form-check-input" name="place" type = checkbox onclick="checkPlaceAll()"></td>
-                            <td id="${place}" onclick="placeChange('${place.name}')">
+                            <td id="${place.name}" >
                                 <span id="place${status.index}"><c:out value="${place.name}"/></span>
                             </td>
                             <td><c:out value="${place.up_time}"/></td>
@@ -117,13 +117,17 @@
             </div>
         </div>
         <div class="col-3" style="width: 65%; border: dodgerblue solid 1px; background: white">
+
             <div>
-            <span class="fw-bold"><span id="station" ></span> 상세설정</span>
+            <c:forEach var="place" items="${place}" varStatus="status">
+            <span class="fw-bold">${place.name} 상세설정</span>
             <span class="fw-bold">측정소 모니터링</span>
+
             <label class="switch">
-                <input type="checkbox">
+                <input id="monitor" value="${place.power}" type="checkbox">
                 <span class="slider round"></span>
             </label>
+            </c:forEach>
             <br>
             <input type="button" value="추가">
             <input type="button" value="삭제">
@@ -153,9 +157,18 @@
     $( document ).ready(function() {
 
         placeChange($("#place0").text());
+        monitoring();
+
         $('#itmes').insertAfter('#c');
 
     });
+
+    function monitoring() {
+        if(document.getElementById('monitor').val() =='on'){
+            document.getElementById('monitor').
+        }
+
+    }
     //센서 체크박스 전체 선택, 해제
     function checkSelectAll()  {
         // 전체 체크박스
@@ -216,7 +229,7 @@
     //측정소 변경
     function placeChange(name) {
         const place = name;
-        $('#station').text(name); //측정소명 span에 넣기
+        //$('#station').text(name); //측정소명 span에 넣기
         $("#items").empty();
 
         $.ajax({

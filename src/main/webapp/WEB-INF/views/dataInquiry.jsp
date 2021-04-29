@@ -41,7 +41,7 @@
     }
     .add-bg {
         background-color: #fff;
-        width: 1300px;
+        width: 100%;
         position: relative;
         left: -20px;
         top: -3px;
@@ -67,6 +67,32 @@
         width: 1100px;
         height: 638px;
     }
+
+    @media all and (max-width: 1399px) and (min-width: 1200px) {
+        .sizing {width:950px;}
+        body {font-size: 0.8rem;}
+        .search {left:260px;}
+    }
+    @media all and (max-width: 1199px) and (min-width: 990px) {
+        .sizing {width:800px;}
+        body {font-size: 0.7rem;}
+        .add-margin {margin-left: 5px;}
+        .search {left:160px;}
+        .f-sizing {font-size: 0.9rem!important;}
+    }
+
+    @media all and (max-width: 989px) {
+        .sizing {width: 720px;top:120px;}
+        .picker {width: 100%;}
+        .add-margin {margin-left: 15px;}
+        .search {left:0px;top:10px;}
+        body {font-size: 0.8rem;}
+        .f-sizing {font-size: 0.9rem!important;}
+        .add-bg{width:720px; height: 120px;}
+        #date_start, #date_end {width:120px;}
+        .down {top:-1190px; height: 110px; padding-bottom: 20px;}
+        .m-top{padding-top: 100px;}
+    }
 </style>
 
 
@@ -74,9 +100,9 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <div class="container">
-    <div class="ms-3 mt-3 add-bg">
+    <div class="ms-3 mt-3 add-bg row">
         <div class="col-3 picker">
-            <span class="fs-5 fw-bold add-margin">측정소</span>
+            <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
             <div class="btn-group w-50 ms-3">
                 <select name="place" id="place" class="btn btn-light" onchange="placeChange()">
                     <c:forEach var="place" items="${place}" varStatus="status">
@@ -87,7 +113,7 @@
 
         </div>
         <div class="search">
-            <span class="fs-5 fw-bold p-3">측정기간</span>
+            <span class="fs-5 fw-bold p-3 f-sizing">측정기간</span>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="day" id="week">
                 <label class="form-check-label" for="week">
@@ -119,6 +145,8 @@
 
     <hr class="mt-2 mb-2">
 
+
+
     <div class="row">
         <div class="col">
             <div class="row bg-white sizing">
@@ -149,7 +177,7 @@
 
     <div class="row">
         <div class="col">
-            <div class="row bg-white">
+            <div class="row bg-white m-top">
 
 <%--                <hr class="mt-1 mb-1">--%>
 

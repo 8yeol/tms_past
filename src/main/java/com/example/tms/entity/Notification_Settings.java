@@ -1,5 +1,6 @@
 package com.example.tms.entity;
 
+
 import lombok.Builder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -7,8 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Document(collection = "sensor_alarm")
-public class Sensor_Alarm {
+@Document(collection = "notification_settings")
+public class Notification_Settings {
 
     @Id
     private ObjectId _id;
@@ -68,17 +69,17 @@ public class Sensor_Alarm {
 
     @Override
     public String toString() {
-        return "Sensor_alarm{" +
+        return "Notification_Settings{" +
                 "_id=" + _id +
                 ", name='" + name + '\'' +
-                ", start=" + start +
-                ", end=" + end +
+                ", start='" + start + '\'' +
+                ", end='" + end + '\'' +
                 ", status=" + status +
                 ", up_time=" + up_time +
                 '}';
     }
     @Builder
-    public Sensor_Alarm(String name, String start, String end, boolean status, Date up_time){
+    public Notification_Settings(String name, String start, String end, boolean status, Date up_time){
         this.name = name;
         this.start = start;
         this.end = end;

@@ -3,9 +3,9 @@ package com.example.tms.controller;
 
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
+import com.example.tms.repository.Reference_Value_SettingRepository;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,18 +26,18 @@ public class JsonController {
     SensorCustomRepository sensorCustomRepository;
 
     final
-    Sensor_InfoRepository sensor_infoRepository;
+    Reference_Value_SettingRepository reference_value_settingRepository;
 
     final
-    Sensor_AlarmRepository sensor_alarmRepository;
+    Notification_SettingsRepository notification_settingsRepository;
 
-    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Sensor_InfoRepository sensor_infoRepository, Sensor_AlarmRepository sensor_alarmRepository) {
+    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Reference_Value_SettingRepository sensor_infoRepository, Reference_Value_SettingRepository reference_value_settingRepository, Notification_SettingsRepository notification_settingsRepository) {
         this.placeRepository = placeRepository;
         this.placeCustomRepository = placeCustomRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
-        this.sensor_infoRepository = sensor_infoRepository;
-        this.sensor_alarmRepository = sensor_alarmRepository;
+        this.reference_value_settingRepository = reference_value_settingRepository;
+        this.notification_settingsRepository = notification_settingsRepository;
     }
 
 // *********************************************************************************************************************
@@ -65,13 +65,13 @@ public class JsonController {
      * @return - 해당 센서의 센서 정보(한글명, 경고값, ...)
      */
     @RequestMapping(value = "/getSensorInfo")
-    public Sensor_Info getSensorInfo(@RequestParam String sensor){
-        return sensor_infoRepository.findByName(sensor);
+    public Reference_Value_Setting getSensorInfo(@RequestParam String sensor){
+        return reference_value_settingRepository.findByName(sensor);
     }
 
     @RequestMapping(value = "/getSensorInfo2")
-    public Sensor_Info getSensorInfo2(@RequestParam String sensor, @RequestParam String power){
-        return sensor_infoRepository.findByNameAndPower(sensor, power);
+    public Reference_Value_Setting getSensorInfo2(@RequestParam String sensor, @RequestParam String power){
+        return reference_value_settingRepository.findByNameAndPower(sensor, power);
     }
 
     @RequestMapping(value = "/getSensorRecent")
@@ -98,29 +98,29 @@ public class JsonController {
      * @param name 센서 이름
      * @return 해당 센서의 status값
      */
-    @RequestMapping(value = "/getSensorAlarm")
+    @RequestMapping(value = "/getNotification")
     public boolean getSensorAlarm(@RequestParam("name") String name){
 
-        return sensor_alarmRepository.findByName(name).isStatus();
+        return notification_settingsRepository.findByName(name).isStatus();
     }
     //알림 시작시간
     @RequestMapping(value = "/getStartTime")
     public String getStartTime(@RequestParam("name") String name){
 
-        return sensor_alarmRepository.findByName(name).getStart();
+        return notification_settingsRepository.findByName(name).getStart();
     }
     //알림 종료시간
     @RequestMapping(value = "/getEndTime")
     public String getEndTime(@RequestParam("name") String name){
 
-        return sensor_alarmRepository.findByName(name).getEnd();
+        return notification_settingsRepository.findByName(name).getEnd();
     }
     //모니터링 on/off 여부
     @RequestMapping(value = "/getPower")
     public String getPower(@RequestParam("name") String name){
 
         try{
-            return sensor_infoRepository.findByName(name).getPower();
+            return reference_value_settingRepository.findByName(name).getPower();
 
         }catch (NullPointerException e){
             return "null";
@@ -130,7 +130,7 @@ public class JsonController {
     @RequestMapping(value = "/getLegal")
     public Double getLegal(@RequestParam("name") String name){
         try{
-            return sensor_infoRepository.findByName(name).getLegal_standard();
+            return reference_value_settingRepository.findByName(name).getLegal_standard();
 
         }catch (NullPointerException e){
             return 0.0;
@@ -140,7 +140,7 @@ public class JsonController {
     @RequestMapping(value = "/getCompany")
     public Double getCompany(@RequestParam("name") String name){
         try{
-            return sensor_infoRepository.findByName(name).getCompany_standard();
+            return reference_value_settingRepository.findByName(name).getCompany_standard();
 
         }catch (NullPointerException e){
             return 0.0;
@@ -150,7 +150,7 @@ public class JsonController {
     @RequestMapping(value = "/getManagement")
     public Double getManagement(@RequestParam("name") String name){
         try{
-            return sensor_infoRepository.findByName(name).getManagement_standard();
+            return reference_value_settingRepository.findByName(name).getManagement_standard();
 
         }catch (NullPointerException e){
             return 0.0;

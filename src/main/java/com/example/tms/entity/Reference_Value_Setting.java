@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Document(collection = "sensor_info")
-public class Sensor_Info {
+@Document(collection = "reference_value_setting")
+public class Reference_Value_Setting {
 
     @Id
     private ObjectId _id;
@@ -78,7 +78,7 @@ public class Sensor_Info {
 
     @Override
     public String toString() {
-        return "Sensor_Info{" +
+        return "Reference_Value_Setting{" +
                 "_id=" + _id +
                 ", name='" + name + '\'' +
                 ", naming='" + naming + '\'' +
@@ -89,7 +89,7 @@ public class Sensor_Info {
                 '}';
     }
     @Builder
-    public Sensor_Info(String name, String naming, Double legal_standard, Double company_standard, Double management_standard, String power){
+    public Reference_Value_Setting(String name, String naming, Double legal_standard, Double company_standard, Double management_standard, String power){
         this.name = name;
         this.naming = naming;
         this.legal_standard = legal_standard;
