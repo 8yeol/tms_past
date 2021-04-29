@@ -81,9 +81,9 @@
             <div class="d-flex justify-content-between">
                 <div class="d-flex radio">
                     <span class="me-3">산소 - 최근 1시간 자료</span>
-                    <input class="form-check-input" type="radio" name="chartRadio" value="60" onchange="test(value)" checked >
+                    <input class="form-check-input" type="radio" name="chartRadio" id="hourRadio" checked >
                     <span class="me-2">1시간</span>
-                    <input class="form-check-input" type="radio" name="chartRadio" value="1440" onchange="test(value)">
+                    <input class="form-check-input" type="radio" name="chartRadio" id="dayRadio" >
                     <span>하루</span>
                 </div>
 
@@ -118,6 +118,7 @@
 <script>
     var place_table, sensor_table, sensor_chart;
     var interval1, interval2;
+    var sensor_data;
     $(document).ready(function () {
         changePlace();
     }); //ready
@@ -133,10 +134,20 @@
         getData(place_name);
     }
 
+    $("input[name=chartRadio]").on('click' , function (){
+        if(sensor_data == null){
+            var temp_sensor_data = place_table.row(0).data();
+            getData2(temp_sensor_data.name);
+        } else{
+            getData2(sensor_data.name);
+        }
+    });
+
     $("#place-table").on('click', 'tr', function(){
-        var sensor_data = place_table.row(this).data();
+        sensor_data = place_table.row(this).data();
         getData2(sensor_data.name);
     });
+
 
     function getData(place_name){
         var place_data = getPlaceData(place_name); // 최근데이터, 60분전데이터, 정보
@@ -153,13 +164,19 @@
                     place_table = draw_place_table(place_data);
                 }
             }
-            interval1 = setTimeout(interval_getData, 10000);
+            interval1 = setTimeout(interval_getData, 1000);
         }, 0);
         var sensor_data = place_table.row(0).data();
         getData2(sensor_data.name);
     }
     function getData2(sensor_name) {
-        var sensor_data_list = getSensor(sensor_name, "", "", "60");
+        var sensor_time_length;
+        if($("input[id=hourRadio]:radio" ).is( ":checked")){
+            sensor_time_length = 60;
+        } else{
+            sensor_time_length = 1440;
+        }
+        var sensor_data_list = getSensor(sensor_name, "", "", sensor_time_length);
         $('#update').text(sensor_data_list[0].x);
         draw_chart(sensor_data_list);
         draw_sensor_table(sensor_data_list);
@@ -172,11 +189,11 @@
                 if(sensor_data_list[0].x != sensor_data_list_recent[0].x){
                     sensor_data_list.unshift(sensor_data_list_recent[0]);
                     // sensor_data_list.pop();
-                    draw_sensor_table(sensor_data_list);
+                    // draw_sensor_table(sensor_data_list);
                     draw_chart(sensor_data_list);
                 }
             }
-            interval2 = setTimeout(interval_getData2, 10000);
+            interval2 = setTimeout(interval_getData2, 1000);
         }, 0);
 
     }
