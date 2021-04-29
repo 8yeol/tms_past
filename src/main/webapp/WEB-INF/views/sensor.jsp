@@ -146,11 +146,9 @@
         getData2(sensor_data.name);
     }
     function getData2(sensor_name) {
-        var sensor_data_list = getSensor(sensor_name, "2021-04-27 17:00:00", "2021-04-27 17:11:00", "");
+        var sensor_data_list = getSensor(sensor_name, "", "", "60");
         draw_chart(sensor_data_list);
-        // setTimeout(function () {
-        //     draw_sensor_table(sensor_data_list);
-        // }, 100);
+        draw_sensor_table(sensor_data_list);
 
         setTimeout(function interval_getData2() {
             clearTimeout(interval2);
