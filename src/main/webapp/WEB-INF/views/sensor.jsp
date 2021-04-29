@@ -27,96 +27,105 @@
     }
 </style>
 
+<style>
+    table#sensor-table thead, table#sensor-table-time thead { /* 테이블 제목 셀 배경, 글자색 설정 */
+        background-color: #97bef8;
+        color: #fff;
+    }
+
+    .bg-grayblue { /* param.place 배경, 글자색 설정 */
+        background-color: #EDF2F8;
+    }
+
+    .bg-lightGray {
+        background-color: lightgrey;
+    }
+</style>
+
+
 <div class="container">
-    <%-- ************************************************************************************************************** --%>
-    <div class="row">
-        <div class="col-12 bg-gradient p-4 mt-4 ms-3 bg-skyblue rounded">
-            <div class="col-6 ms-3 add-bg">
-                <div class="col-md-12">
-                    <span class="fs-5 fw-bold">측정소</span>
-                    <div class="btn-group w-50 ms-3">
-                        <select id="place" class="btn btn-light" onchange="changePlace()">
-                            <c:forEach var="place" items="${place}">
-                                <option value="${place.name}">${place.name}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <hr>
 
     <div class="row">
-        <div class="col">
-            <div class="row">
-                <div class="col-6">
-                    <div class="float-start">
-                        <span class="fs-5 fw-bold mb-2" id="title"> </span>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="float-start">
-                        <span class="fs-5 fw-bold mb-2" id="sensorInfo1"> </span>
-                        <span class="fs-7 mb-2" id="sensorInfo2"> </span>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div>
-                        <span class="fs-7 mb-2"> 업데이트 : </span>
-                        <span class="fs-5 mb-2" id="update"> </span>
-                    </div>
-                </div>
-            </div>
-            <div class="row h-75 mt-4">
-                <div class="col-md-6">
-                    <%-- 센서 최근 테이블--%>
-                    <div class="table-responsive bg-gradient col-md-12">
-                        <table id="place-table">
-                            <thead>
-                            <tr>
-                                <th>항목</th>
-                                <th>측정값</th>
-                                <th>업데이트</th>
-                            </tr>
-                            <thead>
-                        </table>
-                    </div>
-                </div>
-                <%-- 차트 --%>
-                <div class="col-md-6">
-                    <div id="chart" class="col-md-12 mb-4">
-                    </div>
 
-                    <hr>
-                    <%-- 차트의 데이터 테이블 --%>
-                    <table id="sensor-table" class="table-responsive bg-success bg-gradient col-md-12 mt-1">
-                        <thead>
-                        <tr>
-                            <th>측정시간</th>
-                            <th>측정 값</th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
+        <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 38px; text-align: -webkit-center;">
+            <c:forEach var="place" items="${place}" varStatus="cnt">
+                <button class="btn bg-lightGray rounded-0 d-block fs-3 mt-3 me-3" value="${place.name}" onclick="changePlace(value,id)" id="point${cnt.index}">
+                    측정소${cnt.index+1}</button>
+                <hr style="height: 2.5px;">
+            </c:forEach>
         </div>
+
+        <div class="col-md-10 bg-light rounded p-0">
+            <div class="d-flex justify-content-end bg-grayblue">
+                <span class="fs-7 mb-2"> 마지막 업데이트 : </span>
+                <span class="fs-5 mb-2" id="update"></span>
+            </div>
+
+            <span class="fs-3 fw-bold d-flex justify-content-center bg-lightGray" id="title">temp</span>
+
+
+            <table id="place-table">
+                <thead>
+                <tr>
+                    <th>항목</th>
+                    <th>법적기준</th>
+                    <th>관리등급</th>
+                </tr>
+                <thead>
+            </table>
+
+            <div class="d-flex justify-content-between">
+                <div class="d-flex radio">
+                    <span class="me-3">산소 - 최근 1시간 자료</span>
+                    <input class="form-check-input" type="radio" name="chartRadio" value="60" onchange="test(value)" checked >
+                    <span class="me-2">1시간</span>
+                    <input class="form-check-input" type="radio" name="chartRadio" value="1440" onchange="test(value)">
+                    <span>하루</span>
+                </div>
+
+                <span>* 5분 단위로 업데이트 됩니다.</span>
+            </div>
+
+            <%-- 차트 --%>
+            <div id="chart" class=""></div>
+
+            <%-- 차트의 데이터 테이블 --%>
+            <table id="sensor-table" class="table-responsive bg-success bg-gradient col-md-12 mt-1">
+                <thead>
+                <tr class="bg-lightGray">
+                    <th class="d-flex justify-content-between">
+                        <div>법적/사내/관리 기준</div>
+                        <div>100/85/70 mg/Sm³ 이하</div>
+                    </th>
+                </tr>
+                <tr>
+                    <th>측정시간</th>
+                    <th>측정 값</th>
+                    <th>관리 등급</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
     </div>
-    <%-- ************************************************************************************************************** --%>
+
 </div>
-
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
     var place_table, sensor_table, sensor_chart;
     var interval1, interval2;
-
     $(document).ready(function () {
         changePlace();
     }); //ready
 
-    function changePlace() {
-        getData();
+    function changePlace(value) {
+        var place_name;
+        if(value == null){
+            place_name = "point1"; // 기본값
+        }
+        $('#title').text(place_name);
+        getData(place_name);
     }
 
     $("#place-table").on('click', 'tr', function(){
@@ -124,8 +133,7 @@
         getData2(sensor_data.name);
     });
 
-    function getData(){
-        var place_name = $("#place").val(); // 측정소명
+    function getData(place_name){
         var place_data = getPlaceData(place_name); // 최근데이터, 60분전데이터, 정보
         place_table = draw_place_table(place_data);
         // $('#sensorInfo2').text("(경고:"+warning + "/ 위험:"+danger + ")");
@@ -147,6 +155,7 @@
     }
     function getData2(sensor_name) {
         var sensor_data_list = getSensor(sensor_name, "", "", "60");
+        $('#update').text(sensor_data_list[0].x);
         draw_chart(sensor_data_list);
         draw_sensor_table(sensor_data_list);
 
@@ -388,7 +397,7 @@
                 data: data
             }],
             chart: {
-                height: 'auto',
+                height: '50%',
                 type: 'bar',
                 toolbar:{
                     show:true,
@@ -499,4 +508,3 @@
 
 
 </script>
-
