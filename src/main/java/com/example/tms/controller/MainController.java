@@ -318,7 +318,7 @@ public class MainController {
 // param # key : String place (place.name)
 // =====================================================================================================================
 
-    @RequestMapping(value = "/alarmManagement", method = RequestMethod.GET)
+    @RequestMapping(value = "/alarmManagement")
     public String alarmManagement(Model model){
         List<Place> places = placeRepository.findAll();
         List<String> placelist = new ArrayList<>();
@@ -356,7 +356,9 @@ public class MainController {
 //
 // =====================================================================================================================
     @RequestMapping("/stationManagement")
-    public String stationManagement(){
+    public String stationManagement(Model model){
+        List<Place> places = placeRepository.findAll();
+        model.addAttribute("place",places);
 
         return "stationManagement";
     }

@@ -9,8 +9,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="static/js/common/common.js"></script>
 <style>
     /* The switch - the box around the slider */
     .switch {
@@ -74,38 +80,46 @@
     .slider.round:before {
         border-radius: 50%;
     }
+
 </style>
 <div class="container">
     <div class="row m-3">
         <div class="col fs-4 fw-bold">측정소 등록 및 측정소별 항목 등록</div>
     </div>
 
-    <div class="row p-3 bg-light rounded">
+    <div class="row p-3" style="height: 70%; background: lightgray">
         <div class="col-3 border-end" style="width: 35%;">
+            <div>
             <span class="fw-bold">측정소 관리</span>
             <input type="button" value="추가">
             <input type="button" value="삭제">
+            </div>
             <div class="text-center">
-                <table style="border-bottom: 2px solid black;">
-                    <form>
-                        <tr>
-                            <th><input class="all1" type = checkbox></th>
+                <table  width="100%">
+                        <tr style = "border-bottom: black solid 2px;">
+                            <th><input class="form-check-input" type = checkbox></th>
                             <th>측정소 명</th>
                             <th>업데이트</th>
                             <th>모니터링 사용</th>
                         </tr>
 
-                        <td><input class="cha1" type = checkbox></td>
-                        <td>name</td>
-                        <td>update</td>
-                        <td>use</td>
-                    </form>
+                        <c:forEach var="place" items="${place}" varStatus="status">
+                         <tr>
+                            <td><input class="form-check-input" type = checkbox></td>
+                            <td id="${place}" onclick="placeChange('${place.name}')">
+                                <span id="place${status.index}"><c:out value="${place.name}"/></span>
+                            </td>
+                            <td><c:out value="${place.up_time}"/></td>
+                            <td><c:out value="${place.power}"/></td>
+                         </tr>
+                        </c:forEach>
                 </table>
             </div>
         </div>
-        <div class="col-3">
-
-            <span class="fw-bold">station 상세설정</span>
+        <div class="col-3" style="width: 65%; border: dodgerblue solid 1px; background: white">
+            <div>
+            <span class="fw-bold"><span id="station" ></span> 상세설정</span>
+            <span class="fw-bold">측정소 모니터링</span>
             <label class="switch">
                 <input type="checkbox">
                 <span class="slider round"></span>
@@ -113,42 +127,184 @@
             <br>
             <input type="button" value="추가">
             <input type="button" value="삭제">
-            <div class="text-center">
-                <table style="border-bottom: 2px solid black;">
-                    <form>
-                        <tr>
-                            <th><input class="all2" type = checkbox></th>
-                            <th>측정항목</th>
-                            <th>관리ID</th>
-                            <th>경고</th>
-                            <th>위험</th>
-                            <th>대체값</th>
-                            <th>모니터링</th>
-                        </tr>
-
-
-                        <td><input class="chb1" type = checkbox></td>
-                        <td>name</td>
-                        <td>ID</td>
-                        <td><input value="warning"></td>
-                        <td><input value="danger"></td>
-                        <td><input value="replace"></td>
-                        <td>
-                            <label class="switch">
-                                <input type="checkbox">
-                                <span class="slider round"></span>
-                            </label>
-                        </td>
-
-                    </form>
-
-                </table>
             </div>
+            <table style="text-align: center; width: 100%">
+                    <tr id="c" style="border-bottom: black solid 2px; width: 100%; display: flex; ">
+                        <th style="width:5%;"><input class="form-check-input" type = checkbox></th>
+                        <th style="width:15%;">측정항목</th>
+                        <th style="width:24%;">관리ID</th>
+                        <th style="width:14%;">법적기준</th>
+                        <th style="width:14%;">사내기준</th>
+                        <th style="width:14%;">관리기준</th>
+                        <th style="width:14%;">모니터링</th>
+                    </tr>
+                    <tr id="items" style="width: 100%">
+
+                    </tr>
+
+            </table>
         </div>
 
     </div>
 
 
 </div>
+<script>
+    $( document ).ready(function() {
+
+        placeChange($("#place0").text());
+        $('#itmes').insertAfter('#c');
+
+    });
+    //측정소 변경
+    function placeChange(name) {
+        const place = name;
+        $('#station').text(name); //측정소명 span에 넣기
+        $("#items").empty();
+
+        $.ajax({
+            url: '<%=cp%>/getPlaceSensor',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"place": place},
+            success: function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    const tableName = data[i];
+                    const category = findSensorCategory(tableName);
+                    const power = findPower(tableName);
+                    const legal = findLegal(tableName);
+                    const company = findCompany(tableName);
+                    const management = findManagement(tableName);
+
+                    const innerHtml =
+                        "<td style='width:5%;'><input class='form-check-input' type='checkbox' id='" + tableName + "a' name='item' value='" + tableName + "' onclick='checkSelectAll()'></td>" +
+                        "<td style='width:15%;'><label class='form-check-label' for='" + tableName + "a'>" + category + "</label></td>" +
+                        "<td style='width:24%;'><label class='form-check-label' for='" + tableName + "a'>" + tableName + "</label></td>" +
+                        "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "l' value='" + legal + "' ></td>" +
+                        "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "c' value='" + company + "' ></td>" +
+                        "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "m' value='" + management + "' ></td>" +
+                        "<td style='width:14%;'><label class='switch'>" +
+                        "<input id='" + tableName + "' type='checkbox' name='status' " + power + ">" +
+                        "<div class='slider round'></div>" +
+                        "</label></td>"
+
+
+                    const elem = document.createElement('tr');
+                    elem.innerHTML = innerHtml;
+                    document.getElementById('items').append(elem);
+
+
+                }
+
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+    }
+    function findPower(tableName) {
+        let test;
+        $.ajax({
+            url: '<%=cp%>/getPower',
+            type: 'POST',
+            dataType: 'text',
+            async: false,
+            cache: false,
+            data: {"name":tableName},
+            success : function(data) {
+                console.log(data);
+                if(data == "on"){
+                    test = "checked";
+                }else{
+                    test = "";
+                }
+
+            },
+            error : function(request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        return test;
+    }
+    function findLegal(tableName) {
+        console.log(tableName);
+
+        let test;
+        $.ajax({
+            url: '<%=cp%>/getLegal',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"name":tableName},
+            success : function(data) {
+                console.log(data);
+                if(data == 0){
+                 test = "";
+                }else{
+                    test = data;
+                }
+
+            },
+            error : function(request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        return test;
+    }
+    function findCompany(tableName) {
+
+        let test;
+        $.ajax({
+            url: '<%=cp%>/getCompany',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"name":tableName},
+            success : function(data) {
+                console.log(data);
+                if(data == 0){
+                    test = "";
+                }else{
+                    test = data;
+                }
+
+            },
+            error : function(request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        return test;
+    }
+    function findManagement(tableName) {
+        let test;
+        $.ajax({
+            url: '<%=cp%>/getManagement',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"name":tableName},
+            success : function(data) {
+                console.log(data);
+                if(data == 0){
+                    test = "";
+                }else{
+                    test = data;
+                }
+
+            },
+            error : function(request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        return test;
+    }
+
+
+</script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />

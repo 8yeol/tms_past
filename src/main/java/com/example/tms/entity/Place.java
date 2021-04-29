@@ -114,6 +114,7 @@ public class Place {
         this.location = location;
         this.admin = admin;
         this.tel = tel;
+        this.power = power;
         this.up_time = up_time;
         this.sensor = sensor;
 

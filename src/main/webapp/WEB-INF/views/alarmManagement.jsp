@@ -130,19 +130,18 @@
             <span>전체선택</span>
             <input id="bOn" type="button" value="ON">
             <input id="bOff" type="button" value="OFF">
-            <form id="alarmform" action="" method="post">
                 <div class="text-center">
                     <div class="border p-2 bg-white h-75" id="items">
                         <%-- script --%>
                     </div>
 
                 </div>
-            </form>
         </div>
     </div>
     <br>
     <h6>* 웹 페이지 또는 다운받은 앱에서 알림을 받을 측정항목을 선택해주세요. [측정소 관리]에서 설정된 항목의 기준 값 미달 혹은 초과하는 경우 알림이 발생합니다.</h6>
 </div>
+
 <script>
 
     $( document ).ready(function() {
@@ -215,14 +214,12 @@
          success : function(data) {
              for(let i=0;i<data.length;i++){
                  const tableName = data[i];
-
                  const category = findSensorCategory(tableName);
                  const checked = findSensorAlarm(tableName);
 
-
                  const innerHtml = "<div class='form-check mb-2'>" +
                      "<input class='form-check-input' type='checkbox' id='"+tableName+"a' name='item' value='"+tableName+"' onclick='checkSelectAll()'>" +
-                     "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
+                     "<label class='form-check-label' for='"+tableName+"a'>"+category+"</label>" +
                      "<label class='switch'>"+
                      "<input id='"+tableName+"' type='checkbox' name='status' "+checked+">"+
                      "<div class='slider round'></div>"+

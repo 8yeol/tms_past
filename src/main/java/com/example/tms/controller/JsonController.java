@@ -5,6 +5,7 @@ import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -114,7 +115,46 @@ public class JsonController {
 
         return sensor_alarmRepository.findByName(name).getEnd();
     }
+    //모니터링 on/off 여부
+    @RequestMapping(value = "/getPower")
+    public String getPower(@RequestParam("name") String name){
 
+        try{
+            return sensor_infoRepository.findByName(name).getPower();
 
+        }catch (NullPointerException e){
+            return "null";
+        }
+    }
+    //법적기준
+    @RequestMapping(value = "/getLegal")
+    public Double getLegal(@RequestParam("name") String name){
+        try{
+            return sensor_infoRepository.findByName(name).getLegal_standard();
+
+        }catch (NullPointerException e){
+            return 0.0;
+        }
+    }
+    //사내기준
+    @RequestMapping(value = "/getCompany")
+    public Double getCompany(@RequestParam("name") String name){
+        try{
+            return sensor_infoRepository.findByName(name).getCompany_standard();
+
+        }catch (NullPointerException e){
+            return 0.0;
+        }
+    }
+    //관리기준
+    @RequestMapping(value = "/getManagement")
+    public Double getManagement(@RequestParam("name") String name){
+        try{
+            return sensor_infoRepository.findByName(name).getManagement_standard();
+
+        }catch (NullPointerException e){
+            return 0.0;
+        }
+    }
 
 }
