@@ -217,10 +217,6 @@
     </c:forEach>
 
     $(document).ready(function () {
-        const placeLength = ${place.size()}
-            console.log(placeLength)
-            console.log(${place.size()})
-            console.log(${placeSize})
             getData();
         // flashing();
     }); //ready
@@ -256,7 +252,7 @@
                 var place_data_recent = new Array();
                 for(var i=0; i<place_name.length; i++) {
                         clearTimeout(interval); // 실행중인 interval 있다면 삭제
-                        console.log(place_name[i] + " : " +interval);
+                        console.log(place_name[i] + " : " +interval + "----------------------------------------------");
                         place_data_recent.push(getPlaceData(place_name[i]));
                         for (var z = 0; z < place_data[i].length; z++) {
                             if (place_data[i][z].up_time != place_data_recent[i][z].up_time) {
@@ -271,7 +267,8 @@
                                 draw_place_table(place_data[i], i);
                             }
                         }
-                        interval = setTimeout(interval_getData, 500);
+
+                        interval = setTimeout(interval_getData, 5000);
                 }
             }, 0);
     }
@@ -285,12 +282,15 @@
            data: {"place": place},
            async: false,
            success: function (data) {
+               // status_true_count, status_false_count, power_off_count, power_on_count = 0;
+               // legal_standard_count, company_standard_count, management_standard_count = 0;
                $.each(data, function (index, item) { //item (센서명)
                    var sensor = getSensorRecent(item); // item의 최근데이터
                    if(sensor.value == 0 || sensor.value == null){ //null 일때
                        sensor_value = "-"; // "-" 출력(datatable)
                    }else{
                        sensor_value = sensor.value;
+                       status = sensor.status;
                        up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
                    }
 
@@ -309,11 +309,12 @@
                        company_standard = sensorInfo.company_standard;
                        management_standard = sensorInfo.management_standard;
                        power = sensorInfo.power;
+
                    /* power on 출력 */
                    if(power == "on"){
                        getData.push({
                            naming: naming, name:item,
-                           value:sensor_value, up_time: up_time,
+                           value:sensor_value, up_time: up_time, status: sensor.status,
                            legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard, power: power,
                            b5_value: b5_value, com_value: com_value
                        });
@@ -322,13 +323,13 @@
                    if(power == "off"){
                        getData.push({
                            naming: naming, name:item,
-                           value: sensor_value, up_time: up_time,
+                           value: sensor_value, up_time: up_time, status: sensor.status,
                            legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard, power: power,
                            b5_value: b5_value, com_value: com_value
                        });
                    }
+
                });
-               // console.log(getData);
            },
             error: function () {
                console.log("getPlaceData error");
