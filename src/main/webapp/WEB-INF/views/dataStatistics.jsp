@@ -23,7 +23,7 @@
 <style>
     .add-bg {
         background-color: #fff;
-        width: 1300px;
+        width: 100%;
         position: relative;
         left: -20px;
         top: -3px;
