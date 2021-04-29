@@ -126,7 +126,7 @@
     function changePlace(value) {
         var place_name;
         if(value == null){
-            place_name = "point1"; // 기본값
+            place_name = "${place.get(0).name}"; // 기본값
         }else {
             place_name = value;
         }
