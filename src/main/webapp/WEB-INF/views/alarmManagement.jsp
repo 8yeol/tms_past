@@ -146,7 +146,7 @@
      })
 
  }
-    //sensor_alarm status 값 불러오기
+    //Notification_settings status 값 불러오기
     function findNotification(tableName) {
 
      let isChecked;
@@ -231,7 +231,7 @@ function insert(idx) {
             let item = checkedItem[i];
 
             $.ajax({
-                url: '<%=cp%>/saveAlarm',
+                url: '<%=cp%>/saveNotification',
                 type: 'POST',
                 dataType: 'json',
                 async: false,
@@ -253,7 +253,7 @@ function insert(idx) {
         let item = uncheckItem[i];
 
         $.ajax({
-            url: '<%=cp%>/saveAlarm',
+            url: '<%=cp%>/saveNotification',
             type: 'POST',
             dataType: 'json',
             async: false,

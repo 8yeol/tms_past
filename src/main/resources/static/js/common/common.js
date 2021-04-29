@@ -4,7 +4,7 @@ function findSensorCategory(tableName){
         return "산소";
     } else if(tableName.includes('NOX')==true){
         return "질소산화물";
-    } 
+    }
 }
 
 // 천자리 콤마 정규식

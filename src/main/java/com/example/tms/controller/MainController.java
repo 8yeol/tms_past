@@ -1,10 +1,7 @@
 package com.example.tms.controller;
 
 import com.example.tms.entity.*;
-import com.example.tms.repository.MemberRepository;
-import com.example.tms.repository.PlaceRepository;
-import com.example.tms.repository.Sensor_AlarmRepository;
-import com.example.tms.repository.Sensor_InfoRepository;
+import com.example.tms.repository.*;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -14,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -31,14 +27,15 @@ public class MainController {
 
     final MemberRepository memberRepository;
 
-    final Sensor_AlarmRepository sensor_alarmRepository;
+    final Notification_SettingsRepository notification_settingsRepository;
 
-    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate, Sensor_AlarmRepository sensor_alarmRepository, MemberRepository memberRepository) {
+
+    public MainController(PlaceRepository placeRepository, Sensor_InfoRepository sensor_infoRepository, MongoTemplate mongoTemplate, MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository) {
         this.placeRepository = placeRepository;
         this.sensor_infoRepository = sensor_infoRepository;
         this.mongoTemplate = mongoTemplate;
         this.memberRepository = memberRepository;
-        this.sensor_alarmRepository = sensor_alarmRepository;
+        this.notification_settingsRepository = notification_settingsRepository;
     }
 
     @RequestMapping("/")
@@ -332,21 +329,21 @@ public class MainController {
         return "alarmManagement";
     }
     //알림 설정값 저장
-    @RequestMapping("/saveAlarm")
-    public void saveAlarm(String item, String stime, String etime, String status) {
+    @RequestMapping("/saveNotification")
+    public void saveNotification(String item, String stime, String etime, String status) {
 
         Date up_time = new Date();
 
         boolean status1 = Boolean.parseBoolean(status);
-        Sensor_Alarm info = sensor_alarmRepository.findByName(item);
+        Notification_Settings info = notification_settingsRepository.findByName(item);
 
-        Sensor_Alarm entity = new Sensor_Alarm(item, stime, etime, status1, up_time);
+        Notification_Settings entity = new Notification_Settings(item, stime, etime, status1, up_time);
         try{
             entity.set_id(info.get_id());
-            sensor_alarmRepository.save(entity);
+            notification_settingsRepository.save(entity);
 
         } catch (NullPointerException e){
-            sensor_alarmRepository.save(entity);
+            notification_settingsRepository.save(entity);
         }
 
     }
