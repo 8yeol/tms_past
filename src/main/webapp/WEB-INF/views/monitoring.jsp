@@ -60,7 +60,8 @@
     </div>
     <div class="row mt-4">
         <div class="col-md-12 h-75">
-            <table id="sensor-table" class="w-100">
+            <c:forEach var="place" items="${place}" varStatus="status">
+            <table id="sensor-table-${status.index}" class="w-100">
                 <thead>
                 <tr>
                     <th width="12%">항목</th>
@@ -75,6 +76,7 @@
                 </tr>
                 <thead>
             </table>
+            </c:forEach>
         </div>
 </div>
 <%-- <c:forEach var="place" items="${place}">
@@ -118,9 +120,16 @@
 <script>
     var interval;
     var element, shown;
+    var place_name = new Array();
+    var place_data = new Array();
+    <c:forEach items="${place}" var="place" varStatus="status">
+    place_name.push("${place.name}");
+    </c:forEach>
+
     $(document).ready(function () {
             getData();
-            // flashing();
+
+        // flashing();
     }); //ready
 
     function changePlace() {
@@ -143,27 +152,35 @@
     }
 
     function getData(){
-        var place_name = $("#place").val(); // 측정소명
-        var place_data = getPlaceData(place_name); // 최근데이터, 10분전데이터, 정보
-        draw_place_table(place_data); // 로딩되면 테이블 생성
-        setTimeout(function interval_getData() { //실시간 처리위해 setTimeout
-            clearTimeout(interval); // 실행중인 interval 있다면 삭제
-            console.log(interval);
-            var date = new Date(); //현재시간간            $("#time").text(moment(date).format('YYYY-MM-DD HH:mm:ss'));
-            var place_data_recent = getPlaceData(place_name);
-            for (var i = 0; i < place_data.length; i++) {
-                if (place_data[i].up_time != place_data_recent[i].up_time) {
-                    place_data[i].b5_value = place_data_recent[i].b5_value;
-                    place_data[i].com_value = place_data_recent[i].com_value;
-                    place_data[i].value = place_data_recent[i].value;
-                    place_data[i].up_time = place_data_recent[i].up_time;
+        for(var i=0; i<place_name.length; i++){
+            place_data.push(getPlaceData(place_name[i])); // 최근데이터, 10분전데이터, 정보
+            draw_place_table(place_data[i], i); // 로딩되면 테이블 생성
+        }
+            setTimeout(function interval_getData() { //실시간 처리위해 setTimeout
+                var date = new Date(); //현재시간
+                $("#time").text(moment(date).format('YYYY-MM-DD HH:mm:ss'));
+                // 위 for 문의 i가 0에서 넘어오지 않아 새로 생성
+                var place_data_recent = new Array();
+                for(var i=0; i<place_name.length; i++) {
+                        clearTimeout(interval); // 실행중인 interval 있다면 삭제
+                        console.log(place_name[i] + " : " +interval);
+                        place_data_recent.push(getPlaceData(place_name[i]));
+                        for (var z = 0; z < place_data[i].length; z++) {
+                            if (place_data[i][z].up_time != place_data_recent[i][z].up_time) {
+                                place_data[i][z].b5_value = place_data_recent[i][z].b5_value;
+                                place_data[i][z].com_value = place_data_recent[i][z].com_value;
+                                place_data[i][z].value = place_data_recent[i][z].value;
+                                place_data[i][z].up_time = place_data_recent[i][z].up_time;
+                                place_data[i][z].naming = place_data[i][z].naming;
+                                place_data[i][z].name = place_data[i][z].name;
 
-                    $("#update").text(moment(place_data_recent[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
-                    draw_place_table(place_data);
+                                $("#update").text(moment(place_data_recent[i][z].up_time).format('YYYY-MM-DD HH:mm:ss'));
+                                draw_place_table(place_data[i], i);
+                            }
+                        }
+                        interval = setTimeout(interval_getData, 500);
                 }
-            }
-            interval = setTimeout(interval_getData, 1000);
-        }, 0);
+            }, 0);
     }
 
     /* 측정소명으로 센서명을 구하고 센서명으로 센서의 최근데이터, 10분전 데이터, 정보들을 리턴*/
@@ -177,15 +194,15 @@
            success: function (data) {
                $.each(data, function (index, item) { //item (센서명)
                    var sensor = getSensorRecent(item); // item의 최근데이터
-                   if(sensor.value == 0 || sensor.value == null){
-                       sensor_value = "-";
+                   if(sensor.value == 0 || sensor.value == null){ //null 일때
+                       sensor_value = "-"; // "-" 출력(datatable)
                    }else{
                        sensor_value = sensor.value;
                        up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
                    }
 
                    var b5_sensor = getSensor(item, "", "", 10); //item의 10분전 데이터
-                   if(b5_sensor.length != 0){ // 최근데이터 값 - 5분전 데이터
+                   if(b5_sensor.length != 0){ // 최근데이터 값 - 9:59분전 데이터
                        b5_value = (b5_sensor[(b5_sensor.length)-1].value).toFixed(3);
                        com_value = (sensor.value - b5_value).toFixed(3);
                    }else{ // 최근데이터 존재하지 않을 경우 "-" 처리
@@ -218,6 +235,7 @@
                        });
                    }
                });
+               // console.log(getData);
            },
             error: function () {
                console.log("getPlaceData error");
@@ -295,16 +313,17 @@
                     "legal_standard": "-", "company_standard": "-", "management_standard": "-", "power": "off"}
             }
         }); //ajax
+        // console.log(getData);
         return getData;
     }
 
 
     /* place_table 생성 */
-    function draw_place_table(data){
-        $("#sensor-table").DataTable().clear();
-        $("#sensor-table").DataTable().destroy();
+    function draw_place_table(data, index){
+        $("#sensor-table-"+index).DataTable().clear();
+        $("#sensor-table-"+index).DataTable().destroy();
 
-        $('#sensor-table').DataTable({
+        $('#sensor-table-'+index).DataTable({
             paging: false,
             searching: false,
             select: true,
