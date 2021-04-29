@@ -22,6 +22,10 @@
     h1{
         text-align: center;
     }
+    .border-right{
+        border-right-style: solid;
+        border-right-color: darkgray;
+    }
 </style>
 
 <style>
@@ -38,46 +42,132 @@
 
 
 <div class="container">
-    <div class="row">
-        <div class="col-12 bg-gradient mt-4 p-4 bg-skyblue rounded">
-            <div class="col-6 ms-3 add-bg">
-                <div class="col-md-12">
-                    <span class="fs-5 fw-bold">측정소</span>
-                    <div class="btn-group w-50 ms-3">
-                        <select id="place" class="btn btn-light" onchange="changePlace()">
-                            <c:forEach var="place" items="${place}">
-                                <option value="${place.name}">${place.name}</option>
-                            </c:forEach>
-                        </select>
+    <div class="row m-3 mt-3">
+        <div class="col">
+            <span class="fs-4">모니터링 > 실시간 모니터링</span>
+        </div>
+        <div class="col text-end align-self-end">
+            <span class="text-primary small"> * 5분 단위로 업데이트 됩니다.</span>
+        </div>
+    </div>
+    <div class="row m-3 mt-3">
+        <div class="col bg-white m-1">
+            <div class="row">
+                <span class="fs-5 fw-bold">가동률</span>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <p class="fs-1 mb-0">87%</p>
+                    <hr class="m-0">
+                    <p> 87 / 100 </p>
+                </div>
+                <div class="col">
+                    <p class="fs-6">정상 : <a style="text-align: right">87개</a></p>
+                    <p class="fs-6">통신불량 : <a style="text-align: right">4개</a></p>
+                    <p class="fs-6">모니터링 OFF : <a style="text-align: right">9개</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col bg-white m-1">
+            <div class="row">
+                <div class="col">
+                    <span class="fs-6 fw-bold">관리기준</span>
+                </div>
+                <div class="col">
+                    <span class="fs-6 fw-bold">사내기준</span>
+                </div>
+                <div class="col">
+                    <span class="fs-6 fw-bold">법적기준</span>
+                </div>
+            </div>
+            <div class="row h-75">
+                <div class="col border-right">
+                    <div class="row text-center">
+                        <div class="col">
+                            img 추가
+                        </div>
+                        <div class="col">
+                            <p class="fs-1 mb-0">87%</p>
+                            <hr class="m-0">
+                            <p> 87 / 100 </p>
+                        </div>
                     </div>
-                    <div>
-                        현재시간 : <span id="time"></span>
-                        업데이트시간 : <span id="update"></span>
+                </div>
+                <div class="col border-right">
+                    <div class="row text-center">
+                        <div class="col">
+                            img 추가
+                        </div>
+                        <div class="col">
+                            <p class="fs-1 mb-0">87%</p>
+                            <hr class="m-0">
+                            <p> 87 / 100 </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row text-center">
+                        <div class="col">
+                            img 추가
+                        </div>
+                        <div class="col">
+                            <p class="fs-1 mb-0">87%</p>
+                            <hr class="m-0">
+                            <p> 87 / 100 </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-md-12 h-75">
-            <c:forEach var="place" items="${place}" varStatus="status">
-            <table id="sensor-table-${status.index}" class="w-100">
-                <thead>
-                <tr>
-                    <th width="12%">항목</th>
-                    <th width="8%">실시간</th>
-                    <th width="8%">5분전</th>
-                    <th width="5%">증감</th>
-                    <th width="5%">법적기준</th>
-                    <th width="5%">사내기준</th>
-                    <th width="5%">관리기준</th>
-<%--                    <th width="5%">상태</th>--%>
-                    <th width="12%">업데이트</th>
-                </tr>
-                <thead>
-            </table>
-            </c:forEach>
+
+    <div class="row m-3 mt-3 bg-light">
+        <div class="row m-3">
+            <div class="col text-center border">
+                <div class="row p-3">
+                    <div class="col">
+                        <span class="small fw-bold">(추가)직전 데이터보다 높아진 경우</span>
+                    </div>
+                    <div class="col">
+                        <span class="small fw-bold">(추가)직전 데이터보다 낮아진 경우</span>
+                    </div>
+                    <div class="col">
+                        <span class="small fw-bold"> - 직전 데이터와 같은 경우</span>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="row table m-3">
+            <c:set var ="plceSize" value="${place.size()}"/>
+            <c:forEach var="places" items="${place}" varStatus="status">
+            <c:if test="${placeSize%2==1}">
+            <div class="col-md-12 mb-3">
+                <div class="bg-secondary m-2 text-center"><span class="fs-5">측정소 명 추가</span></div>
+                <div class="m-2 text-end"><span class="small">업데이트 날짜 추가</span></div>
+                </c:if>
+                <c:if test="${placeSize%2==0}">
+                <div class="col-md-6 mb-3">
+                    <div class="bg-secondary m-2 text-center"><span class="fs-5">측정소 명 추가</span></div>
+                    <div class="2 text-end"><span class="small">업데이트 날짜 추가</span></div>
+                    </c:if>
+                    <table id="sensor-table-${status.index}" class="table-primary">
+                        <thead>
+                        <tr>
+                            <th>항목</th>
+                            <th>법적기준</th>
+                            <th>사내기준</th>
+                            <th>관리기준</th>
+                            <th>실시간</th>
+                                <%--                    <th width="5%">상태</th>--%>
+                                <%--                    <th width="12%">업데이트</th>--%>
+                        </tr>
+                        <thead>
+                    </table>
+                </div>
+                </c:forEach>
+    </div>
+
+
 </div>
 <%-- <c:forEach var="place" items="${place}">
 <div class="col-md-6 p-3"> &lt;%&ndash; place col-md-12 / col-md-6 / col-md-4 &ndash;%&gt;
@@ -127,8 +217,11 @@
     </c:forEach>
 
     $(document).ready(function () {
+        const placeLength = ${place.size()}
+            console.log(placeLength)
+            console.log(${place.size()})
+            console.log(${placeSize})
             getData();
-
         // flashing();
     }); //ready
 
@@ -333,14 +426,12 @@
             order:[[0, 'desc']],
             columns: [
                 {"data": "naming"},
-                {"data": "value"},
-                {"data": "b5_value"},
-                {"data": "com_value"},
                 {"data": "legal_standard"},
                 {"data": "company_standard"},
                 {"data": "management_standard"},
+                {"data": "value"}
                 // {"data": "power"},
-                {"data": "up_time"},
+                // {"data": "up_time"},
             ],
             'rowCallback': function(row, data, index){
                 if(data.legal_standard){
@@ -365,9 +456,9 @@
                     $(row).find('td:eq(1)').css('background-color', '#fefefe');
                 }
                 if(data.value> b5_value){
-                    $(row).find('td:eq(1)').prepend("▼");
+                    $(row).find('td:eq(4)').prepend("▼");
                 }else if(data.value < b5_value){
-                    $(row).find('td:eq(1)').prepend("▲");
+                    $(row).find('td:eq(4)').prepend("▲");
 
                 }
             },
