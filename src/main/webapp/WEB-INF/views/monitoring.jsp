@@ -57,14 +57,14 @@
             </div>
             <div class="row">
                 <div class="col text-center">
-                    <p class="fs-1 mb-0">87%</p>
+                    <p class="fs-1 mb-0" id="power_text_A">87%</p>
                     <hr class="m-0">
-                    <p> 87 / 100 </p>
+                    <p id="power_text_B"> 87 / 100 </p>
                 </div>
                 <div class="col">
-                    <p class="fs-6">정상 : <a style="text-align: right">87개</a></p>
-                    <p class="fs-6">통신불량 : <a style="text-align: right">4개</a></p>
-                    <p class="fs-6">모니터링 OFF : <a style="text-align: right">9개</a></p>
+                    <p class="fs-6" >정상 : <a style="text-align: right" id="status_on_text">87개</a></p>
+                    <p class="fs-6" >통신불량 : <a style="text-align: right"id="status_off_text">4개</a></p>
+                    <p class="fs-6" >모니터링 OFF : <a style="text-align: right" id="power_off_text">9개</a></p>
                 </div>
             </div>
         </div>
@@ -87,9 +87,9 @@
                             img 추가
                         </div>
                         <div class="col">
-                            <p class="fs-1 mb-0">87%</p>
+                            <p class="fs-1 mb-0" id="legal_standard_text_A">87%</p>
                             <hr class="m-0">
-                            <p> 87 / 100 </p>
+                            <p id="legal_standard_text_B"> 87 / 100 </p>
                         </div>
                     </div>
                 </div>
@@ -99,9 +99,9 @@
                             img 추가
                         </div>
                         <div class="col">
-                            <p class="fs-1 mb-0">87%</p>
+                            <p class="fs-1 mb-0" id="company_standard_text_A">87%</p>
                             <hr class="m-0">
-                            <p> 87 / 100 </p>
+                            <p id="company_standard_text_B"> 87 / 100 </p>
                         </div>
                     </div>
                 </div>
@@ -111,9 +111,9 @@
                             img 추가
                         </div>
                         <div class="col">
-                            <p class="fs-1 mb-0">87%</p>
+                            <p class="fs-1 mb-0" id="management_standard_text_A">87%</p>
                             <hr class="m-0">
-                            <p> 87 / 100 </p>
+                            <p id="management_standard_text_B"> 87 / 100 </p>
                         </div>
                     </div>
                 </div>
@@ -169,39 +169,9 @@
 
 
 </div>
-<%-- <c:forEach var="place" items="${place}">
-<div class="col-md-6 p-3"> &lt;%&ndash; place col-md-12 / col-md-6 / col-md-4 &ndash;%&gt;
-    <div class="row bg-light rounded">
-        <div class="col-xs-12">
-            <h1 class="bg-secondary rounded mt-1">${place.name}</h1>
-        </div>
-        <table id="sensor-table">
-            <thead>
-            <tr>
-                <th>구분</th>
-                <th>항목</th>
-                <th>실시간</th>
-                <th>5분전</th>
-                <th>증감</th>
-            </tr>
-            <thead>
-        </table>
-    </div>
-</div>
-</c:forEach>--%>
-</div>
-<%--<div class="row">
-<div class="col-xs-12 d-flex justify-content-between bg-light rounded mt-3">
-    <div class="flex-fill d-flex justify-content-around">
-        <h3> <i class="fas fa-square text-dark"></i> 장비정상</h3>
-        <h3> <i class="fas fa-square text-secondary"></i> 교정중</h3>
-        <h3> <i class="fas fa-square text-warning"></i> 경고</h3>
-        <h3> <i class="fas fa-square text-danger"></i> 위험</h3>
-        <h3> <i class="fas fa-square text-success"></i> 장비이상</h3>
-    </div>
 
 </div>
-</div>--%>
+
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
@@ -212,6 +182,15 @@
     var element, shown;
     var place_name = new Array();
     var place_data = new Array();
+
+    var status_true_count = 0
+    var status_false_count = 0;
+    var power_on_count = 0;
+    var power_off_count = 0;
+    var legal_standard_count = 0;
+    var company_standard_count = 0;
+    var management_standard_count = 0;
+
     <c:forEach items="${place}" var="place" varStatus="status">
     place_name.push("${place.name}");
     </c:forEach>
@@ -247,6 +226,9 @@
         }
             setTimeout(function interval_getData() { //실시간 처리위해 setTimeout
                 var date = new Date(); //현재시간
+                status_true_count =0, status_false_count = 0;
+                power_on_count= 0, power_off_count = 0;
+                legal_standard_count = 0, company_standard_count = 0, management_standard_count = 0;
                 $("#time").text(moment(date).format('YYYY-MM-DD HH:mm:ss'));
                 // 위 for 문의 i가 0에서 넘어오지 않아 새로 생성
                 var place_data_recent = new Array();
@@ -267,7 +249,21 @@
                                 draw_place_table(place_data[i], i);
                             }
                         }
+                    $("#power_text_A").text((status_true_count/(status_true_count+status_false_count))*100+"%");
+                    $("#power_text_B").text(status_true_count+ " / "+ (status_false_count+status_true_count));
+                    $("#status_on_text").text(status_true_count+"개");
+                    $("#status_off_text").text(status_false_count+"개");
+                    $("#power_off_text").text(power_off_count+"개");
+                    $("#legal_standard_text_A").text((legal_standard_count/(status_true_count+status_false_count))*100+"%");
+                    $("#legal_standard_text_B").text(legal_standard_count+" / "+ (status_true_count+status_false_count));
+                    $("#company_standard_text_A").text((company_standard_count/(status_true_count+status_false_count))*100+"%");
+                    $("#company_standard_text_B").text(company_standard_count+" / "+ (status_true_count+status_false_count));
+                    $("#management_standard_text_A").text((management_standard_count/(status_true_count+status_false_count))*100+"%");
+                    $("#management_standard_text_B").text(management_standard_count+" / "+ (status_true_count+status_false_count));
 
+                        // console.log("S : " +status_true_count+ " / "+ status_false_count);
+                        // console.log("P : " +power_on_count+ " / "+ power_off_count);
+                        // console.log("S : " +legal_standard_count+ " / "+ company_standard_count + " / " + management_standard_count);
                         interval = setTimeout(interval_getData, 5000);
                 }
             }, 0);
@@ -282,8 +278,6 @@
            data: {"place": place},
            async: false,
            success: function (data) {
-               // status_true_count, status_false_count, power_off_count, power_on_count = 0;
-               // legal_standard_count, company_standard_count, management_standard_count = 0;
                $.each(data, function (index, item) { //item (센서명)
                    var sensor = getSensorRecent(item); // item의 최근데이터
                    if(sensor.value == 0 || sensor.value == null){ //null 일때
@@ -304,12 +298,32 @@
                    }
 
                    var sensorInfo = getSensorInfo(item); //item의 정보 데이터
+                   // var sensorInfo = getSensorInfo2(item, "on"); //item의 정보 데이터
                        naming = sensorInfo.naming;
                        legal_standard = sensorInfo.legal_standard;
                        company_standard = sensorInfo.company_standard;
                        management_standard = sensorInfo.management_standard;
                        power = sensorInfo.power;
 
+                   if(sensor.status == "true"){
+                       status_true_count += 1;
+                   }else{
+                       status_false_count += 1;
+                   }
+                   if(sensorInfo.power == "on"){
+                       power_on_count += 1;
+                   }else{
+                       power_off_count += 1;
+                   }
+                   if(sensor.value >= sensorInfo.legal_standard){
+                       legal_standard_count += 1;
+                   }
+                   if(sensor.value >= sensorInfo.company_standard){
+                       company_standard_count += 1;
+                   }
+                   if(sensor.value >= sensorInfo.management_standard){
+                       management_standard_count += 1;
+                   }
                    /* power on 출력 */
                    if(power == "on"){
                        getData.push({
@@ -411,6 +425,39 @@
         return getData;
     }
 
+    /* 센서명으로 센서정보 조회 */
+    function getSensorInfo2(sensor, power) {
+        var getData;
+        $.ajax({
+            url:'getSensorInfo2',
+            dataType: 'json',
+            data: {"sensor": sensor, "power": power},
+            async: false,
+            success: function (data) {
+                // 데이터가 0 또는 null 일 경우 "-" 으로 치환
+                if(data.legal_standard == 0 || data.legal_standard == null){
+                    data.legal_standard = "-";
+                }
+                if(data.company_standard == 0 || data.company_standard == null){
+                    data.company_standard = "-";
+                }
+                if(data.management_standard == 0 || data.management_standard == null){
+                    data.management_standard = "-";
+                }
+                getData = data;
+            },
+            error: function (e) {
+                // console.log("getSensorInfo Error");
+                /* 결과가 존재하지 않을 경우 센서명만 전달 */
+                getData = {"name": sensor, "naming": sensor,
+                    "legal_standard": "-", "company_standard": "-", "management_standard": "-", "power": "off"}
+            }
+        }); //ajax
+        // console.log(getData);
+        return getData;
+    }
+
+
 
     /* place_table 생성 */
     function draw_place_table(data, index){
@@ -436,25 +483,25 @@
             ],
             'rowCallback': function(row, data, index){
                 if(data.legal_standard){
-                    $(row).find('td:eq(4)').css('background-color', '#fff390');
+                    $(row).find('td:eq(1)').css('background-color', '#fff390');
                     if(data.value >= data.legal_standard){
-                        $(row).find('td:eq(1)').css('background-color', '#fff390');
+                        $(row).find('td:eq(4)').css('background-color', '#fff390');
                     }
                 }
                 if(data.company_standard){
-                    $(row).find('td:eq(5)').css('background-color', '#ff909b');
+                    $(row).find('td:eq(2)').css('background-color', '#ff909b');
                     if(data.value >= data.company_standard){
-                        $(row).find('td:eq(1)').css('background-color', '#ff909b');
+                        $(row).find('td:eq(4)').css('background-color', '#ff909b');
                     }
                 }
                 if(data.management_standard){
-                    $(row).find('td:eq(6)').css('background-color', '#fbb333');
+                    $(row).find('td:eq(3)').css('background-color', '#fbb333');
                     if(data.value >= data.management_standard){
-                        $(row).find('td:eq(1)').css('background-color', '#fbb333');
+                        $(row).find('td:eq(4)').css('background-color', '#fbb333');
                     }
                 }
                 if(data.legal_standard == "-" || data.company_standard == "-" || data.management_standard == "-"){
-                    $(row).find('td:eq(1)').css('background-color', '#fefefe');
+                    $(row).find('td:eq(4)').css('background-color', '#fefefe');
                 }
                 if(data.value> b5_value){
                     $(row).find('td:eq(4)').prepend("▼");
