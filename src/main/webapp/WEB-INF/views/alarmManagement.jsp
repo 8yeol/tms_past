@@ -21,6 +21,8 @@
 <link rel="stylesheet" type="text/css" href="static/css/alarmManagement.css">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/chung-timepicker.js"></script>
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<script src="static/js/sweetalert2.min.js"></script>
 
 
 <div class="container">
@@ -78,9 +80,9 @@
      const parentElem = $('#items'+idx);
 
      let innerHTMLTimePicker = "";
-     innerHTMLTimePicker += '<div><span class="textSpanParent">알림 시간</span><div>';
-     innerHTMLTimePicker += '<div><span class="textSpan">From </span><input type="text" id="start'+idx+'" name="start" class="timePicker" readonly/><div>';
-     innerHTMLTimePicker += '<div><span class="textSpan">To </span><input type="text" id="end'+idx+'" name="end" class="timePicker" readonly/><div>';
+     innerHTMLTimePicker += '<div><span class="textSpanParent">알림 시간</span></div>';
+     innerHTMLTimePicker += '<div><span class="textSpan">From </span><input type="text" id="start'+idx+'" name="start" class="timePicker" readonly/></div>';
+     innerHTMLTimePicker += '<div><span class="textSpan">To </span><input type="text" id="end'+idx+'" name="end" class="timePicker" readonly/></div>';
 
 
      $('#alarm'+idx).append(innerHTMLTimePicker);
@@ -223,9 +225,20 @@ function insert(idx) {
 
     const start = $("#start"+idx).val();
     const end = $("#end"+idx).val();
+    if(start =="" || end ==""){
+        Swal.fire({
+            icon: 'warning',
+            title: '경고',
+            text: '알림시간을 입력해주세요.'
+
+        })
+        return false;
+
+    }
 
     for(let i=0; i<checkedItem.length; i++){
             let item = checkedItem[i];
+
 
             $.ajax({
                 url: '<%=cp%>/saveNotification',
@@ -240,6 +253,7 @@ function insert(idx) {
                 },
                 success : function(data) {
                     console.log(data);
+
                 },
                 error : function(request, status, error) {
                     console.log(error)
@@ -268,7 +282,11 @@ function insert(idx) {
             }
         })
     }
-    alert("설정 완료");
+    Swal.fire({
+        icon: 'success',
+        title: '저장완료'
+    })
+
 }
     //시작 시간이 종료시간보다 클때 endTime 변경
     //TimePicker 객체에서 아이디->인덱스 추출
