@@ -360,4 +360,10 @@ public class MainController {
 
         return "stationManagement";
     }
+
+    @RequestMapping("emissionsManagement")
+    public String emissionsManagement(){
+
+        return "emissionsManagement";
+    }
 }

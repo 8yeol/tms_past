@@ -36,14 +36,15 @@ public class Schedule {
             String sensorName = notification.get(i).getName();
             Reference_Value_Setting reference = reference_value_settingRepository.findByName(sensorName);
 
-            // 마지막 센서 값 받아오기
             Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName);
             Float value = sensor.getValue();
+            Date update = sensor.getUp_time();
 
             Float legal = reference.getLegal_standard(); // 법적기준
             Float company = reference.getCompany_standard(); //사내기준
             Float standard = reference.getManagement_standard(); //관리기준
 
+            // update 날짜와 비교하는 if문으로 한번 더 싸줄것
             if(value > legal){
                 System.out.println("legal");
             }else if(value > company){
