@@ -506,7 +506,7 @@
                         zoomin: true,
                         zoomout: true,
                         pan: true,
-                        reset: false,
+                        reset: true,
                     },
                 },
                 animations: {

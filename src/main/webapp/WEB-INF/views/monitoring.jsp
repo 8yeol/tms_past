@@ -249,16 +249,16 @@
                                 draw_place_table(place_data[i], i);
                             }
                         }
-                    $("#power_text_A").text((status_true_count/(status_true_count+status_false_count))*100+"%");
+                    $("#power_text_A").text(((status_true_count/(status_true_count+status_false_count)).toFixed(2)*100)+"%");
                     $("#power_text_B").text(status_true_count+ " / "+ (status_false_count+status_true_count));
                     $("#status_on_text").text(status_true_count+"개");
                     $("#status_off_text").text(status_false_count+"개");
                     $("#power_off_text").text(power_off_count+"개");
-                    $("#legal_standard_text_A").text((legal_standard_count/(status_true_count+status_false_count))*100+"%");
+                    $("#legal_standard_text_A").text(((legal_standard_count/(status_true_count+status_false_count))*100).toFixed(2)+"%");
                     $("#legal_standard_text_B").text(legal_standard_count+" / "+ (status_true_count+status_false_count));
-                    $("#company_standard_text_A").text((company_standard_count/(status_true_count+status_false_count))*100+"%");
+                    $("#company_standard_text_A").text(((company_standard_count/(status_true_count+status_false_count))*100).toFixed(2)+"%");
                     $("#company_standard_text_B").text(company_standard_count+" / "+ (status_true_count+status_false_count));
-                    $("#management_standard_text_A").text((management_standard_count/(status_true_count+status_false_count))*100+"%");
+                    $("#management_standard_text_A").text(((management_standard_count/(status_true_count+status_false_count))*100).toFixed(2)+"%");
                     $("#management_standard_text_B").text(management_standard_count+" / "+ (status_true_count+status_false_count));
 
                         // console.log("S : " +status_true_count+ " / "+ status_false_count);
@@ -483,21 +483,21 @@
             ],
             'rowCallback': function(row, data, index){
                 if(data.legal_standard){
-                    $(row).find('td:eq(1)').css('background-color', '#fff390');
+                    $(row).find('td:eq(1)').css('background-color', '#ff9d5a');
                     if(data.value >= data.legal_standard){
-                        $(row).find('td:eq(4)').css('background-color', '#fff390');
+                        $(row).find('td:eq(4)').css('background-color', '#ff9d5a');
                     }
                 }
                 if(data.company_standard){
-                    $(row).find('td:eq(2)').css('background-color', '#ff909b');
+                    $(row).find('td:eq(2)').css('background-color', '#ffc55a');
                     if(data.value >= data.company_standard){
-                        $(row).find('td:eq(4)').css('background-color', '#ff909b');
+                        $(row).find('td:eq(4)').css('background-color', '#ffc55a');
                     }
                 }
                 if(data.management_standard){
-                    $(row).find('td:eq(3)').css('background-color', '#fbb333');
+                    $(row).find('td:eq(3)').css('background-color', '#a2d674');
                     if(data.value >= data.management_standard){
-                        $(row).find('td:eq(4)').css('background-color', '#fbb333');
+                        $(row).find('td:eq(4)').css('background-color', '#a2d674');
                     }
                 }
                 if(data.legal_standard == "-" || data.company_standard == "-" || data.management_standard == "-"){
