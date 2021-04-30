@@ -63,7 +63,7 @@ input:checked + .slider:before {
 }
 .a1 {
     display: inline-flex;
-    justify-content: flex-end;
+    flex-direction: column;
 }
 
 .a2 {
