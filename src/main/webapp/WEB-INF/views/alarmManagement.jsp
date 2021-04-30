@@ -27,12 +27,12 @@
 
 <div class="container">
 
-    <div class="col" style="font-weight: bolder;margin: 30px 0px; font-size: 27px">
+    <div class="col" style="font-weight: bolder;margin: 30px 0px; font-size: 1.5rem;">
         환경설정 > 알림설정
     </div>
     <div class="row bg-light rounded" ><span style=";font-size: 23px; font-weight: bolder;padding: 20px 20px 20px 40px;">알림설정</span></div>
   <c:forEach var="place" items="${place}" varStatus="status"> <!--JSTL 반복문 시작 -->
-    <div class="row bg-light rounded" id="placeDiv${status.index}" style="border-bottom:2px solid silver;padding:16px 16px 40px 16px;">
+    <div class="row bg-light rounded" id="placeDiv${status.index}" style="border-bottom:2px solid #a9a9a9;padding:16px 16px 40px 16px;">
 
 
 
@@ -44,9 +44,8 @@
         </div>
         <div class="col-3" style="width: 30%"><div class="a1" id="alarm${status.index}"></div></div>
         <div class="col-3 end" style="width: 25%;">
-            <button type="button" class="btn btn-primary" onClick="insert(${status.index})">저장</button>
-            <button type="button" class="cancleBtn" onClick="cancle(${status.index})">취소</button>
-
+            <button type="button" class="btn btn-primary saveBtn" onClick="insert(${status.index})">저장</button>
+            <button type="button" class="cancleBtn" onClick="cancle(${status.index})"><img src="../static/images/reload.png" width="27" height="27"></button>
         </div>
 
 

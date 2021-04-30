@@ -127,3 +127,33 @@ input:checked + .slider:before {
     padding:30px;
     margin-left: 100px;
 }
+
+.timePicker {
+    margin-top: 28px;
+}
+
+#end0, #end1, #end2 {
+    margin-left: 40px;
+}
+#placeDiv0>div, #placeDiv1>div, #placeDiv2>div {
+    margin-top: 20px;
+}
+
+.saveBtn, .cancleBtn {
+    position: absolute;
+    bottom:0px;
+}
+.cancleBtn {
+    left: 75px;
+}
+div.col-3.end {
+    position: relative;
+}
+
+h6 {
+    margin-top: 10px;
+}
+
+button>img {
+    line-height: 27px;
+}
