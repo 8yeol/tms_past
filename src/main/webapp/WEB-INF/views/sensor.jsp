@@ -98,7 +98,7 @@
             <hr>
 
             <%-- 차트의 데이터 테이블 --%>
-            <table id="sensor-table" class="table-responsive bg-gradient col-md-12 mt-1">
+            <table id="sensor-table" class="bg-gradient mt-1">
                 <thead>
                 <tr class="bg-lightGray">
                     <th class="d-flex justify-content-between">

@@ -140,17 +140,17 @@
         <div class="row table m-3">
             <c:set var ="plceSize" value="${place.size()}"/>
             <c:forEach var="places" items="${place}" varStatus="status">
-            <c:if test="${placeSize%2==1}">
+            <c:if test="${placeSize%2==1}"> <%-- 홀수 test는 반대로 --%>
             <div class="col-md-12 mb-3">
-                <div class="bg-secondary m-2 text-center"><span class="fs-5">측정소 명 추가</span></div>
-                <div class="m-2 text-end"><span class="small">업데이트 날짜 추가</span></div>
-                </c:if>
-                <c:if test="${placeSize%2==0}">
-                <div class="col-md-6 mb-3">
-                    <div class="bg-secondary m-2 text-center"><span class="fs-5">측정소 명 추가</span></div>
-                    <div class="2 text-end"><span class="small">업데이트 날짜 추가</span></div>
-                    </c:if>
-                    <table id="sensor-table-${status.index}" class="table-primary">
+                <div class="bg-secondary m-2 text-center"><span class="fs-5">${places.name}</span></div>
+                <div class="2 text-end"><span class="small" id="update-${status.index}">업데이트 날짜</span></div>
+            </c:if>
+            <c:if test="${placeSize%2==0}"> <%-- 짝수 --%>
+            <div class="col-md-6 mb-3">
+                <div class="bg-secondary m-2 text-center"><span class="fs-5">${places.name}</span></div>
+                <div class="2 text-end"><span class="small" id="update-${status.index}">업데이트 날짜</span></div>
+            </c:if>
+                    <table class="table-primary" id="sensor-table-${status.index}">
                         <thead>
                         <tr>
                             <th>항목</th>
@@ -158,13 +158,11 @@
                             <th>사내기준</th>
                             <th>관리기준</th>
                             <th>실시간</th>
-                                <%--                    <th width="5%">상태</th>--%>
-                                <%--                    <th width="12%">업데이트</th>--%>
                         </tr>
                         <thead>
-                    </table>
+                   </table>
                 </div>
-                </c:forEach>
+            </c:forEach>
     </div>
 
 
@@ -180,8 +178,8 @@
 <script>
     var interval;
     var element, shown;
-    var place_name = new Array();
-    var place_data = new Array();
+    var place_name = new Array(); //측정소명
+    var place_data = new Array(); //{최근데이터, 9:59 전 데이터, 센서 정보}
 
     var status_true_count = 0
     var status_false_count = 0;
@@ -202,7 +200,7 @@
 
     function changePlace() {
         getData();
-        // flashing();
+        flashing();
     }
 
     /* 본문 점멸 효과 */
@@ -221,52 +219,56 @@
 
     function getData(){
         for(var i=0; i<place_name.length; i++){
-            place_data.push(getPlaceData(place_name[i])); // 최근데이터, 10분전데이터, 정보
+            place_data.push(getPlaceData(place_name[i])); // 데이터 조회(최근데이터, 10분전데이터, 정보)
+            // draw_place_table2(place_data[i], i);
             draw_place_table(place_data[i], i); // 로딩되면 테이블 생성
+
         }
             setTimeout(function interval_getData() { //실시간 처리위해 setTimeout
                 var date = new Date(); //현재시간
                 status_true_count =0, status_false_count = 0;
                 power_on_count= 0, power_off_count = 0;
                 legal_standard_count = 0, company_standard_count = 0, management_standard_count = 0;
-                $("#time").text(moment(date).format('YYYY-MM-DD HH:mm:ss'));
                 // 위 for 문의 i가 0에서 넘어오지 않아 새로 생성
                 var place_data_recent = new Array();
                 for(var i=0; i<place_name.length; i++) {
-                        clearTimeout(interval); // 실행중인 interval 있다면 삭제
-                        console.log(place_name[i] + " : " +interval + "----------------------------------------------");
-                        place_data_recent.push(getPlaceData(place_name[i]));
-                        for (var z = 0; z < place_data[i].length; z++) {
-                            if (place_data[i][z].up_time != place_data_recent[i][z].up_time) {
-                                place_data[i][z].b5_value = place_data_recent[i][z].b5_value;
-                                place_data[i][z].com_value = place_data_recent[i][z].com_value;
-                                place_data[i][z].value = place_data_recent[i][z].value;
-                                place_data[i][z].up_time = place_data_recent[i][z].up_time;
-                                place_data[i][z].naming = place_data[i][z].naming;
-                                place_data[i][z].name = place_data[i][z].name;
+                    $("#update-"+i).text(moment(place_data.up_time).format('YYYY-MM-DD HH:mm:ss'));
+                    clearTimeout(interval); // 실행중인 interval 있다면 삭제
+                    console.log(place_name[i] + " : " +interval + "----------------------------------------------");
+                    place_data_recent.push(getPlaceData(place_name[i]));
+                    for (var z = 0; z < place_data[i].length; z++) {
+                        if (place_data[i][z].up_time != place_data_recent[i][z].up_time) {
+                            place_data[i][z].b5_value = place_data_recent[i][z].b5_value;
+                            place_data[i][z].com_value = place_data_recent[i][z].com_value;
+                            place_data[i][z].value = place_data_recent[i][z].value;
+                            place_data[i][z].up_time = place_data_recent[i][z].up_time;
+                            place_data[i][z].naming = place_data[i][z].naming;
+                            place_data[i][z].name = place_data[i][z].name;
 
-                                $("#update").text(moment(place_data_recent[i][z].up_time).format('YYYY-MM-DD HH:mm:ss'));
-                                draw_place_table(place_data[i], i);
-                            }
+                            $("#update-"+i).text(moment(place_data_recent[i][z].up_time).format('YYYY-MM-DD HH:mm:ss'));
+                            draw_place_table(place_data[i], i);
+                            // draw_place_table2(place_data[i], i);
+
                         }
-                    $("#power_text_A").text(((status_true_count/(status_true_count+status_false_count)).toFixed(2)*100)+"%");
-                    $("#power_text_B").text(status_true_count+ " / "+ (status_false_count+status_true_count));
-                    $("#status_on_text").text(status_true_count+"개");
-                    $("#status_off_text").text(status_false_count+"개");
-                    $("#power_off_text").text(power_off_count+"개");
-                    $("#legal_standard_text_A").text(((legal_standard_count/(status_true_count+status_false_count))*100).toFixed(2)+"%");
-                    $("#legal_standard_text_B").text(legal_standard_count+" / "+ (status_true_count+status_false_count));
-                    $("#company_standard_text_A").text(((company_standard_count/(status_true_count+status_false_count))*100).toFixed(2)+"%");
-                    $("#company_standard_text_B").text(company_standard_count+" / "+ (status_true_count+status_false_count));
-                    $("#management_standard_text_A").text(((management_standard_count/(status_true_count+status_false_count))*100).toFixed(2)+"%");
-                    $("#management_standard_text_B").text(management_standard_count+" / "+ (status_true_count+status_false_count));
-
-                        // console.log("S : " +status_true_count+ " / "+ status_false_count);
-                        // console.log("P : " +power_on_count+ " / "+ power_off_count);
-                        // console.log("S : " +legal_standard_count+ " / "+ company_standard_count + " / " + management_standard_count);
-                        interval = setTimeout(interval_getData, 5000);
+                    }
+                    draw_place_info();
+                    interval = setTimeout(interval_getData, 5000);
                 }
             }, 0);
+    }
+
+    function draw_place_info() {
+        $("#power_text_A").text(((status_true_count/(status_true_count+status_false_count)).toFixed(2)*100).toFixed(0)+"%");
+        $("#power_text_B").text(status_true_count+ " / "+ (status_false_count+status_true_count));
+        $("#status_on_text").text(status_true_count+"개");
+        $("#status_off_text").text(status_false_count+"개");
+        $("#power_off_text").text(power_off_count+"개");
+        $("#legal_standard_text_A").text(((legal_standard_count/(status_true_count+status_false_count))*100).toFixed(0)+"%");
+        $("#legal_standard_text_B").text(legal_standard_count+" / "+ (status_true_count+status_false_count));
+        $("#company_standard_text_A").text(((company_standard_count/(status_true_count+status_false_count))*100).toFixed(0)+"%");
+        $("#company_standard_text_B").text(company_standard_count+" / "+ (status_true_count+status_false_count));
+        $("#management_standard_text_A").text(((management_standard_count/(status_true_count+status_false_count))*100).toFixed(0)+"%");
+        $("#management_standard_text_B").text(management_standard_count+" / "+ (status_true_count+status_false_count));
     }
 
     /* 측정소명으로 센서명을 구하고 센서명으로 센서의 최근데이터, 10분전 데이터, 정보들을 리턴*/
@@ -279,69 +281,69 @@
            async: false,
            success: function (data) {
                $.each(data, function (index, item) { //item (센서명)
-                   var sensor = getSensorRecent(item); // item의 최근데이터
-                   if(sensor.value == 0 || sensor.value == null){ //null 일때
-                       sensor_value = "-"; // "-" 출력(datatable)
-                   }else{
-                       sensor_value = sensor.value;
-                       status = sensor.status;
-                       up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
-                   }
-
-                   var b5_sensor = getSensor(item, "", "", 10); //item의 10분전 데이터
-                   if(b5_sensor.length != 0){ // 최근데이터 값 - 9:59분전 데이터
-                       b5_value = (b5_sensor[(b5_sensor.length)-1].value).toFixed(3);
-                       com_value = (sensor.value - b5_value).toFixed(3);
-                   }else{ // 최근데이터 존재하지 않을 경우 "-" 처리
-                       b5_value = "-";
-                       com_value = "-";
-                   }
-
-                   var sensorInfo = getSensorInfo(item); //item의 정보 데이터
-                   // var sensorInfo = getSensorInfo2(item, "on"); //item의 정보 데이터
-                       naming = sensorInfo.naming;
-                       legal_standard = sensorInfo.legal_standard;
-                       company_standard = sensorInfo.company_standard;
-                       management_standard = sensorInfo.management_standard;
-                       power = sensorInfo.power;
-
-                   if(sensor.status == "true"){
-                       status_true_count += 1;
-                   }else{
-                       status_false_count += 1;
-                   }
-                   if(sensorInfo.power == "on"){
+                   var Onoff = getPower(item);
+                   if(Onoff == "on"){
                        power_on_count += 1;
+                       var sensor = getSensorRecent(item); // item의 최근데이터
+                       if(sensor.value == 0 || sensor.value == null){ //null 일때
+                           sensor_value = "-"; // "-" 출력(datatable)
+                       }else{
+                           sensor_value = sensor.value.toFixed(2);
+                           status = sensor.status;
+                           up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
+                       }
+
+                       var b5_sensor = getSensor(item, "", "", 10); //item의 10분전 데이터
+                       if(b5_sensor.length != 0){ // 최근데이터 값 - 9:59분전 데이터
+                           b5_value = (b5_sensor[(b5_sensor.length)-1].value).toFixed(3);
+                           com_value = (sensor.value - b5_value).toFixed(3);
+                       }else{ // 최근데이터 존재하지 않을 경우 "-" 처리
+                           b5_value = "-";
+                           com_value = "-";
+                       }
+
+                       var sensorInfo = getSensorInfo(item); //item의 정보 데이터
+                       var naming = sensorInfo.naming;
+                       var legal_standard = sensorInfo.legal_standard;
+                       var company_standard = sensorInfo.company_standard;
+                       var management_standard = sensorInfo.management_standard;
+                       var power = sensorInfo.power;
+
+                       if(status == "true"){
+                           status_true_count += 1;
+                       }else{
+                           status_false_count += 1;
+                       }
+                       if(sensor.value >= sensorInfo.legal_standard){
+                           legal_standard_count += 1;
+                       }
+                       if(sensor.value < sensorInfo.legal_standard && sensor.value >= sensorInfo.company_standard){
+                           company_standard_count += 1;
+                       }
+                       if(sensor.value <= sensorInfo.company_standard && sensor.value > sensorInfo.management_standard){
+                           management_standard_count += 1;
+                       }
+                       /* power on 출력 */
+                       if(power == "on"){
+                           getData.push({
+                               naming: naming, name:item,
+                               value:sensor_value, up_time: up_time, status: sensor.status,
+                               legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard, power: power,
+                               b5_value: b5_value, com_value: com_value
+                           });
+                       }
                    }else{
                        power_off_count += 1;
                    }
-                   if(sensor.value >= sensorInfo.legal_standard){
-                       legal_standard_count += 1;
-                   }
-                   if(sensor.value >= sensorInfo.company_standard){
-                       company_standard_count += 1;
-                   }
-                   if(sensor.value >= sensorInfo.management_standard){
-                       management_standard_count += 1;
-                   }
-                   /* power on 출력 */
-                   if(power == "on"){
-                       getData.push({
-                           naming: naming, name:item,
-                           value:sensor_value, up_time: up_time, status: sensor.status,
-                           legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard, power: power,
-                           b5_value: b5_value, com_value: com_value
-                       });
-                   }
                    /* power off 출력 */
-                   if(power == "off"){
+/*                   if(power == "off"){
                        getData.push({
                            naming: naming, name:item,
                            value: sensor_value, up_time: up_time, status: sensor.status,
                            legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard, power: power,
                            b5_value: b5_value, com_value: com_value
                        });
-                   }
+                   }*/
 
                });
            },
@@ -349,6 +351,26 @@
                console.log("getPlaceData error");
             }
         });//ajax
+        return getData;
+    }
+
+    /* 센서명으로 최근 데이터 조회 */
+    function getPower(sensor){
+        var getData;
+        $.ajax({
+            url:'getPower',
+            dataType: 'text',
+            data:  {"name": sensor},
+            async: false,
+            success: function (data) {
+                getData = data;
+            },
+            error: function (e) {
+                // console.log("getSensorRecent Error");
+                // 결과가 존재하지 않을 경우 null 처리
+                getData = "off";
+            }
+        }); //ajax
         return getData;
     }
 
@@ -458,7 +480,27 @@
     }
 
 
+    function draw_place_table2(data, index) {
 
+        var table = document.getElementById('sensor-table-'+index);
+        /* 행추가 */
+        for (var i=0; i<data.length; i++){
+
+            var newRow = table.insertRow(table.rows.length);
+            var newCeil0 = newRow.insertCell(0);
+            var newCeil1 = newRow.insertCell(1);
+            var newCeil2 = newRow.insertCell(2);
+            var newCeil3 = newRow.insertCell(3);
+            var newCeil4 = newRow.insertCell(4);
+            newCeil0.innerHTML = data[i].naming;
+            newCeil1.innerHTML = data[i].legal_standard;
+            newCeil2.innerHTML = data[i].company_standard;
+            newCeil3.innerHTML = data[i].management_standard;
+            newCeil4.innerHTML = data[i].value;
+            // $('sensor-table-'+index +'> tbody').empty();
+            // $('sensor-table-'+index +'> tbody').destroy();
+        }
+    }
     /* place_table 생성 */
     function draw_place_table(data, index){
         $("#sensor-table-"+index).DataTable().clear();
@@ -482,32 +524,26 @@
                 // {"data": "up_time"},
             ],
             'rowCallback': function(row, data, index){
-                if(data.legal_standard){
+                if(data.legal_standard != "-"){
                     $(row).find('td:eq(1)').css('background-color', '#ff9d5a');
                     if(data.value >= data.legal_standard){
-                        $(row).find('td:eq(4)').css('background-color', '#ff9d5a');
+                        $(row).find('td:eq(4)').css('color', '#ff9d5a');
+                        $(row).find('td:eq(4)').css('font-weight', 'bold');
                     }
                 }
-                if(data.company_standard){
+                if(data.company_standard != "-"){
                     $(row).find('td:eq(2)').css('background-color', '#ffc55a');
-                    if(data.value >= data.company_standard){
-                        $(row).find('td:eq(4)').css('background-color', '#ffc55a');
+                    if(data.value < data.legal_standard && data.value >= data.company_standard){
+                        $(row).find('td:eq(4)').css('color', '#ffc55a');
+                        $(row).find('td:eq(4)').css('font-weight', 'bold');
                     }
                 }
-                if(data.management_standard){
+                if(data.management_standard != "-"){
                     $(row).find('td:eq(3)').css('background-color', '#a2d674');
-                    if(data.value >= data.management_standard){
-                        $(row).find('td:eq(4)').css('background-color', '#a2d674');
+                    if(data.value <= data.company_standard && data.value > data.management_standard){
+                        $(row).find('td:eq(4)').css('color', '#a2d674');
+                        $(row).find('td:eq(4)').css('font-weight', 'bold');
                     }
-                }
-                if(data.legal_standard == "-" || data.company_standard == "-" || data.management_standard == "-"){
-                    $(row).find('td:eq(4)').css('background-color', '#fefefe');
-                }
-                if(data.value> b5_value){
-                    $(row).find('td:eq(4)').prepend("▼");
-                }else if(data.value < b5_value){
-                    $(row).find('td:eq(4)').prepend("▲");
-
                 }
             },
             "language": {
