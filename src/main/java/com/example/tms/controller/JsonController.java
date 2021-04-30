@@ -4,6 +4,7 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import com.example.tms.repository.Reference_Value_SettingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,9 @@ public class JsonController {
     final
     Notification_SettingsRepository notification_settingsRepository;
 
+    @Autowired
+    NotificationListRepository notificationListRepository;
+
     public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Reference_Value_SettingRepository sensor_infoRepository, Reference_Value_SettingRepository reference_value_settingRepository, Notification_SettingsRepository notification_settingsRepository) {
         this.placeRepository = placeRepository;
         this.placeCustomRepository = placeCustomRepository;
@@ -56,6 +60,10 @@ public class JsonController {
         return placeRepository.findByName(place).getSensor();
     }
 
+    @RequestMapping(value = "/notificationList", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object notificationList(){
+        return notificationListRepository.findAll();
+    }
 
 // *********************************************************************************************************************
 // Sensor
@@ -103,18 +111,14 @@ public class JsonController {
 
         return notification_settingsRepository.findByName(name).isStatus();
     }
-    //알림 시작시간
-    @RequestMapping(value = "/getStartTime")
-    public String getStartTime(@RequestParam("name") String name){
+    
+    //설정된 알람 시간
+    @RequestMapping(value = "/getNotifyTime")
+    public Notification_Settings getStartTime(@RequestParam("name") String name){
 
-        return notification_settingsRepository.findByName(name).getStart();
+        return notification_settingsRepository.findByName(name);
     }
-    //알림 종료시간
-    @RequestMapping(value = "/getEndTime")
-    public String getEndTime(@RequestParam("name") String name){
 
-        return notification_settingsRepository.findByName(name).getEnd();
-    }
     //모니터링 on/off 여부
     @RequestMapping(value = "/getPower")
     public String getPower(@RequestParam("name") String name){
@@ -126,6 +130,7 @@ public class JsonController {
             return "null";
         }
     }
+
     //법적기준
     @RequestMapping(value = "/getLegal")
     public Float getLegal(@RequestParam("name") String name){

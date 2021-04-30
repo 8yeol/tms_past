@@ -12,8 +12,9 @@ import java.util.Date;
 public class NotificationList {
     @Id
     public ObjectId _id;
-    public String place;
+    public String place; // 측정소 명
     public String sensor; // 센서명
+    public float value;
     public String notify; // 초과 알림
     public Date up_time; // 업데이트 시간
 }

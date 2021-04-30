@@ -101,7 +101,7 @@ input:checked + .slider:before {
     margin-top: 4px;
     color:#777;
 }
-.cancleBtn{
+.cancelBtn{
     width: 55px;
     height: 38px;
     background-color: white;
@@ -109,7 +109,7 @@ input:checked + .slider:before {
     border: 3px solid rgb(99,130,255);
     border-radius: 5px;
 }
-.cancleBtn:hover{
+.cancelBtn:hover{
     background-color: rgba(99,130,255,0.1);
 }
 .placeName{
@@ -139,11 +139,11 @@ input:checked + .slider:before {
     margin-top: 20px;
 }
 
-.saveBtn, .cancleBtn {
+.saveBtn, .cancelBtn {
     position: absolute;
     bottom:0px;
 }
-.cancleBtn {
+.cancelBtn {
     left: 75px;
 }
 div.col-3.end {

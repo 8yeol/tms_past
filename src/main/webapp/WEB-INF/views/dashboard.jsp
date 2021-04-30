@@ -86,10 +86,10 @@
         </div>
     </div>
     --%>
-     <div class="row m-3 mt-3 margin-l">
+     <div class="row m-3 mt-3 ms-1">
          <span class="fs-4 fw-bold">대시보드</span>
      </div>
-    <div class="row m-3 mt-3 bg-light margin-l h-px">
+    <div class="row m-3 mt-3 bg-light ms-1 h-px">
         <div class="row p-3 h-25 margin-l">
             <div class="col fs-5 fw-bold">
                 측정소 통합 모니터링 (질소산화물)

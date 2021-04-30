@@ -47,28 +47,29 @@ public class Schedule {
             String naming = reference.getNaming();
             String place = placeRepository.findBySensorIsIn(sensorName).getName();
 
-            // colleciton에 마지막 업데이트 된 날짜와 비교해서 5분 이상이면 알림X (이하인 경우만 아래 로직 실행)
+            // collection 에 마지막 업데이트 된 날짜와 비교해서 5분 이상이면 알림X (이하인 경우만 아래 로직 실행)
             long minute = (new Date().getTime() - update.getTime())/60000;
             String notify; //초과알림
             if(minute <= 5) {
                 if (value > legal) {
                     notify = "법적기준 초과";
-                    notification(place, naming, notify);
+                    notification(place, naming, notify, value);
                 } else if (value > company) {
                     notify = "사내기준 초과";
-                    notification(place, naming, notify);
+                    notification(place, naming, notify, value);
                 } else if (value >= standard) {
                     notify = "관리기준 초과";
-                    notification(place, naming, notify);
+                    notification(place, naming, notify, value);
                 }
             }
         }
     }
 
-    public void notification(String place, String sensor, String notify){
+    public void notification(String place, String sensor, String notify, float value){
         NotificationList notificationList = new NotificationList();
         notificationList.setPlace(place);
         notificationList.setSensor(sensor);
+        notificationList.setValue(value);
         notificationList.setNotify(notify);
         notificationList.setUp_time(new Date());
         notificationListRepository.save(notificationList);
