@@ -1,11 +1,10 @@
 package com.example.tms.controller.scheduler;
 
+import com.example.tms.entity.NotificationList;
 import com.example.tms.entity.Notification_Settings;
 import com.example.tms.entity.Reference_Value_Setting;
 import com.example.tms.entity.Sensor;
-import com.example.tms.repository.Notification_SettingsRepository;
-import com.example.tms.repository.Reference_Value_SettingRepository;
-import com.example.tms.repository.SensorCustomRepository;
+import com.example.tms.repository.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -15,19 +14,20 @@ import java.util.List;
 @Component
 public class Schedule {
 
+    final PlaceRepository placeRepository;
+    final NotificationListRepository notificationListRepository;
     final SensorCustomRepository sensorCustomRepository;
-
     final Notification_SettingsRepository notification_settingsRepository;
-
     final Reference_Value_SettingRepository reference_value_settingRepository;
 
-    public Schedule(SensorCustomRepository sensorCustomRepository, Notification_SettingsRepository notification_settingsRepository, Reference_Value_SettingRepository reference_value_settingRepository) {
+    public Schedule(SensorCustomRepository sensorCustomRepository, Notification_SettingsRepository notification_settingsRepository, Reference_Value_SettingRepository reference_value_settingRepository, PlaceRepository placeRepository, NotificationListRepository notificationListRepository) {
         this.sensorCustomRepository = sensorCustomRepository;
         this.notification_settingsRepository = notification_settingsRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
+        this.placeRepository = placeRepository;
+        this.notificationListRepository = notificationListRepository;
     }
 
-    //@Scheduled(cron = "0/3 * * * * *")
     //@Scheduled(cron = "0 0/5 * * * *")
     public void scheduling(){
         List<Notification_Settings> notification = notification_settingsRepository.findByStatusIsTrue();
@@ -44,17 +44,34 @@ public class Schedule {
             Float company = reference.getCompany_standard(); //사내기준
             Float standard = reference.getManagement_standard(); //관리기준
 
-            // update 날짜와 비교하는 if문으로 한번 더 싸줄것
-            if(value > legal){
-                System.out.println("legal");
-            }else if(value > company){
-                System.out.println("company");
-            }else if( value >= standard){
-                System.out.println("standard");
+            String naming = reference.getNaming();
+            String place = placeRepository.findBySensorIsIn(sensorName).getName();
+
+            // colleciton에 마지막 업데이트 된 날짜와 비교해서 5분 이상이면 알림X (이하인 경우만 아래 로직 실행)
+            long minute = (new Date().getTime() - update.getTime())/60000;
+            String notify; //초과알림
+            if(minute <= 5) {
+                if (value > legal) {
+                    notify = "법적기준 초과";
+                    notification(place, naming, notify);
+                } else if (value > company) {
+                    notify = "사내기준 초과";
+                    notification(place, naming, notify);
+                } else if (value >= standard) {
+                    notify = "관리기준 초과";
+                    notification(place, naming, notify);
+                }
             }
         }
-        System.out.println("스케쥴링 테스트 : " + new Date());
     }
 
+    public void notification(String place, String sensor, String notify){
+        NotificationList notificationList = new NotificationList();
+        notificationList.setPlace(place);
+        notificationList.setSensor(sensor);
+        notificationList.setNotify(notify);
+        notificationList.setUp_time(new Date());
+        notificationListRepository.save(notificationList);
+    }
 
 }
