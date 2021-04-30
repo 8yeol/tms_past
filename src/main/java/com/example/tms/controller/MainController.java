@@ -30,32 +30,38 @@ public class MainController {
 
     final Notification_SettingsRepository notification_settingsRepository;
 
+    final EmissionsSettingRepository emissionsSettingRepository;
 
-    public MainController(PlaceRepository placeRepository, Reference_Value_SettingRepository reference_value_settingRepository, MongoTemplate mongoTemplate, MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository) {
+    final YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository;
+
+    public MainController(PlaceRepository placeRepository, Reference_Value_SettingRepository reference_value_settingRepository, MongoTemplate mongoTemplate,
+                          MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository, EmissionsSettingRepository emissionsSettingRepository, YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.mongoTemplate = mongoTemplate;
         this.memberRepository = memberRepository;
         this.notification_settingsRepository = notification_settingsRepository;
+        this.emissionsSettingRepository = emissionsSettingRepository;
+        this.yearlyEmissionsSettingRepository = yearlyEmissionsSettingRepository;
     }
 
     @RequestMapping("/")
-    public String index(){
+    public String index() {
         return "dashboard";
     }
 
     @RequestMapping("/monitoring")
-    public void monitoring(Model model){
+    public void monitoring(Model model) {
         model.addAttribute("place", placeRepository.findAll());
     }
 
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
-    public void sensorInfo(Model model){
+    public void sensorInfo(Model model) {
         model.addAttribute("place", placeRepository.findAll());
     }
 
     @RequestMapping("/alarm")
-    public String alarm(){
+    public String alarm() {
         return "alarm";
     }
     @RequestMapping("/sensorManagement")
@@ -335,16 +341,42 @@ public class MainController {
 //
 // =====================================================================================================================
     @RequestMapping("/stationManagement")
-    public String stationManagement(Model model){
+    public String stationManagement(Model model) {
         List<Place> places = placeRepository.findAll();
-        model.addAttribute("place",places);
+        model.addAttribute("place", places);
 
         return "stationManagement";
     }
 
     @RequestMapping("emissionsManagement")
-    public String emissionsManagement(){
+    public String emissionsManagement(Model model) {
+
+        List<EmissionsSetting> emissions = emissionsSettingRepository.findAll();
+        model.addAttribute("target", emissions);
+
+        List<YearlyEmissionsSetting> yearlyEmissions = yearlyEmissionsSettingRepository.findAll();
+        model.addAttribute("target2", yearlyEmissions);
 
         return "emissionsManagement";
     }
+
+    //배출량 대상 설정
+    @ResponseBody
+    @RequestMapping("emissionsState")
+    public void emissionsState(String sensor, boolean isCollection) {
+
+        //배출량 설정
+        if (isCollection) {
+            EmissionsSetting target = emissionsSettingRepository.findBySensor(sensor);
+            target.setStatus(!target.isStatus());
+            emissionsSettingRepository.save(target);
+
+            //연간 배출량 설정
+        } else {
+            YearlyEmissionsSetting target = yearlyEmissionsSettingRepository.findBySensor(sensor);
+            target.setStatus(!target.isStatus());
+            yearlyEmissionsSettingRepository.save(target);
+        }
+    }
+
 }

@@ -7,6 +7,7 @@ function findSensorCategory(tableName){
     }
 }
 
+
 // 천자리 콤마 정규식
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

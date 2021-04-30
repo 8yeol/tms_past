@@ -124,126 +124,8 @@
         </div>
     </div>
 
-    <div class="row">
-        <h4 class="d-flex justify-content-start mt-5">연간 배출 허용 기준 설정</h4>
-        <div class="col-xs-12 bg-light">
-            <table class="table table-striped">
 
-                <thead>
-                <tr>
-                    <th>NO</th>
-                    <th>코드</th>
-                    <th>항목명</th>
-                    <th>연간 배출 허용 기준</th>
-                    <th>배출 허용 기준 농도</th>
-                    <th>산출식(참고용)</th>
-                    <th>관리</th>
-                </tr>
-                </thead>
 
-                <tbody>
-                <tr>
-                    <th>1</th>
-                    <td>TSP</td>
-                    <td>먼지</td>
-                    <td>1,500,000,000</td>
-                    <td>15</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>2</th>
-                    <td>SO2</td>
-                    <td>아황산가스</td>
-                    <td>1,500,000,000</td>
-                    <td>50</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶x76%22.4</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>3</th>
-                    <td>NOX</td>
-                    <td>질소산화물</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶x46%22.4</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>4</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>4</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>5</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>6</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>7</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                </tbody>
-
-            </table>
-        </div>
-    </div>
-</div>
 
 <!-- okModal -->
 <div class="modal" id="okModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -283,55 +165,7 @@
     </div>
 </div>
 
-<!-- editModal -->
-<div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">센서 수정</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-evenly">
-                <div>
-                    <h4>코드</h4>
-                    <h4>항목명</h4>
-                    <h4>연간배출 허용기준</h4>
-                    <h4>배출허용 기준농도</h4>
-                    <h4>산출식</h4>
-                </div>
-                <div>
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block ">
-                </div>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5">수정</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-
-<!-- deleteModal -->
-<div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">항목 삭제</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-                <h3>@@@ 정말 삭제하시겠습니까?</h3>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-danger me-5">삭제</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 </body>
@@ -378,7 +212,10 @@
 
     $(function () {
         $('.modal-dialog').draggable({handle: ".modal-header"});
+
     });         // modal drag and drop move
+
+
 </script>
 
 
