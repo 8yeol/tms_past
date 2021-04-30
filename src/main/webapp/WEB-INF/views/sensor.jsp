@@ -535,9 +535,10 @@
                 yaxis: [{
                     y: sensor_data.management_standard,
                     y2: sensor_data.management_standard+0.1,
-                   /* borderColor: '#432529',
-                    fillColor: '#432529',*/
+                    opacity: 0,
                     label: {
+                        offsetX: -970,
+                        offsetY: 0,
                         text: '관리기준',
                     }
                 }]
