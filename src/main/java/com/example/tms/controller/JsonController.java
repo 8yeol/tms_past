@@ -4,12 +4,14 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import com.example.tms.repository.Reference_Value_SettingRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -101,22 +103,48 @@ public class JsonController {
         return sensorCustomRepository.getSenor(sensor, from_date, to_date, minute);
     }
 
-    /**
-     * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
-     * @param name 센서 이름
-     * @return 해당 센서의 status값
-     */
-    @RequestMapping(value = "/getNotification")
-    public boolean getSensorAlarm(@RequestParam("name") String name){
+    //김규아 수정
+    @RequestMapping(value = "/getNotifyInfo")
+    public Notification_Settings getNotifyInfo(@RequestParam("name") String name){
 
-        return notification_settingsRepository.findByName(name).isStatus();
+        return notification_settingsRepository.findByName(name);
     }
-    
-    //설정된 알람 시간
+
     @RequestMapping(value = "/getNotifyTime")
     public Notification_Settings getStartTime(@RequestParam("name") String name){
 
         return notification_settingsRepository.findByName(name);
+    }
+
+    //알림 설정값 저장
+    @RequestMapping("/saveNotification")
+    public void saveNotification(@RequestParam(value="checked[]", required = false) List<String> checked,
+                                 @RequestParam(value="uncheck[]", required = false) List<String> uncheck,
+                                 @RequestParam(value="from") String from, @RequestParam(value="to") String to) {
+        if(checked==null||"".equals(checked)){
+        } else{
+            for(int i=0;i<checked.size();i++){
+                saveNotifySetting(checked.get(i), true, from, to);
+            }
+        }
+        if(uncheck==null||"".equals(uncheck)){
+        } else{
+            for(int i=0;i<uncheck.size();i++){
+                saveNotifySetting(uncheck.get(i), false, from, to);
+            }
+        }
+    }
+
+    public void saveNotifySetting(String item, boolean status, String from, String to){
+        Date up_time = new Date();
+
+        Notification_Settings notification_settings = notification_settingsRepository.findByName(item);
+        ObjectId id = notification_settings.get_id();
+
+        Notification_Settings changeSetting = new Notification_Settings(item, from, to, status, up_time);
+        changeSetting.set_id(id);
+
+        notification_settingsRepository.save(changeSetting);
     }
 
     //모니터링 on/off 여부

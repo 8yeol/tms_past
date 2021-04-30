@@ -40,7 +40,6 @@
         <span class="fs-4 fw-bold">환경설정 > 알림설정</span>
     </div>
 
-
     <div class="row m-3 mt-3 bg-light">
         <div class="row p-3 ms-1">
             <div class="col fs-5 fw-bold">
@@ -114,7 +113,6 @@
             cache: false,
             data: {"place": place},
             success: function (data) {
-                console.log(data);
                 for (let i = 0; i < data.length; i++) {
                     const tableName = data[i];
 
@@ -134,7 +132,6 @@
                     parentElem.append(elem);
 
                     if(i%data.length==0){
-                        console.log('test');
                         const time = data[0];
                         const getTime = getNotifyTime(time);
                         $("#start" + idx).val(getTime.get("from"));
@@ -150,19 +147,18 @@
 
     //Notification_settings status 값 불러오기
     function findNotification(tableName) {
-        let isChecked;
+        let isChecked = "";
         $.ajax({
-            url: '<%=cp%>/getNotification',
+            url: '<%=cp%>/getNotifyInfo',
             type: 'POST',
             dataType: 'json',
             async: false,
             cache: false,
             data: {"name": tableName},
             success: function (data) {
-                if (data == true) {
+                const status = data.status;
+                if (status == true) {
                     isChecked = "checked";
-                } else {
-                    isChecked = "";
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
@@ -195,6 +191,19 @@
 
     //알림설정 값 저장
     function insert(idx) {
+        const start = $("#start" + idx).val();
+        const end = $("#end" + idx).val();
+
+        if (start == "" || end == "") {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '알림시간을 입력해주세요.'
+
+            })
+            return false;
+        }
+
         const checkedItem = new Array();
         const uncheckItem = new Array();
         $("input:checkbox[name=status" + idx + "]:checked").each(function () {
@@ -204,66 +213,25 @@
             uncheckItem.push($(this).attr('id'));
         });
 
-        const start = $("#start" + idx).val();
-        const end = $("#end" + idx).val();
-        if (start == "" || end == "") {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '알림시간을 입력해주세요.'
+        $.ajax({
+            url: '<%=cp%>/saveNotification',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "checked":checkedItem,
+                "uncheck":uncheckItem,
+                "from":start,
+                "to":end
+            },
+            success: function (data) {
 
-            })
-            return false;
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        })
 
-        }
-
-        for (let i = 0; i < checkedItem.length; i++) {
-            let item = checkedItem[i];
-
-            $.ajax({
-                url: '<%=cp%>/saveNotification',
-                type: 'POST',
-                dataType: 'json',
-                async: false,
-                cache: false,
-                data: {
-                    "item": item,
-                    "stime": start,
-                    "etime": end,
-                    "status": "true"
-                },
-                success: function (data) {
-                    console.log(data);
-
-                },
-                error: function (request, status, error) {
-                    console.log(error)
-                }
-            })
-        }
-        for (let i = 0; i < uncheckItem.length; i++) {
-            let item = uncheckItem[i];
-
-            $.ajax({
-                url: '<%=cp%>/saveNotification',
-                type: 'POST',
-                dataType: 'json',
-                async: false,
-                cache: false,
-                data: {
-                    "item": item,
-                    "stime": start,
-                    "etime": end,
-                    "status": "false"
-                },
-                success: function (data) {
-                    console.log(data);
-                },
-                error: function (request, status, error) {
-                    console.log(error)
-                }
-            })
-        }
         Swal.fire({
             icon: 'success',
             title: '저장완료'

@@ -329,26 +329,6 @@ public class MainController {
 
         return "alarmManagement";
     }
-    //알림 설정값 저장
-    @RequestMapping("/saveNotification")
-    public void saveNotification(String item, String stime, String etime, String status) {
-
-        Date up_time = new Date();
-
-        boolean status1 = Boolean.parseBoolean(status);
-        Notification_Settings info = notification_settingsRepository.findByName(item);
-
-        Notification_Settings entity = new Notification_Settings(item, stime, etime, status1, up_time);
-        try{
-            entity.set_id(info.get_id());
-            notification_settingsRepository.save(entity);
-
-        } catch (NullPointerException e){
-            notification_settingsRepository.save(entity);
-        }
-
-
-    }
 
 // =====================================================================================================================
 // 측정소 관리페이지 (ppt-9페이지)
