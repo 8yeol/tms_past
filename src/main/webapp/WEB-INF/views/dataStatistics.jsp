@@ -208,6 +208,9 @@
                 type: 'bar',
                 height: 500
             },
+            legend:{
+              position : 'top'
+            },
             plotOptions: {
                 bar: {
                     horizontal: false,

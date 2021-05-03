@@ -115,16 +115,16 @@
         <div class="search">
             <span class="fs-5 fw-bold p-3 f-sizing">측정기간</span>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="day" id="week">
-                <label class="form-check-label" for="week">
-                    일주일
+                <input class="form-check-input" type="radio" name="day" id="day" checked>
+                <label class="form-check-label" for="day">
+                    오늘
                 </label>
             </div>
 
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="day" id="month">
-                <label class="form-check-label" for="month">
-                    한 달
+                <input class="form-check-input" type="radio" name="day" id="week">
+                <label class="form-check-label" for="week">
+                    일주일
                 </label>
             </div>
 
@@ -139,13 +139,11 @@
             <label class="ms-3 me-3">-</label>
             <input type="text" id="date_end" class="text-center p-1" disabled>
 
-            <button type="button" class="btn btn-primary ms-3" onClick="search()">검색</button>
+            <button type="button" class="btn btn-primary ms-3" onClick="search(1)">검색</button>
         </div>
     </div>
 
     <hr class="mt-2 mb-2">
-
-
 
     <div class="row">
         <div class="col">
@@ -178,9 +176,6 @@
     <div class="row">
         <div class="col">
             <div class="row bg-white m-top">
-
-<%--                <hr class="mt-1 mb-1">--%>
-
                 <div class="row ms-2">
                     <div class="col">
                         <table id="information" class="table table-striped table-bordered table-hover text-center" >
@@ -217,7 +212,7 @@
         $("#date_start").val(getDays());
         $("#date_end").val(getDays());
         placeChange();
-        search();
+        search(0);
     });
 
     function addTable(reference){
@@ -250,11 +245,8 @@
                     const cell4 = row.insertCell(3);
                     const cell5 = row.insertCell(4);
                     cell1.innerHTML = i+1;
-                    cell2.innerHTML = data[i].value.toFixed(2);
-                    // 정상, 위험, 경고 값 관리해주는 테이블 만들어서 테이블에서 값 읽어와서 계산하는걸로 수정
-
                     let value = data[i].value.toFixed(2);
-
+                    cell2.innerHTML = value;
                     let grade = '정상';
                     if(value > legal){
                         grade = '<div class="bg-danger text-light">법적기준 초과</div>';
@@ -263,7 +255,6 @@
                     } else if(value > management){
                         grade = '<div class="bg-success text-light">관리기준 초과</div>';
                     }
-
                     cell3.innerHTML = grade;
                     cell4.innerHTML = (data[i].status?"ON":"OFF");
                     cell5.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
@@ -345,9 +336,9 @@
 
             //한개짜리 달력 datepicker
         } else if (!isValidStr(sDate)) {
-            var sDay = sDate.val();
+            const sDay = sDate.val();
             if (flag && !isValidStr(sDay)) { //처음 입력 날짜 설정, update...
-                var sdp = sDate.datepicker().data("datepicker");
+                const sdp = sDate.datepicker().data("datepicker");
                 sdp.selectDate(new Date(sDay.replace(/-/g, "/"))); //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
             }
 
@@ -366,7 +357,7 @@
     }
 
     $('#off').click(function(){
-        search();
+        search(1);
     });
 
     $("input:radio[name=day]").click(function() {
@@ -386,8 +377,8 @@
 
             if(id == 'week'){
                 $("#date_start").val(getDays('week'));
-            } else if(id == 'month'){
-                $("#date_start").val(getDays('month'));
+            } else {
+                $("#date_start").val(getDays());
             }
         }
     });
@@ -428,10 +419,10 @@
     }
 
     function changeItem(){
-        search();
+        search(1);
     }
 
-    function search(){
+    function search(flag){
         const date_start =  $('#date_start').val();
         const date_end = $('#date_end').val();
         const item = $('input[name="item"]:checked').val();
@@ -448,9 +439,6 @@
                 text: '검색 날짜를 입력해주세요.'
             })
         }
-
-        $('#chart-line2').empty();
-        $('#chart-line').empty();
 
         $.ajax({
             url: '<%=cp%>/searchChart',
@@ -473,7 +461,7 @@
                     return false;
                 }else{
                     const reference = getReferenceValue(item);
-                    addChart(data, category, reference);
+                    addChart(data, category, reference, flag);
                     addTable(reference);
                 }
             },
@@ -502,155 +490,166 @@
         return reference;
     }
 
-    function addChart(data, category, reference){
-        const options = {
-            series: [{
-                name: category,
-                data: data
-            }],
-            chart: {
-                id: 'chart2',
-                type: 'line',
-                height: 350,
-                toolbar: {
-                    show: true,
-                    tools: {
-                        download:true
-                    }
-                }
-            },
-            colors: ['#546E7A'],
-            stroke: {
-                width: 3
-            },
-            dataLabels: {
-                enabled: false
-            },
-            fill: {
-                opacity: 1,
-            },
-            markers: {
-                size: 0
-            },
-            xaxis: {
-                type: 'datetime',
-                labels:{
-                    datetimeUTC:false
-                }
-            },
-            yaxis:{
-                labels:{
-                    formatter: function(value){
-                        return value.toFixed(2);
-                    }
-                }
-            },
-            annotations: {
-                yaxis: [
-                    {
-                        y: reference.get("management"),
-                        borderColor: '#00E396',
-                        label: {
-                            borderColor: '#00E396',
-                            style: {
-                                color: '#fff',
-                                background: '#00E396'
-                            },
-                            text: '관리기준',
-                            offsetX: -970
-                        }
-                    },
-                    {
-                        y: reference.get("company"),
-                        borderColor: '#FEB019',
-                        label: {
-                            borderColor: '#FEB019',
-                            style: {
-                                color: '#fff',
-                                background: '#FEB019'
-                            },
-                            text: '사내기준',
-                            offsetX: -970
-                        }
-                    },
-                    {
-                        y: reference.get("legal"),
-                        borderColor: '#FF4560',
-                        label: {
-                            borderColor: '#FF4560',
-                            style: {
-                                color: '#fff',
-                                background: '#FF4560'
-                            },
-                            text: '법적기준',
-                            offsetX: -970
-                        }
-                    }
-                ]
-            }
-        };
-
-        const chart = new ApexCharts(document.querySelector("#chart-line2"), options);
-        chart.render();
-
-        // 여기 문제
-        const optionsLine = {
-            series: [{
-                data : data
-            }],
-            chart: {
-                id: 'chart1',
-                height: 150,
-                type: 'area',
-                brush:{
-                    target: 'chart2',
-                    enabled: true
-                },
-                selection: {
-                    enabled: true,
-                    xaxis: {
-                        type: 'datetime',
-                        labels:{
-                            datetimeUTC:false
+    let options = null, chart = null, optionsLine =null, chartLine =null;
+    function addChart(data, category, reference, flag){
+        if (flag==0){
+            options = {
+                series: [{
+                    name: category,
+                    data: data
+                }],
+                chart: {
+                    id: 'chart2',
+                    type: 'line',
+                    height: 350,
+                    toolbar: {
+                        show: true,
+                        tools: {
+                            download:true
                         }
                     }
                 },
-            },
-            colors: ['#008FFB'],
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    opacityFrom: 0.91,
-                    opacityTo: 0.1,
-                }
-            },
-            xaxis: {
-                type: 'datetime',
-                labels:{
-                    datetimeUTC:false
+                colors: ['#546E7A'],
+                stroke: {
+                    width: 3
                 },
-                tooltip: {
+                dataLabels: {
                     enabled: false
+                },
+                fill: {
+                    opacity: 1,
+                },
+                markers: {
+                    size: 0
+                },
+                xaxis: {
+                    type: 'datetime',
+                    labels:{
+                        datetimeUTC:false
+                    }
+                },
+                yaxis:{
+                    labels:{
+                        formatter: function(value){
+                            return value.toFixed(2);
+                        }
+                    }
+                },
+                annotations: {
+                    yaxis: [
+                        {
+                            y: reference.get("management"),
+                            borderColor: '#00E396',
+                            label: {
+                                borderColor: '#00E396',
+                                style: {
+                                    color: '#fff',
+                                    background: '#00E396'
+                                },
+                                text: '관리기준',
+                                offsetX: -970
+                            }
+                        },
+                        {
+                            y: reference.get("company"),
+                            borderColor: '#FEB019',
+                            label: {
+                                borderColor: '#FEB019',
+                                style: {
+                                    color: '#fff',
+                                    background: '#FEB019'
+                                },
+                                text: '사내기준',
+                                offsetX: -970
+                            }
+                        },
+                        {
+                            y: reference.get("legal"),
+                            borderColor: '#FF4560',
+                            label: {
+                                borderColor: '#FF4560',
+                                style: {
+                                    color: '#fff',
+                                    background: '#FF4560'
+                                },
+                                text: '법적기준',
+                                offsetX: -970
+                            }
+                        }
+                    ]
                 }
-            },
-            yaxis: {
-                tickAmount: 2,
-                labels:{
-                    formatter: function(value){
-                        return value.toFixed(2);
+            };
+
+            chart = new ApexCharts(document.querySelector("#chart-line2"), options);
+            chart.render();
+
+            // 여기 문제
+            optionsLine = {
+                series: [{
+                    data : data
+                }],
+                chart: {
+                    id: 'chart1',
+                    height: 150,
+                    type: 'area',
+                    brush:{
+                        target: 'chart2',
+                        enabled: true
+                    },
+                    selection: {
+                        enabled: true
+                    },
+                },
+                colors: ['#008FFB'],
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        opacityFrom: 0.91,
+                        opacityTo: 0.1,
+                    }
+                },
+                xaxis: {
+                    type: 'datetime',
+                    labels:{
+                        datetimeUTC:false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                },
+                yaxis: {
+                    tickAmount: 2,
+                    labels:{
+                        formatter: function(value){
+                            return value.toFixed(2);
+                        }
                     }
                 }
-            }
-        };
-        const chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
-        chartLine.render();
+            };
+            chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
+            chartLine.render();
+        }else{
+            chart.updateSeries([{
+                data : data
+            }])
+            chartLine.updateSeries([{
+                data : data
+            }])
+            // brush 영역 초기화 해주기 위함
+            chartLine.updateOptions({
+               chart : {
+                   brush:{
+                       target: 'chart2',
+                       enabled: true
+                   }
+               }
+            })
+        }
     }
 
     function getDays(dayType){
         if(dayType == 'week'){
             return moment(new Date()).subtract(7, 'd').format('YYYY-MM-DD');
-        } else if(dayType == 'month'){
-            return moment(new Date()).subtract(1, 'M').format('YYYY-MM-DD');
         }
         return moment(new Date).format('YYYY-MM-DD');
     }
