@@ -88,7 +88,7 @@
             phone += number.substr(7);
         }
         obj.value = phone;
-    }       // inputPhoneNumber
+    }       // inputPhoneNumber 정규식
 
     function autoEmail(a,b){
         /*
@@ -107,7 +107,7 @@
                 return false;
             }
         });
-    }           // autoEmail
+    }           // autoEmail 이메일 자동완성 도우미
 
 </script>
 

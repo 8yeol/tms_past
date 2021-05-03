@@ -34,8 +34,11 @@ public class MainController {
 
     final YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository;
 
+    final Rank_ManagementRepository rank_managementRepository;
+
+
     public MainController(PlaceRepository placeRepository, Reference_Value_SettingRepository reference_value_settingRepository, MongoTemplate mongoTemplate,
-                          MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository, EmissionsSettingRepository emissionsSettingRepository, YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository) {
+                          MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository, EmissionsSettingRepository emissionsSettingRepository, YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository, Rank_ManagementRepository rank_managementRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.mongoTemplate = mongoTemplate;
@@ -43,23 +46,22 @@ public class MainController {
         this.notification_settingsRepository = notification_settingsRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
         this.yearlyEmissionsSettingRepository = yearlyEmissionsSettingRepository;
+        this.rank_managementRepository = rank_managementRepository;
     }
+
 
     @RequestMapping("/")
     public String index() {
         return "dashboard";
     }
-
     @RequestMapping("/monitoring")
     public void monitoring(Model model) {
         model.addAttribute("place", placeRepository.findAll());
     }
-
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
     public void sensorInfo(Model model) {
         model.addAttribute("place", placeRepository.findAll());
     }
-
     @RequestMapping("/alarm")
     public String alarm() {
         return "alarm";
@@ -76,7 +78,9 @@ public class MainController {
     @RequestMapping("/setting")
     public String setting(Model model){
         List<Member> members = memberRepository.findAll();
+        List<rank_management> rank_managements = rank_managementRepository.findAll();
         model.addAttribute("members" , members);
+        model.addAttribute("rank_managements", rank_managements);
         return "setting";
     }
 
@@ -104,44 +108,79 @@ public class MainController {
     @ResponseBody
     public void memberJoinPost(@RequestBody Member member,HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
-
-/*        memberRepository.deleteAll();
+        memberRepository.deleteAll();
         for(int i=0;i < 51; i++){
             Member member1 = new Member();
             member1.setId("testId"+i);
+            member1.setPassword((UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10));
             member1.setTel("010-"+"12"+i+"-123"+i);
             member1.setName("testName"+i);
             member1.setEmail("testEmail"+i+"@dot.com");
-            member1.setState("0");
+            member1.setState("1");
             memberRepository.save(member1);
-        }*/
-
-        if (!memberRepository.existsById(member.getId())) {
-            member.setState("0");
+        }
+/*        if (!memberRepository.existsById(member.getId())) {
+            member.setState("1"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
             memberRepository.save(member);
             out.print("true");
         }else{
             out.print("false");
-        }
+        }*/
     }           // memberJoinPost
 
-    @RequestMapping(value = "/signUpOk", method = RequestMethod.POST)
-    @ResponseBody
-    public void memberSignUpOk(@RequestBody Member member){
-        Member newMember = memberRepository.findById(member.getId());
-        newMember.setState("1");  //0: 대기, 1: 승인 , 2: 거절
-        Date time = new Date();
-        newMember.setJoined(time);
+    @RequestMapping(value = "/signUp", method = RequestMethod.POST)
+    public @ResponseBody String memberSignUp(String id, String iNumber){
+        String msg = "";
+        Member newMember = memberRepository.findById(id);
+        if(iNumber.equals("0")){
+            newMember.setState("0");
+            msg = "가입 거절 되었습니다.";
+        }else{
+            newMember.setState("2"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
+            Date time = new Date();
+            newMember.setJoined(time); // 가입승인일 설정
+            msg = "가입 승인 되었습니다.";
+        }
         memberRepository.save(newMember);
-    }           // memberSignUpOk
+        return msg;
+    }           // memberSignUp
 
-    @RequestMapping(value = "/signUpNo", method = RequestMethod.POST)
-    @ResponseBody
-    public void memberSignUpNo(@RequestBody Member member){
-        Member newMember = memberRepository.findById(member.getId());
-        newMember.setState("2");  //0: 대기, 1: 승인 , 2: 거절
+    @RequestMapping(value = "/gaveRank", method = RequestMethod.POST)
+    public @ResponseBody String gaveRank(String id, String value){
+        Member newMember = memberRepository.findById(id);
+        newMember.setState(value);
         memberRepository.save(newMember);
-    }           // memberSignUpNo
+        return "등급 부여 하였습니다.";
+    }           // gaveRank
+
+    @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+    public @ResponseBody String resetPassword(String id){
+        Member newMember = memberRepository.findById(id);
+        String uuid = (UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10);
+        newMember.setPassword(uuid);
+        memberRepository.save(newMember);
+        return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : "+ uuid;
+    }           // resetPassword
+
+    @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
+    public @ResponseBody String kickMember(String id){
+        memberRepository.deleteById(id);
+        return "탈퇴처리 되었습니다.";
+    }           // kickMember
+
+
+    @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
+    @ResponseBody
+    public void rankSettingSave(@RequestBody rank_management rankManagement){
+        rank_management newRankManagement = rank_managementRepository.findByName(rankManagement.getName());
+        newRankManagement.setDashboard(rankManagement.isDashboard());
+        newRankManagement.setAlarm(rankManagement.isAlarm());
+        newRankManagement.setMonitoring(rankManagement.isMonitoring());
+        newRankManagement.setStatistics(rankManagement.isStatistics());
+        newRankManagement.setSetting(rankManagement.isSetting());
+        rank_managementRepository.save(newRankManagement);
+    }           // rankSettingSave
+
 
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model){
