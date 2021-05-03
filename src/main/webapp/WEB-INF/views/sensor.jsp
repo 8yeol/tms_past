@@ -158,7 +158,6 @@
         $("#place_name li").removeClass('active');
         $(this).addClass('active');
         getData(place_name);
-
     });
 
 
