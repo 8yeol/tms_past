@@ -18,6 +18,11 @@
 <script src="static/js/common/common.js"></script>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
+<%--modal 사용--%>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<%--draggable사용--%>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <style>
     /* The switch - the box around the slider */
     .switch {
@@ -94,8 +99,8 @@
         <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div>
                 <span class="fw-bold">측정소 관리</span>
-                <input type="button" value="추가">
-                <input type="button" value="삭제">
+                <button data-toggle ="modal" data-target="#addPlace">추가</button>
+                <button data-toggle ="modal" data-target="#removePlace">삭제</button>
             </div>
             <div class="text-center">
                 <table width="100%">
@@ -123,14 +128,7 @@
         <div class="col-3" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
 
             <div>
-                <div style="display: flex">
-                    <span class="fw-bold"><span id="station"></span> 상세설정</span>
-                    <span class="fw-bold">측정소 모니터링</span>
-
-                    <label class="switch">
-                        <input id="monitor" type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
+                <div id="p_power" style="display: flex">
                 </div>
                 <div>
                     <input type="button" value="추가">
@@ -156,25 +154,64 @@
         </div>
 
     </div>
-
-
 </div>
+<!-- addPlace -->
+<div class="modal" id="addPlace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">측정소 추가</h5>
+            </div>
+            <div class="modal-body d-flex" style="flex-wrap: wrap;">
+                <forM>
+                <div><span>측정소 명</span><input type="text" class="modal-input"></div>
+                <div><span>위치</span><input type="text" class="modal-input"></div>
+                <div><span>담당자 명</span><input type="text" class="modal-input"></div>
+                <div><span>연락처</span><input type="text" class="modal-input"></div>
+                </forM>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-primary">추가</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- removePlace -->
+<div class="modal" id="removePlace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">측정소 삭제</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <h3>정말 삭제하시겠습니까?</h3>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-danger">삭제</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //팝업창 드래그로 이동 가능
+    $(function () {
+        $('.modal-dialog').draggable({handle: ".modal-header"});
+    });
+    $('.modal').on('hidden.bs.modal', function (e) {
+        console.log('modal close');
+        $(this).find('form')[0].reset()
+    });
+
+</script>
 <script>
     $(document).ready(function () {
 
         placeChange($("#place0").text());
-        //monitoring();
-
-        //$('#itmes').insertAfter('#c');
 
     });
 
-    // function monitoring() {
-    //     if(document.getElementById('monitor').val() =='on'){
-    //         document.getElementById('monitor').
-    //     }
-    //
-    // }
     //센서 체크박스 전체 선택, 해제
     function checkSelectAll() {
         // 전체 체크박스
@@ -237,11 +274,18 @@
     //측정소 변경
     function placeChange(name) {
         const place = name;
-        $('#station').text(name); //측정소명 span에 넣기
-        // const monitor = findMonitor(name);
-        // console.log(monitor);
-        // $('#monitor').text(monitor);
         $("#items").empty();
+        $("#p_power").empty();
+        const p_power = findPlaceMonitor(place);
+
+        let innerHTMLPlace =
+            "<span>" + place + "상세설정</span>" +
+            "<span>측정소 모니터링</span>" +
+            "<label class='switch'>" +
+            "<input id='monitor' type='checkbox' " + p_power + ">" +
+            "<span class='slider round'></span>" +
+            "</label>";
+        $('#p_power').append(innerHTMLPlace);
 
         $.ajax({
             url: '<%=cp%>/getPlaceSensor',
@@ -267,7 +311,7 @@
                         "<td style='width:14%;'><label class='switch'>" +
                         "<input id='" + tableName + "' type='checkbox' name='status' " + power + ">" +
                         "<div class='slider round'></div>" +
-                        "</label></td>"
+                        "</label></td>";
 
                     const elem = document.createElement('tr');
                     elem.setAttribute('style', 'border-bottom: silver solid 2px;');
@@ -296,10 +340,32 @@
             dataType: 'json',
             async: false,
             cache: false,
-            data: {"name": tableName},
+            data: {"tableName": tableName},
             success: function (data) {
                 const power = data.power;
-                console.log(power);
+                if (power == "on") {
+                    isChecked = "checked";
+                }
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        return isChecked;
+    }
+
+    //측정소 모니터링 on/off 불러오기
+    function findPlaceMonitor(tableName) {
+        let isChecked = "";
+        $.ajax({
+            url: '<%=cp%>/getPlace',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"place": tableName},
+            success: function (data) {
+                const power = data.power;
                 if (power == "on") {
                     isChecked = "checked";
                 }
@@ -322,7 +388,6 @@
             cache: false,
             data: {"tableName": tableName},
             success: function (data) {
-                console.log(data);
                 map.set("legal", data.legal_standard);
                 map.set("company", data.company_standard);
                 map.set("management", data.management_standard);
@@ -334,7 +399,6 @@
         })
         return map;
     }
-
 
 </script>
 

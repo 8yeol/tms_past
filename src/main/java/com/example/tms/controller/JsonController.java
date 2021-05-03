@@ -49,6 +49,10 @@ public class JsonController {
      * @param place 측정소 이름
      * @return 해당 측정소의 센서 값 (테이블 명)
      */
+    @RequestMapping(value = "/getPlace", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getPlace(@RequestParam("place") String place) {
+        return placeRepository.findByName(place);
+    }
     @RequestMapping(value = "/getPlaceSensor", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getPlaceSensor(@RequestParam("place") String place) {
         return placeRepository.findByName(place).getSensor();
@@ -174,6 +178,10 @@ public class JsonController {
         notification_settingsRepository.save(changeSetting);
     }
     // 여기까지
+    @RequestMapping(value = "/getPower")
+    public String getPower(@RequestParam("name") String tableName) {
+        return reference_value_settingRepository.findByName(tableName).getPower();
+    }
 
 
 }
