@@ -42,106 +42,113 @@ public class JsonController {
 
     // =================================================================================================================
     // 김규아 추가
+
     /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
+     *
      * @param place 측정소 이름
      * @return 해당 측정소의 센서 값 (테이블 명)
      */
     @RequestMapping(value = "/getPlaceSensor", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getPlaceSensor(@RequestParam("place") String place){
+    public Object getPlaceSensor(@RequestParam("place") String place) {
         return placeRepository.findByName(place).getSensor();
     }
 
     /**
      * 설정된 기준 값을 초과하는 경우 알람 발생 - 해당 발생된 알람의 목록 리스트 (ALL) > 페이징 가능하게 수정할 것.
+     *
      * @return 전체 알람 목록
      */
     @RequestMapping(value = "/notificationList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object notificationList(){
+    public Object notificationList() {
         return notificationListRepository.findAll();
     }
 
     /**
      * 등록된 전체 센서 리스트중, 모니터링 On 설정된 센서 리스트 불러오기
+     *
      * @return 모니터링 on 설정된 센서 리스트
      */
     @RequestMapping(value = "/getMonitoringSensorOn", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getMonitoringSensorOn(){
+    public Object getMonitoringSensorOn() {
         return notification_settingsRepository.findByStatusIsTrue();
     }
 
     /**
      * 설정된 법적기준, 사내기준, 관리기준 목록
+     *
      * @param tableName 테이블 명
      * @return 해당 센서에 등록된 법적기준, 사내기준, 관리기준 목록
      */
     @RequestMapping(value = "/getReferenceValue", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getReferenceValue(@RequestParam("tableName") String tableName){
+    public Object getReferenceValue(@RequestParam("tableName") String tableName) {
         return reference_value_settingRepository.findByName(tableName);
     }
 
     @RequestMapping(value = "/getPlaceName", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getPlaceName(@RequestParam("tableName") String tableName){
+    public Object getPlaceName(@RequestParam("tableName") String tableName) {
         return placeRepository.findBySensorIsIn(tableName).getName();
     }
 // *********************************************************************************************************************
 // Sensor
 // *********************************************************************************************************************
+
     /**
      * @param sensor - 센서명
      * @return - 해당 센서의 센서 정보(한글명, 경고값, ...)
      */
     @RequestMapping(value = "/getSensorInfo")
-    public Reference_Value_Setting getSensorInfo(@RequestParam String sensor){
+    public Reference_Value_Setting getSensorInfo(@RequestParam String sensor) {
         return reference_value_settingRepository.findByName(sensor);
     }
 
     @RequestMapping(value = "/getSensorRecent")
-    public Sensor getSensorRecent(@RequestParam("sensor") String sensor){
+    public Sensor getSensorRecent(@RequestParam("sensor") String sensor) {
         return sensorCustomRepository.getSensorRecent(sensor);
     }
 
     /**
-     * @param sensor - 센서명
+     * @param sensor            - 센서명
      * @param from_date,to_date - 입력패턴('', 'Year-Month-Day hh:mm:ss', 'Year-Month-Day', 'hh:mm:ss', 'hh:mm')
-     * @param minute 분- (60 - 1hour, 1440 - 24hour, ...)
+     * @param minute            분- (60 - 1hour, 1440 - 24hour, ...)
      * @return - 해당 센서의 파라미터로 부터 받은 값에 따라 조건(날짜 및 시간)의 측정 값
      */
     @RequestMapping(value = "/getSensor")
     public List<Sensor> getSensor(@RequestParam("sensor") String sensor,
                                   @RequestParam("from_date") String from_date,
                                   @RequestParam("to_date") String to_date,
-                                  @RequestParam("minute") String minute){
+                                  @RequestParam("minute") String minute) {
         return sensorCustomRepository.getSenor(sensor, from_date, to_date, minute);
     }
 
     //김규아 수정
     @RequestMapping(value = "/getNotifyInfo")
-    public Notification_Settings getNotifyInfo(@RequestParam("name") String name){
+    public Notification_Settings getNotifyInfo(@RequestParam("name") String name) {
 
         return notification_settingsRepository.findByName(name);
     }
 
     /**
      * [환경설정 - 알림설정] 변경된 알림 설정 값을 저장하기 위함
-     * @param onList 해당 측정소의 센서목록 중 모니터링 on 설정된 센서 목록
+     *
+     * @param onList  해당 측정소의 센서목록 중 모니터링 on 설정된 센서 목록
      * @param offList 해당 측정소의 센서목록 중 모니터링 off 설정된 센서 목록
-     * @param from 알림 시작 시간
-     * @param to 알림 종료 시간
+     * @param from    알림 시작 시간
+     * @param to      알림 종료 시간
      */
     @RequestMapping("/saveNotification")
-    public void saveNotification(@RequestParam(value="onList[]", required = false) List<String> onList,
-                                 @RequestParam(value="offList[]", required = false) List<String> offList,
-                                 @RequestParam(value="from") String from, @RequestParam(value="to") String to) {
-        if(onList==null||"".equals(onList)){
-        } else{
-            for(int i=0;i<onList.size();i++){
+    public void saveNotification(@RequestParam(value = "onList[]", required = false) List<String> onList,
+                                 @RequestParam(value = "offList[]", required = false) List<String> offList,
+                                 @RequestParam(value = "from") String from, @RequestParam(value = "to") String to) {
+        if (onList == null || "".equals(onList)) {
+        } else {
+            for (int i = 0; i < onList.size(); i++) {
                 saveNotifySetting(onList.get(i), true, from, to);
             }
         }
-        if(offList==null||"".equals(offList)){
-        } else{
-            for(int i=0;i<offList.size();i++){
+        if (offList == null || "".equals(offList)) {
+        } else {
+            for (int i = 0; i < offList.size(); i++) {
                 saveNotifySetting(offList.get(i), false, from, to);
             }
         }
@@ -149,12 +156,13 @@ public class JsonController {
 
     /**
      * [환경설정 - 알림설정] 모니터링 on/off 변경 및 알림 시간 변경
-     * @param item 센서 테이블 명
+     *
+     * @param item   센서 테이블 명
      * @param status 모니터링 상태
-     * @param from 알림 시작 시간
-     * @param to 알림 종료 시간
+     * @param from   알림 시작 시간
+     * @param to     알림 종료 시간
      */
-    public void saveNotifySetting(String item, boolean status, String from, String to){
+    public void saveNotifySetting(String item, boolean status, String from, String to) {
         Date up_time = new Date();
 
         Notification_Settings notification_settings = notification_settingsRepository.findByName(item);
@@ -167,45 +175,5 @@ public class JsonController {
     }
     // 여기까지
 
-    //모니터링 on/off 여부
-    @RequestMapping(value = "/getPower")
-    public String getPower(@RequestParam("name") String name){
-        try{
-            return reference_value_settingRepository.findByName(name).getPower();
-
-        }catch (NullPointerException e){
-            return "null";
-        }
-    }
-    //법적기준
-    @RequestMapping(value = "/getLegal")
-    public Float getLegal(@RequestParam("name") String name){
-        try{
-            return reference_value_settingRepository.findByName(name).getLegal_standard();
-
-        }catch (NullPointerException e){
-            return 0.0f;
-        }
-    }
-    //사내기준
-    @RequestMapping(value = "/getCompany")
-    public Float getCompany(@RequestParam("name") String name){
-        try{
-            return reference_value_settingRepository.findByName(name).getCompany_standard();
-
-        }catch (NullPointerException e){
-            return 0.0f;
-        }
-    }
-    //관리기준
-    @RequestMapping(value = "/getManagement")
-    public Float getManagement(@RequestParam("name") String name){
-        try{
-            return reference_value_settingRepository.findByName(name).getManagement_standard();
-
-        }catch (NullPointerException e){
-            return 0.0f;
-        }
-    }
 
 }
