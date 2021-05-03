@@ -259,25 +259,32 @@
         const thisYearSum = addMonthlyData(thisYear, thisYearData);
 
         let innerHtml;
+        let increase;
         // 증감률
         $('#information > tfoot').empty();
         innerHtml = "";
         innerHtml += '<tr>'
         innerHtml += '<td>증감률</td>';
         for(let i = 0 ;i <thisYearData.length;i++){
-            if(previousYearData[i] != null || thisYearData[i] == null){
-                let increase = addIncrease(previousYearData[i], thisYearData[i]);
+            increase = addIncrease(previousYearData[i], thisYearData[i]);
+            if(increase>0){
+                innerHtml += '<td style="color:red" class="fw-bold">' + '+ ' + numberWithCommas(increase) + ' %</td>'
+            }else if(increase<0){
+                innerHtml += '<td style="color:blue" class="fw-bold">' + '- ' + numberWithCommas(increase) + ' %</td>'
+            }else{
                 innerHtml += '<td>' + increase + '</td>'
-            } else{
-                innerHtml += '<td> 100 % </td>';
             }
         }
-        if( previousYearSum != 0 || thisYearSum == 0){
-            let increase = addIncrease(previousYearSum, thisYearSum);
-            innerHtml += '<td>' + increase + '</td>';
+
+        increase = addIncrease(previousYearSum, thisYearSum);
+        if(increase>0){
+            innerHtml += '<td style="color:red" class="fw-bold">' + '+ ' + numberWithCommas(increase) + ' %</td>'
+        }else if(increase<0){
+            innerHtml += '<td style="color:blue" class="fw-bold">' + '- ' + numberWithCommas(increase) + ' %</td>'
         }else{
-            innerHtml += '<td> 100 % </td>';
+            innerHtml += '<td>' + increase + '</td>'
         }
+
         innerHtml += '</tr>';
         $('#information > tfoot:last').append(innerHtml);
     }
@@ -305,7 +312,10 @@
         if(isNaN(increase)){
             return '-';
         }
-        return increase.toFixed(2) + ' %';
+        if(increase==Infinity){
+            return thisYear.toFixed();
+        }
+        return increase.toFixed(2);
     }
 </script>
 

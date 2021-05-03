@@ -181,7 +181,6 @@
         </div>
 
         <div class="row text-center margin-l center-position">
-<%--            <hr>--%>
             <div class="progress-info">
                 <div id="blue" class="align-self-center"></div> &emsp;0 ~ 50%
             </div>
@@ -308,7 +307,7 @@
                 for(let i=0; i<data.length; i++){
                     let tableName = data[i].name;
                     $.ajax({
-                        url:'getSensorRecent',
+                        url:'<%=cp%>/getSensorRecent',
                         dataType: 'json',
                         data:  {"sensor": tableName},
                         async: false,
@@ -320,7 +319,7 @@
                             let place; //측정소 명
                             if(minutes<=5){
                                 $.ajax({
-                                    url:'getReferenceValue',
+                                    url:'<%=cp%>/getReferenceValue',
                                     dataType: 'json',
                                     data:  {"tableName": tableName},
                                     async: false,
