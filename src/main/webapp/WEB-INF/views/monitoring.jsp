@@ -24,7 +24,8 @@
     }
     .border-right{
         border-right-style: solid;
-        border-right-color: darkgray;
+        border-right-color: #a9a9a9;
+        border-right-width: 1px;
     }
     .img{
         width: 20px;
@@ -42,6 +43,13 @@
     div.bg-skyblue { /* param.place 배경, 글자색 설정 */
         background-color: #094EB5;
         color: #fff;
+    }
+
+    .emoji {
+        width:60px;
+        height: 60px;
+        position: relative;
+        top: 25px;
     }
 </style>
 
@@ -89,7 +97,7 @@
                 <div class="col border-right">
                     <div class="row text-center">
                         <div class="col">
-                            img 추가
+                            <img src="/static/images/sceptic.png" class="emoji">
                         </div>
                         <div class="col">
                             <p class="fs-1 mb-0" id="legal_standard_text_A">87%</p>
@@ -101,7 +109,7 @@
                 <div class="col border-right">
                     <div class="row text-center">
                         <div class="col">
-                            img 추가
+                            <img src="/static/images/thinking.png" class="emoji">
                         </div>
                         <div class="col">
                             <p class="fs-1 mb-0" id="company_standard_text_A">87%</p>
@@ -113,7 +121,7 @@
                 <div class="col">
                     <div class="row text-center">
                         <div class="col">
-                            img 추가
+                            <img src="/static/images/sad.png" class="emoji">
                         </div>
                         <div class="col">
                             <p class="fs-1 mb-0" id="management_standard_text_A">87%</p>
