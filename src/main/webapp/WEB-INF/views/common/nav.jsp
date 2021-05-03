@@ -16,7 +16,7 @@
     }
 
     #topMenu {
-        height: 30px;
+        height: 35px;
     }
 
     #topMenu ul { /* 메인 메뉴 안의 ul을 설정함: 상위메뉴의 ul+하위 메뉴의 ul */
@@ -28,7 +28,7 @@
     #topMenu ul li { /* 메인 메뉴 안에 ul 태그 안에 있는 li 태그의 스타일 적용(상위/하위메뉴 모두) */
         color: white;
         float: left;
-        line-height: 30px;
+        line-height: 35px;
         vertical-align: middle;
         text-align: center;
         position: relative;
@@ -70,37 +70,43 @@
 
     .submenu { /* 하위 메뉴 스타일 설정 */
         position: absolute;
-        top: 50px;
+        left: -100%;
+        top: 43px;
         height: 0px;
         overflow: hidden;
         transition: height .3s;
         -webkit-transition: height .3s;
         -moz-transition: height .3s;
         -o-transition: height .3s;
-        width: 5000px; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        /*border: 1px solid red;*/
     }
     .shortSubmenu{
         position: absolute;
-        top: 50px;
+        left:-50%;
+        top: 43px;
         height: 0px;
         overflow: hidden;
         transition: height .3s;
         -webkit-transition: height .3s;
         -moz-transition: height .3s;
         -o-transition: height .3s;
-        width: 5000px; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        /*border: 1px solid red;*/
     }
 
     .longSubmenu{
         position: absolute;
-        top: 50px;
+        left: -200%;
+        top: 43px;
         height: 0px;
         overflow: hidden;
         transition: height .3s;
         -webkit-transition: height .3s;
         -moz-transition: height .3s;
         -o-transition: height .3s;
-        width: 5000px; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        /*border: 1px solid red;*/
     }
 
     .submenu li .customSubmenu li{
@@ -109,6 +115,7 @@
 
     .topMenuLi:hover .submenu { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
         height: 50px; /* [변경] 높이를 32px로 설정 */
+        line-height: 50px;
         width: 450px;
         background: #75ACFF;
         border-radius: 5px;
