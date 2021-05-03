@@ -66,10 +66,10 @@
 
     <div class="row">
 
-        <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 29px; text-align: -webkit-center;">
+        <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 38px; text-align: -webkit-center;">
             <ul id="place_name">
             <c:forEach var="place" items="${place}" varStatus="cnt">
-                <li class="place-item btn bg-lightGray d-block fs-3 mt-3 me-3" value="${place.name}">
+                <li class="place-item btn bg-lightGray rounded-0 d-block fs-3 mt-3 me-3" id="${place.name}">
                     <span>${place.name}</span>
                 </li>
                 <hr style="height: 2.5px;">
@@ -79,11 +79,11 @@
 
         <div class="col-md-10 bg-light rounded p-0">
             <div class="d-flex justify-content-end bg-grayblue">
-                <span class="mb-2 small" style="margin-right: 5px;"> 마지막 업데이트 : </span>
-                <span class="mb-2 small" id="update"></span>
+                <span class="fs-7 mb-2"> 마지막 업데이트 : </span>
+                <span class="fs-5 mb-2" id="update"></span>
             </div>
 
-            <span class="fw-bold d-flex justify-content-center bg-lightGray" id="title" style="font-size: 1.5rem;">temp</span>
+            <span class="fs-3 fw-bold d-flex justify-content-center bg-lightGray" id="title">temp</span>
 
 
             <table id="place-table">
@@ -103,35 +103,30 @@
 
             <div class="d-flex justify-content-between">
                 <div class="d-flex radio">
-                    <span class="me-3" id="radio_text" style="margin-left: 10px;">센서명 - 최근 1시간 자료</span>
+                    <span class="me-3" id="radio_text">센서명 - 최근 1시간 자료</span>
                     <input class="form-check-input" type="radio" name="chartRadio" id="hourRadio" checked >
                     <span class="me-2">1시간</span>
                     <input class="form-check-input" type="radio" name="chartRadio" id="dayRadio" >
                     <span>하루</span>
                 </div>
 
-                <span style="margin-right: 10px;">* 5분 단위로 업데이트 됩니다.</span>
+                <span>* 5분 단위로 업데이트 됩니다.</span>
             </div>
 
             <%-- 차트 --%>
-            <div id="chart" class="" style="margin: 0 15px;"></div>
+            <div id="chart" class=""></div>
 
             <hr>
 
-            <div class="d-flex fw-bold pos-a" style="text-align: right;">
-                <div style="color: #000;">법적/사내/관리 기준</div>
-                <div id="standard_text" style="color: #000;">100/85/70 mg/Sm³ 이하</div>
-            </div>
-
-                                <%-- 차트의 데이터 테이블 --%>
-            <table id="sensor-table" class="table-responsive bg-gradient col-md-12 mt-1">
+            <%-- 차트의 데이터 테이블 --%>
+            <table id="sensor-table" class="bg-gradient mt-1">
                 <thead>
-<%--                <tr class="bg-lightGray re-w">--%>
-<%--                    <th class="d-flex justify-content-between">--%>
-<%--                        <div style="color: #000;">법적/사내/관리 기준</div>--%>
-<%--                        <div id="standard_text" style="color: #000;">100/85/70 mg/Sm³ 이하</div>--%>
-<%--                    </th>--%>
-<%--                </tr>--%>
+                <tr class="bg-lightGray">
+                    <th class="d-flex justify-content-between">
+                        <div>법적/사내/관리 기준</div>
+                        <div id="standard_text">100/85/70 mg/Sm³ 이하</div>
+                    </th>
+                </tr>
                 <tr>
                     <th>측정시간</th>
                     <th>측정 값</th>
@@ -159,6 +154,7 @@
                 $(this).addClass('active');
 
             }
+
         });
 
     });
@@ -167,22 +163,36 @@
     var place_table, sensor_table, sensor_chart;
     var interval1, interval2;
     var sensor_data;
+
+
     $(document).ready(function () {
-        var place_name = "${place.get(0).name}"; // 기본값
-        $("#place_name li").eq(0).addClass('active');
-        $('#title').text(place_name);
-        getData(place_name);
+        /* URI로부터 파라미터 확인 */
+        var url = new URL(window.location.href);
+        var urlParams = url.searchParams;
+        if(urlParams.has(('place')) && urlParams.has('sensor')){ //place와 sensor 파라미터가 있을 경우
+            var place_name = urlParams.get('place');
+            var sensor_naming = urlParams.get('sensor');
+            $("#"+place_name).addClass('active');
+            $('#title').text(place_name);
+            getData(place_name, sensor_naming);
+        }else{ //파라미터가 없을 경우
+            var place_name = "${place.get(0).name}"; // 기본값
+            $("#place_name li").eq(0).addClass('active');
+            $('#title').text(place_name);
+            getData(place_name);
+        }
     }); //ready
 
     /* 측정소 변경 이벤트 */
     $("#place_name").on('click', 'li', function () {
-        var place_name = $(this).attr('value');
+        var place_name = $(this).attr('id');
         $("#place_name li").removeClass('active');
         $(this).addClass('active');
         getData(place_name);
     });
 
 
+    /* 차트 1시간 / 하루 이벤트 */
     $("input[name=chartRadio]").on('click' , function (){
         if(sensor_data == null){
             var temp_sensor_data = place_table.row(0).data();
@@ -192,13 +202,13 @@
         }
     });
 
+    /* 센서명 클릭 이벤트 */
     $("#place-table").on('click', 'tr', function(){
         sensor_data = place_table.row(this).data();
         getData2(sensor_data);
     });
 
-
-    function getData(place_name){
+    function getData(place_name, sensor_naming){
         var place_data = getPlaceData(place_name); // 최근데이터, 60분전데이터, 정보
         place_table = draw_place_table(place_data);
         // $('#sensorInfo2').text("(경고:"+warning + "/ 위험:"+danger + ")");
@@ -215,9 +225,19 @@
             }
             interval1 = setTimeout(interval_getData, 5000);
         }, 0);
-        var sensor_data = place_table.row(0).data();
-        getData2(sensor_data);
+        if(!sensor_naming){
+            var sensor_data = place_table.row(0).data();
+            getData2(sensor_data);
+        }else{
+            for(var i=0; i<place_data.length; i++){
+                if(sensor_naming == place_data[i].naming){
+                    var sensor_data = place_data[i];
+                }
+            }
+            getData2(sensor_data);
+        }
     }
+
     function getData2(sensor_data) {
         var sensor_name = sensor_data.name;
         var sensor_time_length;
@@ -701,7 +721,6 @@
             }
         };
         return options;
-
     }
 
 

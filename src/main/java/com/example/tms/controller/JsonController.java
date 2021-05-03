@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,6 +50,10 @@ public class JsonController {
      * @param place 측정소 이름
      * @return 해당 측정소의 센서 값 (테이블 명)
      */
+    @RequestMapping(value = "/getPlace", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getPlace(@RequestParam("place") String place) {
+        return placeRepository.findByName(place);
+    }
     @RequestMapping(value = "/getPlaceSensor", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getPlaceSensor(@RequestParam("place") String place) {
         return placeRepository.findByName(place).getSensor();
@@ -174,6 +179,21 @@ public class JsonController {
         notification_settingsRepository.save(changeSetting);
     }
     // 여기까지
+    @RequestMapping(value = "/getPower")
+    public String getPower(@RequestParam("name") String tableName) {
+        return reference_value_settingRepository.findByName(tableName).getPower();
+    }
+    @RequestMapping(value = "savePlace")
+    public void savePlace(@RequestParam(value="name") String name, @RequestParam(value="location") String location, @RequestParam(value="admin") String admin,
+                          @RequestParam(value="tel") String tel){
+        Date up_time = new Date();
+        String power = "off";
+        List sensor = new ArrayList();
+        Place savePlace = new Place(name, location, admin, tel, power, up_time, sensor);
+
+        placeRepository.save(savePlace);
+
+    }
 
 
 }

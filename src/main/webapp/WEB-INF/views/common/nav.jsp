@@ -16,7 +16,7 @@
     }
 
     #topMenu {
-        height: 30px;
+        height: 35px;
     }
 
     #topMenu ul { /* 메인 메뉴 안의 ul을 설정함: 상위메뉴의 ul+하위 메뉴의 ul */
@@ -28,7 +28,7 @@
     #topMenu ul li { /* 메인 메뉴 안에 ul 태그 안에 있는 li 태그의 스타일 적용(상위/하위메뉴 모두) */
         color: white;
         float: left;
-        line-height: 30px;
+        line-height: 35px;
         vertical-align: middle;
         text-align: center;
         position: relative;
@@ -70,52 +70,59 @@
 
     .submenu { /* 하위 메뉴 스타일 설정 */
         position: absolute;
-        top: 50px;
+        left: -100%;
+        top: 43px;
         height: 0px;
         overflow: hidden;
         transition: height .3s;
         -webkit-transition: height .3s;
         -moz-transition: height .3s;
         -o-transition: height .3s;
-        width: 5000px; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        /*border: 1px solid red;*/
     }
     .shortSubmenu{
         position: absolute;
-        top: 50px;
+        left:-50%;
+        top: 43px;
         height: 0px;
         overflow: hidden;
         transition: height .3s;
         -webkit-transition: height .3s;
         -moz-transition: height .3s;
         -o-transition: height .3s;
-        width: 5000px; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        /*border: 1px solid red;*/
     }
 
     .longSubmenu{
         position: absolute;
-        top: 50px;
+        left: -200%;
+        top: 43px;
         height: 0px;
         overflow: hidden;
         transition: height .3s;
         -webkit-transition: height .3s;
         -moz-transition: height .3s;
         -o-transition: height .3s;
-        width: 5000px; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        /*border: 1px solid red;*/
     }
 
     .submenu li .customSubmenu li{
         display: inline-block; /* [변경] 가로로 펼쳐지도록 설정 */
     }
 
-    .topMenuLi:hover .submenu { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+    .topMenuLi:hover .stan_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
         height: 50px; /* [변경] 높이를 32px로 설정 */
+        line-height: 50px;
         width: 450px;
         background: #75ACFF;
         border-radius: 5px;
         z-index: 500;
     }
 
-    .topMenuLi:hover .shortSubmenu { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+    .topMenuLi:hover .short_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
         height: 50px; /* [변경] 높이를 32px로 설정 */
         width: 300px;
         background: #75ACFF;
@@ -123,7 +130,7 @@
         z-index: 500;
     }
 
-    .topMenuLi:hover .longSubmenu { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+    .topMenuLi:hover .long_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
         height: 50px; /* [변경] 높이를 32px로 설정 */
         width: 750px;
         background: #75ACFF;
@@ -152,19 +159,19 @@
                         <li class="topMenuLi"><a class="menuLink" href="/">대시보드</a></li>
                         <li class="topMenuLi"><a class="menuLink shortLink" href="/alarm">알림</a></li>
                         <li class="topMenuLi"><a class="menuLink" href="/monitoring">모니터링</a>
-                            <ul class="shortSubmenu">
+                            <ul class="submenu short_sub">
                                 <li><a href="/monitoring" class="submenuLink">실시간 모니터링</a></li>
                                 <li><a href="/sensor" class="submenuLink">상세화면</a></li>
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="/dataInquiry">분석 및 통계</a>
-                            <ul class="submenu">
+                            <ul class="submenu stan_sub">
                                 <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
                                 <li><a href="/dataStatistics" class="submenuLink ">통계자료 조회</a></li>
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="/alarmManagement">환경설정</a>
-                            <ul class="longSubmenu">
+                            <ul class="submenu long_sub">
                                 <li><a href="/alarmManagement" class="submenuLink ">알림 설정</a></li>
                                 <li><a href="/stationManagement" class="submenuLink ">측정소 관리</a></li>
                                 <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
@@ -204,7 +211,7 @@
         if ($(this).attr("href") !== "#") {
             var target_URL = $(this).prop("href");
             if (target_URL == current_page_URL) {
-                $('#menu > li').removeClass('active');
+                $(this).parent().find('.submenu').children('li').first().addClass('active');
                 $(this).parentsUntil('#menu').addClass('active');
                 return false;
             }

@@ -13,7 +13,6 @@ public class Place {
     @Id
     private ObjectId _id;
     private String name;
-    private String group;
     private String location;
     private String admin;
     private String tel;
@@ -35,14 +34,6 @@ public class Place {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public void setGroup(String group) {
-        this.group = group;
     }
 
     public String getLocation() {
@@ -98,7 +89,6 @@ public class Place {
         return "Place{" +
                 "_id=" + _id +
                 ", name='" + name + '\'' +
-                ", group='" + group + '\'' +
                 ", location='" + location + '\'' +
                 ", admin='" + admin + '\'' +
                 ", tel='" + tel + '\'' +
@@ -108,9 +98,8 @@ public class Place {
                 '}';
     }
     @Builder
-    public Place(String name, String group, String location,String admin,String tel,String power,Date up_time, List sensor){
+    public Place(String name, String location,String admin,String tel,String power,Date up_time, List sensor){
         this.name = name;
-        this.group = group;
         this.location = location;
         this.admin = admin;
         this.tel = tel;

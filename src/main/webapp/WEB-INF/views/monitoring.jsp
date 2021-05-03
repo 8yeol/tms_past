@@ -26,6 +26,11 @@
         border-right-style: solid;
         border-right-color: darkgray;
     }
+    .img{
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+    }
 </style>
 
 <style>
@@ -126,23 +131,23 @@
             <div class="col text-center border">
                 <div class="row p-3">
                     <div class="col">
-                        <span class="small fw-bold">(추가)직전 데이터보다 높아진 경우</span>
+                        <span class="small fw-bold"><img src="../static/images/up.png" class="img">직전 데이터보다 높아진 경우</span>
                     </div>
                     <div class="col">
-                        <span class="small fw-bold">(추가)직전 데이터보다 낮아진 경우</span>
+                        <span class="small fw-bold"><img src="../static/images/down.jpg" class="img">직전 데이터보다 낮아진 경우</span>
                     </div>
                     <div class="col">
-                        <span class="small fw-bold"> - 직전 데이터와 같은 경우</span>
+                        <span class="small fw-bold"> <b>-</b> 직전 데이터와 같은 경우</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row table m-3">
+        <div class="row table m-3" id="place_table">
             <c:set var ="plceSize" value="${place.size()}"/>
             <c:forEach var="places" items="${place}" varStatus="status">
             <c:if test="${placeSize%2==1}"> <%-- 홀수 test는 반대로 --%>
             <div class="col-md-12 mb-3">
-                <div class="bg-secondary m-2 text-center"><span class="fs-5">${places.name}</span></div>
+                <div class="bg-secondary m-2 text-center" id="${places.name}"><span class="fs-5">${places.name}</span></div>
                 <div class="2 text-end"><span class="small" id="update-${status.index}">업데이트 날짜</span></div>
             </c:if>
             <c:if test="${placeSize%2==0}"> <%-- 짝수 --%>
@@ -194,14 +199,19 @@
     </c:forEach>
 
     $(document).ready(function () {
-            getData();
+        getData();
         // flashing();
     }); //ready
 
-    function changePlace() {
-        getData();
-        flashing();
-    }
+    /* 센서명 클릭 이벤트 */
+    $("#place_table table").on('click', 'tr', function(){
+        var place_div = $(this).parents('#place_table div').eq(1);
+        var place_name = place_div.children('div').eq(0).text();
+        var sensor_naming = $(this).find('td').eq(0).text();
+        console.log(place_name);
+        console.log(sensor_naming);
+        location.replace("/sensor?place="+place_name+"&sensor="+sensor_naming);
+    });
 
     /* 본문 점멸 효과 */
     function flashing(){
@@ -505,7 +515,6 @@
     function draw_place_table(data, index){
         $("#sensor-table-"+index).DataTable().clear();
         $("#sensor-table-"+index).DataTable().destroy();
-
         $('#sensor-table-'+index).DataTable({
             paging: false,
             searching: false,
@@ -544,6 +553,13 @@
                         $(row).find('td:eq(4)').css('color', '#a2d674');
                         $(row).find('td:eq(4)').css('font-weight', 'bold');
                     }
+                }
+                if(data.value < data.b5_value){
+                    $(row).find('td:eq(4)').prepend('<img src="../static/images/down.jpg" class="img">');
+                }else if(data.value > data.b5_value){
+                    $(row).find('td:eq(4)').prepend('<img src="../static/images/up.png" class="img">');
+                }else{
+                    $(row).find('td:eq(4)').prepend(' <b>-</b> ');
                 }
             },
             "language": {
