@@ -147,6 +147,7 @@
     var sensor_data;
     $(document).ready(function () {
         var place_name = "${place.get(0).name}"; // 기본값
+        $("#place_name").eq(0).addClass('active');
         $('#title').text(place_name);
         getData(place_name);
     }); //ready
@@ -157,7 +158,6 @@
         $("#place_name li").removeClass('active');
         $(this).addClass('active');
         getData(place_name);
-
     });
 
 
