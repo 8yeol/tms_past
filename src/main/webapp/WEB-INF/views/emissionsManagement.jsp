@@ -29,6 +29,7 @@
     .multiSelectParent {
         margin-left: 30px;
         margin-right: 30px;
+        position: relative;
     }
 
     .multiSelectParent div {
@@ -43,6 +44,22 @@
         height: 45px;
         border-bottom: 3px solid gray;
         padding: 10px;
+    }
+
+    .MultiSelecterModal {
+        width: 300px;
+        height: 55px;
+        border-radius: 10px;
+        background-color: rgba(99, 130, 255, 0.7);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -40%);
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        display: none;
+
     }
 
     .multiSelect {
@@ -66,6 +83,10 @@
         font-weight: bold;
         font-size: 2rem;
         padding: 0;
+    }
+
+    .multiSelectBtn input[type=button]:hover {
+        background-color: rgba(99, 130, 255, 0.3);
     }
 
     .row1 {
@@ -222,7 +243,7 @@
             <select multiple class="form-control" id="lstBox1">
                 <c:forEach items="${target}" var="target">
                     <c:if test="${target.status eq 'true'}">
-                        <option id="${target.sensor}">${target.place} -  ${target.sensor_naming}
+                        <option id="${target.sensor}">${target.place} - ${target.sensor_naming}
                         </option>
                     </c:if>
                 </c:forEach>
@@ -242,7 +263,7 @@
             <select multiple class="form-control" id="lstBox2">
                 <c:forEach items="${target}" var="target">
                     <c:if test="${target.status eq 'false'}">
-                        <option id="${target.sensor}">${target.place} -  ${target.sensor_naming}
+                        <option id="${target.sensor}">${target.place} - ${target.sensor_naming}
                         </option>
                     </c:if>
                 </c:forEach>
@@ -250,6 +271,8 @@
         </div>
         <div class="clearfix"></div>
 
+        <!-- MultiSelecter Modal-->
+        <div class="MultiSelecterModal" id="emissionsModal"></div>
     </div>
 
     <div class="multiSelectParent">
@@ -260,7 +283,7 @@
                 <c:forEach items="${target2}" var="target2">
                     <c:if test="${target2.status eq 'true'}">
                         <option id="${target2.sensor}">${target2.place} -
-                            ${target2.sensor_naming}
+                                ${target2.sensor_naming}
                         </option>
                     </c:if>
                 </c:forEach>
@@ -288,6 +311,8 @@
         </div>
 
         <div class="clearfix"></div>
+        <!-- MultiSelecter Modal-->
+        <div class="MultiSelecterModal" id="yearlyEmissionsModal"></div>
 
     </div>
 </div>
@@ -348,6 +373,8 @@
 </div>
 
 
+</div>
+
 <script>
 
     $(function () {     // modal drag and drop move
@@ -362,18 +389,64 @@
     //MultiSelecter 변경 이벤트
     $.fn.moveToListAndDelete = function (from, to) {
         let opts = $(from + ' option:selected');
+        MultiSelecterModal(opts, from);                       //Modal Event
 
-        if (from == '#lstBox1' || from == '#lstBox2') {            //배출량
+        if (from == '#lstBox1' || from == '#lstBox2') {       //배출량
             for (i = 0; i < opts.length; i++)
-                stateUpdate(opts.eq(i).attr('id'), true);         // opts.eq(i).attr('id') ->tmsWP0001_NOX_01
-        } else {                                                   //연간 배출량
+                stateUpdate(opts.eq(i).attr('id'), true);     // opts.eq(i).attr('id') ->tmsWP0001_NOX_01
+
+        } else {                                              //연간 배출량
             for (i = 0; i < opts.length; i++)
-                stateUpdate(opts.eq(i).attr('id'), false);        // opts.eq(i).attr('id') ->tmsWP0001_NOX_01
+                stateUpdate(opts.eq(i).attr('id'), false);    // opts.eq(i).attr('id') ->tmsWP0001_NOX_01
         }
 
         $(opts).remove();
         $(to).append($(opts).clone());
     };
+
+
+    //MultiSelecter Modal
+    function MultiSelecterModal(opts, from) {
+        const eModal = $('#emissionsModal');
+        const yeModal = $('#yearlyEmissionsModal');
+
+        if (from == '#lstBox1') {
+            optionCount_Insert(eModal, opts)
+        } else if (from == '#lstBox2') {
+            optionCount_Delete(eModal, opts);
+        } else if (from == '#lstBox3') {
+            optionCount_Insert(yeModal, opts)
+        } else if (from == '#lstBox4') {
+            optionCount_Delete(yeModal, opts);
+        }
+    }
+
+
+    function optionCount_Delete(Modal, opts) {
+        if (opts.length == 1) {
+            Modal.html(opts.text() + ' 센서가 <br> 모니터링 대상 가스에서 제외 되었습니다. ');
+            fade(Modal);
+        } else if (opts.length > 1) {
+            Modal.html(opts.eq(0).text() + ' 센서 외' + (opts.length - 1) + '개가 <br> 모니터링 대상 가스에서 제외 되었습니다. ');
+            fade(Modal);
+        }
+    }
+
+    function optionCount_Insert(Modal, opts) {
+        if (opts.length == 1) {
+            Modal.html(opts.text() + ' 센서가 <br> 모니터링 대상 가스로 선택 되었습니다. ');
+            fade(Modal);
+        } else if (opts.length > 1) {
+            Modal.html(opts.eq(0).text() + ' 센서 외' + (opts.length - 1) + '개가 <br> 모니터링 대상 가스로 선택 되었습니다. ');
+            fade(Modal);
+        }
+    }
+
+    //Modal FadeIn FadeOut
+    function fade(Modal) {
+        Modal.fadeIn(300);
+        Modal.delay(2000).fadeOut(300);
+    }
 
     //센서 상태 업데이트
     function stateUpdate(sensor, isCollection) {
