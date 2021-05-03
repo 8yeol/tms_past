@@ -178,6 +178,13 @@
                         </c:forEach>
                     </div>
                 </c:forEach>
+
+                <!--placeList == Null-->
+                <c:if test="${empty placelist}">
+                    <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;" >
+                        연간 배출량 누적 모니터링 설정 된 센서가 없습니다.  <br>    <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.
+                    </div>
+                </c:if>
         </div>
 
         <div class="row text-center margin-l center-position">
