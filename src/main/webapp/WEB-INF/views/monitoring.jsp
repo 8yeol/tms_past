@@ -26,6 +26,11 @@
         border-right-style: solid;
         border-right-color: darkgray;
     }
+    .img{
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+    }
 </style>
 
 <style>
@@ -126,13 +131,13 @@
             <div class="col text-center border">
                 <div class="row p-3">
                     <div class="col">
-                        <span class="small fw-bold">(추가)직전 데이터보다 높아진 경우</span>
+                        <span class="small fw-bold"><img src="../static/images/up.png" class="img">직전 데이터보다 높아진 경우</span>
                     </div>
                     <div class="col">
-                        <span class="small fw-bold">(추가)직전 데이터보다 낮아진 경우</span>
+                        <span class="small fw-bold"><img src="../static/images/down.jpg" class="img">직전 데이터보다 낮아진 경우</span>
                     </div>
                     <div class="col">
-                        <span class="small fw-bold"> - 직전 데이터와 같은 경우</span>
+                        <span class="small fw-bold"> <b>-</b> 직전 데이터와 같은 경우</span>
                     </div>
                 </div>
             </div>
@@ -550,11 +555,11 @@
                     }
                 }
                 if(data.value < data.b5_value){
-                    $(row).find('td:eq(4)').prepend("작아짐");
+                    $(row).find('td:eq(4)').prepend('<img src="../static/images/down.jpg" class="img">');
                 }else if(data.value > data.b5_value){
-                    $(row).find('td:eq(4)').prepend("커짐");
+                    $(row).find('td:eq(4)').prepend('<img src="../static/images/up.png" class="img">');
                 }else{
-                    $(row).find('td:eq(4)').prepend("같음");
+                    $(row).find('td:eq(4)').prepend(' <b>-</b> ');
                 }
             },
             "language": {
