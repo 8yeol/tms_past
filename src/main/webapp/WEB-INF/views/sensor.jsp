@@ -124,14 +124,14 @@
             <hr>
 
             <%-- 차트의 데이터 테이블 --%>
-            <table id="sensor-table" class="bg-gradient mt-1">
-                <thead>
-                <tr class="bg-lightGray">
-                    <th class="d-flex justify-content-between">
-                        <div>법적/사내/관리 기준</div>
-                        <div id="standard_text">100/85/70 mg/Sm³ 이하</div>
-                    </th>
-                </tr>
+            <div class="d-flex fw-bold pos-a" style="text-align: right;">
+                <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 -</div>
+                <div id="standard_text" style="color: #000;">100/85/70 mg/Sm³ 이하</div>
+            </div>
+
+            <%-- 차트의 데이터 테이블 --%>
+            <table id="sensor-table" class="table-responsive bg-gradient col-md-12 mt-1">
+            <thead>
                 <tr>
                     <th>측정시간</th>
                     <th>측정 값</th>
@@ -146,29 +146,9 @@
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
-    $(function () {
-
-        var url = window.location.pathname,
-
-            urlRegExp = new RegExp(url.replace(/\/$/, '') + "$");
-
-        $('a').each(function () {
-
-            if (urlRegExp.test(this.href.replace(/\/$/, ''))) {
-
-                $(this).addClass('active');
-
-            }
-
-        });
-
-    });
-
-
     var place_table, sensor_table, sensor_chart;
     var interval1, interval2;
     var sensor_data;
-
 
     $(document).ready(function () {
         /* URI로부터 파라미터 확인 */
@@ -667,12 +647,41 @@
             annotations: {
                 yaxis: [{
                     y: sensor_data.management_standard,
-                    y2: sensor_data.management_standard+0.1,
-                    opacity: 0,
+                    borderColor: '#00E396',
                     label: {
-                        offsetX: -970,
-                        offsetY: 0,
+                        borderColor: '#00E396',
+                        style: {
+                            color: '#fff',
+                            background: '#00E396'
+                        },
                         text: '관리기준',
+                        offsetX: -970
+                    }
+                },
+                {
+                    y: sensor_data.company_standard,
+                    borderColor: '#FEB019',
+                    label: {
+                        borderColor: '#FEB019',
+                        style: {
+                            color: '#fff',
+                            background: '#FEB019'
+                        },
+                        text: '사내기준',
+                        offsetX: -970
+                    }
+                },
+                {
+                    y: sensor_data.legal_standard,
+                    borderColor: '#FF4560',
+                    label: {
+                        borderColor: '#FF4560',
+                        style: {
+                            color: '#fff',
+                            background: '#FF4560'
+                        },
+                        text: '법적기준',
+                        offsetX: -970
                     }
                 }]
             },

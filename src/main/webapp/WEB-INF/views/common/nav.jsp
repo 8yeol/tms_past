@@ -165,7 +165,7 @@
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="/dataInquiry">분석 및 통계</a>
-                            <ul class="submenu stan_sub">
+                            <ul class="submenu short_sub">
                                 <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
                                 <li><a href="/dataStatistics" class="submenuLink ">통계자료 조회</a></li>
                             </ul>
@@ -206,14 +206,15 @@
 
 
 <script>
-    var current_page_URL = location.href;
-    $("#menu a").each(function() {
-        if ($(this).attr("href") !== "#") {
-            var target_URL = $(this).prop("href");
-            if (target_URL == current_page_URL) {
-                $(this).parent().find('.submenu').children('li').first().addClass('active');
-                $(this).parentsUntil('#menu').addClass('active');
-                return false;
+    var current_page_URL = location.href; //현재 URL 주소
+    $("#menu a").each(function() { //menu a 태그의 주소
+        if ($(this).attr("href") !== "#") { // 주소링크가 # 아닐때
+            var target_URL = $(this).prop("href"); // 이벤트 발생 a태그의 모든 주소들
+            console.log(target_URL);
+            if (target_URL == current_page_URL) { // 현재 URL 주소와 클릭된 주소가 같다면
+                $(this).parent().find('.submenu').children('li').first().addClass('active'); //클래스 active 추가
+                $(this).parentsUntil('#menu').addClass('active'); //클래스 active 추가
+                return false; //종료
             }
         }
     });

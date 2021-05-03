@@ -216,8 +216,6 @@
         var place_div = $(this).parents('#place_table div').eq(1);
         var place_name = place_div.children('div').eq(0).text();
         var sensor_naming = $(this).find('td').eq(0).text();
-        console.log(place_name);
-        console.log(sensor_naming);
         location.replace("/sensor?place="+place_name+"&sensor="+sensor_naming);
     });
 
