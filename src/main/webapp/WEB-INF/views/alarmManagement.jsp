@@ -70,7 +70,7 @@
                 <div class="col-3 end w-25">
                     <button type="button" class="btn btn-primary saveBtn" onClick="insert(${status.index})">저장</button>
                     <button type="button" class="cancelBtn" onClick="cancel(${status.index})"><img
-                            src="../static/images/reload.png" width="23" height="23"></button>
+                            src="static/images/reload.png" width="23" height="23"></button>
                 </div>
             </div>
             </c:forEach>

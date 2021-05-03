@@ -25,6 +25,11 @@
         background-color: #094EB5;
         color: #fff;
     }
+    .img{
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+    }
 </style>
 
 <style>
@@ -295,6 +300,16 @@
                             up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
                         }
 
+                        var b5_sensor = getSensor(item, "", "", 10); //item의 10분전 데이터
+                        if(b5_sensor.length != 0){ // 최근데이터 값 - 9:59분전 데이터
+                            b5_value = (b5_sensor[(b5_sensor.length)-1].y);
+                            com_value = (sensor.value - b5_value);
+                        }else{ // 최근데이터 존재하지 않을 경우 "-" 처리
+                            b5_value = "-";
+                            com_value = "-";
+                        }
+
+
                         var sensorInfo = getSensorInfo(item); //item의 정보 데이터
                         naming = sensorInfo.naming;
                         legal_standard = sensorInfo.legal_standard;
@@ -316,12 +331,14 @@
                             naming: naming, name:item,
                             value:sensor_value, up_time: up_time,
                             legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard,
-                            power: power, standard : standard
+                            b5_value: b5_value,power: power, standard : standard
                         });
                     }
                 })
             }
         }); //ajax
+        // console.log(getData);
+       // console.log("data "+$(row).find('td:eq(4)').val());
         return getData;
     }
 
@@ -438,7 +455,7 @@
     function draw_place_table(data){
         $("#place-table").DataTable().clear();
         $("#place-table").DataTable().destroy();
-
+        console.log(data);
         var table = $('#place-table').DataTable({
             paging: false,
             searching: false,
@@ -483,6 +500,15 @@
                         $(row).find('td:eq(5)').css('font-weight', 'bold');
                     }
                 }
+
+                if(data.value < data.b5_value){
+                    $(row).find('td:eq(4)').prepend('<img src="static/images/down.jpg" class="img">');
+                }else if(data.value > data.b5_value){
+                    $(row).find('td:eq(4)').prepend('<img src="static/images/up.png" class="img">');
+                }else{
+                    $(row).find('td:eq(4)').prepend(' <b>-</b> ');
+                }
+
             },
             "language": {
                 "emptyTable": "데이터가 없어요.",
