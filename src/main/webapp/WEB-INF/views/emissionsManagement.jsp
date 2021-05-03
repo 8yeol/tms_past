@@ -242,7 +242,7 @@
             <label><b>전체 항목</b></label>
             <select multiple class="form-control" id="lstBox1">
                 <c:forEach items="${target}" var="target">
-                    <c:if test="${target.status eq 'true'}">
+                    <c:if test="${target.status eq 'false'}">
                         <option id="${target.sensor}">${target.place} - ${target.sensor_naming}
                         </option>
                     </c:if>
@@ -262,7 +262,7 @@
             <label><b>대상 가스</b></label>
             <select multiple class="form-control" id="lstBox2">
                 <c:forEach items="${target}" var="target">
-                    <c:if test="${target.status eq 'false'}">
+                    <c:if test="${target.status eq 'true'}">
                         <option id="${target.sensor}">${target.place} - ${target.sensor_naming}
                         </option>
                     </c:if>
@@ -281,7 +281,7 @@
             <label><b>전체 항목</b></label>
             <select multiple class="form-control" id="lstBox3">
                 <c:forEach items="${target2}" var="target2">
-                    <c:if test="${target2.status eq 'true'}">
+                    <c:if test="${target2.status eq 'false'}">
                         <option id="${target2.sensor}">${target2.place} -
                                 ${target2.sensor_naming}
                         </option>
@@ -302,7 +302,7 @@
             <label><b>대상 가스</b></label>
             <select multiple class="form-control" id="lstBox4">
                 <c:forEach items="${target2}" var="target2">
-                    <c:if test="${target2.status eq 'false'}">
+                    <c:if test="${target2.status eq 'true'}">
                         <option id="${target2.sensor}"> ${target2.place} - ${target2.sensor_naming}
                         </option>
                     </c:if>
@@ -444,6 +444,7 @@
 
     //Modal FadeIn FadeOut
     function fade(Modal) {
+        Modal.finish();
         Modal.fadeIn(300);
         Modal.delay(2000).fadeOut(300);
     }

@@ -5,6 +5,7 @@
   Time: 오후 3:55
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -143,7 +144,7 @@
             </div>
         </div>
     </div>
-    <div class="row m-3 mt-4 bg-light margin-l h-px">
+    <div class="row m-3 mt-4 bg-light margin-l pb-4">
         <div class="row p-3 h-25 margin-l">
             <div class="col fs-5 fw-bold">
                 연간 배출량 누적 모니터링
@@ -153,36 +154,32 @@
                 <span class="text-primary" style="font-size: 15%"> * 매일 자정 업데이트 됩니다.</span>
             </div>
         </div>
+
         <div class="row pb-3 px-3 margin-l">
             <%--script--%>
-            <div class="col">
-                <p class="mb-3 fs-5 fw-bold">측정소 1</p>
-                <div class="row pe-5 pb-3 margin-l">
-                    <div class="">
-                        질소산화물
-                    </div>
+                <c:forEach items="${placelist}" var="placelist" varStatus="i">
                     <div class="col">
-                        <div class="progress h-100">
-                            <div class="progress-bar progress-blue" role="progressbar" style="width: 25%;" aria-valuenow="25"
-                                 aria-valuemin="0" aria-valuemax="100">25%
-                            </div>
-                        </div>
+                        <p class="mb-3 fs-5 fw-bold">${placelist}</p>
+                        <c:forEach items="${yearlyEmissions}" var="emissions">
+                            <c:if test="${emissions.place eq placelist}">
+                                    <div class="row pe-5 pb-3 margin-l">
+                                        <div class="">
+                                            ${emissions.sensor_naming}
+                                        </div>
+                                        <div class="col">
+                                            <div class="progress h-100">
+                                                <div class="progress-bar progress-red" role="progressbar" style="width: 85%;" aria-valuenow="85"
+                                                     aria-valuemin="0" aria-valuemax="100">85%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </c:if>
+                        </c:forEach>
                     </div>
-                </div>
-                <div class="row pe-5 pb-3 margin-l">
-                    <div class="">
-                        산소
-                    </div>
-                    <div class="col">
-                        <div class="progress h-100">
-                            <div class="progress-bar progress-yellow" role="progressbar" style="width: 75%;"
-                                 aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">75%
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </c:forEach>
         </div>
+
         <div class="row text-center margin-l center-position">
 <%--            <hr>--%>
             <div class="progress-info">
