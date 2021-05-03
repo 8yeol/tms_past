@@ -51,7 +51,7 @@
         <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 38px; text-align: -webkit-center;">
             <ul id="place_name">
             <c:forEach var="place" items="${place}" varStatus="cnt">
-                <li class="btn bg-lightGray rounded-0 d-block fs-3 mt-3 me-3" value="${place.name}">
+                <li class="place-item btn bg-lightGray rounded-0 d-block fs-3 mt-3 me-3" value="${place.name}">
                     <span>${place.name}</span>
                 </li>
                 <hr style="height: 2.5px;">
@@ -123,6 +123,25 @@
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
+    $(function () {
+
+        var url = window.location.pathname,
+
+            urlRegExp = new RegExp(url.replace(/\/$/, '') + "$");
+
+        $('a').each(function () {
+
+            if (urlRegExp.test(this.href.replace(/\/$/, ''))) {
+
+                $(this).addClass('active');
+
+            }
+
+        });
+
+    });
+
+
     var place_table, sensor_table, sensor_chart;
     var interval1, interval2;
     var sensor_data;
@@ -134,9 +153,13 @@
 
     /* 측정소 변경 이벤트 */
     $("#place_name").on('click', 'li', function () {
-       var place_name = $(this).attr('value');
-       getData(place_name);
+        var place_name = $(this).attr('value');
+        $("#place_name li").removeClass('active');
+        $(this).addClass('active');
+        getData(place_name);
+
     });
+
 
     /* 차트 1시간 / 하루 이벤트 */
     $("input[name=chartRadio]").on('click' , function (){
@@ -660,5 +683,6 @@
         };
         return options;
     }
+
 
 </script>

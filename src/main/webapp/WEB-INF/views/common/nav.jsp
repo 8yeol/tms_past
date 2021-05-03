@@ -149,25 +149,22 @@
                 </a>
 
                 <nav id="topMenu">
-                    <ul>
-                        <li class="topMenuLi"><a class="menuLink" href="/">대시보드</a>
-                        </li>
-                        <li class="topMenuLi"><a class="menuLink shortLink" href="/alarm">알림</a>
-
-                        </li>
+                    <ul id="menu">
+                        <li class="topMenuLi"><a class="menuLink" href="/">대시보드</a></li>
+                        <li class="topMenuLi"><a class="menuLink shortLink" href="/alarm">알림</a></li>
                         <li class="topMenuLi"><a class="menuLink" href="/monitoring">모니터링</a>
                             <ul class="shortSubmenu">
                                 <li><a href="/monitoring" class="submenuLink">실시간 모니터링</a></li>
                                 <li><a href="/sensor" class="submenuLink">상세화면</a></li>
                             </ul>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="">분석 및 통계</a>
+                        <li class="topMenuLi"><a class="menuLink" href="/dataInquiry">분석 및 통계</a>
                             <ul class="submenu">
                                 <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
                                 <li><a href="/dataStatistics" class="submenuLink ">통계자료 조회</a></li>
                             </ul>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="">환경설정</a>
+                        <li class="topMenuLi"><a class="menuLink" href="/alarmManagement">환경설정</a>
                             <ul class="longSubmenu">
                                 <li><a href="/alarmManagement" class="submenuLink ">알림 설정</a></li>
                                 <li><a href="/stationManagement" class="submenuLink ">측정소 관리</a></li>
@@ -203,13 +200,15 @@
 
 
 <script>
-/*    var actionForm = $("#actionForm");
-    $("#sensor").click(function (e) {
-        var place = "point1";
-        e.preventDefault();
-        actionForm.append("<input type='text' name='place' value='"+ place +"'>");
-        actionForm.attr("action", "/sensor");
-        actionForm.submit();
-    })*/
-
+    var current_page_URL = location.href;
+    $("#menu a").each(function() {
+        if ($(this).attr("href") !== "#") {
+            var target_URL = $(this).prop("href");
+            if (target_URL == current_page_URL) {
+                $('#menu > li').removeClass('active');
+                $(this).parentsUntil('#menu').addClass('active');
+                return false;
+            }
+        }
+    });
 </script>
