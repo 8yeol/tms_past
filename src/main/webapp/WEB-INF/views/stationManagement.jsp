@@ -99,8 +99,8 @@
         <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div>
                 <span class="fw-bold">측정소 관리</span>
-                <button data-toggle ="modal" data-target="#addPlace">추가</button>
-                <button data-toggle ="modal" data-target="#removePlace">삭제</button>
+                <button data-toggle="modal" data-target="#addPlace">추가</button>
+                <button data-toggle="modal" data-target="#removePlace">삭제</button>
             </div>
             <div class="text-center">
                 <table width="100%">
@@ -163,15 +163,15 @@
                 <h5 class="modal-title">측정소 추가</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <forM>
-                <div><span>측정소 명</span><input type="text" class="modal-input"></div>
-                <div><span>위치</span><input type="text" class="modal-input"></div>
-                <div><span>담당자 명</span><input type="text" class="modal-input"></div>
-                <div><span>연락처</span><input type="text" class="modal-input"></div>
-                </forM>
+                <form id="placeinfo" method="post">
+                    <div><span>측정소 명</span><input type="text" class="modal-input" name="name"></div>
+                    <div><span>위치</span><input type="text" class="modal-input" name="location"></div>
+                    <div><span>담당자 명</span><input type="text" class="modal-input" name="admin"></div>
+                    <div><span>연락처</span><input type="text" class="modal-input" name="tel"></div>
+                </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-primary">추가</button>
+                <button id="saveBtn" type="button" class="btn btn-primary" onclick="insert()">추가</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
             </div>
         </div>
@@ -188,7 +188,7 @@
                 <h3>정말 삭제하시겠습니까?</h3>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-danger">삭제</button>
+                <button id="rmBtn" type="button" class="btn btn-danger">삭제</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
             </div>
         </div>
@@ -199,6 +199,7 @@
     $(function () {
         $('.modal-dialog').draggable({handle: ".modal-header"});
     });
+    //modal 팝업창 close시 form에 남아있던 데이터 리셋
     $('.modal').on('hidden.bs.modal', function (e) {
         console.log('modal close');
         $(this).find('form')[0].reset()
@@ -398,6 +399,28 @@
             }
         })
         return map;
+    }
+
+    function insert() {
+        var form = $('#placeinfo').serialize();
+
+        $.ajax({
+            url: '<%=cp%>/savePlace',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: form,
+            success: function (data) {
+
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        Swal.fire({
+            icon: 'success',
+            title: '저장완료'
+        })
     }
 
 </script>

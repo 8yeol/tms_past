@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -181,6 +182,17 @@ public class JsonController {
     @RequestMapping(value = "/getPower")
     public String getPower(@RequestParam("name") String tableName) {
         return reference_value_settingRepository.findByName(tableName).getPower();
+    }
+    @RequestMapping(value = "savePlace")
+    public void savePlace(@RequestParam(value="name") String name, @RequestParam(value="location") String location, @RequestParam(value="admin") String admin,
+                          @RequestParam(value="tel") String tel){
+        Date up_time = new Date();
+        String power = "off";
+        List sensor = new ArrayList();
+        Place savePlace = new Place(name, location, admin, tel, power, up_time, sensor);
+
+        placeRepository.save(savePlace);
+
     }
 
 
