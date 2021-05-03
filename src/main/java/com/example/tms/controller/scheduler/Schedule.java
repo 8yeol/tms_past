@@ -28,7 +28,7 @@ public class Schedule {
         this.notificationListRepository = notificationListRepository;
     }
 
-    @Scheduled(cron = "0 0/5 * * * *")
+    //@Scheduled(cron = "0 0/5 * * * *")
     public void scheduling(){
         List<Notification_Settings> notification = notification_settingsRepository.findByStatusIsTrue();
 
