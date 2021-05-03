@@ -7,6 +7,12 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
+
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <script src="static/js/moment.min.js"></script>
 
@@ -271,7 +277,7 @@
         $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD'));
     }
 
-    // 관리등급 초과 모니터링 (처음 로딩될 때 한번, 그 후로 매 5분마다 실행)
+    // 관리등급 초과 모니터링 (처음 로딩될 때 한번, 그 후로 매 5분마다 실행) - 완료
     function excess() {
         addExcessData();
         // 매 5분마다 실행되게 하는 평션
@@ -280,20 +286,87 @@
         const timeToSetInterval = timeSinceBoundary === 0 ? 0 : (FIVE_MINUTES - timeSinceBoundary);
         setTimeout(function () {
             setInterval(function () {
-                console.log(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
                 addExcessData();
             }, FIVE_MINUTES);
         }, timeToSetInterval);
     }
 
     function addExcessData() {
-        //for 문 돌려서 해당 항목 개수만큼 append
-        $("#normal").empty();
+        console.log (" 실행시간 : " + moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
-        $("#normal").append("<h5 class='card-title'>normal</h5>");
-        $("#caution").append("<h5 class='card-title'>caution</h5>");
-        $("#warning").append("<h5 class='card-title'>warning</h5>");
-        $("#danger").append("<h5 class='card-title'>danger</h5>");
+        $("#normal").empty();
+        $("#caution").empty();
+        $("#warning").empty();
+        $("#danger").empty();
+
+        // 정상 값이 필요 없으면 센서 목록 불러와서 5분전 데이터 계산해서 넣어주면 되는데, 정상 값도 필요하기 때문에 해당 로직으로 작성
+        $.ajax({
+            url: '<%=cp%>/getMonitoringSensorOn',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {},
+            success : function(data) {
+                for(let i=0; i<data.length; i++){
+                    let tableName = data[i].name;
+                    $.ajax({
+                        url:'getSensorRecent',
+                        dataType: 'json',
+                        data:  {"sensor": tableName},
+                        async: false,
+                        success: function (data) {
+                            const now = moment();
+                            const up_time = moment(new Date(data.up_time), 'YYYY-MM-DD HH:mm:ss');
+                            const minutes = moment.duration(now.diff(up_time)).asMinutes();
+                            const value = (data.value).toFixed(2);
+                            let place; //측정소 명
+                            if(minutes<=5){
+                                $.ajax({
+                                    url:'getReferenceValue',
+                                    dataType: 'json',
+                                    data:  {"tableName": tableName},
+                                    async: false,
+                                    success: function (data) {
+                                        $.ajax({
+                                            url:'getPlaceName',
+                                            dataType: 'text',
+                                            data:  {"tableName": tableName},
+                                            async: false,
+                                            success: function (data) {
+                                                place = data;
+                                            },
+                                            error: function(request, status, error) {
+                                                console.log(error)
+                                            }
+                                        });
+
+                                        if(value > data.legal_standard){
+                                            $("#danger").append("<h5 class='card-title'>"+place+" - " +data.naming+" ["+value+"] </h5>");
+                                        } else if(value > data.company_standard){
+                                            $("#warning").append("<h5 class='card-title'>"+place+" - " +data.naming+" ["+value+"] </h5>");
+                                        } else if(value > data.management_standard){
+                                            $("#caution").append("<h5 class='card-title'>"+place+" - " +data.naming+" ["+value+"] </h5>");
+                                        } else{
+                                            $("#normal").append("<h5 class='card-title'>"+place+" - " +data.naming+" ["+value+"] </h5>");
+                                        }
+                                    },
+                                    error: function(request, status, error) {
+                                        console.log(error)
+                                    }
+                                });
+                            }
+                        },
+                        error: function(request, status, error) {
+                            console.log(error)
+                        }
+                    });
+                }
+            },
+            error : function(request, status, error) {
+                console.log(error)
+            }
+        })
 
         // 완료 후 업데이트 시간 표시
         $("#excess_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));

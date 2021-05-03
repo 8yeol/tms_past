@@ -204,13 +204,13 @@
             return false;
         }
 
-        const checkedItem = new Array();
-        const uncheckItem = new Array();
+        const onList = new Array();
+        const offList = new Array();
         $("input:checkbox[name=status" + idx + "]:checked").each(function () {
-            checkedItem.push($(this).attr('id'));
+            onList.push($(this).attr('id'));
         });
         $("input:checkbox[name=status" + idx + "]:not(:checked)").each(function () {
-            uncheckItem.push($(this).attr('id'));
+            offList.push($(this).attr('id'));
         });
 
         $.ajax({
@@ -219,8 +219,8 @@
             async: false,
             cache: false,
             data: {
-                "checked":checkedItem,
-                "uncheck":uncheckItem,
+                "onList":onList,
+                "offList":offList,
                 "from":start,
                 "to":end
             },

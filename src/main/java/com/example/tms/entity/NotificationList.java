@@ -15,6 +15,7 @@ public class NotificationList {
     public String place; // 측정소 명
     public String sensor; // 센서명
     public float value;
+    public int grade; // 관리 등급 ( 1 : 법적기준 초과, 2 : 사내기준 초과, 3 : 관리기준 초과)
     public String notify; // 초과 알림
     public Date up_time; // 업데이트 시간
 }
