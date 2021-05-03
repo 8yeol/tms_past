@@ -40,6 +40,24 @@
     .bg-lightGray {
         background-color: lightgrey;
     }
+
+    ul,ol {
+        list-style: none;
+    }
+
+    #place_name>li.active {
+        background-color: #fff;
+        border-radius: 100px;
+    }
+    #place_name>li.active>span {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+
+    .pos-a {
+        position: absolute;
+        right: 10px;
+    }
 </style>
 
 
@@ -48,10 +66,10 @@
 
     <div class="row">
 
-        <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 38px; text-align: -webkit-center;">
+        <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 29px; text-align: -webkit-center;">
             <ul id="place_name">
             <c:forEach var="place" items="${place}" varStatus="cnt">
-                <li class="place-item btn bg-lightGray rounded-0 d-block fs-3 mt-3 me-3" value="${place.name}">
+                <li class="place-item btn bg-lightGray d-block fs-3 mt-3 me-3" value="${place.name}">
                     <span>${place.name}</span>
                 </li>
                 <hr style="height: 2.5px;">
@@ -61,11 +79,11 @@
 
         <div class="col-md-10 bg-light rounded p-0">
             <div class="d-flex justify-content-end bg-grayblue">
-                <span class="fs-7 mb-2"> 마지막 업데이트 : </span>
-                <span class="fs-5 mb-2" id="update"></span>
+                <span class="mb-2 small" style="margin-right: 5px;"> 마지막 업데이트 : </span>
+                <span class="mb-2 small" id="update"></span>
             </div>
 
-            <span class="fs-3 fw-bold d-flex justify-content-center bg-lightGray" id="title">temp</span>
+            <span class="fw-bold d-flex justify-content-center bg-lightGray" id="title" style="font-size: 1.5rem;">temp</span>
 
 
             <table id="place-table">
@@ -85,30 +103,35 @@
 
             <div class="d-flex justify-content-between">
                 <div class="d-flex radio">
-                    <span class="me-3" id="radio_text">센서명 - 최근 1시간 자료</span>
+                    <span class="me-3" id="radio_text" style="margin-left: 10px;">센서명 - 최근 1시간 자료</span>
                     <input class="form-check-input" type="radio" name="chartRadio" id="hourRadio" checked >
                     <span class="me-2">1시간</span>
                     <input class="form-check-input" type="radio" name="chartRadio" id="dayRadio" >
                     <span>하루</span>
                 </div>
 
-                <span>* 5분 단위로 업데이트 됩니다.</span>
+                <span style="margin-right: 10px;">* 5분 단위로 업데이트 됩니다.</span>
             </div>
 
             <%-- 차트 --%>
-            <div id="chart" class=""></div>
+            <div id="chart" class="" style="margin: 0 15px;"></div>
 
             <hr>
 
-            <%-- 차트의 데이터 테이블 --%>
-            <table id="sensor-table" class="bg-gradient mt-1">
+            <div class="d-flex fw-bold pos-a" style="text-align: right;">
+                <div style="color: #000;">법적/사내/관리 기준</div>
+                <div id="standard_text" style="color: #000;">100/85/70 mg/Sm³ 이하</div>
+            </div>
+
+                                <%-- 차트의 데이터 테이블 --%>
+            <table id="sensor-table" class="table-responsive bg-gradient col-md-12 mt-1">
                 <thead>
-                <tr class="bg-lightGray">
-                    <th class="d-flex justify-content-between">
-                        <div>법적/사내/관리 기준</div>
-                        <div id="standard_text">100/85/70 mg/Sm³ 이하</div>
-                    </th>
-                </tr>
+<%--                <tr class="bg-lightGray re-w">--%>
+<%--                    <th class="d-flex justify-content-between">--%>
+<%--                        <div style="color: #000;">법적/사내/관리 기준</div>--%>
+<%--                        <div id="standard_text" style="color: #000;">100/85/70 mg/Sm³ 이하</div>--%>
+<%--                    </th>--%>
+<%--                </tr>--%>
                 <tr>
                     <th>측정시간</th>
                     <th>측정 값</th>
@@ -136,7 +159,6 @@
                 $(this).addClass('active');
 
             }
-
         });
 
     });
@@ -147,7 +169,7 @@
     var sensor_data;
     $(document).ready(function () {
         var place_name = "${place.get(0).name}"; // 기본값
-        $("#place_name").eq(0).addClass('active');
+        $("#place_name li").eq(0).addClass('active');
         $('#title').text(place_name);
         getData(place_name);
     }); //ready
@@ -161,7 +183,6 @@
     });
 
 
-    /* 차트 1시간 / 하루 이벤트 */
     $("input[name=chartRadio]").on('click' , function (){
         if(sensor_data == null){
             var temp_sensor_data = place_table.row(0).data();
@@ -171,7 +192,6 @@
         }
     });
 
-    /* 센서명 클릭 이벤트 */
     $("#place-table").on('click', 'tr', function(){
         sensor_data = place_table.row(this).data();
         getData2(sensor_data);
@@ -198,7 +218,6 @@
         var sensor_data = place_table.row(0).data();
         getData2(sensor_data);
     }
-
     function getData2(sensor_data) {
         var sensor_name = sensor_data.name;
         var sensor_time_length;
@@ -682,6 +701,7 @@
             }
         };
         return options;
+
     }
 
 

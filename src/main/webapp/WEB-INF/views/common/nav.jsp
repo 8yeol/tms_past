@@ -132,11 +132,10 @@
     }
 
 
-    .submenuLink:hover { /* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
+    .submenuLink:hover, li.active>a { /* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
         color: #F7C259;
         font-weight: bold;
     }
-
 
 </style>
 
