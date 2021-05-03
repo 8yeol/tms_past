@@ -1,12 +1,11 @@
 package com.example.tms.entity;
 
-import lombok.Data;
+import lombok.Builder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "reference_value_setting")
-@Data
 public class Reference_Value_Setting {
     @Id
     private ObjectId _id;

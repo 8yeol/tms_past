@@ -4,6 +4,7 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import com.example.tms.repository.Reference_Value_SettingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,16 +32,17 @@ public class JsonController {
     final
     Notification_SettingsRepository notification_settingsRepository;
 
-    @Autowired
+    final
     NotificationListRepository notificationListRepository;
 
-    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Reference_Value_SettingRepository sensor_infoRepository, Reference_Value_SettingRepository reference_value_settingRepository, Notification_SettingsRepository notification_settingsRepository) {
+    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Reference_Value_SettingRepository sensor_infoRepository, Reference_Value_SettingRepository reference_value_settingRepository, Notification_SettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository) {
         this.placeRepository = placeRepository;
         this.placeCustomRepository = placeCustomRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.notification_settingsRepository = notification_settingsRepository;
+        this.notificationListRepository = notificationListRepository;
     }
 
 // *********************************************************************************************************************
@@ -74,11 +76,6 @@ public class JsonController {
     @RequestMapping(value = "/getSensorInfo")
     public Reference_Value_Setting getSensorInfo(@RequestParam String sensor){
         return reference_value_settingRepository.findByName(sensor);
-    }
-
-    @RequestMapping(value = "/getSensorInfo2")
-    public Reference_Value_Setting getSensorInfo2(@RequestParam String sensor, @RequestParam String power){
-        return reference_value_settingRepository.findByNameAndPower(sensor, power);
     }
 
     @RequestMapping(value = "/getSensorRecent")

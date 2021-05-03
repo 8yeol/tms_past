@@ -210,7 +210,7 @@
     }
 
 
-    /* 측정소가 바뀐 데이터 조회*/
+    /* 측정소명으로 센서명 조회*/
     function getPlaceData(place){
         var getData = new Array();
         $.ajax({
@@ -220,38 +220,61 @@
             async: false,
             success: function (data) {
                 $.each(data, function (index, item) { //item (센서명)
-                    var sensor = getSensorRecent(item); // item의 최근데이터
-                    if(sensor.value == 0 || sensor.value == null){ //null 일때
-                        sensor_value = "-"; // "-" 출력(datatable)
-                    }else{
-                        sensor_value = sensor.value.toFixed(2);
-                        up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
-                    }
+                    var Onoff = getPower(item);
+                    if(Onoff == "on"){
+                        var sensor = getSensorRecent(item); // item의 최근데이터
+                        if(sensor.value == 0 || sensor.value == null){ //null 일때
+                            sensor_value = "-"; // "-" 출력(datatable)
+                        }else{
+                            sensor_value = sensor.value.toFixed(2);
+                            up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
+                        }
 
-                    var sensorInfo = getSensorInfo(item); //item의 정보 데이터
-                    naming = sensorInfo.naming;
-                    legal_standard = sensorInfo.legal_standard;
-                    company_standard = sensorInfo.company_standard;
-                    management_standard = sensorInfo.management_standard;
-                    power = sensorInfo.power;
-                    if(sensor.value < company_standard && sensor.value >= management_standard){
-                        standard = "관리기준 초과";
-                    }else if(sensor.value< legal_standard && sensor.value >= company_standard){
-                        standard = "사내기준 초과";
-                    }else if(sensor.value >= legal_standard){
-                        standard = "법적기준 초과";
-                    }else if(sensor.value < management_standard){
-                        standard = "정상";
-                    }else{
-                        standard = "-";
+                        var sensorInfo = getSensorInfo(item); //item의 정보 데이터
+                        naming = sensorInfo.naming;
+                        legal_standard = sensorInfo.legal_standard;
+                        company_standard = sensorInfo.company_standard;
+                        management_standard = sensorInfo.management_standard;
+                        power = sensorInfo.power;
+                        if(sensor.value < company_standard && sensor.value >= management_standard){
+                            standard = "관리기준 초과";
+                        }else if(sensor.value< legal_standard && sensor.value >= company_standard){
+                            standard = "사내기준 초과";
+                        }else if(sensor.value >= legal_standard){
+                            standard = "법적기준 초과";
+                        }else if(sensor.value < management_standard){
+                            standard = "정상";
+                        }else{
+                            standard = "-";
+                        }
+                        getData.push({
+                            naming: naming, name:item,
+                            value:sensor_value, up_time: up_time,
+                            legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard,
+                            power: power, standard : standard
+                        });
                     }
-                    getData.push({
-                        naming: naming, name:item,
-                        value:sensor_value, up_time: up_time,
-                        legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard,
-                        power: power, standard : standard
-                    });
                 })
+            }
+        }); //ajax
+        return getData;
+    }
+
+    /* 센서명으로 최근 데이터 조회 */
+    function getPower(sensor){
+        var getData;
+        $.ajax({
+            url:'getPower',
+            dataType: 'text',
+            data:  {"name": sensor},
+            async: false,
+            success: function (data) {
+                getData = data;
+            },
+            error: function (e) {
+                // console.log("getSensorRecent Error");
+                // 결과가 존재하지 않을 경우 null 처리
+                getData = "off";
             }
         }); //ajax
         return getData;
@@ -415,6 +438,25 @@
         return table;
     }
 
+    /* 센서명으로 최근 데이터 조회 */
+    function getPower(sensor){
+        var getData;
+        $.ajax({
+            url:'getPower',
+            dataType: 'text',
+            data:  {"name": sensor},
+            async: false,
+            success: function (data) {
+                getData = data;
+            },
+            error: function (e) {
+                // console.log("getSensorRecent Error");
+                // 결과가 존재하지 않을 경우 null 처리
+                getData = "off";
+            }
+        }); //ajax
+        return getData;
+    }
     /* draw sensor time table */
     function draw_sensor_table(sensor_data_list) {
 
