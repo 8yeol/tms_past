@@ -10,4 +10,5 @@ public interface MemberRepository extends MongoRepository<Member, Long> {
     List<Member> findByState(String str);
     Member findById(String str);
     Boolean existsById(String str);
+    Member deleteById(String str);
 }
