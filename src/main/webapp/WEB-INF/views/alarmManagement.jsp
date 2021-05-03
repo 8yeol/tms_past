@@ -25,13 +25,14 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <style>
-    .border-bottom-custom{
+    .border-bottom-custom {
         border-bottom: 2px solid #a9a9a9;
-        padding : 16px 16px 40px 16px ;
+        padding: 16px 16px 40px 16px;
     }
-    .border-tom-custom{
+
+    .border-tom-custom {
         border-top: 2px solid #a9a9a9;
-        padding : 16px 16px 40px 16px ;
+        padding: 16px 16px 40px 16px;
     }
 </style>
 
@@ -48,17 +49,17 @@
         </div>
 
         <c:forEach var="place" items="${place}" varStatus="status">
-            <c:choose>
-                <c:when test="${status.first}">
-                <div class="row bg-light rounded ms-1 border-bottom-custom border-tom-custom" id="placeDiv${status.index}">
-                </c:when>
-                <c:otherwise>
-                <div class="row bg-light rounded ms-1 border-bottom-custom" id="placeDiv${status.index}">
+        <c:choose>
+        <c:when test="${status.first}">
+        <div class="row bg-light rounded ms-1 border-bottom-custom border-tom-custom" id="placeDiv${status.index}">
+            </c:when>
+            <c:otherwise>
+            <div class="row bg-light rounded ms-1 border-bottom-custom" id="placeDiv${status.index}">
                 </c:otherwise>
-            </c:choose>
+                </c:choose>
                 <span class="fs-5 placeName" id="place${status.index}">${place}</span>
                 <div class="col-3" style="width: 45%;">
-                <span style="margin-left: 130px;" class="textSpanParent"> 센서 목록</span>
+                    <span style="margin-left: 130px;" class="textSpanParent"> 센서 목록</span>
                     <div id="items${status.index}">
                             <%-- script --%>
                     </div>
@@ -72,200 +73,200 @@
                             src="../static/images/reload.png" width="23" height="23"></button>
                 </div>
             </div>
-        </c:forEach>
+            </c:forEach>
+        </div>
+
+        <h6>* 알림을 받을 측정항목을 선택해 주세요. [환경설정 > 측정소 관리]에서 설정된 항목의 기준이 초과하는 경우 알림이 발생합니다.</h6>
     </div>
 
-    <h6>* 알림을 받을 측정항목을 선택해 주세요. [환경설정 > 측정소 관리]에서 설정된 항목의 기준이 초과하는 경우 알림이 발생합니다.</h6>
-</div>
+    <script>
 
-<script>
+        $(document).ready(function () {
+            const placeLength = ${place.size()};
+            //저장소 DIV 반복 생성
+            for (let i = 0; i < placeLength; i++) {
+                placeMake($("#place" + i).text(), i);
+            }
+            //각각 타임피커 셋팅
+            for (let i = 0; i < placeLength; i++) {
+                $('#start' + i).chungTimePicker({viewType: 1});
+                $('#end' + i).chungTimePicker({viewType: 1});
+            }
+        });
 
-    $(document).ready(function () {
-        const placeLength = ${place.size()};
-        //저장소 DIV 반복 생성
-        for (let i = 0; i < placeLength; i++) {
-            placeMake($("#place" + i).text(), i);
-        }
-        //각각 타임피커 셋팅
-        for (let i = 0; i < placeLength; i++) {
-            $('#start' + i).chungTimePicker({viewType: 1});
-            $('#end' + i).chungTimePicker({viewType: 1});
-        }
-    });
+        //측정소 생성
+        function placeMake(name, idx) {
+            const place = name;
+            const parentElem = $('#items' + idx);
 
-    //측정소 생성
-    function placeMake(name, idx) {
-        const place = name;
-        const parentElem = $('#items' + idx);
+            let innerHTMLTimePicker = "";
+            innerHTMLTimePicker += '<div><span class="textSpanParent">알림 시간</span></div>';
+            innerHTMLTimePicker += '<div><span class="textSpan">From </span><input type="text" id="start' + idx + '" name="start" class="timePicker" readonly/></div>';
+            innerHTMLTimePicker += '<div><span class="textSpan">To </span><input type="text" id="end' + idx + '" name="end" class="timePicker" readonly/></div>';
 
-        let innerHTMLTimePicker = "";
-        innerHTMLTimePicker += '<div><span class="textSpanParent">알림 시간</span></div>';
-        innerHTMLTimePicker += '<div><span class="textSpan">From </span><input type="text" id="start' + idx + '" name="start" class="timePicker" readonly/></div>';
-        innerHTMLTimePicker += '<div><span class="textSpan">To </span><input type="text" id="end' + idx + '" name="end" class="timePicker" readonly/></div>';
+            $('#alarm' + idx).append(innerHTMLTimePicker);
 
-        $('#alarm' + idx).append(innerHTMLTimePicker);
+            $.ajax({
+                url: '<%=cp%>/getPlaceSensor',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                cache: false,
+                data: {"place": place},
+                success: function (data) {
+                    for (let i = 0; i < data.length; i++) {
+                        const tableName = data[i];
+                        const category = findSensorCategory(tableName);
+                        const checked = findNotification(tableName);
 
-        $.ajax({
-            url: '<%=cp%>/getPlaceSensor',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"place": place},
-            success: function (data) {
-                for (let i = 0; i < data.length; i++) {
-                    const tableName = data[i];
-                    const category = findSensorCategory(tableName);
-                    const checked = findNotification(tableName);
+                        const innerHtml =
+                            "<label style='font-size: 18px;' class='form-check-label' for='" + tableName + "'>" + category + "</label>" +
+                            "<label class='switch'>" +
+                            "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + checked + ">" +
+                            "<div class='slider round'></div>" +
+                            "</label>"
 
-                    const innerHtml =
-                        "<label style='font-size: 18px;' class='form-check-label' for='" + tableName + "'>" + category + "</label>" +
-                        "<label class='switch'>" +
-                        "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + checked + ">" +
-                        "<div class='slider round'></div>" +
-                        "</label>"
+                        const elem = document.createElement('div');
+                        elem.setAttribute('class', 'label-form')
+                        elem.innerHTML = innerHtml;
+                        parentElem.append(elem);
 
-                    const elem = document.createElement('div');
-                    elem.setAttribute('class', 'label-form')
-                    elem.innerHTML = innerHtml;
-                    parentElem.append(elem);
-
-                    if(i%data.length==0){
-                        const time = data[0];
-                        const getTime = getNotifyTime(time);
-                        $("#start" + idx).val(getTime.get("from"));
-                        $("#end" + idx).val(getTime.get("to"));
+                        if (i % data.length == 0) {
+                            const time = data[0];
+                            const getTime = getNotifyTime(time);
+                            $("#start" + idx).val(getTime.get("from"));
+                            $("#end" + idx).val(getTime.get("to"));
+                        }
                     }
+                },
+                error: function (request, status, error) { // 결과 에러 콜백함수
+                    console.log(error)
                 }
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
-        })
-    }
+            })
+        }
 
-    //Notification_settings status 값 불러오기
-    function findNotification(tableName) {
-        let isChecked = "";
-        $.ajax({
-            url: '<%=cp%>/getNotifyInfo',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"name": tableName},
-            success: function (data) {
-                const status = data.status;
-                if (status == true) {
-                    isChecked = "checked";
+        //Notification_settings status 값 불러오기
+        function findNotification(tableName) {
+            let isChecked = "";
+            $.ajax({
+                url: '<%=cp%>/getNotifyInfo',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                cache: false,
+                data: {"name": tableName},
+                success: function (data) {
+                    const status = data.status;
+                    if (status == true) {
+                        isChecked = "checked";
+                    }
+                },
+                error: function (request, status, error) { // 결과 에러 콜백함수
+                    console.log(error)
                 }
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
+            })
+            return isChecked;
+        }
+
+        // 설정된 알람시간 불러오기
+        function getNotifyTime(time) {
+            let map = new Map();
+            $.ajax({
+                url: '<%=cp%>/getNotifyInfo',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                cache: false,
+                data: {"name": time},
+                success: function (data) {
+                    map.set("from", data.start);
+                    map.set("to", data.end);
+                },
+                error: function (request, status, error) { // 결과 에러 콜백함수
+                    console.log(error)
+                }
+            })
+            return map;
+        }
+
+        //알림설정 값 저장
+        function insert(idx) {
+            const start = $("#start" + idx).val();
+            const end = $("#end" + idx).val();
+
+            if (start == "" || end == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '알림시간을 입력해주세요.'
+
+                })
+                return false;
             }
-        })
-        return isChecked;
-    }
 
-    // 설정된 알람시간 불러오기
-    function getNotifyTime(time) {
-        let map = new Map();
-        $.ajax({
-            url: '<%=cp%>/getNotifyInfo',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"name": time},
-            success: function (data) {
-                map.set("from", data.start);
-                map.set("to", data.end);
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
-        })
-        return map;
-    }
+            const onList = new Array();
+            const offList = new Array();
+            $("input:checkbox[name=status" + idx + "]:checked").each(function () {
+                onList.push($(this).attr('id'));
+            });
+            $("input:checkbox[name=status" + idx + "]:not(:checked)").each(function () {
+                offList.push($(this).attr('id'));
+            });
 
-    //알림설정 값 저장
-    function insert(idx) {
-        const start = $("#start" + idx).val();
-        const end = $("#end" + idx).val();
+            $.ajax({
+                url: '<%=cp%>/saveNotification',
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: {
+                    "onList": onList,
+                    "offList": offList,
+                    "from": start,
+                    "to": end
+                },
+                success: function (data) {
 
-        if (start == "" || end == "") {
+                },
+                error: function (request, status, error) {
+                    console.log(error)
+                }
+            })
+
             Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '알림시간을 입력해주세요.'
-
+                icon: 'success',
+                title: '저장완료'
             })
-            return false;
+
         }
 
-        const onList = new Array();
-        const offList = new Array();
-        $("input:checkbox[name=status" + idx + "]:checked").each(function () {
-            onList.push($(this).attr('id'));
-        });
-        $("input:checkbox[name=status" + idx + "]:not(:checked)").each(function () {
-            offList.push($(this).attr('id'));
-        });
+        //시작 시간이 종료시간보다 클때 endTime 변경
+        //TimePicker 객체에서 아이디->인덱스 추출
+        function changeEndTime(obj) {
+            let objId = obj.ele[0].id;               //console.log(objId) -> start0
+            let idx = objId.replace(/[^0-9]/g, ''); //console.log(idx) -> 0
 
-        $.ajax({
-            url: '<%=cp%>/saveNotification',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: {
-                "onList":onList,
-                "offList":offList,
-                "from":start,
-                "to":end
-            },
-            success: function (data) {
+            let stime = $('#start' + idx).val();
+            let etime = $('#end' + idx).val();
 
-            },
-            error: function (request, status, error) {
-                console.log(error)
+            if (stime > etime) {
+                swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: 'From 시간 보다 적은 시간을 입력하실 수 없습니다.'
+                })
+                $('#end' + idx).val(stime);
             }
-        })
-
-        Swal.fire({
-            icon: 'success',
-            title: '저장완료'
-        })
-
-    }
-
-    //시작 시간이 종료시간보다 클때 endTime 변경
-    //TimePicker 객체에서 아이디->인덱스 추출
-    function changeEndTime(obj) {
-        let objId = obj.ele[0].id;               //console.log(objId) -> start0
-        let idx = objId.replace(/[^0-9]/g, ''); //console.log(idx) -> 0
-
-        let stime = $('#start' + idx).val();
-        let etime = $('#end' + idx).val();
-
-        if (stime > etime) {
-            swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: 'From 시간 보다 적은 시간을 입력하실 수 없습니다.'
-            })
-            $('#end' + idx).val(stime);
         }
-    }
 
-    //임시로 설정한값 삭제후 다시 생성
-    function cancel(idx) {
-        $('#alarm' + idx).empty();
-        $('#items' + idx).empty();
+        //임시로 설정한값 삭제후 다시 생성
+        function cancel(idx) {
+            $('#alarm' + idx).empty();
+            $('#items' + idx).empty();
 
-        placeMake($("#place" + idx).text(), idx);
-        $('#start' + idx).chungTimePicker({viewType: 1});
-        $('#end' + idx).chungTimePicker({viewType: 1});
-    }
-</script>
+            placeMake($("#place" + idx).text(), idx);
+            $('#start' + idx).chungTimePicker({viewType: 1});
+            $('#end' + idx).chungTimePicker({viewType: 1});
+        }
+    </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

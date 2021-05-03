@@ -189,8 +189,8 @@
                                 <th width="10%">순번</th>
                                 <th width="20%">측정 값</th>
                                 <th width="20%">관리등급</th>
-                                <th width="20%">모니터링</th>
-                                <th width="30%">시간</th>
+                                <th width="20%">모니터링 여부</th>
+                                <th width="30%">업데이트 시간</th>
                             </tr>
                             </thead>
                             <tbody id="informationBody">
@@ -220,9 +220,13 @@
         search();
     });
 
-    function addTable(){
+    function addTable(reference){
         $('#information').DataTable().clear();
         $('#information').DataTable().destroy();
+
+        const management = reference.get("management");
+        const company = reference.get("company");
+        const legal = reference.get("legal");
 
         $.ajax({
             url: '<%=cp%>/searchInformatin',
@@ -237,6 +241,7 @@
             },
             success : function(data) {
                 const tbody = document.getElementById('informationBody');
+
                 for(let i=0; i<data.length; i++){
                     const row = tbody.insertRow( tbody.rows.length );
                     const cell1 = row.insertCell(0);
@@ -246,13 +251,17 @@
                     const cell5 = row.insertCell(4);
                     cell1.innerHTML = i+1;
                     cell2.innerHTML = data[i].value.toFixed(2);
-
                     // 정상, 위험, 경고 값 관리해주는 테이블 만들어서 테이블에서 값 읽어와서 계산하는걸로 수정
+
+                    let value = data[i].value.toFixed(2);
+
                     let grade = '정상';
-                    if(data[i].value>=18){
-                        grade = '<div class="text-warning">경고</div>';
-                    } else if(data[i].value>=15){
-                        grade = '<div class="text-danger">위험</div>';
+                    if(value > legal){
+                        grade = '<div class="bg-danger text-light">법적기준 초과</div>';
+                    } else if(value > company){
+                        grade = '<div class="bg-warning text-light">사내기준 초과</div>';
+                    } else if(value > management){
+                        grade = '<div class="bg-success text-light">관리기준 초과</div>';
                     }
 
                     cell3.innerHTML = grade;
@@ -462,113 +471,179 @@
                         text: '검색 결과가 없습니다.'
                     })
                     return false;
+                }else{
+                    const reference = getReferenceValue(item);
+                    addChart(data, category, reference);
+                    addTable(reference);
                 }
-
-                const options = {
-                    series: [{
-                        name:category,
-                        data: data
-                    }],
-                    chart: {
-                        id: 'chart2',
-                        type: 'line',
-                        height: 350,
-                        toolbar: {
-                            show: true,
-                            tools: {
-                                download:true
-                            }
-                        }
-                    },
-                    colors: ['#546E7A'],
-                    stroke: {
-                        width: 3
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    fill: {
-                        opacity: 1,
-                    },
-                    markers: {
-                        size: 0
-                    },
-                    xaxis: {
-                        type: 'datetime',
-                        labels:{
-                            datetimeUTC:false
-                        }
-                    },
-                    yaxis:{
-                        labels:{
-                            formatter: function(value){
-                                return value.toFixed(2);
-                            }
-                        }
-                    }
-                };
-
-                const chart = new ApexCharts(document.querySelector("#chart-line2"), options);
-                chart.render();
-
-                // 여기 문제
-                const optionsLine = {
-                    series: [{
-                        data: data
-                    }],
-                    chart: {
-                        id: 'chart1',
-                        height: 150,
-                        type: 'area',
-                        brush:{
-                            target: 'chart2',
-                            enabled: true
-                        },
-                        selection: {
-                            enabled: true,
-                            xaxis: {
-                                type: 'datetime',
-                                labels:{
-                                    datetimeUTC:false
-                                }
-                            }
-                        },
-                    },
-                    colors: ['#008FFB'],
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            opacityFrom: 0.91,
-                            opacityTo: 0.1,
-                        }
-                    },
-                    xaxis: {
-                        type: 'datetime',
-                        labels:{
-                            datetimeUTC:false
-                        },
-                        tooltip: {
-                            enabled: false
-                        }
-                    },
-                    yaxis: {
-                        tickAmount: 2,
-                        labels:{
-                            formatter: function(value){
-                                return value.toFixed(2);
-                            }
-                        }
-                    }
-                };
-                const chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
-                chartLine.render();
-
             },
             error : function(request, status, error) {
                 console.log(error)
             }
         })
-        addTable();
+    }
+
+    function getReferenceValue(tableName){
+        let reference = new Map();
+        $.ajax({
+            url:'<%=cp%>/getReferenceValue',
+            dataType: 'json',
+            data:  {"tableName": tableName},
+            async: false,
+            success: function (data) {
+                reference.set("management",data.management_standard);
+                reference.set("company",data.company_standard);
+                reference.set("legal",data.legal_standard);
+            },
+            error: function(request, status, error) {
+                console.log(error)
+            }
+        });
+        return reference;
+    }
+
+    function addChart(data, category, reference){
+        const options = {
+            series: [{
+                name: category,
+                data: data
+            }],
+            chart: {
+                id: 'chart2',
+                type: 'line',
+                height: 350,
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download:true
+                    }
+                }
+            },
+            colors: ['#546E7A'],
+            stroke: {
+                width: 3
+            },
+            dataLabels: {
+                enabled: false
+            },
+            fill: {
+                opacity: 1,
+            },
+            markers: {
+                size: 0
+            },
+            xaxis: {
+                type: 'datetime',
+                labels:{
+                    datetimeUTC:false
+                }
+            },
+            yaxis:{
+                labels:{
+                    formatter: function(value){
+                        return value.toFixed(2);
+                    }
+                }
+            },
+            annotations: {
+                yaxis: [
+                    {
+                        y: reference.get("management"),
+                        borderColor: '#00E396',
+                        label: {
+                            borderColor: '#00E396',
+                            style: {
+                                color: '#fff',
+                                background: '#00E396'
+                            },
+                            text: '관리기준',
+                            offsetX: -970
+                        }
+                    },
+                    {
+                        y: reference.get("company"),
+                        borderColor: '#FEB019',
+                        label: {
+                            borderColor: '#FEB019',
+                            style: {
+                                color: '#fff',
+                                background: '#FEB019'
+                            },
+                            text: '사내기준',
+                            offsetX: -970
+                        }
+                    },
+                    {
+                        y: reference.get("legal"),
+                        borderColor: '#FF4560',
+                        label: {
+                            borderColor: '#FF4560',
+                            style: {
+                                color: '#fff',
+                                background: '#FF4560'
+                            },
+                            text: '법적기준',
+                            offsetX: -970
+                        }
+                    }
+                ]
+            }
+        };
+
+        const chart = new ApexCharts(document.querySelector("#chart-line2"), options);
+        chart.render();
+
+        // 여기 문제
+        const optionsLine = {
+            series: [{
+                data : data
+            }],
+            chart: {
+                id: 'chart1',
+                height: 150,
+                type: 'area',
+                brush:{
+                    target: 'chart2',
+                    enabled: true
+                },
+                selection: {
+                    enabled: true,
+                    xaxis: {
+                        type: 'datetime',
+                        labels:{
+                            datetimeUTC:false
+                        }
+                    }
+                },
+            },
+            colors: ['#008FFB'],
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    opacityFrom: 0.91,
+                    opacityTo: 0.1,
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                labels:{
+                    datetimeUTC:false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            },
+            yaxis: {
+                tickAmount: 2,
+                labels:{
+                    formatter: function(value){
+                        return value.toFixed(2);
+                    }
+                }
+            }
+        };
+        const chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
+        chartLine.render();
     }
 
     function getDays(dayType){

@@ -51,7 +51,20 @@ public class MainController {
 
 
     @RequestMapping("/")
-    public String index() {
+    public String index(Model model) {
+        //선택된 센서 가져오기
+        List<YearlyEmissionsSetting> yearlyEmissions= yearlyEmissionsSettingRepository.findByStatusIsTrue();
+        model.addAttribute("yearlyEmissions", yearlyEmissions);
+
+        //선택된 센서 측정소 중복제거  List -> Set
+        List<String> placelist = new ArrayList<>();
+        for(YearlyEmissionsSetting place : yearlyEmissions){
+            placelist.add(place.getPlace());
+        }
+
+        TreeSet<String> placeSet = new TreeSet<>(placelist);
+        model.addAttribute("placelist", placeSet);
+
         return "dashboard";
     }
     @RequestMapping("/monitoring")
