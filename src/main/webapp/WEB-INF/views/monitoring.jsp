@@ -131,10 +131,10 @@
             <div class="col text-center border">
                 <div class="row p-3">
                     <div class="col">
-                        <span class="small fw-bold"><img src="../static/images/up.png" class="img">직전 데이터보다 높아진 경우</span>
+                        <span class="small fw-bold"><img src="static/images/up.png" class="img">직전 데이터보다 높아진 경우</span>
                     </div>
                     <div class="col">
-                        <span class="small fw-bold"><img src="../static/images/down.jpg" class="img">직전 데이터보다 낮아진 경우</span>
+                        <span class="small fw-bold"><img src="static/images/down.jpg" class="img">직전 데이터보다 낮아진 경우</span>
                     </div>
                     <div class="col">
                         <span class="small fw-bold"> <b>-</b> 직전 데이터와 같은 경우</span>
@@ -234,6 +234,7 @@
             draw_place_table(place_data[i], i); // 로딩되면 테이블 생성
 
         }
+        console.log(place_data);
             setTimeout(function interval_getData() { //실시간 처리위해 setTimeout
                 var date = new Date(); //현재시간
                 status_true_count =0, status_false_count = 0;
@@ -555,9 +556,9 @@
                     }
                 }
                 if(data.value < data.b5_value){
-                    $(row).find('td:eq(4)').prepend('<img src="../static/images/down.jpg" class="img">');
+                    $(row).find('td:eq(4)').prepend('<img src="static/images/down.jpg" class="img">');
                 }else if(data.value > data.b5_value){
-                    $(row).find('td:eq(4)').prepend('<img src="../static/images/up.png" class="img">');
+                    $(row).find('td:eq(4)').prepend('<img src="static/images/up.png" class="img">');
                 }else{
                     $(row).find('td:eq(4)').prepend(' <b>-</b> ');
                 }
