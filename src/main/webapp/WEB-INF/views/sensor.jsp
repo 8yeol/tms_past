@@ -49,11 +49,14 @@
     <div class="row">
 
         <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 38px; text-align: -webkit-center;">
+            <ul id="place_name">
             <c:forEach var="place" items="${place}" varStatus="cnt">
-                <button class="btn bg-lightGray rounded-0 d-block fs-3 mt-3 me-3" value="${place.name}" onclick="changePlace(value,id)" id="point${cnt.index}">
-                    측정소${cnt.index+1}</button>
+                <li class="btn bg-lightGray rounded-0 d-block fs-3 mt-3 me-3" value="${place.name}">
+                    <span>${place.name}</span>
+                </li>
                 <hr style="height: 2.5px;">
             </c:forEach>
+            </ul>
         </div>
 
         <div class="col-md-10 bg-light rounded p-0">
@@ -124,20 +127,18 @@
     var interval1, interval2;
     var sensor_data;
     $(document).ready(function () {
-        changePlace();
-    }); //ready
-
-    function changePlace(value) {
-        var place_name;
-        if(value == null){
-            place_name = "${place.get(0).name}"; // 기본값
-        }else {
-            place_name = value;
-        }
+        var place_name = "${place.get(0).name}"; // 기본값
         $('#title').text(place_name);
         getData(place_name);
-    }
+    }); //ready
 
+    /* 측정소 변경 이벤트 */
+    $("#place_name").on('click', 'li', function () {
+       var place_name = $(this).attr('value');
+       getData(place_name);
+    });
+
+    /* 차트 1시간 / 하루 이벤트 */
     $("input[name=chartRadio]").on('click' , function (){
         if(sensor_data == null){
             var temp_sensor_data = place_table.row(0).data();
@@ -147,6 +148,7 @@
         }
     });
 
+    /* 센서명 클릭 이벤트 */
     $("#place-table").on('click', 'tr', function(){
         sensor_data = place_table.row(this).data();
         getData2(sensor_data);
@@ -173,6 +175,7 @@
         var sensor_data = place_table.row(0).data();
         getData2(sensor_data);
     }
+
     function getData2(sensor_data) {
         var sensor_name = sensor_data.name;
         var sensor_time_length;
