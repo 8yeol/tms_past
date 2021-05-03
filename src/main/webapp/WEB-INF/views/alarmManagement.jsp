@@ -115,7 +115,6 @@
             success: function (data) {
                 for (let i = 0; i < data.length; i++) {
                     const tableName = data[i];
-
                     const category = findSensorCategory(tableName);
                     const checked = findNotification(tableName);
 
@@ -172,7 +171,7 @@
     function getNotifyTime(time) {
         let map = new Map();
         $.ajax({
-            url: '<%=cp%>/getNotifyTime',
+            url: '<%=cp%>/getNotifyInfo',
             type: 'POST',
             dataType: 'json',
             async: false,

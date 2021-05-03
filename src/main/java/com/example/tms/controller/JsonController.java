@@ -40,6 +40,7 @@ public class JsonController {
 // Place
 // *********************************************************************************************************************
 
+    // =================================================================================================================
     // 김규아 추가
     /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
@@ -117,12 +118,6 @@ public class JsonController {
     //김규아 수정
     @RequestMapping(value = "/getNotifyInfo")
     public Notification_Settings getNotifyInfo(@RequestParam("name") String name){
-
-        return notification_settingsRepository.findByName(name);
-    }
-
-    @RequestMapping(value = "/getNotifyTime")
-    public Notification_Settings getStartTime(@RequestParam("name") String name){
 
         return notification_settingsRepository.findByName(name);
     }
