@@ -23,7 +23,7 @@
 <style>
     .add-bg {
         background-color: #fff;
-        width: 100%;
+        width: 102%;
         position: relative;
         left: -20px;
         top: -3px;
@@ -55,7 +55,7 @@
             <p class="small m-0"> 마지막 업데이트 : <span class="small fw-bold" id="update"> </span></p>
         </div>
     </div>
-    <div class="row ms-3 mt-2 p-3 add-bg">
+    <div class="row mt-2 p-3 add-bg" style="margin-left: 5px;">
         <div class="col text-center">
             <span class="fs-5 fw-bold">측정소</span>
             <div class="btn-group w-50 ms-3">

@@ -64,7 +64,7 @@
         margin-top: 10px;
     }
     .sizing {
-        width: 1100px;
+        width: 1087px;
         height: 638px;
     }
     label {
@@ -122,12 +122,12 @@
 
     /* 미디어쿼리 */
     @media all and (max-width: 1399px) and (min-width: 1200px) {
-        .sizing {width:950px;}
+        .sizing {width:937px;}
         body {font-size: 0.8rem;}
         .search {left:260px;}
     }
     @media all and (max-width: 1199px) and (min-width: 990px) {
-        .sizing {width:800px;}
+        .sizing {width:787px;}
         body {font-size: 0.7rem;}
         .add-margin {margin-left: 5px;}
         .search {left:160px;}
@@ -135,7 +135,7 @@
     }
 
     @media all and (max-width: 989px) {
-        .sizing {width: 720px;top:120px;}
+        .sizing {width: 707px;top:120px;}
         .picker {width: 100%;}
         .add-margin {margin-left: 15px;}
         .search {left:0px;top:10px;}
@@ -143,7 +143,7 @@
         .f-sizing {font-size: 0.9rem!important;}
         .add-bg{width:720px; height: 120px;}
         #date_start, #date_end {width:120px;}
-        .down {top:-1190px; height: 110px; padding-bottom: 20px;}
+        .down {top:-1220px; width: 740px; height: 110px; padding-bottom: 20px;}
         .m-top{padding-top: 100px;}
     }
 </style>
@@ -198,7 +198,7 @@
 
     <hr class="mt-2 mb-2">
 
-    <div class="row">
+    <div class="row" style="margin-left: 1px;">
         <div class="col">
             <div class="row bg-white sizing">
                 <div class="row add-margin-top">
@@ -228,7 +228,7 @@
 
     <div class="row">
         <div class="col">
-            <div class="row bg-white m-top">
+            <div class="row bg-white m-top" style="margin-left: 1px;">
                 <div class="row ms-2">
                     <div class="col">
                         <table id="information" class="table table-striped table-bordered table-hover text-center" >

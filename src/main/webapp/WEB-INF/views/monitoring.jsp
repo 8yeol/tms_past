@@ -64,7 +64,7 @@
         </div>
     </div>
     <div class="row m-3 mt-3">
-        <div class="col bg-white m-1">
+        <div class="col bg-white" style="margin-right: 5px;">
             <div class="row">
                 <span class="fs-5 fw-bold">가동률</span>
             </div>
@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
-        <div class="col bg-white m-1">
+        <div class="col bg-white" style="margin-left: 5px;">
             <div class="row">
                 <div class="col">
                     <span class="fs-6 fw-bold">관리기준</span>
