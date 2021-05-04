@@ -23,8 +23,36 @@ public class NotificationListCustomRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<HashMap> getCount(String place, String sensor, String grade, String from_date, String to_date, String minute){
-        /* from A to B : A 부터 B까지 */
+    public List<HashMap> getCount(String place, LocalDateTime from_date, LocalDateTime to_date){
+        try{
+            if(from_date.isBefore(to_date)){
+                ProjectionOperation projectionOperation = Aggregation.project()
+                       .andInclude("place")
+                        .andInclude("up_time")
+                        .andInclude("count");
+                MatchOperation matchOperation = Aggregation.match(new Criteria()
+                            .andOperator(Criteria.where("up_time").gte(from_date).lte(to_date)
+                                    .andOperator(Criteria.where("place").is(place)
+                                    )));
+
+                SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
+
+                GroupOperation groupOperation = Aggregation
+                        .group("place"/*, "sensor", "grade", "notify"*/).count().as("count");
+                Aggregation aggregation = Aggregation.newAggregation(projectionOperation, matchOperation, sortOperation, groupOperation);
+
+                AggregationResults<HashMap> results = mongoTemplate.aggregate(aggregation, "notification_list", HashMap.class);
+                List<HashMap> result = results.getMappedResults();
+                return result;
+            }
+        }catch (Exception e){
+            log.info(e.getMessage());
+        }
+        return null;
+    }
+
+   /* public List<HashMap> getCount(String place, String sensor, String grade, String from_date, String to_date, String minute){
+        *//* from A to B : A 부터 B까지 *//*
         LocalDateTime A = null;  LocalDateTime B = null;
         if(from_date.isEmpty() && to_date.isEmpty()){
             if (minute.isEmpty()){ //from, to, minute 미입력 : 24시간 전 ~ 현재
@@ -99,7 +127,7 @@ public class NotificationListCustomRepository {
                 SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
 
                 GroupOperation groupOperation = Aggregation
-                        .group("place"/*, "sensor", "grade", "notify"*/).count().as("count");
+                        .group("place"*//*, "sensor", "grade", "notify"*//*).count().as("count");
                 Aggregation aggregation = Aggregation.newAggregation(projectionOperation, matchOperation, sortOperation, groupOperation);
 
                 AggregationResults<HashMap> results = mongoTemplate.aggregate(aggregation, "notification_list", HashMap.class);
@@ -110,7 +138,7 @@ public class NotificationListCustomRepository {
             log.info(e.getMessage());
         }
         return null;
-    }
+    }*/
 
     /* String type -> LocalDateTime format  */
     private LocalDateTime format_time(String datetime, boolean end){

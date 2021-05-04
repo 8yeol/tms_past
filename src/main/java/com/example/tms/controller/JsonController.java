@@ -280,32 +280,114 @@ public class JsonController {
                 System.out.println("2222222");
                 reference_value_settingRepository.deleteByName(referenceList.get(i));
 
+
+
+
             }
         }
     }
     @RequestMapping("getNotificationCount")
-    public List<HashMap> getCount(@RequestParam("place") String place, @RequestParam("sensor") String sensor,
+    public List<HashMap> getCount(@RequestParam("place") String place,
+                                  @RequestParam("from_date") String from_date,
+                                  @RequestParam("to_date") String to_date){
+        LocalDateTime A = null;  LocalDateTime B = null;
+        if(!from_date.isEmpty() && !to_date.isEmpty()){ // from ~ to
+            A = LocalDateTime.parse(from_date+"T00:00:00");
+            B = LocalDateTime.parse(to_date+"T00:00:00");
+        }else if(!from_date.isEmpty() && to_date.isEmpty()){
+            A = LocalDateTime.parse(from_date+"T00:00:00");
+            B = LocalDateTime.parse(from_date+"T23:59:59");
+        }
+        return notificationListCustomRepository.getCount(place, A, B);
+    }
+
+    /*@RequestMapping("getNotificationCount2")
+    public List<HashMap> getCount2(@RequestParam("place") String place, @RequestParam("sensor") String sensor,
                                          @RequestParam("grade") String grade,
                                          @RequestParam("from_date") String from_date,
                                          @RequestParam("to_date") String to_date,
                                          @RequestParam("minute") String minute){
         return notificationListCustomRepository.getCount(place, sensor, grade, from_date, to_date, minute);
-    }
+    }*/
+
+
 
     @RequestMapping(value = "saveNotiStatistics")
-    public void saveNotiStatistics(@RequestParam("place") String place,
-                                   @RequestParam("from_date") String from_date,
-                                   @RequestParam("to_date") String to_date
-                                   ) {
-//        Place place_name = placeRepository.findAll();
+    public void saveNotiStatistics() {
+        List<Place> place = placeRepository.findAll();
 
 
-        List<HashMap> list = notificationListCustomRepository.getCount(place, null, null, from_date, to_date, null);
+        LocalDate localDate = LocalDate.now();
+        log.info(localDate);
 
-        for (int i = 0; i < list.size(); i++) {
-            Notification_Statistics ns = new Notification_Statistics(place, from_date, to_date, (Integer) list.get(0).get("count"));
-            notification_statisticsRepository.save(ns);
+        int year = localDate.getYear();
+        int month = localDate.getMonthValue();
+        int day = localDate.getDayOfMonth();
+        int day_1 = day-1;
+
+//        for (int i = 0; i < list.size(); i++) {
+//            Notification_Statistics ns = new Notification_Statistics(place, from_date, to_date, (Integer) list.get(0).get("count"));
+//            notification_statisticsRepository.save(ns);
+//        }
+
+        GregorianCalendar cld = new GregorianCalendar(year, month-1, 1);
+        int lastDay = cld.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+
+        for(int m=1; m<month; m++){
+            GregorianCalendar calendar = new GregorianCalendar(year, m-1, 1);
+            int m_lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            for(int d=1; d<=m_lastDay; d++){
+                LocalDateTime A = null;  LocalDateTime B = null;
+                String mm, dd = null;
+                if(month < 10){
+                    mm = "0"+String.valueOf(m);
+                }else{
+                    mm = String.valueOf(m);
+                }
+                if(d < 10){
+                    dd = "0"+String.valueOf(d);
+                }else{
+                    dd = String.valueOf(d);
+                }
+                String from_date = year+"-"+mm+"-"+dd;
+                A = LocalDateTime.parse(from_date+"T00:00:00");
+                B = LocalDateTime.parse(from_date+"T23:59:59");
+                for(int i=0; i<place.size(); i++) {
+                    List<HashMap> list = notificationListCustomRepository.getCount(place.get(i).getName(), A, B);
+                    Notification_Statistics ns = new Notification_Statistics(place.get(i).getName(), from_date, "", (Integer) list.get(0).get("count"));
+                    notification_statisticsRepository.save(ns);
+                }
+            }
         }
+
+
+
+
+
+
+//        LocalDateTime A = null;  LocalDateTime B = null;
+//        if(!from_date.isEmpty() && !to_date.isEmpty()){ // from ~ to
+//            A = LocalDateTime.parse(from_date+"T00:00:00");
+//            B = LocalDateTime.parse(to_date+"T00:00:00");
+//        }else if(!from_date.isEmpty() && to_date.isEmpty()){
+//            A = LocalDateTime.parse(from_date+"T00:00:00");
+//            B = LocalDateTime.parse(from_date+"T23:59:59");
+//        }
+//
+//
+//        for(int i=0; i<place_name.size(); i++){
+//            List<HashMap> list = notificationListCustomRepository.getCount(place.get(i).getName(), A, B);
+//            Notification_Statistics ns = new Notification_Statistics(place.get(i).getName(), from_date, to_date, (Integer) list.get(0).get("count"));
+//            notification_statisticsRepository.save(ns);
+//        }
+
+
+       /* for(int month = 1; month <=12; month++){
+            GregorianCalendar cld = new GregorianCalendar(2021, month-1, 1);
+            log.info(month + " / " +cld.getActualMaximum(Calendar.DAY_OF_MONTH));
+        }*/
+
     }
 
 }
