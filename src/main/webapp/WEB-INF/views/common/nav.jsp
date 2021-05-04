@@ -69,6 +69,7 @@
     }
 
     .submenu { /* 하위 메뉴 스타일 설정 */
+        text-align: center;
         position: absolute;
         left: -100%;
         top: 43px;
@@ -79,7 +80,6 @@
         -moz-transition: height .3s;
         -o-transition: height .3s;
         width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
-        /*border: 1px solid red;*/
     }
     .shortSubmenu{
         position: absolute;
@@ -123,6 +123,9 @@
     }
 
     .topMenuLi:hover .short_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+        position: absolute;
+        left: -50%;
+        top: 43px;
         height: 50px; /* [변경] 높이를 32px로 설정 */
         width: 300px;
         background: #75ACFF;
@@ -131,6 +134,9 @@
     }
 
     .topMenuLi:hover .long_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+        position: absolute;
+        left: -200%;
+        top: 43px;
         height: 50px; /* [변경] 높이를 32px로 설정 */
         width: 750px;
         background: #75ACFF;

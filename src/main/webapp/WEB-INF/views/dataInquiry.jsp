@@ -67,7 +67,60 @@
         width: 1100px;
         height: 638px;
     }
+    label {
+        margin-bottom: 5px;
+    }
 
+    /* 데이터테이블 */
+    .toolbar>b {
+        font-size: 1.25rem;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        color: #333 !important;
+        border: 0px solid transparent;
+        border-radius: 50px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        color: #fff !important;
+        border: 0px;
+        background: #97bef8;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+        cursor: default;
+        color: #666 !important;
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: none
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        color: white !important;
+        border: 0px;
+        background: #254069;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+        outline: none;
+        background-color: #2b2b2b;
+        box-shadow: inset 0 0 3px #111
+    }
+
+    /* 미디어쿼리 */
     @media all and (max-width: 1399px) and (min-width: 1200px) {
         .sizing {width:950px;}
         body {font-size: 0.8rem;}
@@ -213,6 +266,17 @@
         $("#date_end").val(getDays());
         placeChange();
         search(0);
+
+        $("label>input").attr("placeholder","Search");
+
+        $("label")
+            .contents()
+            .filter(function () {
+                // get only the text nodes
+                return this.nodeType === 3 && this.nodeValue.trim() !== "";
+            }).wrap("<p />");
+
+        $("label>p").remove();
     });
 
     function addTable(reference){

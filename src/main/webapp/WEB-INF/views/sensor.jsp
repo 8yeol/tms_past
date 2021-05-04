@@ -63,6 +63,54 @@
         position: absolute;
         right: 10px;
     }
+    .buttons-excel {
+        margin-left: 10px;
+    }
+
+    /* 데이터 테이블 */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        color: #333 !important;
+        border: 0px solid transparent;
+        border-radius: 50px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        color: #fff !important;
+        border: 0px;
+        background: #97bef8;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+        cursor: default;
+        color: #666 !important;
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: none
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        color: white !important;
+        border: 0px;
+        background: #254069;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+        outline: none;
+        background-color: #2b2b2b;
+        box-shadow: inset 0 0 3px #111
+    }
 </style>
 
 
@@ -71,10 +119,10 @@
 
     <div class="row">
 
-        <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 38px; text-align: -webkit-center;">
+        <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 32px; text-align: -webkit-center;">
             <ul id="place_name">
             <c:forEach var="place" items="${place}" varStatus="cnt">
-                <li class="place-item btn bg-lightGray rounded-0 d-block fs-3 mt-3 me-3" id="${place.name}">
+                <li class="place-item btn bg-lightGray d-block fs-3 mt-3 me-3" id="${place.name}">
                     <span>${place.name}</span>
                 </li>
                 <hr style="height: 2.5px;">
@@ -85,7 +133,7 @@
         <div class="col-md-10 bg-light rounded p-0">
             <div class="d-flex justify-content-end bg-grayblue">
                 <span class="fs-7 mb-2"> 마지막 업데이트 : </span>
-                <span class="fs-5 mb-2" id="update"></span>
+                <span class="mb-2" id="update" style="margin-left: 5px;"></span>
             </div>
 
             <span class="fs-3 fw-bold d-flex justify-content-center bg-lightGray" id="title">temp</span>
@@ -108,18 +156,18 @@
 
             <div class="d-flex justify-content-between">
                 <div class="d-flex radio">
-                    <span class="me-3" id="radio_text">센서명 - 최근 1시간 자료</span>
+                    <span class="me-3" id="radio_text" style="margin-left: 10px;">센서명 - 최근 1시간 자료</span>
                     <input class="form-check-input" type="radio" name="chartRadio" id="hourRadio" checked >
                     <span class="me-2">1시간</span>
                     <input class="form-check-input" type="radio" name="chartRadio" id="dayRadio" >
                     <span>하루</span>
                 </div>
 
-                <span>* 5분 단위로 업데이트 됩니다.</span>
+                <span style="margin-right: 10px;">* 5분 단위로 업데이트 됩니다.</span>
             </div>
 
             <%-- 차트 --%>
-            <div id="chart" class=""></div>
+            <div id="chart" class="" style="margin: 0 10px;"></div>
 
             <hr>
 
