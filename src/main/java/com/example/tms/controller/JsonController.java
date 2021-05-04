@@ -5,13 +5,18 @@ import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import com.example.tms.repository.Reference_Value_SettingRepository;
 import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.*;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +33,9 @@ public class JsonController {
     final Notification_SettingsRepository notification_settingsRepository;
     final NotificationListRepository notificationListRepository;
 
-    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Reference_Value_SettingRepository sensor_infoRepository, Reference_Value_SettingRepository reference_value_settingRepository, Notification_SettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository) {
+    final MongoTemplate mongoTemplate;
+
+    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Reference_Value_SettingRepository sensor_infoRepository, Reference_Value_SettingRepository reference_value_settingRepository, Notification_SettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, MongoTemplate mongoTemplate) {
         this.placeRepository = placeRepository;
         this.placeCustomRepository = placeCustomRepository;
         this.sensorRepository = sensorRepository;
@@ -36,6 +43,7 @@ public class JsonController {
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.notification_settingsRepository = notification_settingsRepository;
         this.notificationListRepository = notificationListRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
 // *********************************************************************************************************************
@@ -68,8 +76,43 @@ public class JsonController {
      */
     @RequestMapping(value = "/notificationList", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object notificationList() {
-        return notificationListRepository.findAll();
+        /*
+        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "up_time");
+
+        SkipOperation skip = Aggregation.skip((pageNo) * 10);
+
+        LimitOperation limit = Aggregation.limit(10);
+
+        Aggregation agg = Aggregation.newAggregation(
+                sort,
+                skip,
+                limit
+        );
+
+        AggregationResults<NotificationList> results = mongoTemplate.aggregate(agg, "notification_list", NotificationList.class);
+
+        List<NotificationList> result = results.getMappedResults();
+*/
+        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "up_time");
+
+        Aggregation agg = Aggregation.newAggregation(
+                sort
+        );
+
+        AggregationResults<NotificationList> results = mongoTemplate.aggregate(agg, "notification_list", NotificationList.class);
+
+        List<NotificationList> result = results.getMappedResults();
+
+        return result;
     }
+
+    /*
+    @RequestMapping(value = "/getNotificationTotal", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getNotificationTotal() {
+
+        return notificationListRepository.count();
+    }
+    */
 
     /**
      * 등록된 전체 센서 리스트중, 모니터링 On 설정된 센서 리스트 불러오기

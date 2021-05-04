@@ -3,6 +3,7 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import com.example.tms.repository.Reference_Value_SettingRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -94,6 +95,7 @@ public class MainController {
 
     @RequestMapping("/alarm")
     public String alarm() {
+
         return "alarm";
     }
 
@@ -266,12 +268,6 @@ public class MainController {
         }
 
         SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "x");
-
-        //그룹함수
-        /*
-        GroupOperation groupBy = Aggregation.group("conv_date","type1","type2").count().as("count")
-                .sum("number").as("num_sum");
-        */
 
         Aggregation agg = Aggregation.newAggregation(
                 dateProjection,

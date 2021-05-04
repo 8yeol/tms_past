@@ -42,10 +42,9 @@
         </div>
         <div class="row">
             <div class="col p-3">
-                <table id="information" class="table table-bordered table-hover text-center" >
+                <table id="information" class="table table-bordered table-hover text-center mb-0" >
                     <thead class="add-bg-color">
                     <tr>
-                        <th>순번</th>
                         <th>측정소</th>
                         <th>알림내용</th>
                         <th>데이터</th>
@@ -60,6 +59,11 @@
                     <%--script--%>
                     </tfoot>
                 </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-end me-2" id="paging">
+                <%--script--%>
             </div>
         </div>
 
@@ -96,10 +100,34 @@
         addChart();
         addTable();
     });
-
+    let table;
+    //let TOTAL = 0, PREVIOUS_TOTAL = 0;
     function addTable(){
         $('#information').DataTable().clear();
         $('#information').DataTable().destroy();
+/*
+
+        $.ajax({
+            url: '<%=cp%>/getNotificationTotal',
+            type: 'POST',
+            dataType: 'text',
+            async: false,
+            cache: false,
+            data: {"pageNo":1},
+            success : function(data) {
+                TOTAL = data;
+            },
+            error : function(request, status, error) {
+                console.log(error)
+            }
+        })
+
+        if(TOTAL > PREVIOUS_TOTAL){
+
+        }
+*/
+
+        //paging(TOTAL, 10, 5, 1)
 
         $.ajax({
             url: '<%=cp%>/notificationList',
@@ -117,13 +145,22 @@
                     const cell3 = row.insertCell(2);
                     const cell4 = row.insertCell(3);
                     const cell5 = row.insertCell(4);
-                    const cell6 = row.insertCell(5);
-                    cell1.innerHTML = i+1;
-                    cell2.innerHTML = data[i].place;
-                    cell3.innerHTML = data[i].sensor + " 센서 " + data[i].notify;
-                    cell4.innerHTML = data[i].value.toFixed(2);
-                    cell5.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
-                    cell6.innerHTML = data[i].notify;
+
+
+                    const now = moment();
+                    const upTime = moment(new Date(data[i].up_time), 'YYYY-MM-DD HH:mm:ss');
+                    const minutes = moment.duration(now.diff(upTime)).asMinutes();
+
+                    if(minutes < 5){
+                        cell1.innerHTML = "<span class='new text-danger'>N</span> " + data[i].place;
+                    } else{
+                        cell1.innerHTML = data[i].place;
+                    }
+
+                    cell2.innerHTML = data[i].sensor + " 센서 " + data[i].notify;
+                    cell3.innerHTML = data[i].value.toFixed(2);
+                    cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
+                    cell5.innerHTML = data[i].notify;
                 }
             },
             error : function(request, status, error) {
@@ -131,10 +168,98 @@
             }
         })
 
-        $('#information').dataTable({
-            "pageLength": 8
+        table = $('#information').dataTable({
+            lengthChange : false,
+            pageLength: 10,
+            info: false,
+            order: false,
         });
     }
+/*
+    function paging(totalData, dataPerPage, pageCount, currentPage){
+
+        console.log("currentPage : " + currentPage);
+
+        const totalPage = Math.ceil(totalData/dataPerPage);    // 총 페이지 수
+        const pageGroup = Math.ceil(currentPage/pageCount);    // 페이지 그룹
+
+        console.log("pageGroup : " + pageGroup);
+
+        let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
+        if(last > totalPage)
+            last = totalPage;
+        const first = last - (pageCount-1);    // 화면에 보여질 첫번째 페이지 번호
+        const next = last+1;
+        const prev = first-1;
+
+        console.log("last : " + last);
+        console.log("first : " + first);
+        console.log("next : " + next);
+        console.log("prev : " + prev);
+
+        let html = "";
+
+        if(prev > 0)
+            html += "<a href=# id='prev'><</a> ";
+
+        for(let i=first; i <= last; i++){
+            html += "<a href='#' id=" + i + ">" + i + "</a> ";
+        }
+
+        if(last < totalPage)
+            html += "<a href=# id='next'>></a>";
+
+        $("#paging").html(html);    // 페이지 목록 생성
+        $("#paging a").css("color", "black");
+        $("#paging a#" + currentPage).css({"text-decoration":"none",
+            "color":"red",
+            "font-weight":"bold"});    // 현재 페이지 표시
+
+        $("#paging a").click(function(){
+            $('#information > tbody').empty();
+
+            const $item = $(this);
+            const $id = $item.attr("id");
+            let selectedPage = $item.text();
+
+            console.log(selectedPage)
+
+            if($id == "next")    selectedPage = next;
+            if($id == "prev")    selectedPage = prev;
+
+            $.ajax({
+                url: '<%=cp%>/notificationList',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                cache: false,
+                data: {"pageNo":selectedPage},
+                success : function(data) {
+                    const tbody = document.getElementById('informationBody');
+                    for(let i=0; i<data.length; i++){
+                        const row = tbody.insertRow( tbody.rows.length );
+                        const cell1 = row.insertCell(0);
+                        const cell2 = row.insertCell(1);
+                        const cell3 = row.insertCell(2);
+                        const cell4 = row.insertCell(3);
+                        const cell5 = row.insertCell(4);
+                        cell1.innerHTML = data[i].place;
+                        cell2.innerHTML = data[i].sensor + " 센서 " + data[i].notify;
+                        cell3.innerHTML = data[i].value.toFixed(2);
+                        cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
+                        cell5.innerHTML = data[i].notify;
+                    }
+                },
+                error : function(request, status, error) {
+                    console.log(error)
+                }
+            })
+
+            paging(totalData, dataPerPage, pageCount, selectedPage);
+        });
+
+    }
+*/
 
     function addChart(){
         const options = {
