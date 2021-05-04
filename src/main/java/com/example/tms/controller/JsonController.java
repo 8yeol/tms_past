@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -262,16 +263,17 @@ public class JsonController {
     public void saveNotiStatistics(@RequestParam("place") String place,
                                    @RequestParam("from_date") String from_date,
                                    @RequestParam("to_date") String to_date
-                                   ){
+                                   ) {
 //        Place place_name = placeRepository.findAll();
 
 
         List<HashMap> list = notificationListCustomRepository.getCount(place, null, null, from_date, to_date, null);
 
-        for(int i=0; i<list.size(); i++){
-            Notification_Statistics ns = new Notification_Statistics(place, from_date, to_date, (Integer)list.get(0).get("count"));
+        for (int i = 0; i < list.size(); i++) {
+            Notification_Statistics ns = new Notification_Statistics(place, from_date, to_date, (Integer) list.get(0).get("count"));
             notification_statisticsRepository.save(ns);
         }
+    }
 
     //측정소 삭제
     @RequestMapping(value = "/removePlace")
