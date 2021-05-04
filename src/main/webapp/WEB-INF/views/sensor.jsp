@@ -166,7 +166,7 @@
                     <input class="form-check-input" type="radio" name="chartRadio" id="hourRadio" checked >
                     <span class="me-2">1시간</span>
                     <input class="form-check-input" type="radio" name="chartRadio" id="dayRadio" >
-                    <span>하루</span>
+                    <span>24시간</span>
                 </div>
 
                 <span style="margin-right: 10px;">* 5분 단위로 업데이트 됩니다.</span>
@@ -287,7 +287,7 @@
             textTime = "1시간";
         } else{
             sensor_time_length = 1440;
-            textTime = "하루";
+            textTime = "24시간";
         }
         $("#radio_text").text(sensor_data.naming+ " - 최근 " + textTime + " 자료") ;
 
