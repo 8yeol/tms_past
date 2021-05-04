@@ -60,6 +60,7 @@ public class MainController {
         List<YearlyEmissionsSetting> setting = yearlyEmissionsSettingRepository.findByStatusIsTrue();
         List<YearlyEmissions> yEmissions = yearlyEmissionsRepository.findAll();
         List<YearlyEmissions> yearlyEmissions = new ArrayList<>();
+        //setting.get(0).getSensor().split("_")[1]
 
         //연간 배출량센서가 설정되어있는지 판단
         for (int i = 0; i < setting.size(); i++) {         /*선택된 센서*/
@@ -436,7 +437,7 @@ public class MainController {
     @RequestMapping("emissionsState")
     public void emissionsState(String sensor, boolean isCollection) {
 
-        //배출량 설정
+            //배출량 설정
         if (isCollection) {
             EmissionsSetting target = emissionsSettingRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());

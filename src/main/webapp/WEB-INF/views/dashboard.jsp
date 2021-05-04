@@ -74,8 +74,9 @@
     }
     .standard{
         text-align: right;
-        font-size: 0.8rem;
+        font-size: 0.6rem;
         margin-top: 2px;
+        padding-right: 50px;
     }
     @media all and (max-width: 1399px) and (min-width: 1200px) {
         .center-position {
