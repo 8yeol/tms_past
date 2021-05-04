@@ -1,7 +1,6 @@
 package com.example.tms.repository;
 
-import com.example.tms.entity.*;
-
+import com.example.tms.entity.NotificationList;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -11,26 +10,20 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
 @Log4j2
-public class SensorCustomRepository {
+public class NotificationListCustomRepository {
 
     final MongoTemplate mongoTemplate;
 
-    public SensorCustomRepository(MongoTemplate mongoTemplate) {
+    public NotificationListCustomRepository(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
-
-    /**
-     * @param sensor (sensor sensor)
-     * @param from_date,to_date ('', 'Year-Month-Day hh:mm:ss', 'Year-Month-Day', 'hh:mm:ss', 'hh:mm')
-     * @param minute (60 - 1hour, 1440 - 24hour, ...)
-     * @return List<Sensor> </sensor>_id, value, status, up_time
-     */
-    public List<Sensor> getSenor(String sensor, String from_date, String to_date, String minute){
+    public List<HashMap> getCount(String place, String sensor, String grade, String from_date, String to_date, String minute){
         /* from A to B : A 부터 B까지 */
         LocalDateTime A = null;  LocalDateTime B = null;
         if(from_date.isEmpty() && to_date.isEmpty()){
@@ -65,28 +58,52 @@ public class SensorCustomRepository {
                 }
             }
         }
-
-        try {
+        try{
             if(A.isBefore(B)){
-                //A.compare(B) - A<B:1,  A>B:1, A==B:0
                 ProjectionOperation projectionOperation = Aggregation.project()
+                        .and("place").as("place")
+                        .and("sensor").as("sensor")
                         .andInclude("value")
-                        .andInclude("status")
-                        .andInclude("up_time");
-                /* match - gt:>, gte:>=, lt:<, lte:<=, ne:!*/
-//        MatchOperation matchOperation = Aggregation.match(new Criteria().andOperator(Criteria.where("status").is(value)));
-                MatchOperation matchOperation = Aggregation.match(new Criteria().andOperator(Criteria.where("up_time")
-                        .gte(A).lte(B)
-                ));
-                /* sort */
+                        .andInclude("grade")
+                        .andInclude("notify")
+                        .andInclude("up_time")
+                        .andInclude("count");
+                MatchOperation matchOperation = null;
+                if(!sensor.isEmpty() && !grade.isEmpty()) {
+                    matchOperation = Aggregation.match(new Criteria()
+                        .andOperator(Criteria.where("up_time").gte(A).lte(B)
+                        .andOperator(Criteria.where("place").is(place)
+                        .andOperator(Criteria.where("sensor").is(sensor)
+                        .andOperator(Criteria.where("grade").is(Integer.valueOf(grade)))
+                        )
+                        )));
+                }else if(!sensor.isEmpty() && grade.isEmpty()){
+                    matchOperation = Aggregation.match(new Criteria()
+                        .andOperator(Criteria.where("up_time").gte(A).lte(B)
+                        .andOperator(Criteria.where("place").is(place)
+                        .andOperator(Criteria.where("sensor").is(sensor))
+                        )));
+                }else if(sensor.isEmpty() && !grade.isEmpty()){
+                    matchOperation = Aggregation.match(new Criteria()
+                        .andOperator(Criteria.where("up_time").gte(A).lte(B)
+                        .andOperator(Criteria.where("place").is(place)
+                        .andOperator(Criteria.where("grade").is(Integer.valueOf(grade)))
+                    )));
+                }else{
+                    matchOperation = Aggregation.match(new Criteria()
+                        .andOperator(Criteria.where("up_time").gte(A).lte(B)
+                        .andOperator(Criteria.where("place").is(place)
+                        )));
+                }
+//                        ));
                 SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
-                /* limit */
-//        LimitOperation limitOperation = Aggregation.limit(1);
-                /* fetch */
-                Aggregation aggregation = Aggregation.newAggregation(projectionOperation, matchOperation, sortOperation);
 
-                AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
-                List<Sensor> result = results.getMappedResults();
+                GroupOperation groupOperation = Aggregation
+                        .group("place"/*, "sensor", "grade", "notify"*/).count().as("count");
+                Aggregation aggregation = Aggregation.newAggregation(projectionOperation, matchOperation, sortOperation, groupOperation);
+
+                AggregationResults<HashMap> results = mongoTemplate.aggregate(aggregation, "notification_list", HashMap.class);
+                List<HashMap> result = results.getMappedResults();
                 return result;
             }
         }catch (Exception e){
@@ -121,28 +138,4 @@ public class SensorCustomRepository {
         }
         return null;
     }
-
-    public Sensor getSensorRecent(String sensor){
-        try{
-            ProjectionOperation projectionOperation = Aggregation.project()
-                    .andInclude("value")
-                    .andInclude("status")
-                    .andInclude("up_time");
-            /* sort */
-            SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
-            /* limit */
-            LimitOperation limitOperation = Aggregation.limit(1);
-            /* fetch */
-            Aggregation aggregation = Aggregation.newAggregation(projectionOperation, sortOperation, limitOperation);
-
-            AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
-            List<Sensor> result = results.getMappedResults();
-            return result.get(0); //-> Json -> sensor 타입으로 변경 필요
-        }catch (Exception e){
-            log.info("getSensorRecent error" + e.getMessage());
-        }
-        return null;
-    }
-
-
 }

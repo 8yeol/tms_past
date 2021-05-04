@@ -4,6 +4,7 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import com.example.tms.repository.Reference_Value_SettingRepository;
+import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,6 +24,7 @@ import java.util.List;
 
 
 @RestController
+@Log4j2
 public class JsonController {
 
     final PlaceRepository placeRepository;
@@ -32,6 +34,8 @@ public class JsonController {
     final Reference_Value_SettingRepository reference_value_settingRepository;
     final Notification_SettingsRepository notification_settingsRepository;
     final NotificationListRepository notificationListRepository;
+    final NotificationListCustomRepository notificationListCustomRepository;
+    final Notification_StatisticsRepository notification_statisticsRepository;
 
     final MongoTemplate mongoTemplate;
 
@@ -231,17 +235,43 @@ public class JsonController {
     public String getPower(@RequestParam("name") String tableName) {
         return reference_value_settingRepository.findByName(tableName).getPower();
     }
-
-    //측정소 추가
-    @RequestMapping(value = "/savePlace")
-    public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "location") String location, @RequestParam(value = "admin") String admin,
-                          @RequestParam(value = "tel") String tel) {
+    @RequestMapping(value = "savePlace")
+    public void savePlace(@RequestParam(value="name") String name, @RequestParam(value="location") String location, @RequestParam(value="admin") String admin,
+                          @RequestParam(value="tel") String tel){
         Date up_time = new Date();
         String power = "off";
         List sensor = new ArrayList();
         Place savePlace = new Place(name, location, admin, tel, power, up_time, sensor);
+
         placeRepository.save(savePlace);
     }
+
+
+
+
+    @RequestMapping("getNotificationCount")
+    public List<HashMap> getCount(@RequestParam("place") String place, @RequestParam("sensor") String sensor,
+                                         @RequestParam("grade") String grade,
+                                         @RequestParam("from_date") String from_date,
+                                         @RequestParam("to_date") String to_date,
+                                         @RequestParam("minute") String minute){
+        return notificationListCustomRepository.getCount(place, sensor, grade, from_date, to_date, minute);
+    }
+
+    @RequestMapping(value = "saveNotiStatistics")
+    public void saveNotiStatistics(@RequestParam("place") String place,
+                                   @RequestParam("from_date") String from_date,
+                                   @RequestParam("to_date") String to_date
+                                   ){
+//        Place place_name = placeRepository.findAll();
+
+
+        List<HashMap> list = notificationListCustomRepository.getCount(place, null, null, from_date, to_date, null);
+
+        for(int i=0; i<list.size(); i++){
+            Notification_Statistics ns = new Notification_Statistics(place, from_date, to_date, (Integer)list.get(0).get("count"));
+            notification_statisticsRepository.save(ns);
+        }
 
     //측정소 삭제
     @RequestMapping(value = "/removePlace")
@@ -253,4 +283,6 @@ public class JsonController {
             }
         }
     }
+
+
 }
