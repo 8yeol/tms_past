@@ -225,6 +225,7 @@
     /* 측정소 변경 이벤트 */
     $("#place_name").on('click', 'li', function () {
         var place_name = $(this).attr('id');
+        $('#title').text(place_name);
         $("#place_name li").removeClass('active');
         $(this).addClass('active');
         getData(place_name);
