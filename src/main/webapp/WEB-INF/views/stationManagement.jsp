@@ -103,27 +103,18 @@
                 <button onclick="removePlace()">삭제</button>
             </div>
             <div class="text-center">
-                <table width="100%">
-                    <tr style="border-bottom: silver solid 2px;">
-                        <th><input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)"></th>
-                        <th>측정소 명</th>
-                        <th>업데이트</th>
-                        <th>모니터링 사용</th>
-                    </tr>
+                <div style="border-bottom: silver solid 2px; display: flex;">
+                    <div><input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)"></div>
+                    <div>측정소 명</div>
+                    <div>업데이트</div>
+                    <div>모니터링 사용</div>
+                </div>
+                <div>
+                    <ul id="placeDiv" style="list-style: none; padding: 0px;">
 
-                    <c:forEach var="place" items="${place}" varStatus="status">
-                        <tr onclick="placeChange('${place.name}')" style="border-bottom: silver solid 2px;">
-                            <td><input class="form-check-input" id="${place.name}" name="place" type=checkbox
-                                       onclick="checkPlaceAll()">
-                            </td>
-                            <td>
-                                <span id="place${status.index}"><c:out value="${place.name}"/></span>
-                            </td>
-                            <td><c:out value="${place.up_time}"/></td>
-                            <td><c:out value="${place.power}"/></td>
-                        </tr>
-                    </c:forEach>
-                </table>
+                    </ul>
+                </div>
+
             </div>
         </div>
         <div class="col-3" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
@@ -173,7 +164,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button id="saveBtn" type="button" class="btn btn-primary" onclick="insertPlace()">추가</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button id="cancelBtn" type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -192,8 +183,9 @@
 </script>
 <script>
     $(document).ready(function () {
-
+        placeDiv();
         placeChange($("#place0").text());
+
 
     });
 
@@ -255,6 +247,40 @@
             checkbox.checked = placeAll.checked
         })
     }
+
+    function placeDiv() {
+        $("#placeDiv").empty();
+        $.ajax({
+            url: '<%=cp%>/getPlaceList',
+            async: false,
+            cache: false,
+            success: function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    const test = data[i];
+                    const name = test.name;
+                    const time = test.up_time;
+                    const power = test.power;
+
+                    const innerHTML = "<div style='border-bottom: silver solid 2px;' onclick=\"placeChange('" + name + "')\" >" +
+                        "<li>" +
+                        "<span><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'><span>" +
+                        "<span id='place" + i + "'>" + name + "</span>" +
+                        "<span>" + time + "</span>" +
+                        "<span>" + power + "</span>" +
+                        "</li>" +
+                        "</div>";
+
+                    $('#placeDiv').append(innerHTML);
+                }
+
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+
+    }
+
 
     //측정소 변경
     function placeChange(name) {
@@ -406,7 +432,9 @@
             title: '저장완료'
         }).then((result) => {
             if (result.isConfirmed) {
-                location.reload();
+                //location.reload();
+                document.getElementById("cancelBtn").click();
+                placeDiv();
             }
         })
     }
@@ -457,7 +485,9 @@
                     'success'
                 ).then((result) => {
                     if (result.isConfirmed) {
-                        location.reload();
+                        //location.reload();
+                        placeDiv();
+                        placeChange($("#place0").text());
                     }
                 })
 

@@ -54,6 +54,16 @@ public class JsonController {
     // 김규아 추가
 
     /**
+     * 전체 측정소 정보를 읽어오기 위한 메소드
+     *
+     * @return 전체 측정소 정보
+     */
+    @RequestMapping(value = "/getPlaceList")
+    public List<Place> getPlaceList() {
+        return placeRepository.findAll();
+    }
+
+    /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
      *
      * @param place 측정소 이름
@@ -238,17 +248,15 @@ public class JsonController {
         String power = "off";
         List sensor = new ArrayList();
         Place savePlace = new Place(name, location, admin, tel, power, up_time, sensor);
-
         placeRepository.save(savePlace);
     }
 
     //측정소 삭제
     @RequestMapping(value = "/removePlace")
-    public void removePlace(@RequestParam(value = "placeList[]", required = false) List<String> placeList) {
+    public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList) {
         if (placeList == null || "".equals(placeList)) {
         } else {
             for (int i = 0; i < placeList.size(); i++) {
-                System.out.println(placeList.size());
                 placeRepository.deleteByName(placeList.get(i));
             }
         }
