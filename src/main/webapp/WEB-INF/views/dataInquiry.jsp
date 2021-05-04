@@ -269,14 +269,14 @@
 
         $("label>input").attr("placeholder","Search");
 
-        $("label")
+        $("#information_filter label")
             .contents()
             .filter(function () {
                 // get only the text nodes
                 return this.nodeType === 3 && this.nodeValue.trim() !== "";
             }).wrap("<p />");
 
-        $("label>p").remove();
+        $("#information_filter label>p").remove();
     });
 
     function addTable(reference){
