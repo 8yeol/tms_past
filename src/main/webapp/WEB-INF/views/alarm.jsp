@@ -95,10 +95,10 @@
         <span class="fs-4 fw-bold">알림</span>
     </div>
 
-    <div class="row m-3 mt-3 bg-light ms-1">
+    <div class="row m-3 mt-3 bg-light ms-1 h-80">
         <div class="row p-3 ms-1">
             <div class="col fs-5 fw-bold">
-                알림 목록 <span class="small"> - 최근 한달 자료</span>
+                알림 목록
             </div>
             <div class="col text-end">
                 <span class="small">마지막 업데이트 : <span class="fw-bold" id="notify_info">업데이트 시간</span></span><br>
@@ -107,9 +107,10 @@
         </div>
         <div class="row">
             <div class="col p-3">
-                <table id="information" class="table table-bordered table-hover text-center mb-0" >
+                <table id="information" class="table table-bordered table-hover text-center" >
                     <thead class="add-bg-color">
                     <tr>
+                        <th>순번</th>
                         <th>측정소</th>
                         <th>알림내용</th>
                         <th>데이터</th>

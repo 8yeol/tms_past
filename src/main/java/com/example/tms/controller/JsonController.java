@@ -3,21 +3,16 @@ package com.example.tms.controller;
 
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
-import com.example.tms.repository.Reference_Value_SettingRepository;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +24,6 @@ import java.util.List;
 public class JsonController {
 
     final PlaceRepository placeRepository;
-    final PlaceCustomRepository placeCustomRepository;
     final SensorRepository sensorRepository;
     final SensorCustomRepository sensorCustomRepository;
     final Reference_Value_SettingRepository reference_value_settingRepository;
@@ -40,18 +34,21 @@ public class JsonController {
 
     final MongoTemplate mongoTemplate;
 
-    public JsonController(PlaceRepository placeRepository, PlaceCustomRepository placeCustomRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, Reference_Value_SettingRepository sensor_infoRepository, Reference_Value_SettingRepository reference_value_settingRepository, Notification_SettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, MongoTemplate mongoTemplate) {
+    public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository,
+                          Reference_Value_SettingRepository reference_value_settingRepository, Notification_SettingsRepository notification_settingsRepository,
+                          NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, Notification_StatisticsRepository notification_statisticsRepository, MongoTemplate mongoTemplate) {
         this.placeRepository = placeRepository;
-        this.placeCustomRepository = placeCustomRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.notification_settingsRepository = notification_settingsRepository;
         this.notificationListRepository = notificationListRepository;
+        this.notificationListCustomRepository = notificationListCustomRepository;
+        this.notification_statisticsRepository = notification_statisticsRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
-// *********************************************************************************************************************
+    // *********************************************************************************************************************
 // Place
 // *********************************************************************************************************************
 
