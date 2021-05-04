@@ -123,8 +123,8 @@
                 <div id="p_power" style="display: flex">
                 </div>
                 <div>
-                    <input type="button" value="추가">
-                    <input type="button" value="삭제">
+                    <button data-toggle="modal" data-target="#addReference">추가</button>
+                    <button onclick="removeReference()">삭제</button>
                 </div>
             </div>
             <table style="text-align: center; width: 100%">
@@ -165,6 +165,38 @@
             <div class="modal-footer d-flex justify-content-center">
                 <button id="saveBtn" type="button" class="btn btn-primary" onclick="insertPlace()">추가</button>
                 <button id="cancelBtn" type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- addReference -->
+<div class="modal" id="addReference" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">@@@ 센서 수정</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-evenly">
+                <div>
+                    <h4>분류</h4>
+                    <h4>한글명</h4>
+                    <h4>센서관리ID</h4>
+                    <h4>테이블명</h4>
+                </div>
+                <div>
+                    <select name="modalDropdown1" class="btn-secondary rounded-3 mdd mb-2">
+                        <option value="1">전체</option>
+                        <option value="2">먼지</option>
+                        <option value="3">아황산가스</option>
+                    </select>
+                    <input type="text" class="text-secondary d-block mb-2">
+                    <input type="text" class="text-secondary d-block mb-2">
+                    <input type="text" class="text-secondary d-block ">
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success me-5">수정</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
             </div>
         </div>
     </div>
@@ -487,6 +519,62 @@
                     if (result.isConfirmed) {
                         //location.reload();
                         placeDiv();
+                        placeChange($("#place0").text());
+                    }
+                })
+
+            }
+        })
+    }
+
+    function removeReference() {
+        const referenceList = new Array();
+        $("input:checkbox[name=item]:checked").each(function () {
+            referenceList.push($(this).attr('id'));
+        });
+        console.log(referenceList);
+        if (referenceList.length == 0) {
+
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '삭제할 측정항목을 체크해주세요.'
+
+            })
+            return false;
+        }
+
+        swal.fire({
+            title: '측정항목 삭제',
+            text: '정말 삭제하시겠습니까?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'red',
+            cancelButtonColor: 'gray',
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<%=cp%>/removeReference',
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: {"referenceList": referenceList},
+                    success: function (data) {
+
+                    },
+                    error: function (request, status, error) { // 결과 에러 콜백함수
+                        console.log(error)
+                    }
+                })
+                swal.fire(
+                    '삭제 완료',
+                    '',
+                    'success'
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        //location.reload();
                         placeChange($("#place0").text());
                     }
                 })

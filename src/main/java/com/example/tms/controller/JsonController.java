@@ -48,7 +48,7 @@ public class JsonController {
         this.mongoTemplate = mongoTemplate;
     }
 
-    // *********************************************************************************************************************
+// *********************************************************************************************************************
 // Place
 // *********************************************************************************************************************
 
@@ -143,6 +143,28 @@ public class JsonController {
     public Object getPlaceName(@RequestParam("tableName") String tableName) {
         return placeRepository.findBySensorIsIn(tableName).getName();
     }
+
+    //측정소 추가
+    @RequestMapping(value = "/savePlace")
+    public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "location") String location, @RequestParam(value = "admin") String admin,
+                          @RequestParam(value = "tel") String tel) {
+        Date up_time = new Date();
+        String power = "off";
+        List sensor = new ArrayList();
+        Place savePlace = new Place(name, location, admin, tel, power, up_time, sensor);
+        placeRepository.save(savePlace);
+    }
+
+    //측정소 삭제
+    @RequestMapping(value = "/removePlace")
+    public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList) {
+        if (placeList == null || "".equals(placeList)) {
+        } else {
+            for (int i = 0; i < placeList.size(); i++) {
+                placeRepository.deleteByName(placeList.get(i));
+            }
+        }
+    }
 // *********************************************************************************************************************
 // Sensor
 // *********************************************************************************************************************
@@ -233,20 +255,40 @@ public class JsonController {
     public String getPower(@RequestParam("name") String tableName) {
         return reference_value_settingRepository.findByName(tableName).getPower();
     }
-    @RequestMapping(value = "savePlace")
-    public void savePlace(@RequestParam(value="name") String name, @RequestParam(value="location") String location, @RequestParam(value="admin") String admin,
-                          @RequestParam(value="tel") String tel){
+
+    //측정소 상세설정 항목 추가
+    @RequestMapping(value = "/saveReference")
+    public void saveReference(@RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
         Date up_time = new Date();
+        float legal = 0.0f;
+        float management = 0.0f;
+        float company = 0.0f;
         String power = "off";
-        List sensor = new ArrayList();
-        Place savePlace = new Place(name, location, admin, tel, power, up_time, sensor);
+        //reference document 생성
+        Reference_Value_Setting saveReference = new Reference_Value_Setting(name, naming, legal, company, management, power);
+        reference_value_settingRepository.save(saveReference);
+        //place 업데이트 시간 수정
+        Place place = placeRepository.findByName(name);
+        ObjectId id = place.get_id();
 
-        placeRepository.save(savePlace);
+        Place updatePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getPower(), up_time, place.getSensor());
+        updatePlace.set_id(id);
+        placeRepository.save(updatePlace);
     }
+    //측정소 상세설정 항목 삭제
+    @RequestMapping(value = "/removeReference")
+    public void removeReference(@RequestParam(value = "referenceList[]") List<String> referenceList) {
+        System.out.println("111111");
+        if (referenceList == null || "".equals(referenceList)) {
+            System.out.println("3333");
+        } else {
+            for (int i = 0; i < referenceList.size(); i++) {
+                System.out.println("2222222");
+                reference_value_settingRepository.deleteByName(referenceList.get(i));
 
-
-
-
+            }
+        }
+    }
     @RequestMapping("getNotificationCount")
     public List<HashMap> getCount(@RequestParam("place") String place, @RequestParam("sensor") String sensor,
                                          @RequestParam("grade") String grade,
@@ -271,17 +313,5 @@ public class JsonController {
             notification_statisticsRepository.save(ns);
         }
     }
-
-    //측정소 삭제
-    @RequestMapping(value = "/removePlace")
-    public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList) {
-        if (placeList == null || "".equals(placeList)) {
-        } else {
-            for (int i = 0; i < placeList.size(); i++) {
-                placeRepository.deleteByName(placeList.get(i));
-            }
-        }
-    }
-
 
 }

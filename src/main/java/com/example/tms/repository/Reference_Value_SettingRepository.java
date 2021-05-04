@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface Reference_Value_SettingRepository extends MongoRepository<Reference_Value_Setting, ObjectId> {
     Reference_Value_Setting findByName(String name);
+
+    void deleteByName(String name);//삭제
 }
