@@ -6,6 +6,7 @@ import com.example.tms.repository.*;
 import com.example.tms.repository.Reference_Value_SettingRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,6 +55,7 @@ public class JsonController {
     public Object getPlace(@RequestParam("place") String place) {
         return placeRepository.findByName(place);
     }
+
     @RequestMapping(value = "/getPlaceSensor", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getPlaceSensor(@RequestParam("place") String place) {
         return placeRepository.findByName(place).getSensor();
@@ -178,22 +180,34 @@ public class JsonController {
 
         notification_settingsRepository.save(changeSetting);
     }
+
     // 여기까지
     @RequestMapping(value = "/getPower")
     public String getPower(@RequestParam("name") String tableName) {
         return reference_value_settingRepository.findByName(tableName).getPower();
     }
-    @RequestMapping(value = "savePlace")
-    public void savePlace(@RequestParam(value="name") String name, @RequestParam(value="location") String location, @RequestParam(value="admin") String admin,
-                          @RequestParam(value="tel") String tel){
+
+    //측정소 추가
+    @RequestMapping(value = "/savePlace")
+    public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "location") String location, @RequestParam(value = "admin") String admin,
+                          @RequestParam(value = "tel") String tel) {
         Date up_time = new Date();
         String power = "off";
         List sensor = new ArrayList();
         Place savePlace = new Place(name, location, admin, tel, power, up_time, sensor);
 
         placeRepository.save(savePlace);
-
     }
 
-
+    //측정소 삭제
+    @RequestMapping(value = "/removePlace")
+    public void removePlace(@RequestParam(value = "placeList[]", required = false) List<String> placeList) {
+        if (placeList == null || "".equals(placeList)) {
+        } else {
+            for (int i = 0; i < placeList.size(); i++) {
+                System.out.println(placeList.size());
+                placeRepository.deleteByName(placeList.get(i));
+            }
+        }
+    }
 }

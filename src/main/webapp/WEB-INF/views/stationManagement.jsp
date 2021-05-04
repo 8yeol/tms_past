@@ -100,7 +100,7 @@
             <div>
                 <span class="fw-bold">측정소 관리</span>
                 <button data-toggle="modal" data-target="#addPlace">추가</button>
-                <button data-toggle="modal" data-target="#removePlace">삭제</button>
+                <button onclick="removePlace()">삭제</button>
             </div>
             <div class="text-center">
                 <table width="100%">
@@ -113,9 +113,10 @@
 
                     <c:forEach var="place" items="${place}" varStatus="status">
                         <tr onclick="placeChange('${place.name}')" style="border-bottom: silver solid 2px;">
-                            <td><input class="form-check-input" name="place" type=checkbox onclick="checkPlaceAll()">
+                            <td><input class="form-check-input" id="${place.name}" name="place" type=checkbox
+                                       onclick="checkPlaceAll()">
                             </td>
-                            <td id="${place.name}">
+                            <td>
                                 <span id="place${status.index}"><c:out value="${place.name}"/></span>
                             </td>
                             <td><c:out value="${place.up_time}"/></td>
@@ -171,29 +172,13 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button id="saveBtn" type="button" class="btn btn-primary" onclick="insert()">추가</button>
+                <button id="saveBtn" type="button" class="btn btn-primary" onclick="insertPlace()">추가</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
 </div>
-<!-- removePlace -->
-<div class="modal" id="removePlace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">측정소 삭제</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-                <h3>정말 삭제하시겠습니까?</h3>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button id="rmBtn" type="button" class="btn btn-danger">삭제</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <script>
     //팝업창 드래그로 이동 가능
     $(function () {
@@ -201,7 +186,6 @@
     });
     //modal 팝업창 close시 form에 남아있던 데이터 리셋
     $('.modal').on('hidden.bs.modal', function (e) {
-        console.log('modal close');
         $(this).find('form')[0].reset()
     });
 
@@ -401,7 +385,7 @@
         return map;
     }
 
-    function insert() {
+    function insertPlace() {
         var form = $('#placeinfo').serialize();
 
         $.ajax({
@@ -420,8 +404,67 @@
         Swal.fire({
             icon: 'success',
             title: '저장완료'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                location.reload();
+            }
         })
     }
+
+    function removePlace() {
+        const placeList = new Array();
+        $("input:checkbox[name=place]:checked").each(function () {
+            placeList.push($(this).attr('id'));
+        });
+        if (placeList.length == 0) {
+
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '삭제할 측정소를 체크해주세요.'
+
+            })
+            return false;
+        }
+
+        swal.fire({
+            title: '측정소 삭제',
+            text: '정말 삭제하시겠습니까?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'red',
+            cancelButtonColor: 'gray',
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '<%=cp%>/removePlace',
+                    type: 'POST',
+                    async: false,
+                    cache: false,
+                    data: {"placeList": placeList},
+                    success: function (data) {
+
+                    },
+                    error: function (request, status, error) { // 결과 에러 콜백함수
+                        console.log(error)
+                    }
+                })
+                swal.fire(
+                    '삭제 완료',
+                    '',
+                    'success'
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                })
+
+            }
+        })
+    }
+
 
 </script>
 
