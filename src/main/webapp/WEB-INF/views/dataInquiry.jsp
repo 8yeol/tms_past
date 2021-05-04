@@ -67,9 +67,7 @@
         width: 1087px;
         height: 638px;
     }
-    label {
-        margin-bottom: 5px;
-    }
+
     .h-fix {
         height: 300px;
     }
@@ -121,6 +119,10 @@
         outline: none;
         background-color: #2b2b2b;
         box-shadow: inset 0 0 3px #111
+    }
+
+    #information_filter label {
+        margin-bottom: 5px;
     }
 
     /* 미디어쿼리 */
@@ -270,17 +272,6 @@
         $("#date_end").val(getDays());
         placeChange();
         search(0);
-
-        $("label>input").attr("placeholder","Search");
-
-        $("#information_filter label")
-            .contents()
-            .filter(function () {
-                // get only the text nodes
-                return this.nodeType === 3 && this.nodeValue.trim() !== "";
-            }).wrap("<p />");
-
-        $("#information_filter label>p").remove();
     });
 
     function addTable(reference){

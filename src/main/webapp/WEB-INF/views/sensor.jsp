@@ -30,44 +30,12 @@
         height: 10px;
         margin-right: 10px;
     }
-</style>
 
-<style>
-    table#sensor-table thead, table#sensor-table-time thead { /* 테이블 제목 셀 배경, 글자색 설정 */
-        background-color: #97bef8;
-        color: #fff;
+    /* 데이터테이블 */
+    .toolbar>b {
+        font-size: 1.25rem;
     }
 
-    .bg-grayblue { /* param.place 배경, 글자색 설정 */
-        background-color: #EDF2F8;
-    }
-
-    .bg-lightGray {
-        background-color: lightgrey;
-    }
-
-    ul,ol {
-        list-style: none;
-    }
-
-    #place_name>li.active {
-        background-color: #fff;
-        border-radius: 100px;
-    }
-    #place_name>li.active>span {
-        font-weight: bold;
-        color: #0d6efd;
-    }
-
-    .pos-a {
-        position: absolute;
-        right: 10px;
-    }
-    .buttons-excel {
-        margin-left: 10px;
-    }
-
-    /* 데이터 테이블 */
     .dataTables_wrapper .dataTables_paginate .paginate_button {
         box-sizing: border-box;
         display: inline-block;
@@ -111,6 +79,44 @@
         background-color: #2b2b2b;
         box-shadow: inset 0 0 3px #111
     }
+
+</style>
+
+<style>
+    table#sensor-table thead, table#sensor-table-time thead { /* 테이블 제목 셀 배경, 글자색 설정 */
+        background-color: #97bef8;
+        color: #fff;
+    }
+
+    .bg-grayblue { /* param.place 배경, 글자색 설정 */
+        background-color: #EDF2F8;
+    }
+
+    .bg-lightGray {
+        background-color: lightgrey;
+    }
+
+    ul,ol {
+        list-style: none;
+    }
+
+    #place_name>li.active {
+        background-color: #fff;
+        border-radius: 100px;
+    }
+    #place_name>li.active>span {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+
+    .pos-a {
+        position: absolute;
+        right: 10px;
+    }
+    .buttons-excel {
+        margin-left: 10px;
+    }
+
 </style>
 
 
