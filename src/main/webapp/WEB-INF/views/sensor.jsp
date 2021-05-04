@@ -26,8 +26,8 @@
         color: #fff;
     }
     .img{
-        width: 20px;
-        height: 20px;
+        width: 10px;
+        height: 10px;
         margin-right: 10px;
     }
 </style>
@@ -721,8 +721,8 @@
             yaxis: {
                 tickAmount: 2,
                 decimalsInFloat: 2, //소수점아래
-                min: min, //최소
-                max: max //최대
+                // min: min, //최소
+                // max: max //최대
             },
             xaxis: {
                 type: 'datetime',

@@ -28,8 +28,8 @@
         border-right-width: 1px;
     }
     .img{
-        width: 20px;
-        height: 20px;
+        width: 10px;
+        height: 10px;
         margin-right: 10px;
     }
 </style>
