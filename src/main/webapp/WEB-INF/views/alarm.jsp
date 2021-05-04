@@ -23,6 +23,16 @@
     .h-80{
         height: 80%;
     }
+    .new {
+        font-size: 14px;
+        color: #fff;
+        background-color: #db3535;
+        border-radius: 50px;
+        display: inline-block;
+        width: 23px;
+        height: 23px;
+        margin-right: 5px;
+    }
 </style>
 <div class="container">
 
@@ -152,7 +162,7 @@
                     const minutes = moment.duration(now.diff(upTime)).asMinutes();
 
                     if(minutes < 5){
-                        cell1.innerHTML = "<span class='new text-danger'>N</span> " + data[i].place;
+                        cell1.innerHTML = "<span class='new'>N</span> " + data[i].place;
                     } else{
                         cell1.innerHTML = data[i].place;
                     }

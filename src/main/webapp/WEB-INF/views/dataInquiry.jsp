@@ -70,6 +70,9 @@
     label {
         margin-bottom: 5px;
     }
+    .h-fix {
+        height: 300px;
+    }
 
     /* 데이터테이블 */
     .toolbar>b {
@@ -145,6 +148,7 @@
         #date_start, #date_end {width:120px;}
         .down {top:-1220px; width: 740px; height: 110px; padding-bottom: 20px;}
         .m-top{padding-top: 100px;}
+        .h-fix {height: 68px;}
     }
 </style>
 
@@ -253,7 +257,7 @@
         <div class="col-lg-2 down">
             <div class="mt-4 p-2 bg-white text-center">차트 항목 선택</div>
 
-            <div class="border p-2 bg-white h-75" id="items">
+            <div class="border p-2 bg-white h-fix" id="items">
                 <%-- script --%>
             </div>
         </div>

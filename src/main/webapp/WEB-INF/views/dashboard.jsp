@@ -74,7 +74,8 @@
     }
     .standard{
         text-align: right;
-
+        font-size: 0.8rem;
+        margin-top: 2px;
     }
     @media all and (max-width: 1399px) and (min-width: 1200px) {
         .center-position {
@@ -181,17 +182,17 @@
             </div>
         </div>
 
-        <div class="row pb-5 px-3 margin-l">
+        <div class="row pb-5 px-3 margin-l" style="margin-top: 20px;">
             <%--script--%>
             <c:forEach items="${placelist}" var="placelist" varStatus="i">
                 <div class="col">
-                    <p class="mb-3 fs-5 fw-bold">${placelist}</p>
+                    <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
                     <c:forEach items="${sensorlist}" var="emissions">
                         <c:if test="${emissions.place eq placelist}">
                             <c:set var="percent" value="${(emissions.yearlyValue*100)/(emissions.standard)}"/>
                             <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
                             <div class="row pe-3  margin-l">
-                                <div class="">
+                                <div class="fw-bold" style="margin-bottom: 2px;">
                                         ${emissions.sensor_naming}
                                 </div>
                                 <div class="col">
@@ -223,6 +224,7 @@
                         </c:if>
                     </c:forEach>
                 </div>
+                <div class="line" style="width: 1px; height: 70%; background-color: #a9a9a9; padding:0;position: relative; top: 60px;"></div>
             </c:forEach>
 
             <!--placeList == Null-->
@@ -301,6 +303,8 @@
         integrated();
         accumulate();
         excess();
+
+        $('.line').eq(2).remove();
     });
 
     // 날씨 정보 출력 (처음 로딩될 때 한번, 그 후로 매 시간마다 실행)
