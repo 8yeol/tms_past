@@ -116,14 +116,6 @@ public class JsonController {
         return result;
     }
 
-    /*
-    @RequestMapping(value = "/getNotificationTotal", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getNotificationTotal() {
-
-        return notificationListRepository.count();
-    }
-    */
-
     /**
      * 등록된 전체 센서 리스트중, 모니터링 On 설정된 센서 리스트 불러오기
      *
