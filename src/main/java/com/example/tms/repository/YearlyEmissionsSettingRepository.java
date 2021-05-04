@@ -8,8 +8,6 @@ import java.util.List;
 
 
 public interface YearlyEmissionsSettingRepository extends MongoRepository<YearlyEmissionsSetting, ObjectId> {
-
-
     YearlyEmissionsSetting findBySensor(String sensor);
     List<YearlyEmissionsSetting> findByStatusIsTrue();
 }

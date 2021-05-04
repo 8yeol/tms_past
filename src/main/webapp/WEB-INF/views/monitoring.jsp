@@ -145,7 +145,7 @@
                         <span class="small fw-bold"><img src="static/images/down.jpg" class="img">직전 데이터보다 낮아진 경우</span>
                     </div>
                     <div class="col">
-                        <span class="small fw-bold"> <b>-</b> 직전 데이터와 같은 경우</span>
+                        <span class="small fw-bold"> <b>ㅡ</b> 직전 데이터와 같은 경우</span>
                     </div>
                 </div>
             </div>
@@ -566,7 +566,7 @@
                 }else if(data.value > data.b5_value){
                     $(row).find('td:eq(4)').prepend('<img src="static/images/up.png" class="img">');
                 }else{
-                    $(row).find('td:eq(4)').prepend(' <b>-</b> ');
+                    $(row).find('td:eq(4)').prepend(' <b>ㅡ</b> ');
                 }
             },
             "language": {

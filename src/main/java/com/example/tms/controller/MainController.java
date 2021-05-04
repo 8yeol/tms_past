@@ -36,9 +36,11 @@ public class MainController {
 
     final Rank_ManagementRepository rank_managementRepository;
 
+    final YearlyEmissionsRepository yearlyEmissionsRepository;
 
     public MainController(PlaceRepository placeRepository, Reference_Value_SettingRepository reference_value_settingRepository, MongoTemplate mongoTemplate,
-                          MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository, EmissionsSettingRepository emissionsSettingRepository, YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository, Rank_ManagementRepository rank_managementRepository) {
+                          MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository, EmissionsSettingRepository emissionsSettingRepository,
+                          YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository, Rank_ManagementRepository rank_managementRepository, YearlyEmissionsRepository yearlyEmissionsRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.mongoTemplate = mongoTemplate;
@@ -47,63 +49,80 @@ public class MainController {
         this.emissionsSettingRepository = emissionsSettingRepository;
         this.yearlyEmissionsSettingRepository = yearlyEmissionsSettingRepository;
         this.rank_managementRepository = rank_managementRepository;
+        this.yearlyEmissionsRepository = yearlyEmissionsRepository;
     }
 
 
     @RequestMapping("/")
     public String index(Model model) {
-        //선택된 센서 가져오기
-        List<YearlyEmissionsSetting> yearlyEmissions= yearlyEmissionsSettingRepository.findByStatusIsTrue();
-        model.addAttribute("yearlyEmissions", yearlyEmissions);
+        //선택된 센서 (findByStatusIsTrue) , 연간 배출량 (findAll) 가져오기
+        List<YearlyEmissionsSetting> setting = yearlyEmissionsSettingRepository.findByStatusIsTrue();
+        List<YearlyEmissions> yEmissions = yearlyEmissionsRepository.findAll();
+        List<YearlyEmissions> yearlyEmissions = new ArrayList<>();
+
+        //연간 배출량센서가 설정되어있는지 판단
+        for (int i = 0; i < setting.size(); i++) {         /*선택된 센서*/
+            for(int j = 0; j<yEmissions.size(); j++) {     /*연간 배출량 센서*/
+                if (setting.get(i).getPlace().equals(yEmissions.get(j).getPlace()) &&
+                        setting.get(i).getSensor_naming().equals(yEmissions.get(j).getSensor_naming())) {
+                    yearlyEmissions.add(yEmissions.get(j));
+                }
+            }
+        }
+        model.addAttribute("sensorlist",yearlyEmissions);
 
         //선택된 센서 측정소 중복제거  List -> Set
         List<String> placelist = new ArrayList<>();
-        for(YearlyEmissionsSetting place : yearlyEmissions){
+        for (YearlyEmissionsSetting place : setting) {
             placelist.add(place.getPlace());
         }
-
         TreeSet<String> placeSet = new TreeSet<>(placelist);
         model.addAttribute("placelist", placeSet);
 
         return "dashboard";
     }
+
     @RequestMapping("/monitoring")
     public void monitoring(Model model) {
         model.addAttribute("place", placeRepository.findAll());
     }
+
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
     public void sensorInfo(Model model) {
         model.addAttribute("place", placeRepository.findAll());
     }
+
     @RequestMapping("/alarm")
     public String alarm() {
         return "alarm";
     }
+
     @RequestMapping("/sensorManagement")
-    public String sensorManagement(){
+    public String sensorManagement() {
         return "sensorManagement";
     }
+
     @RequestMapping("/alarmSetting")
-    public String alarmSetting(){
+    public String alarmSetting() {
         return "alarmSetting";
     }
 
     @RequestMapping("/setting")
-    public String setting(Model model){
+    public String setting(Model model) {
         List<Member> members = memberRepository.findAll();
         List<rank_management> rank_managements = rank_managementRepository.findAll();
-        model.addAttribute("members" , members);
+        model.addAttribute("members", members);
         model.addAttribute("rank_managements", rank_managements);
         return "setting";
     }
 
     @RequestMapping("/dataStatistics")
-    public String statistics(Model model){
+    public String statistics(Model model) {
 
         List<Place> places = placeRepository.findAll();
 
         List<String> placelist = new ArrayList<>();
-        for(Place place : places){
+        for (Place place : places) {
             placelist.add(place.getName());
         }
 
@@ -113,22 +132,22 @@ public class MainController {
     }
 
     @RequestMapping(value = "/memberJoin", method = RequestMethod.GET)
-    public String memberJoinGet(){
+    public String memberJoinGet() {
         return "memberJoin";
     }
 
     @RequestMapping(value = "/memberJoin", method = RequestMethod.POST)
     @ResponseBody
-    public void memberJoinPost(@RequestBody Member member,HttpServletResponse response) throws Exception {
+    public void memberJoinPost(@RequestBody Member member, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
         memberRepository.deleteAll();
-        for(int i=0;i < 51; i++){
+        for (int i = 0; i < 51; i++) {
             Member member1 = new Member();
-            member1.setId("testId"+i);
-            member1.setPassword((UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10));
-            member1.setTel("010-"+"12"+i+"-123"+i);
-            member1.setName("testName"+i);
-            member1.setEmail("testEmail"+i+"@dot.com");
+            member1.setId("testId" + i);
+            member1.setPassword((UUID.randomUUID().toString().replaceAll("-", "")).substring(0, 10));
+            member1.setTel("010-" + "12" + i + "-123" + i);
+            member1.setName("testName" + i);
+            member1.setEmail("testEmail" + i + "@dot.com");
             member1.setState("1");
             memberRepository.save(member1);
         }
@@ -142,13 +161,14 @@ public class MainController {
     }           // memberJoinPost
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public @ResponseBody String memberSignUp(String id, String iNumber){
+    public @ResponseBody
+    String memberSignUp(String id, String iNumber) {
         String msg = "";
         Member newMember = memberRepository.findById(id);
-        if(iNumber.equals("0")){
+        if (iNumber.equals("0")) {
             newMember.setState("0");
             msg = "가입 거절 되었습니다.";
-        }else{
+        } else {
             newMember.setState("2"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
             Date time = new Date();
             newMember.setJoined(time); // 가입승인일 설정
@@ -159,7 +179,8 @@ public class MainController {
     }           // memberSignUp
 
     @RequestMapping(value = "/gaveRank", method = RequestMethod.POST)
-    public @ResponseBody String gaveRank(String id, String value){
+    public @ResponseBody
+    String gaveRank(String id, String value) {
         Member newMember = memberRepository.findById(id);
         newMember.setState(value);
         memberRepository.save(newMember);
@@ -167,16 +188,18 @@ public class MainController {
     }           // gaveRank
 
     @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
-    public @ResponseBody String resetPassword(String id){
+    public @ResponseBody
+    String resetPassword(String id) {
         Member newMember = memberRepository.findById(id);
-        String uuid = (UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10);
+        String uuid = (UUID.randomUUID().toString().replaceAll("-", "")).substring(0, 10);
         newMember.setPassword(uuid);
         memberRepository.save(newMember);
-        return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : "+ uuid;
+        return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : " + uuid;
     }           // resetPassword
 
     @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
-    public @ResponseBody String kickMember(String id){
+    public @ResponseBody
+    String kickMember(String id) {
         memberRepository.deleteById(id);
         return "탈퇴처리 되었습니다.";
     }           // kickMember
@@ -184,7 +207,7 @@ public class MainController {
 
     @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
     @ResponseBody
-    public void rankSettingSave(@RequestBody rank_management rankManagement){
+    public void rankSettingSave(@RequestBody rank_management rankManagement) {
         rank_management newRankManagement = rank_managementRepository.findByName(rankManagement.getName());
         newRankManagement.setDashboard(rankManagement.isDashboard());
         newRankManagement.setAlarm(rankManagement.isAlarm());
@@ -196,12 +219,12 @@ public class MainController {
 
 
     @RequestMapping("/dataInquiry")
-    public String dataInquiry(Model model){
+    public String dataInquiry(Model model) {
 
         List<Place> places = placeRepository.findAll();
 
         List<String> placelist = new ArrayList<>();
-        for(Place place : places){
+        for (Place place : places) {
             placelist.add(place.getName());
         }
 
@@ -220,7 +243,7 @@ public class MainController {
 
         MatchOperation where;
 
-        if( off == true ) {
+        if (off == true) {
             // 모든 데이터 표시
             where = Aggregation.match(
                     new Criteria().andOperator(
@@ -273,7 +296,7 @@ public class MainController {
 
         MatchOperation where;
 
-        if( off == true ) {
+        if (off == true) {
             // 모든 데이터 표시
             where = Aggregation.match(
                     new Criteria().andOperator(
@@ -312,12 +335,12 @@ public class MainController {
 
     @RequestMapping(value = "/addStatisticsData", method = RequestMethod.POST)
     @ResponseBody
-    public List addStatisticsData(int year, String item){
-        int[] months = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+    public List addStatisticsData(int year, String item) {
+        int[] months = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
         List data = new ArrayList();
 
-        for(int i = 0 ; i <months.length; i++){
-            Map<String, String> map = getLastDay(year,months[i]);
+        for (int i = 0; i < months.length; i++) {
+            Map<String, String> map = getLastDay(year, months[i]);
             String from = map.get("from");
             String to = map.get("to");
             ProjectionOperation dateProjection = Aggregation.project()
@@ -328,8 +351,8 @@ public class MainController {
             MatchOperation where = Aggregation.match(
                     new Criteria().andOperator(
                             Criteria.where("up_time")
-                                    .gte(LocalDateTime.parse( from + "T00:00:00"))
-                                    .lte(LocalDateTime.parse( to + "T23:59:59"))
+                                    .gte(LocalDateTime.parse(from + "T00:00:00"))
+                                    .lte(LocalDateTime.parse(to + "T23:59:59"))
                     )
             );
 
@@ -343,9 +366,9 @@ public class MainController {
 
             AggregationResults<Map> results = mongoTemplate.aggregate(agg, item, Map.class);
             List<Map> result = results.getMappedResults();
-            if( result.size() != 0){
+            if (result.size() != 0) {
                 data.add(result.get(0).get("sum_value"));
-            } else{
+            } else {
                 data.add(null);
             }
         }
@@ -359,7 +382,7 @@ public class MainController {
 
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
-        from.set(year,  month-1, 1); //월은 -1해줘야 해당월로 인식
+        from.set(year, month - 1, 1); //월은 -1해줘야 해당월로 인식
 
         to.set(from.get(Calendar.YEAR), from.get(Calendar.MONTH), from.getActualMaximum(Calendar.DAY_OF_MONTH));
 
@@ -375,11 +398,11 @@ public class MainController {
 // =====================================================================================================================
 
     @RequestMapping(value = "/alarmManagement")
-    public String alarmManagement(Model model){
+    public String alarmManagement(Model model) {
         List<Place> places = placeRepository.findAll();
         List<String> placelist = new ArrayList<>();
 
-        for(Place place : places){
+        for (Place place : places) {
             placelist.add(place.getName());
         }
 
@@ -388,7 +411,7 @@ public class MainController {
         return "alarmManagement";
     }
 
-// =====================================================================================================================
+    // =====================================================================================================================
 // 측정소 관리페이지 (ppt-9페이지)
 //
 // =====================================================================================================================

@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -38,12 +39,15 @@
         background: #D6032B;
         display: inline-block;
     }
+
     .progress-blue {
         background-color: #0C64E8;
     }
+
     .progress-yellow {
         background-color: #DB510B;
     }
+
     .progress-red {
         background-color: #D6032B;
     }
@@ -51,29 +55,51 @@
     .margin-l {
         margin-left: 0;
     }
+
     .card-body {
         border-radius: 5px;
     }
+
     .progress-info {
         width: 200px;
     }
+
     .center-position {
         position: relative;
         left: 25%;
     }
+
     .h-px {
         height: 340px;
     }
+    .standard{
+        text-align: right;
+
+    }
     @media all and (max-width: 1399px) and (min-width: 1200px) {
-        .center-position {left:20%;}
-        .h-px {height: 365px;}
+        .center-position {
+            left: 20%;
+        }
+
+        .h-px {
+            height: 365px;
+        }
     }
+
     @media all and (max-width: 1199px) and (min-width: 990px) {
-        .center-position {left:15%;}
-        .h-px {height: 326px;}
+        .center-position {
+            left: 15%;
+        }
+
+        .h-px {
+            height: 326px;
+        }
     }
+
     @media all and (max-width: 989px) {
-        .center-position {left:3%;}
+        .center-position {
+            left: 3%;
+        }
     }
 </style>
 
@@ -93,9 +119,9 @@
         </div>
     </div>
     --%>
-     <div class="row m-3 mt-3 ms-1">
-         <span class="fs-4 fw-bold">대시보드</span>
-     </div>
+    <div class="row m-3 mt-3 ms-1">
+        <span class="fs-4 fw-bold">대시보드</span>
+    </div>
     <div class="row m-3 mt-3 bg-light ms-1 h-px">
         <div class="row p-3 h-25 margin-l">
             <div class="col fs-5 fw-bold">
@@ -155,36 +181,57 @@
             </div>
         </div>
 
-        <div class="row pb-3 px-3 margin-l">
+        <div class="row pb-5 px-3 margin-l">
             <%--script--%>
-                <c:forEach items="${placelist}" var="placelist" varStatus="i">
-                    <div class="col">
-                        <p class="mb-3 fs-5 fw-bold">${placelist}</p>
-                        <c:forEach items="${yearlyEmissions}" var="emissions">
-                            <c:if test="${emissions.place eq placelist}">
-                                    <div class="row pe-5 pb-3 margin-l">
-                                        <div class="">
-                                            ${emissions.sensor_naming}
-                                        </div>
-                                        <div class="col">
-                                            <div class="progress h-100">
-                                                <div class="progress-bar progress-red" role="progressbar" style="width: 85%;" aria-valuenow="85"
-                                                     aria-valuemin="0" aria-valuemax="100">85%
-                                                </div>
-                                            </div>
+            <c:forEach items="${placelist}" var="placelist" varStatus="i">
+                <div class="col">
+                    <p class="mb-3 fs-5 fw-bold">${placelist}</p>
+                    <c:forEach items="${sensorlist}" var="emissions">
+                        <c:if test="${emissions.place eq placelist}">
+                            <c:set var="percent" value="${(emissions.yearlyValue*100)/(emissions.standard)}"/>
+                            <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
+                            <div class="row pe-3  margin-l">
+                                <div class="">
+                                        ${emissions.sensor_naming}
+                                </div>
+                                <div class="col">
+                                    <div class="progress h-100">
+                                        <c:choose>
+                                        <c:when test="${percent le 50}">
+                                            <div class="progress-bar progress-blue" role="progressbar"
+                                                 style="width: <fmt:formatNumber value="${percent}" type="number"/>%;"
+                                        </c:when>
+                                        <c:when test="${percent le 80}">
+                                            <div class="progress-bar progress-yellow" role="progressbar"
+                                                 style="width: <fmt:formatNumber value="${percent}" type="number"/>%;"
+                                        </c:when>
+                                        <c:when test="${percent gt 80}">
+                                        <div class="progress-bar progress-red" role="progressbar"
+                                             style="width: <fmt:formatNumber value="${percent}" type="number"/>%;"
+                                        </c:when>
+                                        </c:choose>
+                                             aria-valuenow="<fmt:formatNumber value="${percent}" type="number"/>"
+                                             aria-valuemin="0" aria-valuemax="100"><fmt:formatNumber
+                                                value="${emissions.yearlyValue}" groupingUsed="true"/>
                                         </div>
                                     </div>
+                                </div>${percent}%
+                            </div>
+                            <div class="standard">
+                                    <fmt:formatNumber value="${emissions.standard}" groupingUsed="true"/>
+                            </div>
                         </c:if>
-                        </c:forEach>
-                    </div>
-                </c:forEach>
+                    </c:forEach>
+                </div>
+            </c:forEach>
 
-                <!--placeList == Null-->
-                <c:if test="${empty placelist}">
-                    <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;" >
-                        연간 배출량 누적 모니터링 설정 된 센서가 없습니다.  <br>    <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.
-                    </div>
-                </c:if>
+            <!--placeList == Null-->
+            <c:if test="${empty placelist}">
+                <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
+                    연간 배출량 누적 모니터링 설정 된 센서가 없습니다. <br>
+                    <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.
+                </div>
+            </c:if>
         </div>
 
         <div class="row text-center margin-l center-position">
@@ -295,7 +342,7 @@
     }
 
     function addExcessData() {
-        console.log (" 실행시간 : " + moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
+        console.log(" 실행시간 : " + moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
         $("#normal").empty();
         $("#caution").empty();
@@ -310,13 +357,13 @@
             async: false,
             cache: false,
             data: {},
-            success : function(data) {
-                for(let i=0; i<data.length; i++){
+            success: function (data) {
+                for (let i = 0; i < data.length; i++) {
                     let tableName = data[i].name;
                     $.ajax({
-                        url:'<%=cp%>/getSensorRecent',
+                        url: '<%=cp%>/getSensorRecent',
                         dataType: 'json',
-                        data:  {"sensor": tableName},
+                        data: {"sensor": tableName},
                         async: false,
                         success: function (data) {
                             const now = moment();
@@ -324,49 +371,49 @@
                             const minutes = moment.duration(now.diff(up_time)).asMinutes();
                             const value = (data.value).toFixed(2);
                             let place; //측정소 명
-                            if(minutes<=5){
+                            if (minutes <= 5) {
                                 $.ajax({
-                                    url:'<%=cp%>/getReferenceValue',
+                                    url: '<%=cp%>/getReferenceValue',
                                     dataType: 'json',
-                                    data:  {"tableName": tableName},
+                                    data: {"tableName": tableName},
                                     async: false,
                                     success: function (data) {
                                         $.ajax({
-                                            url:'getPlaceName',
+                                            url: 'getPlaceName',
                                             dataType: 'text',
-                                            data:  {"tableName": tableName},
+                                            data: {"tableName": tableName},
                                             async: false,
                                             success: function (data) {
                                                 place = data;
                                             },
-                                            error: function(request, status, error) {
+                                            error: function (request, status, error) {
                                                 console.log(error)
                                             }
                                         });
 
-                                        if(value > data.legal_standard){
-                                            $("#danger").append("<h5 class='card-title'>"+place+" - " +data.naming+" ["+value+"] </h5>");
-                                        } else if(value > data.company_standard){
-                                            $("#warning").append("<h5 class='card-title'>"+place+" - " +data.naming+" ["+value+"] </h5>");
-                                        } else if(value > data.management_standard){
-                                            $("#caution").append("<h5 class='card-title'>"+place+" - " +data.naming+" ["+value+"] </h5>");
-                                        } else{
-                                            $("#normal").append("<h5 class='card-title'>"+place+" - " +data.naming+" ["+value+"] </h5>");
+                                        if (value > data.legal_standard) {
+                                            $("#danger").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                        } else if (value > data.company_standard) {
+                                            $("#warning").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                        } else if (value > data.management_standard) {
+                                            $("#caution").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                        } else {
+                                            $("#normal").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         }
                                     },
-                                    error: function(request, status, error) {
+                                    error: function (request, status, error) {
                                         console.log(error)
                                     }
                                 });
                             }
                         },
-                        error: function(request, status, error) {
+                        error: function (request, status, error) {
                             console.log(error)
                         }
                     });
                 }
             },
-            error : function(request, status, error) {
+            error: function (request, status, error) {
                 console.log(error)
             }
         })

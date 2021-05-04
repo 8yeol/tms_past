@@ -486,7 +486,7 @@
                 }else if(data.value > data.b5_value){
                     $(row).find('td:eq(4)').prepend('<img src="static/images/up.png" class="img">');
                 }else{
-                    $(row).find('td:eq(4)').prepend(' <b>-</b> ');
+                    $(row).find('td:eq(4)').prepend(' <b>ㅡ</b> ');
                 }
 
             },
