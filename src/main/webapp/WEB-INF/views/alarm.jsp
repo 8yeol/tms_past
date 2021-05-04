@@ -95,10 +95,10 @@
         <span class="fs-4 fw-bold">알림</span>
     </div>
 
-    <div class="row m-3 mt-3 bg-light ms-1 h-80">
-        <div class="row p-3 ms-1">
+    <div class="row m-3 mt-3 bg-light ms-1">
+        <div class="row p-3 pb-0 ms-1">
             <div class="col fs-5 fw-bold">
-                알림 목록
+                실시간 알림 목록 <span class="small"> - 최근 일주일 자료 <a id="period"></a></span>
             </div>
             <div class="col text-end">
                 <span class="small">마지막 업데이트 : <span class="fw-bold" id="notify_info">업데이트 시간</span></span><br>
@@ -107,10 +107,9 @@
         </div>
         <div class="row">
             <div class="col p-3">
-                <table id="information" class="table table-bordered table-hover text-center" >
+                <table id="information" class="table table-bordered table-hover text-center mb-0" >
                     <thead class="add-bg-color">
                     <tr>
-                        <th>순번</th>
                         <th>측정소</th>
                         <th>알림내용</th>
                         <th>데이터</th>
@@ -186,13 +185,21 @@
         $('#information').DataTable().clear();
         $('#information').DataTable().destroy();
 
+        const today = moment(new Date()).format('YYYY-MM-DD');
+        const week = moment(new Date()).subtract(7, 'd').format('YYYY-MM-DD');
+
+        $("#period").text("( "+ week + " ~ " + today + " )");
+
         $.ajax({
             url: '<%=cp%>/notificationList',
             type: 'POST',
             dataType: 'json',
             async: false,
             cache: false,
-            data: {},
+            data: {
+                "week" : week,
+                "today" : today
+            },
             success : function(data) {
                 const tbody = document.getElementById('informationBody');
                 for(let i=0; i<data.length; i++){
@@ -237,6 +244,21 @@
             pageLength: 10,
             info: false,
             order: false,
+            language: {
+                emptyTable: "데이터가 없어요.",
+                lengthMenu: "페이지당 _MENU_ 개씩 보기",
+                info: "현재 _START_ - _END_ / _TOTAL_건",
+                infoEmpty: "데이터 없음",
+                infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
+                search: "전체검색 : ",
+                zeroRecords: "일치하는 데이터가 없어요.",
+                loadingRecords: "로딩중...",
+                processing: "잠시만 기다려 주세요...",
+                paginate: {
+                    next: "다음",
+                    previous: "이전"
+                },
+            },
         });
 
         $("#notify_info").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));

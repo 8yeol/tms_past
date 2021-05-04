@@ -8,11 +8,13 @@ import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -87,27 +89,19 @@ public class JsonController {
      * @return 전체 알람 목록
      */
     @RequestMapping(value = "/notificationList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object notificationList() {
-        /*
-        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "up_time");
-
-        SkipOperation skip = Aggregation.skip((pageNo) * 10);
-
-        LimitOperation limit = Aggregation.limit(10);
-
-        Aggregation agg = Aggregation.newAggregation(
-                sort,
-                skip,
-                limit
+    public Object notificationList(@RequestParam("week") String week, @RequestParam("today") String today) {
+        MatchOperation where = Aggregation.match(
+                new Criteria().andOperator(
+                        Criteria.where("up_time")
+                                .gte(LocalDateTime.parse(week + "T00:00:00"))
+                                .lte(LocalDateTime.parse(today + "T23:59:59"))
+                )
         );
 
-        AggregationResults<NotificationList> results = mongoTemplate.aggregate(agg, "notification_list", NotificationList.class);
-
-        List<NotificationList> result = results.getMappedResults();
-*/
         SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "up_time");
 
         Aggregation agg = Aggregation.newAggregation(
+                where,
                 sort
         );
 
