@@ -20,12 +20,14 @@
         <div class="col-xs-12 d-flex justify-content-center bg-white p-5">
             <div class="me-5">
                 <h3 class="text text-secondary">ID</h3>
+                <h3 class="text text-secondary">Password</h3>
                 <h3 class="text text-secondary">이름</h3>
                 <h3 class="text text-secondary">이메일</h3>
                 <h3 class="text text-secondary">연락처</h3>
             </div>
             <div>
                 <input class="form-control" type="text" id="id">
+                <input class="form-control" type="password" id="password">
                 <input class="form-control" type="text" id="name">
                 <input class="form-control" type="email" id="email" onkeyup="autoEmail('email',this.value)">
                 <input class="form-control" type="tel" id="tel" onkeyup="inputPhoneNumber(this)">
@@ -41,7 +43,7 @@
 
 <script>
     function join_submit() {
-        if ($("#id").val() != "" && $("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "") {
+        if ($("#id").val() != "" && $("#password").val() &&$("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "") {
             var settings = {
                 "url": "http://localhost:8090/memberJoin",
                 "method": "POST",
@@ -50,13 +52,19 @@
                     "accept": "application/json",
                     "content-type": "application/json;charset=UTF-8"
                 },
-                "data": "{\r\n    \"id\": \""+$("#id").val()+"\",\r\n    \"name\": \""+$("#name").val()+"\",\r\n    \"email\": \""+$("#email").val()+"\",\r\n    \"tel\": \""+$("#tel").val()+"\"\r\n}",
+                "data": "{\r\n    \"id\": \""+$("#id").val()+"\"," +
+                    "\r\n    \"password\": \""+$("#password").val()+"\"," +
+                    "\r\n    \"name\": \""+$("#name").val()+"\"," +
+                    "\r\n    \"email\": \""+$("#email").val()+"\"," +
+                    "\r\n    \"tel\": \""+$("#tel").val()+"\"\r\n}",
             };
             $.ajax(settings).done(function (response) {
                 if (response == "true") {
                     alert("가입신청성공!");
-                } else {
+                } else if(response == "false"){
                     alert("중복되는 ID입니다.");
+                } else {
+                    alert("가입신청실패");
                 }
                 location.reload();
             });

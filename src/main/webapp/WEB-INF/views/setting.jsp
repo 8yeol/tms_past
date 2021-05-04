@@ -591,11 +591,6 @@
     }       //rankRadioChanged
 
     function rankSettingSave(){
-        var dashboard = $('#dashBoardChk').prop("checked");
-        var alarm = $('#alarmChk').prop("checked");
-        var monitoring = $('#monitoringChk').prop("checked");
-        var statistics = $('#statisticsChk').prop("checked");
-        var setting = $('#settingChk').prop("checked");
         var settings = {
             "url": "http://localhost:8090/rankSettingSave",
             "method": "POST",
@@ -604,11 +599,11 @@
                 "content-type": "application/json;charset=UTF-8"
             },
             "data": "{\r\n    \"name\": \""+rName+"\"," +
-                "\r\n    \"dashboard\": "+dashboard+"," +
-                "\r\n    \"alarm\": "+alarm+"," +
-                "\r\n    \"monitoring\": "+monitoring+"," +
-                "\r\n    \"statistics\": "+statistics+"," +
-                "\r\n    \"setting\": "+setting+"\r\n}",
+                "\r\n    \"dashboard\": "+$('#dashBoardChk').prop("checked")+"," +
+                "\r\n    \"alarm\": "+$('#alarmChk').prop("checked")+"," +
+                "\r\n    \"monitoring\": "+$('#monitoringChk').prop("checked")+"," +
+                "\r\n    \"statistics\": "+$('#statisticsChk').prop("checked")+"," +
+                "\r\n    \"setting\": "+$('#settingChk').prop("checked")+"\r\n}",
         };
         $.ajax(settings).success(function (response) {
             alert("권한관리 설정이 저장되었습니다.");

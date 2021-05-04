@@ -3,7 +3,6 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
 import com.example.tms.repository.Reference_Value_SettingRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -55,7 +54,7 @@ public class MainController {
 
 
     @RequestMapping("/")
-    public String index(Model model) {
+    public String dashboard(Model model) {
         //선택된 센서 (findByStatusIsTrue) , 연간 배출량 (findAll) 가져오기
         List<YearlyEmissionsSetting> setting = yearlyEmissionsSettingRepository.findByStatusIsTrue();
         List<YearlyEmissions> yEmissions = yearlyEmissionsRepository.findAll();
@@ -83,7 +82,10 @@ public class MainController {
 
         return "dashboard";
     }
-
+    @RequestMapping("/accessDenied")
+    public String accessDenied() {
+        return "accessDenied";
+    }
     @RequestMapping("/monitoring")
     public void monitoring(Model model) {
         model.addAttribute("place", placeRepository.findAll());
@@ -143,35 +145,34 @@ public class MainController {
     @ResponseBody
     public void memberJoinPost(@RequestBody Member member, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
-        memberRepository.deleteAll();
-        for (int i = 0; i < 51; i++) {
+/*        memberRepository.deleteAll();
+        for(int i=0;i < 51; i++){
             Member member1 = new Member();
-            member1.setId("testId" + i);
-            member1.setPassword((UUID.randomUUID().toString().replaceAll("-", "")).substring(0, 10));
-            member1.setTel("010-" + "12" + i + "-123" + i);
-            member1.setName("testName" + i);
-            member1.setEmail("testEmail" + i + "@dot.com");
+            member1.setId("testId"+i);
+            member1.setPassword((UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10));
+            member1.setTel("010-"+"12"+i+"-123"+i);
+            member1.setName("testName"+i);
+            member1.setEmail("testEmail"+i+"@dot.com");
             member1.setState("1");
             memberRepository.save(member1);
-        }
-/*        if (!memberRepository.existsById(member.getId())) {
+        }*/
+        if (!memberRepository.existsById(member.getId())) {
             member.setState("1"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
             memberRepository.save(member);
             out.print("true");
         }else{
             out.print("false");
-        }*/
+        }
     }           // memberJoinPost
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public @ResponseBody
-    String memberSignUp(String id, String iNumber) {
+    public @ResponseBody String memberSignUp(String id, String iNumber){
         String msg = "";
         Member newMember = memberRepository.findById(id);
-        if (iNumber.equals("0")) {
+        if(iNumber.equals("0")){
             newMember.setState("0");
             msg = "가입 거절 되었습니다.";
-        } else {
+        }else{
             newMember.setState("2"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
             Date time = new Date();
             newMember.setJoined(time); // 가입승인일 설정
@@ -182,8 +183,7 @@ public class MainController {
     }           // memberSignUp
 
     @RequestMapping(value = "/gaveRank", method = RequestMethod.POST)
-    public @ResponseBody
-    String gaveRank(String id, String value) {
+    public @ResponseBody String gaveRank(String id, String value){
         Member newMember = memberRepository.findById(id);
         newMember.setState(value);
         memberRepository.save(newMember);
@@ -191,18 +191,16 @@ public class MainController {
     }           // gaveRank
 
     @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
-    public @ResponseBody
-    String resetPassword(String id) {
+    public @ResponseBody String resetPassword(String id){
         Member newMember = memberRepository.findById(id);
-        String uuid = (UUID.randomUUID().toString().replaceAll("-", "")).substring(0, 10);
+        String uuid = (UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10);
         newMember.setPassword(uuid);
         memberRepository.save(newMember);
-        return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : " + uuid;
+        return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : "+ uuid;
     }           // resetPassword
 
     @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
-    public @ResponseBody
-    String kickMember(String id) {
+    public @ResponseBody String kickMember(String id){
         memberRepository.deleteById(id);
         return "탈퇴처리 되었습니다.";
     }           // kickMember
