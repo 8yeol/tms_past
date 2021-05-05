@@ -28,7 +28,7 @@ public class MainController {
 
     final MemberRepository memberRepository;
 
-    final Notification_SettingsRepository notification_settingsRepository;
+    final Notification_Statistics_CustomRepository notification_statistics_customRepository;
 
     final EmissionsSettingRepository emissionsSettingRepository;
 
@@ -39,13 +39,13 @@ public class MainController {
     final YearlyEmissionsRepository yearlyEmissionsRepository;
 
     public MainController(PlaceRepository placeRepository, Reference_Value_SettingRepository reference_value_settingRepository, MongoTemplate mongoTemplate,
-                          MemberRepository memberRepository, Notification_SettingsRepository notification_settingsRepository, EmissionsSettingRepository emissionsSettingRepository,
+                          MemberRepository memberRepository, Notification_Statistics_CustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository,
                           YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository, Rank_ManagementRepository rank_managementRepository, YearlyEmissionsRepository yearlyEmissionsRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.mongoTemplate = mongoTemplate;
         this.memberRepository = memberRepository;
-        this.notification_settingsRepository = notification_settingsRepository;
+        this.notification_statistics_customRepository = notification_statistics_customRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
         this.yearlyEmissionsSettingRepository = yearlyEmissionsSettingRepository;
         this.rank_managementRepository = rank_managementRepository;
