@@ -265,8 +265,9 @@
             async: false,
             success: function (data) {
                 $.each(data, function (index, item) { //item (센서명)
-                    var Onoff = getPower(item);
-                    if (Onoff == "on") {
+                    console.log(item)
+                    var Monitoring = getMonitoring(item);
+                    if (Monitoring) {
                         power_on_count += 1;
                         var sensor = getSensorRecent(item); // item의 최근데이터
                         if (sensor.value == 0 || sensor.value == null) { //null 일때
@@ -293,7 +294,7 @@
                         var management_standard = sensorInfo.managementStandard;
                         var power = sensorInfo.power;
 
-                        if (status == "true") {
+                        if (status == "true") { //센서상태
                             status_true_count += 1;
                         } else {
                             status_false_count += 1;
@@ -307,8 +308,8 @@
                         if (sensor.value <= sensorInfo.companyStandard && sensor.value > sensorInfo.managementStandard) {
                             management_standard_count += 1;
                         }
-                        /* power on 출력 */
-                        if (power == "on") {
+                        /* Monitoring true 출력 */
+                        if (Monitoring) {
                             getData.push({
                                 naming: naming,
                                 name: item,
@@ -346,10 +347,10 @@
     }
 
     /* 센서명으로 최근 데이터 조회 */
-    function getPower(sensor) {
+    function getMonitoring(sensor) {
         var getData;
         $.ajax({
-            url: 'getPower',
+            url: 'getMonitoring',
             dataType: 'text',
             data: {"name": sensor},
             async: false,
@@ -359,7 +360,7 @@
             error: function (e) {
                 // console.log("getSensorRecent Error");
                 // 결과가 존재하지 않을 경우 null 처리
-                getData = "off";
+                getData = false;
             }
         }); //ajax
         return getData;

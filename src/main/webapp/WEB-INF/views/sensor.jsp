@@ -329,8 +329,8 @@
             async: false,
             success: function (data) {
                 $.each(data, function (index, item) { //item (센서명)
-                    var Onoff = getPower(item);
-                    if(Onoff == "on"){
+                    var Monitoring = getMonitoring(item);
+                    if(Monitoring){
                         var sensor = getSensorRecent(item); // item의 최근데이터
                         if(sensor.value == 0 || sensor.value == null){ //null 일때
                             sensor_value = "-"; // "-" 출력(datatable)
@@ -382,10 +382,10 @@
     }
 
     /* 센서명으로 최근 데이터 조회 */
-    function getPower(sensor){
+    function getMonitoring(sensor){
         var getData;
         $.ajax({
-            url:'getPower',
+            url:'getMonitoring',
             dataType: 'text',
             data:  {"name": sensor},
             async: false,
@@ -568,25 +568,6 @@
         return table;
     }
 
-    /* 센서명으로 최근 데이터 조회 */
-    function getPower(sensor){
-        var getData;
-        $.ajax({
-            url:'getPower',
-            dataType: 'text',
-            data:  {"name": sensor},
-            async: false,
-            success: function (data) {
-                getData = data;
-            },
-            error: function (e) {
-                // console.log("getSensorRecent Error");
-                // 결과가 존재하지 않을 경우 null 처리
-                getData = "off";
-            }
-        }); //ajax
-        return getData;
-    }
     /* draw sensor time table */
     function draw_sensor_table(sensor_data_list) {
 
