@@ -172,6 +172,12 @@ public class JsonController {
         return reference_value_settingRepository.findByName(sensor);
     }
 
+    // 김규아 추가
+    @RequestMapping(value = "/getMonitoringPlace")
+    public List<Place> getMonitoringPlace() {
+        return placeRepository.findByMonitoringIsTrue();
+    }
+
     @RequestMapping(value = "/getSensorRecent")
     public Sensor getSensorRecent(@RequestParam("sensor") String sensor) {
         return sensorCustomRepository.getSensorRecent(sensor);

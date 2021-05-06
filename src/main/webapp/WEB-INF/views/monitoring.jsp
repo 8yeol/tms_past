@@ -3,6 +3,12 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
@@ -63,9 +69,9 @@
             </div>
             <div class="row">
                 <div class="col text-center">
-                    <p class="fs-1 mb-0" id="power_text_A"></p>
+                    <p class="fs-1 mb-0" id="powerPercent"></p>
                     <hr class="m-0">
-                    <p id="power_text_B"></p>
+                    <p id="powerMore"></p>
                 </div>
                 <div class="col">
                     <p class="fs-6">정상 : <a style="text-align: right" id="status_on_text"></a></p>
@@ -182,8 +188,10 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
+
     let INTERVAL;
 
+    // 수정필요 (draw_place_info > 센서관리 구현완료되면 맞춰서 수정할 것)
     let status_true_count = 0, status_false_count = 0, power_on_count = 0, power_off_count = 0, legal_standard_count = 0, company_standard_count = 0, management_standard_count = 0;
 
     $(document).ready(function () {
@@ -191,59 +199,30 @@
         // flashing();
     });
 
-    // 모니터링 on 되어있는 측정소 명
-    function getPlace(){
-        const place_name = new Array();
+    // 센서명 클릭 이벤트 (table click > tbody click 변경)
+    $("#place_table tbody").on('click', 'tr', function () {
+        const placeName = $(this).parents('#place_table div').eq(0).children().eq(0).children().eq(0).text();
+        const sensorName = $(this).find('td').eq(0).text();
+        location.replace("/sensor?place=" + placeName + "&sensor=" + sensorName);
+    });
 
-        <c:forEach items="${place}" var="place" varStatus="status">
-            place_name.push("${place.name}");
-        </c:forEach>
-
-        return place_name;
-    }
-
-    function getData() {
-
-        const place_name = getPlace();
-
-        var place_data = new Array(); //{최근데이터, 9:59 전 데이터, 센서 정보}
-
-        for (var i = 0; i < place_name.length; i++) {
-            place_data.push(getPlaceData(place_name[i])); // 데이터 조회(최근데이터, 10분전데이터, 정보)
-            draw_place_table(place_data[i], i); // 로딩되면 테이블 생성
-
-        }
-        console.log(place_data);
-        setTimeout(function interval_getData() { //실시간 처리위해 setTimeout
-            // 위 for 문의 i가 0에서 넘어오지 않아 새로 생성
-            var place_data_recent = new Array();
-            for (var i = 0; i < place_name.length; i++) {
-                clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
-                //console.log(place_name[i] + " : " + INTERVAL + "----------------------------------------------");
-                place_data_recent.push(getPlaceData(place_name[i]));
-                for (var z = 0; z < place_data[i].length; z++) {
-                    if (place_data[i][z].up_time != place_data_recent[i][z].up_time) {
-                        place_data[i][z].b5_value = place_data_recent[i][z].b5_value;
-                        place_data[i][z].com_value = place_data_recent[i][z].com_value;
-                        place_data[i][z].value = place_data_recent[i][z].value;
-                        place_data[i][z].up_time = place_data_recent[i][z].up_time;
-                        place_data[i][z].naming = place_data[i][z].naming;
-                        place_data[i][z].name = place_data[i][z].name;
-
-                        draw_place_table(place_data[i], i);
-
-                    }
-                }
-                INTERVAL = setTimeout(interval_getData, 5000);
-            }
-            draw_place_info();
-        }, 0);
+    // 점멸 효과 element(전역변수 > 지역변수 변경)
+    function flashing() {
+        const element = $(".row ");
+        setTimeout(function flashInterval() {
+            setTimeout(function () {
+                element.css({"opacity": 0});
+            }, 0);
+            setTimeout(function () {
+                element.css({"opacity": 1});
+            }, 200); //0.2초 숨김
+            setTimeout(flashInterval, 1000); //0.8초 보여줌
+        }, 0)
     }
 
     function draw_place_info() {
-        console.log('draw place info')
-        $("#power_text_A").text(((status_true_count / (status_true_count + status_false_count)).toFixed(2) * 100).toFixed(0) + "%");
-        $("#power_text_B").text(status_true_count + " / " + (status_false_count + status_true_count));
+        $("#powerPercent").text( ((status_true_count / (status_true_count + status_false_count)).toFixed(2) * 100).toFixed(0) + "%");
+        $("#powerMore").text(status_true_count + " / " + (status_false_count + status_true_count));
         $("#status_on_text").text(status_true_count + "개");
         $("#status_off_text").text(status_false_count + "개");
         $("#power_off_text").text(power_off_count + "개");
@@ -255,21 +234,39 @@
         $("#management_standard_text_B").text(management_standard_count + " / " + (status_true_count + status_false_count));
     }
 
+    // 중복 로직 수정 (수정 필요)
+    function getData() {
+        setTimeout(function interval_getData() { //실시간 처리위한 setTimeout
+
+            status_true_count = 0, status_false_count = 0, power_on_count = 0, power_off_count = 0, legal_standard_count = 0, company_standard_count = 0, management_standard_count = 0;
+
+            const placeName = getPlace();
+            const placeData = new Array();
+            for (let i = 0; i < placeName.length; i++) {
+                clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
+                const data = getPlaceData(placeName[i])
+                draw_place_table(data, i); // 로딩되면 테이블 생성
+                placeData.push(data);
+                INTERVAL = setTimeout(interval_getData, 60000);
+            }
+            draw_place_info();
+        }, 0);
+    }
+
     /* 측정소명으로 센서명을 구하고 센서명으로 센서의 최근데이터, 10분전 데이터, 정보들을 리턴*/
     function getPlaceData(place) {
-        var getData = new Array();
+        const getData = new Array();
         $.ajax({  //측정소의 센서명을 구함
             url: 'getPlaceSensor',
             dataType: 'json',
             data: {"place": place},
             async: false,
             success: function (data) {
-                $.each(data, function (index, item) { //item (센서명)
-                    console.log(item)
-                    var Monitoring = getMonitoring(item);
-                    if (Monitoring) {
-                        power_on_count += 1;
-                        var sensor = getSensorRecent(item); // item의 최근데이터
+
+                $.each(data, function (index, item) { //item (센서명);
+                    const monitoring = getMonitoring(item);
+                    if (monitoring) {
+                        const sensor = getSensorRecent(item); // item의 최근데이터
                         if (sensor.value == 0 || sensor.value == null) { //null 일때
                             sensor_value = "-"; // "-" 출력(datatable)
                         } else {
@@ -309,7 +306,7 @@
                             management_standard_count += 1;
                         }
                         /* Monitoring true 출력 */
-                        if (Monitoring) {
+                        if (monitoring) {
                             getData.push({
                                 naming: naming,
                                 name: item,
@@ -338,57 +335,19 @@
                                        }*/
 
                 });
+
             },
             error: function () {
                 console.log("getPlaceData error");
             }
-        });//ajax
+        });
         return getData;
     }
 
-    /* 센서명으로 최근 데이터 조회 */
-    function getMonitoring(sensor) {
-        var getData;
-        $.ajax({
-            url: 'getMonitoring',
-            dataType: 'text',
-            data: {"name": sensor},
-            async: false,
-            success: function (data) {
-                getData = data;
-            },
-            error: function (e) {
-                // console.log("getSensorRecent Error");
-                // 결과가 존재하지 않을 경우 null 처리
-                getData = false;
-            }
-        }); //ajax
-        return getData;
-    }
-
-    /* 센서명으로 최근 데이터 조회 */
-    function getSensorRecent(sensor) {
-        var getData;
-        $.ajax({
-            url: 'getSensorRecent',
-            dataType: 'json',
-            data: {"sensor": sensor},
-            async: false,
-            success: function (data) {
-                getData = data;
-            },
-            error: function (e) {
-                // console.log("getSensorRecent Error");
-                // 결과가 존재하지 않을 경우 null 처리
-                getData = {value: null, status: false, up_time: null};
-            }
-        }); //ajax
-        return getData;
-    }
 
     /* 센서명으로 from, to, minute 의 조건에 맞는 from ~ to 센서의 데이터 조회 */
     function getSensor(sensor, from_date, to_date, minute) {
-        var getData = new Array();
+        let result = new Array();
         $.ajax({
             url: 'getSensor',
             dataType: 'json',
@@ -396,7 +355,7 @@
             async: false,
             success: function (data) { // from ~ to 또는 to-minute ~ now 또는 from ~ from+minute 데이터 조회
                 $.each(data, function (index, item) {
-                    getData.push({up_time: moment(item.up_time).format('YYYY-MM-DD HH:mm:ss'), value: item.value});
+                    result.push({up_time: moment(item.up_time).format('YYYY-MM-DD HH:mm:ss'), value: item.value});
                 })
             },
             error: function (e) {
@@ -404,12 +363,12 @@
                 // 조회 결과 없을 때 return [];
             }
         }); //ajax
-        return getData;
+        return result;
     }
 
     /* 센서명으로 센서정보 조회 */
     function getSensorInfo(sensor) {
-        var getData;
+        let result;
         $.ajax({
             url: 'getSensorInfo',
             dataType: 'json',
@@ -426,47 +385,75 @@
                 if (data.managementStandard == 0 || data.managementStandard == null) {
                     data.managementStandard = "-";
                 }
-                getData = data;
+                result = data;
             },
             error: function (e) {
                 // console.log("getSensorInfo Error");
                 /* 결과가 존재하지 않을 경우 센서명만 전달 */
-                getData = {
+                result = {
                     "name": sensor, "naming": sensor,
                     "legalStandard": "-", "companyStandard": "-", "managementStandard": "-", "power": "off"
                 }
             }
-        }); //ajax
-        // console.log(getData);
-        return getData;
+        });
+        return result;
     }
 
+    // 모니터링 on/off 조회
+    function getMonitoring(sensor) {
+        let result;
+        $.ajax({
+            url: 'getMonitoring',
+            dataType: 'text',
+            data: {"name": sensor},
+            async: false,
+            success: function (data) {
+                result = data;
+            },
+            error: function (e) {
+                result = false;
+            }
+        });
+        return result;
+    }
 
+    // 최근 데이터 조회
+    function getSensorRecent(sensor) {
+        let result;
+        $.ajax({
+            url: 'getSensorRecent',
+            dataType: 'json',
+            data: {"sensor": sensor},
+            async: false,
+            success: function (data) {
+                result = data;
+            },
+            error: function (e) {
+                result = {value: null, status: false, up_time: null};
+            }
+        });
+        return result;
+    }
 
+    // 모니터링 on 되어있는 측정소 명 (새로고침 없이 받아 오기 위해 ajax)
+    function getPlace(){
+        const placeName = new Array();
 
+        $.ajax({
+            url: '<%=cp%>/getMonitoringPlace',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                for(let i=0; i<data.length; i++){
+                    placeName.push(data[i].name);
+                }
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
 
-
-
-    /* 센서명 클릭 이벤트 */
-    $("#place_table table").on('click', 'tr', function () {
-        const place_div = $(this).parents('#place_table div').eq(0);
-        const place_name = place_div.children().eq(0).children().eq(0).text();
-        const sensor_naming = $(this).find('td').eq(0).text();
-        location.replace("/sensor?place=" + place_name + "&sensor=" + sensor_naming);
-    });
-
-    /* 본문 점멸 효과 */
-    function flashing() {
-        const element = $(".row ");
-        setTimeout(function flashInterval() {
-            setTimeout(function () {
-                element.css({"opacity": 0});
-            }, 0);
-            setTimeout(function () {
-                element.css({"opacity": 1});
-            }, 200); //0.2초 숨김
-            setTimeout(flashInterval, 1000); //0.8초 보여줌
-        }, 0)
+        return placeName;
     }
 
     function draw_place_table(data, index) {
@@ -481,9 +468,9 @@
             const newCeil3 = newRow.insertCell(3);
             const newCeil4 = newRow.insertCell(4);
             newCeil0.innerHTML = data[i].naming;
-            newCeil1.innerHTML = data[i].legal_standard;
-            newCeil2.innerHTML = data[i].company_standard;
-            newCeil3.innerHTML = data[i].management_standard;
+            newCeil1.innerHTML = '<div class="bg-danger text-light">'+data[i].legal_standard+'</div>';
+            newCeil2.innerHTML = '<div class="bg-warning text-light">'+data[i].company_standard+'</div>';
+            newCeil3.innerHTML = '<div class="bg-success text-light">'+data[i].management_standard+'</div>';
 
             if(data[i].value > data[i].legal_standard){
                 newCeil4.innerHTML = '<span class="text-danger fw-bold">' + fiveMinutesAgo(data[i].b5_value, data[i].value) + '</span>';
@@ -508,4 +495,5 @@
             return ' - ' + now;
         }
     }
+
 </script>
