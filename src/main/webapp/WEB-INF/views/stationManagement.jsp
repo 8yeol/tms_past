@@ -345,14 +345,14 @@
                     const power = findMonitor(tableName);
 
                     const innerHtml =
-                        "<td style='width:5%;'><input class='form-check-input' type='checkbox' id='" + tableName + "a' name='item' value='" + tableName + "' onclick='checkSelectAll()'></td>" +
-                        "<td style='width:15%;'><label class='form-check-label' for='" + tableName + "a'>" + category + "</label></td>" +
-                        "<td style='width:24%;'><label class='form-check-label' for='" + tableName + "a'>" + tableName + "</label></td>" +
+                        "<td style='width:5%;'><input class='form-check-input' type='checkbox' id='" + tableName + "' name='item' value='" + tableName + "' onclick='checkSelectAll()'></td>" +
+                        "<td style='width:15%;'><label class='form-check-label' for='" + tableName + "'>" + category + "</label></td>" +
+                        "<td style='width:24%;'><label class='form-check-label' for='" + tableName + "'>" + tableName + "</label></td>" +
                         "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' ></td>" +
                         "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "c' value='" + value.get("company") + "' ></td>" +
                         "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "m' value='" + value.get("management") + "' ></td>" +
                         "<td style='width:14%;'><label class='switch'>" +
-                        "<input id='" + tableName + "' type='checkbox' name='status' " + power + ">" +
+                        "<input id='" + tableName + "a' type='checkbox' name='status' " + power + ">" +
                         "<div class='slider round'></div>" +
                         "</label></td>";
 
