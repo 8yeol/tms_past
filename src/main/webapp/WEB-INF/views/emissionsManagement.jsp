@@ -153,13 +153,12 @@
                 </tbody>
 
             </table>
+            <!--  Standard == null -->
             <c:if test="${empty standard}">
-                <tr>
-                    <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
+                    <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;"id="nullStandard">
                         연간 배출 허용 기준이 없습니다. <br>
                         <b>추가</b> 버튼으로 허용 기준을 설정 해주세요.
                     </div>
-                </tr>
             </c:if>
         </div>
     </div>
@@ -280,7 +279,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5" onclick="insert()">추가</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancle">취소</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addCancle">취소</button>
             </div>
         </div>
     </div>
@@ -361,38 +360,27 @@
             var num = this.value.replace(rgx1, "");
             this.value = num;
         });
-
     });
 
-    //기준 추가
+    //허용 기준 추가
     function insert() {
         var unComma = $("input[name='standard']").val().replace(/,/g, '');
         $("input[name='standard']").val(unComma);
 
         var form = $('#addStandard').serialize();
-
-        $.ajax({
-            url: 'saveEmissionsStandard',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: form,
-            success: function (data) {
-                drawTable(data);
-                $("#cancle").click();
-                Swal.fire({
-                    icon: 'success',
-                    title: '추가 완료',
-                    text: '연간 배출 허용 기준이 추가되었습니다.'
-                })
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
-        });
+        standardAjax(form,"추가");
     }
 
-    //editModal 기존값 셋팅
+    //기준 수정
+    function editStandard() {
+        var unComma = $("input[name='standard']").val().replace(/,/g, '');
+        $("input[name='standard']").val(unComma);
+
+        var form = $('#editStandard').serialize();
+        standardAjax(form,"수정");
+    }
+
+    //editModal 선택값 셋팅
     function editModalSetting(obj) {
 
         var tdList = $(obj).parent().parent().children()
@@ -405,13 +393,7 @@
         $("input[name='formula']").val(tdList.eq(5).html());
     }
 
-    //기준 수정
-    function editStandard() {
-        var unComma = $("input[name='standard']").val().replace(/,/g, '');
-        $("input[name='standard']").val(unComma);
-
-        var form = $('#editStandard').serialize();
-
+    function standardAjax(form,str){
         $.ajax({
             url: 'saveEmissionsStandard',
             type: 'POST',
@@ -420,11 +402,12 @@
             data: form,
             success: function (data) {
                 drawTable(data);
+                $("#addCancle").click();
                 $("#editCancle").click();
                 Swal.fire({
                     icon: 'success',
-                    title: '수정 완료',
-                    text: '연간 배출 허용 기준이 수정되었습니다.'
+                    title: str+' 완료',
+                    text: '연간 배출 허용 기준이 '+str+'되었습니다.'
                 })
                 inputClean();
             },
@@ -436,6 +419,7 @@
 
     //테이블 모두 삭제하고 새로운 데이터로 다시 그립니다.
     function drawTable(data) {
+        $('#nullStandard').remove();
         $('#tbody').children().remove();
 
         for (i = 0; i < data.length; i++) {
