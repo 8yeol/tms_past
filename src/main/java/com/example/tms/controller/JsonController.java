@@ -142,8 +142,9 @@ public class JsonController {
                           @RequestParam(value = "tel") String tel) {
         Date up_time = new Date();
         String power = "off";
+        Boolean monitoring = false;
         List sensor = new ArrayList();
-        Place savePlace = new Place(name, location, admin, tel, power, up_time, sensor);
+        Place savePlace = new Place(name, location, admin, tel, monitoring,power, up_time, sensor);
         placeRepository.save(savePlace);
     }
 
@@ -244,8 +245,8 @@ public class JsonController {
 
     // 측정항목 상세설정 모니터링 on/off
     @RequestMapping(value = "/getMonitoring")
-    public boolean getMonitoring(@RequestParam("name") String tableName) {
-        return reference_value_settingRepository.findByName(tableName).isMonitoring();
+    public Boolean getMonitoring(@RequestParam("name") String tableName) {
+        return reference_value_settingRepository.findByName(tableName).getMonitoring();
     }
 
     //측정소 상세설정 항목 추가
@@ -254,7 +255,7 @@ public class JsonController {
         float legal = 0.0f;
         float management = 0.0f;
         float company = 0.0f;
-        boolean monitoring = false;
+        Boolean monitoring = false;
 
         //reference document 생성
         ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
@@ -263,7 +264,7 @@ public class JsonController {
         Place place = placeRepository.findByName(name);
         ObjectId id = place.get_id();
 
-        Place updatePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getPower(), new Date(), place.getSensor());
+        Place updatePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(),place.getPower(), new Date(), place.getSensor());
         updatePlace.set_id(id);
         placeRepository.save(updatePlace);
     }

@@ -14,7 +14,7 @@ public class ReferenceValueSetting {
     private Float legalStandard;//법적기준
     private Float companyStandard;//사내기준
     private Float managementStandard; //관리기준
-    private boolean monitoring; //모니터링
+    private Boolean monitoring; //모니터링
 
     @Builder
     public ReferenceValueSetting(String name, String naming, Float legalStandard, Float companyStandard, Float managementStandard, Boolean monitoring) {
@@ -74,11 +74,11 @@ public class ReferenceValueSetting {
         this.managementStandard = managementStandard;
     }
 
-    public boolean isMonitoring() {
+    public Boolean getMonitoring() {
         return monitoring;
     }
 
-    public void setMonitoring(boolean monitoring) {
+    public void setMonitoring(Boolean monitoring) {
         this.monitoring = monitoring;
     }
 

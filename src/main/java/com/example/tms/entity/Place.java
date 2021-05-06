@@ -110,11 +110,12 @@ public class Place {
     }
 
     @Builder
-    public Place(String name, String location,String admin,String tel,String power,Date up_time, List sensor){
+    public Place(String name, String location,String admin,String tel, Boolean monitoring, String power,Date up_time, List sensor){
         this.name = name;
         this.location = location;
         this.admin = admin;
         this.tel = tel;
+        this.monitoring = monitoring;
         this.power = power;
         this.up_time = up_time;
         this.sensor = sensor;
