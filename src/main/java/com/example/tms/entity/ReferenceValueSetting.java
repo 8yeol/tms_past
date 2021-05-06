@@ -9,16 +9,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ReferenceValueSetting {
     @Id
     private ObjectId _id;
-    private String managementId;
-    private String naming;
+    private String name; //테이블 명
+    private String naming; //한글명
     private Float legalStandard;//법적기준
     private Float companyStandard;//사내기준
     private Float managementStandard; //관리기준
     private Boolean monitoring; //모니터링
 
     @Builder
-    public ReferenceValueSetting(String managementId, String naming, Float legalStandard, Float companyStandard, Float managementStandard, Boolean monitoring) {
-        this.managementId = managementId;
+    public ReferenceValueSetting(String name, String naming, Float legalStandard, Float companyStandard, Float managementStandard, Boolean monitoring) {
+        this.name = name;
         this.naming = naming;
         this.legalStandard = legalStandard;
         this.companyStandard = companyStandard;
@@ -34,12 +34,12 @@ public class ReferenceValueSetting {
         this._id = _id;
     }
 
-    public String getManagementId() {
-        return managementId;
+    public String getName() {
+        return name;
     }
 
-    public void setManagementId(String managementId) {
-        this.managementId = managementId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNaming() {
@@ -86,7 +86,7 @@ public class ReferenceValueSetting {
     public String toString() {
         return "ReferenceValueSetting{" +
                 "_id=" + _id +
-                ", managementId='" + managementId + '\'' +
+                ", name='" + name + '\'' +
                 ", naming='" + naming + '\'' +
                 ", legalStandard=" + legalStandard +
                 ", companyStandard=" + companyStandard +
