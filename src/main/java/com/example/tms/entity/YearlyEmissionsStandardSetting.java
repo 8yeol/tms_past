@@ -6,13 +6,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "yearly_emissions")
-public class YearlyEmissions {
+@Document(collection = "y_emissions_standard_setting")
+public class YearlyEmissionsStandardSetting {
     @Id
     private ObjectId _id;
-    private String place;
+    private String sensorCode;
     private String sensorNaming;
-    public int standard;
-    public int yearlyValue;
-
+    private int yearlyStandard;
+    private int percent;
+    private String formula;
 }

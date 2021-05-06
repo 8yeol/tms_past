@@ -31,12 +31,12 @@ public class JsonController {
     final NotificationListRepository notificationListRepository;
     final NotificationListCustomRepository notificationListCustomRepository;
     final NotificationStatisticsRepository notification_statisticsRepository;
-
+    final YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository;
     final MongoTemplate mongoTemplate;
 
     public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository,
                           ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository,
-                          NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, NotificationStatisticsRepository notification_statisticsRepository, MongoTemplate mongoTemplate) {
+                          NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, NotificationStatisticsRepository notification_statisticsRepository, MongoTemplate mongoTemplate,YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository) {
         this.placeRepository = placeRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
@@ -45,6 +45,7 @@ public class JsonController {
         this.notificationListRepository = notificationListRepository;
         this.notificationListCustomRepository = notificationListCustomRepository;
         this.notification_statisticsRepository = notification_statisticsRepository;
+        this.yearlyEmissionsStandardRepository = yearlyEmissionsStandardRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -379,5 +380,28 @@ public class JsonController {
     @RequestMapping(value = "getNotiStatistics")
     public List<NotificationStatistics> getNotiStatics(@RequestParam("place") String place){
         return notification_statisticsRepository.findByPlace(place);
+    }
+
+    //배출기준 추가
+    @RequestMapping(value = "/saveEmissionsStandard")
+    public List saveEmissionsStandard(@RequestParam(value = "code") String code, @RequestParam(value = "sensorName") String sensorName, @RequestParam(value = "standard") int standard,@RequestParam(value = "hiddenCode" ,required=false) String hiddenCode,
+                                      @RequestParam(value = "percent") int percent, @RequestParam(value = "formula") String formula) {
+
+        YearlyEmissionsStandardSetting setting;
+
+        if(hiddenCode==null){  //추가
+            setting = new YearlyEmissionsStandardSetting();
+        }else{                 //수정
+            setting = yearlyEmissionsStandardRepository.findBySensorCode(hiddenCode);
+        }
+        setting.setSensorCode(code);
+        setting.setSensorNaming(sensorName);
+        setting.setYearlyStandard(standard);
+        setting.setPercent(percent);
+        setting.setFormula(formula);
+        yearlyEmissionsStandardRepository.save(setting);
+
+        List<YearlyEmissionsStandardSetting> standardList =  yearlyEmissionsStandardRepository.findAll();
+        return standardList;
     }
 }

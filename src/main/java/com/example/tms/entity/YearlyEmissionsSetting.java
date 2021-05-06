@@ -13,5 +13,7 @@ public class YearlyEmissionsSetting {
     private String place;
     private String sensor;
     private String sensorNaming;
+    private int standard;
+    private int yearlyValue;
     private boolean status;
 }

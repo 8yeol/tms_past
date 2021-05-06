@@ -36,11 +36,11 @@ public class MainController {
 
     final RankManagementRepository rank_managementRepository;
 
-    final YearlyEmissionsRepository yearlyEmissionsRepository;
+    final YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository;
 
     public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository, MongoTemplate mongoTemplate,
                           MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository,
-                          YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository, RankManagementRepository rank_managementRepository, YearlyEmissionsRepository yearlyEmissionsRepository) {
+                          YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository, RankManagementRepository rank_managementRepository,YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.mongoTemplate = mongoTemplate;
@@ -49,29 +49,16 @@ public class MainController {
         this.emissionsSettingRepository = emissionsSettingRepository;
         this.yearlyEmissionsSettingRepository = yearlyEmissionsSettingRepository;
         this.rank_managementRepository = rank_managementRepository;
-        this.yearlyEmissionsRepository = yearlyEmissionsRepository;
+        this.yearlyEmissionsStandardRepository = yearlyEmissionsStandardRepository;
     }
 
 
     @RequestMapping("/")
     public String dashboard(Model model) {
-        //선택된 센서 (findByStatusIsTrue) , 연간 배출량 (findAll) 가져오기
+        //선택된 센서 (findByStatusIsTrue) 가져오기
         List<YearlyEmissionsSetting> setting = yearlyEmissionsSettingRepository.findByStatusIsTrue();
-        List<YearlyEmissions> yEmissions = yearlyEmissionsRepository.findAll();
-        List<YearlyEmissions> yearlyEmissions = new ArrayList<>();
-        //setting.get(0).getSensor().split("_")[1]
 
-        //연간 배출량센서가 설정되어있는지 판단
-        for (int i = 0; i < setting.size(); i++) {         // 선택된 센서
-            for(int j = 0; j<yEmissions.size(); j++) {     // 연간 배출량 센서
-                if (setting.get(i).getPlace().equals(yEmissions.get(j).getPlace()) &&
-                        setting.get(i).getSensorNaming().equals(yEmissions.get(j).getSensorNaming())) {
-                    yearlyEmissions.add(yEmissions.get(j));
-                }
-            }
-        }
-
-        model.addAttribute("sensorlist",yearlyEmissions);
+        model.addAttribute("sensorlist",setting);
 
         //선택된 센서 측정소 중복제거  List -> Set
         List<String> placelist = new ArrayList<>();
@@ -425,10 +412,13 @@ public class MainController {
     public String emissionsManagement(Model model) {
 
         List<EmissionsSetting> emissions = emissionsSettingRepository.findAll();
-        model.addAttribute("target", emissions);
+        model.addAttribute("emissions", emissions);
 
         List<YearlyEmissionsSetting> yearlyEmissions = yearlyEmissionsSettingRepository.findAll();
-        model.addAttribute("target2", yearlyEmissions);
+        model.addAttribute("yearlyEmissions", yearlyEmissions);
+
+        List<YearlyEmissionsStandardSetting> standard =  yearlyEmissionsStandardRepository.findAll();
+        model.addAttribute("standard",standard);
 
         return "emissionsManagement";
     }

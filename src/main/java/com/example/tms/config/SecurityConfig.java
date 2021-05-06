@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin();
         http.httpBasic();
         http.exceptionHandling().accessDeniedPage("/accessDenied");
+
     }
 }
 
