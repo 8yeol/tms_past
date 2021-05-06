@@ -6,11 +6,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Log4j2
-public class Notification_Statistics_CustomRepository {
+public class NotificationStatisticsCustomRepository {
 
     final MongoTemplate mongoTemplate;
 
-    public Notification_Statistics_CustomRepository(MongoTemplate mongoTemplate) {
+    public NotificationStatisticsCustomRepository(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 }

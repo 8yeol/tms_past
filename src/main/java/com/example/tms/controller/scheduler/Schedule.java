@@ -1,8 +1,8 @@
 package com.example.tms.controller.scheduler;
 
 import com.example.tms.entity.NotificationList;
-import com.example.tms.entity.Notification_Settings;
-import com.example.tms.entity.Reference_Value_Setting;
+import com.example.tms.entity.NotificationSettings;
+import com.example.tms.entity.ReferenceValueSetting;
 import com.example.tms.entity.Sensor;
 import com.example.tms.repository.*;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,10 +17,10 @@ public class Schedule {
     final PlaceRepository placeRepository;
     final NotificationListRepository notificationListRepository;
     final SensorCustomRepository sensorCustomRepository;
-    final Notification_SettingsRepository notification_settingsRepository;
-    final Reference_Value_SettingRepository reference_value_settingRepository;
+    final NotificationSettingsRepository notification_settingsRepository;
+    final ReferenceValueSettingRepository reference_value_settingRepository;
 
-    public Schedule(SensorCustomRepository sensorCustomRepository, Notification_SettingsRepository notification_settingsRepository, Reference_Value_SettingRepository reference_value_settingRepository, PlaceRepository placeRepository, NotificationListRepository notificationListRepository) {
+    public Schedule(SensorCustomRepository sensorCustomRepository, NotificationSettingsRepository notification_settingsRepository, ReferenceValueSettingRepository reference_value_settingRepository, PlaceRepository placeRepository, NotificationListRepository notificationListRepository) {
         this.sensorCustomRepository = sensorCustomRepository;
         this.notification_settingsRepository = notification_settingsRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
@@ -30,20 +30,20 @@ public class Schedule {
 
     //@Scheduled(cron = "0 0/5 * * * *")
     public void scheduling(){
-        List<Notification_Settings> notification = notification_settingsRepository.findByStatusIsTrue();
+        List<NotificationSettings> notification = notification_settingsRepository.findByStatusIsTrue();
 
         // 설정 된 알림 시간에만 알림되도록 수정 (from ~ to)
         for(int i=0; i<notification.size(); i++){
             String sensorName = notification.get(i).getName();
-            Reference_Value_Setting reference = reference_value_settingRepository.findByName(sensorName);
+            ReferenceValueSetting reference = reference_value_settingRepository.findByName(sensorName);
 
             Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName);
             Float value = sensor.getValue();
             Date update = sensor.getUp_time();
 
-            Float legal = reference.getLegal_standard(); // 법적기준
-            Float company = reference.getCompany_standard(); //사내기준
-            Float standard = reference.getManagement_standard(); //관리기준
+            Float legal = reference.getLegalStandard(); // 법적기준
+            Float company = reference.getCompanyStandard(); //사내기준
+            Float standard = reference.getManagementStandard(); //관리기준
 
             String naming = reference.getNaming();
             String place = placeRepository.findBySensorIsIn(sensorName).getName();

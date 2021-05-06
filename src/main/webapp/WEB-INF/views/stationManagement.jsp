@@ -431,9 +431,9 @@
             cache: false,
             data: {"tableName": tableName},
             success: function (data) {
-                map.set("legal", data.legal_standard);
-                map.set("company", data.company_standard);
-                map.set("management", data.management_standard);
+                map.set("legal", data.legalStandard);
+                map.set("company", data.companyStandard);
+                map.set("management", data.managementStandard);
 
             },
             error: function (request, status, error) { // 결과 에러 콜백함수

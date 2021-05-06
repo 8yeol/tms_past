@@ -12,6 +12,6 @@ public class EmissionsSetting {
     private ObjectId _id;
     private String place;
     private String sensor;
-    private String sensor_naming;
+    private String sensorNaming;
     private boolean status;
 }

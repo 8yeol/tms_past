@@ -17,7 +17,7 @@ public class Member {
     private String email;
     private String tel;
     private Date joined;
-    private Date last_login;
+    private Date lastLogin;
     private String state;
 
     public ObjectId get_id() {
@@ -76,12 +76,12 @@ public class Member {
         this.joined = joined;
     }
 
-    public Date getLast_login() {
-        return last_login;
+    public Date getLastLogin() {
+        return lastLogin;
     }
 
-    public void setLast_login(Date last_login) {
-        this.last_login = last_login;
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     public String getState() {
@@ -92,18 +92,4 @@ public class Member {
         this.state = state;
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "_id=" + _id +
-                ", id='" + id + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", tel='" + tel + '\'' +
-                ", joined=" + joined +
-                ", last_login=" + last_login +
-                ", state='" + state + '\'' +
-                '}';
-    }
 }

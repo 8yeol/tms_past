@@ -2,7 +2,7 @@ package com.example.tms.controller;
 
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
-import com.example.tms.repository.Reference_Value_SettingRepository;
+import com.example.tms.repository.ReferenceValueSettingRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -22,25 +22,25 @@ public class MainController {
 
     final PlaceRepository placeRepository;
 
-    final Reference_Value_SettingRepository reference_value_settingRepository;
+    final ReferenceValueSettingRepository reference_value_settingRepository;
 
     final MongoTemplate mongoTemplate;
 
     final MemberRepository memberRepository;
 
-    final Notification_Statistics_CustomRepository notification_statistics_customRepository;
+    final NotificationStatisticsCustomRepository notification_statistics_customRepository;
 
     final EmissionsSettingRepository emissionsSettingRepository;
 
     final YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository;
 
-    final Rank_ManagementRepository rank_managementRepository;
+    final RankManagementRepository rank_managementRepository;
 
     final YearlyEmissionsRepository yearlyEmissionsRepository;
 
-    public MainController(PlaceRepository placeRepository, Reference_Value_SettingRepository reference_value_settingRepository, MongoTemplate mongoTemplate,
-                          MemberRepository memberRepository, Notification_Statistics_CustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository,
-                          YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository, Rank_ManagementRepository rank_managementRepository, YearlyEmissionsRepository yearlyEmissionsRepository) {
+    public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository, MongoTemplate mongoTemplate,
+                          MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository,
+                          YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository, RankManagementRepository rank_managementRepository, YearlyEmissionsRepository yearlyEmissionsRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.mongoTemplate = mongoTemplate;
@@ -62,15 +62,18 @@ public class MainController {
         //setting.get(0).getSensor().split("_")[1]
 
         //연간 배출량센서가 설정되어있는지 판단
-        for (int i = 0; i < setting.size(); i++) {         /*선택된 센서*/
-            for(int j = 0; j<yEmissions.size(); j++) {     /*연간 배출량 센서*/
+        for (int i = 0; i < setting.size(); i++) {         // 선택된 센서
+            for(int j = 0; j<yEmissions.size(); j++) {     // 연간 배출량 센서
                 if (setting.get(i).getPlace().equals(yEmissions.get(j).getPlace()) &&
-                        setting.get(i).getSensor_naming().equals(yEmissions.get(j).getSensor_naming())) {
+                        setting.get(i).getSensorNaming().equals(yEmissions.get(j).getSensorNaming())) {
                     yearlyEmissions.add(yEmissions.get(j));
                 }
             }
         }
+
         model.addAttribute("sensorlist",yearlyEmissions);
+
+        System.out.println(yearlyEmissions);
 
         //선택된 센서 측정소 중복제거  List -> Set
         List<String> placelist = new ArrayList<>();
@@ -115,7 +118,7 @@ public class MainController {
     @RequestMapping("/setting")
     public String setting(Model model) {
         List<Member> members = memberRepository.findAll();
-        List<rank_management> rank_managements = rank_managementRepository.findAll();
+        List<RankManagement> rank_managements = rank_managementRepository.findAll();
         model.addAttribute("members", members);
         model.addAttribute("rank_managements", rank_managements);
         return "setting";
@@ -208,8 +211,8 @@ public class MainController {
 
     @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
     @ResponseBody
-    public void rankSettingSave(@RequestBody rank_management rankManagement) {
-        rank_management newRankManagement = rank_managementRepository.findByName(rankManagement.getName());
+    public void rankSettingSave(@RequestBody RankManagement rankManagement) {
+        RankManagement newRankManagement = rank_managementRepository.findByName(rankManagement.getName());
         newRankManagement.setDashboard(rankManagement.isDashboard());
         newRankManagement.setAlarm(rankManagement.isAlarm());
         newRankManagement.setMonitoring(rankManagement.isMonitoring());

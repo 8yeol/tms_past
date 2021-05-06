@@ -553,9 +553,9 @@
             data:  {"tableName": tableName},
             async: false,
             success: function (data) {
-                reference.set("management",data.management_standard);
-                reference.set("company",data.company_standard);
-                reference.set("legal",data.legal_standard);
+                reference.set("management",data.managementStandard);
+                reference.set("company",data.companyStandard);
+                reference.set("legal",data.legalStandard);
             },
             error: function(request, status, error) {
                 console.log(error)

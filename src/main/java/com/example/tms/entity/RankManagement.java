@@ -5,13 +5,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "rank_management")
-public class rank_management {
+public class RankManagement {
 
     @Id
     private ObjectId _id;
-
     private String name;
-
     private boolean dashboard;
     private boolean alarm;
     private boolean monitoring;

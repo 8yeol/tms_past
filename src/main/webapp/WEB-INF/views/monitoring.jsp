@@ -321,9 +321,9 @@
 
                        var sensorInfo = getSensorInfo(item); //item의 정보 데이터
                        var naming = sensorInfo.naming;
-                       var legal_standard = sensorInfo.legal_standard;
-                       var company_standard = sensorInfo.company_standard;
-                       var management_standard = sensorInfo.management_standard;
+                       var legal_standard = sensorInfo.legalStandard;
+                       var company_standard = sensorInfo.companyStandard;
+                       var management_standard = sensorInfo.managementStandard;
                        var power = sensorInfo.power;
 
                        if(status == "true"){
@@ -442,14 +442,14 @@
             async: false,
             success: function (data) {
                 // 데이터가 0 또는 null 일 경우 "-" 으로 치환
-                if(data.legal_standard == 0 || data.legal_standard == null){
-                    data.legal_standard = "-";
+                if(data.legalStandard == 0 || data.legalStandard == null){
+                    data.legalStandard = "-";
                 }
-                if(data.company_standard == 0 || data.company_standard == null){
-                    data.company_standard = "-";
+                if(data.companyStandard == 0 || data.companyStandard == null){
+                    data.companyStandard = "-";
                 }
-                if(data.management_standard == 0 || data.management_standard == null){
-                    data.management_standard = "-";
+                if(data.managementStandard == 0 || data.managementStandard == null){
+                    data.managementStandard = "-";
                 }
                 getData = data;
             },
@@ -457,7 +457,7 @@
                 // console.log("getSensorInfo Error");
                 /* 결과가 존재하지 않을 경우 센서명만 전달 */
                 getData = {"name": sensor, "naming": sensor,
-                    "legal_standard": "-", "company_standard": "-", "management_standard": "-", "power": "off"}
+                    "legalStandard": "-", "companyStandard": "-", "managementStandard": "-", "power": "off"}
             }
         }); //ajax
         // console.log(getData);
@@ -474,14 +474,14 @@
             async: false,
             success: function (data) {
                 // 데이터가 0 또는 null 일 경우 "-" 으로 치환
-                if(data.legal_standard == 0 || data.legal_standard == null){
-                    data.legal_standard = "-";
+                if(data.legalStandard == 0 || data.legalStandard == null){
+                    data.legalStandard = "-";
                 }
-                if(data.company_standard == 0 || data.company_standard == null){
-                    data.company_standard = "-";
+                if(data.companyStandard == 0 || data.companyStandard == null){
+                    data.companyStandard = "-";
                 }
-                if(data.management_standard == 0 || data.management_standard == null){
-                    data.management_standard = "-";
+                if(data.managementStandard == 0 || data.managementStandard == null){
+                    data.managementStandard = "-";
                 }
                 getData = data;
             },
@@ -489,7 +489,7 @@
                 // console.log("getSensorInfo Error");
                 /* 결과가 존재하지 않을 경우 센서명만 전달 */
                 getData = {"name": sensor, "naming": sensor,
-                    "legal_standard": "-", "company_standard": "-", "management_standard": "-", "power": "off"}
+                    "legalStandard": "-", "companyStandard": "-", "managementStandard": "-", "power": "off"}
             }
         }); //ajax
         // console.log(getData);
@@ -510,9 +510,9 @@
             var newCeil3 = newRow.insertCell(3);
             var newCeil4 = newRow.insertCell(4);
             newCeil0.innerHTML = data[i].naming;
-            newCeil1.innerHTML = data[i].legal_standard;
-            newCeil2.innerHTML = data[i].company_standard;
-            newCeil3.innerHTML = data[i].management_standard;
+            newCeil1.innerHTML = data[i].legalStandard;
+            newCeil2.innerHTML = data[i].companyStandard;
+            newCeil3.innerHTML = data[i].managementStandard;
             newCeil4.innerHTML = data[i].value;
             // $('sensor-table-'+index +'> tbody').empty();
             // $('sensor-table-'+index +'> tbody').destroy();
@@ -540,23 +540,23 @@
                 // {"data": "up_time"},
             ],
             'rowCallback': function(row, data, index){
-                if(data.legal_standard != "-"){
+                if(data.legalStandard != "-"){
                     $(row).find('td:eq(1)').css('background-color', '#ff9d5a');
-                    if(data.value >= data.legal_standard){
+                    if(data.value >= data.legalStandard){
                         $(row).find('td:eq(4)').css('color', '#ff9d5a');
                         $(row).find('td:eq(4)').css('font-weight', 'bold');
                     }
                 }
-                if(data.company_standard != "-"){
+                if(data.companyStandard != "-"){
                     $(row).find('td:eq(2)').css('background-color', '#ffc55a');
-                    if(data.value < data.legal_standard && data.value >= data.company_standard){
+                    if(data.value < data.legalStandard && data.value >= data.companyStandard){
                         $(row).find('td:eq(4)').css('color', '#ffc55a');
                         $(row).find('td:eq(4)').css('font-weight', 'bold');
                     }
                 }
-                if(data.management_standard != "-"){
+                if(data.managementStandard != "-"){
                     $(row).find('td:eq(3)').css('background-color', '#a2d674');
-                    if(data.value <= data.company_standard && data.value > data.management_standard){
+                    if(data.value <= data.companyStandard && data.value > data.managementStandard){
                         $(row).find('td:eq(4)').css('color', '#a2d674');
                         $(row).find('td:eq(4)').css('font-weight', 'bold');
                     }

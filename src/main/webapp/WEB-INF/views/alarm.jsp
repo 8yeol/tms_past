@@ -98,7 +98,7 @@
     <div class="row m-3 mt-3 bg-light ms-1">
         <div class="row p-3 pb-0 ms-1">
             <div class="col fs-5 fw-bold">
-                실시간 알림 목록 <span class="small"> - 최근 일주일 자료 <a id="period"></a></span>
+                실시간 알림 목록 <span class="small"><a id="period"></a></span>
             </div>
             <div class="col text-end">
                 <span class="small">마지막 업데이트 : <span class="fw-bold" id="notify_info">업데이트 시간</span></span><br>

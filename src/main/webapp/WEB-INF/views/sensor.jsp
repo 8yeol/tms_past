@@ -296,7 +296,7 @@
         draw_chart(sensor_data_list, sensor_data);
         draw_sensor_table(sensor_data_list);
 
-        $("#standard_text").text(sensor_data.legal_standard+"/"+sensor_data.company_standard+"/"+sensor_data.management_standard+" mg/Sm³ 이하");
+        $("#standard_text").text(sensor_data.legalStandard+"/"+sensor_data.companyStandard+"/"+sensor_data.managementStandard+" mg/Sm³ 이하");
         setTimeout(function interval_getData2() {
             clearTimeout(interval2);
             console.log("g2: "+interval2);
@@ -347,9 +347,9 @@
 
                         var sensorInfo = getSensorInfo(item); //item의 정보 데이터
                         naming = sensorInfo.naming;
-                        legal_standard = sensorInfo.legal_standard;
-                        company_standard = sensorInfo.company_standard;
-                        management_standard = sensorInfo.management_standard;
+                        legal_standard = sensorInfo.legalStandard;
+                        company_standard = sensorInfo.companyStandard;
+                        management_standard = sensorInfo.managementStandard;
                         power = sensorInfo.power;
                         if(sensor.value < company_standard && sensor.value >= management_standard){
                             standard = "관리기준 초과";
@@ -427,14 +427,14 @@
             async: false,
             success: function (data) {
                 // 데이터가 0 또는 null 일 경우 "-" 으로 치환
-                if(data.legal_standard == 0 || data.legal_standard == null){
-                    data.legal_standard = "-";
+                if(data.legalStandard == 0 || data.legalStandard == null){
+                    data.legalStandard = "-";
                 }
-                if(data.company_standard == 0 || data.company_standard == null){
-                    data.company_standard = "-";
+                if(data.companyStandard == 0 || data.companyStandard == null){
+                    data.companyStandard = "-";
                 }
-                if(data.management_standard == 0 || data.management_standard == null){
-                    data.management_standard = "-";
+                if(data.managementStandard == 0 || data.managementStandard == null){
+                    data.managementStandard = "-";
                 }
                 getData = data;
             },
@@ -442,7 +442,7 @@
                 // console.log("getSensorInfo Error");
                 /* 결과가 존재하지 않을 경우 센서명만 전달 */
                 getData = {"name": sensor, "naming": sensor,
-                    "legal_standard": "-", "company_standard": "-", "management_standard": "-", "power": "off"}
+                    "legalStandard": "-", "companyStandard": "-", "managementStandard": "-", "power": "off"}
             }
         }); //ajax
         return getData;
@@ -459,9 +459,9 @@
             async: false,
             success: function (data) { // from ~ to 또는 to-minute ~ now 또는 from ~ from+minute 데이터 조회
                 var sensorInfo = getSensorInfo(sensor);
-                var legal_standard = sensorInfo.legal_standard;
-                var company_standard = sensorInfo.company_standard;
-                var management_standard = sensorInfo.management_standard;
+                var legal_standard = sensorInfo.legalStandard;
+                var company_standard = sensorInfo.companyStandard;
+                var management_standard = sensorInfo.managementStandard;
                 $.each(data, function (index, item) {
                     if(item.value < company_standard && item.value >= management_standard){
                         standard = "관리기준 초과";
@@ -508,9 +508,9 @@
                 {"data": "standard"}
             ],
             'rowCallback': function(row, data, index){
-                if(data.legal_standard != "-"){
+                if(data.legalStandard != "-"){
                     $(row).find('td:eq(1)').css('background-color', '#ff9d5a');
-                    if(data.value >= data.legal_standard){
+                    if(data.value >= data.legalStandard){
                         $(row).find('td:eq(4)').css('color', '#ff9d5a');
                         $(row).find('td:eq(4)').css('font-weight', 'bold');
                         $(row).find('td:eq(5)').css('color', '#ff9d5a');
@@ -519,7 +519,7 @@
                 }
                 if(data.company_standard != "-"){
                     $(row).find('td:eq(2)').css('background-color', '#ffc55a');
-                    if(data.value < data.legal_standard && data.value >= data.company_standard){
+                    if(data.value < data.legalStandard && data.value >= data.companyStandard){
                         $(row).find('td:eq(4)').css('color', '#ffc55a');
                         $(row).find('td:eq(4)').css('font-weight', 'bold');
                         $(row).find('td:eq(5)').css('color', '#ffc55a');
@@ -528,7 +528,7 @@
                 }
                 if(data.management_standard != "-"){
                     $(row).find('td:eq(3)').css('background-color', '#a2d674');
-                    if(data.value <= data.company_standard && data.value > data.management_standard){
+                    if(data.value <= data.companyStandard && data.value > data.managementStandard){
                         $(row).find('td:eq(4)').css('color', '#a2d674');
                         $(row).find('td:eq(4)').css('font-weight', 'bold');
                         $(row).find('td:eq(5)').css('color', '#a2d674');

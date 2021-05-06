@@ -26,17 +26,17 @@ public class JsonController {
     final PlaceRepository placeRepository;
     final SensorRepository sensorRepository;
     final SensorCustomRepository sensorCustomRepository;
-    final Reference_Value_SettingRepository reference_value_settingRepository;
-    final Notification_SettingsRepository notification_settingsRepository;
+    final ReferenceValueSettingRepository reference_value_settingRepository;
+    final NotificationSettingsRepository notification_settingsRepository;
     final NotificationListRepository notificationListRepository;
     final NotificationListCustomRepository notificationListCustomRepository;
-    final Notification_StatisticsRepository notification_statisticsRepository;
+    final NotificationStatisticsRepository notification_statisticsRepository;
 
     final MongoTemplate mongoTemplate;
 
     public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository,
-                          Reference_Value_SettingRepository reference_value_settingRepository, Notification_SettingsRepository notification_settingsRepository,
-                          NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, Notification_StatisticsRepository notification_statisticsRepository, MongoTemplate mongoTemplate) {
+                          ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository,
+                          NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, NotificationStatisticsRepository notification_statisticsRepository, MongoTemplate mongoTemplate) {
         this.placeRepository = placeRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
@@ -166,7 +166,7 @@ public class JsonController {
      * @return - 해당 센서의 센서 정보(한글명, 경고값, ...)
      */
     @RequestMapping(value = "/getSensorInfo")
-    public Reference_Value_Setting getSensorInfo(@RequestParam String sensor) {
+    public ReferenceValueSetting getSensorInfo(@RequestParam String sensor) {
         return reference_value_settingRepository.findByName(sensor);
     }
 
@@ -191,7 +191,7 @@ public class JsonController {
 
     //김규아 수정
     @RequestMapping(value = "/getNotifyInfo")
-    public Notification_Settings getNotifyInfo(@RequestParam("name") String name) {
+    public NotificationSettings getNotifyInfo(@RequestParam("name") String name) {
 
         return notification_settingsRepository.findByName(name);
     }
@@ -233,10 +233,10 @@ public class JsonController {
     public void saveNotifySetting(String item, boolean status, String from, String to) {
         Date up_time = new Date();
 
-        Notification_Settings notification_settings = notification_settingsRepository.findByName(item);
+        NotificationSettings notification_settings = notification_settingsRepository.findByName(item);
         ObjectId id = notification_settings.get_id();
 
-        Notification_Settings changeSetting = new Notification_Settings(item, from, to, status, up_time);
+        NotificationSettings changeSetting = new NotificationSettings(item, from, to, status, up_time);
         changeSetting.set_id(id);
 
         notification_settingsRepository.save(changeSetting);
@@ -251,19 +251,18 @@ public class JsonController {
     //측정소 상세설정 항목 추가
     @RequestMapping(value = "/saveReference")
     public void saveReference(@RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
-        Date up_time = new Date();
         float legal = 0.0f;
         float management = 0.0f;
         float company = 0.0f;
         String power = "off";
         //reference document 생성
-        Reference_Value_Setting saveReference = new Reference_Value_Setting(name, naming, legal, company, management, power);
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, power);
         reference_value_settingRepository.save(saveReference);
         //place 업데이트 시간 수정
         Place place = placeRepository.findByName(name);
         ObjectId id = place.get_id();
 
-        Place updatePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getPower(), up_time, place.getSensor());
+        Place updatePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getPower(), new Date(), place.getSensor());
         updatePlace.set_id(id);
         placeRepository.save(updatePlace);
     }
@@ -303,7 +302,7 @@ public class JsonController {
             for (int i = 0; i < place.size(); i++) {
                 List<HashMap> list = notificationListCustomRepository.getCount(place.get(i).getName(), LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(from_date + "T23:59:59"));
                 try {
-                    Notification_Statistics ns = new Notification_Statistics(place.get(i).getName(), from_date, "", (Integer) list.get(0).get("count"));
+                    NotificationStatistics ns = new NotificationStatistics(place.get(i).getName(), from_date, "", (Integer) list.get(0).get("count"));
                     notification_statisticsRepository.save(ns);
 //                            log.info(from_date+" : " +list);
                 } catch (Exception e) {
@@ -329,7 +328,7 @@ public class JsonController {
             for (int i = 0; i < place.size(); i++) {
                 List<HashMap> list = notificationListCustomRepository.getCount(place.get(i).getName(), LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(from_date + "T23:59:59").plusMonths(1));
                 try {
-                    Notification_Statistics ns = new Notification_Statistics(place.get(i).getName(), from_date, to_date, (Integer) list.get(0).get("count"));
+                    NotificationStatistics ns = new NotificationStatistics(place.get(i).getName(), from_date, to_date, (Integer) list.get(0).get("count"));
                     notification_statisticsRepository.save(ns);
                     log.info(from_date + " : " + list);
                 } catch (Exception e) {
@@ -363,7 +362,7 @@ public class JsonController {
                     for (int i = 0; i < place.size(); i++) {
                         List<HashMap> list = notificationListCustomRepository.getCount(place.get(i).getName(), LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(from_date + "T23:59:59"));
                         try {
-                            Notification_Statistics ns = new Notification_Statistics(place.get(i).getName(), from_date, "", (Integer) list.get(0).get("count"));
+                            NotificationStatistics ns = new NotificationStatistics(place.get(i).getName(), from_date, "", (Integer) list.get(0).get("count"));
                             notification_statisticsRepository.save(ns);
 //                            log.info(from_date+" : " +list);
                         } catch (Exception e) {
@@ -376,7 +375,7 @@ public class JsonController {
     }
 
     @RequestMapping(value = "getNotiStatistics")
-    public List<Notification_Statistics> getNotiStatics(@RequestParam("place") String place){
+    public List<NotificationStatistics> getNotiStatics(@RequestParam("place") String place){
         return notification_statisticsRepository.findByPlace(place);
     }
 }

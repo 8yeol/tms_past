@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
 @Document(collection = "notification_settings")
-public class Notification_Settings {
+public class NotificationSettings {
 
     @Id
     private ObjectId _id;
@@ -79,7 +79,7 @@ public class Notification_Settings {
                 '}';
     }
     @Builder
-    public Notification_Settings(String name, String start, String end, boolean status, Date up_time){
+    public NotificationSettings(String name, String start, String end, boolean status, Date up_time){
         this.name = name;
         this.start = start;
         this.end = end;

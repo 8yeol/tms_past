@@ -243,7 +243,7 @@
             <select multiple class="form-control" id="lstBox1">
                 <c:forEach items="${target}" var="target">
                     <c:if test="${target.status eq 'false'}">
-                        <option id="${target.sensor}">${target.place} - ${target.sensor_naming}
+                        <option id="${target.sensor}">${target.place} - ${target.sensorNaming}
                         </option>
                     </c:if>
                 </c:forEach>
@@ -263,7 +263,7 @@
             <select multiple class="form-control" id="lstBox2">
                 <c:forEach items="${target}" var="target">
                     <c:if test="${target.status eq 'true'}">
-                        <option id="${target.sensor}">${target.place} - ${target.sensor_naming}
+                        <option id="${target.sensor}">${target.place} - ${target.sensorNaming}
                         </option>
                     </c:if>
                 </c:forEach>
@@ -283,7 +283,7 @@
                 <c:forEach items="${target2}" var="target2">
                     <c:if test="${target2.status eq 'false'}">
                         <option id="${target2.sensor}">${target2.place} -
-                                ${target2.sensor_naming}
+                                ${target2.sensorNaming}
                         </option>
                     </c:if>
                 </c:forEach>
@@ -303,7 +303,7 @@
             <select multiple class="form-control" id="lstBox4">
                 <c:forEach items="${target2}" var="target2">
                     <c:if test="${target2.status eq 'true'}">
-                        <option id="${target2.sensor}"> ${target2.place} - ${target2.sensor_naming}
+                        <option id="${target2.sensor}"> ${target2.place} - ${target2.sensorNaming}
                         </option>
                     </c:if>
                 </c:forEach>

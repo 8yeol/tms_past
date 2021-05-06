@@ -1,16 +1,12 @@
 package com.example.tms.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
 @Document(collection = "notification_statistics")
-public class Notification_Statistics {
+public class NotificationStatistics {
 
     @Id
     private ObjectId _id;
@@ -20,7 +16,7 @@ public class Notification_Statistics {
     private int count;
 
     @Builder
-    public Notification_Statistics(String place, String from_date, String to_date, int count) {
+    public NotificationStatistics(String place, String from_date, String to_date, int count) {
         this.place = place;
         this.from_date = from_date;
         this.to_date = to_date;

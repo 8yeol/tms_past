@@ -194,7 +194,7 @@
                             <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
                             <div class="row pe-3  margin-l">
                                 <div class="fw-bold" style="margin-bottom: 2px;">
-                                        ${emissions.sensor_naming}
+                                        ${emissions.sensorNaming}
                                 </div>
                                 <div class="col">
                                     <div class="progress h-100">
@@ -396,11 +396,11 @@
                                             }
                                         });
 
-                                        if (value > data.legal_standard) {
+                                        if (value > data.legalStandard) {
                                             $("#danger").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
-                                        } else if (value > data.company_standard) {
+                                        } else if (value > data.companyStandard) {
                                             $("#warning").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
-                                        } else if (value > data.management_standard) {
+                                        } else if (value > data.managementStandard) {
                                             $("#caution").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         } else {
                                             $("#normal").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");

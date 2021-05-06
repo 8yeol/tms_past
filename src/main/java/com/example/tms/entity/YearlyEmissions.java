@@ -11,7 +11,7 @@ public class YearlyEmissions {
     @Id
     private ObjectId _id;
     private String place;
-    private String sensor_naming;
+    private String sensorNaming;
     public int standard;
     public int yearlyValue;
 
