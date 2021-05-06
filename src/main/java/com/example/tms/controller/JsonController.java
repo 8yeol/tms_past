@@ -129,7 +129,7 @@ public class JsonController {
      */
     @RequestMapping(value = "/getReferenceValue", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getReferenceValue(@RequestParam("tableName") String tableName) {
-        return reference_value_settingRepository.findByName(tableName);
+        return reference_value_settingRepository.findByManagementId(tableName);
     }
 
     @RequestMapping(value = "/getPlaceName", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -145,7 +145,7 @@ public class JsonController {
         String power = "off";
         Boolean monitoring = false;
         List sensor = new ArrayList();
-        Place savePlace = new Place(name, location, admin, tel, monitoring,power, up_time, sensor);
+        Place savePlace = new Place(name, location, admin, tel, monitoring, power, up_time, sensor);
         placeRepository.save(savePlace);
     }
 
@@ -169,7 +169,7 @@ public class JsonController {
      */
     @RequestMapping(value = "/getSensorInfo")
     public ReferenceValueSetting getSensorInfo(@RequestParam String sensor) {
-        return reference_value_settingRepository.findByName(sensor);
+        return reference_value_settingRepository.findByManagementId(sensor);
     }
 
     // 김규아 추가
@@ -253,25 +253,25 @@ public class JsonController {
     // 측정항목 상세설정 모니터링 on/off
     @RequestMapping(value = "/getMonitoring")
     public Boolean getMonitoring(@RequestParam("name") String tableName) {
-        return reference_value_settingRepository.findByName(tableName).getMonitoring();
+        return reference_value_settingRepository.findByManagementId(tableName).getMonitoring();
     }
 
     //측정소 상세설정 항목 추가
     @RequestMapping(value = "/saveReference")
-    public void saveReference(@RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
+    public void saveReference(@RequestParam(value = "managementId") String managementId, @RequestParam(value = "naming") String naming) {
         float legal = 0.0f;
         float management = 0.0f;
         float company = 0.0f;
         Boolean monitoring = false;
 
         //reference document 생성
-        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(managementId, naming, legal, company, management, monitoring);
         reference_value_settingRepository.save(saveReference);
         //place 업데이트 시간 수정
-        Place place = placeRepository.findByName(name);
+        Place place = placeRepository.findByName(managementId);
         ObjectId id = place.get_id();
 
-        Place updatePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(),place.getPower(), new Date(), place.getSensor());
+        Place updatePlace = new Place(managementId, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(),place.getPower(), new Date(), place.getSensor());
         updatePlace.set_id(id);
         placeRepository.save(updatePlace);
     }
@@ -279,19 +279,14 @@ public class JsonController {
     //측정소 상세설정 항목 삭제
     @RequestMapping(value = "/removeReference")
     public void removeReference(@RequestParam(value = "referenceList[]") List<String> referenceList) {
-        System.out.println("111111");
         if (referenceList == null || "".equals(referenceList)) {
-            System.out.println("3333");
         } else {
             for (int i = 0; i < referenceList.size(); i++) {
-                System.out.println("2222222");
-                reference_value_settingRepository.deleteByName(referenceList.get(i));
-
+                reference_value_settingRepository.deleteByManagementId(referenceList.get(i));
 
             }
         }
     }
-
 
     /* 알림페이지 일별 데이터 저장 */
     @RequestMapping(value = "saveNotiStatistics")
