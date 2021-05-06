@@ -1,5 +1,6 @@
 package com.example.tms.entity;
 
+import lombok.Builder;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,15 +14,16 @@ public class ReferenceValueSetting {
     private Float legalStandard;//법적기준
     private Float companyStandard;//사내기준
     private Float managementStandard; //관리기준
-    private String power; //모니터링
+    private boolean monitoring; //모니터링
 
-    public ReferenceValueSetting(String name, String naming, Float legalStandard, Float companyStandard, Float managementStandard, String power) {
+    @Builder
+    public ReferenceValueSetting(String name, String naming, Float legalStandard, Float companyStandard, Float managementStandard, Boolean monitoring) {
         this.name = name;
         this.naming = naming;
         this.legalStandard = legalStandard;
         this.companyStandard = companyStandard;
         this.managementStandard = managementStandard;
-        this.power = power;
+        this.monitoring = monitoring;
     }
 
     public ObjectId get_id() {
@@ -72,11 +74,24 @@ public class ReferenceValueSetting {
         this.managementStandard = managementStandard;
     }
 
-    public String getPower() {
-        return power;
+    public boolean isMonitoring() {
+        return monitoring;
     }
 
-    public void setPower(String power) {
-        this.power = power;
+    public void setMonitoring(boolean monitoring) {
+        this.monitoring = monitoring;
+    }
+
+    @Override
+    public String toString() {
+        return "ReferenceValueSetting{" +
+                "_id=" + _id +
+                ", name='" + name + '\'' +
+                ", naming='" + naming + '\'' +
+                ", legalStandard=" + legalStandard +
+                ", companyStandard=" + companyStandard +
+                ", managementStandard=" + managementStandard +
+                ", monitoring=" + monitoring +
+                '}';
     }
 }

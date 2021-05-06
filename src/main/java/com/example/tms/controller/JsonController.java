@@ -243,9 +243,9 @@ public class JsonController {
     }
 
     // 여기까지
-    @RequestMapping(value = "/getPower")
-    public String getPower(@RequestParam("name") String tableName) {
-        return reference_value_settingRepository.findByName(tableName).getPower();
+    @RequestMapping(value = "/getMonitoring")
+    public Boolean getMonitoring(@RequestParam("name") String tableName) {
+        return reference_value_settingRepository.findByName(tableName).isMonitoring();
     }
 
     //측정소 상세설정 항목 추가

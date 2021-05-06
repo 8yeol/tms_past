@@ -132,13 +132,6 @@ input:checked + .slider:before {
     margin-top: 28px;
 }
 
-#end0, #end1, #end2 {
-    margin-left: 40px;
-}
-#placeDiv0>div, #placeDiv1>div, #placeDiv2>div {
-    margin-top: 20px;
-}
-
 .saveBtn, .cancelBtn {
     position: absolute;
     bottom:0px;
