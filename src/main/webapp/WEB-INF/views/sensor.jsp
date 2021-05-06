@@ -32,6 +32,10 @@
     }
 
     /* 데이터테이블 */
+    table.dataTable {
+        width:98% !important;
+    }
+
     .toolbar>b {
         font-size: 1.25rem;
     }
@@ -131,7 +135,7 @@
                 <li class="place-item btn bg-lightGray d-block fs-3 mt-3 me-3" id="${place.name}">
                     <span>${place.name}</span>
                 </li>
-                <hr style="height: 2.5px;">
+                <hr style="height: 2px;">
             </c:forEach>
             </ul>
         </div>
@@ -142,10 +146,10 @@
                 <span class="mb-2" id="update" style="margin-left: 5px;"></span>
             </div>
 
-            <span class="fs-3 fw-bold d-flex justify-content-center bg-lightGray" id="title">temp</span>
+            <span class="fs-4 fw-bold d-flex justify-content-center bg-lightGray" id="title">temp</span>
 
 
-            <table id="place-table">
+            <table id="place-table" style="margin-top: 13px; text-align: center;">
                 <thead>
                 <tr>
                     <th>항목</th>
