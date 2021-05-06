@@ -30,8 +30,11 @@ public class JsonController {
     final NotificationSettingsRepository notification_settingsRepository;
     final NotificationListRepository notificationListRepository;
     final NotificationListCustomRepository notificationListCustomRepository;
-    final NotificationStatisticsRepository notification_statisticsRepository;
     final YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository;
+    final NotificationStatisticsCustomRepository notificationStatisticsCustomRepository;
+    final NotificationDayStatisticsRepository notificationDayStatisticsRepository;
+    final NotificationMonthStatisticsRepository notificationMonthStatisticsRepository;
+
     final MongoTemplate mongoTemplate;
 
     public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository,
@@ -44,8 +47,10 @@ public class JsonController {
         this.notification_settingsRepository = notification_settingsRepository;
         this.notificationListRepository = notificationListRepository;
         this.notificationListCustomRepository = notificationListCustomRepository;
-        this.notification_statisticsRepository = notification_statisticsRepository;
         this.yearlyEmissionsStandardRepository = yearlyEmissionsStandardRepository;
+        this.notificationStatisticsCustomRepository = notificationStatisticsCustomRepository;
+        this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
+        this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -129,7 +134,7 @@ public class JsonController {
      */
     @RequestMapping(value = "/getReferenceValue", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getReferenceValue(@RequestParam("tableName") String tableName) {
-        return reference_value_settingRepository.findByManagementId(tableName);
+        return reference_value_settingRepository.findByName(tableName);
     }
 
     @RequestMapping(value = "/getPlaceName", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -145,7 +150,7 @@ public class JsonController {
         String power = "off";
         Boolean monitoring = false;
         List sensor = new ArrayList();
-        Place savePlace = new Place(name, location, admin, tel, monitoring, power, up_time, sensor);
+        Place savePlace = new Place(name, location, admin, tel, monitoring,power, up_time, sensor);
         placeRepository.save(savePlace);
     }
 
@@ -169,7 +174,7 @@ public class JsonController {
      */
     @RequestMapping(value = "/getSensorInfo")
     public ReferenceValueSetting getSensorInfo(@RequestParam String sensor) {
-        return reference_value_settingRepository.findByManagementId(sensor);
+        return reference_value_settingRepository.findByName(sensor);
     }
 
     // 김규아 추가
@@ -291,96 +296,113 @@ public class JsonController {
     /* 알림페이지 일별 데이터 저장 */
     @RequestMapping(value = "saveNotiStatistics")
     public void saveNotiStatistics() {
-        List<Place> place = placeRepository.findAll();
-        /* 현재 날짜 */
-        LocalDate nowDate = LocalDate.now();
-        int year = nowDate.getYear();
-        int month = nowDate.getMonthValue();
-        int day = nowDate.getDayOfMonth();
-//        GregorianCalendar cld = new GregorianCalendar(year, month - 1, 1);
-//        int lastDay = cld.getActualMaximum(Calendar.DAY_OF_MONTH);
+        LocalDate nowDate = LocalDate.now(); //현재시간
+        int getYear = nowDate.getYear();
+        int getMonth = nowDate.getMonthValue();
+        int getDay = nowDate.getDayOfMonth();
+        LocalDate getYesterday = nowDate.minusDays(1);
+        LocalDate getLastMonth = nowDate.minusMonths(1);
 
-        /* 어제제 데이 삽입 */
-        if(false){
-            String from_date = String.valueOf(nowDate.minusDays(1));
-            for (int i = 0; i < place.size(); i++) {
-                List<HashMap> list = notificationListCustomRepository.getCount(place.get(i).getName(), LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(from_date + "T23:59:59"));
-                try {
-                    NotificationStatistics ns = new NotificationStatistics(place.get(i).getName(), from_date, "", (Integer) list.get(0).get("count"));
-                    notification_statisticsRepository.save(ns);
-//                            log.info(from_date+" : " +list);
-                } catch (Exception e) {
-                    log.info(e.getMessage());
+        /* 일 데이터 입력 : 어제 */
+       /* if(false){
+            notificationDayStatisticsRepository.deleteByDay(String.valueOf(getYesterday)); //데이터가 존재할 경우 삭제
+            try {
+                int arr[] = new int[3];
+                for(int grade=1; grade<=3; grade++) {
+                    List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(getYesterday + "T00:00:00"), LocalDateTime.parse(getYesterday + "T23:59:59"));
+                    arr[grade-1] = (int) list.get(0).get("count");
                 }
+                NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(getYesterday), arr[0], arr[1], arr[2]);
+                notificationDayStatisticsRepository.save(ns);
+            } catch (Exception e) {
+//                log.info(e.getMessage());
             }
-        } //if
+        }*/ //if
 
-        /* 지난 월 데이터 삽입 */
-        if(true) {
-            //day == 1;
-            String newMonth = null;
 
-            if (month <= 10) {
-                newMonth = "0" + String.valueOf(month - 1);
-            } else {
-                newMonth = String.valueOf(month - 1);
-            }
-            GregorianCalendar newCld = new GregorianCalendar(year, month - 2, 1);
-            int lastDay = newCld.getActualMaximum(Calendar.DAY_OF_MONTH);
-            String from_date = year + "-" + newMonth + "-01";
-            String to_date = year + "-" + newMonth + "-"+lastDay;
-            for (int i = 0; i < place.size(); i++) {
-                List<HashMap> list = notificationListCustomRepository.getCount(place.get(i).getName(), LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(from_date + "T23:59:59").plusMonths(1));
-                try {
-                    NotificationStatistics ns = new NotificationStatistics(place.get(i).getName(), from_date, to_date, (Integer) list.get(0).get("count"));
-                    notification_statisticsRepository.save(ns);
-                    log.info(from_date + " : " + list);
-                } catch (Exception e) {
-                    log.info(e.getMessage());
+        /* 일 데이터 및 월 데이터 입력: 1월1일 ~ 어제 날짜 */
+        if(false) {
+            for (int m = 1; m <= getMonth; m++) {
+                LocalDate date = LocalDate.of(getYear, m, 1);
+                int lastDay = date.lengthOfMonth();
+                if (m == getMonth) { // 이번 달, 어제 날짜까지 구하기 위함
+                    lastDay = getDay-1;
                 }
-            }
-        } //if
-
-        /* 1월 ~ 현재 데이터 삽입  */
-        if(true) {
-            for (int m = 1; m <= month; m++) {
-                GregorianCalendar calendar = new GregorianCalendar(year, m - 1, 1);
-                int m_lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-                if (m == month) {
-                    m_lastDay = day - 1;//( 현재 -1 ) 어제
-                }
-                for (int d = 1; d <= m_lastDay; d++) {
-                    String newMonth, newDay = null;
-                    if (m < 10) {
-                        newMonth = "0" + String.valueOf(m);
-                    } else {
-                        newMonth = String.valueOf(m);
-                    }
-                    if (d < 10) {
-                        newDay = "0" + String.valueOf(d);
-                    } else {
-                        newDay = String.valueOf(d);
-                    }
-                    String from_date = year + "-" + newMonth + "-" + newDay;
-
-                    for (int i = 0; i < place.size(); i++) {
-                        List<HashMap> list = notificationListCustomRepository.getCount(place.get(i).getName(), LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(from_date + "T23:59:59"));
-                        try {
-                            NotificationStatistics ns = new NotificationStatistics(place.get(i).getName(), from_date, "", (Integer) list.get(0).get("count"));
-                            notification_statisticsRepository.save(ns);
-//                            log.info(from_date+" : " +list);
-                        } catch (Exception e) {
-                            log.info(e.getMessage());
+                for (int d = 1; d <= lastDay; d++) {
+                    LocalDate date2 = LocalDate.of(getYear, m, d);
+                    notificationDayStatisticsRepository.deleteByDay(String.valueOf(date2)); //데이터가 존재할 경우 삭제
+                    try {
+                        int arr[] = new int[3];
+                        for(int grade=1; grade<=3; grade++) {
+                            List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(date2 + "T00:00:00"), LocalDateTime.parse(date2 + "T23:59:59"));
+                            arr[grade-1] = (int) list.get(0).get("count");
                         }
+                        NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), arr[0], arr[1], arr[2]);
+                        notificationDayStatisticsRepository.save(ns);
+                    } catch (Exception e) {
+                        NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), 0, 0, 0);
+                        notificationDayStatisticsRepository.save(ns);
+//                        log.info(e.getMessage());
                     }
                 }
-            } //for
+            }
         } //if
+
+
+
+        /* 월 데이터 입력 : 지난 달 *//*
+        if(false) {
+            String date = String.valueOf(getLastMonth).substring(0,7);
+            notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
+            int lastMonthOfDay = getLastMonth.lengthOfMonth();
+            LocalDate from_date = LocalDate.of(getYear, getLastMonth.getMonth(), 1);
+            LocalDate to_date = LocalDate.of(getYear, getLastMonth.getMonth(), lastMonthOfDay);
+            try {
+                int arr[] = new int[3];
+                for(int grade=1; grade<=3; grade++) {
+                    List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(to_date + "T23:59:59"));
+                    arr[grade-1] = (int) list.get(0).get("count");
+                }
+                NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
+                notificationMonthStatisticsRepository.save(ns);
+            } catch (Exception e) {
+//                log.info(e.getMessage());
+            }
+        }*/ //if
+
+        if(true) {
+            for (int m = 1; m <= getMonth; m++) {
+                LocalDate from_date = LocalDate.of(2019, m, 1);
+                LocalDate to_date = LocalDate.of(getYear, m, from_date.lengthOfMonth());
+                String date = String.valueOf(from_date).substring(0, 7);
+                notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
+                try {
+                    int arr[] = new int[3];
+                    for (int grade = 1; grade <= 3; grade++) {
+                        List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(to_date + "T23:59:59"));
+                        arr[grade - 1] = (int) list.get(0).get("count");
+                    }
+                    NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
+                    notificationMonthStatisticsRepository.save(ns);
+                } catch (Exception e) {
+                    NotificationMonthStatistics ns = new NotificationMonthStatistics(date, 0, 0, 0);
+                    notificationMonthStatisticsRepository.save(ns);
+                }
+            }
+        }
+
     }
 
-    @RequestMapping(value = "getNotiStatistics")
-    public List<NotificationStatistics> getNotiStatics(@RequestParam("place") String place){
-        return notification_statisticsRepository.findByPlace(place);
+    /* 알림 현황 조회 - 최근 일주일 (limit-7개) */
+    @RequestMapping(value = "getNotificationWeekStatistics")
+    public List<NotificationDayStatistics> getNotificationWeekStatistics() {
+        return notificationStatisticsCustomRepository.getNotificationWeekStatistics();
+    }
+
+    /* 알림 현황 조회 - 최근 1년 (limit-12개) */
+    @RequestMapping(value = "getNotificationMonthStatistics")
+    public List<NotificationMonthStatistics> getNotificationMonthStatistics() {
+        return notificationStatisticsCustomRepository.getNotificationMonthStatistics();
     }
 
     //배출기준 추가, 수정

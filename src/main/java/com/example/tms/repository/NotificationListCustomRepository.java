@@ -23,22 +23,22 @@ public class NotificationListCustomRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<HashMap> getCount(String place, LocalDateTime from_date, LocalDateTime to_date){
+    public List<HashMap> getCount(int grade, LocalDateTime from_date, LocalDateTime to_date){
         try{
             if(from_date.isBefore(to_date)){
                 ProjectionOperation projectionOperation = Aggregation.project()
-                       .andInclude("place")
+                        .andInclude("grade")
                         .andInclude("up_time")
                         .andInclude("count");
                 MatchOperation matchOperation = Aggregation.match(new Criteria()
                             .andOperator(Criteria.where("up_time").gte(from_date).lte(to_date)
-                                    .andOperator(Criteria.where("place").is(place)
+                                    .andOperator(Criteria.where("grade").is(grade)
                                     )));
 
                 SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
 
                 GroupOperation groupOperation = Aggregation
-                        .group("place"/*, "sensor", "grade", "notify"*/).count().as("count");
+                        .group("grade"/*, "sensor", "grade", "notify"*/).count().as("count");
                 Aggregation aggregation = Aggregation.newAggregation(projectionOperation, matchOperation, sortOperation, groupOperation);
 
                 AggregationResults<HashMap> results = mongoTemplate.aggregate(aggregation, "notification_list", HashMap.class);

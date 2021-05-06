@@ -1,15 +1,12 @@
 package com.example.tms.controller.scheduler;
 
-import com.example.tms.entity.NotificationList;
-import com.example.tms.entity.NotificationSettings;
-import com.example.tms.entity.ReferenceValueSetting;
-import com.example.tms.entity.Sensor;
+import com.example.tms.entity.*;
 import com.example.tms.repository.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Component
 public class Schedule {
@@ -19,13 +16,23 @@ public class Schedule {
     final SensorCustomRepository sensorCustomRepository;
     final NotificationSettingsRepository notification_settingsRepository;
     final ReferenceValueSettingRepository reference_value_settingRepository;
+    final NotificationDayStatisticsRepository notificationDayStatisticsRepository;
+    final NotificationMonthStatisticsRepository notificationMonthStatisticsRepository;
+    final NotificationListCustomRepository notificationListCustomRepository;
 
-    public Schedule(SensorCustomRepository sensorCustomRepository, NotificationSettingsRepository notification_settingsRepository, ReferenceValueSettingRepository reference_value_settingRepository, PlaceRepository placeRepository, NotificationListRepository notificationListRepository) {
+
+    public Schedule(PlaceRepository placeRepository, NotificationListRepository notificationListRepository,
+                    SensorCustomRepository sensorCustomRepository, NotificationSettingsRepository notification_settingsRepository,
+                    ReferenceValueSettingRepository reference_value_settingRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository,
+                    NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository) {
+        this.placeRepository = placeRepository;
+        this.notificationListRepository = notificationListRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.notification_settingsRepository = notification_settingsRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
-        this.placeRepository = placeRepository;
-        this.notificationListRepository = notificationListRepository;
+        this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
+        this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
+        this.notificationListCustomRepository = notificationListCustomRepository;
     }
 
     //@Scheduled(cron = "0 0/5 * * * *")
@@ -81,4 +88,51 @@ public class Schedule {
         notificationListRepository.save(notificationList);
     }
 
+
+    /* 알림 현황 입력 */
+    public void saveNotiStatistics(boolean day, boolean month){
+        LocalDate nowDate = LocalDate.now(); //현재시간
+        int getYear = nowDate.getYear();
+        int getMonth = nowDate.getMonthValue();
+        int getDay = nowDate.getDayOfMonth();
+        LocalDate getYesterday = nowDate.minusDays(1);
+        LocalDate getLastMonth = nowDate.minusMonths(1);
+
+        /* 일 데이터 입력 : 어제 */
+        if(day){
+            notificationDayStatisticsRepository.deleteByDay(String.valueOf(getYesterday)); //데이터가 존재할 경우 삭제
+            try {
+                int arr[] = new int[3];
+                for(int grade=1; grade<=3; grade++) {
+                    List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(getYesterday + "T00:00:00"), LocalDateTime.parse(getYesterday + "T23:59:59"));
+                    arr[grade-1] = (int) list.get(0).get("count");
+                }
+                NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(getYesterday), arr[0], arr[1], arr[2]);
+                notificationDayStatisticsRepository.save(ns);
+            } catch (Exception e) {
+//                log.info(e.getMessage());
+            }
+        } //if
+
+        /* 월 데이터 입력 : 지난 달 */
+        if(month) {
+            String date = String.valueOf(getLastMonth).substring(0,7);
+            notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
+            int lastMonthOfDay = getLastMonth.lengthOfMonth();
+            LocalDate from_date = LocalDate.of(getYear, getLastMonth.getMonth(), 1);
+            LocalDate to_date = LocalDate.of(getYear, getLastMonth.getMonth(), lastMonthOfDay);
+            try {
+                int arr[] = new int[3];
+                for(int grade=1; grade<=3; grade++) {
+                    List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(to_date + "T23:59:59"));
+                    arr[grade-1] = (int) list.get(0).get("count");
+                }
+                NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
+                notificationMonthStatisticsRepository.save(ns);
+            } catch (Exception e) {
+//                log.info(e.getMessage());
+            }
+        } //if
+
+    }
 }

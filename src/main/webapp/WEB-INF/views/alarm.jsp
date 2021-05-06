@@ -162,8 +162,22 @@
     $( document ).ready(function() {
         $("#notify_info").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
         $("#notify_chart").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
-        addChart();
         addTable();
+
+        if($("input[id=week]:radio" ).is( ":checked")){
+            var chartData = getWeekChartData();
+        }
+        addChart(chartData);
+    });
+
+    $("input[name=day]").on('click' , function (){
+        var chartData = null;
+        if($("input[id=week]:radio" ).is( ":checked")){
+            chartData = getWeekChartData();
+        }else{
+            chartData = getMonthChartData();
+        }
+        addChart(chartData);
     });
 
     function addTable() {
@@ -264,18 +278,58 @@
         $("#notify_info").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
     }
 
-    function addChart(){
+    function  getWeekChartData() {
+        var getData = new Array();
+        $.ajax({
+            url: 'getNotificationWeekStatistics',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                for(var i=0; i<data.length; i++){
+                    getData.push({day: data[i].day, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});
+                }
+            }
+        });
+        return getData;
+    }
+    function  getMonthChartData() {
+        var getData = new Array();
+        $.ajax({
+            url: 'getNotificationMonthStatistics',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                for(var i=0; i<data.length; i++){
+                    getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});
+                }
+            }
+        });
+        return getData;
+    }
+
+    function addChart(chartData){
+        var day = new Array();
+        var legalCount = new Array();
+        var companyCount = new Array();
+        var managementCount = new Array();
+        for(var i=chartData.length-1; 0<=i; i--){
+            day.push(chartData[i].day);
+            legalCount.push(chartData[i].legalCount);
+            companyCount.push(chartData[i].companyCount);
+            managementCount.push(chartData[i].managementCount);
+        }
         const options = {
             series: [{
-                name: 'Net Profit',
-                data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+                name: '법적 기준 초과',
+                data: legalCount
             }, {
-                name: 'Revenue',
-                data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+                name: '사내 기준 초과',
+                data: companyCount
             }, {
-                name: 'Free Cash Flow',
-                data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+                name: '관리 기준 초과',
+                data: managementCount
             }],
+            colors: ['#F44336', '#ffc107', '#198754'],
             chart: {
                 type: 'bar',
                 height: 400
@@ -296,24 +350,21 @@
                 colors: ['transparent']
             },
             xaxis: {
-                categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-            },
-            yaxis: {
-                title: {
-                    text: '$ (thousands)'
-                }
+                categories: day,
             },
             fill: {
-                opacity: 1
+                opacity: 1,
+                // colors: ['#F44336', '#ffc107', '#198754']
             },
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return "$ " + val + " thousands"
+                        return val + "번"
                     }
                 }
             }
         };
+        $("#chart").empty();
         const chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
     }
