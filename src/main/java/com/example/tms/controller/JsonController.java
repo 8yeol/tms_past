@@ -388,16 +388,17 @@ public class JsonController {
         return notification_statisticsRepository.findByPlace(place);
     }
 
-    //배출기준 추가
+    //배출기준 추가, 수정
     @RequestMapping(value = "/saveEmissionsStandard")
     public List saveEmissionsStandard(@RequestParam(value = "code") String code, @RequestParam(value = "sensorName") String sensorName, @RequestParam(value = "standard") int standard,@RequestParam(value = "hiddenCode" ,required=false) String hiddenCode,
                                       @RequestParam(value = "percent") int percent, @RequestParam(value = "formula") String formula) {
 
         YearlyEmissionsStandardSetting setting;
 
-        if(hiddenCode==null){  //추가
+        //hidden 값이 있는지로 추가와 수정을 판별
+        if(hiddenCode==null){
             setting = new YearlyEmissionsStandardSetting();
-        }else{                 //수정
+        }else{
             setting = yearlyEmissionsStandardRepository.findBySensorCode(hiddenCode);
         }
         setting.setSensorCode(code);

@@ -305,7 +305,7 @@
         accumulate();
         excess();
 
-        $('.line').eq(2).remove();
+      $('.line').eq($('.line').length-1).remove();
     });
 
     // 날씨 정보 출력 (처음 로딩될 때 한번, 그 후로 매 시간마다 실행)
