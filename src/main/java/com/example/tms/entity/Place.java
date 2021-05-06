@@ -1,6 +1,7 @@
 package com.example.tms.entity;
 
 import lombok.Builder;
+import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,6 +17,7 @@ public class Place {
     private String location;
     private String admin;
     private String tel;
+    private Boolean monitoring;
     private String power;
     private Date up_time;
     private List sensor;
@@ -60,6 +62,14 @@ public class Place {
         this.tel = tel;
     }
 
+    public Boolean getMonitoring() {
+        return monitoring;
+    }
+
+    public void setMonitoring(Boolean monitoring) {
+        this.monitoring = monitoring;
+    }
+
     public String getPower() {
         return power;
     }
@@ -92,11 +102,13 @@ public class Place {
                 ", location='" + location + '\'' +
                 ", admin='" + admin + '\'' +
                 ", tel='" + tel + '\'' +
+                ", monitoring=" + monitoring +
                 ", power='" + power + '\'' +
                 ", up_time=" + up_time +
                 ", sensor=" + sensor +
                 '}';
     }
+
     @Builder
     public Place(String name, String location,String admin,String tel,String power,Date up_time, List sensor){
         this.name = name;
@@ -106,6 +118,5 @@ public class Place {
         this.power = power;
         this.up_time = up_time;
         this.sensor = sensor;
-
     }
 }

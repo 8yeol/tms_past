@@ -427,7 +427,7 @@
             Modal.html(opts.text() + ' 센서가 <br> 모니터링 대상 가스에서 제외 되었습니다. ');
             fade(Modal);
         } else if (opts.length > 1) {
-            Modal.html(opts.eq(0).text() + ' 센서 외' + (opts.length - 1) + '개가 <br> 모니터링 대상 가스에서 제외 되었습니다. ');
+            Modal.html(opts.eq(0).text() + ' 센서 외 ' + (opts.length - 1) + '개가 <br> 모니터링 대상 가스에서 제외 되었습니다. ');
             fade(Modal);
         }
     }
@@ -437,7 +437,7 @@
             Modal.html(opts.text() + ' 센서가 <br> 모니터링 대상 가스로 선택 되었습니다. ');
             fade(Modal);
         } else if (opts.length > 1) {
-            Modal.html(opts.eq(0).text() + ' 센서 외' + (opts.length - 1) + '개가 <br> 모니터링 대상 가스로 선택 되었습니다. ');
+            Modal.html(opts.eq(0).text() + ' 센서 외 ' + (opts.length - 1) + '개가 <br> 모니터링 대상 가스로 선택 되었습니다. ');
             fade(Modal);
         }
     }

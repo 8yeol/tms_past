@@ -73,8 +73,6 @@ public class MainController {
 
         model.addAttribute("sensorlist",yearlyEmissions);
 
-        System.out.println(yearlyEmissions);
-
         //선택된 센서 측정소 중복제거  List -> Set
         List<String> placelist = new ArrayList<>();
         for (YearlyEmissionsSetting place : setting) {
@@ -89,9 +87,11 @@ public class MainController {
     public String accessDenied() {
         return "accessDenied";
     }
+
     @RequestMapping("/monitoring")
     public void monitoring(Model model) {
-        model.addAttribute("place", placeRepository.findAll());
+
+        model.addAttribute("place", placeRepository.findByMonitoringIsTrue());
     }
 
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
