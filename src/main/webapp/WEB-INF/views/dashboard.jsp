@@ -76,7 +76,7 @@
         text-align: right;
         font-size: 0.6rem;
         margin-top: 2px;
-        padding-right: 50px;
+        padding-right: 25px;
     }
     @media all and (max-width: 1399px) and (min-width: 1200px) {
         .center-position {
@@ -184,7 +184,6 @@
         </div>
 
         <div class="row pb-5 px-3 margin-l" style="margin-top: 20px;">
-            <%--script--%>
             <c:forEach items="${placelist}" var="placelist" varStatus="i">
                 <div class="col">
                     <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
@@ -228,7 +227,6 @@
                 <div class="line" style="width: 1px; height: 70%; background-color: #a9a9a9; padding:0;position: relative; top: 60px;"></div>
             </c:forEach>
 
-            <!--placeList == Null-->
             <c:if test="${empty placelist}">
                 <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
                     연간 배출량 누적 모니터링 설정 된 센서가 없습니다. <br>
@@ -295,7 +293,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <script>
@@ -423,7 +420,6 @@
             }
         })
 
-        // 완료 후 업데이트 시간 표시
         $("#excess_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
     }
 
