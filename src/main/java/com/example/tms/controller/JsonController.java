@@ -242,9 +242,9 @@ public class JsonController {
         notification_settingsRepository.save(changeSetting);
     }
 
-    // 여기까지
+    // 측정항목 상세설정 모니터링 on/off
     @RequestMapping(value = "/getMonitoring")
-    public Boolean getMonitoring(@RequestParam("name") String tableName) {
+    public boolean getMonitoring(@RequestParam("name") String tableName) {
         return reference_value_settingRepository.findByName(tableName).isMonitoring();
     }
 
@@ -254,9 +254,10 @@ public class JsonController {
         float legal = 0.0f;
         float management = 0.0f;
         float company = 0.0f;
-        String power = "off";
+        boolean monitoring = false;
+
         //reference document 생성
-        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, power);
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
         reference_value_settingRepository.save(saveReference);
         //place 업데이트 시간 수정
         Place place = placeRepository.findByName(name);
