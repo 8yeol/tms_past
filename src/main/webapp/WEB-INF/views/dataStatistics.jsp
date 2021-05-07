@@ -215,7 +215,7 @@
                     }
                 },
                 error : function(request, status, error) {
-                    console.log(error)
+                    console.log(error);
                 }
             })
         }
@@ -288,18 +288,22 @@
     function addTable(previousYear, thisYear, previousYearData, thisYearData){
         $('#information > tbody').empty();
 
+        if(previousYearData.length==0) {
+            if(thisYearData.length==0){
+                $('#information > tfoot').empty();
+                $('#information > tbody').empty();
+
+                const innerHtml = "<tr><td colspan='14' rowspan='3'> 저장된 센서 데이터가 없습니다. </td></tr>";
+                $('#information > tbody').append(innerHtml);
+                return false
+            }
+            for(let i=0; i<12; i++){
+                previousYearData.push(null);
+            }
+        }
+
         const previousYearSum = addMonthlyData(previousYear, previousYearData);
         const thisYearSum = addMonthlyData(thisYear, thisYearData);
-
-        if(previousYearData.length==0&&thisYearData.length==0){
-            $('#information > tfoot').empty();
-            $('#information > tbody').empty();
-
-            const innerHtml = "<tr><td colspan='14' rowspan='3'> 저장된 센서 데이터가 없습니다. </td></tr>";
-
-            $('#information > tbody').append(innerHtml);
-            return false;
-        }
 
         let innerHtml;
         let increase;

@@ -97,6 +97,7 @@ public class Schedule {
         notificationListRepository.save(notificationList);
     }
 
+
     @Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
     public void monthlyEmissionsScheduling(){
         LocalDate today = LocalDate.now();
@@ -107,6 +108,7 @@ public class Schedule {
         for(SensorList sensorList : sensorListRepository.findAll()){
             MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(sensorList.getTableName(), from.getYear());
             Double value = monthlyEmissionsCustomRepository.addStatisticsData(sensorList.getTableName(), from.toString(), to.toString());
+
             if(from.getMonthValue()==1){
                 monthlyEmissions.setJan(value);
             } else if(from.getMonthValue()==2){
