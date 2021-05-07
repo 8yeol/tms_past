@@ -2,6 +2,7 @@ package com.example.tms.controller.scheduler;
 
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -35,7 +36,7 @@ public class Schedule {
         this.notificationListCustomRepository = notificationListCustomRepository;
     }
 
-    //@Scheduled(cron = "0 0/5 * * * *")
+//    @Scheduled(cron = "0 0/5 * * * *")
     public void scheduling(){
         List<NotificationSettings> notification = notification_settingsRepository.findByStatusIsTrue();
 
@@ -89,50 +90,49 @@ public class Schedule {
     }
 
 
-    /* 알림 현황 입력 */
-    public void saveNotiStatistics(boolean day, boolean month){
-        LocalDate nowDate = LocalDate.now(); //현재시간
-        int getYear = nowDate.getYear();
-        int getMonth = nowDate.getMonthValue();
-        int getDay = nowDate.getDayOfMonth();
-        LocalDate getYesterday = nowDate.minusDays(1);
-        LocalDate getLastMonth = nowDate.minusMonths(1);
+    /* 알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산 */
+    @Scheduled(cron = "0 1 0 * * * *")  //매일 00시 01분에 스케쥴 실행
+    public void saveNotiStatistics(){
+        LocalDate nowDate = LocalDate.now();
 
         /* 일 데이터 입력 : 어제 */
-        if(day){
+        try {
+            LocalDate getYesterday = nowDate.minusDays(1); //전날 데이터 입력
             notificationDayStatisticsRepository.deleteByDay(String.valueOf(getYesterday)); //데이터가 존재할 경우 삭제
-            try {
-                int arr[] = new int[3];
-                for(int grade=1; grade<=3; grade++) {
-                    List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(getYesterday + "T00:00:00"), LocalDateTime.parse(getYesterday + "T23:59:59"));
-                    arr[grade-1] = (int) list.get(0).get("count");
-                }
-                NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(getYesterday), arr[0], arr[1], arr[2]);
-                notificationDayStatisticsRepository.save(ns);
-            } catch (Exception e) {
-//                log.info(e.getMessage());
+            int arr[] = new int[3];
+            for(int grade=1; grade<=3; grade++) {
+                List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(getYesterday + "T00:00:00"), LocalDateTime.parse(getYesterday + "T23:59:59"));
+                arr[grade-1] = (int) list.get(0).get("count");
             }
-        } //if
+            NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(getYesterday), arr[0], arr[1], arr[2]);
+            notificationDayStatisticsRepository.save(ns);
+        } catch (Exception e) {
 
-        /* 월 데이터 입력 : 지난 달 */
-        if(month) {
-            String date = String.valueOf(getLastMonth).substring(0,7);
-            notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
-            int lastMonthOfDay = getLastMonth.lengthOfMonth();
-            LocalDate from_date = LocalDate.of(getYear, getLastMonth.getMonth(), 1);
-            LocalDate to_date = LocalDate.of(getYear, getLastMonth.getMonth(), lastMonthOfDay);
-            try {
-                int arr[] = new int[3];
-                for(int grade=1; grade<=3; grade++) {
-                    List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(to_date + "T23:59:59"));
-                    arr[grade-1] = (int) list.get(0).get("count");
-                }
-                NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
-                notificationMonthStatisticsRepository.save(ns);
-            } catch (Exception e) {
-//                log.info(e.getMessage());
+        }
+
+        /* 월 데이터 입력 : 이번 달 */
+        try {
+            int getDay = nowDate.getDayOfMonth();
+            if(getDay == 1){ //매달 1일인 경우 지난달 계산
+                nowDate = nowDate.minusDays(1);
             }
-        } //if
+            int lastday = nowDate.lengthOfMonth();
+            int getYear = nowDate.getYear();
+            int getMonth = nowDate.getMonthValue();
+            String date = String.valueOf(nowDate).substring(0,7); //'yyyy-mm'
+            notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
+            LocalDate fromDate = LocalDate.of(getYear, getMonth, 1); //
+            LocalDate toDate = LocalDate.of(getYear, getMonth, lastday);
+            int arr[] = new int[3];
+            for(int grade=1; grade<=3; grade++) {
+                List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(fromDate + "T00:00:00"), LocalDateTime.parse(toDate + "T23:59:59"));
+                arr[grade-1] = (int) list.get(0).get("count");
+            }
+            NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
+            notificationMonthStatisticsRepository.save(ns);
+        } catch (Exception e) {
+
+        }
 
     }
 }
