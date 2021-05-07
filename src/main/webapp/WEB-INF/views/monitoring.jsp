@@ -150,37 +150,7 @@
             </div>
         </div>
         <div class="row table m-3" id="place_table">
-            <c:set var="plceSize" value="${place.size()}"/>
-            <c:forEach var="places" items="${place}" varStatus="status">
-            <c:choose>
-                <c:when test="${placeSize%2==1}">
-                    <div class="col-md-12 mb-3" >
-                    <div class="bg-info m-2 text-center"><span class="fs-5">${places.name}</span></div>
-                    <div class="2 text-end">업데이트 : <span class="small" id="update-${status.index}"></span></div>
-                </c:when>
-                <c:otherwise>
-                    <div class="col-md-6 mb-3">
-                    <div class="bg-info m-2 text-center"><span class="fs-5">${places.name}</span></div>
-                    <div class="2 text-end">업데이트 : <span class="small" id="update-${status.index}"></span></div>
-                </c:otherwise>
-            </c:choose>
-                   <table class="table table-bordered table-hover text-center">
-                        <thead>
-                        <tr class="add-bg-color">
-                            <th>항목</th>
-                            <th>법적기준</th>
-                            <th>사내기준</th>
-                            <th>관리기준</th>
-                            <th>실시간</th>
-                        </tr>
-                        <thead>
-                        <tbody id="sensor-table-${status.index}">
-                            <%--script--%>
-                        </tbody>
-                    </table>
-                </div>
-                </c:forEach>
-            </div>
+
         </div>
     </div>
 </div>
@@ -196,6 +166,8 @@
 
     $(document).ready(function () {
         getData();
+
+
         // flashing();
     });
 
@@ -236,11 +208,40 @@
 
     // 중복 로직 수정 (수정 필요)
     function getData() {
+        const placeName = getPlace();
+        var col_md_size;
+        for(var i=0; i<placeName.length; i++){
+            if(placeName.length%2==0){ //짝수개
+                console.log(placeName.length);
+                // $('#place_table').append("<div class='col-md-6 mb-3'>");
+                col_md_size = 6;
+            }else if(placeName.length%2==1){ //홀수개
+                col_md_size = 12;
+                // $('#place_table').append("<div class='col-md-12 mb-3'>");
+            }
+
+            $('#place_table').append("<div class='col-md-"+col_md_size+" mb-3'>" +
+                "<div class='bg-info m-2 text-center'><span class='fs-5'>"+placeName[i]+"</span></div>" +
+                "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
+                "<table class='table table-bordered table-hover text-center'>" +
+                "<thead>" +
+                "<tr class='add-bg-color'>" +
+                "<th>항목</th>" +
+                "<th>법적기준</th>" +
+                "<th>사내기준</th>" +
+                "<th>관리기준</th>" +
+                "<th>실시간</th>" +
+                "</tr>" +
+                "</thead>"+
+                "<tbody id='sensor-table-"+i+"'>"+
+                "</tbody>" +
+                "</table>" +
+            "</div>");
+        }
         setTimeout(function interval_getData() { //실시간 처리위한 setTimeout
 
             status_true_count = 0, status_false_count = 0, power_on_count = 0, power_off_count = 0, legal_standard_count = 0, company_standard_count = 0, management_standard_count = 0;
 
-            const placeName = getPlace();
             const placeData = new Array();
             for (let i = 0; i < placeName.length; i++) {
                 clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
