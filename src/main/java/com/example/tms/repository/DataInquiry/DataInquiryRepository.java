@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public class DataInquiryCustomRepository {
+public class DataInquiryRepository {
     final MongoTemplate mongoTemplate;
 
-    public DataInquiryCustomRepository(MongoTemplate mongoTemplate) {
+    public DataInquiryRepository(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 

@@ -16,9 +16,12 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+
 <script src="static/js/common/common.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/moment.min.js"></script>
+<script src="static/js/sweetalert2.min.js"></script>
 
 <style>
     .add-bg {
@@ -157,31 +160,58 @@
     }
 
     function itemChange(){
-        //const place = $("#place").val();
         const item = $("#items").val();
-        //$(".placeAndItem").text("["+place + " - " + findSensorCategory(item) +"] ");
         const thisYear = new Date().getFullYear();
         const previousYear = thisYear-1;
+
+        if(item==null){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '해당 측정소에 등록된 측정 항목이 없습니다.'
+            })
+        }
 
         let thisYearData = [],previousYearData = [];
 
         for(let i=1; i>=0; i--){
             let year = thisYear;
             year = year-i;
-
             $.ajax({
-                url: '<%=cp%>/addStatisticsData',
+                url: '<%=cp%>/getStatisticsData',
                 type: 'POST',
                 dataType: 'json',
                 async: false,
                 cache: false,
-                data: {"item":item,
+                data: {"sensor":item,
                     "year":year},
                 success : function(data) {
                     if(i==0){
-                        thisYearData.push(data);
+                        thisYearData.push(data.jan);
+                        thisYearData.push(data.feb);
+                        thisYearData.push(data.mar);
+                        thisYearData.push(data.apr);
+                        thisYearData.push(data.may);
+                        thisYearData.push(data.jun);
+                        thisYearData.push(data.jul);
+                        thisYearData.push(data.aug);
+                        thisYearData.push(data.sep);
+                        thisYearData.push(data.oct);
+                        thisYearData.push(data.nov);
+                        thisYearData.push(data.dec);
                     } else {
-                        previousYearData.push(data);
+                        previousYearData.push(data.jan);
+                        previousYearData.push(data.feb);
+                        previousYearData.push(data.mar);
+                        previousYearData.push(data.apr);
+                        previousYearData.push(data.may);
+                        previousYearData.push(data.jun);
+                        previousYearData.push(data.jul);
+                        previousYearData.push(data.aug);
+                        previousYearData.push(data.sep);
+                        previousYearData.push(data.oct);
+                        previousYearData.push(data.nov);
+                        previousYearData.push(data.dec);
                     }
                 },
                 error : function(request, status, error) {
@@ -189,8 +219,8 @@
                 }
             })
         }
-        addChart(previousYear, thisYear, previousYearData[0], thisYearData[0]);
-        addTable(previousYear, thisYear, previousYearData[0], thisYearData[0]);
+        addChart(previousYear, thisYear, previousYearData, thisYearData);
+        addTable(previousYear, thisYear, previousYearData, thisYearData);
     }
 
     function addChart(previousYear, thisYear, previousYearData, thisYearData){
@@ -260,6 +290,16 @@
 
         const previousYearSum = addMonthlyData(previousYear, previousYearData);
         const thisYearSum = addMonthlyData(thisYear, thisYearData);
+
+        if(previousYearData.length==0&&thisYearData.length==0){
+            $('#information > tfoot').empty();
+            $('#information > tbody').empty();
+
+            const innerHtml = "<tr><td colspan='14' rowspan='3'> 저장된 센서 데이터가 없습니다. </td></tr>";
+
+            $('#information > tbody').append(innerHtml);
+            return false;
+        }
 
         let innerHtml;
         let increase;

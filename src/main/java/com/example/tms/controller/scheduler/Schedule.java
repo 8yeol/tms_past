@@ -96,35 +96,9 @@ public class Schedule {
         notificationListRepository.save(notificationList);
     }
 
-    //@Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
     public void monthlyEmissionsScheduling(){
         System.out.println("월별 배출량 추이 스케줄러" + new Date());
-
-        List<SensorList> sensorLists = sensorListRepository.findAll();
-
-        for(SensorList sensorList : sensorLists){
-            List<Double> monthlyList = monthlyEmissionsCustomRepository.addStatisticsData(2021, sensorList.getTableName());
-
-            System.out.println(monthlyList);
-
-            MonthlyEmissions monthlyEmissions = new MonthlyEmissions();
-            monthlyEmissions.setSensor(sensorList.getTableName());
-            monthlyEmissions.setYear(2021);
-            monthlyEmissions.setJan(monthlyList.get(0));
-            monthlyEmissions.setFeb(monthlyList.get(1));
-            monthlyEmissions.setMay(monthlyList.get(2));
-            monthlyEmissions.setApr(monthlyList.get(3));
-            monthlyEmissions.setMar(monthlyList.get(4));
-            monthlyEmissions.setJun(monthlyList.get(5));
-            monthlyEmissions.setJul(monthlyList.get(6));
-            monthlyEmissions.setAug(monthlyList.get(7));
-            monthlyEmissions.setSep(monthlyList.get(8));
-            monthlyEmissions.setOct(monthlyList.get(9));
-            monthlyEmissions.setNov(monthlyList.get(10));
-            monthlyEmissions.setDec(monthlyList.get(11));
-
-            monthlyEmissionsRepository.insert(monthlyEmissions);
-        }
 
     }
 

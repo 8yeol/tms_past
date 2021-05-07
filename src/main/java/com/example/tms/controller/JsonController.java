@@ -3,7 +3,8 @@ package com.example.tms.controller;
 
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
-import com.example.tms.repository.DataInquiry.DataInquiryCustomRepository;
+import com.example.tms.repository.DataInquiry.DataInquiryRepository;
+import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsRepository;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
@@ -36,9 +37,11 @@ public class JsonController {
     final NotificationMonthStatisticsRepository notificationMonthStatisticsRepository;
     final MongoTemplate mongoTemplate;
 
-    final DataInquiryCustomRepository dataInquiryCustomRepository;
+    final DataInquiryRepository dataInquiryCustomRepository;
 
-    public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate, DataInquiryCustomRepository dataInquiryCustomRepository) {
+    final MonthlyEmissionsRepository monthlyEmissionsRepository;
+
+    public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository) {
         this.placeRepository = placeRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
@@ -53,6 +56,7 @@ public class JsonController {
         this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
         this.mongoTemplate = mongoTemplate;
         this.dataInquiryCustomRepository = dataInquiryCustomRepository;
+        this.monthlyEmissionsRepository = monthlyEmissionsRepository;
     }
 
     // *********************************************************************************************************************
@@ -425,4 +429,9 @@ public class JsonController {
         return dataInquiryCustomRepository.searchInformatin(date_start, date_end, item, off);
     }
 
+    @RequestMapping(value = "/getStatisticsData", method = RequestMethod.POST)
+    public MonthlyEmissions getStatisticsData(String sensor, int year) {
+
+        return monthlyEmissionsRepository.findBySensorAndYear(sensor, year);
+    }
 }
