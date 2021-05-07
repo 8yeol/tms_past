@@ -247,7 +247,7 @@
                 title: '경고',
                 text: 'From 시간 보다 적은 시간을 입력하실 수 없습니다.'
             })
-            $('#end' + idx).val(stime);
+            $('#end' + idx).val();
             return;
         }
 
