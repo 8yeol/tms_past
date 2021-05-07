@@ -294,7 +294,8 @@ public class JsonController {
             }
         }
     }
-    /* 알림페이지 일별 데이터 저장 */
+
+    /* 알림 현황 데이터 저장 */
     @RequestMapping(value = "saveNotiStatistics")
     public void saveNotiStatistics() {
         LocalDate nowDate = LocalDate.now(); //현재시간
@@ -304,91 +305,50 @@ public class JsonController {
         LocalDate getYesterday = nowDate.minusDays(1);
         LocalDate getLastMonth = nowDate.minusMonths(1);
 
-        /* 일 데이터 입력 : 어제 */
-       /* if(false){
-            notificationDayStatisticsRepository.deleteByDay(String.valueOf(getYesterday)); //데이터가 존재할 경우 삭제
-            try {
-                int arr[] = new int[3];
-                for(int grade=1; grade<=3; grade++) {
-                    List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(getYesterday + "T00:00:00"), LocalDateTime.parse(getYesterday + "T23:59:59"));
-                    arr[grade-1] = (int) list.get(0).get("count");
-                }
-                NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(getYesterday), arr[0], arr[1], arr[2]);
-                notificationDayStatisticsRepository.save(ns);
-            } catch (Exception e) {
-//                log.info(e.getMessage());
+       /* 일 데이터 및 월 데이터 입력: 1월1일 ~ 어제 날짜 */
+        for (int m = 1; m <= getMonth; m++) {
+            LocalDate date = LocalDate.of(getYear, m, 1);
+            int lastDay = date.lengthOfMonth();
+            if (m == getMonth) { // 이번 달, 어제 날짜까지 구하기 위함
+                lastDay = getDay-1;
             }
-        }*/ //if
-
-
-        /* 일 데이터 및 월 데이터 입력: 1월1일 ~ 어제 날짜 */
-        if(false) {
-            for (int m = 1; m <= getMonth; m++) {
-                LocalDate date = LocalDate.of(getYear, m, 1);
-                int lastDay = date.lengthOfMonth();
-                if (m == getMonth) { // 이번 달, 어제 날짜까지 구하기 위함
-                    lastDay = getDay-1;
-                }
-                for (int d = 1; d <= lastDay; d++) {
-                    LocalDate date2 = LocalDate.of(getYear, m, d);
-                    notificationDayStatisticsRepository.deleteByDay(String.valueOf(date2)); //데이터가 존재할 경우 삭제
-                    try {
-                        int arr[] = new int[3];
-                        for(int grade=1; grade<=3; grade++) {
-                            List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(date2 + "T00:00:00"), LocalDateTime.parse(date2 + "T23:59:59"));
-                            arr[grade-1] = (int) list.get(0).get("count");
-                        }
-                        NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), arr[0], arr[1], arr[2]);
-                        notificationDayStatisticsRepository.save(ns);
-                    } catch (Exception e) {
-                        NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), 0, 0, 0);
-                        notificationDayStatisticsRepository.save(ns);
-//                        log.info(e.getMessage());
+            for (int d = 1; d <= lastDay; d++) {
+                LocalDate date2 = LocalDate.of(getYear, m, d);
+                notificationDayStatisticsRepository.deleteByDay(String.valueOf(date2)); //데이터가 존재할 경우 삭제
+                try {
+                    int arr[] = new int[3];
+                    for(int grade=1; grade<=3; grade++) {
+                        List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(date2 + "T00:00:00"), LocalDateTime.parse(date2 + "T23:59:59"));
+                        arr[grade-1] = (int) list.get(0).get("count");
                     }
+                    NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), arr[0], arr[1], arr[2]);
+                    notificationDayStatisticsRepository.save(ns);
+                } catch (Exception e) {
+                    NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), 0, 0, 0);
+                    notificationDayStatisticsRepository.save(ns);
+//                        log.info(e.getMessage());
                 }
             }
-        } //if
+        }
 
 
-
-        /* 월 데이터 입력 : 지난 달 *//*
-        if(false) {
-            String date = String.valueOf(getLastMonth).substring(0,7);
+        /* 월데이터 입력 : 1월 ~ 이번 달 */
+        for (int m = 1; m <= getMonth; m++) {
+            LocalDate from_date = LocalDate.of(getYear, m, 1);
+            LocalDate to_date = LocalDate.of(getYear, m, from_date.lengthOfMonth());
+            String date = String.valueOf(from_date).substring(0, 7);
             notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
-            int lastMonthOfDay = getLastMonth.lengthOfMonth();
-            LocalDate from_date = LocalDate.of(getYear, getLastMonth.getMonth(), 1);
-            LocalDate to_date = LocalDate.of(getYear, getLastMonth.getMonth(), lastMonthOfDay);
             try {
                 int arr[] = new int[3];
-                for(int grade=1; grade<=3; grade++) {
+                for (int grade = 1; grade <= 3; grade++) {
                     List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(to_date + "T23:59:59"));
-                    arr[grade-1] = (int) list.get(0).get("count");
+                    arr[grade - 1] = (int) list.get(0).get("count");
                 }
                 NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
                 notificationMonthStatisticsRepository.save(ns);
             } catch (Exception e) {
-//                log.info(e.getMessage());
-            }
-        }*/ //if
-
-        if(true) {
-            for (int m = 1; m <= getMonth; m++) {
-                LocalDate from_date = LocalDate.of(2019, m, 1);
-                LocalDate to_date = LocalDate.of(getYear, m, from_date.lengthOfMonth());
-                String date = String.valueOf(from_date).substring(0, 7);
-                notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
-                try {
-                    int arr[] = new int[3];
-                    for (int grade = 1; grade <= 3; grade++) {
-                        List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(to_date + "T23:59:59"));
-                        arr[grade - 1] = (int) list.get(0).get("count");
-                    }
-                    NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
-                    notificationMonthStatisticsRepository.save(ns);
-                } catch (Exception e) {
-                    NotificationMonthStatistics ns = new NotificationMonthStatistics(date, 0, 0, 0);
-                    notificationMonthStatisticsRepository.save(ns);
-                }
+                NotificationMonthStatistics ns = new NotificationMonthStatistics(date, 0, 0, 0);
+                notificationMonthStatisticsRepository.save(ns);
             }
         }
 
