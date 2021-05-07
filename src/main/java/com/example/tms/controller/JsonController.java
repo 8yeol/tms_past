@@ -185,6 +185,11 @@ public class JsonController {
     public ReferenceValueSetting getSensorInfo(@RequestParam String sensor) {
         return reference_value_settingRepository.findByName(sensor);
     }
+    //센서리스트 불러오기
+    @RequestMapping(value = "/getSensorList2")
+    public List<SensorList> getSensorList2(@RequestParam("place") String place) {
+        return sensorListRepository.findByPlace(place);
+    }
 
     // 김규아 추가
     @RequestMapping(value = "/getMonitoringPlace")
@@ -285,7 +290,7 @@ public class JsonController {
         Place place = placeRepository.findBySensorIsIn(name);
         ObjectId id = place.get_id();
 
-        Place updatePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(),place.getPower(), new Date(), place.getSensor());
+        Place updatePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
         updatePlace.set_id(id);
         placeRepository.save(updatePlace);
     }
@@ -296,8 +301,7 @@ public class JsonController {
         if (referenceList == null || "".equals(referenceList)) {
         } else {
             for (int i = 0; i < referenceList.size(); i++) {
-                reference_value_settingRepository.findByName(referenceList.get(i));
-
+                reference_value_settingRepository.deleteByName(referenceList.get(i));
             }
         }
     }
@@ -312,7 +316,7 @@ public class JsonController {
         LocalDate getYesterday = nowDate.minusDays(1);
         LocalDate getLastMonth = nowDate.minusMonths(1);
 
-       /* 일 데이터 및 월 데이터 입력: 1월1일 ~ 어제 날짜 */
+        /* 일 데이터 및 월 데이터 입력: 1월1일 ~ 어제 날짜 */
         for (int m = 1; m <= getMonth; m++) {
             LocalDate date = LocalDate.of(getYear, m, 1);
             int lastDay = date.lengthOfMonth();

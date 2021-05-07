@@ -2,7 +2,11 @@ package com.example.tms.repository;
 
 import com.example.tms.entity.SensorList;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.bson.types.ObjectId;
 
-public interface SensorListRepository extends MongoRepository<SensorList, Object> {
+import java.util.List;
+
+public interface SensorListRepository extends MongoRepository<SensorList, ObjectId> {
+    List<SensorList> findByPlace(String place);
 
 }
