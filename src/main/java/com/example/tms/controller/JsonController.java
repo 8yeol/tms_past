@@ -95,7 +95,6 @@ public class JsonController {
 
     @RequestMapping(value = "getSensorList")
     public List<SensorList> getSensorList(){
-        System.out.println(sensorListRepository.findAll());
         return sensorListRepository.findAll();
     }
 
@@ -436,6 +435,25 @@ public class JsonController {
     public List<Sensor> searchInformatin(String date_start, String date_end, String item, boolean off) {
 
         return dataInquiryCustomRepository.searchInformatin(date_start, date_end, item, off);
+    }
+    //센서관리 항목 추가
+    @RequestMapping(value = "/saveSensor")
+    public List saveSensor(@RequestParam(value = "managementId") String managementId, @RequestParam(value = "classification") String classification, @RequestParam(value = "naming") String naming,@RequestParam(value = "place") String place,
+                           @RequestParam(value = "tableName") String tableName) {
+
+        SensorList sensor = new SensorList();
+        sensor.setClassification(classification);
+        sensor.setManagementId(managementId);
+        sensor.setNaming(naming);
+        sensor.setPlace(place);
+        sensor.setTableName(tableName);
+        Date up_time = new Date();
+        System.out.println(up_time);
+        sensor.setUpTime(up_time);
+        sensor.setStatus(true);
+
+        sensorListRepository.save(sensor);
+        return sensorListRepository.findAll();
     }
 
     @RequestMapping(value = "/getStatisticsData", method = RequestMethod.POST)

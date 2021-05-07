@@ -441,7 +441,7 @@
     }
 
     function inputClean() {
-        $("input").val("");
+        $("input[type=text]").val("");
     }
 
 
