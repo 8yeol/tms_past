@@ -85,7 +85,6 @@ public class MainController {
 
     @RequestMapping("/sensorManagement")
     public String sensorManagement() {
-
         return "sensorManagement";
     }
 
