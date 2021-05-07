@@ -253,61 +253,74 @@
     });
 
     function getData(place_name, sensor_naming){
-        var place_data = getPlaceData(place_name); // 최근데이터, 60분전데이터, 정보
-        place_table = draw_place_table(place_data);
-        // $('#sensorInfo2').text("(경고:"+warning + "/ 위험:"+danger + ")");
-        setTimeout(function interval_getData() {
-            clearTimeout(interval1);
-            console.log("g1: "+interval1);
-            var place_data_recent = getPlaceData(place_name);
-            for (var i = 0; i < place_data.length; i++) {
-                if (place_data[i].up_time != place_data_recent[i].up_time) {
-                    place_data[i].value = place_data_recent[i].value;
-                    place_data[i].up_time = place_data_recent[i].up_time;
-                    place_table = draw_place_table(place_data);
+        try{
+            var place_data = getPlaceData(place_name); // 최근데이터, 60분전데이터, 정보
+            place_table = draw_place_table(place_data);
+            if(place_data.length != 0){
+                setTimeout(function interval_getData() {
+                    clearTimeout(interval1);
+                    console.log("g1: "+interval1);
+                    var place_data_recent = getPlaceData(place_name);
+                    for (var i = 0; i < place_data.length; i++) {
+                        if (place_data[i].up_time != place_data_recent[i].up_time) {
+                            place_data[i].value = place_data_recent[i].value;
+                            place_data[i].up_time = place_data_recent[i].up_time;
+                            place_table = draw_place_table(place_data);
+                        }
+                    }
+                    interval1 = setTimeout(interval_getData, 5000);
+                }, 0);
+                // $('#sensorInfo2').text("(경고:"+warning + "/ 위험:"+danger + ")");
+                if(!sensor_naming){
+                    var sensor_data = place_table.row(0).data();
+                    getData2(sensor_data);
+                }else{
+                    for(var i=0; i<place_data.length; i++){
+                        if(sensor_naming == place_data[i].naming){
+                            var sensor_data = place_data[i];
+                        }
+                    }
+                    getData2(sensor_data);
                 }
+            }else{
+                clearTimeout(interval1);
+                clearTimeout(interval2);
+                draw_sensor_table(null);
+                draw_chart(null, null);
+                $("#radio_text").text(" - 최근 " + textTime + " 자료") ;
+                $("#standard_text").text("");
             }
-            interval1 = setTimeout(interval_getData, 5000);
-        }, 0);
-        if(!sensor_naming){
-            var sensor_data = place_table.row(0).data();
-            getData2(sensor_data);
-        }else{
-            for(var i=0; i<place_data.length; i++){
-                if(sensor_naming == place_data[i].naming){
-                    var sensor_data = place_data[i];
-                }
-            }
-            getData2(sensor_data);
+        }catch (e) {
+
         }
     }
 
     function getData2(sensor_data) {
-        var sensor_name = sensor_data.name;
-        var sensor_time_length;
         var textTime;
         if($("input[id=hourRadio]:radio" ).is( ":checked")){
             sensor_time_length = 60;
             textTime = "1시간";
-        } else{
+        }else{
             sensor_time_length = 1440;
             textTime = "24시간";
         }
-        $("#radio_text").text(sensor_data.naming+ " - 최근 " + textTime + " 자료") ;
+        var sensor_name = sensor_data.name;
+        var sensor_time_length;
 
         var sensor_data_list = getSensor(sensor_name, "", "", sensor_time_length);
         $('#update').text(sensor_data_list[0].x);
         draw_chart(sensor_data_list, sensor_data);
         draw_sensor_table(sensor_data_list);
 
+        $("#radio_text").text(sensor_data.naming+ " - 최근 " + textTime + " 자료") ;
         $("#standard_text").text(sensor_data.legalStandard+"/"+sensor_data.companyStandard+"/"+sensor_data.managementStandard+" mg/Sm³ 이하");
         setTimeout(function interval_getData2() {
             clearTimeout(interval2);
             console.log("g2: "+interval2);
-            var sensor_data_list_recent = getSensor(sensor_name, "", "", 1);
+            var sensor_data_list_recent = getSensorRecent(sensor_name);
             if(sensor_data_list_recent.length != 0){ // null = []
-                if(sensor_data_list[0].x != sensor_data_list_recent[0].x){
-                    sensor_data_list.unshift(sensor_data_list_recent[0]);
+                if(sensor_data_list[0].x == sensor_data_list_recent.up_time){
+                    sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value.toFixed(2), standard: sensor_data_list_recent.standard});
                     // sensor_data_list.pop();
                     draw_sensor_table(sensor_data_list);
                     draw_chart(sensor_data_list, sensor_data);
@@ -317,7 +330,6 @@
         }, 0);
 
     }
-
 
     /* 측정소명으로 센서명 조회*/
     function getPlaceData(place){
@@ -351,17 +363,17 @@
 
                         var sensorInfo = getSensorInfo(item); //item의 정보 데이터
                         naming = sensorInfo.naming;
-                        legal_standard = sensorInfo.legalStandard;
-                        company_standard = sensorInfo.companyStandard;
-                        management_standard = sensorInfo.managementStandard;
+                        legalStandard = sensorInfo.legalStandard;
+                        companyStandard = sensorInfo.companyStandard;
+                        managementStandard = sensorInfo.managementStandard;
                         power = sensorInfo.power;
-                        if(sensor.value < company_standard && sensor.value >= management_standard){
+                        if(sensor.value < companyStandard && sensor.value >= managementStandard){
                             standard = "관리기준 초과";
-                        }else if(sensor.value< legal_standard && sensor.value >= company_standard){
+                        }else if(sensor.value< legalStandard && sensor.value >= companyStandard){
                             standard = "사내기준 초과";
-                        }else if(sensor.value >= legal_standard){
+                        }else if(sensor.value >= legalStandard){
                             standard = "법적기준 초과";
-                        }else if(sensor.value < management_standard){
+                        }else if(sensor.value < managementStandard){
                             standard = "정상";
                         }else{
                             standard = "-";
@@ -369,11 +381,14 @@
                         getData.push({
                             naming: naming, name:item,
                             value:sensor_value, up_time: up_time,
-                            legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard,
+                            legalStandard: legalStandard, companyStandard: companyStandard, managementStandard: managementStandard,
                             b5_value: b5_value,power: power, standard : standard
                         });
                     }
                 })
+            },
+            error: function (e) {
+
             }
         }); //ajax
         // console.log(getData);
@@ -395,7 +410,7 @@
             error: function (e) {
                 // console.log("getSensorRecent Error");
                 // 결과가 존재하지 않을 경우 null 처리
-                getData = "off";
+                getData = false;
             }
         }); //ajax
         return getData;
@@ -410,7 +425,23 @@
             data:  {"sensor": sensor},
             async: false,
             success: function (data) {
-                getData = data;
+                var sensorInfo = getSensorInfo(sensor);
+                var legalStandard = sensorInfo.legalStandard;
+                var companyStandard = sensorInfo.companyStandard;
+                var managementStandard = sensorInfo.managementStandard;
+                var standard;
+                if(data.value < companyStandard && data.value >= managementStandard){
+                    standard = "관리기준 초과";
+                }else if(data.value< legalStandard && data.value >= companyStandard){
+                    standard = "사내기준 초과";
+                }else if(data.value >= legalStandard){
+                    standard = "법적기준 초과";
+                }else if(data.value < managementStandard){
+                    standard = "정상";
+                }else{
+                    standard = "-";
+                }
+                getData = {value: data.value, status: data.status, up_time:moment(data.up_time).format('YYYY-MM-DD HH:mm:ss'), standard: standard};
             },
             error: function (e) {
                 // console.log("getSensorRecent Error");
@@ -463,17 +494,17 @@
             async: false,
             success: function (data) { // from ~ to 또는 to-minute ~ now 또는 from ~ from+minute 데이터 조회
                 var sensorInfo = getSensorInfo(sensor);
-                var legal_standard = sensorInfo.legalStandard;
-                var company_standard = sensorInfo.companyStandard;
-                var management_standard = sensorInfo.managementStandard;
+                var legalStandard = sensorInfo.legalStandard;
+                var companyStandard = sensorInfo.companyStandard;
+                var managementStandard = sensorInfo.managementStandard;
                 $.each(data, function (index, item) {
-                    if(item.value < company_standard && item.value >= management_standard){
+                    if(item.value < companyStandard && item.value >= managementStandard){
                         standard = "관리기준 초과";
-                    }else if(item.value< legal_standard && item.value >= company_standard){
+                    }else if(item.value< legalStandard && item.value >= companyStandard){
                         standard = "사내기준 초과";
-                    }else if(item.value >= legal_standard){
+                    }else if(item.value >= legalStandard){
                         standard = "법적기준 초과";
-                    }else if(item.value < management_standard){
+                    }else if(item.value < managementStandard){
                         standard = "정상";
                     }else{
                         standard = "-";
@@ -494,7 +525,7 @@
     function draw_place_table(data){
         $("#place-table").DataTable().clear();
         $("#place-table").DataTable().destroy();
-        console.log(data);
+        // console.log(data);
         var table = $('#place-table').DataTable({
             paging: false,
             searching: false,
@@ -505,9 +536,9 @@
             order:[[0, 'asc']],
             columns: [
                 {"data": "naming"},
-                {"data": "legal_standard"},
-                {"data": "company_standard"},
-                {"data": "management_standard"},
+                {"data": "legalStandard"},
+                {"data": "companyStandard"},
+                {"data": "managementStandard"},
                 {"data": "value"},
                 {"data": "standard"}
             ],
@@ -521,7 +552,7 @@
                         $(row).find('td:eq(5)').css('font-weight', 'bold');
                     }
                 }
-                if(data.company_standard != "-"){
+                if(data.companyStandard != "-"){
                     $(row).find('td:eq(2)').css('background-color', '#ffc55a');
                     if(data.value < data.legalStandard && data.value >= data.companyStandard){
                         $(row).find('td:eq(4)').css('color', '#ffc55a');
@@ -530,7 +561,7 @@
                         $(row).find('td:eq(5)').css('font-weight', 'bold');
                     }
                 }
-                if(data.management_standard != "-"){
+                if(data.managementStandard != "-"){
                     $(row).find('td:eq(3)').css('background-color', '#a2d674');
                     if(data.value <= data.companyStandard && data.value > data.managementStandard){
                         $(row).find('td:eq(4)').css('color', '#a2d674');
@@ -589,20 +620,20 @@
             pagingType: 'numbers',
             order:[[0, 'desc']],
             /*'rowCallback': function(row, data, index){
-                if(sensor_data.legal_standard != "-"){
-                    if(data.y >= sensor_data.legal_standard){
+                if(sensor_data.legalStandard != "-"){
+                    if(data.y >= sensor_data.legalStandard){
                         $(row).find('td:eq(2)').css('color', '#ff9d5a');
                         $(row).find('td:eq(2)').css('font-weight', 'bold');
                     }
                 }
-                if(sensor_data.company_standard != "-"){
-                    if(data.y < sensor_data.legal_standard && data.y >= sensor_data.company_standard){
+                if(sensor_data.companyStandard != "-"){
+                    if(data.y < sensor_data.legalStandard && data.y >= sensor_data.companyStandard){
                         $(row).find('td:eq(2)').css('color', '#ffc55a');
                         $(row).find('td:eq(2)').css('font-weight', 'bold');
                     }
                 }
-                if(sensor_data.management_standard != "-"){
-                    if(data.y <= sensor_data.company_standard && data.y > sensor_data.management_standard){
+                if(sensor_data.managementStandard != "-"){
+                    if(data.y <= sensor_data.companyStandard && data.y > sensor_data.managementStandard){
                         $(row).find('td:eq(2)').css('color', '#a2d674');
                         $(row).find('td:eq(2)').css('font-weight', 'bold');
                     }
@@ -640,161 +671,186 @@
 
     /* chart Option Setting */
     function setChartOption(sensor_data_list, sensor_data){
-        var min = 0;
-        var max = sensor_data.management_standard*2;
-        var options = {
-            series: [{
-                name: sensor_data.naming,
-                data: sensor_data_list
-            }],
-            chart: {
-                height: '400px',
-                type: 'bar',
-                toolbar:{
-                    show:true,
-                    tools: {
-                        download: true,
-                        selection: true,
-                        zoom: true,
-                        zoomin: true,
-                        zoomout: true,
-                        pan: true,
-                        reset: true,
-                    },
+        var options;
+        if(sensor_data == null && sensor_data_list == null){
+            options = {
+                chart: {
+                    height: '400px',
                 },
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    speed: 10,
-                    animateGradually: {
-                        enabled: true,
-                        delay: 0
-                    },
-                    dynamicAnimation: {
-                        enabled: true,
-                        speed: 10
+                series: [
+                    {
+                        data: []
+                    }
+                ],
+                yaxis: {
+                    labels: {
+                        show: true,
+                        formatter: function (val) {
+                            if (sensor_data_list === null || sensor_data_list.length === 0)
+                                return 'No data'
+                            else
+                                return val
+                        }
                     }
                 },
-            },
-            tooltip:{
-                enbaled: true,
-                x: {
-                    show: true,
-                    format: 'HH:mm',
-                    formatter: undefined,
+            };
+        }else{
+            var min = 0;
+            var max = sensor_data.managementStandard*2;
+            options = {
+                series: [{
+                    name: sensor_data.naming,
+                    data: sensor_data_list
+                }],
+                chart: {
+                    height: '400px',
+                    type: 'bar',
+                    toolbar:{
+                        show:true,
+                        tools: {
+                            download: true,
+                            selection: true,
+                            zoom: true,
+                            zoomin: true,
+                            zoomout: true,
+                            pan: true,
+                            reset: true,
+                        },
+                    },
+                    animations: {
+                        enabled: true,
+                        easing: 'linear',
+                        speed: 10,
+                        animateGradually: {
+                            enabled: true,
+                            delay: 0
+                        },
+                        dynamicAnimation: {
+                            enabled: true,
+                            speed: 10
+                        }
+                    },
                 },
-            },
-            annotations: {
-                yaxis: [{
-                    y: sensor_data.management_standard,
-                    borderColor: '#00E396',
-                    label: {
+                tooltip:{
+                    enbaled: true,
+                    x: {
+                        show: true,
+                        format: 'HH:mm',
+                        formatter: undefined,
+                    },
+                },
+                annotations: {
+                    yaxis: [{
+                        y: sensor_data.managementStandard,
                         borderColor: '#00E396',
-                        style: {
-                            color: '#fff',
-                            background: '#00E396'
+                        label: {
+                            borderColor: '#00E396',
+                            style: {
+                                color: '#fff',
+                                background: '#00E396'
+                            },
+                            text: '관리기준',
+                            offsetX: -970
+                        }
+                    },
+                        {
+                            y: sensor_data.companyStandard,
+                            borderColor: '#FEB019',
+                            label: {
+                                borderColor: '#FEB019',
+                                style: {
+                                    color: '#fff',
+                                    background: '#FEB019'
+                                },
+                                text: '사내기준',
+                                offsetX: -970
+                            }
                         },
-                        text: '관리기준',
-                        offsetX: -970
-                    }
-                },
-                {
-                    y: sensor_data.company_standard,
-                    borderColor: '#FEB019',
-                    label: {
-                        borderColor: '#FEB019',
-                        style: {
-                            color: '#fff',
-                            background: '#FEB019'
-                        },
-                        text: '사내기준',
-                        offsetX: -970
-                    }
-                },
-                {
-                    y: sensor_data.legal_standard,
-                    borderColor: '#FF4560',
-                    label: {
-                        borderColor: '#FF4560',
-                        style: {
-                            color: '#fff',
-                            background: '#FF4560'
-                        },
-                        text: '법적기준',
-                        offsetX: -970
-                    }
-                }]
-            },
-            plotOptions: {
-                bar: {
-                    colors: {
-                        ranges: [{
-                            from: min,
-                            to: sensor_data.management_standard-0.001,
-                            color: '#97bef8'
-                        }, { //관리
-                            from: sensor_data.management_standard,
-                            to: sensor_data.company_standard-0.001,
-                            color: '#a2d674'
-                        }, { //사내
-                            from: sensor_data.company_standard,
-                            to: sensor_data.legal_standard-0.001,
-                            color: '#ffc55a'
-                        }, { //법적
-                            from: sensor_data.legal_standard,
-                            to: max,
-                            color: '#ff9d5a'
+                        {
+                            y: sensor_data.legalStandard,
+                            borderColor: '#FF4560',
+                            label: {
+                                borderColor: '#FF4560',
+                                style: {
+                                    color: '#fff',
+                                    background: '#FF4560'
+                                },
+                                text: '법적기준',
+                                offsetX: -970
+                            }
                         }]
-                    },
-                    columnWidth: '30%'
                 },
-            },
-            stroke: {
-                width: 0,
-            },
-            dataLabels: {
-                enabled: false
-            },
-            fill: {
-                opacity: 1,
-            },
-            yaxis: {
-                tickAmount: 2,
-                decimalsInFloat: 2, //소수점아래
-                // min: min, //최소
-                // max: max //최대
-            },
-            xaxis: {
-                type: 'datetime',
-                labels: {
-                    show: true,
-                    datetimeUTC: false,
-                    datetimeFormatter: {
-                        year: 'yyyy년',
-                        month: 'MM월',
-                        day: 'dd일',
-                        hour: 'HH:mm'
+                plotOptions: {
+                    bar: {
+                        colors: {
+                            ranges: [{
+                                from: min,
+                                to: sensor_data.managementStandard-0.001,
+                                color: '#97bef8'
+                            }, { //관리
+                                from: sensor_data.managementStandard,
+                                to: sensor_data.companyStandard-0.001,
+                                color: '#a2d674'
+                            }, { //사내
+                                from: sensor_data.companyStandard,
+                                to: sensor_data.legalStandard-0.001,
+                                color: '#ffc55a'
+                            }, { //법적
+                                from: sensor_data.legalStandard,
+                                to: max,
+                                color: '#ff9d5a'
+                            }]
+                        },
+                        columnWidth: '30%'
                     },
                 },
-                tickPlacement: 'on',
-                axisBorder: {
-                    show: true,
-                    color: '#78909C',
-                    height: 2,
-                    width: '100%',
-                    offsetX: 0,
-                    offsetY: 0
+                stroke: {
+                    width: 0,
                 },
-                axisTicks: {
-                    show: true,
-                    borderType: 'solid',
-                    color: '#78909C',
-                    height: 8,
-                    offsetX: 0,
-                    offsetY: 0
+                dataLabels: {
+                    enabled: false
                 },
-            }
-        };
+                fill: {
+                    opacity: 1,
+                },
+                yaxis: {
+                    tickAmount: 2,
+                    decimalsInFloat: 2, //소수점아래
+                    // min: min, //최소
+                    // max: max //최대
+                },
+                xaxis: {
+                    type: 'datetime',
+                    labels: {
+                        show: true,
+                        datetimeUTC: false,
+                        datetimeFormatter: {
+                            year: 'yyyy년',
+                            month: 'MM월',
+                            day: 'dd일',
+                            hour: 'HH:mm'
+                        },
+                    },
+                    tickPlacement: 'on',
+                    axisBorder: {
+                        show: true,
+                        color: '#78909C',
+                        height: 2,
+                        width: '100%',
+                        offsetX: 0,
+                        offsetY: 0
+                    },
+                    axisTicks: {
+                        show: true,
+                        borderType: 'solid',
+                        color: '#78909C',
+                        height: 8,
+                        offsetX: 0,
+                        offsetY: 0
+                    },
+                }
+            };
+        }
         return options;
     }
 
