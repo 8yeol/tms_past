@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
@@ -96,10 +97,24 @@ public class Schedule {
         notificationListRepository.save(notificationList);
     }
 
-    @Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
+    @Scheduled(cron = "0/10 * * * * *")
+    //@Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
     public void monthlyEmissionsScheduling(){
         System.out.println("월별 배출량 추이 스케줄러" + new Date());
 
+        System.out.println(sensorListRepository.findAll());
+
+        for(SensorList sensorList : sensorListRepository.findAll()){
+            System.out.println(sensorList.getTableName());
+        }
+
+        LocalDate today = LocalDate.now();
+        LocalDate lastMonth = today.minus(1, ChronoUnit.MONTHS);
+        LocalDate from = lastMonth.withDayOfMonth(1);
+        LocalDate to = lastMonth.withDayOfMonth(lastMonth.lengthOfMonth());
+
+        System.out.println(from);
+        System.out.println(to);
     }
 
 
