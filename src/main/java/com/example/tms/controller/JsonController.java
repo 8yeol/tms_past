@@ -202,6 +202,11 @@ public class JsonController {
         return sensorCustomRepository.getSensorRecent(sensor);
     }
 
+    @RequestMapping(value = "/getSensorBeforeData")
+    public Sensor getSensorBeforeData(@RequestParam("sensor") String sensor) {
+        return sensorCustomRepository.getSensorBeforeData(sensor);
+    }
+
     /**
      * @param sensor            - 센서명
      * @param from_date,to_date - 입력패턴('', 'Year-Month-Day hh:mm:ss', 'Year-Month-Day', 'hh:mm:ss', 'hh:mm')
