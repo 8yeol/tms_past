@@ -284,11 +284,7 @@
                 }
             }else{
                 clearTimeout(interval1);
-                clearTimeout(interval2);
-                draw_sensor_table(null);
-                draw_chart(null, null);
-                $("#radio_text").text(" - 최근 " + textTime + " 자료") ;
-                $("#standard_text").text("");
+                getData2(sensor_data);
             }
         }catch (e) {
 
@@ -304,30 +300,39 @@
             sensor_time_length = 1440;
             textTime = "24시간";
         }
-        var sensor_name = sensor_data.name;
-        var sensor_time_length;
+        try{
+            var sensor_name = sensor_data.name;
+            var sensor_time_length;
 
-        var sensor_data_list = getSensor(sensor_name, "", "", sensor_time_length);
-        $('#update').text(sensor_data_list[0].x);
-        draw_chart(sensor_data_list, sensor_data);
-        draw_sensor_table(sensor_data_list);
+            var sensor_data_list = getSensor(sensor_name, "", "", sensor_time_length);
+            $('#update').text(sensor_data_list[0].x);
+            draw_chart(sensor_data_list, sensor_data);
+            draw_sensor_table(sensor_data_list);
 
-        $("#radio_text").text(sensor_data.naming+ " - 최근 " + textTime + " 자료") ;
-        $("#standard_text").text(sensor_data.legalStandard+"/"+sensor_data.companyStandard+"/"+sensor_data.managementStandard+" mg/Sm³ 이하");
-        setTimeout(function interval_getData2() {
-            clearTimeout(interval2);
-            console.log("g2: "+interval2);
-            var sensor_data_list_recent = getSensorRecent(sensor_name);
-            if(sensor_data_list_recent.length != 0){ // null = []
-                if(sensor_data_list[0].x == sensor_data_list_recent.up_time){
-                    sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value.toFixed(2), standard: sensor_data_list_recent.standard});
-                    // sensor_data_list.pop();
-                    draw_sensor_table(sensor_data_list);
-                    draw_chart(sensor_data_list, sensor_data);
+            $("#radio_text").text(sensor_data.naming+ " - 최근 " + textTime + " 자료") ;
+            $("#standard_text").text(sensor_data.legalStandard+"/"+sensor_data.companyStandard+"/"+sensor_data.managementStandard+" mg/Sm³ 이하");
+            setTimeout(function interval_getData2() {
+                clearTimeout(interval2);
+                console.log("g2: "+interval2);
+                var sensor_data_list_recent = getSensorRecent(sensor_name);
+                if(sensor_data_list_recent.length != 0){ // null = []
+                    if(sensor_data_list[0].x == sensor_data_list_recent.up_time){
+                        sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value.toFixed(2), standard: sensor_data_list_recent.standard});
+                        // sensor_data_list.pop();
+                        draw_sensor_table(sensor_data_list);
+                        draw_chart(sensor_data_list, sensor_data);
+                    }
                 }
-            }
-            interval2 = setTimeout(interval_getData2, 5000);
-        }, 0);
+                interval2 = setTimeout(interval_getData2, 5000);
+            }, 0);
+
+        }catch (e) {
+            clearTimeout(interval2);
+            draw_chart(null, null);
+            draw_sensor_table(null);
+            $("#radio_text").text(" - 최근 " + textTime + " 자료") ;
+            $("#standard_text").text("");
+        }
 
     }
 
