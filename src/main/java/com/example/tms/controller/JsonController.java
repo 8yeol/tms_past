@@ -318,7 +318,7 @@ public class JsonController {
                 try {
                     int arr[] = new int[3];
                     for(int grade=1; grade<=3; grade++) {
-                        List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(date2 + "T00:00:00"), LocalDateTime.parse(date2 + "T23:59:59"));
+                        List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(date2), String.valueOf(date2));
                         arr[grade-1] = (int) list.get(0).get("count");
                     }
                     NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), arr[0], arr[1], arr[2]);
@@ -341,7 +341,7 @@ public class JsonController {
             try {
                 int arr[] = new int[3];
                 for (int grade = 1; grade <= 3; grade++) {
-                    List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(from_date + "T00:00:00"), LocalDateTime.parse(to_date + "T23:59:59"));
+                    List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(from_date), String.valueOf(to_date));
                     arr[grade - 1] = (int) list.get(0).get("count");
                 }
                 NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
@@ -352,6 +352,19 @@ public class JsonController {
             }
         }
 
+    }
+
+    /* 알림 현황 조회 [현재날짜, legalCount, companyCount, managementCount]*/
+    @RequestMapping(value = "getNotiStatisticsNow")
+    public ArrayList getNotificationStatistics(){
+        ArrayList al = new ArrayList();
+        LocalDate nowDate = LocalDate.now();
+        al.add(nowDate);
+        for(int grade=1; grade<=3; grade++){
+            List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(nowDate), String.valueOf(nowDate));
+            al.add(list.get(0).get("count"));
+        }
+        return al;
     }
 
     /* 알림 현황 조회 - 최근 일주일 (limit-7개) */

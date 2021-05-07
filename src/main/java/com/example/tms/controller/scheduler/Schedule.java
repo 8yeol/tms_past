@@ -101,7 +101,7 @@ public class Schedule {
             notificationDayStatisticsRepository.deleteByDay(String.valueOf(getYesterday)); //데이터가 존재할 경우 삭제
             int arr[] = new int[3];
             for(int grade=1; grade<=3; grade++) {
-                List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(getYesterday + "T00:00:00"), LocalDateTime.parse(getYesterday + "T23:59:59"));
+                List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(getYesterday), String.valueOf(getYesterday));
                 arr[grade-1] = (int) list.get(0).get("count");
             }
             NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(getYesterday), arr[0], arr[1], arr[2]);
@@ -125,7 +125,7 @@ public class Schedule {
             LocalDate toDate = LocalDate.of(getYear, getMonth, lastday);
             int arr[] = new int[3];
             for(int grade=1; grade<=3; grade++) {
-                List<HashMap> list = notificationListCustomRepository.getCount(grade, LocalDateTime.parse(fromDate + "T00:00:00"), LocalDateTime.parse(toDate + "T23:59:59"));
+                List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(fromDate), String.valueOf(toDate));
                 arr[grade-1] = (int) list.get(0).get("count");
             }
             NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);

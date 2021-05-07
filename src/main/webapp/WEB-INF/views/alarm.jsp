@@ -281,6 +281,15 @@
     function  getWeekChartData() {
         var getData = new Array();
         $.ajax({
+           url: 'getNotiStatisticsNow',
+           dataType: 'json',
+           async: false,
+           success: function (data) {
+                getData.push({day: data[0], legalCount:data[1], companyCount:data[2], managementCount: data[3]});
+           }
+        });
+
+        $.ajax({
             url: 'getNotificationWeekStatistics',
             dataType: 'json',
             async: false,

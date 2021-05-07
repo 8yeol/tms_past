@@ -23,15 +23,17 @@ public class NotificationListCustomRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public List<HashMap> getCount(int grade, LocalDateTime from_date, LocalDateTime to_date){
+    public List<HashMap> getCount(int grade, String from_date, String to_date){
+        LocalDateTime fromDate = LocalDateTime.parse(from_date + "T00:00:00");
+        LocalDateTime toDate = LocalDateTime.parse(to_date + "T23:59:59");
         try{
-            if(from_date.isBefore(to_date)){
+            if(fromDate.isBefore(toDate)){
                 ProjectionOperation projectionOperation = Aggregation.project()
                         .andInclude("grade")
                         .andInclude("up_time")
                         .andInclude("count");
                 MatchOperation matchOperation = Aggregation.match(new Criteria()
-                            .andOperator(Criteria.where("up_time").gte(from_date).lte(to_date)
+                            .andOperator(Criteria.where("up_time").gte(fromDate).lte(toDate)
                                     .andOperator(Criteria.where("grade").is(grade)
                                     )));
 
@@ -141,7 +143,7 @@ public class NotificationListCustomRepository {
     }*/
 
     /* String type -> LocalDateTime format  */
-    private LocalDateTime format_time(String datetime, boolean end){
+    /*private LocalDateTime format_time(String datetime, boolean end){
         try {
             LocalDateTime newDateTime = null;
             // length : 2021-04-22T01:33:00 - 19, 2021-04-22 01:33:00 - 19, 2021-04-22 - 10, 01:33:00 - 8, 2021-04 - 7, 01:33 - 5
@@ -159,11 +161,12 @@ public class NotificationListCustomRepository {
             }else{
                 newDateTime = LocalDateTime.now();
             }
-            return newDateTime; /* Year-Month-Day + T + Hours:Minutes:Seconds */
+            return newDateTime; *//* Year-Month-Day + T + Hours:Minutes:Seconds *//*
         }catch (Exception e){
             log.info(e.getMessage());
 
         }
         return null;
-    }
+    }*/
+
 }
