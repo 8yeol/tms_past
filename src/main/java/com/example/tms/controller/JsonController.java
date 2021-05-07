@@ -193,6 +193,11 @@ public class JsonController {
     public List<SensorList> getSensorList2(@RequestParam("place") String place) {
         return sensorListRepository.findByPlace(place);
     }
+    //센서리스트 측정항목 불러오기
+    @RequestMapping(value = "/getSensorManagementId")
+    public String getSensorManagementId(@RequestParam("name") String tablename) {
+        return sensorListRepository.findByTableName(tablename);
+    }
 
     // 김규아 추가
     @RequestMapping(value = "/getMonitoringPlace")
@@ -285,22 +290,27 @@ public class JsonController {
 
     //측정소 상세설정 항목 추가
     @RequestMapping(value = "/saveReference")
-    public void saveReference(@RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
-        float legal = 0.0f;
-        float management = 0.0f;
-        float company = 0.0f;
-        Boolean monitoring = false;
+    public String saveReference(@RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
+        if(reference_value_settingRepository.findByName(name)==null){
+            float legal = 0.0f;
+            float management = 0.0f;
+            float company = 0.0f;
+            Boolean monitoring = false;
 
-        //reference document 생성
-        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
-        reference_value_settingRepository.save(saveReference);
-        //place 업데이트 시간 수정
-        Place place = placeRepository.findBySensorIsIn(name);
-        ObjectId id = place.get_id();
+            //reference document 생성
+            ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
+            reference_value_settingRepository.save(saveReference);
+            //place 업데이트 시간 수정
+            Place place = placeRepository.findBySensorIsIn(name);
+            ObjectId id = place.get_id();
 
-        Place updatePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
-        updatePlace.set_id(id);
-        placeRepository.save(updatePlace);
+            Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+            updatePlace.set_id(id);
+            placeRepository.save(updatePlace);
+            return "success";
+        }else {
+            return "fail";
+        }
     }
 
     //측정소 상세설정 항목 삭제
@@ -309,9 +319,22 @@ public class JsonController {
         if (referenceList == null || "".equals(referenceList)) {
         } else {
             for (int i = 0; i < referenceList.size(); i++) {
-                reference_value_settingRepository.deleteByName(referenceList.get(i));
+                removeReferencePlaceUpdate(referenceList.get(i));
             }
         }
+    }
+    //상세설정값 삭제 및 측정소 업데이트 시간 수정
+    public void removeReferencePlaceUpdate(String name){
+        //상세설정 값 삭제
+        reference_value_settingRepository.deleteByName(name);
+        //place 업데이트 시간 수정
+        Place place = placeRepository.findBySensorIsIn(name);
+        ObjectId id = place.get_id();
+
+        Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        updatePlace.set_id(id);
+        placeRepository.save(updatePlace);
+
     }
 
     /* 알림 현황 데이터 저장 */
