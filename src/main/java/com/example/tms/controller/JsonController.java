@@ -3,6 +3,7 @@ package com.example.tms.controller;
 
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
+import com.example.tms.repository.DataInquiry.DataInquiryCustomRepository;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Sort;
@@ -10,9 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,11 +34,11 @@ public class JsonController {
     final NotificationStatisticsCustomRepository notificationStatisticsCustomRepository;
     final NotificationDayStatisticsRepository notificationDayStatisticsRepository;
     final NotificationMonthStatisticsRepository notificationMonthStatisticsRepository;
-
     final MongoTemplate mongoTemplate;
 
+    final DataInquiryCustomRepository dataInquiryCustomRepository;
 
-    public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate) {
+    public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate, DataInquiryCustomRepository dataInquiryCustomRepository) {
         this.placeRepository = placeRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
@@ -53,8 +52,8 @@ public class JsonController {
         this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
         this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
         this.mongoTemplate = mongoTemplate;
+        this.dataInquiryCustomRepository = dataInquiryCustomRepository;
     }
-
 
     // *********************************************************************************************************************
 // Place
@@ -73,6 +72,7 @@ public class JsonController {
         return placeRepository.findAll();
     }
 
+
     /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
      *
@@ -88,6 +88,13 @@ public class JsonController {
     public Object getPlaceSensor(@RequestParam("place") String place) {
         return placeRepository.findByName(place).getSensor();
     }
+
+    @RequestMapping(value = "getSensorList")
+    public List<SensorList> getSensorList(){
+        System.out.println(sensorListRepository.findAll());
+        return sensorListRepository.findAll();
+    }
+
 
     /**
      * 설정된 기준 값을 초과하는 경우 알람 발생 - 해당 발생된 알람의 목록 리스트 (ALL) > 페이징 가능하게 수정할 것.
@@ -403,4 +410,19 @@ public class JsonController {
         List<YearlyEmissionsStandardSetting> standardList =  yearlyEmissionsStandardRepository.findAll();
         return standardList;
     }
+
+
+
+    @RequestMapping(value = "/searchChart", method = RequestMethod.POST)
+    public List<ChartData> searchChart(String date_start, String date_end, String item, boolean off) {
+
+        return dataInquiryCustomRepository.searchChart(date_start, date_end, item, off);
+    }
+
+    @RequestMapping(value = "/searchInformatin", method = RequestMethod.POST)
+    public List<Sensor> searchInformatin(String date_start, String date_end, String item, boolean off) {
+
+        return dataInquiryCustomRepository.searchInformatin(date_start, date_end, item, off);
+    }
+
 }

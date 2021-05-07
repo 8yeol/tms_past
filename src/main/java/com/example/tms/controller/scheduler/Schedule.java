@@ -2,11 +2,12 @@ package com.example.tms.controller.scheduler;
 
 import com.example.tms.entity.*;
 import com.example.tms.repository.*;
+import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsCustomRepository;
+import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -21,11 +22,14 @@ public class Schedule {
     final NotificationMonthStatisticsRepository notificationMonthStatisticsRepository;
     final NotificationListCustomRepository notificationListCustomRepository;
 
+    final MonthlyEmissionsRepository monthlyEmissionsRepository;
+    final MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository;
+    final SensorListRepository sensorListRepository;
 
     public Schedule(PlaceRepository placeRepository, NotificationListRepository notificationListRepository,
                     SensorCustomRepository sensorCustomRepository, NotificationSettingsRepository notification_settingsRepository,
                     ReferenceValueSettingRepository reference_value_settingRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository,
-                    NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository) {
+                    NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository, SensorListRepository sensorListRepository) {
         this.placeRepository = placeRepository;
         this.notificationListRepository = notificationListRepository;
         this.sensorCustomRepository = sensorCustomRepository;
@@ -34,9 +38,12 @@ public class Schedule {
         this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
         this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
         this.notificationListCustomRepository = notificationListCustomRepository;
+        this.monthlyEmissionsRepository = monthlyEmissionsRepository;
+        this.monthlyEmissionsCustomRepository = monthlyEmissionsCustomRepository;
+        this.sensorListRepository = sensorListRepository;
     }
 
-//    @Scheduled(cron = "0 0/5 * * * *")
+    //@Scheduled(cron = "0 0/5 * * * *")
     public void scheduling(){
         List<NotificationSettings> notification = notification_settingsRepository.findByStatusIsTrue();
 
@@ -89,6 +96,38 @@ public class Schedule {
         notificationListRepository.save(notificationList);
     }
 
+    //@Scheduled(cron = "*/5 * * * * *")
+    public void monthlyEmissionsScheduling(){
+        System.out.println("월별 배출량 추이 스케줄러" + new Date());
+
+        List<SensorList> sensorLists = sensorListRepository.findAll();
+
+        for(SensorList sensorList : sensorLists){
+            List<Double> monthlyList = monthlyEmissionsCustomRepository.addStatisticsData(2021, sensorList.getTableName());
+
+            System.out.println(monthlyList);
+
+            MonthlyEmissions monthlyEmissions = new MonthlyEmissions();
+            monthlyEmissions.setSensor(sensorList.getTableName());
+            monthlyEmissions.setYear(2021);
+            monthlyEmissions.setJan(monthlyList.get(0));
+            monthlyEmissions.setFeb(monthlyList.get(1));
+            monthlyEmissions.setMay(monthlyList.get(2));
+            monthlyEmissions.setApr(monthlyList.get(3));
+            monthlyEmissions.setMar(monthlyList.get(4));
+            monthlyEmissions.setJun(monthlyList.get(5));
+            monthlyEmissions.setJul(monthlyList.get(6));
+            monthlyEmissions.setAug(monthlyList.get(7));
+            monthlyEmissions.setSep(monthlyList.get(8));
+            monthlyEmissions.setOct(monthlyList.get(9));
+            monthlyEmissions.setNov(monthlyList.get(10));
+            monthlyEmissions.setDec(monthlyList.get(11));
+
+            monthlyEmissionsRepository.insert(monthlyEmissions);
+        }
+
+    }
+
 
     /* 알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산 */
     @Scheduled(cron = "0 1 0 * * *") //매일 00시 01분에 처리
@@ -135,4 +174,6 @@ public class Schedule {
         }
 
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.tms.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,6 +15,7 @@ public class SensorList {
     public String naming; //한글명
     public String managementId; //관리아이디
     public String tableName; //테이블명
+    @JsonFormat(timezone = "Asia/Seoul")
     public Date upTime; //업데이트 시간
     public String place; //측정소명
     public boolean status; //통신상태
