@@ -91,7 +91,7 @@ public class Schedule {
 
 
     /* 알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산 */
-    @Scheduled(cron = "0 1 0 * * * *")  //매일 00시 01분에 스케쥴 실행
+    @Scheduled(cron = "0 1 0 * * *") //매일 00시 01분에 처리
     public void saveNotiStatistics(){
         LocalDate nowDate = LocalDate.now();
 
