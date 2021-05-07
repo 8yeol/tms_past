@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
@@ -150,6 +151,41 @@
         color: #F7C259;
         font-weight: bold;
     }
+        /* 드롭다운 버튼 style*/
+    .dropbtn {
+        background-color: #0d6efd;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {background-color: #ddd;}
+
+    .dropdown:hover .dropdown-content {display: block;}
+
+    .dropdown:hover .dropbtn {background-color: #0f6fd0;}
 
 </style>
 
@@ -192,23 +228,23 @@
             </div>
 
             <div class="text-end">
+
                 <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <sec:authentication property="principal.Username"/> 님
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">마이페이지</a>
-                        <a class="dropdown-item" href="#">로그아웃</a>
+                    <button class="dropbtn rounded"> <%--<sec:authentication property="principal.Username"/> --%>--- 님 <i class="fas fa-caret-down"></i></button>
+                    <div class="dropdown-content text-start">
+                        <a href="#">마이페이지</a>
+                        <a href="/logout">로그아웃</a>
                     </div>
                 </div>
+
             </div>
+
         </div>
     </div>
 
-<%--    <form id="actionForm"  action="" method="get">
+    <%--    <form id="actionForm"  action="" method="get">
 
-    </form>--%>
+        </form>--%>
 </header>
 
 

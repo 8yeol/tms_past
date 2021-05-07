@@ -70,6 +70,11 @@ public class MainController {
 
         return "dashboard";
     }
+
+    @RequestMapping("/login")
+    public String login() {
+        return "login";
+    }
     @RequestMapping("/accessDenied")
     public String accessDenied() {
         return "accessDenied";

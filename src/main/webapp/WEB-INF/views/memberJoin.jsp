@@ -8,32 +8,38 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 
-<jsp:include page="/WEB-INF/views/common/header.jsp"/>
+<link rel="stylesheet" href="static/css/bootstrap.min.css">
+<link rel="stylesheet" href="static/css/common.css">
+
+<script src="static/js/jquery-3.6.0.min.js"></script>
+<script src="static/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<body>
+<body class="bg-secondary">
 <div class="container">
-    <div class="row justify-content-center bg-white p-5">
-        <h2 class="text-primary my-5 d-flex justify-content-center">회원가입</h2>
-        <div class="col-xs-12 d-flex justify-content-center bg-white p-5">
+
+    <div class="row justify-content-center bg-white p-5 mt-5">
+        <h1 class="py-5 fw-bold text-center">Sing Up</h1>
+        <div class="col-xs-12 d-flex justify-content-center bg-white px-5">
             <div class="me-5">
-                <h3 class="text text-secondary">ID</h3>
-                <h3 class="text text-secondary">Password</h3>
-                <h3 class="text text-secondary">이름</h3>
-                <h3 class="text text-secondary">이메일</h3>
-                <h3 class="text text-secondary">연락처</h3>
+                <h3 class="text text-secondary fw-bold">ID</h3>
+                <h3 class="text text-secondary fw-bold">Password</h3>
+                <h3 class="text text-secondary fw-bold">이름</h3>
+                <h3 class="text text-secondary fw-bold">이메일</h3>
+                <h3 class="text text-secondary fw-bold">연락처</h3>
             </div>
             <div>
                 <input class="form-control" type="text" id="id">
-                <input class="form-control" type="password" id="password">
-                <input class="form-control" type="text" id="name">
-                <input class="form-control" type="email" id="email" onkeyup="autoEmail('email',this.value)">
-                <input class="form-control" type="tel" id="tel" onkeyup="inputPhoneNumber(this)">
+                <input class="form-control mt-1" type="password" id="password">
+                <input class="form-control mt-1" type="text" id="name">
+                <input class="form-control mt-1" type="email" id="email" onkeyup="autoEmail('email',this.value)">
+                <input class="form-control mt-1" type="tel" id="tel" onkeyup="inputPhoneNumber(this)">
             </div>
         </div>
-        <button class="btn btn-success fs-3 px-5 py-2 w-auto h-auto" onclick="join_submit()">가입신청</button>
+        <button class="btn btn-success fs-3 px-5 py-2 w-auto h-auto mt-3" onclick="join_submit()">가입신청</button>
+        <a class="text-decoration-none text-center mt-3" href="/login">취소</a>
     </div>
 </div>
 
