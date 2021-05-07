@@ -97,7 +97,7 @@ public class Schedule {
         notificationListRepository.save(notificationList);
     }
 
-    @Scheduled(cron = "0/10 * * * * *")
+    //@Scheduled(cron = "0/10 * * * * *")
     //@Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
     public void monthlyEmissionsScheduling(){
         System.out.println("월별 배출량 추이 스케줄러" + new Date());
