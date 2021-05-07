@@ -184,15 +184,14 @@
                 <div>
                     <form>
                         <select id="select" name="modalDropdown1" class="btn-secondary rounded-3 mdd mb-2">
-                            <%--                            <option value="0">선택</option>--%>
                         </select>
-                        <input type="text" id="sname" class="text-secondary d-block mb-2">
+                        <input type="text" id="sname" class="text-secondary d-block mb-2"/>
                     </form>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-primary" onclick="insertReference()">추가</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button id=canBtn type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
             </div>
         </div>
     </div>
@@ -213,6 +212,30 @@
     $(document).ready(function () {
         placeDiv();
         placeChange($("#place0").text());
+        $("#select").on("change", function () {
+            var sel = $("#select option:selected").val();
+            if (sel == "선택") {
+                $('#sname').val("");
+            } else {
+                $.ajax({
+                    url: '<%=cp%>/getSensorManagementId',
+                    type: 'POST',
+                    dataType: 'json',
+                    async: false,
+                    cache: false,
+                    data: {"name": sel},
+                    success: function (data) {
+                        if (data.length < 1 || data == "" || data == null) {
+                            return false;
+                        }
+                        $('#sname').val(data.naming);
+                    },
+                    error: function (request, status, error) { // 결과 에러 콜백함수
+                        console.log(error)
+                    }
+                })
+            }
+        })
     });
 
     //센서 체크박스 전체 선택, 해제
@@ -227,7 +250,7 @@
         const selectAll
             = document.querySelector('input[name="selectall"]');
 
-        if (checkboxes.length == checked.length) {
+        if (checkboxes.length === checked.length) {
             selectAll.checked = true;
         } else {
             selectAll.checked = false;
@@ -255,7 +278,7 @@
         const placeAll
             = document.querySelector('input[name="placeall"]');
 
-        if (checkboxes.length == checked.length) {
+        if (checkboxes.length === checked.length) {
             placeAll.checked = true;
         } else {
             placeAll.checked = false;
@@ -368,6 +391,14 @@
                             const selectAll
                                 = document.querySelector('input[name="selectall"]');
                             selectAll.checked = false;
+                        } else {
+                            if (i == 0) {
+                                const none =
+                                    "<div>등록된 센서 데이터가 없습니다.</div>" +
+                                    "<div>센서 등록 후 이용 가능합니다.</div>";
+
+                                $('#items').append(none); //센서 없을때
+                            }
                         }
                     }
                 }
@@ -433,11 +464,13 @@
             dataType: 'json',
             async: false,
             cache: false,
-            data:{"place":name},
+            data: {"place": name},
             success: function (data) {
-
-                for (let i = 0; i < data.length; i++) {
-                    $("#select").append('<option value="' + data[i].tableName + '">' + data[i].tableName + '</option>');
+                $("#select").append('<option>선택</option>');
+                if (data.length != 0) {
+                    for (let i = 0; i < data.length; i++) {
+                        $("#select").append('<option value="' + data[i].tableName + '">' + data[i].tableName + '</option>');
+                    }
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
@@ -464,12 +497,13 @@
                 map.set("management", data.managementStandard);
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
+                console.log(error);
             }
         })
         return map;
     }
 
+    //측정소 추가
     function insertPlace() {
         var form = $('#placeinfo').serialize();
 
@@ -496,6 +530,48 @@
                 placeDiv();
             }
         })
+    }
+
+    //상세설정 항목 추가
+    function insertReference() {
+        const sel = $("#select option:selected").val();
+        const put = $("#sname").val();
+
+        $.ajax({
+            url: '<%=cp%>/saveReference',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "name": sel,
+                "naming": put
+            },
+            success: function (data) {
+                if (data == "success") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '저장완료'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            //location.reload();
+                            document.getElementById("canBtn").click();
+                            placeDiv();
+                            placeChange($("#place0").text());
+                        }
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '이미 존재하는 데이터입니다.'
+                    })
+                }
+
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+
     }
 
     function removePlace() {
@@ -559,7 +635,6 @@
         $("input:checkbox[name=item]:checked").each(function () {
             referenceList.push($(this).attr('id'));
         });
-        console.log(referenceList);
         if (referenceList.length == 0) {
 
             Swal.fire({

@@ -119,7 +119,6 @@
             cache: false,
             data: {"place": place},
             success: function (data) {
-
                 if (data != "") {
                     for (let i = 0; i < data.length; i++) {
 
@@ -147,7 +146,6 @@
                         }
                     }
                 } else {
-                    console.log(idx)
                     $("#div" + idx).empty();
 
                     const none = "<div style='margin: auto; text-align: center; height: 151px; padding-top: 35px;' class='fw-bold fs-5'>" +
