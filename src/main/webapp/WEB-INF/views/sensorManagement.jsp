@@ -80,7 +80,7 @@
                 </div>
                 <div class="pt-2 pe-5 margin-l">
                     <label class="me-3 col-xs-3 w-10 label">한글명</label>
-                    <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming" id="naming">
+                    <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming" id="naming" readonly>
                     <label class="me-3 col-xs-3 w-10 label">테이블명</label>
                     <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="tableName">
                 </div>
