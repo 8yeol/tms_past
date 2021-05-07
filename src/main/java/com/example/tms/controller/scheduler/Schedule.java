@@ -97,24 +97,43 @@ public class Schedule {
         notificationListRepository.save(notificationList);
     }
 
-    //@Scheduled(cron = "0/10 * * * * *")
     @Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
     public void monthlyEmissionsScheduling(){
-        System.out.println("월별 배출량 추이 스케줄러" + new Date());
-
-        System.out.println(sensorListRepository.findAll());
-
-        for(SensorList sensorList : sensorListRepository.findAll()){
-            System.out.println(sensorList.getTableName());
-        }
-
         LocalDate today = LocalDate.now();
         LocalDate lastMonth = today.minus(1, ChronoUnit.MONTHS);
         LocalDate from = lastMonth.withDayOfMonth(1);
         LocalDate to = lastMonth.withDayOfMonth(lastMonth.lengthOfMonth());
 
-        System.out.println(from);
-        System.out.println(to);
+        for(SensorList sensorList : sensorListRepository.findAll()){
+            MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(sensorList.getTableName(), from.getYear());
+            Double value = monthlyEmissionsCustomRepository.addStatisticsData(sensorList.getTableName(), from.toString(), to.toString());
+            if(from.getMonthValue()==1){
+                monthlyEmissions.setJan(value);
+            } else if(from.getMonthValue()==2){
+                monthlyEmissions.setFeb(value);
+            }else if(from.getMonthValue()==3){
+                monthlyEmissions.setMar(value);
+            }else if(from.getMonthValue()==4){
+                monthlyEmissions.setApr(value);
+            }else if(from.getMonthValue()==5){
+                monthlyEmissions.setMay(value);
+            }else if(from.getMonthValue()==6){
+                monthlyEmissions.setJun(value);
+            }else if(from.getMonthValue()==7){
+                monthlyEmissions.setJul(value);
+            }else if(from.getMonthValue()==8){
+                monthlyEmissions.setAug(value);
+            }else if(from.getMonthValue()==9){
+                monthlyEmissions.setSep(value);
+            }else if(from.getMonthValue()==10){
+                monthlyEmissions.setOct(value);
+            }else if(from.getMonthValue()==11){
+                monthlyEmissions.setNov(value);
+            }else if(from.getMonthValue()==12){
+                monthlyEmissions.setDec(value);
+            }
+            monthlyEmissionsRepository.save(monthlyEmissions);
+        }
     }
 
 
