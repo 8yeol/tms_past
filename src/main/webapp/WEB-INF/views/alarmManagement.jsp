@@ -241,6 +241,16 @@
             })
             return false;
         }
+        if (start > end) {
+            swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: 'From 시간 보다 적은 시간을 입력하실 수 없습니다.'
+            })
+            $('#end' + idx).val(stime);
+            return;
+        }
+
 
         const onList = new Array();
         const offList = new Array();

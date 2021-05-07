@@ -224,6 +224,7 @@
                     title: '센서 추가',
                     text: '관리 항목에 센서가 추가 되었습니다.'
                 })
+                $("input[type=text]").val("");
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error)

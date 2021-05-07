@@ -470,9 +470,7 @@ public class JsonController {
         sensor.setNaming(naming);
         sensor.setPlace(place);
         sensor.setTableName(tableName);
-        Date up_time = new Date();
-        System.out.println(up_time);
-        sensor.setUpTime(up_time);
+        sensor.setUpTime(new Date());
         sensor.setStatus(true);
 
         sensorListRepository.save(sensor);
