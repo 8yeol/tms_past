@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+
+
 import java.util.List;
 
 @Configuration
@@ -18,36 +20,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-/*        List<RankManagement> rm = rank_managementRepository.findAll();
-        String dashboard = "" , alarm = "" , monitoring = "" , Statistics = "" , Setting  = "";
-        for(int i = 0;i < rm.size();i++){
-            int rNum = i+2;
-            if(rm.get(i).isDashboard()) //권한값이 True 이면 추가
-                dashboard += ", ROLE_"+rNum;
-            if(rm.get(i).isAlarm())
-                alarm += ", ROLE_"+rNum;
-            if(rm.get(i).isAlarm())
-                monitoring += ", ROLE_"+rNum;
-            if(rm.get(i).isStatistics())
-                Statistics += ", ROLE_"+rNum;
-            if(rm.get(i).isSetting())
-                Setting += ", ROLE_"+rNum;
-        }
-        http.authorizeRequests().antMatchers("/").hasAnyAuthority(dashboard)
-                .antMatchers("/memberJoin").anonymous()
-                .antMatchers("/alarm").hasAnyAuthority(alarm)
-                .antMatchers("/monitoring","/sensor").hasAnyAuthority(monitoring)
-                .antMatchers("/dataInquiry","/dataStatistics").hasAnyAuthority(Statistics)
-                .antMatchers("/alarmManagement","/stationManagement","/sensorManagement","/emissionsManagement","/setting").hasAnyAuthority(Setting);
 
+/*        http.authorizeRequests().antMatchers("/memberJoin").anonymous()
+                .antMatchers("/").access("@authChecker.check(authentication , 'dashboard')")
+                .antMatchers("/alarm").access("@authChecker.check(authentication , 'alarm')")
+                .antMatchers("/monitoring","/sensor").access("@authChecker.check(authentication , 'monitoring')")
+                .antMatchers("/dataInquiry","/dataStatistics").access("@authChecker.check(authentication , 'statistics')")
+                .antMatchers("/alarmManagement","/stationManagement","/sensorManagement","/emissionsManagement","/setting").access("@authChecker.check(authentication , 'setting')");
 
         http.formLogin().loginPage("/login").permitAll();
         http.logout().logoutSuccessUrl("/login");
-        http.csrf().disable();*//* Spring Security에서는 @EnableWebSecurity 지정 시, 자동으로 CSRF 보호 기능이 활성화 *//*
+        http.csrf().disable(); *//*Spring Security에서는 @EnableWebSecurity 지정 시, 자동으로 CSRF 보호 기능이 활성화 *//*
         http.httpBasic();
         http.exceptionHandling().accessDeniedPage("/accessDenied");*/
 
         http.authorizeRequests().anyRequest().anonymous();
+        http.csrf().disable();
+        http.httpBasic();
 
     }
 }

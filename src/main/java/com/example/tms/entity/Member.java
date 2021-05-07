@@ -92,4 +92,18 @@ public class Member {
         this.state = state;
     }
 
+    @Override
+    public String toString() {
+        return "Member{" +
+                "_id=" + _id +
+                ", id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", tel='" + tel + '\'' +
+                ", joined=" + joined +
+                ", lastLogin=" + lastLogin +
+                ", state='" + state + '\'' +
+                '}';
+    }
 }
