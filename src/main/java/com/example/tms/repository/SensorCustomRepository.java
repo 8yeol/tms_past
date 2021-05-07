@@ -122,6 +122,7 @@ public class SensorCustomRepository {
         return null;
     }
 
+    /* 최근 데이터 조회 */
     public Sensor getSensorRecent(String sensor){
         try{
             ProjectionOperation projectionOperation = Aggregation.project()
@@ -144,5 +145,27 @@ public class SensorCustomRepository {
         return null;
     }
 
+    /* 최근데이터 2개 조회 후 2번째 데이터 리턴 */
+    public Sensor getSensorBeforeData(String sensor){
+        try{
+            ProjectionOperation projectionOperation = Aggregation.project()
+                    .andInclude("value")
+                    .andInclude("status")
+                    .andInclude("up_time");
+            /* sort */
+            SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
+            /* limit */
+            LimitOperation limitOperation = Aggregation.limit(2);
+            /* fetch */
+            Aggregation aggregation = Aggregation.newAggregation(projectionOperation, sortOperation, limitOperation);
+
+            AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
+            List<Sensor> result = results.getMappedResults();
+            return result.get(1);
+        }catch (Exception e){
+            log.info("getSensorRecent error" + e.getMessage());
+        }
+        return null;
+    }
 
 }

@@ -120,7 +120,7 @@
         <div class="col-3" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
 
             <div>
-                <div id="p_power" style="display: flex">
+                <div id="p_monitoring" style="display: flex">
                 </div>
                 <div>
                     <button data-toggle="modal" data-target="#addReference">추가</button>
@@ -174,28 +174,24 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">@@@ 센서 수정</h5>
+                <h5 class="modal-title">항목 추가</h5>
             </div>
             <div class="modal-body d-flex justify-content-evenly">
                 <div>
-                    <h4>분류</h4>
-                    <h4>한글명</h4>
-                    <h4>센서관리ID</h4>
-                    <h4>테이블명</h4>
+                    <h4>관리ID</h4>
+                    <h4>측정 항목</h4>
                 </div>
                 <div>
-                    <select name="modalDropdown1" class="btn-secondary rounded-3 mdd mb-2">
-                        <option value="1">전체</option>
-                        <option value="2">먼지</option>
-                        <option value="3">아황산가스</option>
-                    </select>
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block ">
+                    <form>
+                        <select id="select" name="modalDropdown1" class="btn-secondary rounded-3 mdd mb-2">
+                            <%--                            <option value="0">선택</option>--%>
+                        </select>
+                        <input type="text" id="sname" class="text-secondary d-block mb-2">
+                    </form>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5">수정</button>
+                <button type="button" class="btn btn-primary" onclick="insertReference()">추가</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
             </div>
         </div>
@@ -217,8 +213,6 @@
     $(document).ready(function () {
         placeDiv();
         placeChange($("#place0").text());
-
-
     });
 
     //센서 체크박스 전체 선택, 해제
@@ -233,12 +227,11 @@
         const selectAll
             = document.querySelector('input[name="selectall"]');
 
-        if (checkboxes.length === checked.length) {
+        if (checkboxes.length == checked.length) {
             selectAll.checked = true;
         } else {
             selectAll.checked = false;
         }
-
     }
 
     function selectAll(selectAll) {
@@ -252,7 +245,6 @@
 
     //측정소 체크박스 전체 선택, 해제
     function checkPlaceAll() {
-
         // 전체 체크박스
         const checkboxes
             = document.querySelectorAll('input[name="place"]');
@@ -268,7 +260,6 @@
         } else {
             placeAll.checked = false;
         }
-
     }
 
     function placeAll(placeAll) {
@@ -280,6 +271,7 @@
         })
     }
 
+    //측정소 목록 불러오기
     function placeDiv() {
         $("#placeDiv").empty();
         $.ajax({
@@ -291,14 +283,18 @@
                     const test = data[i];
                     const name = test.name;
                     const time = test.up_time;
-                    const power = test.power;
-
+                    const monitoring = test.monitoring;
+                    if (monitoring == true) {
+                        onoff = "on";
+                    } else {
+                        onoff = "off";
+                    }
                     const innerHTML = "<div style='border-bottom: silver solid 2px;' onclick=\"placeChange('" + name + "')\" >" +
                         "<li>" +
                         "<span><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'><span>" +
                         "<span id='place" + i + "'>" + name + "</span>" +
                         "<span>" + time + "</span>" +
-                        "<span>" + power + "</span>" +
+                        "<span>" + onoff + "</span>" +
                         "</li>" +
                         "</div>";
 
@@ -310,25 +306,30 @@
                 console.log(error)
             }
         })
-
     }
-
 
     //측정소 변경
     function placeChange(name) {
-        const place = name;
-        $("#items").empty();
-        $("#p_power").empty();
-        const p_power = findPlaceMonitor(place);
+        const place = name; // 측정소1 입력
+        $("#items").empty(); //div items 비우기
+        $("#p_monitoring").empty(); //div p_monitoring 비우기
+        const p_monitoring = findPlaceMonitor(place); //측정소monitor on/off 확인
+        findSensorList(name);
 
         let innerHTMLPlace =
             "<span>" + place + "상세설정</span>" +
             "<span>측정소 모니터링</span>" +
             "<label class='switch'>" +
-            "<input id='monitor' type='checkbox' " + p_power + ">" +
+            "<input id='monitor' type='checkbox' " + p_monitoring + ">" +
             "<span class='slider round'></span>" +
             "</label>";
-        $('#p_power').append(innerHTMLPlace);
+        $('#p_monitoring').append(innerHTMLPlace); //측정소 명 + 모니터링 on/off div
+
+        const none =
+            "<div>등록된 센서 데이터가 없습니다.</div>" +
+            "<div>센서 등록 후 이용 가능합니다.</div>";
+
+        $('#items').append(none); //센서 없을때
 
         $.ajax({
             url: '<%=cp%>/getPlaceSensor',
@@ -338,38 +339,41 @@
             cache: false,
             data: {"place": place},
             success: function (data) {
-                for (let i = 0; i < data.length; i++) {
-                    const tableName = data[i];
-                    const category = findSensorCategory(tableName);
-                    const value = findReference(tableName);
-                    const power = findMonitor(tableName);
+                if (data.length != 0) {
+                    $("#items").empty(); //센서 있을때 div 비움
+                    for (let i = 0; i < data.length; i++) {
+                        const tableName = data[i]; //측정소에 저장된 센서명---> 이걸 reference컬렉션에서 가져와야함.
+                        const value = findReference(tableName); //naming, name, legal, company, management //map이 비어있을때
+                        const monitoring = findMonitor(tableName); //모니터 on/off(checked)
+                        if (value.size != 0) {
+                            const innerHtml =
+                                "<td style='width:5%;'><input class='form-check-input' type='checkbox' id='" + value.get("name") + "' name='item' value='" + value.get("name") + "' onclick='checkSelectAll()'></td>" +
+                                "<td style='width:15%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("naming") + "</label></td>" +
+                                "<td style='width:24%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("name") + "</label></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' ></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "c' value='" + value.get("company") + "' ></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "m' value='" + value.get("management") + "' ></td>" +
+                                "<td style='width:14%;'><label class='switch'>" +
+                                "<input id='" + value.get("name") + "a' type='checkbox' name='status' " + monitoring + ">" +
+                                "<div class='slider round'></div>" +
+                                "</label></td>";
 
-                    const innerHtml =
-                        "<td style='width:5%;'><input class='form-check-input' type='checkbox' id='" + tableName + "' name='item' value='" + tableName + "' onclick='checkSelectAll()'></td>" +
-                        "<td style='width:15%;'><label class='form-check-label' for='" + tableName + "'>" + category + "</label></td>" +
-                        "<td style='width:24%;'><label class='form-check-label' for='" + tableName + "'>" + tableName + "</label></td>" +
-                        "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' ></td>" +
-                        "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "c' value='" + value.get("company") + "' ></td>" +
-                        "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "m' value='" + value.get("management") + "' ></td>" +
-                        "<td style='width:14%;'><label class='switch'>" +
-                        "<input id='" + tableName + "a' type='checkbox' name='status' " + power + ">" +
-                        "<div class='slider round'></div>" +
-                        "</label></td>";
+                            const elem = document.createElement('tr');
+                            elem.setAttribute('style', 'border-bottom: silver solid 2px;');
+                            elem.setAttribute('id', 'tr' + i);
+                            elem.innerHTML = innerHtml;
+                            document.getElementById('items').append(elem);
 
-                    const elem = document.createElement('tr');
-                    elem.setAttribute('style', 'border-bottom: silver solid 2px;');
-                    elem.innerHTML = innerHtml;
-                    document.getElementById('items').append(elem);
-
-                    //측정소 변경시 센서 체크박스 해제
-                    const selectAll
-                        = document.querySelector('input[name="selectall"]');
-                    selectAll.checked = false;
+                            //측정소 변경시 센서 체크박스 해제
+                            const selectAll
+                                = document.querySelector('input[name="selectall"]');
+                            selectAll.checked = false;
+                        }
+                    }
                 }
-
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
+                console.log(error);
             }
         })
     }
@@ -385,8 +389,8 @@
             cache: false,
             data: {"tableName": tableName},
             success: function (data) {
-                const power = data.power;
-                if (power == "on") {
+                const monitoring = data.monitoring;
+                if (monitoring == true) {
                     isChecked = "checked";
                 }
             },
@@ -408,8 +412,8 @@
             cache: false,
             data: {"place": tableName},
             success: function (data) {
-                const power = data.power;
-                if (power == "on") {
+                const monitoring = data.monitoring;
+                if (monitoring == true) {
                     isChecked = "checked";
                 }
             },
@@ -418,6 +422,28 @@
             }
         })
         return isChecked;
+    }
+
+    //sensorList 불러오기
+    function findSensorList(name) {
+        $("#select").empty();
+        $.ajax({
+            url: '<%=cp%>/getSensorList2',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data:{"place":name},
+            success: function (data) {
+
+                for (let i = 0; i < data.length; i++) {
+                    $("#select").append('<option value="' + data[i].tableName + '">' + data[i].tableName + '</option>');
+                }
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
     }
 
     //센서 기준값 불러오기
@@ -431,10 +457,11 @@
             cache: false,
             data: {"tableName": tableName},
             success: function (data) {
+                map.set("naming", data.naming);
+                map.set("name", data.name);
                 map.set("legal", data.legalStandard);
                 map.set("company", data.companyStandard);
                 map.set("management", data.managementStandard);
-
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error)

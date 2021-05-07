@@ -275,9 +275,9 @@
                             up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
                         }
 
-                        var b5_sensor = getSensor(item, "", "", 10); //item의 10분전 데이터
-                        if (b5_sensor.length != 0) { // 최근데이터 값 - 9:59분전 데이터
-                            b5_value = (b5_sensor[(b5_sensor.length) - 1].value).toFixed(3);
+                        var beforeSensor = getSensorBeforeData(item); //item의 10분전 데이터
+                        if (beforeSensor.length != 0) { // 최근데이터 값 - 9:59분전 데이터
+                            b5_value = (beforeSensor[(beforeSensor.length) - 1].value).toFixed(3);
                             com_value = (sensor.value - b5_value).toFixed(3);
                         } else { // 최근데이터 존재하지 않을 경우 "-" 처리
                             b5_value = "-";
@@ -324,16 +324,6 @@
                     } else {
                         power_off_count += 1;
                     }
-                    /* power off 출력 */
-                    /*                   if(power == "off"){
-                                           getData.push({
-                                               naming: naming, name:item,
-                                               value: sensor_value, up_time: up_time, status: sensor.status,
-                                               legal_standard: legal_standard, company_standard: company_standard, management_standard: management_standard, power: power,
-                                               b5_value: b5_value, com_value: com_value
-                                           });
-                                       }*/
-
                 });
 
             },
@@ -345,18 +335,16 @@
     }
 
 
-    /* 센서명으로 from, to, minute 의 조건에 맞는 from ~ to 센서의 데이터 조회 */
-    function getSensor(sensor, from_date, to_date, minute) {
+    /* 센서명 이전 데이터 조회 */
+    function getSensorBeforeData(sensor) {
         let result = new Array();
         $.ajax({
-            url: 'getSensor',
+            url: 'getSensorBeforeData',
             dataType: 'json',
-            data: {"sensor": sensor, "from_date": from_date, "to_date": to_date, "minute": minute},
+            data: {"sensor": sensor},
             async: false,
             success: function (data) { // from ~ to 또는 to-minute ~ now 또는 from ~ from+minute 데이터 조회
-                $.each(data, function (index, item) {
-                    result.push({up_time: moment(item.up_time).format('YYYY-MM-DD HH:mm:ss'), value: item.value});
-                })
+                    result.push({up_time: moment(data.up_time).format('YYYY-MM-DD HH:mm:ss'), value: data.value});
             },
             error: function (e) {
                 // console.log("getSensor Error");
