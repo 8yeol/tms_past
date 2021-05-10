@@ -725,8 +725,18 @@
         var companyname = str + "c";
         var company = $("#" + companyname).val(); //사내기준 값
         var value = $("#" + tablename).val(); //법적기준 값
-
         var pname = $("#pname").text();
+        if (isNaN(value) == true) {
+
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
         if (parseFloat(value) <= parseFloat(company)) { //법적기준 값이 사내기준 값보다 작을때
             Swal.fire({
                 icon: 'warning',
@@ -763,6 +773,17 @@
         var manage = $("#" + managename).val(); //관리기준 값
         var value = $("#" + tablename).val();
         var pname = $("#pname").text();
+        if (isNaN(value) == true) {
+
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
 
         if (parseFloat(value) <= parseFloat(manage)) {  //
             Swal.fire({
@@ -807,7 +828,17 @@
         var company = $("#" + companyname).val(); //사내기준 값
         var value = $("#" + tablename).val(); //관리기준
         var pname = $("#pname").text();
+        if (isNaN(value) == true) {
 
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
         if (parseFloat(company) <= parseFloat(value)) {  //
             Swal.fire({
                 icon: 'warning',
