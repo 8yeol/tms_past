@@ -9,8 +9,6 @@
     String cp = request.getContextPath();
 %>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
-
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
 <script src="static/js/vue.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
@@ -468,20 +466,20 @@
             newCeil3.innerHTML = '<div class="bg-success text-light">'+data[i].management_standard+'</div>';
 
             if(data[i].value > data[i].legal_standard){
-                newCeil4.innerHTML = '<span class="text-danger fw-bold">' + fiveMinutesAgo(data[i].b5_value, data[i].value) + '</span>';
+                newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_beforeDate(data[i].b5_value, data[i].value) + '</span>';
             } else if( data[i].value > data[i].company_standard){
-                newCeil4.innerHTML = '<span class="text-warning fw-bold">' + fiveMinutesAgo(data[i].b5_value, data[i].value) + '</span>';
+                newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_beforeDate(data[i].b5_value, data[i].value) + '</span>';
             } else if( data[i].value > data[i].management_standard){
-                newCeil4.innerHTML = '<span class="text-success fw-bold">' + fiveMinutesAgo(data[i].b5_value, data[i].value) + '</span>';
+                newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_beforeDate(data[i].b5_value, data[i].value) + '</span>';
             } else{
-                newCeil4.innerHTML = fiveMinutesAgo(data[i].b5_value, data[i].value);
+                newCeil4.innerHTML = draw_beforeDate(data[i].b5_value, data[i].value);
             }
 
             $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
         }
     }
 
-    function fiveMinutesAgo(fiveMinutes , now){
+    function draw_beforeDate(fiveMinutes , now){
         if(fiveMinutes > now){
             return '<img src="static/images/down.jpg" class="img">' + now;
         } else if( now > fiveMinutes) {

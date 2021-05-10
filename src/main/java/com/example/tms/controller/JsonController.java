@@ -559,7 +559,7 @@ public class JsonController {
     }
     //센서관리 항목 추가
     @RequestMapping(value = "/saveSensor")
-    public List saveSensor(@RequestParam(value = "managementId") String managementId, @RequestParam(value = "classification") String classification, @RequestParam(value = "naming") String naming,@RequestParam(value = "place") String place,
+    public void saveSensor(@RequestParam(value = "managementId") String managementId, @RequestParam(value = "classification") String classification, @RequestParam(value = "naming") String naming,@RequestParam(value = "place") String place,
                            @RequestParam(value = "tableName") String tableName) {
 
         SensorList sensor = new SensorList();
@@ -572,7 +572,6 @@ public class JsonController {
         sensor.setStatus(true);
 
         sensorListRepository.save(sensor);
-        return sensorListRepository.findAll();
     }
 
     @RequestMapping(value = "/getStatisticsData", method = RequestMethod.POST)
