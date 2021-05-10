@@ -173,7 +173,6 @@
 
     // 센서명 클릭 이벤트 (table click > tbody click 변경)
     $("#place_table tbody").on('click', 'tr', function () {
-        console.log(123);
         const placeName = $(this).parents('#place_table div').eq(0).children().eq(0).children().eq(0).text();
         const sensorName = $(this).find('td').eq(0).text();
         location.replace("/sensor?place=" + placeName + "&sensor=" + sensorName);
@@ -210,35 +209,7 @@
     // 중복 로직 수정 (수정 필요)
     function getData() {
         const placeName = getPlace();
-        var col_md_size;
-        for(var i=0; i<placeName.length; i++){
-            if(placeName.length%2==0){ //짝수개
-                console.log(placeName.length);
-                // $('#place_table').append("<div class='col-md-6 mb-3'>");
-                col_md_size = 6;
-            }else if(placeName.length%2==1){ //홀수개
-                col_md_size = 12;
-                // $('#place_table').append("<div class='col-md-12 mb-3'>");
-            }
-
-            $('#place_table').append("<div class='col-md-"+col_md_size+" mb-3'>" +
-                "<div class='bg-info m-2 text-center'><span class='fs-5'>"+placeName[i]+"</span></div>" +
-                "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
-                "<table class='table table-bordered table-hover text-center'>" +
-                "<thead>" +
-                "<tr class='add-bg-color'>" +
-                "<th>항목</th>" +
-                "<th>법적기준</th>" +
-                "<th>사내기준</th>" +
-                "<th>관리기준</th>" +
-                "<th>실시간</th>" +
-                "</tr>" +
-                "</thead>"+
-                "<tbody id='sensor-table-"+i+"'>"+
-                "</tbody>" +
-                "</table>" +
-            "</div>");
-        }
+        draw_place_table_frame(placeName); // place table frame 생성
         setTimeout(function interval_getData() { //실시간 처리위한 setTimeout
 
             status_true_count = 0, status_false_count = 0, power_on_count = 0, power_off_count = 0, legal_standard_count = 0, company_standard_count = 0, management_standard_count = 0;
@@ -255,7 +226,43 @@
         }, 0);
     }
 
-    /* 측정소명으로 센서명을 구하고 센서명으로 센서의 최근데이터, 10분전 데이터, 정보들을 리턴*/
+
+
+
+
+
+    function draw_place_table_frame(placeName) {
+        var col_md_size;
+        for(var i=0; i<placeName.length; i++){
+            if(placeName.length%2==0){ //짝수개
+                console.log(placeName.length);
+                // $('#place_table').append("<div class='col-md-6 mb-3'>");
+                col_md_size = 6;
+            }else if(placeName.length%2==1){ //홀수개
+                col_md_size = 12;
+                // $('#place_table').append("<div class='col-md-12 mb-3'>");
+            }
+
+            $('#place_table').append("<div class='col-md-"+col_md_size+" mb-3 mt-2'>" +
+                "<div class='bg-info m-2 text-center'><span class='fs-5'>"+placeName[i]+"</span></div>" +
+                "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
+                "<table class='table table-bordered table-hover text-center'>" +
+                "<thead>" +
+                "<tr class='add-bg-color'>" +
+                "<th>항목</th>" +
+                "<th>법적기준</th>" +
+                "<th>사내기준</th>" +
+                "<th>관리기준</th>" +
+                "<th>실시간</th>" +
+                "</tr>" +
+                "</thead>"+
+                "<tbody id='sensor-table-"+i+"'>"+
+                "</tbody>" +
+                "</table>" +
+                "</div>");
+        }
+    }
+    /* 측정소명으로 센서명을 구하고 센서명으로 센서의 최근데이터, 이전 데이터, 정보들을 리턴*/
     function getPlaceData(place) {
         const getData = new Array();
         $.ajax({  //측정소의 센서명을 구함
