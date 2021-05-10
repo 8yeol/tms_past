@@ -237,7 +237,6 @@
                 icon: 'warning',
                 title: '경고',
                 text: '알림시간을 입력해주세요.'
-
             })
             return false;
         }
@@ -252,15 +251,19 @@
             return;
         }
 
-        //저장할때 시간 있는지 검사
-        if (start > end) {
+        //시간과 분을 정확히 입력했는지 검사
+        if (start.length!=5 || end.length!=5) {
             swal.fire({
                 icon: 'warning',
                 title: '경고',
-                text: 'From 시간 보다 적은 시간을 입력하실 수 없습니다.'
+                text: '시간을 정확히 입력 해주세요.'
             })
             return;
         }
+
+
+
+
 
         const onList = new Array();
         const offList = new Array();
@@ -305,9 +308,6 @@
 
         let stime = $('#start' + idx).val();
         let etime = $('#end' + idx).val();
-
-        console.log(stime.length);
-        console.log(etime.length);
 
         if (stime > etime) {
             swal.fire({
