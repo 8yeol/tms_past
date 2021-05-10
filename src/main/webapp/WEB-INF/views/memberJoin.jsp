@@ -24,18 +24,24 @@
         <h1 class="py-5 fw-bold text-center">Sing Up</h1>
         <div class="col-xs-12 d-flex justify-content-center bg-white px-5">
             <div class="me-5">
-                <h3 class="text text-secondary fw-bold">ID</h3>
-                <h3 class="text text-secondary fw-bold">Password</h3>
+                <h3 class="text text-secondary fw-bold">아이디</h3>
+                <h3 class="text text-secondary fw-bold">비밀번호</h3>
+                <h3 class="text text-secondary fw-bold">비밀번호확인</h3>
                 <h3 class="text text-secondary fw-bold">이름</h3>
                 <h3 class="text text-secondary fw-bold">이메일</h3>
                 <h3 class="text text-secondary fw-bold">연락처</h3>
+                <h3 class="text text-secondary fw-bold">부서명</h3>
+                <h3 class="text text-secondary fw-bold">직급</h3>
             </div>
             <div>
                 <input class="form-control" type="text" id="id">
                 <input class="form-control mt-1" type="password" id="password">
+                <input class="form-control mt-1" type="password" id="passwordCheck">
                 <input class="form-control mt-1" type="text" id="name">
                 <input class="form-control mt-1" type="email" id="email" onkeyup="autoEmail('email',this.value)">
                 <input class="form-control mt-1" type="tel" id="tel" onkeyup="inputPhoneNumber(this)">
+                <input class="form-control mt-1" type="text" id="department">
+                <input class="form-control mt-1" type="text" id="grade">
             </div>
         </div>
         <button class="btn btn-success fs-3 px-5 py-2 w-auto h-auto mt-3" onclick="join_submit()">가입신청</button>
@@ -49,7 +55,13 @@
 
 <script>
     function join_submit() {
-        if ($("#id").val() != "" && $("#password").val() &&$("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "") {
+        if ($("#id").val() != "" && $("#password").val() != ""  && $("#passwordCheck").val() != ""&& $("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "") {
+
+            if($("#password").val() != $("#passwordCheck").val()){
+                alert("비밀번호가 틀립니다.");
+                return;
+            }
+
             var settings = {
                 "url": "http://localhost:8090/memberJoin",
                 "method": "POST",
@@ -62,6 +74,8 @@
                     "\r\n    \"password\": \""+$("#password").val()+"\"," +
                     "\r\n    \"name\": \""+$("#name").val()+"\"," +
                     "\r\n    \"email\": \""+$("#email").val()+"\"," +
+                    "\r\n    \"department\": \""+$("#department").val()+"\"," +
+                    "\r\n    \"grade\": \""+$("#grade").val()+"\"," +
                     "\r\n    \"tel\": \""+$("#tel").val()+"\"\r\n}",
             };
             $.ajax(settings).done(function (response) {
@@ -78,6 +92,7 @@
             alert("빈칸없이 입력하여 주세요");
         }
     }           // join_submit()
+
 
     function inputPhoneNumber(obj) {
         var number = obj.value.replace(/[^0-9]/g, "");

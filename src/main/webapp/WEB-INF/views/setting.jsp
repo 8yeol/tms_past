@@ -72,7 +72,7 @@
 
                 <tbody>
                 <c:forEach items="${members}" var="mList" varStatus="cnt">
-                    <tr class="text-center" style="font-size: 14px">
+                    <tr class="text-center" style="font-size: 13px">
                         <td>${cnt.index+1}</td>
                         <td>${mList.id}</td>
                         <td>${mList.name}</td>
@@ -107,7 +107,14 @@
                             </c:otherwise>
                         </c:choose>
 
-                        <td><%--최종로그인--%></td>
+                        <c:choose>
+                            <c:when test="${mList.lastLogin != null}">
+                                <td><fmt:formatDate value="${mList.lastLogin}" pattern="yyyy년 MM월 dd일 hh시"/></td>
+                            </c:when>
+                            <c:otherwise>
+                                <td></td>
+                            </c:otherwise>
+                        </c:choose>
                         <c:choose>
                             <c:when test="${mList.state eq '1'}">
                                 <td>

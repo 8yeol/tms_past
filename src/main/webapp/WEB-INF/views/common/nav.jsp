@@ -232,7 +232,7 @@
                 <div class="dropdown">
                     <button class="dropbtn rounded"> <%--<sec:authentication property="principal.Username"/> --%>--- 님 <i class="fas fa-caret-down"></i></button>
                     <div class="dropdown-content text-start">
-                        <a href="#">마이페이지</a>
+                        <a href="/myPage">마이페이지</a>
                         <a href="/logout">로그아웃</a>
                     </div>
                 </div>

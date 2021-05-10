@@ -19,6 +19,9 @@ public class Member {
     private Date joined;
     private Date lastLogin;
     private String state;
+    private String department;
+    private String grade;
+
 
     public ObjectId get_id() {
         return _id;
@@ -92,6 +95,22 @@ public class Member {
         this.state = state;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
@@ -104,6 +123,8 @@ public class Member {
                 ", joined=" + joined +
                 ", lastLogin=" + lastLogin +
                 ", state='" + state + '\'' +
+                ", department='" + department + '\'' +
+                ", grade='" + grade + '\'' +
                 '}';
     }
 }
