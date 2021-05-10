@@ -240,7 +240,7 @@
     /* 차트 1시간 / 하루 이벤트 */
     $("input[name=chartRadio]").on('click' , function (){
         if(sensor_data == null){
-            var temp_sensor_data = place_table.row(0).data();
+            var temp_sensor_data = place_table[0];
             getData2(temp_sensor_data);
         } else{
             getData2(sensor_data);
@@ -250,7 +250,7 @@
     /* 센서명 클릭 이벤트 */
     $("#place-tbody-table").on('click', 'tr', function(){
         const name = $(this).find('input').val();
-        var sensor_data = getSensorData(name);
+        sensor_data = getSensorData(name);
         getData2(sensor_data);
     });
 
@@ -581,6 +581,7 @@
 
             $('#update').text(data[i].up_time);
         }
+        return data;
     }
 
     function draw_beforeData(fiveMinutes , now){
