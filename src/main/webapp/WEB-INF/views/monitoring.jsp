@@ -9,8 +9,6 @@
     String cp = request.getContextPath();
 %>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
-
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
 <script src="static/js/vue.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
