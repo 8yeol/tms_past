@@ -208,8 +208,6 @@
         draw_place_table_frame(placeName); // place table frame 생성
         setTimeout(function interval_getData() { //실시간 처리위한 setTimeout
 
-            status_true_count = 0, status_false_count = 0, power_on_count = 0, power_off_count = 0, legal_standard_count = 0, company_standard_count = 0, management_standard_count = 0;
-
             const placeData = new Array();
             for (let i = 0; i < placeName.length; i++) {
                 clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
@@ -226,12 +224,9 @@
         var col_md_size;
         for(var i=0; i<placeName.length; i++){
             if(placeName.length%2==0){ //짝수개
-                console.log(placeName.length);
-                // $('#place_table').append("<div class='col-md-6 mb-3'>");
                 col_md_size = 6;
             }else if(placeName.length%2==1){ //홀수개
                 col_md_size = 12;
-                // $('#place_table').append("<div class='col-md-12 mb-3'>");
             }
 
             $('#place_table').append("<div class='col-md-"+col_md_size+" mb-3 mt-2'>" +
@@ -262,75 +257,63 @@
             data: {"place": place},
             async: false,
             success: function (data) {
-
                 $.each(data, function (index, item) { //item (센서명);
-                    const monitoring = getMonitoring(item);
-                    if (monitoring) {
-                        const sensor = getSensorRecent(item); // item의 최근데이터
-                        if (sensor.value == 0 || sensor.value == null) { //null 일때
-                            sensor_value = "-"; // "-" 출력(datatable)
-                        } else {
-                            sensor_value = sensor.value.toFixed(2);
-                            status = sensor.status;
-                            up_time = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
-                        }
-
-                        var beforeSensor = getSensorBeforeData(item); //item의 10분전 데이터
-                        if (beforeSensor.length != 0) { // 최근데이터 값 - 9:59분전 데이터
-                            b5_value = (beforeSensor[(beforeSensor.length) - 1].value).toFixed(3);
-                            com_value = (sensor.value - b5_value).toFixed(3);
-                        } else { // 최근데이터 존재하지 않을 경우 "-" 처리
-                            b5_value = "-";
-                            com_value = "-";
-                        }
-
-                        var sensorInfo = getSensorInfo(item); //item의 정보 데이터
-                        var naming = sensorInfo.naming;
-                        var legal_standard = sensorInfo.legalStandard;
-                        var company_standard = sensorInfo.companyStandard;
-                        var management_standard = sensorInfo.managementStandard;
-                        var power = sensorInfo.power;
-
-                        if (status == "true") { //센서상태
-                            status_true_count += 1;
-                        } else {
-                            status_false_count += 1;
-                        }
-                        if (sensor.value >= sensorInfo.legalStandard) {
-                            legal_standard_count += 1;
-                        }
-                        if (sensor.value < sensorInfo.legalStandard && sensor.value >= sensorInfo.companyStandard) {
-                            company_standard_count += 1;
-                        }
-                        if (sensor.value <= sensorInfo.companyStandard && sensor.value > sensorInfo.managementStandard) {
-                            management_standard_count += 1;
-                        }
-                        /* Monitoring true 출력 */
-                        if (monitoring) {
-                            getData.push({
-                                naming: naming,
-                                name: item,
-                                value: sensor_value,
-                                up_time: up_time,
-                                status: sensor.status,
-                                legal_standard: legal_standard,
-                                company_standard: company_standard,
-                                management_standard: management_standard,
-                                power: power,
-                                b5_value: b5_value,
-                                com_value: com_value
-                            });
-                        }
-                    } else {
-                        power_off_count += 1;
-                    }
+                    getData.push(getSensorData(item));
                 });
-
             },
             error: function () {
-                console.log("getPlaceData error");
             }
         });
+        return getData;
+    }
+
+    /* 센서 정보 조회 */
+    function getSensorData(sensor){
+        var getData;
+        var Monitoring = getMonitoring(sensor);
+        if(Monitoring){
+            /* 센서의 최근 데이터 */
+            var recentData = getSensorRecent(sensor);
+            if(recentData.value == 0 || recentData.value == null){ //null 일때
+                recentData.value = "-"; // "-" 출력(datatable)
+            }else{
+                sensorValue = recentData.value.toFixed(2);
+                sensorUptime = moment(sensor.up_time).format('YYYY-MM-DD HH:mm:ss');
+            }
+            /* 센서의 이전 데이터*/
+            var beforeData = getSensorBeforeData(sensor); //sensor 이전 데이터
+            if(beforeData.length == 0){
+                beforeValue = "-";
+            }else{ // 최근데이터 존재하지 않을 경우 "-" 처리
+                beforeValue = beforeData[0].value.toFixed(2);
+            }
+
+
+            var sensorInfo = getSensorInfo(sensor); //sensor 정보 데이터
+            naming = sensorInfo.naming;
+            monitoring = sensorInfo.monitoring;
+            legalStandard = sensorInfo.legalStandard;
+            companyStandard = sensorInfo.companyStandard;
+            managementStandard = sensorInfo.managementStandard;
+            if(recentData.value < companyStandard && recentData.value >= managementStandard){
+                standard = "관리기준 초과";
+            }else if(recentData.value< legalStandard && recentData.value >= companyStandard){
+                standard = "사내기준 초과";
+            }else if(recentData.value >= legalStandard){
+                standard = "법적기준 초과";
+            }else if(recentData.value < managementStandard){
+                standard = "정상";
+            }else{
+                standard = "-";
+            }
+
+            getData =({
+                naming: naming, name:sensor,
+                value:sensorValue, up_time: sensorUptime,
+                legalStandard: legalStandard, companyStandard: companyStandard, managementStandard: managementStandard,
+                beforeValue: beforeValue, monitoring: monitoring, standard : standard
+            });
+        }
         return getData;
     }
 
@@ -344,7 +327,7 @@
             data: {"sensor": sensor},
             async: false,
             success: function (data) { // from ~ to 또는 to-minute ~ now 또는 from ~ from+minute 데이터 조회
-                    result.push({up_time: moment(data.up_time).format('YYYY-MM-DD HH:mm:ss'), value: data.value});
+                result.push({up_time: moment(data.up_time).format('YYYY-MM-DD HH:mm:ss'), value: data.value});
             },
             error: function (e) {
                 // console.log("getSensor Error");
@@ -456,31 +439,31 @@
             const newCeil3 = newRow.insertCell(3);
             const newCeil4 = newRow.insertCell(4);
             newCeil0.innerHTML = data[i].naming;
-            newCeil1.innerHTML = '<div class="bg-danger text-light">'+data[i].legal_standard+'</div>';
-            newCeil2.innerHTML = '<div class="bg-warning text-light">'+data[i].company_standard+'</div>';
-            newCeil3.innerHTML = '<div class="bg-success text-light">'+data[i].management_standard+'</div>';
+            newCeil1.innerHTML = '<div class="bg-danger text-light">'+data[i].legalStandard+'</div>';
+            newCeil2.innerHTML = '<div class="bg-warning text-light">'+data[i].companyStandard+'</div>';
+            newCeil3.innerHTML = '<div class="bg-success text-light">'+data[i].managementStandard+'</div>';
 
-            if(data[i].value > data[i].legal_standard){
-                newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_beforeDate(data[i].b5_value, data[i].value) + '</span>';
-            } else if( data[i].value > data[i].company_standard){
-                newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_beforeDate(data[i].b5_value, data[i].value) + '</span>';
-            } else if( data[i].value > data[i].management_standard){
-                newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_beforeDate(data[i].b5_value, data[i].value) + '</span>';
+            if(data[i].value > data[i].legalStandard){
+                newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
+            } else if( data[i].value > data[i].companyStandard){
+                newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
+            } else if( data[i].value > data[i].managementStandard){
+                newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
             } else{
-                newCeil4.innerHTML = draw_beforeDate(data[i].b5_value, data[i].value);
+                newCeil4.innerHTML = draw_beforeDate(data[i].beforeValue, data[i].value);
             }
 
             $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
         }
     }
 
-    function draw_beforeDate(fiveMinutes , now){
-        if(fiveMinutes > now){
-            return '<img src="static/images/down.jpg" class="img">' + now;
-        } else if( now > fiveMinutes) {
-            return '<img src="static/images/up.png" class="img">' + now;
+    function draw_beforeDate(A , B){
+        if(A > B){
+            return '<img src="static/images/down.jpg" class="img">' + B;
+        } else if( B > A) {
+            return '<img src="static/images/up.png" class="img">' + B;
         } else{
-            return ' - ' + now;
+            return B;
         }
     }
 </script>
