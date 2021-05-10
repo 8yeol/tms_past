@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -64,6 +65,12 @@ public class MainController {
     @RequestMapping("/accessDenied")
     public String accessDenied() {
         return "accessDenied";
+    }
+    @RequestMapping("/myPage")
+    public String myPage(Principal principal,Model model){
+        Member member = memberRepository.findById(principal.getName());
+        model.addAttribute("member", member);
+        return "myPage";
     }
 
     @RequestMapping("/monitoring")
@@ -151,6 +158,41 @@ public class MainController {
             out.print("false");
         }
     }           // memberJoinPost
+
+    @RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
+    @ResponseBody
+    public void memberUpdate(@RequestBody Member member, HttpServletResponse response) throws Exception {
+        PrintWriter out = response.getWriter();
+        Member newMember = memberRepository.findById(member.getId());
+        if( !(member.getPassword().equals(newMember.getPassword())) ) {// 들어온 pwd 값과 DB pwd 값이 같지않으면
+            out.print("false");
+        } else{
+            newMember.setName(member.getName());
+            newMember.setEmail(member.getEmail());
+            newMember.setTel(member.getTel());
+            newMember.setDepartment(member.getDepartment());
+            newMember.setGrade(member.getGrade());
+            memberRepository.save(newMember);
+            out.print("true");
+        }
+    }           // memberUpdate
+
+    @RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
+    @ResponseBody
+    public void loginCheck(@RequestBody Member member, HttpServletResponse response) throws Exception {
+        PrintWriter out = response.getWriter();
+        if(!memberRepository.existsById(member.getId())){ // ID가 존재하지않으면
+            out.print("id");
+        } else if(!memberRepository.findById(member.getId()).getPassword().equals(member.getPassword())){ // password가 틀리면
+            out.print("password");
+        } else { // 로그인성공
+            Member newMember = memberRepository.findById(member.getId());
+            Date time = new Date();
+            newMember.setLastLogin(time);
+            memberRepository.save(newMember);
+        }
+    }           // loginCheck
+
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public @ResponseBody String memberSignUp(String id, String iNumber){

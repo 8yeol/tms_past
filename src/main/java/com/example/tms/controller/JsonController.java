@@ -68,7 +68,6 @@ public class JsonController {
 
     /**
      * 전체 측정소 정보를 읽어오기 위한 메소드
-     *
      * @return 전체 측정소 정보
      */
     @RequestMapping(value = "/getPlaceList")
@@ -79,7 +78,6 @@ public class JsonController {
 
     /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
-     *
      * @param place 측정소 이름
      * @return 해당 측정소의 센서 값 (테이블 명)
      */
@@ -188,11 +186,7 @@ public class JsonController {
     public ReferenceValueSetting getSensorInfo(@RequestParam String sensor) {
         return reference_value_settingRepository.findByName(sensor);
     }
-    //센서리스트 불러오기
-    @RequestMapping(value = "/getSensorList2")
-    public List<SensorList> getSensorList2(@RequestParam("place") String place) {
-        return sensorListRepository.findByPlace(place);
-    }
+
     //센서리스트 측정항목 불러오기
     @RequestMapping(value = "/getSensorManagementId")
     public String getSensorManagementId(@RequestParam("name") String tablename) {
@@ -205,11 +199,17 @@ public class JsonController {
         return placeRepository.findByMonitoringIsTrue();
     }
 
+    /** 선세의 최근 데이터 조회 (limit:1)
+     * @return classification, naming, managementId, tableName, upTime, place, status
+     */
     @RequestMapping(value = "/getSensorRecent")
     public Sensor getSensorRecent(@RequestParam("sensor") String sensor) {
         return sensorCustomRepository.getSensorRecent(sensor);
     }
 
+    /** 센서의 최근 전 값 조회 (limit:2) -> 조회한 결과 중 2번째 데이터 리턴
+     *  @return classification, naming, managementId, tableName, upTime, place, status
+     */
     @RequestMapping(value = "/getSensorBeforeData")
     public Sensor getSensorBeforeData(@RequestParam("sensor") String sensor) {
         return sensorCustomRepository.getSensorBeforeData(sensor);
@@ -337,7 +337,9 @@ public class JsonController {
 
     }
 
-    /* 알림 현황 데이터 저장 */
+    /** 알림 현황 저장 (일 - 1월1부터 ~ 어제 날짜 / 월 - 1월1부터 이번달)
+     *  notification_day_statistics(일) , notification_month_statistics(월)
+     */
     @RequestMapping(value = "saveNotiStatistics")
     public void saveNotiStatistics() {
         LocalDate nowDate = LocalDate.now(); //현재시간
@@ -396,26 +398,36 @@ public class JsonController {
 
     }
 
-    /* 알림 현황 조회 [현재날짜, legalCount, companyCount, managementCount]*/
-    @RequestMapping(value = "getNotiStatisticsNow")
+    /** 당일 알림 현황 조회
+     * @return day(현재날짜), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
+     */
+    @RequestMapping(value = "getNotiStkatisticsNow")
     public ArrayList getNotificationStatistics(){
         ArrayList al = new ArrayList();
-        LocalDate nowDate = LocalDate.now();
-        al.add(nowDate);
-        for(int grade=1; grade<=3; grade++){
-            List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(nowDate), String.valueOf(nowDate));
-            al.add(list.get(0).get("count"));
+        try{
+            LocalDate nowDate = LocalDate.now();
+            al.add(nowDate);
+            for(int grade=1; grade<=3; grade++){
+                List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(nowDate), String.valueOf(nowDate));
+                al.add(list.get(0).get("count"));
+            }
+        }catch (Exception e){
         }
         return al;
     }
 
-    /* 알림 현황 조회 - 최근 일주일 (limit-7개) */
+
+    /** 일별 알림 현황 조회 - 최근 일주일 (limit:7)
+     * @return day('yyyy-MM-dd'), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
+     */
     @RequestMapping(value = "getNotificationWeekStatistics")
     public List<NotificationDayStatistics> getNotificationWeekStatistics() {
         return notificationStatisticsCustomRepository.getNotificationWeekStatistics();
     }
 
-    /* 알림 현황 조회 - 최근 1년 (limit-12개) */
+    /** 월별 현황 조회 - 최근 1년 (limit:12)
+     * @return month('yyyy-MM'), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
+     */
     @RequestMapping(value = "getNotificationMonthStatistics")
     public List<NotificationMonthStatistics> getNotificationMonthStatistics() {
         return notificationStatisticsCustomRepository.getNotificationMonthStatistics();

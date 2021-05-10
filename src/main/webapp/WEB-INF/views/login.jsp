@@ -16,14 +16,14 @@
             <form method='post' name='username' value='admin'>
                 <div class="">
                     <p class="text-start text-secondary fs-4 fw-bold">아이디</p>
-                    <input class="form-control" type='text' name='username' value=''>
+                    <input class="form-control" type='text' name='username' value='' id="id">
                 </div>
                 <div class="">
                     <p class="text-start text-secondary fs-4 fw-bold mt-3">비밀번호</p>
-                    <input class="form-control" type='password' name='password' value=''>
+                    <input class="form-control" type='password' name='password' value='' id="password">
                 </div>
                 <div>
-                    <input class="btn btn-primary mt-5 fs-3 px-5" type='submit' value="로그인">
+                    <input class="btn btn-primary mt-5 fs-3 px-5" onclick="login()" type='submit' value="로그인">
                 </div>
                 <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
             </form>
@@ -37,7 +37,32 @@
 </body>
 
 <script>
+    function login(){
 
+        if ($("#id").val() != "" && $("#password").val() != "") {
+            var settings = {
+                "url": "http://localhost:8090/loginCheck",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "accept": "application/json",
+                    "content-type": "application/json;charset=UTF-8"
+                },
+                "data": "{\r\n    \"id\": \""+$("#id").val()+"\",\r\n    \"password\": \""+$("#password").val()+"\"\r\n}",
+            };
+            $.ajax(settings).done(function (response) {
+                if (response == "id") {
+                    alert("아이디가 틀립니다.");
+                    location.reload();
+                } else if(response == "password"){
+                    alert("비밀번호가 틀립니다.");
+                    location.reload();
+                }
+            });
+        } else{
+            alert("빈칸없이 입력하여 주세요");
+        }
+    }
 </script>
 
 
