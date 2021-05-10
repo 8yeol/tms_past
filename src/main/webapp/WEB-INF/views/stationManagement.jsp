@@ -90,6 +90,60 @@
         border-radius: 50%;
     }
 
+    button.addBtn {
+        background-color: #000;
+        color: #fff;
+        border: 1px solid #000;
+        border-radius: 20px;
+        margin-top: 5px;
+        width: 60px;
+    }
+    button.removeBtn {
+        border: 2px solid #000;
+        border-radius: 20px;
+        margin-top: 5px;
+        width: 60px;
+    }
+
+    #placeDiv li {
+        text-align: justify;
+    }
+    #placeDiv li>span input{
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    #placeDiv li>span>span span:nth-child(1) {
+        margin-left: 9%;
+    }
+    #placeDiv li>span>span span:nth-child(2) {
+        margin-left: 10%;
+    }
+    #placeDiv li>span>span span:nth-child(3) {
+        margin-left: 15%;
+    }
+
+    #p_monitoring>span {
+        margin-top: 4px;
+    }
+    #p_monitoring>span:nth-child(1) {
+        font-size: 1.25rem;
+    }
+    #p_monitoring>span:nth-child(2) {
+        margin-left: 5px;
+        font-size: 1.25rem;
+    }
+    #p_monitoring>span:nth-child(3) {
+        position: relative;
+        left: 58%;
+    }
+    #p_monitoring>label.switch {
+        position: relative;
+        left: 59%;
+    }
+
+    td>input {
+        text-align: center;
+    }
 
 </style>
 <div class="container">
@@ -102,16 +156,16 @@
     <div class="row bg-light" style="height: 70%; padding: 0px 25px 25px 25px;">
         <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div>
-                <span class="fw-bold">측정소 관리</span>
-                <button data-toggle="modal" data-target="#addPlace">추가</button>
-                <button onclick="removePlace()">삭제</button>
+                <span class="fw-bold" style="margin-right: 53%;">측정소 관리</span>
+                <button data-toggle="modal" data-target="#addPlace" class="addBtn">추가</button>
+                <button onclick="removePlace()" class="removeBtn">삭제</button>
             </div>
             <div class="text-center">
-                <div style="border-bottom: silver solid 2px; display: flex;">
-                    <div><input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)"></div>
-                    <div>측정소 명</div>
-                    <div>업데이트</div>
-                    <div>모니터링 사용</div>
+                <div class="fw-bold" style="border-bottom: silver solid 2px; display: inline-block; text-align: justify; width:100%; position: relative;">
+                    <div style="display: inline-block; position: relative; left: 5px;"><input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)"></div>
+                    <div style="display: inline-block; position: relative;  top:15px; left: 10%;">측정소 명</div>
+                    <div style="display: inline-block; position: relative;  top:15px; left: 27%;">업데이트</div>
+                    <div style="display: inline-block; position: relative;  top:15px; left: 44%;">모니터링 사용</div>
                 </div>
                 <div>
                     <ul id="placeDiv" style="list-style: none; padding: 0px;">
@@ -124,11 +178,11 @@
         <div class="col-3" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
 
             <div>
-                <div id="p_monitoring" style="display: flex">
+                <div id="p_monitoring" class="fw-bold" style="display: flex; margin-top: 5px;">
                 </div>
-                <div>
-                    <button data-toggle="modal" data-target="#addReference">추가</button>
-                    <button onclick="removeReference()">삭제</button>
+                <div style="width: 130px; position: relative; left: 82%; margin: 5px 0px;">
+                    <button data-toggle="modal" data-target="#addReference" class="addBtn">추가</button>
+                    <button onclick="removeReference()" class="removeBtn">삭제</button>
                 </div>
             </div>
             <table style="text-align: center; width: 100%">
@@ -159,11 +213,11 @@
                 <h5 class="modal-title">측정소 추가</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <form id="placeinfo" method="post">
-                    <div><span>측정소 명</span><input type="text" class="modal-input" name="name"></div>
-                    <div><span>위치</span><input type="text" class="modal-input" name="location"></div>
-                    <div><span>담당자 명</span><input type="text" class="modal-input" name="admin"></div>
-                    <div><span>연락처</span><input type="text" class="modal-input" name="tel"></div>
+                <form id="placeinfo" method="post" style="width:100%; ">
+                    <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text" class="modal-input" name="name" style="position: relative; left: 15%;"></div>
+                    <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input" name="location" style="position: relative; left: 22%;"></div>
+                    <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input" name="admin" style="position: relative; left: 15%;"></div>
+                    <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel" style="position: relative; left: 19%;"></div>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -187,7 +241,7 @@
                 </div>
                 <div>
                     <form>
-                        <select id="select" name="modalDropdown1" class="btn-secondary rounded-3 mdd mb-2">
+                        <select id="select" name="modalDropdown1" class="btn-secondary rounded-3 mdd mb-2" style="width:100%;">
                         </select>
                         <input type="text" id="sname" class="text-secondary d-block mb-2"/>
                     </form>
