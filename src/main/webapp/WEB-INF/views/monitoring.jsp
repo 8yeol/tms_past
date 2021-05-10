@@ -166,13 +166,11 @@
 
     $(document).ready(function () {
         getData();
-
-
         // flashing();
     });
 
     // 센서명 클릭 이벤트 (table click > tbody click 변경)
-    $("#place_table tbody").on('click', 'tr', function () {
+    $("#place_table").on('click', 'tbody tr', function () {
         const placeName = $(this).parents('#place_table div').eq(0).children().eq(0).children().eq(0).text();
         const sensorName = $(this).find('td').eq(0).text();
         location.replace("/sensor?place=" + placeName + "&sensor=" + sensorName);
