@@ -84,7 +84,17 @@ public class MainController {
     }
 
     @RequestMapping("/sensorManagement")
-    public String sensorManagement() {
+    public String sensorManagement(Model model) {
+
+        List<Place> places = placeRepository.findAll();
+
+        List<String> placelist = new ArrayList<>();
+        for (Place place : places) {
+            placelist.add(place.getName());
+        }
+
+        model.addAttribute("place", placelist);
+
         return "sensorManagement";
     }
 

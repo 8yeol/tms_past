@@ -49,18 +49,7 @@
         font-size: 1.3rem;
     }
 
-    .saveBtn {
-        float: right;
-        margin-right: 100px;
-        background-color: #0275d8;
-        color: white;
-        width: 110px;
-        height: 35px;
-        font-size: 1.3rem;
-
-    }
 </style>
-<body>
 
 <div class="container">
     <div class="row">
@@ -71,25 +60,65 @@
 
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
 
-            <form id="saveForm">
-                <div class="pt-3 pe-5 margin-l">
-                    <label class="me-3 col-xs-3 label">센서명</label>
-                    <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="managementId">
-                    <label class="me-3 col-xs-3 w-10 label">분류</label>
-                    <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="classification">
-                </div>
-                <div class="pt-2 pe-5 margin-l">
-                    <label class="me-3 col-xs-3 w-10 label">한글명</label>
-                    <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming" id="naming" readonly>
+            <saveSensor id="saveForm">
+
+                <div class="pt-3 pe-5 ms-1">
                     <label class="me-3 col-xs-3 w-10 label">테이블명</label>
-                    <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="tableName">
-                </div>
-                <div class="pt-2 pe-5 pb-3 margin-l" style="float: left;margin-left: 326px;">
+                    <%-- mongoCollection 불러와서 tms~~~형식(센서)으로 된 테이블 명 뿌려주기 --%>
+                    <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTable()">
+                        <%--
+                        <c:forEach var="table" items="${tableList}" varStatus="status">
+                            <option value="${table}">${place}</option>
+                        </c:forEach>
+                        --%>
+                        <option>선택</option>
+                        <option value="tmsWP0001_NOX_01">tmsWP0001_NOX_01</option>
+                        <option value="tmsWP0001_NOX_02">tmsWP0001_NOX_02</option>
+                        <option value="tmsWP0001_NOX_03">tmsWP0001_NOX_03</option>
+                        <option value="tmsWP0001_O2b_01">tmsWP0001_O2b_01</option>
+                        <option value="tmsWP0001_O2b_02">tmsWP0001_O2b_02</option>
+                        <option value="tmsWP0001_O2b_03">tmsWP0001_O2b_03</option>
+                    </select>
+
                     <label class="me-3 col-xs-3 w-10 label">측정소</label>
-                    <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="place">
+                    <select name="place" id="place" class="btn btn-outline-dark">
+                        <option>선택</option>
+                        <c:forEach var="place" items="${place}" varStatus="status">
+                            <option value="${place}">${place}</option>
+                        </c:forEach>
+                    </select>
                 </div>
-            </form>
-            <button class="saveBtn" onclick="saveSensor()">센서 추가</button>
+
+                <div class="row pe-5 ms-1">
+                    <div class="row bg-white m-3">
+                        <div class="row">
+                            <div class="col text-end">
+                                <span class="text-primary" style="font-size: 15%"> * 테이블명 선택시 자동 입력됩니다.</span>
+                            </div>
+                        </div>
+                        <div class="row p-5">
+                            <div class="col">
+                                <label class="me-3 col-xs-3 label">관리 ID</label>
+                                <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="managementId" id="m_id">
+                            </div>
+                            <div class="col">
+                                <label class="me-3 col-xs-3 w-10 label">분류</label>
+                                <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="classification" id="m_class">
+                            </div>
+                            <div class="col">
+                                <label class="me-3 col-xs-3 w-10 label">한글명</label>
+                                <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming" id="naming">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </saveSensor>
+
+            <div class="row">
+                <div class="col text-end">
+                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor()">센서 추가</button>
+                </div>
+            </div>
 
         </div>
 
@@ -175,7 +204,6 @@
 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-</body>
 <script>
     $(function () {
         //초기 데이터 셋팅
@@ -262,7 +290,14 @@
             $('#tbody').append(innerHTML);
         }
     }
-
+    function changeTable(){
+        const tableName = $("#tableName").val();
+        const str = tableName.split('_');
+        const id = str[1]+'_'+str[2];
+        $('#m_id').val(id);
+        $('#m_class').val(str[1]);
+        $('#naming').val(findSensorCategory(tableName));
+    }
 </script>
 
 

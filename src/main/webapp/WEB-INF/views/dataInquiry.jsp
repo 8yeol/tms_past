@@ -573,7 +573,7 @@
                     data: data
                 }],
                 chart: {
-                    id: 'chart2',
+                    id: 'chart',
                     type: 'line',
                     height: 350,
                     toolbar: {
@@ -663,11 +663,11 @@
                     data : data
                 }],
                 chart: {
-                    id: 'chart1',
+                    id: 'chart2',
                     height: 150,
                     type: 'area',
                     brush:{
-                        target: 'chart2',
+                        target: 'chart',
                         enabled: true
                     },
                     selection: {
@@ -713,7 +713,7 @@
             chartLine.updateOptions({
                chart : {
                    brush:{
-                       target: 'chart2',
+                       target: 'chart',
                        enabled: true
                    }
                }
