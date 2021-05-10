@@ -167,7 +167,7 @@ public class JsonController {
     public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "location") String location, @RequestParam(value = "admin") String admin,
                           @RequestParam(value = "tel") String tel) {
         Date up_time = new Date();
-        String power = "off";
+        String power = "OFF";
         Boolean monitoring = false;
         List sensor = new ArrayList();
         Place savePlace = new Place(name, location, admin, tel, monitoring, power, up_time, sensor);

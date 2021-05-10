@@ -252,7 +252,7 @@
         }
 
         //시간과 분을 정확히 입력했는지 검사
-        if (start.length!=5 || end.length!=5) {
+        if (start.length != 5 || end.length != 5) {
             swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -260,10 +260,6 @@
             })
             return;
         }
-
-
-
-
 
         const onList = new Array();
         const offList = new Array();
