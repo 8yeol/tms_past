@@ -173,6 +173,7 @@
 
     // 센서명 클릭 이벤트 (table click > tbody click 변경)
     $("#place_table tbody").on('click', 'tr', function () {
+        console.log(123);
         const placeName = $(this).parents('#place_table div').eq(0).children().eq(0).children().eq(0).text();
         const sensorName = $(this).find('td').eq(0).text();
         location.replace("/sensor?place=" + placeName + "&sensor=" + sensorName);

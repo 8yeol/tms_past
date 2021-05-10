@@ -241,6 +241,8 @@
             })
             return false;
         }
+
+        //저장할때 시간 검사
         if (start > end) {
             swal.fire({
                 icon: 'warning',
@@ -250,6 +252,15 @@
             return;
         }
 
+        //저장할때 시간 있는지 검사
+        if (start > end) {
+            swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: 'From 시간 보다 적은 시간을 입력하실 수 없습니다.'
+            })
+            return;
+        }
 
         const onList = new Array();
         const offList = new Array();
@@ -294,6 +305,9 @@
 
         let stime = $('#start' + idx).val();
         let etime = $('#end' + idx).val();
+
+        console.log(stime.length);
+        console.log(etime.length);
 
         if (stime > etime) {
             swal.fire({

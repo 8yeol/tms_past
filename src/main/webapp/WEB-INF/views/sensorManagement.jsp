@@ -60,7 +60,7 @@
 
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
 
-            <saveSensor id="saveForm">
+            <form id="saveForm">
 
                 <div class="pt-3 pe-5 ms-1">
                     <label class="me-3 col-xs-3 w-10 label">테이블명</label>
@@ -99,20 +99,23 @@
                         <div class="row p-5">
                             <div class="col">
                                 <label class="me-3 col-xs-3 label">관리 ID</label>
-                                <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="managementId" id="m_id">
+                                <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="managementId"
+                                       id="m_id">
                             </div>
                             <div class="col">
                                 <label class="me-3 col-xs-3 w-10 label">분류</label>
-                                <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="classification" id="m_class">
+                                <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="classification"
+                                       id="m_class">
                             </div>
                             <div class="col">
                                 <label class="me-3 col-xs-3 w-10 label">한글명</label>
-                                <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming" id="naming">
+                                <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming"
+                                       id="naming">
                             </div>
                         </div>
                     </div>
                 </div>
-            </saveSensor>
+            </form>
 
             <div class="row">
                 <div class="col text-end">
@@ -138,7 +141,7 @@
                 </tr>
                 </thead>
                 <tbody id="tbody">
-                 <!-- script -->
+                <!-- script -->
                 </tbody>
             </table>
             <c:if test="${empty sensorList}">
@@ -220,7 +223,7 @@
 
 
     //데이터 가져와서 그리기
-    function getSensor(){
+    function getSensor() {
         $.ajax({
             url: 'getSensorList',
             type: 'POST',
@@ -236,7 +239,25 @@
     }
 
     //데이터 저장후 그리기
-    function saveSensor(){
+    function saveSensor() {
+
+        if ($('#tableName').val() == '선택') {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '테이블명을 선택 해주세요.'
+            })
+            return;
+        }
+        if ($('#place').val() == '선택') {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '측정소를 선택 해주세요.'
+            })
+            return;
+        }
+
         var form = $('#saveForm').serialize();
 
         $.ajax({
@@ -244,7 +265,7 @@
             type: 'POST',
             async: false,
             cache: false,
-            data:form,
+            data: form,
             success: function (data) {
                 drawTable(data)
                 Swal.fire({
@@ -266,9 +287,9 @@
         $('#tbody').children().remove();
 
         for (i = 0; i < data.length; i++) {
-            if(data.status==false){
+            if (data[i].status == false) {
                 var status = '<i class="fas fa-circle ms-4 text-danger"></i>'
-            }else{
+            } else {
                 var status = '<i class="fas fa-circle ms-4 text-success"></i>'
             }
 
@@ -277,26 +298,33 @@
                 " <th>" + (i + 1) + "</th>" +
                 " <td>" + data[i].classification + "</td>" +
                 " <td>" + data[i].naming + "</td>" +
-                " <td>" + data[i].managementId+ "</td>" +
+                " <td>" + data[i].managementId + "</td>" +
                 " <td>" + data[i].tableName + "</td>" +
-                " <td>" +moment(data[i].upTime).format('YYYY-MM-DD HH:mm:ss') + "</td>" +
+                " <td>" + moment(data[i].upTime).format('YYYY-MM-DD HH:mm:ss') + "</td>" +
                 " <td>" + data[i].place + "</td>" +
-                " <td>" +status+ "</td>" +
-                "<td>"+
-                '<i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>'+
-                '<i class="fas fa-times" data-toggle="modal" data-target="#checkModal"></i>'+
-                '</td>'+
+                " <td>" + status + "</td>" +
+                "<td>" +
+                '<i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>' +
+                '<i class="fas fa-times" data-toggle="modal" data-target="#checkModal"></i>' +
+                '</td>' +
                 "</tr>";
             $('#tbody').append(innerHTML);
         }
     }
-    function changeTable(){
+
+    function changeTable() {
         const tableName = $("#tableName").val();
-        const str = tableName.split('_');
-        const id = str[1]+'_'+str[2];
-        $('#m_id').val(id);
-        $('#m_class').val(str[1]);
-        $('#naming').val(findSensorCategory(tableName));
+        if (tableName == "선택") {
+            $('#m_id').val("");
+            $('#m_class').val("");
+            $('#naming').val("");
+        } else {
+            const str = tableName.split('_');
+            const id = str[1] + '_' + str[2];
+            $('#m_id').val(id);
+            $('#m_class').val(str[1]);
+            $('#naming').val(findSensorCategory(tableName));
+        }
     }
 </script>
 
