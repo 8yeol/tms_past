@@ -9,7 +9,6 @@
 <body class="bg-secondary">
 
 <div class="container">
-
     <div class="bg-white p-5 d-flex justify-content-center text-center mt-5 rounded">
         <div>
             <h1 class="py-5 fw-bold">Login</h1>
@@ -37,7 +36,7 @@
 </body>
 
 <script>
-    function login(){
+    function login() {
 
         if ($("#id").val() != "" && $("#password").val() != "") {
             var settings = {
@@ -48,18 +47,18 @@
                     "accept": "application/json",
                     "content-type": "application/json;charset=UTF-8"
                 },
-                "data": "{\r\n    \"id\": \""+$("#id").val()+"\",\r\n    \"password\": \""+$("#password").val()+"\"\r\n}",
+                "data": "{\r\n    \"id\": \"" + $("#id").val() + "\",\r\n    \"password\": \"" + $("#password").val() + "\"\r\n}",
             };
             $.ajax(settings).done(function (response) {
                 if (response == "id") {
                     alert("아이디가 틀립니다.");
                     location.reload();
-                } else if(response == "password"){
+                } else if (response == "password") {
                     alert("비밀번호가 틀립니다.");
                     location.reload();
                 }
             });
-        } else{
+        } else {
             alert("빈칸없이 입력하여 주세요");
         }
     }

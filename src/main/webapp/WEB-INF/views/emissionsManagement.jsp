@@ -10,15 +10,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="static/js/jquery-ui.js"></script>
 
 <style>
     .multiSelectComboBox {
@@ -112,7 +107,7 @@
     <div class="row">
         <div class="row1">
             <span>연간 배출 허용 기준 설정</span>
-            <button data-toggle="modal" data-target="#addModal" onclick="inputClean()"
+            <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="inputClean()"
                     style="background-color:green;color:white"> 추가
             </button>
         </div>
@@ -142,9 +137,9 @@
                         <td>${standard.percent}</td>
                         <td>${standard.formula}</td>
                         <td>
-                            <i onclick="editModalSetting(this)" class="fas fa-edit me-2" data-toggle="modal"
-                               data-target="#editModal"></i>
-                            <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                            <i onclick="editModalSetting(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
+                               data-bs-target="#editModal"></i>
+                            <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                         </td>
                     </tr>
                 </c:forEach>
@@ -308,7 +303,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5" onclick="insert()">추가</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addCancle">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="addCancle">취소</button>
             </div>
         </div>
     </div>
@@ -344,7 +339,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5" onclick="editStandard()">수정</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="editCancle">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="editCancle">취소</button>
             </div>
         </div>
     </div>
@@ -363,7 +358,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-danger me-5" onclick="deleteStandard()">삭제</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -460,8 +455,8 @@
                 " <td>" + data[i].percent + "</td>" +
                 " <td>" + data[i].formula + "</td>" +
                 " <td>" +
-                "<i class='fas fa-edit me-2' data-toggle='modal' data-target='#editModal' onclick='editModalSetting(this)'></i>" +
-                "<i class='fas fa-times' data-toggle='modal' data-target='#deleteModal'></i>" +
+                "<i class='fas fa-edit me-2' data-bs-toggle='modal' data-bs-target='#editModal' onclick='editModalSetting(this)'></i>" +
+                "<i class='fas fa-times' data-bs-toggle='modal' data-bs-target='#deleteModal'></i>" +
                 "</td>" +
                 "</tr>";
             $('#tbody').append(innerHTML);
