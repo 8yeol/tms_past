@@ -109,7 +109,7 @@
     <div class="row">
         <div class="row1">
             <span>연간 배출 허용 기준 설정</span>
-            <button data-toggle="modal" data-target="#addModal" onclick="inputClean()"
+            <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="inputClean()"
                     style="background-color:green;color:white"> 추가
             </button>
         </div>
