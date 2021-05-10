@@ -19,9 +19,6 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/stationManagement.css">
 <script src="static/js/sweetalert2.min.js"></script>
-<%--modal 사용--%>
-<script src="static/js/popper.min.js"></script>
-<script src="static/js/bootstrap1.min.js"></script>
 <%--draggable사용--%>
 <script src="static/js/jquery-ui.js"></script>
 <%--시간 format--%>
@@ -39,7 +36,7 @@
         <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div>
                 <span class="fw-bold" style="margin-right: 53%;">측정소 관리</span>
-                <button data-toggle="modal" data-target="#addPlace" class="addBtn">추가</button>
+                <button data-bs-toggle="modal" data-bs-taget="#addPlace" class="addBtn">추가</button>
                 <button onclick="removePlace()" class="removeBtn">삭제</button>
             </div>
             <div class="text-center">
@@ -63,7 +60,7 @@
                 <div id="p_monitoring" class="fw-bold" style="display: flex; margin-top: 5px;">
                 </div>
                 <div style="width: 130px; position: relative; left: 82%; margin: 5px 0px;">
-                    <button data-toggle="modal" data-target="#addReference" class="addBtn">추가</button>
+                    <button data-bs-toggle="modal" data-bs-taget="#addReference" class="addBtn">추가</button>
                     <button onclick="removeReference()" class="removeBtn">삭제</button>
                 </div>
             </div>
@@ -104,7 +101,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button id="saveBtn" type="button" class="btn btn-primary" onclick="insertPlace()">추가</button>
-                <button id="cancelBtn" type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button id="cancelBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -131,7 +128,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-primary" onclick="insertReference()">추가</button>
-                <button id=canBtn type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button id=canBtn type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
             </div>
         </div>
     </div>
