@@ -253,7 +253,6 @@
     $("#menu a").each(function() { //menu a 태그의 주소
         if ($(this).attr("href") !== "#") { // 주소링크가 # 아닐때
             var target_URL = $(this).prop("href"); // 이벤트 발생 a태그의 모든 주소들
-            console.log(target_URL);
             if (target_URL == current_page_URL) { // 현재 URL 주소와 클릭된 주소가 같다면
                 $(this).parent().find('.submenu').children('li').first().addClass('active'); //클래스 active 추가
                 $(this).parentsUntil('#menu').addClass('active'); //클래스 active 추가
