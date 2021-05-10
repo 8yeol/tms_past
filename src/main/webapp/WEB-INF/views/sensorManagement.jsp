@@ -48,7 +48,7 @@
                 <div class="pt-3 pe-5 ms-1">
                     <label class="me-3 col-xs-3 w-10 label">테이블명</label>
                     <%-- mongoCollection 불러와서 tms~~~형식(센서)으로 된 테이블 명 뿌려주기 --%>
-                    <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName()">
+                    <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName('')">
                         <%--
                         <c:forEach var="table" items="${tableList}" varStatus="status">
                             <option value="${table}">${place}</option>
@@ -99,7 +99,7 @@
             </form>
             <div class="row">
                 <div class="col text-end">
-                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor()">센서 추가</button>
+                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor('')">센서 추가</button>
                 </div>
             </div>
         </div>
@@ -125,32 +125,89 @@
     </div>
 </div>
 
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalTitle"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="edit-name" class="col-form-label">Recipient:</label>
-                        <input type="text" class="form-control" id="edit-name">
-                    </div>
-                    <div class="mb-3">
-                        <label for="message-text" class="col-form-label">Message:</label>
-                        <textarea class="form-control" id="edit-text"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
+    <!-- addModal -->
+    <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                    <h5 class="modal-title">센서 수정</h5>
+                </div>
+                <div class="modal-body d-flex justify-content-evenly">
+                    <form id="editForm" method="post" autocomplete="off">
+                        <div class="row">
+                            <div class="col text-center">
+                                <span class="text-primary" style="font-size: 15%"> * 테이블명 선택시 자동 입력됩니다.</span>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="fs-5 fw-bold add-margin f-sizing">테이블명</span>
+                            </div>
+                            <div class="col" >
+                                <select name="tableName" id="tableName2" class="btn btn-outline-dark" onchange="changeTableName(2)"style="width: 223px;">
+                                    <%--
+                                    <c:forEach var="table" items="${tableList}" varStatus="status">
+                                        <option value="${table}">${place}</option>
+                                    </c:forEach>
+                                    --%>
+                                    <option>선택</option>
+                                    <option value="tmsWP0001_NOX_01">tmsWP0001_NOX_01</option>
+                                    <option value="tmsWP0001_NOX_02">tmsWP0001_NOX_02</option>
+                                    <option value="tmsWP0001_NOX_03">tmsWP0001_NOX_03</option>
+                                    <option value="tmsWP0001_O2b_01">tmsWP0001_O2b_01</option>
+                                    <option value="tmsWP0001_O2b_02">tmsWP0001_O2b_02</option>
+                                    <option value="tmsWP0001_O2b_03">tmsWP0001_O2b_03</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
+                            </div>
+                            <div class="col">
+                                <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;">
+                                    <option>선택</option>
+                                    <c:forEach var="place" items="${place}" varStatus="status">
+                                        <option value="${place}">${place}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="fs-5 fw-bold add-margin f-sizing">관리 ID</span>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="text-secondary" name="managementId" id="m_id2">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="fs-5 fw-bold add-margin f-sizing">분류</span>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="text-secondary" name="classification" id="m_class2">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="text-secondary" name="naming" id="naming2">
+                            </div>
+                        </div>
+                        <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-success me-5" onclick="saveSensor(2)">수정</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
@@ -160,6 +217,8 @@
 
     //데이터 가져와서 그리기
     function getSensor() {
+        $('#tbody').children().remove();  //테이블 비우기
+
         $.ajax({
             url: 'getSensorList',
             type: 'POST',
@@ -183,7 +242,7 @@
                     const cell6 = row.insertCell(5);
                     const cell7 = row.insertCell(6);
                     const cell8 = row.insertCell(7);
-                    cell3.setAttribute('class','target');
+                    cell4.setAttribute('class','target');
                     cell1.innerHTML = data[i].classification;
                     cell2.innerHTML = data[i].naming;
                     cell3.innerHTML = data[i].managementId;
@@ -191,8 +250,8 @@
                     cell5.innerHTML = moment(data[i].upTime).format('YYYY-MM-DD HH:mm:ss');
                     cell6.innerHTML = data[i].place;
                     cell7.innerHTML = status;
-                    cell8.innerHTML = '<i type="button" class="fas fa-edit btn" data-bs-toggle="modal" data-bs-target="#editModal"></i>' +
-                        '<i type="button" class="fas fa-times btn" onclick="deleteSensor(this)"></i>';
+                    cell8.innerHTML = '<i type="button" class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editSetting(this)"></i>' +
+                        '<i type="button" class="fas fa-times" onclick="deleteModal(this)"></i>';
                        /* '<i class="btn fas fa-edit me-2" ata-bs-toggle="modal" data-bs-target="#exampleModal"></i>' +
                         '<i class="fas fa-times" data-toggle="modal" data-target="#deleteSensor"></i>';*/
                 }
@@ -224,8 +283,18 @@
         });
     }
 
-    function deleteSensor(obj){
-        console.log($(obj).parent().prevAll($(".target")).html());
+    function editSetting(obj){
+        var sensor = $(obj).parent().parent().children();
+
+        $("#tableName2").val(sensor.eq(3).html());             // -> tmsWP0001_NOX_01
+        $("#place2").val(sensor.eq(5).html());                 // -> 측정소 1
+        $("input[name=hiddenCode]").val(sensor.eq(2).html());  // -> NOX_01
+
+        changeTableName(2);
+    }
+
+    function deleteModal(obj){
+     let managementId = $(obj).parent().parent().children().eq(2).html(); //-> NOX_01
         Swal.fire({
             icon: 'error',
             title: '삭제',
@@ -236,20 +305,37 @@
             cancelButtonText: '취소'
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
-
-                    '삭제 완료',
-                    '삭제 되었습니다.',
-                    'warning'
-                )
+                deleteSensor(managementId);
             }
                  });
-
     }
 
+    function  deleteSensor(managementId){
+            $.ajax({
+                url: 'deleteSensor',
+                type: 'POST',
+                async: false,
+                cache: false,
+                data:  { managementId : managementId },
+                success: function (data) {
+                    Swal.fire(
+                        '삭제 완료',
+                        '삭제 되었습니다.',
+                        'warning'
+                    );
+                    getSensor();
+                },
+                error: function (request, status, error) {
+                    console.log(error)
+                }
+            });
+        }
+
+
+
     //데이터 저장 후 페이지 새로고침
-    function saveSensor() {
-        if ($('#tableName').val() == '선택') {
+    function saveSensor(idx) {
+        if ($('#tableName'+idx).val() == '선택') {
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -257,8 +343,25 @@
             })
             return;
         }
+        if ($('#place'+idx).val() == '선택') {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '측정소명을 선택 해주세요.'
+            })
+            return;
+        }
 
-        const form = $('#saveForm').serialize();
+        let form="";
+        let str="";
+
+        if(idx==2){
+            form = $('#editForm').serialize();
+            str = '수정';
+        }else{
+            form = $('#saveForm').serialize();
+            str = '추가';
+        }
 
         $.ajax({
             url: 'saveSensor',
@@ -267,10 +370,11 @@
             cache: false,
             data: form,
             success: function () {
+                $('#editModal').modal('hide');
                 Swal.fire({
                     icon: 'success',
-                    title: '센서 추가',
-                    text: '관리 항목에 센서가 추가 되었습니다.',
+                    title: '센서 '+str,
+                    text: '관리 항목에 센서가 '+str+' 되었습니다.',
                     timer: 1500
                 })
                 setTimeout(function() {
@@ -289,21 +393,22 @@
         });
     }
 
-    function changeTableName() {
-        const tableName = $("#tableName").val();
+    function changeTableName(idx) {
+        const tableName = $("#tableName"+idx).val();
         if (tableName == "선택") {
-            $('#m_id').val("");
-            $('#m_class').val("");
-            $('#naming').val("");
-            $('#place option:eq(0)').attr('selected','selected');
+            $('#m_id'+idx).val("");
+            $('#m_class'+idx).val("");
+            $('#naming'+idx).val("");
+            $('#place'+idx+' option:eq(0)').attr('selected','selected');
         } else {
             const str = tableName.split('_');
             const id = str[1] + '_' + str[2];
-            $('#m_id').val(id);
-            $('#m_class').val(str[1]);
-            $('#naming').val(findSensorCategory(tableName));
+            $('#m_id'+idx).val(id);
+            $('#m_class'+idx).val(str[1]);
+            $('#naming'+idx).val(findSensorCategory(tableName));
         }
     }
+
 </script>
 
 

@@ -102,10 +102,7 @@ public class JsonController {
     }
 
     @RequestMapping(value = "getSensorList")
-    public List<SensorList> getSensorList() {
-        return sensorListRepository.findAll();
-    }
-
+    public List<SensorList> getSensorList() { return sensorListRepository.findAll(); }
 
     /**
      * 설정된 기준 값을 초과하는 경우 알람 발생 - 해당 발생된 알람의 목록 리스트 (ALL) > 페이징 가능하게 수정할 것.
@@ -528,7 +525,7 @@ public class JsonController {
         YearlyEmissionsStandardSetting setting;
 
         //hidden 값이 있는지로 추가와 수정을 판별
-        if(hiddenCode==""){
+        if(hiddenCode==""||hiddenCode==null){
             setting = new YearlyEmissionsStandardSetting();
         }else{
             setting = yearlyEmissionsStandardRepository.findBySensorCode(hiddenCode);
@@ -568,12 +565,20 @@ public class JsonController {
 
         return dataInquiryCustomRepository.searchInformatin(date_start, date_end, item, off);
     }
-    //센서관리 항목 추가
+    //센서관리 항목 추가,수정
     @RequestMapping(value = "/saveSensor")
     public void saveSensor(@RequestParam(value = "managementId") String managementId, @RequestParam(value = "classification") String classification, @RequestParam(value = "naming") String naming,@RequestParam(value = "place") String place,
-                           @RequestParam(value = "tableName") String tableName) {
+                           @RequestParam(value = "tableName") String tableName,@RequestParam(value = "hiddenCode" ,required=false) String hiddenCode) {
 
-        SensorList sensor = new SensorList();
+        SensorList sensor;
+
+        //hidden 값이 있는지로 추가와 수정을 판별
+        if(hiddenCode==""||hiddenCode==null){
+            sensor = new SensorList();
+        }else{
+            sensor = sensorListRepository.findByManagementId(hiddenCode);
+        }
+
         sensor.setClassification(classification);
         sensor.setManagementId(managementId);
         sensor.setNaming(naming);
@@ -583,6 +588,15 @@ public class JsonController {
         sensor.setStatus(true);
 
         sensorListRepository.save(sensor);
+    }
+
+    //센서관리 삭제
+    @RequestMapping(value = "/deleteSensor")
+    public void deleteSensor(String managementId) {
+
+       SensorList sensor = sensorListRepository.findByManagementId(managementId);
+       sensorListRepository.delete(sensor);
+
     }
 
     @RequestMapping(value = "/getStatisticsData", method = RequestMethod.POST)
