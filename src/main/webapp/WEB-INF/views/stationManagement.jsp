@@ -15,16 +15,13 @@
     String cp = request.getContextPath();
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
-<script src="static/js/common/common.js"></script>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
-<%--modal 사용--%>
 <script src="static/js/popper.min.js"></script>
-<script src="static/js/bootstrap1.min.js"></script>
-<%--draggable사용--%>
 <script src="static/js/jquery-ui.js"></script>
-<%--시간 format--%>
 <script src="static/js/moment.min.js"></script>
+
+<script src="static/js/common/common.js"></script>
 
 <style>
     /* The switch - the box around the slider */

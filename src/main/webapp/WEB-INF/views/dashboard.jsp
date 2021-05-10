@@ -106,21 +106,6 @@
 </style>
 
 <div class="container">
-    <%--
-    <div class="row m-3 mt-3 bg-light" style="height: 8%">
-        <div class="row">
-            <div class="col text-end pt-2">
-                <span class="small">마지막 업데이트 : <span class="fw-bold" id="weather_update">업데이트 시간</span></span><br>
-                <span class="text-primary" style="font-size: 15%"> * 1시간 단위로 업데이트 됩니다.</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                날씨 정보 추가
-            </div>
-        </div>
-    </div>
-    --%>
     <div class="row m-3 mt-3 ms-1">
         <span class="fs-4 fw-bold">대시보드</span>
     </div>
@@ -297,36 +282,16 @@
 
 <script>
     $(document).ready(function () {
-        weather();
         integrated();
-        accumulate();
         excess();
 
       $('.line').eq($('.line').length-1).remove();
     });
 
-    // 날씨 정보 출력 (처음 로딩될 때 한번, 그 후로 매 시간마다 실행)
-    function weather() {
-        $("#weather_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
-
-    }
-
-    function addWeatherData() {
-
-        // 완료 후 업데이트 시간 표시
-        $("#weather_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
-    }
-
     // 측정소 통합 모니터링
     // DB 저장(매월 마지막날 Sheduler 돌려서 update)
     function integrated() {
         $("#integrated_update").text(moment(new Date()).subtract(1, 'months').endOf('month').format('YYYY-MM-DD'));
-    }
-
-    // 연간 배출량 누적 모니터링(매일 자정 페이지 새로고침)
-    // DB 저장 (매일 일정시간에 Scheduler 돌려서 update)
-    function accumulate() {
-        $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD'));
     }
 
     // 관리등급 초과 모니터링 (처음 로딩될 때 한번, 그 후로 매 5분마다 실행) - 완료
