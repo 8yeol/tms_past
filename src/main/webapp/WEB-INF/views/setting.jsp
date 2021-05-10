@@ -1,51 +1,43 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
-<link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
-
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="static/js/jquery.dataTables.min.js"></script>
-
 <style>
     .bg-lightGray {
-        background: lightgrey;
+        background: #d3d3d3;
     }
-
     hr {
         color: white;
     }
 </style>
 
-<script type="text/javascript">
-    jQuery(function ($) {
-        $("#member-Table").DataTable({
-            "language": {
-                "emptyTable": "데이터가 없어요.",
-                "lengthMenu": "페이지당 _MENU_ 개씩 보기",
-                "info": "현재 _START_ - _END_ / _TOTAL_건",
-                "infoEmpty": "데이터 없음",
-                "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
-                "search": "전체검색 : ",
-                "zeroRecords": "일치하는 데이터가 없어요.",
-                "loadingRecords": "로딩중...",
-                "processing": "잠시만 기다려 주세요...",
-                "paginate": {
-                    "next": "다음",
-                    "previous": "이전"
+    <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+    <script src="static/js/jquery-ui.js"></script>
+    <script src="static/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $("#member-Table").DataTable({
+                "language": {
+                    "emptyTable": "데이터가 없어요.",
+                    "lengthMenu": "페이지당 _MENU_ 개씩 보기",
+                    "info": "현재 _START_ - _END_ / _TOTAL_건",
+                    "infoEmpty": "데이터 없음",
+                    "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
+                    "search": "전체검색 : ",
+                    "zeroRecords": "일치하는 데이터가 없어요.",
+                    "loadingRecords": "로딩중...",
+                    "processing": "잠시만 기다려 주세요...",
+                    "paginate": {
+                        "next": "다음",
+                        "previous": "이전"
+                    },
                 },
-            },
-            pageLength: 10
+                pageLength: 10
+            });
         });
-    });
-</script>
-<body>
+    </script>
 
 <div class="container">
 
@@ -119,19 +111,19 @@
                             <c:when test="${mList.state eq '1'}">
                                 <td>
                                     <button class="btn btn-success py-0 px-2" style="font-size: 12px;"
-                                            data-toggle="modal" data-target="#okModal"
+                                            data-bs-toggle="modal" data-bs-target="#okModal"
                                             onclick="ID_Set('${mList.id}')">승인
                                     </button>
                                     <button class="btn btn-danger py-0 px-2" style="font-size: 12px;"
-                                            data-toggle="modal" data-target="#noModal"
+                                            data-bs-toggle="modal" data-bs-target="#noModal"
                                             onclick="ID_Set('${mList.id}')">거절
                                     </button>
                                 </td>
                             </c:when>
                             <c:when test="${mList.state eq '2' || mList.state eq '3' || mList.state eq '4'}">
                                 <td>
-                                    <i class="fas fa-edit d-flex justify-content-center btn p-0" data-toggle="modal"
-                                       data-target="#managementModal" onclick="ID_Set('${mList.id}')"></i>
+                                    <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
+                                       data-bs-target="#managementModal" onclick="ID_Set('${mList.id}')"></i>
                                 </td>
                             </c:when>
                             <c:otherwise>
@@ -197,7 +189,9 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-end">
-                        <button class="btn btn-primary align-text-bottom me-2 mb-2 py-1 px-3 fw-bold fs-6" onclick="rankSettingSave()">저장</button>
+                        <button class="btn btn-primary align-text-bottom me-2 mb-2 py-1 px-3 fw-bold fs-6"
+                                onclick="rankSettingSave()">저장
+                        </button>
                     </div>
                 </div>
             </div>
@@ -235,8 +229,8 @@
                     <td>15</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
+                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -247,8 +241,8 @@
                     <td>50</td>
                     <td>일일유량x배출허용기준초과농도x10⁶x76%22.4</td>
                     <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
+                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -259,8 +253,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶x46%22.4</td>
                     <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
+                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -271,8 +265,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
+                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -283,8 +277,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
+                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -295,8 +289,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
+                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -307,8 +301,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
+                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -319,8 +313,8 @@
                     <td>25</td>
                     <td>일일유량x배출허용기준초과농도x10⁶</td>
                     <td>
-                        <i class="fas fa-edit me-2" data-toggle="modal" data-target="#editModal"></i>
-                        <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
+                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                     </td>
                 </tr>
                 </tbody>
@@ -343,10 +337,10 @@
                 <h3 id="okModal_Body">가입승인 하시겠습니까?</h3>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" data-dismiss="modal" value="1"
+                <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" value="1"
                         onclick="sing_Up(value)">승인
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -363,10 +357,10 @@
                 <h3>가입거절 하시겠습니까?</h3>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-danger me-5" data-dismiss="modal" value="0"
+                <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal" value="0"
                         onclick="sing_Up(value)">거절
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -397,7 +391,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5">수정</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -416,7 +410,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-danger me-5">삭제</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -433,19 +427,19 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-toggle="modal"
-                            data-target="#userGrantManagementModal">회원 권한 관리
+                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
+                            data-bs-target="#userGrantManagementModal">회원 권한 관리
                     </button>
-                    <button class="btn btn-primary fw-bold fs-4 px-5 mt-3" data-toggle="modal"
-                            data-target="#userPwdmodal">회원 비밀번호 초기화
+                    <button class="btn btn-primary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
+                            data-bs-target="#userPwdmodal">회원 비밀번호 초기화
                     </button>
-                    <button class="btn btn-danger fw-bold fs-4 px-5 mt-3" data-toggle="modal"
-                            data-target="#userExpulsionmodal">회원 추방
+                    <button class="btn btn-danger fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
+                            data-bs-target="#userExpulsionmodal">회원 추방
                     </button>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">확인</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
             </div>
         </div>
     </div>
@@ -465,9 +459,9 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-primary me-5" data-dismiss="modal" onclick="resetPassword()">초기화
+                <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">초기화
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -486,9 +480,9 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-danger me-5" data-dismiss="modal" onclick="kickMember()">추방
+                <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal" onclick="kickMember()">추방
                 </button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -503,19 +497,19 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-dismiss="modal" value="2"
+                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="2"
                             onclick="gave_Rank(value)">일반회원 등급부여
                     </button>
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-dismiss="modal" value="3"
+                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="3"
                             onclick="gave_Rank(value)">관리자 등급부여
                     </button>
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-dismiss="modal" value="4"
+                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="4"
                             onclick="gave_Rank(value)">최고관리자 등급부여
                     </button>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">확인</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
             </div>
         </div>
     </div>
@@ -525,7 +519,6 @@
 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-</body>
 
 <script>
     $(document).ready(function () {
@@ -597,7 +590,7 @@
         </c:forEach>
     }       //rankRadioChanged
 
-    function rankSettingSave(){
+    function rankSettingSave() {
         var settings = {
             "url": "http://localhost:8090/rankSettingSave",
             "method": "POST",
@@ -605,14 +598,14 @@
                 "accept": "application/json",
                 "content-type": "application/json;charset=UTF-8"
             },
-            "data": "{\r\n    \"name\": \""+rName+"\"," +
-                "\r\n    \"dashboard\": "+$('#dashBoardChk').prop("checked")+"," +
-                "\r\n    \"alarm\": "+$('#alarmChk').prop("checked")+"," +
-                "\r\n    \"monitoring\": "+$('#monitoringChk').prop("checked")+"," +
-                "\r\n    \"statistics\": "+$('#statisticsChk').prop("checked")+"," +
-                "\r\n    \"setting\": "+$('#settingChk').prop("checked")+"\r\n}",
+            "data": "{\r\n    \"name\": \"" + rName + "\"," +
+                "\r\n    \"dashboard\": " + $('#dashBoardChk').prop("checked") + "," +
+                "\r\n    \"alarm\": " + $('#alarmChk').prop("checked") + "," +
+                "\r\n    \"monitoring\": " + $('#monitoringChk').prop("checked") + "," +
+                "\r\n    \"statistics\": " + $('#statisticsChk').prop("checked") + "," +
+                "\r\n    \"setting\": " + $('#settingChk').prop("checked") + "\r\n}",
         };
-        $.ajax(settings).success(function (response) {
+        $.ajax(settings).done(function (response) {
             alert("권한관리 설정이 저장되었습니다.");
             location.reload();
         });

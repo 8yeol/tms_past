@@ -4,6 +4,7 @@
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+
 <script src="static/js/vue.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/vue-apexcharts.js"></script>

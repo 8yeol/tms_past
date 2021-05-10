@@ -1,26 +1,16 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: sjku
-  Date: 2021-04-21
-  Time: 오전 10:40
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
 
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
 <link rel="stylesheet" href="static/css/common.css">
+<link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
 
 <script src="static/js/jquery-3.6.0.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="static/js/jquery-ui.js"></script>
 
 <body class="bg-secondary">
 <div class="container">
-
-    <div class="row justify-content-center bg-white p-5 mt-5">
+    <div class="row justify-content-center bg-white p-5 mt-5 rounded">
         <h1 class="py-5 fw-bold text-center">Sing Up</h1>
         <div class="col-xs-12 d-flex justify-content-center bg-white px-5">
             <div class="me-5">
@@ -55,9 +45,9 @@
 
 <script>
     function join_submit() {
-        if ($("#id").val() != "" && $("#password").val() != ""  && $("#passwordCheck").val() != ""&& $("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "") {
+        if ($("#id").val() != "" && $("#password").val() != "" && $("#passwordCheck").val() != "" && $("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "") {
 
-            if($("#password").val() != $("#passwordCheck").val()){
+            if ($("#password").val() != $("#passwordCheck").val()) {
                 alert("비밀번호가 틀립니다.");
                 return;
             }
@@ -70,25 +60,25 @@
                     "accept": "application/json",
                     "content-type": "application/json;charset=UTF-8"
                 },
-                "data": "{\r\n    \"id\": \""+$("#id").val()+"\"," +
-                    "\r\n    \"password\": \""+$("#password").val()+"\"," +
-                    "\r\n    \"name\": \""+$("#name").val()+"\"," +
-                    "\r\n    \"email\": \""+$("#email").val()+"\"," +
-                    "\r\n    \"department\": \""+$("#department").val()+"\"," +
-                    "\r\n    \"grade\": \""+$("#grade").val()+"\"," +
-                    "\r\n    \"tel\": \""+$("#tel").val()+"\"\r\n}",
+                "data": "{\r\n    \"id\": \"" + $("#id").val() + "\"," +
+                    "\r\n    \"password\": \"" + $("#password").val() + "\"," +
+                    "\r\n    \"name\": \"" + $("#name").val() + "\"," +
+                    "\r\n    \"email\": \"" + $("#email").val() + "\"," +
+                    "\r\n    \"department\": \"" + $("#department").val() + "\"," +
+                    "\r\n    \"grade\": \"" + $("#grade").val() + "\"," +
+                    "\r\n    \"tel\": \"" + $("#tel").val() + "\"\r\n}",
             };
             $.ajax(settings).done(function (response) {
                 if (response == "true") {
                     alert("가입신청성공!");
-                } else if(response == "false"){
+                } else if (response == "false") {
                     alert("중복되는 ID입니다.");
                 } else {
                     alert("가입신청실패");
                 }
                 location.reload();
             });
-        } else{
+        } else {
             alert("빈칸없이 입력하여 주세요");
         }
     }           // join_submit()
@@ -119,20 +109,20 @@
         obj.value = phone;
     }       // inputPhoneNumber 정규식
 
-    function autoEmail(a,b){
+    function autoEmail(a, b) {
         /*
             a : input의 ID
             b : 입력되는 input의 값
         */
         var mailId = b.split('@'); // 메일계정의 ID만 받아와서 처리하기 위함
-        var mailList = ['naver.com','gmail.com','daum.net','hanmail.net','korea.kr']; // 메일목록
+        var mailList = ['naver.com', 'gmail.com', 'daum.net', 'hanmail.net', 'korea.kr']; // 메일목록
         var availableCity = new Array; // 자동완성 키워드 리스트
-        for(var i=0; i < mailList.length; i++ ){
-            availableCity.push( mailId[0] +'@'+ mailList[i] ); // 입력되는 텍스트와 메일목록을 조합
+        for (var i = 0; i < mailList.length; i++) {
+            availableCity.push(mailId[0] + '@' + mailList[i]); // 입력되는 텍스트와 메일목록을 조합
         }
-        $("#"+a).autocomplete({
+        $("#" + a).autocomplete({
             source: availableCity, // jQuery 자동완성에 목록을 넣어줌
-            focus: function(event, ui) {
+            focus: function (event, ui) {
                 return false;
             }
         });

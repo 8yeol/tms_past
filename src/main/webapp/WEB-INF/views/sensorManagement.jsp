@@ -89,7 +89,7 @@
                                        id="m_class">
                             </div>
                             <div class="col">
-                                <label class="me-3 col-xs-3 w-10 label">한글명</label>
+                                <label class="me-3 col-xs-3 w-10 label">항목명</label>
                                 <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming"
                                        id="naming">
                             </div>

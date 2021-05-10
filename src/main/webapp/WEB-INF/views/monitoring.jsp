@@ -222,11 +222,6 @@
         }, 0);
     }
 
-
-
-
-
-
     function draw_place_table_frame(placeName) {
         var col_md_size;
         for(var i=0; i<placeName.length; i++){
@@ -488,5 +483,4 @@
             return ' - ' + now;
         }
     }
-
 </script>

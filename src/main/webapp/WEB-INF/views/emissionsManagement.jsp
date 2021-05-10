@@ -10,15 +10,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="static/js/jquery-ui.js"></script>
 
 <style>
     .multiSelectComboBox {
@@ -112,19 +107,18 @@
     <div class="row">
         <div class="row1">
             <span>연간 배출 허용 기준 설정</span>
-            <button data-toggle="modal" data-target="#addModal" onclick="inputClean()"
+            <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="inputClean()"
                     style="background-color:green;color:white"> 추가
             </button>
         </div>
         <div class="row2">
-            <span>* 설정된 연간 배출 허용 기준 값은 [대시보드 - 초과배출부과금 대상가스 모니터링]의 배출량 계산에 활용됩니다.</span>
+            <span>* 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량 계산에 활용됩니다.</span>
         </div>
         <div class="col-xs-12 bg-light">
             <table class="table table-striped">
 
                 <thead>
                 <tr>
-                    <th>NO</th>
                     <th>코드</th>
                     <th>항목명</th>
                     <th>연간 배출 허용 기준</th>
@@ -137,16 +131,15 @@
                 <tbody id="tbody">
                 <c:forEach items="${standard}" var="standard" varStatus="i">
                     <tr>
-                        <th>${i.index+1}</th>
                         <td>${standard.sensorCode}</td>
                         <td>${standard.sensorNaming}</td>
                         <td><fmt:formatNumber value="${standard.yearlyStandard}" groupingUsed="true"/></td>
                         <td>${standard.percent}</td>
                         <td>${standard.formula}</td>
                         <td>
-                            <i onclick="editModalSetting(this)" class="fas fa-edit me-2" data-toggle="modal"
-                               data-target="#editModal"></i>
-                            <i class="fas fa-times" data-toggle="modal" data-target="#deleteModal"></i>
+                            <i onclick="editModalSetting(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
+                               data-bs-target="#editModal"></i>
+                            <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
                         </td>
                     </tr>
                 </c:forEach>
@@ -260,26 +253,57 @@
                 <h5 class="modal-title">센서 추가</h5>
             </div>
             <div class="modal-body d-flex justify-content-evenly">
-                <div>
-                    <h4>코드</h4>
-                    <h4>항목명</h4>
-                    <h4>연간배출 허용기준</h4>
-                    <h4>배출허용 기준농도</h4>
-                    <h4>산출식</h4>
-                </div>
-                <div>
-                    <form id="addStandard" method="post" autocomplete="off">
-                        <input type="text" class="text-secondary d-block mb-2" name="code">
-                        <input type="text" class="text-secondary d-block mb-2" name="sensorName">
-                        <input type="text" class="text-secondary d-block mb-2" name="standard">
-                        <input type="text" class="text-secondary d-block mb-2" name="percent">
-                        <input type="text" class="text-secondary d-block " name="formula">
-                    </form>
-                </div>
+                <form id="addStandard" method="post" autocomplete="off">
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="text-danger" style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">코드</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="code">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="sensorName">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">연간배출 허용기준</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="standard">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">배출허용 기준농도</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="percent">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">산출식(참고용)</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="formula">
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5" onclick="insert()">추가</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="addCancle">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="addCancle">취소</button>
             </div>
         </div>
     </div>
@@ -315,7 +339,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5" onclick="editStandard()">수정</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="editCancle">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="editCancle">취소</button>
             </div>
         </div>
     </div>
@@ -334,7 +358,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-danger me-5" onclick="deleteStandard()">삭제</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -425,15 +449,14 @@
         for (i = 0; i < data.length; i++) {
             var innerHTML = "";
             innerHTML = " <tr>" +
-                " <th>" + (i + 1) + "</th>" +
                 " <td>" + data[i].sensorCode + "</td>" +
                 " <td>" + data[i].sensorNaming + "</td>" +
                 " <td>" + numberWithCommas(data[i].yearlyStandard) + "</td>" +
                 " <td>" + data[i].percent + "</td>" +
                 " <td>" + data[i].formula + "</td>" +
                 " <td>" +
-                "<i class='fas fa-edit me-2' data-toggle='modal' data-target='#editModal' onclick='editModalSetting(this)'></i>" +
-                "<i class='fas fa-times' data-toggle='modal' data-target='#deleteModal'></i>" +
+                "<i class='fas fa-edit me-2' data-bs-toggle='modal' data-bs-target='#editModal' onclick='editModalSetting(this)'></i>" +
+                "<i class='fas fa-times' data-bs-toggle='modal' data-bs-target='#deleteModal'></i>" +
                 "</td>" +
                 "</tr>";
             $('#tbody').append(innerHTML);
