@@ -401,7 +401,7 @@ public class JsonController {
     /** 당일 알림 현황 조회
      * @return day(현재날짜), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
-    @RequestMapping(value = "getNotiStkatisticsNow")
+    @RequestMapping(value = "getNotiStatisticsNow")
     public ArrayList getNotificationStatistics(){
         ArrayList al = new ArrayList();
         try{
