@@ -91,8 +91,18 @@ public class JsonController {
         return placeRepository.findByName(place).getSensor();
     }
 
+    //측정소 모니터링 업데이트
+    @RequestMapping(value = "/placeMonitoringUpdate")
+    public void placeMonitoringUpdate(@RequestParam("name") String name, @RequestParam("check") Boolean check) {
+        Place place = placeRepository.findByName(name);
+        ObjectId id = place.get_id();
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), check, place.getPower(), new Date(), place.getSensor());
+        savePlace.set_id(id);
+        placeRepository.save(savePlace);
+    }
+
     @RequestMapping(value = "getSensorList")
-    public List<SensorList> getSensorList(){
+    public List<SensorList> getSensorList() {
         return sensorListRepository.findAll();
     }
 
@@ -185,6 +195,13 @@ public class JsonController {
     @RequestMapping(value = "/getSensorInfo")
     public ReferenceValueSetting getSensorInfo(@RequestParam String sensor) {
         return reference_value_settingRepository.findByName(sensor);
+    }
+
+
+    //센서리스트 불러오기
+    @RequestMapping(value = "/getSensorList2")
+    public List<SensorList> getSensorList2(@RequestParam("place") String place) {
+        return sensorListRepository.findByPlace(place);
     }
 
     //센서리스트 측정항목 불러오기
@@ -291,7 +308,7 @@ public class JsonController {
     //측정소 상세설정 항목 추가
     @RequestMapping(value = "/saveReference")
     public String saveReference(@RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
-        if(reference_value_settingRepository.findByName(name)==null){
+        if (reference_value_settingRepository.findByName(name) == null) {
             float legal = 0.0f;
             float management = 0.0f;
             float company = 0.0f;
@@ -308,9 +325,77 @@ public class JsonController {
             updatePlace.set_id(id);
             placeRepository.save(updatePlace);
             return "success";
-        }else {
+        } else {
             return "fail";
         }
+    }
+
+    //측정 항목 모니터링 업데이트
+    @RequestMapping(value = "/referenceMonitoringUpdate")
+    public void referenceMonitoringUpdate(@RequestParam("place") String name, @RequestParam("check") Boolean check, @RequestParam("tablename") String tablename) {
+        //측정항목 업데이트
+        ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
+        ObjectId id1 = reference.get_id();
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(tablename, reference.getNaming(), reference.getLegalStandard(), reference.getCompanyStandard(), reference.getManagementStandard(), check);
+        saveReference.set_id(id1);
+        reference_value_settingRepository.save(saveReference);
+        //측정소 업데이트
+        Place place = placeRepository.findByName(name);
+        ObjectId id = place.get_id();
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        savePlace.set_id(id);
+        placeRepository.save(savePlace);
+    }
+
+    //측정 항목 법적기준 업데이트
+    @RequestMapping(value = "/legalUpdate")
+    public void legalUpdate(@RequestParam("place") String name, @RequestParam("value") Float value, @RequestParam("tablename") String tablename) {
+        //측정항목 업데이트
+        ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
+        ObjectId id1 = reference.get_id();
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(tablename, reference.getNaming(), value, reference.getCompanyStandard(), reference.getManagementStandard(), reference.getMonitoring());
+        saveReference.set_id(id1);
+        reference_value_settingRepository.save(saveReference);
+        //측정소 업데이트
+        Place place = placeRepository.findByName(name);
+        ObjectId id = place.get_id();
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        savePlace.set_id(id);
+        placeRepository.save(savePlace);
+    }
+
+    //측정 항목 사내기준 업데이트
+    @RequestMapping(value = "/companyUpdate")
+    public void companyUpdate(@RequestParam("place") String name, @RequestParam("value") Float value, @RequestParam("tablename") String tablename) {
+        //측정항목 업데이트
+        ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
+        ObjectId id1 = reference.get_id();
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(tablename, reference.getNaming(), reference.getLegalStandard(), value, reference.getManagementStandard(), reference.getMonitoring());
+        saveReference.set_id(id1);
+        reference_value_settingRepository.save(saveReference);
+        //측정소 업데이트
+        Place place = placeRepository.findByName(name);
+        ObjectId id = place.get_id();
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        savePlace.set_id(id);
+        placeRepository.save(savePlace);
+    }
+
+    //측정 항목 관리기준 업데이트
+    @RequestMapping(value = "/managementUpdate")
+    public void managementUpdate(@RequestParam("place") String name, @RequestParam("value") Float value, @RequestParam("tablename") String tablename) {
+        //측정항목 업데이트
+        ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
+        ObjectId id1 = reference.get_id();
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(tablename, reference.getNaming(), reference.getLegalStandard(), reference.getCompanyStandard(), value, reference.getMonitoring());
+        saveReference.set_id(id1);
+        reference_value_settingRepository.save(saveReference);
+        //측정소 업데이트
+        Place place = placeRepository.findByName(name);
+        ObjectId id = place.get_id();
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        savePlace.set_id(id);
+        placeRepository.save(savePlace);
     }
 
     //측정소 상세설정 항목 삭제
@@ -323,8 +408,9 @@ public class JsonController {
             }
         }
     }
+
     //상세설정값 삭제 및 측정소 업데이트 시간 수정
-    public void removeReferencePlaceUpdate(String name){
+    public void removeReferencePlaceUpdate(String name) {
         //상세설정 값 삭제
         reference_value_settingRepository.deleteByName(name);
         //place 업데이트 시간 수정
@@ -354,16 +440,16 @@ public class JsonController {
             LocalDate date = LocalDate.of(getYear, m, 1);
             int lastDay = date.lengthOfMonth();
             if (m == getMonth) { // 이번 달, 어제 날짜까지 구하기 위함
-                lastDay = getDay-1;
+                lastDay = getDay - 1;
             }
             for (int d = 1; d <= lastDay; d++) {
                 LocalDate date2 = LocalDate.of(getYear, m, d);
                 notificationDayStatisticsRepository.deleteByDay(String.valueOf(date2)); //데이터가 존재할 경우 삭제
                 try {
                     int arr[] = new int[3];
-                    for(int grade=1; grade<=3; grade++) {
+                    for (int grade = 1; grade <= 3; grade++) {
                         List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(date2), String.valueOf(date2));
-                        arr[grade-1] = (int) list.get(0).get("count");
+                        arr[grade - 1] = (int) list.get(0).get("count");
                     }
                     NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), arr[0], arr[1], arr[2]);
                     notificationDayStatisticsRepository.save(ns);
@@ -402,7 +488,7 @@ public class JsonController {
      * @return day(현재날짜), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
     @RequestMapping(value = "getNotiStatisticsNow")
-    public ArrayList getNotificationStatistics(){
+    public ArrayList getNotificationStatistics() {
         ArrayList al = new ArrayList();
         try{
             LocalDate nowDate = LocalDate.now();

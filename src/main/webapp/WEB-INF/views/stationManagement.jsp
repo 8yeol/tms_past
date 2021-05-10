@@ -19,10 +19,13 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
 <%--modal 사용--%>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<script src="static/js/popper.min.js"></script>
+<script src="static/js/bootstrap1.min.js"></script>
 <%--draggable사용--%>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="static/js/jquery-ui.js"></script>
+<%--시간 format--%>
+<script src="static/js/moment.min.js"></script>
+
 <style>
     /* The switch - the box around the slider */
     .switch {
@@ -86,6 +89,7 @@
     .slider.round:before {
         border-radius: 50%;
     }
+
 
 </style>
 <div class="container">
@@ -305,7 +309,7 @@
                 for (let i = 0; i < data.length; i++) {
                     const test = data[i];
                     const name = test.name;
-                    const time = test.up_time;
+                    const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
                     const monitoring = test.monitoring;
                     if (monitoring == true) {
                         onoff = "on";
@@ -340,10 +344,11 @@
         findSensorList(name);
 
         let innerHTMLPlace =
-            "<span>" + place + "상세설정</span>" +
+            "<span id='pname'>" + place + "</span>" +
+            "<span>상세설정</span>" +
             "<span>측정소 모니터링</span>" +
             "<label class='switch'>" +
-            "<input id='monitor' type='checkbox' " + p_monitoring + ">" +
+            "<input id='monitor' type='checkbox' " + p_monitoring + " onchange='p_monitoringupdate()'>" +
             "<span class='slider round'></span>" +
             "</label>";
         $('#p_monitoring').append(innerHTMLPlace); //측정소 명 + 모니터링 on/off div
@@ -373,11 +378,11 @@
                                 "<td style='width:5%;'><input class='form-check-input' type='checkbox' id='" + value.get("name") + "' name='item' value='" + value.get("name") + "' onclick='checkSelectAll()'></td>" +
                                 "<td style='width:15%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("naming") + "</label></td>" +
                                 "<td style='width:24%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("name") + "</label></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' ></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "c' value='" + value.get("company") + "' ></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "m' value='" + value.get("management") + "' ></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' onchange='legalupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "c' value='" + value.get("company") + "' onchange='companyupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "m' value='" + value.get("management") + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:14%;'><label class='switch'>" +
-                                "<input id='" + value.get("name") + "a' type='checkbox' name='status' " + monitoring + ">" +
+                                "<input id='" + value.get("name") + "a' type='checkbox' name='status' " + monitoring + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +
                                 "</label></td>";
 
@@ -536,42 +541,47 @@
     function insertReference() {
         const sel = $("#select option:selected").val();
         const put = $("#sname").val();
+        if (sel != "선택" && put != "") {
+            $.ajax({
+                url: '<%=cp%>/saveReference',
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: {
+                    "name": sel,
+                    "naming": put
+                },
+                success: function (data) {
+                    if (data == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '저장완료'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                //location.reload();
+                                document.getElementById("canBtn").click();
+                                placeDiv();
+                                placeChange($("#pname").text());
+                            }
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '이미 존재하는 데이터입니다.'
+                        })
+                    }
 
-        $.ajax({
-            url: '<%=cp%>/saveReference',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: {
-                "name": sel,
-                "naming": put
-            },
-            success: function (data) {
-                if (data == "success") {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '저장완료'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            //location.reload();
-                            document.getElementById("canBtn").click();
-                            placeDiv();
-                            placeChange($("#place0").text());
-                        }
-                    })
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '이미 존재하는 데이터입니다.'
-                    })
+                },
+                error: function (request, status, error) { // 결과 에러 콜백함수
+                    console.log(error)
                 }
-
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
-        })
-
+            })
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: '입력 데이터를 확인해주세요.'
+            })
+        }
     }
 
     function removePlace() {
@@ -677,12 +687,141 @@
                 ).then((result) => {
                     if (result.isConfirmed) {
                         //location.reload();
-                        placeChange($("#place0").text());
+                        placeDiv();
+                        placeChange($("#pname").text());
                     }
                 })
 
             }
         })
+    }
+
+    //측정소 모니터링 onchange
+    function p_monitoringupdate() {
+        var check = $("#monitor").is(":checked");
+        var name = $("#pname").text();
+
+        $.ajax({
+            url: '<%=cp%>/placeMonitoringUpdate',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "name": name,
+                "check": check
+            }
+
+        })
+        placeDiv();
+        placeChange($("#pname").text());
+    }
+
+    //측정항목 모니터링 onchange
+    function monitoringupdate(name) {
+        var tablename = name.id;
+        var str = tablename.slice(0, -1);
+        var check = $("#" + name.id).is(":checked");
+        var pname = $("#pname").text();
+
+        $.ajax({
+            url: '<%=cp%>/referenceMonitoringUpdate',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "tablename": str,
+                "check": check,
+                "place": pname
+            },
+            success: function (data) {
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        })
+        placeDiv();
+        placeChange($("#pname").text());
+    }
+
+    //legal onchange
+    function legalupdate(name) {
+        var tablename = name.id;
+        var str = tablename.slice(0, -1);
+        var value = $("#" + tablename).val();
+        var pname = $("#pname").text();
+
+        $.ajax({
+            url: '<%=cp%>/legalUpdate',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "tablename": str,
+                "value": value,
+                "place": pname
+            },
+            success: function (data) {
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        })
+        placeDiv();
+        placeChange($("#pname").text());
+    }
+
+    //company onchange
+    function companyupdate(name) {
+        var tablename = name.id;
+        var str = tablename.slice(0, -1);
+        var value = $("#" + tablename).val();
+        var pname = $("#pname").text();
+
+        $.ajax({
+            url: '<%=cp%>/companyUpdate',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "tablename": str,
+                "value": value,
+                "place": pname
+            },
+            success: function (data) {
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        })
+        placeDiv();
+        placeChange($("#pname").text());
+    }
+
+    //management onchange
+    function managementupdate(name) {
+        var tablename = name.id;
+        var str = tablename.slice(0, -1);
+        var value = $("#" + tablename).val();
+        var pname = $("#pname").text();
+
+        $.ajax({
+            url: '<%=cp%>/managementUpdate',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "tablename": str,
+                "value": value,
+                "place": pname
+            },
+            success: function (data) {
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        })
+        placeDiv();
+        placeChange($("#pname").text());
     }
 
 
