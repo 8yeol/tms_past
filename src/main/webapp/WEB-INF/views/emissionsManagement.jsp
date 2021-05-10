@@ -11,8 +11,10 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
+
 <script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
+<script src="static/js/popper.min.js"></script>
 <script src="static/js/jquery-ui.js"></script>
 
 <style>
@@ -107,7 +109,7 @@
     <div class="row">
         <div class="row1">
             <span>연간 배출 허용 기준 설정</span>
-            <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="inputClean()"
+            <button data-toggle="modal" data-target="#addModal" onclick="inputClean()"
                     style="background-color:green;color:white"> 추가
             </button>
         </div>
@@ -137,9 +139,8 @@
                         <td>${standard.percent}</td>
                         <td>${standard.formula}</td>
                         <td>
-                            <i onclick="editModalSetting(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
-                               data-bs-target="#editModal"></i>
-                            <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
+                            <i onclick="editModalSetting(this)" class="fas fa-edit me-2"  data-bs-toggle="modal" data-bs-target="#addModal"></i>
+                            <i class="fas fa-times" onclick="deleteModal(this)"></i>
                         </td>
                     </tr>
                 </c:forEach>
@@ -299,65 +300,11 @@
                             <input type="text" class="text-secondary" name="formula">
                         </div>
                     </div>
+                    <input type="hidden" name="hiddenCode"> <!-- 추가 수정 판별할 데이터 -->
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5" onclick="insert()">추가</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="addCancle">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- editModal -->
-<div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">센서 수정</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-evenly">
-                <div>
-                    <h4>코드</h4>
-                    <h4>항목명</h4>
-                    <h4>연간배출 허용기준</h4>
-                    <h4>배출허용 기준농도</h4>
-                    <h4>산출식</h4>
-                </div>
-                <div>
-                    <form id="editStandard" method="post" autocomplete="off">
-                        <input type="text" class="text-secondary d-block mb-2" name="code">
-                        <input type="hidden" name="hiddenCode">
-                        <input type="text" class="text-secondary d-block mb-2" name="sensorName">
-                        <input type="text" class="text-secondary d-block mb-2" name="standard">
-                        <input type="text" class="text-secondary d-block mb-2" name="percent">
-                        <input type="text" class="text-secondary d-block " name="formula">
-
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" onclick="editStandard()">수정</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="editCancle">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- deleteModal -->
-<div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">항목 삭제</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-                <h3>삭제하시겠습니까?</h3>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-danger me-5" onclick="deleteStandard()">삭제</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
@@ -386,7 +333,7 @@
         });
     });
 
-    //허용 기준 추가
+    //기준 추가
     function insert() {
         var unComma = $("input[name='standard']").val().replace(/,/g, '');
         $("input[name='standard']").val(unComma);
@@ -400,21 +347,25 @@
         var unComma = $("input[name='standard']").val().replace(/,/g, '');
         $("input[name='standard']").val(unComma);
 
-        var form = $('#editStandard').serialize();
+        var form = $('#addStandard').serialize();
         standardAjax(form,"수정");
     }
 
     //editModal 선택값 셋팅
     function editModalSetting(obj) {
+        $('.modal-title').html('센서 수정');
+        $('.btn-success').html('수정');
+        $('.btn-success').removeAttr("onclick");
+        $('.btn-success').attr("onclick", "editStandard()");
 
         var tdList = $(obj).parent().parent().children()
 
-        $("input[name='code']").val(tdList.eq(1).html());
-        $("input[name='hiddenCode']").val(tdList.eq(1).html());
-        $("input[name='sensorName']").val(tdList.eq(2).html());
-        $("input[name='standard']").val(tdList.eq(3).html());
-        $("input[name='percent']").val(tdList.eq(4).html());
-        $("input[name='formula']").val(tdList.eq(5).html());
+        $("input[name='code']").val(tdList.eq(0).html());
+        $("input[name='hiddenCode']").val(tdList.eq(0).html());
+        $("input[name='sensorName']").val(tdList.eq(1).html());
+        $("input[name='standard']").val(tdList.eq(2).html());
+        $("input[name='percent']").val(tdList.eq(3).html());
+        $("input[name='formula']").val(tdList.eq(4).html());
     }
 
     function standardAjax(form,str){
@@ -426,8 +377,8 @@
             data: form,
             success: function (data) {
                 drawTable(data);
-                $("#addCancle").click();
-                $("#editCancle").click();
+                $('#addModal').modal('hide');
+
                 Swal.fire({
                     icon: 'success',
                     title: str+' 완료',
@@ -440,6 +391,46 @@
             }
         });
     }
+
+    function deleteModal(obj){
+        var code = $(obj).parent().parent().children().eq(0).html();  //console.log(code); -> NOX
+
+        Swal.fire({
+            icon: 'error',
+            title: '삭제',
+            text: '정말 삭제 하시겠습니까?',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {   //삭제 버튼 누를때
+                deleteAjax(code);
+            }
+        });
+    }
+
+    function deleteAjax(code){
+        $.ajax({
+            url: 'deleteEmissionsStandard',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data:  { code : code },
+            success: function (data) {
+                Swal.fire(
+                    '삭제 완료',
+                    '삭제 되었습니다.',
+                    'warning'
+                );
+                drawTable(data);
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
+
 
     //테이블 모두 삭제하고 새로운 데이터로 다시 그립니다.
     function drawTable(data) {
@@ -455,15 +446,18 @@
                 " <td>" + data[i].percent + "</td>" +
                 " <td>" + data[i].formula + "</td>" +
                 " <td>" +
-                "<i class='fas fa-edit me-2' data-bs-toggle='modal' data-bs-target='#editModal' onclick='editModalSetting(this)'></i>" +
-                "<i class='fas fa-times' data-bs-toggle='modal' data-bs-target='#deleteModal'></i>" +
+                "<i class='fas fa-edit me-2'  data-bs-toggle='modal' data-bs-target='#addModal' onclick='editModalSetting(this)'></i>" +
+                "<i class='fas fa-times' onclick='deleteModal(this)'></i>" +
                 "</td>" +
                 "</tr>";
             $('#tbody').append(innerHTML);
         }
     }
 
+    //Modal 초기화
     function inputClean() {
+        $('.modal-title').html('센서 추가');
+        $('.btn-success').html('추가');
         $("input[type=text]").val("");
     }
 

@@ -528,7 +528,7 @@ public class JsonController {
         YearlyEmissionsStandardSetting setting;
 
         //hidden 값이 있는지로 추가와 수정을 판별
-        if(hiddenCode==null){
+        if(hiddenCode==""){
             setting = new YearlyEmissionsStandardSetting();
         }else{
             setting = yearlyEmissionsStandardRepository.findBySensorCode(hiddenCode);
@@ -543,8 +543,19 @@ public class JsonController {
         List<YearlyEmissionsStandardSetting> standardList =  yearlyEmissionsStandardRepository.findAll();
         return standardList;
     }
+    //배출기준 삭제
+    @RequestMapping(value = "/deleteEmissionsStandard")
+    public List deleteEmissionsStandard(@RequestParam(value = "code") String code) {
 
+        YearlyEmissionsStandardSetting setting;
 
+        setting = yearlyEmissionsStandardRepository.findBySensorCode(code);
+
+        yearlyEmissionsStandardRepository.delete(setting);
+
+        List<YearlyEmissionsStandardSetting> standardList =  yearlyEmissionsStandardRepository.findAll();
+        return standardList;
+    }
 
     @RequestMapping(value = "/searchChart", method = RequestMethod.POST)
     public List<ChartData> searchChart(String date_start, String date_end, String item, boolean off) {

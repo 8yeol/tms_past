@@ -183,6 +183,7 @@
                     const cell6 = row.insertCell(5);
                     const cell7 = row.insertCell(6);
                     const cell8 = row.insertCell(7);
+                    cell3.setAttribute('class','target');
                     cell1.innerHTML = data[i].classification;
                     cell2.innerHTML = data[i].naming;
                     cell3.innerHTML = data[i].managementId;
@@ -191,7 +192,7 @@
                     cell6.innerHTML = data[i].place;
                     cell7.innerHTML = status;
                     cell8.innerHTML = '<i type="button" class="fas fa-edit btn" data-bs-toggle="modal" data-bs-target="#editModal"></i>' +
-                        '<i type="button" class="fas fa-times btn" onclick="deleteSensor()"></i>';
+                        '<i type="button" class="fas fa-times btn" onclick="deleteSensor(this)"></i>';
                        /* '<i class="btn fas fa-edit me-2" ata-bs-toggle="modal" data-bs-target="#exampleModal"></i>' +
                         '<i class="fas fa-times" data-toggle="modal" data-target="#deleteSensor"></i>';*/
                 }
@@ -223,8 +224,27 @@
         });
     }
 
-    function deleteSensor(){
-        console.log('delete sensor');
+    function deleteSensor(obj){
+        console.log($(obj).parent().prevAll($(".target")).html());
+        Swal.fire({
+            icon: 'error',
+            title: '삭제',
+            text: '정말 삭제 하시겠습니까?',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+
+                    '삭제 완료',
+                    '삭제 되었습니다.',
+                    'warning'
+                )
+            }
+                 });
+
     }
 
     //데이터 저장 후 페이지 새로고침
