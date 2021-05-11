@@ -1,6 +1,7 @@
 package com.example.tms.controller;
 
 import com.example.tms.entity.*;
+import com.example.tms.mongo.MongoConfig;
 import com.example.tms.repository.*;
 import com.example.tms.repository.ReferenceValueSettingRepository;
 import org.springframework.stereotype.Controller;
@@ -25,9 +26,7 @@ public class MainController {
     final ItemRepository itemRepository;
     final SensorListRepository sensorListRepository;
 
-    public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository,
-                          MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository,
-                          AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, ItemRepository itemRepository, SensorListRepository sensorListRepository) {
+    public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository, MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, ItemRepository itemRepository, SensorListRepository sensorListRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.memberRepository = memberRepository;
@@ -94,6 +93,19 @@ public class MainController {
 
     @RequestMapping("/sensorManagement")
     public String sensorManagement(Model model) {
+
+       //model.addAttribute("collections", mongoConfig.getCollections());
+
+        List<Place> places = placeRepository.findAll();
+
+        List<String> placelist = new ArrayList<>();
+        for (Place place : places) {
+            placelist.add(place.getName());
+        }
+
+        model.addAttribute("place", placelist);
+
+
         return "sensorManagement";
     }
 
@@ -279,9 +291,7 @@ public class MainController {
 //
 // =====================================================================================================================
     @RequestMapping("/stationManagement")
-    public String stationManagement(Model model) {
-        List<Place> places = placeRepository.findAll();
-        model.addAttribute("place", places);
+    public String stationManagement() {
 
         return "stationManagement";
     }

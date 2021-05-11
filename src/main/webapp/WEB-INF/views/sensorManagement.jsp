@@ -49,19 +49,11 @@
                     <label class="me-3 col-xs-3 w-10 label">테이블명</label>
                     <%-- mongoCollection 불러와서 tms~~~형식(센서)으로 된 테이블 명 뿌려주기 --%>
                     <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName('')">
-                            <%--
-                            <c:forEach var="table" items="${tableList}" varStatus="status">
-                                <option value="${table}">${place}</option>
-                            </c:forEach>
-                            --%>
-                            <option>선택</option>
-                            <option value="tmsWP0001_NOX_01">tmsWP0001_NOX_01</option>
-                            <option value="tmsWP0001_NOX_02">tmsWP0001_NOX_02</option>
-                            <option value="tmsWP0001_NOX_03">tmsWP0001_NOX_03</option>
-                            <option value="tmsWP0001_O2b_01">tmsWP0001_O2b_01</option>
-                            <option value="tmsWP0001_O2b_02">tmsWP0001_O2b_02</option>
-                            <option value="tmsWP0001_O2b_03">tmsWP0001_O2b_03</option>
-                            <option value="test_test_test5555">test_test_test5555</option>
+                        <option>선택</option>
+                        <option value="lghausys_NOX_001">lghausys_NOX_001</option>
+                        <c:forEach var="collection" items="${collections}" varStatus="status">
+                            <option value="${collection}">${collection}</option>
+                        </c:forEach>
                     </select>
                     <label class="me-3 col-xs-3 w-10 label">측정소</label>
                     <select name="place" id="place" class="btn btn-outline-dark">
@@ -91,12 +83,6 @@
                                 <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming"
                                        id="naming" readonly>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <smal> * 테이블 선택 후 항목명이 비어있는 경우 [환경설정 - 배출량 관리] 페이지의 연간 배출 허용 기준 설정에서 분류코드와 항목명을 입력해주세요.
-                            </smal>
                         </div>
                     </div>
                 </div>
@@ -201,18 +187,18 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">연간 배출 허용 기준 추가</h5>
+                <h5 class="modal-title">항목명 추가</h5>
             </div>
             <div class="modal-body d-flex justify-content-evenly">
                 <form id="addStandard" method="post" autocomplete="off">
                     <div class="row">
                         <div class="col text-center">
-                            <span class="text-danger" style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>
+                            <span class="text-danger" style="font-size: 15%"> * 설정된 분류 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">코드</span>
+                            <span class="fs-5 fw-bold add-margin f-sizing">분류 코드</span>
                         </div>
                         <div class="col">
                             <input type="text" class="text-secondary" name="code" readonly>
@@ -468,7 +454,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: '추가 완료 ',
-                    html: '연간 배출 허용 기준 설정이<br> 추가 되었습니다.',
+                    html: '항목명이 설정 되었습니다. 항목명 변경은 <b>[환경설정 - 연간 배출 허용 기준 설정]</b> 에서 변경하실 수 있습니다.',
                     timer: 1500
                 })
                 changeTableName('');
