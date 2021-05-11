@@ -15,16 +15,35 @@
     String cp = request.getContextPath();
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
-<script src="static/js/common/common.js"></script>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/stationManagement.css">
+<script src="static/js/common/common.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
-<%--draggable사용--%>
 <script src="static/js/jquery-ui.js"></script>
-<%--시간 format--%>
 <script src="static/js/moment.min.js"></script>
 
+<style>
+    .MultiSelecterModal {
+        width: 450px;
+        height: 55px;
+        border-radius: 10px;
+        background-color: #0d6efd;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -40%);
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        display: none;
+        line-height: 55px;
 
+    }
+
+    #placeDiv > div.active {
+        color: #0d6efd;
+    }
+</style>
 <div class="container">
     <div class="col" style="font-weight: bolder;margin: 30px 0px; font-size: 27px">
         환경설정 > 측정소 관리
@@ -36,12 +55,17 @@
         <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div>
                 <span class="fw-bold" style="margin-right: 53%;">측정소 관리</span>
-                <button data-bs-toggle="modal" data-bs-taget="#addPlace" class="addBtn">추가</button>
+                <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
                 <button onclick="removePlace()" class="removeBtn">삭제</button>
             </div>
             <div class="text-center">
-                <div class="fw-bold" style="border-bottom: silver solid 2px; display: inline-block; text-align: justify; width:100%; position: relative;">
-                    <div style="display: inline-block; position: relative; left: 5px;"><input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)"></div>
+                <div class="fw-bold"
+                     style="border-bottom: silver solid 2px; display: inline-block; text-align: justify; width:100%; position: relative; padding-bottom: 5px;">
+                    <div style="display: inline-block; position: relative; left: 5px;"><input name="placeall"
+                                                                                              class="form-check-input"
+                                                                                              type=checkbox
+                                                                                              onclick="placeAll(this)">
+                    </div>
                     <div style="display: inline-block; position: relative;  top:15px; left: 10%;">측정소 명</div>
                     <div style="display: inline-block; position: relative;  top:15px; left: 27%;">업데이트</div>
                     <div style="display: inline-block; position: relative;  top:15px; left: 44%;">모니터링 사용</div>
@@ -60,12 +84,12 @@
                 <div id="p_monitoring" class="fw-bold" style="display: flex; margin-top: 5px;">
                 </div>
                 <div style="width: 130px; position: relative; left: 82%; margin: 5px 0px;">
-                    <button data-bs-toggle="modal" data-bs-taget="#addReference" class="addBtn">추가</button>
+                    <button data-bs-toggle="modal" data-bs-target="#addReference" class="addBtn">추가</button>
                     <button onclick="removeReference()" class="removeBtn">삭제</button>
                 </div>
             </div>
             <table style="text-align: center; width: 100%">
-                <tr id="c" style="border-bottom: silver solid 2px; width: 100%; display: flex; ">
+                <tr id="c" style="border-bottom: silver solid 2px; width: 100%; display: flex; padding-bottom: 5px;">
                     <th style="width:5%;"><input name="selectall" class="form-check-input" type=checkbox
                                                  onclick="selectAll(this)"></th>
                     <th style="width:15%;">측정항목</th>
@@ -93,10 +117,21 @@
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
                 <form id="placeinfo" method="post" style="width:100%; ">
-                    <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text" class="modal-input" name="name" style="position: relative; left: 15%;"></div>
-                    <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input" name="location" style="position: relative; left: 22%;"></div>
-                    <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input" name="admin" style="position: relative; left: 15%;"></div>
-                    <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel" style="position: relative; left: 19%;"></div>
+                    <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text"
+                                                                                               class="modal-input"
+                                                                                               name="name"
+                                                                                               style="position: relative; left: 15%;">
+
+                    </div>
+                    <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
+                                                                          name="location"
+                                                                          style="position: relative; left: 22%;"></div>
+                    <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
+                                                                             name="admin"
+                                                                             style="position: relative; left: 15%;">
+                    </div>
+                    <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
+                                                                           style="position: relative; left: 19%;"></div>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -106,6 +141,8 @@
         </div>
     </div>
 </div>
+<%--값 수정시 알림창--%>
+<div class="MultiSelecterModal" id="alert"></div>
 <!-- addReference -->
 <div class="modal" id="addReference" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -120,7 +157,8 @@
                 </div>
                 <div>
                     <form>
-                        <select id="select" name="modalDropdown1" class="btn-secondary rounded-3 mdd mb-2" style="width:100%;">
+                        <select id="select" name="modalDropdown1" class="btn-secondary rounded-3 mdd mb-2"
+                                style="width:100%;">
                         </select>
                         <input type="text" id="sname" class="text-secondary d-block mb-2"/>
                     </form>
@@ -173,6 +211,7 @@
                 })
             }
         })
+
     });
 
     //센서 체크박스 전체 선택, 해제
@@ -245,11 +284,11 @@
                     const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
                     const monitoring = test.monitoring;
                     if (monitoring == true) {
-                        onoff = "on";
+                        onoff = "ON";
                     } else {
-                        onoff = "off";
+                        onoff = "OFF";
                     }
-                    const innerHTML = "<div style='border-bottom: silver solid 2px;' onclick=\"placeChange('" + name + "')\" >" +
+                    const innerHTML = "<div id='" + name + "p' style='border-bottom: silver solid 2px;' onclick=\"placeChange('" + name + "')\" >" +
                         "<li>" +
                         "<span><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'><span>" +
                         "<span id='place" + i + "'>" + name + "</span>" +
@@ -271,6 +310,8 @@
     //측정소 변경
     function placeChange(name) {
         const place = name; // 측정소1 입력
+        $('#placeDiv div').removeClass('active');
+        $("#" + place + "p").addClass('active');
         $("#items").empty(); //div items 비우기
         $("#p_monitoring").empty(); //div p_monitoring 비우기
         const p_monitoring = findPlaceMonitor(place); //측정소monitor on/off 확인
@@ -286,9 +327,9 @@
             "</label>";
         $('#p_monitoring').append(innerHTMLPlace); //측정소 명 + 모니터링 on/off div
 
-        const none =
-            "<div>등록된 센서 데이터가 없습니다.</div>" +
-            "<div>센서 등록 후 이용 가능합니다.</div>";
+        const none = "<div class='fw-bold' style='padding-top : 20px;'>" +
+            "<div style='padding-bottom:5px;'>등록된 센서 데이터가 없습니다.</div>" +
+            "<div>센서 등록 후 이용 가능합니다.</div></div>";
 
         $('#items').append(none); //센서 없을때
 
@@ -311,11 +352,11 @@
                                 "<td style='width:5%;'><input class='form-check-input' type='checkbox' id='" + value.get("name") + "' name='item' value='" + value.get("name") + "' onclick='checkSelectAll()'></td>" +
                                 "<td style='width:15%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("naming") + "</label></td>" +
                                 "<td style='width:24%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("name") + "</label></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' onchange='legalupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "c' value='" + value.get("company") + "' onchange='companyupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px;' class='form-check-input' type='text' id='" + tableName + "m' value='" + value.get("management") + "' onchange='managementupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' onchange='legalupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "c' value='" + value.get("company") + "' onchange='companyupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "m' value='" + value.get("management") + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:14%;'><label class='switch'>" +
-                                "<input id='" + value.get("name") + "a' type='checkbox' name='status' " + monitoring + " onchange='monitoringupdate(this)'>" +
+                                "<input id='" + value.get("name") + "a' type='checkbox' name='" + value.get("naming") + "' " + monitoring + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +
                                 "</label></td>";
 
@@ -450,13 +491,8 @@
             type: 'POST',
             async: false,
             cache: false,
-            data: form,
-            success: function (data) {
+            data: form
 
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
         })
         Swal.fire({
             icon: 'success',
@@ -466,6 +502,7 @@
                 //location.reload();
                 document.getElementById("cancelBtn").click();
                 placeDiv();
+                placeChange($("#pname").text());
             }
         })
     }
@@ -631,8 +668,8 @@
 
     //측정소 모니터링 onchange
     function p_monitoringupdate() {
-        var check = $("#monitor").is(":checked");
-        var name = $("#pname").text();
+        var check = $("#monitor").is(":checked"); //true/false
+        var name = $("#pname").text(); //측정소 이름
 
         $.ajax({
             url: '<%=cp%>/placeMonitoringUpdate',
@@ -645,6 +682,7 @@
             }
 
         })
+        MultiSelecterModal(name, "", "monitor", check);
         placeDiv();
         placeChange($("#pname").text());
     }
@@ -665,13 +703,9 @@
                 "tablename": str,
                 "check": check,
                 "place": pname
-            },
-            success: function (data) {
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error);
             }
         })
+        MultiSelecterModal(pname, name.name, "monitor", check);
         placeDiv();
         placeChange($("#pname").text());
     }
@@ -680,8 +714,30 @@
     function legalupdate(name) {
         var tablename = name.id;
         var str = tablename.slice(0, -1);
-        var value = $("#" + tablename).val();
+        var companyname = str + "c";
+        var company = $("#" + companyname).val(); //사내기준 값
+        var value = $("#" + tablename).val(); //법적기준 값
         var pname = $("#pname").text();
+        if (isNaN(value) == true) {
+
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
+        if (parseFloat(value) <= parseFloat(company)) { //법적기준 값이 사내기준 값보다 작을때
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '법적기준 값은 사내기준 값보다 작거나 같을 수 없습니다.'
+            })
+            placeChange($("#pname").text());
+            return;
+        }
 
         $.ajax({
             url: '<%=cp%>/legalUpdate',
@@ -692,13 +748,9 @@
                 "tablename": str,
                 "value": value,
                 "place": pname
-            },
-            success: function (data) {
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error);
             }
         })
+        MultiSelecterModal(pname, name.name, "legal", value);
         placeDiv();
         placeChange($("#pname").text());
     }
@@ -707,8 +759,42 @@
     function companyupdate(name) {
         var tablename = name.id;
         var str = tablename.slice(0, -1);
+        var legalname = str + "l";
+        var legal = $("#" + legalname).val(); //법적기준 값
+        var managename = str + "m";
+        var manage = $("#" + managename).val(); //관리기준 값
         var value = $("#" + tablename).val();
         var pname = $("#pname").text();
+        if (isNaN(value) == true) {
+
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
+
+        if (parseFloat(value) <= parseFloat(manage)) {  //
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '사내기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
+            })
+            placeChange($("#pname").text());
+            return;
+        }
+        if (parseFloat(legal) <= parseFloat(value)) {  //
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '사내기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
+            })
+            placeChange($("#pname").text());
+            return;
+        }
 
         $.ajax({
             url: '<%=cp%>/companyUpdate',
@@ -719,13 +805,9 @@
                 "tablename": str,
                 "value": value,
                 "place": pname
-            },
-            success: function (data) {
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error);
             }
         })
+        MultiSelecterModal(pname, name.name, "company", value);
         placeDiv();
         placeChange($("#pname").text());
     }
@@ -734,8 +816,30 @@
     function managementupdate(name) {
         var tablename = name.id;
         var str = tablename.slice(0, -1);
-        var value = $("#" + tablename).val();
+        var companyname = str + "c";
+        var company = $("#" + companyname).val(); //사내기준 값
+        var value = $("#" + tablename).val(); //관리기준
         var pname = $("#pname").text();
+        if (isNaN(value) == true) {
+
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
+        if (parseFloat(company) <= parseFloat(value)) {  //
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '관리기준 값은 사내기준 값보다 크거나 같을 수 없습니다.'
+            })
+            placeChange($("#pname").text());
+            return;
+        }
 
         $.ajax({
             url: '<%=cp%>/managementUpdate',
@@ -746,15 +850,44 @@
                 "tablename": str,
                 "value": value,
                 "place": pname
-            },
-            success: function (data) {
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error);
             }
         })
+        MultiSelecterModal(pname, name.name, "manage", value);
         placeDiv();
         placeChange($("#pname").text());
+    }
+
+    function MultiSelecterModal(place, name, standard, value) {
+        const modal = $('#alert');
+        if (standard == "legal") {
+            modal.html("'" + place + "-" + name + "'의 법적기준 값이 '" + value + "'(으)로 설정되었습니다.");
+        } else if (standard == "company") {
+            modal.html("'" + place + "-" + name + "'의 사내기준 값이 '" + value + "'(으)로 설정되었습니다.");
+        } else if (standard == "manage") {
+            modal.html("'" + place + "-" + name + "'의 관리기준 값이 '" + value + "'(으)로 설정되었습니다.");
+        } else {
+            if (value == true) {
+                if (name == "") {
+                    modal.html("'" + place + "' 모니터링 'ON'(으)로 설정되었습니다.");
+                } else {
+                    modal.html("'" + place + "-" + name + "' 모니터링 'ON'(으)로 설정되었습니다.");
+                }
+            } else {
+                if (name == "") {
+                    modal.html("'" + place + "' 모니터링 'OFF'(으)로 설정되었습니다.");
+                } else {
+                    modal.html("'" + place + "-" + name + "' 모니터링 'OFF'(으)로 설정되었습니다.");
+                }
+            }
+        }
+        fade(modal);
+    }
+
+    //Modal FadeIn FadeOut
+    function fade(Modal) {
+        Modal.finish();
+        Modal.fadeIn(300);
+        Modal.delay(2000).fadeOut(300);
     }
 
 

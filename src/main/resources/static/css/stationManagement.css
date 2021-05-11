@@ -78,6 +78,8 @@ button.removeBtn {
 
 #placeDiv li {
     text-align: justify;
+    padding-bottom: 10px;
+    padding-top: 10px;
 }
 #placeDiv li>span input{
     margin-left: 5px;
