@@ -201,7 +201,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">센서 추가</h5>
+                <h5 class="modal-title">연간 배출 허용 기준 추가</h5>
             </div>
             <div class="modal-body d-flex justify-content-evenly">
                 <form id="addStandard" method="post" autocomplete="off">
@@ -254,7 +254,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" onclick="insert()">추가</button>
+                <button type="button" class="btn btn-success me-5" onclick="addStandardSetting()">추가</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
@@ -264,6 +264,20 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
     $(function () {
+        //콤마 자동 찍기, 숫자만 입력 가능
+        $("input[name='standard']").bind('keyup', function (e) {
+            var rgx1 = /\D/g;
+            var rgx2 = /(\d+)(\d{3})/;
+            var num = this.value.replace(rgx1, "");
+
+            while (rgx2.test(num)) num = num.replace(rgx2, '$1' + ',' + '$2');
+            this.value = num;
+        });
+        $("input[name='percent']").bind('keyup', function (e) {
+            var rgx1 = /\D/g;
+            var num = this.value.replace(rgx1, "");
+            this.value = num;
+        });
         getSensor();
         getPlace();
     });
@@ -408,21 +422,7 @@
 
     //데이터 저장 후 페이지 새로고침
     function saveSensor(idx) {
-        if ($('#naming' + idx).val() == '') {
 
-            $('#label').html(' <span class="text-danger" style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>')
-
-
-
-
-
-
-
-            $('#editModal').modal('show');
-
-
-            return;
-        }
         if ($('#tableName' + idx).val() == '선택') {
             Swal.fire({
                 icon: 'warning',
@@ -431,6 +431,7 @@
             })
             return;
         }
+
         if ($('#place' + idx).val() == '선택') {
             Swal.fire({
                 icon: 'warning',
@@ -440,6 +441,10 @@
             return;
         }
 
+        if ($('#naming' + idx).val() == '') {
+            $('#addModal').modal('show');
+            return;
+        }
 
         let form = "";
         let str = "";
@@ -483,6 +488,39 @@
         });
     }
 
+    function addStandardSetting(){
+        var unComma = $("input[name='standard']").val().replace(/,/g, '');
+        $("input[name='standard']").val(unComma);
+        $("input[type=hidden]").val("");
+        standardForm = $('#addStandard').serialize();
+        addStandard(standardForm);
+    }
+
+    function addStandard(form){
+        $.ajax({
+            url: 'saveEmissionsStandard',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: form,
+            success: function () {
+                $('#addModal').modal('hide');
+                Swal.fire({
+                    icon: 'success',
+                    title: '추가 완료 ',
+                    html: '연간 배출 허용 기준 설정이<br> 추가 되었습니다.',
+                    timer: 1500
+                })
+                changeTableName('');
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        });
+    }
+
+
+
     function changeTableName(idx) {
         const tableName = $("#tableName" + idx).val();
         if (tableName == "선택") {
@@ -491,6 +529,7 @@
             $('#naming' + idx).val("");
             $('#place' + idx + ' option:eq(0)').attr('selected', 'selected');
         } else {
+            console.log('ttt');
             const str = tableName.split('_');
             const id = str[1] + '_' + str[2];
             $('#m_id' + idx).val(id);
@@ -509,8 +548,8 @@
             cache: false,
             success: function (data) {
                 for (i = 0; i < data.length; i++) {
-                    if (tableName.includes(data[i].sensorCode))
-                        result = data[i].sensorNaming;
+                    if (tableName.includes(data[i].item))
+                        result = data[i].itemName;
                 }
             },
             error: function (request, status, error) {

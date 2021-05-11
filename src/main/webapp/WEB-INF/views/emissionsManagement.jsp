@@ -447,10 +447,10 @@
         for (i = 0; i < data.length; i++) {
             var innerHTML = "";
             innerHTML = " <tr>" +
-                " <td>" + data[i].sensorCode + "</td>" +
-                " <td>" + data[i].sensorNaming + "</td>" +
-                " <td>" + numberWithCommas(data[i].yearlyStandard) + "</td>" +
-                " <td>" + data[i].percent + "</td>" +
+                " <td>" + data[i].item + "</td>" +
+                " <td>" + data[i].itemName + "</td>" +
+                " <td>" + numberWithCommas(data[i].emissionsStandard) + "</td>" +
+                " <td>" + data[i].densityStandard + "</td>" +
                 " <td>" + data[i].formula + "</td>" +
                 " <td>" +
                 "<i class='fas fa-edit me-2'  data-bs-toggle='modal' data-bs-target='#addModal' onclick='editSetting(this)'></i>" +
