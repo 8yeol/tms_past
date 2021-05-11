@@ -218,8 +218,8 @@
                 }
             }
         }
-        $("#statusPercent").text(((sensorStatusSuccess / (sensorStatusSuccess + sensorMonitoringOff)).toFixed(2) * 100).toFixed(0) + "%");
-        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorMonitoringOff));
+        $("#statusPercent").text(((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0) + "%");
+        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail));
         $("#statusOn").text(sensorStatusSuccess);
         $("#statusOff").text(sensorStatusFail);
         $("#monitoringOff").text(sensorMonitoringOff);
