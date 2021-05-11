@@ -96,7 +96,7 @@ public class JsonController {
     public void placeMonitoringUpdate(@RequestParam("name") String name, @RequestParam("check") Boolean check) {
         Place place = placeRepository.findByName(name);
         ObjectId id = place.get_id();
-        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), check, place.getPower(), new Date(), place.getSensor());
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), check, new Date(), place.getSensor());
         savePlace.set_id(id);
         placeRepository.save(savePlace);
     }
@@ -167,7 +167,7 @@ public class JsonController {
         String power = "OFF";
         Boolean monitoring = false;
         List sensor = new ArrayList();
-        Place savePlace = new Place(name, location, admin, tel, monitoring, power, up_time, sensor);
+        Place savePlace = new Place(name, location, admin, tel, monitoring, up_time, sensor);
         placeRepository.save(savePlace);
     }
 
@@ -312,7 +312,7 @@ public class JsonController {
                 Place place = placeRepository.findBySensorIsIn(name);
                 ObjectId id = place.get_id();
 
-                Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+                Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
                 updatePlace.set_id(id);
                 placeRepository.save(updatePlace);
 
@@ -322,7 +322,7 @@ public class JsonController {
                 ObjectId id = placesensor.get_id();
                 List<String> sensor = placesensor.getSensor();
                 sensor.add(name);
-                Place updatePlace = new Place(placename, placesensor.getLocation(), placesensor.getAdmin(), placesensor.getTel(), placesensor.getMonitoring(), placesensor.getPower(), new Date(), sensor);
+                Place updatePlace = new Place(placename, placesensor.getLocation(), placesensor.getAdmin(), placesensor.getTel(), placesensor.getMonitoring(), new Date(), sensor);
                 updatePlace.set_id(id);
                 placeRepository.save(updatePlace);
 
@@ -354,7 +354,7 @@ public class JsonController {
         //측정소 업데이트
         Place place = placeRepository.findByName(name);
         ObjectId id = place.get_id();
-        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
         savePlace.set_id(id);
         placeRepository.save(savePlace);
     }
@@ -371,7 +371,7 @@ public class JsonController {
         //측정소 업데이트
         Place place = placeRepository.findByName(name);
         ObjectId id = place.get_id();
-        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
         savePlace.set_id(id);
         placeRepository.save(savePlace);
     }
@@ -388,7 +388,7 @@ public class JsonController {
         //측정소 업데이트
         Place place = placeRepository.findByName(name);
         ObjectId id = place.get_id();
-        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
         savePlace.set_id(id);
         placeRepository.save(savePlace);
     }
@@ -405,7 +405,7 @@ public class JsonController {
         //측정소 업데이트
         Place place = placeRepository.findByName(name);
         ObjectId id = place.get_id();
-        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
         savePlace.set_id(id);
         placeRepository.save(savePlace);
     }
@@ -436,7 +436,7 @@ public class JsonController {
         List<String> sensor = place.getSensor();
         sensor.remove(name);
 
-        Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), sensor);
+        Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), sensor);
         updatePlace.set_id(id);
         placeRepository.save(updatePlace);
 
