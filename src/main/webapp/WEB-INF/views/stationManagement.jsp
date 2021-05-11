@@ -287,11 +287,11 @@
                         onoff = "OFF";
                     }
                     const innerHTML = "<div id='" + name + "p' style='border-bottom: silver solid 2px;' onclick=\"placeChange('" + name + "')\" >" +
-                        "<li>" +
-                        "<span><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'></span>" +
-                        "<span id='place" + i + "'>" + name + "</span>" +
-                        "<span>" + time + "</span>" +
-                        "<span>" + onoff + "</span>" +
+                        "<li style='display: flex; text-align: center'>" +
+                        "<span ><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'></span>" +
+                        "<span style='width: 30%;' id='place" + i + "'>" + name + "</span>" +
+                        "<span style='width: 40%; text-align: left'>" + time + "</span>" +
+                        "<span style='width: 23%;'>" + onoff + "</span>" +
                         "</li>" +
                         "</div>";
 
@@ -344,7 +344,6 @@
                     for (let i = 0; i < data.length; i++) {
                         const tableName = data[i]; //측정소에 저장된 센서명---> 이걸 reference컬렉션에서 가져와야함.
                         const value = findReference(tableName); //naming, name, legal, company, management //map이 비어있을때
-                        console.log(tableName);
                         const monitoring = findMonitor(tableName); //모니터 on/off(checked)
                         if (value.size != 0) {
                             const innerHtml =
@@ -469,6 +468,15 @@
             cache: false,
             data: {"tableName": tableName},
             success: function (data) {
+                if(data.legalStandard == 999){
+                    data.legalStandard = "";
+                }
+                if(data.companyStandard == 999){
+                    data.companyStandard = "";
+                }
+                if(data.managementStandard == 999){
+                    data.managementStandard = "";
+                }
                 map.set("naming", data.naming);
                 map.set("name", data.name);
                 map.set("legal", data.legalStandard);
@@ -509,6 +517,7 @@
 
     //상세설정 항목 추가
     function insertReference() {
+        const place = $("#pname").text();
         const sel = $("#select option:selected").val();
         const put = $("#sname").val();
         if (sel != "선택" && put != "") {
@@ -518,6 +527,7 @@
                 async: false,
                 cache: false,
                 data: {
+                    "place" :place,
                     "name": sel,
                     "naming": put
                 },
@@ -716,6 +726,8 @@
         var str = tablename.slice(0, -1);
         var companyname = str + "c";
         var company = $("#" + companyname).val(); //사내기준 값
+        var managename = str + "m";
+        var manage = $("#" + managename).val(); //관리기준 값
         var value = $("#" + tablename).val(); //법적기준 값
         var pname = $("#pname").text();
         if (isNaN(value) == true) {
@@ -734,6 +746,15 @@
                 icon: 'warning',
                 title: '경고',
                 text: '법적기준 값은 사내기준 값보다 작거나 같을 수 없습니다.'
+            })
+            placeChange($("#pname").text());
+            return;
+        }
+        if (parseFloat(value) <= parseFloat(manage)) { //법적기준 값이 관리기준 값보다 작을때
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '법적기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
             })
             placeChange($("#pname").text());
             return;
@@ -816,6 +837,8 @@
     function managementupdate(name) {
         var tablename = name.id;
         var str = tablename.slice(0, -1);
+        var legalname = str + "l";
+        var legal = $("#" + legalname).val(); //법적기준 값
         var companyname = str + "c";
         var company = $("#" + companyname).val(); //사내기준 값
         var value = $("#" + tablename).val(); //관리기준
@@ -836,6 +859,15 @@
                 icon: 'warning',
                 title: '경고',
                 text: '관리기준 값은 사내기준 값보다 크거나 같을 수 없습니다.'
+            })
+            placeChange($("#pname").text());
+            return;
+        }
+        if (parseFloat(legal) <= parseFloat(value)) {  //
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '관리기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
             })
             placeChange($("#pname").text());
             return;
