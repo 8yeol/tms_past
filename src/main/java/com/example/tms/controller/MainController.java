@@ -55,9 +55,19 @@ public class MainController {
         TreeSet<String> placeSet = new TreeSet<>(placelist);
         model.addAttribute("placelist", placeSet);
 
+        //연간 배출기준값 가져오기
         List<YearlyEmissionsStandardSetting> standard = yearlyEmissionsStandardRepository.findAll();
         model.addAttribute("standard",standard);
 
+        for (int i = 0; i<setting.size(); i++){
+            for (int k = 0; k<standard.size(); k++) {
+                if (setting.get(i).getSensorNaming().equals(standard.get(k).getSensorNaming())){
+                    System.out.println("센서네임 동일 ! ");
+                    System.out.println(standard.get(k));
+                    System.out.println("-------------------------------------");
+                }
+            }
+        }
         return "dashboard";
     }
 
@@ -95,16 +105,6 @@ public class MainController {
 
     @RequestMapping("/sensorManagement")
     public String sensorManagement(Model model) {
-
-        List<Place> places = placeRepository.findAll();
-
-        List<String> placelist = new ArrayList<>();
-        for (Place place : places) {
-            placelist.add(place.getName());
-        }
-
-        model.addAttribute("place", placelist);
-
         return "sensorManagement";
     }
 
