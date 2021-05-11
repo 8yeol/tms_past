@@ -78,9 +78,7 @@ public class MainController {
     }
 
     @RequestMapping("/monitoring")
-    public void monitoring(Model model) {
-
-        model.addAttribute("place", placeRepository.findByMonitoringIsTrue());
+    public void monitoring() {
     }
 
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)

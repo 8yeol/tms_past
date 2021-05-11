@@ -26,38 +26,31 @@ public class SensorCustomRepository {
 
     /**
      * @param sensor (sensor sensor)
-     * @param minute (60 - 1hour, 1440 - 24hour, ...)
+     * @param hour (60 - 1hour, 1440 - 24hour, ...)
      * @return List<Sensor> </sensor>_id, value, status, up_time
      */
-    public List<Sensor> getSenor(String sensor, String minute){
+    public List<Sensor> getSenor(String sensor, String hour){
         /* from A to B : A 부터 B까지 */
         LocalDateTime A = null;  LocalDateTime B = null;
 
-            if (minute.isEmpty()){ //from, to, minute 미입력 : 24시간 전 ~ 현재
-                A = LocalDateTime.now().minusMinutes(Long.parseLong("1440"));
+            if (hour.isEmpty()){ //from, to, minute 미입력 : 24시간 전 ~ 현재
+                A = LocalDateTime.now().minusHours(Long.parseLong("24"));
                 B = LocalDateTime.now();
             }else{ //from, to 미입력, minute 입력 :  현재(-minute) ~ 현재
-                A = LocalDateTime.now().minusMinutes(Long.parseLong(minute));
+                A = LocalDateTime.now().minusHours(Long.parseLong(hour));
                 B = LocalDateTime.now();
             }
 
         try {
             if(A.isBefore(B)){
-                //A.compare(B) - A<B:1,  A>B:1, A==B:0
                 ProjectionOperation projectionOperation = Aggregation.project()
                         .andInclude("value")
                         .andInclude("status")
                         .andInclude("up_time");
-                /* match - gt:>, gte:>=, lt:<, lte:<=, ne:!*/
-//        MatchOperation matchOperation = Aggregation.match(new Criteria().andOperator(Criteria.where("status").is(value)));
                 MatchOperation matchOperation = Aggregation.match(new Criteria().andOperator(Criteria.where("up_time")
                         .gte(A).lte(B)
                 ));
-                /* sort */
                 SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
-                /* limit */
-//        LimitOperation limitOperation = Aggregation.limit(1);
-                /* fetch */
                 Aggregation aggregation = Aggregation.newAggregation(projectionOperation, matchOperation, sortOperation);
 
                 AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);

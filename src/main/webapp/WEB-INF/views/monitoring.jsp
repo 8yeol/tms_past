@@ -253,28 +253,17 @@
     // 전체 측정소 이름 구함 (조건: 파워 On, 모니터링 True)
     function getPlace(){
         const placeName = new Array();
-        // var powerOn =0, powerOff =0, monitoringOn =0, monitoringOff =0;
         $.ajax({
             url: '<%=cp%>/getPlaceList',
             dataType: 'json',
             async: false,
             success: function (data) {
                 $.each(data, function (index, item) { //item (센서명)
-                    power = item.power;
                     monitoring = item.monitoring;
-                    if(power == 'ON' && monitoring){
-                        placeName.push(item.name);
-                        // powerOn +=1;
-                        // monitoringOn +=1;
-                    }else if(power == 'ON' && !monitoring){
-                        // powerOn +=1;
-                        // monitoringOff +=1;
-                    }else if(power == 'OFF' && monitoring){
-                        // powerOff +=1;
-                        // monitoringOn += 1;
-                    }else if(power == 'Off' && !monitoring){
-                        // powerOff +=1;
-                        // monitoringOff +=1;
+                    if(monitoring){
+                       placeName.push(item.name);
+                    }else{
+
                     }
                 })
 
