@@ -425,11 +425,18 @@ public class JsonController {
     public void removeReferencePlaceUpdate(String name) {
         //상세설정 값 삭제
         reference_value_settingRepository.deleteByName(name);
+        //알림설정값 삭제
+        if (notification_settingsRepository.deleteByName(name) != null) {
+            notification_settingsRepository.deleteByName(name);
+        }
         //place 업데이트 시간 수정
         Place place = placeRepository.findBySensorIsIn(name);
         ObjectId id = place.get_id();
+        //센서리스트에서 센서 제거
+        List<String> sensor = place.getSensor();
+        sensor.remove(name);
 
-        Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+        Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), sensor);
         updatePlace.set_id(id);
         placeRepository.save(updatePlace);
 
