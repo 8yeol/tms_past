@@ -37,9 +37,7 @@
         font-weight: bold;
         display: none;
         line-height: 55px;
-
     }
-
     #placeDiv > div.active {
         color: #0d6efd;
     }
@@ -290,7 +288,7 @@
                     }
                     const innerHTML = "<div id='" + name + "p' style='border-bottom: silver solid 2px;' onclick=\"placeChange('" + name + "')\" >" +
                         "<li>" +
-                        "<span><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'><span>" +
+                        "<span><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'></span>" +
                         "<span id='place" + i + "'>" + name + "</span>" +
                         "<span>" + time + "</span>" +
                         "<span>" + onoff + "</span>" +
@@ -310,21 +308,21 @@
     //측정소 변경
     function placeChange(name) {
         const place = name; // 측정소1 입력
-        $('#placeDiv div').removeClass('active');
-        $("#" + place + "p").addClass('active');
+        $('#placeDiv div').removeClass('active'); //텍스트 색상 제거
+        $("#" + place + "p").addClass('active'); // 텍스트 색상 변경
         $("#items").empty(); //div items 비우기
         $("#p_monitoring").empty(); //div p_monitoring 비우기
         const p_monitoring = findPlaceMonitor(place); //측정소monitor on/off 확인
         findSensorList(name);
 
         let innerHTMLPlace =
-            "<span id='pname'>" + place + "</span>" +
-            "<span>상세설정</span>" +
-            "<span>측정소 모니터링</span>" +
-            "<label class='switch'>" +
+            "<div id='pname'>" + place + "</div>" +
+            "<div>상세설정</div>" +
+            "<div>측정소 모니터링</div>" +
+            "<div><label class='switch'>" +
             "<input id='monitor' type='checkbox' " + p_monitoring + " onchange='p_monitoringupdate()'>" +
             "<span class='slider round'></span>" +
-            "</label>";
+            "</label></div>";
         $('#p_monitoring').append(innerHTMLPlace); //측정소 명 + 모니터링 on/off div
 
         const none = "<div class='fw-bold' style='padding-top : 20px;'>" +
@@ -367,10 +365,7 @@
                             elem.innerHTML = innerHtml;
                             document.getElementById('items').append(elem);
 
-                            //측정소 변경시 센서 체크박스 해제
-                            const selectAll
-                                = document.querySelector('input[name="selectall"]');
-                            selectAll.checked = false;
+
                         } else {
                             if (i == 0) {
                                 const none =
@@ -382,6 +377,10 @@
                         }
                     }
                 }
+                //측정소 변경시 센서 체크박스 해제
+                const selectAll
+                    = document.querySelector('input[name="selectall"]');
+                selectAll.checked = false;
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
