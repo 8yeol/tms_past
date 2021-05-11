@@ -5,6 +5,7 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,6 @@ public class Place {
     private String admin;
     private String tel;
     private Boolean monitoring;
-    private String power;
     private Date up_time;
     private List sensor;
 
@@ -70,14 +70,6 @@ public class Place {
         this.monitoring = monitoring;
     }
 
-    public String getPower() {
-        return power;
-    }
-
-    public void setPower(String power) {
-        this.power = power;
-    }
-
     public Date getUp_time() {
         return up_time;
     }
@@ -103,20 +95,18 @@ public class Place {
                 ", admin='" + admin + '\'' +
                 ", tel='" + tel + '\'' +
                 ", monitoring=" + monitoring +
-                ", power='" + power + '\'' +
                 ", up_time=" + up_time +
                 ", sensor=" + sensor +
                 '}';
     }
 
     @Builder
-    public Place(String name, String location,String admin,String tel, Boolean monitoring, String power,Date up_time, List sensor){
+    public Place(String name, String location, String admin, String tel, Boolean monitoring, Date up_time, List sensor) {
         this.name = name;
         this.location = location;
         this.admin = admin;
         this.tel = tel;
         this.monitoring = monitoring;
-        this.power = power;
         this.up_time = up_time;
         this.sensor = sensor;
     }
