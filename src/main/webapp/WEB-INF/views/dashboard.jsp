@@ -212,7 +212,8 @@
                                             ${percent}%
                                     </div>
                                     <div class="standard">
-                                            ${standard.yearlyStandard}
+                                        <fmt:formatNumber
+                                                value="${standard.yearlyStandard}" groupingUsed="true"/>
                                     </div>
                                 </c:if>
                             </c:forEach>
