@@ -215,7 +215,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">코드</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="code">
+                            <input type="text" class="text-secondary" name="code" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -226,31 +226,6 @@
                             <input type="text" class="text-secondary" name="sensorName">
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">연간배출 허용기준</span>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="text-secondary" name="standard">
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">배출허용 기준농도</span>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="text-secondary" name="percent">
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">산출식(참고용)</span>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="text-secondary" name="formula">
-                        </div>
-                    </div>
-                    <input type="hidden" name="hiddenCode"> <!-- 추가 수정 판별할 데이터 -->
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -264,20 +239,6 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
     $(function () {
-        //콤마 자동 찍기, 숫자만 입력 가능
-        $("input[name='standard']").bind('keyup', function (e) {
-            var rgx1 = /\D/g;
-            var rgx2 = /(\d+)(\d{3})/;
-            var num = this.value.replace(rgx1, "");
-
-            while (rgx2.test(num)) num = num.replace(rgx2, '$1' + ',' + '$2');
-            this.value = num;
-        });
-        $("input[name='percent']").bind('keyup', function (e) {
-            var rgx1 = /\D/g;
-            var num = this.value.replace(rgx1, "");
-            this.value = num;
-        });
         getSensor();
         getPlace();
     });
@@ -442,6 +403,7 @@
         }
 
         if ($('#naming' + idx).val() == '') {
+            $('input[name=code]').val($('#m_class').val());
             $('#addModal').modal('show');
             return;
         }
@@ -489,8 +451,6 @@
     }
 
     function addStandardSetting(){
-        var unComma = $("input[name='standard']").val().replace(/,/g, '');
-        $("input[name='standard']").val(unComma);
         $("input[type=hidden]").val("");
         standardForm = $('#addStandard').serialize();
         addStandard(standardForm);
@@ -498,7 +458,7 @@
 
     function addStandard(form){
         $.ajax({
-            url: 'saveEmissionsStandard',
+            url: 'simpleSaveStandard',
             type: 'POST',
             async: false,
             cache: false,

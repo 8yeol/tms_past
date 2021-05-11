@@ -563,6 +563,18 @@ public class JsonController {
         List<Item> standardList =  itemRepository.findAll();
         return standardList;
     }
+    //센서 추가시 간단한 배출기준 추가
+    @RequestMapping(value = "/simpleSaveStandard")
+    public void simpleSaveStandard(@RequestParam(value = "code") String code, @RequestParam(value = "sensorName") String sensorName) {
+
+        Item setting = new Item();
+        setting.setItem(code);
+        setting.setItemName(sensorName);
+        setting.setEmissionsStandard(999999999);
+        setting.setFormula("-");
+        itemRepository.save(setting);
+    }
+
     //배출기준 삭제
     @RequestMapping(value = "/deleteEmissionsStandard")
     public List deleteEmissionsStandard(@RequestParam(value = "code") String code) {
