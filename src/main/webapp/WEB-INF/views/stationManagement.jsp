@@ -119,17 +119,21 @@
                     <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text"
                                                                                                class="modal-input"
                                                                                                name="name"
+                                                                                               id="na"
                                                                                                style="position: relative; left: 15%;">
 
                     </div>
                     <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
+                                                                          id="lo"
                                                                           style="position: relative; left: 22%;"></div>
                     <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
+                                                                             id="ad"
                                                                              style="position: relative; left: 15%;">
                     </div>
                     <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
+                                                                           id="te"
                                                                            style="position: relative; left: 19%;"></div>
                 </form>
             </div>
@@ -493,14 +497,23 @@
 
     //측정소 추가
     function insertPlace() {
-        var form = $('#placeinfo').serialize();
+        const na = $("#na").val();
+        const name = na.replace(/(\s*)/g, "");
+        const location = $("#lo").val();
+        const tel = $("#te").val();
+        const admin = $("#ad").val();
 
         $.ajax({
             url: '<%=cp%>/savePlace',
             type: 'POST',
             async: false,
             cache: false,
-            data: form
+            data: {
+                "name": name,
+                "location": location,
+                "tel": tel,
+                "admin": admin
+            }
 
         })
         Swal.fire({
