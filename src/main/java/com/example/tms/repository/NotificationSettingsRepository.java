@@ -9,5 +9,5 @@ import java.util.List;
 public interface NotificationSettingsRepository extends MongoRepository<NotificationSettings, ObjectId> {
     NotificationSettings findByName(String name);
     List<NotificationSettings> findByStatusIsTrue();
-    NotificationSettings deleteByName(String name);
+    void deleteByName(String name);
 }

@@ -61,9 +61,9 @@
                 <div class="fw-bold"
                      style="border-bottom: silver solid 2px; display: flex; width:100%; position: relative; padding-bottom: 5px;">
                     <div style="margin-left: 5px; margin-right: 5px;"><input name="placeall"
-                                                                                              class="form-check-input"
-                                                                                              type=checkbox
-                                                                                              onclick="placeAll(this)">
+                                                                             class="form-check-input"
+                                                                             type=checkbox
+                                                                             onclick="placeAll(this)">
                     </div>
                     <div style="width: 30%">측정소 명</div>
                     <div style="width: 40%;">업데이트</div>
@@ -310,7 +310,7 @@
     function placeChange(name) {
         const place = name; // 측정소1 입력
         $('#placeDiv div').removeClass('active'); //텍스트 색상 제거
-        $("#"+place+"p").addClass('active'); // 텍스트 색상 변경
+        $("#" + place + "p").addClass('active'); // 텍스트 색상 변경
         $("#items").empty(); //div items 비우기
         $("#p_monitoring").empty(); //div p_monitoring 비우기
         const p_monitoring = findPlaceMonitor(place); //측정소monitor on/off 확인

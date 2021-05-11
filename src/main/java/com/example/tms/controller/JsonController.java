@@ -69,6 +69,7 @@ public class JsonController {
 
     /**
      * 전체 측정소 정보를 읽어오기 위한 메소드
+     *
      * @return 전체 측정소 정보
      */
     @RequestMapping(value = "/getPlaceList")
@@ -79,6 +80,7 @@ public class JsonController {
 
     /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
+     *
      * @param place 측정소 이름
      * @return 해당 측정소의 센서 값 (테이블 명)
      */
@@ -103,7 +105,9 @@ public class JsonController {
     }
 
     @RequestMapping(value = "getSensorList")
-    public List<SensorList> getSensorList() { return sensorListRepository.findAll(); }
+    public List<SensorList> getSensorList() {
+        return sensorListRepository.findAll();
+    }
 
     /**
      * 설정된 기준 값을 초과하는 경우 알람 발생 - 해당 발생된 알람의 목록 리스트 (ALL) > 페이징 가능하게 수정할 것.
@@ -178,9 +182,26 @@ public class JsonController {
         if (placeList == null || "".equals(placeList)) {
         } else {
             for (int i = 0; i < placeList.size(); i++) {
-                placeRepository.deleteByName(placeList.get(i));
+                removePlaceSensorInfo(placeList.get(i));
             }
         }
+    }
+
+    public void removePlaceSensorInfo(String place) {
+        Place placeInfo = placeRepository.findByName(place);
+        List<String> sensor = placeInfo.getSensor();
+        for (int i = 0; i < sensor.size(); i++) {
+            //상세설정 값 삭제
+            if (reference_value_settingRepository.findByName(sensor.get(i)) != null) {
+                reference_value_settingRepository.deleteByName(sensor.get(i));
+            }
+            //알림설정값 삭제
+            if (notification_settingsRepository.findByName(sensor.get(i)) != null) {
+                notification_settingsRepository.deleteByName(sensor.get(i));
+            }
+        }
+        //측정소 삭제
+        placeRepository.deleteByName(place);
     }
 // *********************************************************************************************************************
 // Sensor
@@ -214,7 +235,9 @@ public class JsonController {
         return placeRepository.findByMonitoringIsTrue();
     }
 
-    /** 선세의 최근 데이터 조회 (limit:1)
+    /**
+     * 선세의 최근 데이터 조회 (limit:1)
+     *
      * @return classification, naming, managementId, tableName, upTime, place, status
      */
     @RequestMapping(value = "/getSensorRecent")
@@ -222,8 +245,10 @@ public class JsonController {
         return sensorCustomRepository.getSensorRecent(sensor);
     }
 
-    /** 센서의 최근 전 값 조회 (limit:2) -> 조회한 결과 중 2번째 데이터 리턴
-     *  @return classification, naming, managementId, tableName, upTime, place, status
+    /**
+     * 센서의 최근 전 값 조회 (limit:2) -> 조회한 결과 중 2번째 데이터 리턴
+     *
+     * @return classification, naming, managementId, tableName, upTime, place, status
      */
     @RequestMapping(value = "/getSensorBeforeData")
     public Sensor getSensorBeforeData(@RequestParam("sensor") String sensor) {
@@ -231,8 +256,8 @@ public class JsonController {
     }
 
     /**
-     * @param sensor            - 센서명
-     * @param hour            시간
+     * @param sensor - 센서명
+     * @param hour   시간
      * @return - 해당 센서의 파라미터로 부터 받은 값에 따라 조건(날짜 및 시간)의 측정 값
      */
     @RequestMapping(value = "/getSensor")
@@ -284,14 +309,14 @@ public class JsonController {
      */
     public void saveNotifySetting(String item, boolean status, String from, String to) {
         Date up_time = new Date();
-        if(notification_settingsRepository.findByName(item) != null){
+        if (notification_settingsRepository.findByName(item) != null) {
             NotificationSettings notification_settings = notification_settingsRepository.findByName(item);
             ObjectId id = notification_settings.get_id();
 
             NotificationSettings changeSetting = new NotificationSettings(item, from, to, status, up_time);
             changeSetting.set_id(id);
             notification_settingsRepository.save(changeSetting);
-        }else{
+        } else {
             NotificationSettings newSetting = new NotificationSettings(item, from, to, status, up_time);
             notification_settingsRepository.save(newSetting);
         }
@@ -305,10 +330,10 @@ public class JsonController {
 
     //측정소 상세설정 항목 추가
     @RequestMapping(value = "/saveReference")
-    public String saveReference(@RequestParam(value = "place") String placename,@RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
+    public String saveReference(@RequestParam(value = "place") String placename, @RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
         if (reference_value_settingRepository.findByName(name) == null) {
 
-            if(placeRepository.findBySensorIsIn(name) != null){
+            if (placeRepository.findBySensorIsIn(name) != null) {
                 //place 업데이트 시간 수정
                 Place place = placeRepository.findBySensorIsIn(name);
                 ObjectId id = place.get_id();
@@ -318,7 +343,7 @@ public class JsonController {
                 placeRepository.save(updatePlace);
 
 
-            }else{
+            } else {
                 Place placesensor = placeRepository.findByName(placename);
                 ObjectId id = placesensor.get_id();
                 List<String> sensor = placesensor.getSensor();
@@ -427,7 +452,7 @@ public class JsonController {
         //상세설정 값 삭제
         reference_value_settingRepository.deleteByName(name);
         //알림설정값 삭제
-        if (notification_settingsRepository.deleteByName(name) != null) {
+        if (notification_settingsRepository.findByName(name) != null) {
             notification_settingsRepository.deleteByName(name);
         }
         //place 업데이트 시간 수정
@@ -443,8 +468,9 @@ public class JsonController {
 
     }
 
-    /** 알림 현황 저장 (일 - 1월1부터 ~ 어제 날짜 / 월 - 1월1부터 이번달)
-     *  notification_day_statistics(일) , notification_month_statistics(월)
+    /**
+     * 알림 현황 저장 (일 - 1월1부터 ~ 어제 날짜 / 월 - 1월1부터 이번달)
+     * notification_day_statistics(일) , notification_month_statistics(월)
      */
     @RequestMapping(value = "saveNotiStatistics")
     public void saveNotiStatistics() {
@@ -504,35 +530,41 @@ public class JsonController {
 
     }
 
-    /** 당일 알림 현황 조회
+    /**
+     * 당일 알림 현황 조회
+     *
      * @return day(현재날짜), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
     @RequestMapping(value = "getNotiStatisticsNow")
     public ArrayList getNotificationStatistics() {
         ArrayList al = new ArrayList();
-        try{
+        try {
             LocalDate nowDate = LocalDate.now();
             al.add(nowDate);
-            for(int grade=1; grade<=3; grade++){
+            for (int grade = 1; grade <= 3; grade++) {
                 List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(nowDate), String.valueOf(nowDate));
                 al.add(list.get(0).get("count"));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
         }
         return al;
     }
 
 
-    /** 일별 알림 현황 조회 - 최근 일주일 (limit:7)
-     * @return day('yyyy-MM-dd'), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
+    /**
+     * 일별 알림 현황 조회 - 최근 일주일 (limit:7)
+     *
+     * @return day(' yyyy - MM - dd '), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
     @RequestMapping(value = "getNotificationWeekStatistics")
     public List<NotificationDayStatistics> getNotificationWeekStatistics() {
         return notificationStatisticsCustomRepository.getNotificationWeekStatistics();
     }
 
-    /** 월별 현황 조회 - 최근 1년 (limit:12)
-     * @return month('yyyy-MM'), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
+    /**
+     * 월별 현황 조회 - 최근 1년 (limit:12)
+     *
+     * @return month(' yyyy - MM '), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
     @RequestMapping(value = "getNotificationMonthStatistics")
     public List<NotificationMonthStatistics> getNotificationMonthStatistics() {
@@ -542,15 +574,15 @@ public class JsonController {
 
     //배출기준 추가, 수정
     @RequestMapping(value = "/saveEmissionsStandard")
-    public List saveEmissionsStandard(@RequestParam(value = "code") String code, @RequestParam(value = "sensorName") String sensorName, @RequestParam(value = "standard") int standard,@RequestParam(value = "hiddenCode" ,required=false) String hiddenCode,
+    public List saveEmissionsStandard(@RequestParam(value = "code") String code, @RequestParam(value = "sensorName") String sensorName, @RequestParam(value = "standard") int standard, @RequestParam(value = "hiddenCode", required = false) String hiddenCode,
                                       @RequestParam(value = "percent") int percent, @RequestParam(value = "formula") String formula) {
 
         Item setting;
 
         //hidden 값이 있는지로 추가와 수정을 판별
-        if(hiddenCode==""||hiddenCode==null){
+        if (hiddenCode == "" || hiddenCode == null) {
             setting = new Item();
-        }else{
+        } else {
             setting = itemRepository.findByItem(hiddenCode);
         }
 
@@ -561,9 +593,10 @@ public class JsonController {
         setting.setFormula(formula);
         itemRepository.save(setting);
 
-        List<Item> standardList =  itemRepository.findAll();
+        List<Item> standardList = itemRepository.findAll();
         return standardList;
     }
+
     //센서 추가시 간단한 배출기준 추가
     @RequestMapping(value = "/simpleSaveStandard")
     public void simpleSaveStandard(@RequestParam(value = "code") String code, @RequestParam(value = "sensorName") String sensorName) {
@@ -586,7 +619,7 @@ public class JsonController {
 
         itemRepository.delete(setting);
 
-        List<Item> standardList =  itemRepository.findAll();
+        List<Item> standardList = itemRepository.findAll();
         return standardList;
     }
 
@@ -601,19 +634,20 @@ public class JsonController {
 
         return dataInquiryCustomRepository.searchInformatin(date_start, date_end, item, off);
     }
+
     //센서관리 항목 추가,수정
     @RequestMapping(value = "/saveSensor")
-    public void saveSensor(@RequestParam(value = "managementId") String managementId, @RequestParam(value = "classification") String classification, @RequestParam(value = "naming") String naming,@RequestParam(value = "place") String place,
-                           @RequestParam(value = "tableName") String tableName,@RequestParam(value = "hiddenCode" ,required=false) String hiddenCode) {
+    public void saveSensor(@RequestParam(value = "managementId") String managementId, @RequestParam(value = "classification") String classification, @RequestParam(value = "naming") String naming, @RequestParam(value = "place") String place,
+                           @RequestParam(value = "tableName") String tableName, @RequestParam(value = "hiddenCode", required = false) String hiddenCode) {
 
         SensorList sensor;
 
         //hidden 값이 있는지로 추가와 수정을 판별
-        if(hiddenCode==""||hiddenCode==null){
+        if (hiddenCode == "" || hiddenCode == null) {
             sensor = new SensorList();
             //
-        } else{
-            sensor = sensorListRepository.findByTableName(tableName,"");
+        } else {
+            sensor = sensorListRepository.findByTableName(tableName, "");
         }
 
         sensor.setClassification(classification);
@@ -631,8 +665,8 @@ public class JsonController {
     @RequestMapping(value = "/deleteSensor")
     public void deleteSensor(String tableName) {
 
-       SensorList sensor = sensorListRepository.findByTableName(tableName,"");
-       sensorListRepository.delete(sensor);
+        SensorList sensor = sensorListRepository.findByTableName(tableName, "");
+        sensorListRepository.delete(sensor);
 
     }
 
