@@ -139,7 +139,7 @@
             <div class="modal-body d-flex justify-content-evenly">
                 <form id="editForm" method="post" autocomplete="off">
                     <div class="row">
-                        <div class="col text-center">
+                        <div class="col text-center" id="label">
                             <span class="text-primary" style="font-size: 15%"> * 테이블명 선택시 자동 입력됩니다.</span>
                         </div>
                     </div>
@@ -343,6 +343,21 @@
 
     //데이터 저장 후 페이지 새로고침
     function saveSensor(idx) {
+        if ($('#naming' + idx).val() == '') {
+
+            $('#label').html(' <span class="text-danger" style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>')
+
+
+
+
+
+
+
+            $('#editModal').modal('show');
+
+
+            return;
+        }
         if ($('#tableName' + idx).val() == '선택') {
             Swal.fire({
                 icon: 'warning',
@@ -359,14 +374,7 @@
             })
             return;
         }
-        if ($('#naming' + idx).val() == '') {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                html: ' <b>[환경설정 - 배출량 관리]</b> 연간 배출 허용 기준 설정에서<br>  분류코드와 항목명을 입력해주세요.'
-            })
-            return;
-        }
+
 
         let form = "";
         let str = "";

@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 
-public interface Annual_EmissionsRepository extends MongoRepository<AnnualEmissions, ObjectId> {
+public interface AnnualEmissionsRepository extends MongoRepository<AnnualEmissions, ObjectId> {
     AnnualEmissions findBySensor(String sensor);
     List<AnnualEmissions> findByStatusIsTrue();
 }
