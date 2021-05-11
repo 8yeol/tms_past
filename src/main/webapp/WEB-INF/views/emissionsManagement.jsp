@@ -108,9 +108,9 @@
     <div class="row">
         <div class="row1">
             <span>연간 배출 허용 기준 설정</span>
-            <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="insertSetting()"
-                    style="background-color:green;color:white"> 추가
-            </button>
+           <!-- <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="insertSetting()"
+                    style="background-color:green;color:white"> 추가 버튼
+            </button>   -->
         </div>
         <div class="row2">
             <span>* 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량 계산에 활용됩니다.</span>
@@ -138,7 +138,8 @@
                         <td>${standard.densityStandard}</td>
                         <td>${standard.formula}</td>
                         <td>
-                            <i onclick="editSetting(this)" class="fas fa-edit me-2"  data-bs-toggle="modal" data-bs-target="#addModal"></i>
+                            <i onclick="editSetting(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
+                               data-bs-target="#addModal"></i>
                             <i class="fas fa-times" onclick="deleteModal(this)"></i>
                         </td>
                     </tr>
@@ -148,10 +149,10 @@
             </table>
             <!--  Standard == null -->
             <c:if test="${empty standard}">
-                    <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;"id="nullStandard">
-                        연간 배출 허용 기준이 없습니다. <br>
-                        <b>추가</b> 버튼으로 허용 기준을 설정 해주세요.
-                    </div>
+                <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;" id="nullStandard">
+                    연간 배출 허용 기준이 없습니다. <br>
+                    <b>추가</b> 버튼으로 허용 기준을 설정 해주세요.
+                </div>
             </c:if>
         </div>
     </div>
@@ -256,7 +257,8 @@
                 <form id="addStandard" method="post" autocomplete="off">
                     <div class="row">
                         <div class="col text-center">
-                            <span class="text-danger" style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>
+                            <span class="text-danger"
+                                  style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -264,7 +266,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">코드</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="code">
+                            <input type="text" class="text-secondary" name="code" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -272,7 +274,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="sensorName">
+                            <input type="text" class="text-secondary" name="sensorName" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -332,31 +334,23 @@
         });
     });
 
-    //기준 추가
-    function insert() {
-        var unComma = $("input[name='standard']").val().replace(/,/g, '');
-        $("input[name='standard']").val(unComma);
+    // //기준 추가
+    // function insert() {
+    //     var unComma = $("input[name='standard']").val().replace(/,/g, '');
+    //     $("input[name='standard']").val(unComma);
+    //
+    //     var form = $('#addStandard').serialize();
+    //     standardAjax(form, "추가");
+    // }
+    // function insertSetting() {
+    //     $('.modal-title').html('센서 추가');
+    //     $('.btn-success').html('추가');
+    //     $('.btn-success').removeAttr("onclick");
+    //     $('.btn-success').attr("onclick", "insert()");
+    //     inputClean();
+    // }
+    //
 
-        var form = $('#addStandard').serialize();
-        standardAjax(form,"추가");
-    }
-
-    //기준 수정
-    function editStandard() {
-        var unComma = $("input[name='standard']").val().replace(/,/g, '');
-        $("input[name='standard']").val(unComma);
-
-        var form = $('#addStandard').serialize();
-        standardAjax(form,"수정");
-    }
-
-    function insertSetting(){
-        $('.modal-title').html('센서 추가');
-        $('.btn-success').html('추가');
-        $('.btn-success').removeAttr("onclick");
-        $('.btn-success').attr("onclick", "insert()");
-        inputClean();
-    }
 
     //editModal 선택값 셋팅
     function editSetting(obj) {
@@ -375,7 +369,25 @@
         $("input[name='formula']").val(tdList.eq(4).html());
     }
 
-    function standardAjax(form,str){
+
+    //기준 수정
+    function editStandard() {
+        formula = $('input[name=formula]').val();
+        percent = $('input[name=percent]').val();
+        standard = $('input[name=standard]').val();
+        if (formula == '' || percent == '' || standard == ''){
+            alert('입력값을 확인 하세요.');
+            return;
+        }
+
+        var unComma = $("input[name='standard']").val().replace(/,/g, '');
+        $("input[name='standard']").val(unComma);
+
+        var form = $('#addStandard').serialize();
+        standardAjax(form, "수정");
+    }
+
+    function standardAjax(form, str) {
         $.ajax({
             url: 'saveEmissionsStandard',
             type: 'POST',
@@ -388,8 +400,8 @@
 
                 Swal.fire({
                     icon: 'success',
-                    title: str+' 완료',
-                    text: '연간 배출 허용 기준이 '+str+'되었습니다.'
+                    title: str + ' 완료',
+                    text: '연간 배출 허용 기준이 ' + str + '되었습니다.'
                 })
                 inputClean();
             },
@@ -399,7 +411,7 @@
         });
     }
 
-    function deleteModal(obj){
+    function deleteModal(obj) {
         var code = $(obj).parent().parent().children().eq(0).html();  //console.log(code); -> NOX
 
         Swal.fire({
@@ -417,13 +429,13 @@
         });
     }
 
-    function deleteAjax(code){
+    function deleteAjax(code) {
         $.ajax({
             url: 'deleteEmissionsStandard',
             type: 'POST',
             async: false,
             cache: false,
-            data:  { code : code },
+            data: {code: code},
             success: function (data) {
                 Swal.fire(
                     '삭제 완료',
@@ -550,7 +562,7 @@
             error: function (request, status, error) {
                 console.log(error)
             }
-        })
+        });
     }
 </script>
 
