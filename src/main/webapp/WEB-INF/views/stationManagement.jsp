@@ -40,7 +40,7 @@
 
     }
 
-    li.on {
+    #placeDiv > div.active {
         color: #0d6efd;
     }
 </style>
@@ -121,6 +121,7 @@
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                style="position: relative; left: 15%;">
+
                     </div>
                     <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
@@ -210,11 +211,6 @@
                 })
             }
         })
-        $('li').click(function () {
-            $('li').removeClass()
-            $(this).addClass('on')
-
-        })
 
     });
 
@@ -292,7 +288,7 @@
                     } else {
                         onoff = "OFF";
                     }
-                    const innerHTML = "<div style='border-bottom: silver solid 2px;' onclick=\"placeChange('" + name + "')\" >" +
+                    const innerHTML = "<div id='" + name + "p' style='border-bottom: silver solid 2px;' onclick=\"placeChange('" + name + "')\" >" +
                         "<li>" +
                         "<span><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'><span>" +
                         "<span id='place" + i + "'>" + name + "</span>" +
@@ -314,6 +310,8 @@
     //측정소 변경
     function placeChange(name) {
         const place = name; // 측정소1 입력
+        $('#placeDiv div').removeClass('active');
+        $("#" + place + "p").addClass('active');
         $("#items").empty(); //div items 비우기
         $("#p_monitoring").empty(); //div p_monitoring 비우기
         const p_monitoring = findPlaceMonitor(place); //측정소monitor on/off 확인
@@ -493,13 +491,8 @@
             type: 'POST',
             async: false,
             cache: false,
-            data: form,
-            success: function (data) {
+            data: form
 
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
         })
         Swal.fire({
             icon: 'success',
@@ -509,6 +502,7 @@
                 //location.reload();
                 document.getElementById("cancelBtn").click();
                 placeDiv();
+                placeChange($("#pname").text());
             }
         })
     }
@@ -676,7 +670,6 @@
     function p_monitoringupdate() {
         var check = $("#monitor").is(":checked"); //true/false
         var name = $("#pname").text(); //측정소 이름
-        console.log(check);
 
         $.ajax({
             url: '<%=cp%>/placeMonitoringUpdate',
@@ -719,7 +712,6 @@
 
     //legal onchange
     function legalupdate(name) {
-        console.log(name);
         var tablename = name.id;
         var str = tablename.slice(0, -1);
         var companyname = str + "c";
@@ -880,7 +872,7 @@
                 } else {
                     modal.html("'" + place + "-" + name + "' 모니터링 'ON'(으)로 설정되었습니다.");
                 }
-            }else{
+            } else {
                 if (name == "") {
                     modal.html("'" + place + "' 모니터링 'OFF'(으)로 설정되었습니다.");
                 } else {
