@@ -38,6 +38,7 @@
         display: none;
         line-height: 55px;
     }
+
     #placeDiv > div.active {
         color: #0d6efd;
     }
@@ -58,15 +59,15 @@
             </div>
             <div class="text-center">
                 <div class="fw-bold"
-                     style="border-bottom: silver solid 2px; display: inline-block; text-align: justify; width:100%; position: relative; padding-bottom: 5px;">
-                    <div style="display: inline-block; position: relative; left: 5px;"><input name="placeall"
+                     style="border-bottom: silver solid 2px; display: flex; width:100%; position: relative; padding-bottom: 5px;">
+                    <div style="margin-left: 5px; margin-right: 5px;"><input name="placeall"
                                                                                               class="form-check-input"
                                                                                               type=checkbox
                                                                                               onclick="placeAll(this)">
                     </div>
-                    <div style="display: inline-block; position: relative;  top:15px; left: 10%;">측정소 명</div>
-                    <div style="display: inline-block; position: relative;  top:15px; left: 27%;">업데이트</div>
-                    <div style="display: inline-block; position: relative;  top:15px; left: 44%;">모니터링 사용</div>
+                    <div style="width: 30%">측정소 명</div>
+                    <div style="width: 40%;">업데이트</div>
+                    <div style="width: 24%;">모니터링 사용</div>
                 </div>
                 <div>
                     <ul id="placeDiv" style="list-style: none; padding: 0px;">
@@ -290,8 +291,8 @@
                         "<li style='display: flex; text-align: center'>" +
                         "<span ><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'></span>" +
                         "<span style='width: 30%;' id='place" + i + "'>" + name + "</span>" +
-                        "<span style='width: 40%; text-align: left'>" + time + "</span>" +
-                        "<span style='width: 23%;'>" + onoff + "</span>" +
+                        "<span style='width: 40%; '>" + time + "</span>" +
+                        "<span style='width: 24%;'>" + onoff + "</span>" +
                         "</li>" +
                         "</div>";
 
@@ -309,7 +310,7 @@
     function placeChange(name) {
         const place = name; // 측정소1 입력
         $('#placeDiv div').removeClass('active'); //텍스트 색상 제거
-        $("#" + place + "p").addClass('active'); // 텍스트 색상 변경
+        $("#"+place+"p").addClass('active'); // 텍스트 색상 변경
         $("#items").empty(); //div items 비우기
         $("#p_monitoring").empty(); //div p_monitoring 비우기
         const p_monitoring = findPlaceMonitor(place); //측정소monitor on/off 확인
@@ -468,13 +469,13 @@
             cache: false,
             data: {"tableName": tableName},
             success: function (data) {
-                if(data.legalStandard == 999){
+                if (data.legalStandard == 999) {
                     data.legalStandard = "";
                 }
-                if(data.companyStandard == 999){
+                if (data.companyStandard == 999) {
                     data.companyStandard = "";
                 }
-                if(data.managementStandard == 999){
+                if (data.managementStandard == 999) {
                     data.managementStandard = "";
                 }
                 map.set("naming", data.naming);
@@ -527,7 +528,7 @@
                 async: false,
                 cache: false,
                 data: {
-                    "place" :place,
+                    "place": place,
                     "name": sel,
                     "naming": put
                 },
@@ -652,13 +653,10 @@
                     type: 'POST',
                     async: false,
                     cache: false,
-                    data: {"referenceList": referenceList},
-                    success: function (data) {
-
+                    data: {
+                        "referenceList": referenceList
                     },
-                    error: function (request, status, error) { // 결과 에러 콜백함수
-                        console.log(error)
-                    }
+
                 })
                 swal.fire(
                     '삭제 완료',

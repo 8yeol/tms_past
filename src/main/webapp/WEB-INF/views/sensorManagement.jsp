@@ -66,9 +66,6 @@
                     <label class="me-3 col-xs-3 w-10 label">측정소</label>
                     <select name="place" id="place" class="btn btn-outline-dark">
                         <option>선택</option>
-                        <c:forEach var="place" items="${place}" varStatus="status">
-                            <option value="${place}">${place}</option>
-                        </c:forEach>
                     </select>
                 </div>
                 <div class="row pe-5 ms-1">
@@ -98,7 +95,8 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <smal> * 테이블 선택 후 항목명이 비어있는 경우 [환경설정 - 배출량 관리] 페이지의 연간 배출 허용 기준 설정에서 분류코드와 항목명을 입력해주세요. </smal>
+                            <smal> * 테이블 선택 후 항목명이 비어있는 경우 [환경설정 - 배출량 관리] 페이지의 연간 배출 허용 기준 설정에서 분류코드와 항목명을 입력해주세요.
+                            </smal>
                         </div>
                     </div>
                 </div>
@@ -131,81 +129,163 @@
     </div>
 </div>
 
-    <!-- editModal -->
-    <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header justify-content-center">
-                    <h5 class="modal-title">센서 수정</h5>
-                </div>
-                <div class="modal-body d-flex justify-content-evenly">
-                    <form id="editForm" method="post" autocomplete="off">
-                        <div class="row">
-                            <div class="col text-center">
-                                <span class="text-primary" style="font-size: 15%"> * 테이블명 선택시 자동 입력됩니다.</span>
-                            </div>
+<!-- editModal -->
+<div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">센서 수정</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-evenly">
+                <form id="editForm" method="post" autocomplete="off">
+                    <div class="row">
+                        <div class="col text-center" id="label">
+                            <span class="text-primary" style="font-size: 15%"> * 테이블명 선택시 자동 입력됩니다.</span>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <span class="fs-5 fw-bold add-margin f-sizing">테이블명</span>
-                            </div>
-                            <div class="col" >
-                                <input type="text" class="text-secondary" name="tableName" id="tableName2" readonly>
-                            </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">테이블명</span>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
-                            </div>
-                            <div class="col">
-                                <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;">
-                                    <c:forEach var="place" items="${place}" varStatus="status">
-                                        <option value="${place}">${place}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="tableName" id="tableName2" readonly>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <span class="fs-5 fw-bold add-margin f-sizing">관리 ID</span>
-                            </div>
-                            <div class="col">
-                                <input type="text" class="text-secondary" name="managementId" id="m_id2" readonly>
-                            </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <span class="fs-5 fw-bold add-margin f-sizing">분류</span>
-                            </div>
-                            <div class="col">
-                                <input type="text" class="text-secondary" name="classification" id="m_class2" readonly>
-                            </div>
+                        <div class="col">
+                            <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;">
+                            </select>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col">
-                                <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
-                            </div>
-                            <div class="col">
-                                <input type="text" class="text-secondary" name="naming" id="naming2" readonly>
-                            </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">관리 ID</span>
                         </div>
-                        <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
-                    </form>
-                </div>
-                <div class="modal-footer d-flex justify-content-center">
-                    <button type="button" class="btn btn-success me-5" onclick="saveSensor(2)">수정</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="managementId" id="m_id2" readonly>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">분류</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="classification" id="m_class2" readonly>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="naming" id="naming2" readonly>
+                        </div>
+                    </div>
+                    <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success me-5" onclick="saveSensor(2)">수정</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
+</div>
 
+
+<!-- 배출허용 기준 추가 -->
+<div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">센서 추가</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-evenly">
+                <form id="addStandard" method="post" autocomplete="off">
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="text-danger" style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">코드</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="code">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="sensorName">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">연간배출 허용기준</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="standard">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">배출허용 기준농도</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="percent">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">산출식(참고용)</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="formula">
+                        </div>
+                    </div>
+                    <input type="hidden" name="hiddenCode"> <!-- 추가 수정 판별할 데이터 -->
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success me-5" onclick="insert()">추가</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
     $(function () {
         getSensor();
+        getPlace();
     });
+
+    function getPlace() {
+        $.ajax({
+            url: 'getPlaceList',
+            type: 'POST',
+            async: false,
+            cache: false,
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+                    innerHTML = '<option value="'+data[i].name+'">'+data[i].name+'</option>';
+                    $('#place').append(innerHTML);
+                    $('#place2').append(innerHTML);
+                }
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
 
     //데이터 가져와서 그리기
     function getSensor() {
@@ -225,7 +305,7 @@
                     } else {
                         status = '<i class="fas fa-circle ms-4 text-success"></i>'
                     }
-                    const row = tbody.insertRow( tbody.rows.length );
+                    const row = tbody.insertRow(tbody.rows.length);
                     const cell1 = row.insertCell(0);
                     const cell2 = row.insertCell(1);
                     const cell3 = row.insertCell(2);
@@ -243,8 +323,8 @@
                     cell7.innerHTML = status;
                     cell8.innerHTML = '<i type="button" class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editSetting(this)"></i>' +
                         '<i type="button" class="fas fa-times" onclick="deleteModal(this)"></i>';
-                       /* '<i class="btn fas fa-edit me-2" ata-bs-toggle="modal" data-bs-target="#exampleModal"></i>' +
-                        '<i class="fas fa-times" data-toggle="modal" data-target="#deleteSensor"></i>';*/
+                    /* '<i class="btn fas fa-edit me-2" ata-bs-toggle="modal" data-bs-target="#exampleModal"></i>' +
+                     '<i class="fas fa-times" data-toggle="modal" data-target="#deleteSensor"></i>';*/
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
@@ -253,7 +333,7 @@
         });
 
         $('#sensorTable').dataTable({
-            lengthChange : false,
+            lengthChange: false,
             pageLength: 10,
             info: false,
             language: {
@@ -274,7 +354,7 @@
         });
     }
 
-    function editSetting(obj){
+    function editSetting(obj) {
         var sensor = $(obj).parent().parent().children();
 
         $("#tableName2").val(sensor.eq(3).html());             // -> tmsWP0001_NOX_01
@@ -284,8 +364,8 @@
         changeTableName(2);   // -> null= 추가 , 2 = 수정
     }
 
-    function deleteModal(obj){
-     let managementId = $(obj).parent().parent().children().eq(2).html(); //-> NOX_01
+    function deleteModal(obj) {
+        let tableName = $(obj).parent().parent().children().eq(3).html(); //-> tmsWP0001_NOX_01
         Swal.fire({
             icon: 'error',
             title: '삭제',
@@ -298,37 +378,52 @@
             if (result.isConfirmed) {
                 deleteSensor(tableName);
             }
-                 });
+        });
     }
 
-    function  deleteSensor(tableName){
-            $.ajax({
-                url: 'deleteSensor',
-                type: 'POST',
-                async: false,
-                cache: false,
-                data:  { tableName : tableName },
-                success: function (data) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '삭제 완료',
-                        text: '삭제 되었습니다..',
-                        timer: 1500
-                    })
-                    setTimeout(function() {
-                        location.reload();
-                    }, 2000);
-                },
-                error: function (request, status, error) {
-                    console.log(error)
-                }
-            });
-        }
+    function deleteSensor(tableName) {
+        $.ajax({
+            url: 'deleteSensor',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {tableName: tableName},
+            success: function (data) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '삭제 완료',
+                    text: '삭제 되었습니다..',
+                    timer: 1500
+                })
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
 
 
     //데이터 저장 후 페이지 새로고침
     function saveSensor(idx) {
-        if ($('#tableName'+idx).val() == '선택') {
+        if ($('#naming' + idx).val() == '') {
+
+            $('#label').html(' <span class="text-danger" style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>')
+
+
+
+
+
+
+
+            $('#editModal').modal('show');
+
+
+            return;
+        }
+        if ($('#tableName' + idx).val() == '선택') {
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -336,7 +431,7 @@
             })
             return;
         }
-        if ($('#place'+idx).val() == '선택') {
+        if ($('#place' + idx).val() == '선택') {
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -344,22 +439,15 @@
             })
             return;
         }
-        if ($('#naming'+idx).val() == '') {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                html: ' <b>[환경설정 - 배출량 관리]</b> 연간 배출 허용 기준 설정에서<br>  분류코드와 항목명을 입력해주세요.'
-            })
-            return;
-        }
 
-        let form="";
-        let str="";
 
-        if(idx==2){
+        let form = "";
+        let str = "";
+
+        if (idx == 2) {
             form = $('#editForm').serialize();
             str = '수정';
-        }else{
+        } else {
             form = $('#saveForm').serialize();
             str = '추가';
             $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
@@ -375,11 +463,11 @@
                 $('#editModal').modal('hide');
                 Swal.fire({
                     icon: 'success',
-                    title: '센서 '+str,
-                    text: '관리 항목에 센서가 '+str+' 되었습니다.',
+                    title: '센서 ' + str,
+                    text: '관리 항목에 센서가 ' + str + ' 되었습니다.',
                     timer: 1500
                 })
-                setTimeout(function() {
+                setTimeout(function () {
                     location.reload();
                 }, 2000);
                 /*
@@ -396,36 +484,36 @@
     }
 
     function changeTableName(idx) {
-        const tableName = $("#tableName"+idx).val();
+        const tableName = $("#tableName" + idx).val();
         if (tableName == "선택") {
-            $('#m_id'+idx).val("");
-            $('#m_class'+idx).val("");
-            $('#naming'+idx).val("");
-            $('#place'+idx+' option:eq(0)').attr('selected','selected');
+            $('#m_id' + idx).val("");
+            $('#m_class' + idx).val("");
+            $('#naming' + idx).val("");
+            $('#place' + idx + ' option:eq(0)').attr('selected', 'selected');
         } else {
             const str = tableName.split('_');
             const id = str[1] + '_' + str[2];
-            $('#m_id'+idx).val(id);
-            $('#m_class'+idx).val(str[1]);
-            $('#naming'+idx).val(findNaming(tableName));
+            $('#m_id' + idx).val(id);
+            $('#m_class' + idx).val(str[1]);
+            $('#naming' + idx).val(findNaming(tableName));
         }
     }
 
-    function findNaming(tableName){
-        let result="";
+    function findNaming(tableName) {
+        let result = "";
         $.ajax({
             url: '/getNaming',
             type: 'POST',
             dataType: 'json',
             async: false,
             cache: false,
-            success : function(data) {
-                for (i = 0 ; i<data.length; i++){
-                    if(tableName.includes(data[i].sensorCode))
-                        result =  data[i].sensorNaming;
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+                    if (tableName.includes(data[i].sensorCode))
+                        result = data[i].sensorNaming;
                 }
             },
-            error : function(request, status, error) {
+            error: function (request, status, error) {
                 console.log(error)
             }
         })

@@ -177,8 +177,8 @@
                     <c:forEach items="${sensorlist}" var="emissions">
                         <c:if test="${emissions.place eq placelist}">
                             <c:forEach items="${standard}" var="standard">
-                                <c:if test="${standard.sensorNaming eq emissions.sensorNaming}">
-                                    <c:set var="percent" value="${(emissions.yearlyValue*100)/(standard.yearlyStandard)}"/>
+                                <c:if test="${standard.itemName eq emissions.sensorNaming}">
+                                    <c:set var="percent" value="${(emissions.yearlyValue*100)/(standard.emissionsStandard)}"/>
                                     <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
                                     <div class="row pe-3  margin-l">
                                         <div class="fw-bold" style="margin-bottom: 2px;">
@@ -213,7 +213,7 @@
                                     </div>
                                     <div class="standard">
                                         <fmt:formatNumber
-                                                value="${standard.yearlyStandard}" groupingUsed="true"/>
+                                                value="${standard.emissionsStandard}" groupingUsed="true"/>
                                     </div>
                                 </c:if>
                             </c:forEach>
