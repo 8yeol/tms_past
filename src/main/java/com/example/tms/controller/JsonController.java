@@ -231,13 +231,13 @@ public class JsonController {
 
     /**
      * @param sensor            - 센서명
-     * @param minute            분- (60 - 1hour, 1440 - 24hour, ...)
+     * @param hour            시간
      * @return - 해당 센서의 파라미터로 부터 받은 값에 따라 조건(날짜 및 시간)의 측정 값
      */
     @RequestMapping(value = "/getSensor")
     public List<Sensor> getSensor(@RequestParam("sensor") String sensor,
-                                  @RequestParam("minute") String minute) {
-        return sensorCustomRepository.getSenor(sensor, minute);
+                                  @RequestParam("hour") String hour) {
+        return sensorCustomRepository.getSenor(sensor, hour);
     }
 
     //김규아 수정
