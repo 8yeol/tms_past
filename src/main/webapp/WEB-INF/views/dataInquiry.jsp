@@ -495,6 +495,14 @@
         search(1);
     }
 
+    function reset(){
+        addChart([], [], [], 1);
+        $('#information').DataTable().clear();
+        $('#information').DataTable().destroy();
+        const innerHtml = "<tr><td colspan='5'> 저장된 센서 데이터가 없습니다. </td></tr>";
+        $('#information > tbody').append(innerHtml);
+    }
+
     function search(flag){
         const date_start =  $('#date_start').val();
         const date_end = $('#date_end').val();
@@ -507,14 +515,7 @@
                 title: '경고',
                 text: '해당 측정소에 등록된 센서가 없습니다.'
             })
-
-            addChart([], [], [], 1);
-
-            $('#information').DataTable().clear();
-            $('#information').DataTable().destroy();
-            const innerHtml = "<tr><td colspan='5'> 저장된 센서 데이터가 없습니다. </td></tr>";
-            $('#information > tbody').append(innerHtml);
-
+            reset();
             return false;
         }
 
@@ -546,8 +547,9 @@
                     Swal.fire({
                         icon: 'warning',
                         title: '경고',
-                        text: '검색 결과가 없습니다.'
+                        text: '해당 기간 내의 검색 결과가 없습니다.'
                     })
+                    reset();
                     return false;
                 }else{
                     const reference = getReferenceValue(item);
