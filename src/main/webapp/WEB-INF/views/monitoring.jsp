@@ -478,30 +478,37 @@
     function draw_place_table(data, index) {
         $('#sensor-table-' + index).empty();
         const tbody = document.getElementById('sensor-table-' + index);
+        if(data.length == 0){
+            const newRow = tbody.insertRow(tbody.rows);
+            const newCeil0 = newRow.insertCell();
+            newCeil0.innerHTML = '<div>'+'noData'+'</div>';
+            newCeil0.colSpan = 5;
+            $("#update-" + index).text("-");
+        }else{
+            for (let i = 0; i < data.length; i++) {
+                const newRow = tbody.insertRow(tbody.rows.length);
+                const newCeil0 = newRow.insertCell(0);
+                const newCeil1 = newRow.insertCell(1);
+                const newCeil2 = newRow.insertCell(2);
+                const newCeil3 = newRow.insertCell(3);
+                const newCeil4 = newRow.insertCell(4);
+                newCeil0.innerHTML = data[i].naming;
+                newCeil1.innerHTML = '<div class="bg-danger text-light">'+data[i].legalStandard+'</div>';
+                newCeil2.innerHTML = '<div class="bg-warning text-light">'+data[i].companyStandard+'</div>';
+                newCeil3.innerHTML = '<div class="bg-success text-light">'+data[i].managementStandard+'</div>';
 
-        for (let i = 0; i < data.length; i++) {
-            const newRow = tbody.insertRow(tbody.rows.length);
-            const newCeil0 = newRow.insertCell(0);
-            const newCeil1 = newRow.insertCell(1);
-            const newCeil2 = newRow.insertCell(2);
-            const newCeil3 = newRow.insertCell(3);
-            const newCeil4 = newRow.insertCell(4);
-            newCeil0.innerHTML = data[i].naming;
-            newCeil1.innerHTML = '<div class="bg-danger text-light">'+data[i].legalStandard+'</div>';
-            newCeil2.innerHTML = '<div class="bg-warning text-light">'+data[i].companyStandard+'</div>';
-            newCeil3.innerHTML = '<div class="bg-success text-light">'+data[i].managementStandard+'</div>';
+                if(data[i].value > data[i].legalStandard){
+                    newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
+                } else if( data[i].value > data[i].companyStandard){
+                    newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
+                } else if( data[i].value > data[i].managementStandard){
+                    newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
+                } else{
+                    newCeil4.innerHTML = draw_beforeDate(data[i].beforeValue, data[i].value);
+                }
 
-            if(data[i].value > data[i].legalStandard){
-                newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
-            } else if( data[i].value > data[i].companyStandard){
-                newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
-            } else if( data[i].value > data[i].managementStandard){
-                newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
-            } else{
-                newCeil4.innerHTML = draw_beforeDate(data[i].beforeValue, data[i].value);
+                $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
             }
-
-            $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
         }
     }
 
