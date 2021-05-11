@@ -501,6 +501,23 @@
         const item = $('input[name="item"]:checked').val();
         const off = $('#off').is(":checked"); // false : 선택안됨(표시X) , true : 선택(표시)
 
+        if(item==undefined){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '해당 측정소에 등록된 센서가 없습니다.'
+            })
+
+            addChart([], [], [], 1);
+
+            $('#information').DataTable().clear();
+            $('#information').DataTable().destroy();
+            const innerHtml = "<tr><td colspan='5'> 저장된 센서 데이터가 없습니다. </td></tr>";
+            $('#information > tbody').append(innerHtml);
+
+            return false;
+        }
+
         const place = $("#place").val();
         const category = findSensorCategory(item);
         $('#title').text(place + " - " + category);

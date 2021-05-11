@@ -61,6 +61,7 @@
                         <option value="tmsWP0001_O2b_01">tmsWP0001_O2b_01</option>
                         <option value="tmsWP0001_O2b_02">tmsWP0001_O2b_02</option>
                         <option value="tmsWP0001_O2b_03">tmsWP0001_O2b_03</option>
+                        <option value="test">test</option>
                     </select>
                     <label class="me-3 col-xs-3 w-10 label">측정소</label>
                     <select name="place" id="place" class="btn btn-outline-dark">
@@ -81,18 +82,23 @@
                             <div class="col">
                                 <label class="me-3 col-xs-3 label">관리 ID</label>
                                 <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="managementId"
-                                       id="m_id">
+                                       id="m_id" readonly>
                             </div>
                             <div class="col">
                                 <label class="me-3 col-xs-3 w-10 label">분류</label>
                                 <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="classification"
-                                       id="m_class">
+                                       id="m_class" readonly>
                             </div>
                             <div class="col">
                                 <label class="me-3 col-xs-3 w-10 label">항목명</label>
                                 <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming"
-                                       id="naming">
+                                       id="naming" readonly>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <smal> * 테이블 선택 후 항목명이 비어있는 경우 [환경설정 - 배출량 관리] 페이지의 연간 배출 허용 기준 설정에서 분류코드와 항목명을 입력해주세요. </smal>
                         </div>
                     </div>
                 </div>
@@ -318,12 +324,15 @@
                 cache: false,
                 data:  { managementId : managementId },
                 success: function (data) {
-                    Swal.fire(
-                        '삭제 완료',
-                        '삭제 되었습니다.',
-                        'warning'
-                    );
-                    location.reload();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '삭제 완료',
+                        text: '삭제 되었습니다..',
+                        timer: 1500
+                    })
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
                 },
                 error: function (request, status, error) {
                     console.log(error)
@@ -346,7 +355,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
-                text: '측정소명을 선택 해주세요.'
+                text: '측정소를 선택 해주세요.'
             })
             return;
         }
