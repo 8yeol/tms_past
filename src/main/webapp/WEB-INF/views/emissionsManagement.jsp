@@ -108,7 +108,7 @@
     <div class="row">
         <div class="row1">
             <span>연간 배출 허용 기준 설정</span>
-            <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="inputClean()"
+            <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="insertSetting()"
                     style="background-color:green;color:white"> 추가
             </button>
         </div>
@@ -138,7 +138,7 @@
                         <td>${standard.percent}</td>
                         <td>${standard.formula}</td>
                         <td>
-                            <i onclick="editModalSetting(this)" class="fas fa-edit me-2"  data-bs-toggle="modal" data-bs-target="#addModal"></i>
+                            <i onclick="editSetting(this)" class="fas fa-edit me-2"  data-bs-toggle="modal" data-bs-target="#addModal"></i>
                             <i class="fas fa-times" onclick="deleteModal(this)"></i>
                         </td>
                     </tr>
@@ -350,14 +350,22 @@
         standardAjax(form,"수정");
     }
 
+    function insertSetting(){
+        $('.modal-title').html('센서 추가');
+        $('.btn-success').html('추가');
+        $('.btn-success').removeAttr("onclick");
+        $('.btn-success').attr("onclick", "insert()");
+        inputClean();
+    }
+
     //editModal 선택값 셋팅
-    function editModalSetting(obj) {
+    function editSetting(obj) {
         $('.modal-title').html('센서 수정');
         $('.btn-success').html('수정');
         $('.btn-success').removeAttr("onclick");
         $('.btn-success').attr("onclick", "editStandard()");
 
-        var tdList = $(obj).parent().parent().children()
+        var tdList = $(obj).parent().parent().children();
 
         $("input[name='code']").val(tdList.eq(0).html());
         $("input[name='hiddenCode']").val(tdList.eq(0).html());
@@ -445,7 +453,7 @@
                 " <td>" + data[i].percent + "</td>" +
                 " <td>" + data[i].formula + "</td>" +
                 " <td>" +
-                "<i class='fas fa-edit me-2'  data-bs-toggle='modal' data-bs-target='#addModal' onclick='editModalSetting(this)'></i>" +
+                "<i class='fas fa-edit me-2'  data-bs-toggle='modal' data-bs-target='#addModal' onclick='editSetting(this)'></i>" +
                 "<i class='fas fa-times' onclick='deleteModal(this)'></i>" +
                 "</td>" +
                 "</tr>";
@@ -455,9 +463,8 @@
 
     //Modal 초기화
     function inputClean() {
-        $('.modal-title').html('센서 추가');
-        $('.btn-success').html('추가');
         $("input[type=text]").val("");
+        $("input[type=hidden]").val("");
     }
 
 

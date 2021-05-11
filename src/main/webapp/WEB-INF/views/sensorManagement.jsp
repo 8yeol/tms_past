@@ -157,6 +157,7 @@
                                     <option value="tmsWP0001_O2b_01">tmsWP0001_O2b_01</option>
                                     <option value="tmsWP0001_O2b_02">tmsWP0001_O2b_02</option>
                                     <option value="tmsWP0001_O2b_03">tmsWP0001_O2b_03</option>
+                                    <option value="test555">test55555</option>
                                 </select>
                             </div>
                         </div>
@@ -242,7 +243,6 @@
                     const cell6 = row.insertCell(5);
                     const cell7 = row.insertCell(6);
                     const cell8 = row.insertCell(7);
-                    cell4.setAttribute('class','target');
                     cell1.innerHTML = data[i].classification;
                     cell2.innerHTML = data[i].naming;
                     cell3.innerHTML = data[i].managementId;
@@ -290,7 +290,7 @@
         $("#place2").val(sensor.eq(5).html());                 // -> 측정소 1
         $("input[name=hiddenCode]").val(sensor.eq(2).html());  // -> NOX_01
 
-        changeTableName(2);
+        changeTableName(2);   // -> null= 추가 , 2 = 수정
     }
 
     function deleteModal(obj){
@@ -323,14 +323,13 @@
                         '삭제 되었습니다.',
                         'warning'
                     );
-                    getSensor();
+                    location.reload();
                 },
                 error: function (request, status, error) {
                     console.log(error)
                 }
             });
         }
-
 
 
     //데이터 저장 후 페이지 새로고침
@@ -361,6 +360,7 @@
         }else{
             form = $('#saveForm').serialize();
             str = '추가';
+            $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
         }
 
         $.ajax({
@@ -388,7 +388,7 @@
                 */
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
+                console.log(error);
             }
         });
     }

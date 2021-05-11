@@ -527,6 +527,7 @@ public class JsonController {
         }else{
             setting = yearlyEmissionsStandardRepository.findBySensorCode(hiddenCode);
         }
+
         setting.setSensorCode(code);
         setting.setSensorNaming(sensorName);
         setting.setYearlyStandard(standard);

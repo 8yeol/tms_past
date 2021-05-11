@@ -346,6 +346,7 @@
                     for (let i = 0; i < data.length; i++) {
                         const tableName = data[i]; //측정소에 저장된 센서명---> 이걸 reference컬렉션에서 가져와야함.
                         const value = findReference(tableName); //naming, name, legal, company, management //map이 비어있을때
+                        console.log(tableName);
                         const monitoring = findMonitor(tableName); //모니터 on/off(checked)
                         if (value.size != 0) {
                             const innerHtml =
