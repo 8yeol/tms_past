@@ -20,14 +20,14 @@ public class MainController {
     final MemberRepository memberRepository;
     final NotificationStatisticsCustomRepository notification_statistics_customRepository;
     final EmissionsSettingRepository emissionsSettingRepository;
-    final YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository;
+    final AnnualEmissionsRepository yearlyEmissionsSettingRepository;
     final RankManagementRepository rank_managementRepository;
     final YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository;
     final SensorListRepository sensorListRepository;
 
     public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository,
                           MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository,
-                          YearlyEmissionsSettingRepository yearlyEmissionsSettingRepository, RankManagementRepository rank_managementRepository, YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository, SensorListRepository sensorListRepository) {
+                          AnnualEmissionsRepository yearlyEmissionsSettingRepository, RankManagementRepository rank_managementRepository, YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository, SensorListRepository sensorListRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.memberRepository = memberRepository;
@@ -43,13 +43,13 @@ public class MainController {
     @RequestMapping("/")
     public String dashboard(Model model) {
         //선택된 센서 (findByStatusIsTrue) 가져오기
-        List<YearlyEmissionsSetting> setting = yearlyEmissionsSettingRepository.findByStatusIsTrue();
+        List<AnnualEmissions> setting = yearlyEmissionsSettingRepository.findByStatusIsTrue();
 
         model.addAttribute("sensorlist",setting);
 
         //선택된 센서 측정소 중복제거  List -> Set
         List<String> placelist = new ArrayList<>();
-        for (YearlyEmissionsSetting place : setting) {
+        for (AnnualEmissions place : setting) {
             placelist.add(place.getPlace());
         }
         TreeSet<String> placeSet = new TreeSet<>(placelist);
@@ -300,7 +300,7 @@ public class MainController {
         List<EmissionsSetting> emissions = emissionsSettingRepository.findAll();
         model.addAttribute("emissions", emissions);
 
-        List<YearlyEmissionsSetting> yearlyEmissions = yearlyEmissionsSettingRepository.findAll();
+        List<AnnualEmissions> yearlyEmissions = yearlyEmissionsSettingRepository.findAll();
         model.addAttribute("yearlyEmissions", yearlyEmissions);
 
         List<YearlyEmissionsStandardSetting> standard =  yearlyEmissionsStandardRepository.findAll();
@@ -322,7 +322,7 @@ public class MainController {
 
             //연간 배출량 설정
         } else {
-            YearlyEmissionsSetting target = yearlyEmissionsSettingRepository.findBySensor(sensor);
+            AnnualEmissions target = yearlyEmissionsSettingRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
             yearlyEmissionsSettingRepository.save(target);
         }

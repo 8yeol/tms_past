@@ -573,7 +573,8 @@ public class JsonController {
         //hidden 값이 있는지로 추가와 수정을 판별
         if(hiddenCode==""||hiddenCode==null){
             sensor = new SensorList();
-        }else{
+            //
+        } else{
             sensor = sensorListRepository.findByManagementId(hiddenCode);
         }
 

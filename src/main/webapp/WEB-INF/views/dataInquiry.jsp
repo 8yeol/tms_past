@@ -275,6 +275,8 @@
     });
 
     function addTable(reference){
+
+        $("#informationBody").empty();
         $('#information').DataTable().clear();
         $('#information').DataTable().destroy();
 
