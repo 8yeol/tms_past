@@ -283,14 +283,17 @@ public class JsonController {
      */
     public void saveNotifySetting(String item, boolean status, String from, String to) {
         Date up_time = new Date();
+        if(notification_settingsRepository.findByName(item) != null){
+            NotificationSettings notification_settings = notification_settingsRepository.findByName(item);
+            ObjectId id = notification_settings.get_id();
 
-        NotificationSettings notification_settings = notification_settingsRepository.findByName(item);
-        ObjectId id = notification_settings.get_id();
-
-        NotificationSettings changeSetting = new NotificationSettings(item, from, to, status, up_time);
-        changeSetting.set_id(id);
-
-        notification_settingsRepository.save(changeSetting);
+            NotificationSettings changeSetting = new NotificationSettings(item, from, to, status, up_time);
+            changeSetting.set_id(id);
+            notification_settingsRepository.save(changeSetting);
+        }else{
+            NotificationSettings newSetting = new NotificationSettings(item, from, to, status, up_time);
+            notification_settingsRepository.save(newSetting);
+        }
     }
 
     // 측정항목 상세설정 모니터링 on/off
@@ -301,23 +304,38 @@ public class JsonController {
 
     //측정소 상세설정 항목 추가
     @RequestMapping(value = "/saveReference")
-    public String saveReference(@RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
+    public String saveReference(@RequestParam(value = "place") String placename,@RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
         if (reference_value_settingRepository.findByName(name) == null) {
-            float legal = 0.0f;
-            float management = 0.0f;
-            float company = 0.0f;
+
+            if(placeRepository.findBySensorIsIn(name) != null){
+                //place 업데이트 시간 수정
+                Place place = placeRepository.findBySensorIsIn(name);
+                ObjectId id = place.get_id();
+
+                Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
+                updatePlace.set_id(id);
+                placeRepository.save(updatePlace);
+
+
+            }else{
+                Place placesensor = placeRepository.findByName(placename);
+                ObjectId id = placesensor.get_id();
+                List<String> sensor = placesensor.getSensor();
+                sensor.add(name);
+                Place updatePlace = new Place(placename, placesensor.getLocation(), placesensor.getAdmin(), placesensor.getTel(), placesensor.getMonitoring(), placesensor.getPower(), new Date(), sensor);
+                updatePlace.set_id(id);
+                placeRepository.save(updatePlace);
+
+            }
+            float legal = 999.0f;
+            float management = 999.0f;
+            float company = 999.0f;
             Boolean monitoring = false;
 
             //reference document 생성
             ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
             reference_value_settingRepository.save(saveReference);
-            //place 업데이트 시간 수정
-            Place place = placeRepository.findBySensorIsIn(name);
-            ObjectId id = place.get_id();
 
-            Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), place.getPower(), new Date(), place.getSensor());
-            updatePlace.set_id(id);
-            placeRepository.save(updatePlace);
             return "success";
         } else {
             return "fail";

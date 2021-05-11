@@ -20,20 +20,20 @@ public class MainController {
     final MemberRepository memberRepository;
     final NotificationStatisticsCustomRepository notification_statistics_customRepository;
     final EmissionsSettingRepository emissionsSettingRepository;
-    final AnnualEmissionsRepository yearlyEmissionsSettingRepository;
+    final Annual_EmissionsRepository annualEmissionsRepository;
     final RankManagementRepository rank_managementRepository;
     final YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository;
     final SensorListRepository sensorListRepository;
 
     public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository,
                           MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository,
-                          AnnualEmissionsRepository yearlyEmissionsSettingRepository, RankManagementRepository rank_managementRepository, YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository, SensorListRepository sensorListRepository) {
+                          Annual_EmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, YearlyEmissionsStandardRepository yearlyEmissionsStandardRepository, SensorListRepository sensorListRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.memberRepository = memberRepository;
         this.notification_statistics_customRepository = notification_statistics_customRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
-        this.yearlyEmissionsSettingRepository = yearlyEmissionsSettingRepository;
+        this.annualEmissionsRepository = annualEmissionsRepository;
         this.rank_managementRepository = rank_managementRepository;
         this.yearlyEmissionsStandardRepository = yearlyEmissionsStandardRepository;
         this.sensorListRepository = sensorListRepository;
@@ -43,7 +43,7 @@ public class MainController {
     @RequestMapping("/")
     public String dashboard(Model model) {
         //선택된 센서 (findByStatusIsTrue) 가져오기
-        List<AnnualEmissions> setting = yearlyEmissionsSettingRepository.findByStatusIsTrue();
+        List<AnnualEmissions> setting = annualEmissionsRepository.findByStatusIsTrue();
 
         model.addAttribute("sensorlist",setting);
 
@@ -54,6 +54,9 @@ public class MainController {
         }
         TreeSet<String> placeSet = new TreeSet<>(placelist);
         model.addAttribute("placelist", placeSet);
+
+        List<YearlyEmissionsStandardSetting> standard = yearlyEmissionsStandardRepository.findAll();
+        model.addAttribute("standard",standard);
 
         return "dashboard";
     }
@@ -300,7 +303,7 @@ public class MainController {
         List<EmissionsSetting> emissions = emissionsSettingRepository.findAll();
         model.addAttribute("emissions", emissions);
 
-        List<AnnualEmissions> yearlyEmissions = yearlyEmissionsSettingRepository.findAll();
+        List<AnnualEmissions> yearlyEmissions = annualEmissionsRepository.findAll();
         model.addAttribute("yearlyEmissions", yearlyEmissions);
 
         List<YearlyEmissionsStandardSetting> standard =  yearlyEmissionsStandardRepository.findAll();
@@ -322,9 +325,9 @@ public class MainController {
 
             //연간 배출량 설정
         } else {
-            AnnualEmissions target = yearlyEmissionsSettingRepository.findBySensor(sensor);
+            AnnualEmissions target = annualEmissionsRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
-            yearlyEmissionsSettingRepository.save(target);
+            annualEmissionsRepository.save(target);
         }
     }
 
