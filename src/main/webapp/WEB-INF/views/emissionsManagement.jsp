@@ -376,7 +376,11 @@
         percent = $('input[name=percent]').val();
         standard = $('input[name=standard]').val();
         if (formula == '' || percent == '' || standard == ''){
-            alert('입력값을 확인 하세요.');
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력값을 확인 해주세요.'
+            })
             return;
         }
 
