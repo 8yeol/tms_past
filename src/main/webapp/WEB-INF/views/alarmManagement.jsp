@@ -47,6 +47,10 @@
                 알림설정
             </div>
         </div>
+        <div id = "noneDiv" style="border-bottom: 2px solid #a9a9a9; margin: auto;">
+            <div class="fw-bold fs-5" style='margin: auto; text-align: center; height: 151px; padding-top: 35px;'>
+                모니터링 ON 설정된 측정소가 없습니다. <br> <b>[환경설정 > 측정소 관리]</b> 에서 측정소 모니터링을 설정해주세요.</div>
+        </div>
 
         <c:forEach var="place" items="${place}" varStatus="status">
             <div id="placeDiv${status.index}">
@@ -83,13 +87,17 @@
 
     $(document).ready(function () {
         const placeLength = ${place.size()};
+
         //저장소 DIV 반복 생성
         for (let i = 0; i < placeLength; i++) {
             const monitoring = findPlace($("#place" + i).text());
             if (monitoring == true) {
+                $("#noneDiv").empty();
+                document.getElementById("noneDiv").style="";
                 placeMake($("#place" + i).text(), i);
             } else {
                 $("#placeDiv" + i).empty();
+
             }
         }
         //각각 타임피커 셋팅
