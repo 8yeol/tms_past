@@ -26,14 +26,13 @@ public class SensorCustomRepository {
 
     /**
      * @param sensor (sensor sensor)
-     * @param from_date,to_date ('', 'Year-Month-Day hh:mm:ss', 'Year-Month-Day', 'hh:mm:ss', 'hh:mm')
      * @param minute (60 - 1hour, 1440 - 24hour, ...)
      * @return List<Sensor> </sensor>_id, value, status, up_time
      */
-    public List<Sensor> getSenor(String sensor, String from_date, String to_date, String minute){
+    public List<Sensor> getSenor(String sensor, String minute){
         /* from A to B : A 부터 B까지 */
         LocalDateTime A = null;  LocalDateTime B = null;
-        if(from_date.isEmpty() && to_date.isEmpty()){
+
             if (minute.isEmpty()){ //from, to, minute 미입력 : 24시간 전 ~ 현재
                 A = LocalDateTime.now().minusMinutes(Long.parseLong("1440"));
                 B = LocalDateTime.now();
@@ -41,30 +40,6 @@ public class SensorCustomRepository {
                 A = LocalDateTime.now().minusMinutes(Long.parseLong(minute));
                 B = LocalDateTime.now();
             }
-        }else{ // from, to 입력
-            if(!from_date.isEmpty() && !to_date.isEmpty()){ // from ~ to
-                A = format_time(from_date, false);
-                B = format_time(to_date, true);
-            }else{ // from, to 둘 중 하나만 입력
-                if(!minute.isEmpty()){ // minute 입력
-                    if(!to_date.isEmpty()){ // to 입력, from(-minute) ~ to
-                        A = format_time(to_date, false).minusMinutes(Long.parseLong(minute));
-                        B = format_time(to_date, true);
-                    }else if(!from_date.isEmpty()){ //from 입력, from ~ to(+minute)
-                        A = format_time(from_date, false);
-                        B = format_time(from_date, true).plusMinutes(Long.parseLong(minute));
-                    }
-                }else{ // minute 미입력
-                    if(!to_date.isEmpty()){ // 하루전 ~ 현재
-                        A = format_time(to_date, false).minusDays(1);
-                        B = format_time(to_date, true);
-                    }else if(!from_date.isEmpty()){ // from ~ 현재
-                        A = format_time(from_date, false);
-                        B = LocalDateTime.now();
-                    }
-                }
-            }
-        }
 
         try {
             if(A.isBefore(B)){

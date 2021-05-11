@@ -656,7 +656,6 @@
             chart = new ApexCharts(document.querySelector("#chart-line2"), options);
             chart.render();
 
-            // 여기 문제
             optionsLine = {
                 series: [{
                     data : data
