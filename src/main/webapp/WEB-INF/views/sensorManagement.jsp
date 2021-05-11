@@ -49,19 +49,19 @@
                     <label class="me-3 col-xs-3 w-10 label">테이블명</label>
                     <%-- mongoCollection 불러와서 tms~~~형식(센서)으로 된 테이블 명 뿌려주기 --%>
                     <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName('')">
-                        <%--
-                        <c:forEach var="table" items="${tableList}" varStatus="status">
-                            <option value="${table}">${place}</option>
-                        </c:forEach>
-                        --%>
-                        <option>선택</option>
-                        <option value="tmsWP0001_NOX_01">tmsWP0001_NOX_01</option>
-                        <option value="tmsWP0001_NOX_02">tmsWP0001_NOX_02</option>
-                        <option value="tmsWP0001_NOX_03">tmsWP0001_NOX_03</option>
-                        <option value="tmsWP0001_O2b_01">tmsWP0001_O2b_01</option>
-                        <option value="tmsWP0001_O2b_02">tmsWP0001_O2b_02</option>
-                        <option value="tmsWP0001_O2b_03">tmsWP0001_O2b_03</option>
-                        <option value="test">test</option>
+                            <%--
+                            <c:forEach var="table" items="${tableList}" varStatus="status">
+                                <option value="${table}">${place}</option>
+                            </c:forEach>
+                            --%>
+                            <option>선택</option>
+                            <option value="tmsWP0001_NOX_01">tmsWP0001_NOX_01</option>
+                            <option value="tmsWP0001_NOX_02">tmsWP0001_NOX_02</option>
+                            <option value="tmsWP0001_NOX_03">tmsWP0001_NOX_03</option>
+                            <option value="tmsWP0001_O2b_01">tmsWP0001_O2b_01</option>
+                            <option value="tmsWP0001_O2b_02">tmsWP0001_O2b_02</option>
+                            <option value="tmsWP0001_O2b_03">tmsWP0001_O2b_03</option>
+                            <option value="test_test_test5555">test_test_test5555</option>
                     </select>
                     <label class="me-3 col-xs-3 w-10 label">측정소</label>
                     <select name="place" id="place" class="btn btn-outline-dark">
@@ -131,7 +131,7 @@
     </div>
 </div>
 
-    <!-- addModal -->
+    <!-- editModal -->
     <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -150,20 +150,7 @@
                                 <span class="fs-5 fw-bold add-margin f-sizing">테이블명</span>
                             </div>
                             <div class="col" >
-                                <select name="tableName" id="tableName2" class="btn btn-outline-dark" onchange="changeTableName(2)"style="width: 223px;">
-                                    <%--
-                                    <c:forEach var="table" items="${tableList}" varStatus="status">
-                                        <option value="${table}">${place}</option>
-                                    </c:forEach>
-                                    --%>
-                                    <option>선택</option>
-                                    <option value="tmsWP0001_NOX_01">tmsWP0001_NOX_01</option>
-                                    <option value="tmsWP0001_NOX_02">tmsWP0001_NOX_02</option>
-                                    <option value="tmsWP0001_NOX_03">tmsWP0001_NOX_03</option>
-                                    <option value="tmsWP0001_O2b_01">tmsWP0001_O2b_01</option>
-                                    <option value="tmsWP0001_O2b_02">tmsWP0001_O2b_02</option>
-                                    <option value="tmsWP0001_O2b_03">tmsWP0001_O2b_03</option>
-                                </select>
+                                <input type="text" class="text-secondary" name="tableName" id="tableName2" readonly>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -172,7 +159,6 @@
                             </div>
                             <div class="col">
                                 <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;">
-                                    <option>선택</option>
                                     <c:forEach var="place" items="${place}" varStatus="status">
                                         <option value="${place}">${place}</option>
                                     </c:forEach>
@@ -184,7 +170,7 @@
                                 <span class="fs-5 fw-bold add-margin f-sizing">관리 ID</span>
                             </div>
                             <div class="col">
-                                <input type="text" class="text-secondary" name="managementId" id="m_id2">
+                                <input type="text" class="text-secondary" name="managementId" id="m_id2" readonly>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -192,7 +178,7 @@
                                 <span class="fs-5 fw-bold add-margin f-sizing">분류</span>
                             </div>
                             <div class="col">
-                                <input type="text" class="text-secondary" name="classification" id="m_class2">
+                                <input type="text" class="text-secondary" name="classification" id="m_class2" readonly>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -200,7 +186,7 @@
                                 <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
                             </div>
                             <div class="col">
-                                <input type="text" class="text-secondary" name="naming" id="naming2">
+                                <input type="text" class="text-secondary" name="naming" id="naming2" readonly>
                             </div>
                         </div>
                         <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
@@ -293,7 +279,7 @@
 
         $("#tableName2").val(sensor.eq(3).html());             // -> tmsWP0001_NOX_01
         $("#place2").val(sensor.eq(5).html());                 // -> 측정소 1
-        $("input[name=hiddenCode]").val(sensor.eq(2).html());  // -> NOX_01
+        $("input[name=hiddenCode]").val(sensor.eq(3).html());  // -> tmsWP0001_NOX_01
 
         changeTableName(2);   // -> null= 추가 , 2 = 수정
     }
@@ -310,18 +296,18 @@
             cancelButtonText: '취소'
         }).then((result) => {
             if (result.isConfirmed) {
-                deleteSensor(managementId);
+                deleteSensor(tableName);
             }
                  });
     }
 
-    function  deleteSensor(managementId){
+    function  deleteSensor(tableName){
             $.ajax({
                 url: 'deleteSensor',
                 type: 'POST',
                 async: false,
                 cache: false,
-                data:  { managementId : managementId },
+                data:  { tableName : tableName },
                 success: function (data) {
                     Swal.fire({
                         icon: 'warning',
@@ -355,6 +341,14 @@
                 icon: 'warning',
                 title: '경고',
                 text: '측정소를 선택 해주세요.'
+            })
+            return;
+        }
+        if ($('#naming'+idx).val() == '') {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                html: ' <b>[환경설정 - 배출량 관리]</b> 연간 배출 허용 기준 설정에서<br>  분류코드와 항목명을 입력해주세요.'
             })
             return;
         }
@@ -413,10 +407,30 @@
             const id = str[1] + '_' + str[2];
             $('#m_id'+idx).val(id);
             $('#m_class'+idx).val(str[1]);
-            $('#naming'+idx).val(findSensorCategory(tableName));
+            $('#naming'+idx).val(findNaming(tableName));
         }
     }
 
+    function findNaming(tableName){
+        let result="";
+        $.ajax({
+            url: '/getNaming',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            success : function(data) {
+                for (i = 0 ; i<data.length; i++){
+                    if(tableName.includes(data[i].sensorCode))
+                        result =  data[i].sensorNaming;
+                }
+            },
+            error : function(request, status, error) {
+                console.log(error)
+            }
+        })
+        return result;
+    }
 </script>
 
 

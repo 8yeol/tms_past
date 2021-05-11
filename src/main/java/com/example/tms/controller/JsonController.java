@@ -575,7 +575,7 @@ public class JsonController {
             sensor = new SensorList();
             //
         } else{
-            sensor = sensorListRepository.findByManagementId(hiddenCode);
+            sensor = sensorListRepository.findByTableName(tableName,"");
         }
 
         sensor.setClassification(classification);
@@ -591,9 +591,9 @@ public class JsonController {
 
     //센서관리 삭제
     @RequestMapping(value = "/deleteSensor")
-    public void deleteSensor(String managementId) {
+    public void deleteSensor(String tableName) {
 
-       SensorList sensor = sensorListRepository.findByManagementId(managementId);
+       SensorList sensor = sensorListRepository.findByTableName(tableName,"");
        sensorListRepository.delete(sensor);
 
     }
@@ -603,4 +603,10 @@ public class JsonController {
 
         return monthlyEmissionsRepository.findBySensorAndYear(sensor, year);
     }
+
+    @RequestMapping(value = "/getNaming")
+    public List getNaming() {
+        return yearlyEmissionsStandardRepository.findAll();
+    }
+
 }
