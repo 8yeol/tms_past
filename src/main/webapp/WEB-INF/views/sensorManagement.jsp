@@ -479,8 +479,6 @@
         });
     }
 
-
-
     function changeTableName(idx) {
         const tableName = $("#tableName" + idx).val();
         if (tableName == "선택") {
