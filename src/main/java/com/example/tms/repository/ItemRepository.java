@@ -7,5 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 
 public interface ItemRepository extends MongoRepository<Item, ObjectId> {
-    Item findBySensorCode(String sensorCode);
+    Item findByItem(String Item);
 }

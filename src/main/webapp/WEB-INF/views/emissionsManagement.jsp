@@ -132,10 +132,10 @@
                 <tbody id="tbody">
                 <c:forEach items="${standard}" var="standard" varStatus="i">
                     <tr>
-                        <td>${standard.sensorCode}</td>
-                        <td>${standard.sensorNaming}</td>
-                        <td><fmt:formatNumber value="${standard.yearlyStandard}" groupingUsed="true"/></td>
-                        <td>${standard.percent}</td>
+                        <td>${standard.item}</td>
+                        <td>${standard.itemName}</td>
+                        <td><fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/></td>
+                        <td>${standard.densityStandard}</td>
                         <td>${standard.formula}</td>
                         <td>
                             <i onclick="editSetting(this)" class="fas fa-edit me-2"  data-bs-toggle="modal" data-bs-target="#addModal"></i>

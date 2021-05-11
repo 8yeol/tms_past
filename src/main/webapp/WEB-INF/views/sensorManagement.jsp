@@ -196,6 +196,71 @@
 </div>
 
 
+<!-- 배출허용 기준 추가 -->
+<div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">센서 추가</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-evenly">
+                <form id="addStandard" method="post" autocomplete="off">
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="text-danger" style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">코드</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="code">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="sensorName">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">연간배출 허용기준</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="standard">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">배출허용 기준농도</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="percent">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">산출식(참고용)</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" class="text-secondary" name="formula">
+                        </div>
+                    </div>
+                    <input type="hidden" name="hiddenCode"> <!-- 추가 수정 판별할 데이터 -->
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success me-5" onclick="insert()">추가</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
     $(function () {

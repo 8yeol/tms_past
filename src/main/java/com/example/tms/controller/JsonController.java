@@ -543,7 +543,7 @@ public class JsonController {
         if(hiddenCode==""||hiddenCode==null){
             setting = new Item();
         }else{
-            setting = itemRepository.findBySensorCode(hiddenCode);
+            setting = itemRepository.findByItem(hiddenCode);
         }
 
         setting.setItem(code);
@@ -562,7 +562,7 @@ public class JsonController {
 
         Item setting;
 
-        setting = itemRepository.findBySensorCode(code);
+        setting = itemRepository.findByItem(code);
 
         itemRepository.delete(setting);
 
