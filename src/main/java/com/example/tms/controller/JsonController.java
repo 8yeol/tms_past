@@ -35,13 +35,16 @@ public class JsonController {
     final NotificationStatisticsCustomRepository notificationStatisticsCustomRepository;
     final NotificationDayStatisticsRepository notificationDayStatisticsRepository;
     final NotificationMonthStatisticsRepository notificationMonthStatisticsRepository;
+    final AnnualEmissionsRepository annualEmissionsRepository;
+    final EmissionsSettingRepository emissionsSettingRepository;
     final MongoTemplate mongoTemplate;
+
 
     final DataInquiryRepository dataInquiryCustomRepository;
 
     final MonthlyEmissionsRepository monthlyEmissionsRepository;
 
-    public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, ItemRepository itemRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository) {
+    public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, ItemRepository itemRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository,AnnualEmissionsRepository annualEmissionsRepository,EmissionsSettingRepository emissionsSettingRepository) {
         this.placeRepository = placeRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
@@ -57,6 +60,8 @@ public class JsonController {
         this.mongoTemplate = mongoTemplate;
         this.dataInquiryCustomRepository = dataInquiryCustomRepository;
         this.monthlyEmissionsRepository = monthlyEmissionsRepository;
+        this.annualEmissionsRepository = annualEmissionsRepository;
+        this.emissionsSettingRepository = emissionsSettingRepository;
     }
 
 
@@ -658,6 +663,22 @@ public class JsonController {
         sensor.setStatus(true);
 
         sensorListRepository.save(sensor);
+
+        //연간 배출량 누적 모니터랑 대상 && 배출량 추이 모니터링 대상   설정에도 추가합니다.
+        AnnualEmissions aEmissions = new AnnualEmissions();
+        aEmissions.setSensor(tableName);
+        aEmissions.setPlace(place);
+        aEmissions.setStatus(false);
+        aEmissions.setSensorNaming(naming);
+        aEmissions.setYearlyValue(7000000);
+        annualEmissionsRepository.save(aEmissions);
+
+        EmissionsSetting emissions = new EmissionsSetting();
+        emissions.setSensor(tableName);
+        emissions.setPlace(place);
+        emissions.setStatus(false);
+        emissions.setSensorNaming(naming);
+        emissionsSettingRepository.save(emissions);
     }
 
     //센서관리 삭제

@@ -172,7 +172,7 @@
 
         <div class="row pb-5 px-3 margin-l" style="margin-top: 20px;">
             <c:forEach items="${placelist}" var="placelist" varStatus="i">
-                <div class="col">
+                <div class="col-md-4">
                     <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
                     <c:forEach items="${sensorlist}" var="emissions">
                         <c:if test="${emissions.place eq placelist}">
@@ -220,8 +220,10 @@
                         </c:if>
                     </c:forEach>
                 </div>
-                <div class="line"
+               <!-- <div class="line"
                      style="width: 1px; height: 70%; background-color: #a9a9a9; padding:0;position: relative; top: 60px;"></div>
+                측정소가 많아져서 col-md-4을 주니 라인이 레이아웃을 망가뜨립니다. -->
+
             </c:forEach>
 
             <c:if test="${empty placelist}">
