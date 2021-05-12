@@ -176,7 +176,7 @@
 
         <div class="row pb-5 px-3 margin-l" style="margin-top: 20px;">
             <c:forEach items="${placelist}" var="placelist" varStatus="i">
-                <div class="col-md-4">
+                <div class="col-md-4 pb-5 pt-1">
                     <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
                     <c:forEach items="${sensorlist}" var="emissions">
                         <c:if test="${emissions.place eq placelist}">
