@@ -538,10 +538,6 @@
     }
 
 
-
-
-
-
     //측정소 전체 (상단 일반 테이블)
     function draw_place_table(data){
         try{
@@ -656,7 +652,7 @@
         const monitor = getMonitoring(sensor); //power on,off
         let sensorValue, sensorUptime, beforeValue;
         // monitor=='true' 체크
-        if(monitor){
+        if(monitor === 'true'){
             // 최근 데이터
             const recentData = getSensorRecent(sensor);
             if(recentData.value == 0 || recentData.value == null){

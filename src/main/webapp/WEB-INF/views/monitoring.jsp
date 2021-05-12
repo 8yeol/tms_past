@@ -314,7 +314,7 @@
             success: function (data) {
                 $.each(data, function (index, item) { //item (센서명) : 센서의 최근데이터, 이전 데이터, 정보들을 구함
                     var monitoring = getMonitoring(item); //모니터링 On
-                    if(monitoring || monitoring == 'true'){
+                    if(monitoring === 'true'){
                         /* 센서의 최근 데이터 */
                         var recentData = getSensorRecent(item);
                         if(recentData.value == 0 || recentData.value == null){ //null 일때
