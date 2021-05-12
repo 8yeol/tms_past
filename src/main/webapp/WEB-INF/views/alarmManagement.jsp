@@ -230,7 +230,9 @@
                 map.set("to", data.end);
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
+                map.set("from", "00:00");
+                map.set("to", "23:55");
+                console.log(error);
             }
         })
         return map;
