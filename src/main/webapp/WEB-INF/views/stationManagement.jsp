@@ -24,8 +24,7 @@
 
 <style>
     .MultiSelecterModal {
-        width: 450px;
-        height: 55px;
+        width: auto;
         border-radius: 10px;
         background-color: #0d6efd;
         position: absolute;
@@ -37,6 +36,7 @@
         font-weight: bold;
         display: none;
         line-height: 55px;
+        padding: 10px;
     }
 
     #placeDiv > div.active {

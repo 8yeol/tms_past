@@ -47,9 +47,10 @@
                 알림설정
             </div>
         </div>
-        <div id = "noneDiv" style="border-bottom: 2px solid #a9a9a9; margin: auto;">
+        <div id="noneDiv" style="border-bottom: 2px solid #a9a9a9; margin: auto;">
             <div class="fw-bold fs-5" style='margin: auto; text-align: center; height: 151px; padding-top: 35px;'>
-                모니터링 ON 설정된 측정소가 없습니다. <br> <b>[환경설정 > 측정소 관리]</b> 에서 측정소 모니터링을 설정해주세요.</div>
+                모니터링 ON 설정된 측정소가 없습니다. <br> <b>[환경설정 > 측정소 관리]</b> 에서 측정소 모니터링을 설정해주세요.
+            </div>
         </div>
 
         <c:forEach var="place" items="${place}" varStatus="status">
@@ -93,7 +94,7 @@
             const monitoring = findPlace($("#place" + i).text());
             if (monitoring == true) {
                 $("#noneDiv").empty();
-                document.getElementById("noneDiv").style="";
+                document.getElementById("noneDiv").style = "";
                 placeMake($("#place" + i).text(), i);
             } else {
                 $("#placeDiv" + i).empty();
@@ -247,28 +248,26 @@
                 text: '알림시간을 입력해주세요.'
             })
             return false;
+        } else {
+            //저장할때 시간 검사
+            if (start >= end) {
+                swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: 'From 시간 보다 적거나 같은 시간을 입력하실 수 없습니다.'
+                })
+                return;
+            }
+            //시간과 분을 정확히 입력했는지 검사
+            if (start.length != 5 || end.length != 5) {
+                swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '시간을 정확히 입력 해주세요.'
+                })
+                return;
+            }
         }
-
-        //저장할때 시간 검사
-        if (start > end) {
-            swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: 'From 시간 보다 적은 시간을 입력하실 수 없습니다.'
-            })
-            return;
-        }
-
-        //시간과 분을 정확히 입력했는지 검사
-        if (start.length != 5 || end.length != 5) {
-            swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '시간을 정확히 입력 해주세요.'
-            })
-            return;
-        }
-
         const onList = new Array();
         const offList = new Array();
         $("input:checkbox[name=status" + idx + "]:checked").each(function () {
@@ -313,13 +312,16 @@
         let stime = $('#start' + idx).val();
         let etime = $('#end' + idx).val();
 
-        if (stime > etime) {
-            swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: 'From 시간 보다 적은 시간을 입력하실 수 없습니다.'
-            })
-            $('#end' + idx).val(stime);
+        if (etime != "") {
+            if (stime >= etime) {
+                swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: 'To 시간이 From 시간 보다 적거나 같을 수 없습니다.'
+                })
+                $("#end"+idx).val("");
+                return;
+            }
         }
     }
 
