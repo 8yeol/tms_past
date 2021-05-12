@@ -504,13 +504,10 @@
     /* 최근, 이전데이터 비교하여 이미지 생성*/
     function draw_beforeDate(A , B){
         if(A > B){
-            console.log("down")
             return '<img src="static/images/down.jpg" class="img">' + B;
         } else if( B > A) {
-            console.log("up")
             return '<img src="static/images/up.png" class="img">' + B;
         } else{
-            console.log("-")
             return B;
         }
     }
