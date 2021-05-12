@@ -391,7 +391,7 @@
             }
         })
     }
-
+    //측정소 명 중복 확인
     function findPlace(name) {
         var data1 = "";
         $.ajax({
@@ -411,6 +411,25 @@
             }
         })
         return data1;
+    }
+    function findSensor(name){
+        var have = "";
+        $.ajax({
+            url: '<%=cp%>/getPlaceSensor',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"place": name},
+            success: function (data) {
+                have = data;
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+                have = 0;
+            }
+        })
+        return have;
     }
 
     //센서 모니터링 on/off 불러오기
@@ -731,6 +750,16 @@
     function p_monitoringupdate() {
         var check = $("#monitor").is(":checked"); //true/false
         var name = $("#pname").text(); //측정소 이름
+
+        if(findSensor(name) == 0){ //등록된 센서가 없을때
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '등록된 센서가 없어 모니터링 기능을 사용할 수 없습니다.'
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
 
         $.ajax({
             url: '<%=cp%>/placeMonitoringUpdate',
