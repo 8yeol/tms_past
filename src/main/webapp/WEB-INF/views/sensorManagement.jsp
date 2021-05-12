@@ -208,7 +208,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="sensorName">
+                            <input type="text" class="text-secondary" name="sensorName" id="sensorName">
                         </div>
                     </div>
                 </form>
@@ -399,6 +399,7 @@
                 cancelButtonText: '취소'
             }).then((result) => {
                 if (result.isConfirmed) {
+                    $('#sensorName').val('');
                     $('input[name=code]').val($('#m_class').val());
                     $('#addModal').modal('show');
                 }
