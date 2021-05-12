@@ -710,24 +710,14 @@ public class JsonController {
             Place updatePlace = new Place(placeremove.getName(), placeremove.getLocation(), placeremove.getAdmin(), placeremove.getTel(), monitoring, new Date(), sensorremove);
             updatePlace.set_id(id);
             placeRepository.save(updatePlace);
-
             //측정소 센서 추가 및 시간 업데이트
-            System.out.println(place);
             Place placeadd = placeRepository.findByName(place); //측정소 정보
-            System.out.println(placeadd);
             ObjectId idadd = placeadd.get_id(); //수정할 아이디
-
             List<String> sensoradd = placeadd.getSensor();
-            System.out.println(sensoradd);
             sensoradd.add(hiddenCode);
-            System.out.println(sensoradd);
-
             Place placeUp = new Place(placeadd.getName(), placeadd.getLocation(), placeadd.getAdmin(), placeadd.getTel(), placeadd.getMonitoring(), new Date(), sensoradd);
             placeUp.set_id(idadd);
-            System.out.println(placeUp);
-
             placeRepository.save(placeUp);
-            System.out.println(placeRepository.findAll());
 
         }
         sensorListRepository.save(sensor);
