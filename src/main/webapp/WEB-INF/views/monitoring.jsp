@@ -245,7 +245,7 @@
                 setTimeout(function () {
                     draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
                 }, 0);
-                INTERVAL = setTimeout(interval_getData, 1000);
+                INTERVAL = setTimeout(interval_getData, 10000);
             }
         }, 0);
     }
@@ -262,14 +262,11 @@
                     monitoring = item.monitoring;
                     if(monitoring){
                        placeName.push(item.name);
-                    }else{
-
                     }
                 })
-
             },
             error: function (request, status, error) {
-                console.log(error)
+                // console.log(error)
             }
         });
         return placeName;
@@ -334,8 +331,8 @@
                         }
                         /* 센서의 이전 데이터 */
                         var beforeData = getSensorBeforeData(item); //sensor 이전 데이터
-                        if(beforeData.length == 0){
-                            beforeValue = "-";
+                        if(beforeData == undefined){
+                            beforeValue = null;
                         }else{ // 최근데이터 존재하지 않을 경우 "-" 처리
                             beforeValue = beforeData.value.toFixed(2);
                         }
@@ -375,7 +372,7 @@
         return getData;
     }
 
-    // 모니터링 on/off 조회 - getPlaceData 사용
+    // 모니터링 on/off 조회
     function getMonitoring(sensor) {
         let result;
         $.ajax({
@@ -393,7 +390,7 @@
         return result;
     }
 
-    // 최근 데이터 조회 - getPlaceData 사용
+    // 최근 데이터 조회
     function getSensorRecent(sensor) {
         let result;
         $.ajax({
@@ -411,7 +408,7 @@
         return result;
     }
 
-    /* 센서명 이전 데이터 조회 - getPlaceData 사용 */
+    /* 센서명 이전 데이터 조회 */
     function getSensorBeforeData(sensor) {
         let result;
         $.ajax({
@@ -430,7 +427,7 @@
         return result;
     }
 
-    /* 센서명으로 센서정보 조회 - getPlaceData 사용  */
+    /* 센서명으로 센서정보 조회 */
     function getSensorInfo(sensor) {
         let result;
         $.ajax({
