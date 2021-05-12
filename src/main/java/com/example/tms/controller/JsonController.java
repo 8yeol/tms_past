@@ -350,11 +350,10 @@ public class JsonController {
     }
 
     //측정소 상세설정 항목 추가
-    @RequestMapping(value = "/saveReference")
-    public String saveReference(@RequestParam(value = "place") String placename, @RequestParam(value = "name") String name, @RequestParam(value = "naming") String naming) {
-        if (reference_value_settingRepository.findByName(name) == null) {
+    public void saveReference(String placename,String name,String naming) {
+//        if (reference_value_settingRepository.findByName(name) == null) {
 
-            if (placeRepository.findBySensorIsIn(name) != null) {
+            if (placeRepository.findBySensorIsIn(name) != null) { //기존 센서가 존재
                 //place 업데이트 시간 수정
                 Place place = placeRepository.findBySensorIsIn(name);
                 ObjectId id = place.get_id();
@@ -364,7 +363,7 @@ public class JsonController {
                 placeRepository.save(updatePlace);
 
 
-            } else {
+            } else { //최초 입력
                 Place placesensor = placeRepository.findByName(placename);
                 ObjectId id = placesensor.get_id();
                 List<String> sensor = placesensor.getSensor();
@@ -383,10 +382,10 @@ public class JsonController {
             ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
             reference_value_settingRepository.save(saveReference);
 
-            return "success";
-        } else {
-            return "fail";
-        }
+//            return "success";
+//        } else {
+//            return "fail";
+//        }
     }
 
     //측정 항목 모니터링 업데이트
@@ -703,9 +702,8 @@ public class JsonController {
             //센서 상세설정, 알림설정 삭제 , 업데이트 시간 수정
             removeReferencePlaceUpdate(hiddenCode);
         }
-
-
         sensorListRepository.save(sensor);
+        saveReference(place, tableName, naming);
     }
 
     //센서관리 삭제
