@@ -202,7 +202,7 @@
                         place_data[i].up_time = recentData.up_time;
                     }
                 }
-                interval1 = setTimeout(interval_getData, 5000);
+                interval1 = setTimeout(interval_getData, 1000);
             }, 0);
             // $('#sensorInfo2').text("(경고:"+warning + "/ 위험:"+danger + ")");
             if (!sensor_naming) { //파라미터로 넘어오는 값이 없을 경우
@@ -260,16 +260,14 @@
                             sensor_data_list.pop();
                         }
                     }
-                    interval2 = setTimeout(interval_getData2, 5000);
+                    interval2 = setTimeout(interval_getData2, 1000);
                 }, 0);
         } else{ // null 일 때
             draw_place_table(null);
-            $("#chart").empty();
-            // chart = setChartOption(null, null);
-            // chart.updateSeries([{
-            //     name: null,
-            //     data: []
-            // }])
+            chart.updateSeries([{
+                data: []
+            }]);
+
             draw_sensor_table(null);
             $("#radio_text").text("-") ;
             $("#standard_text").text("");
@@ -296,34 +294,7 @@
 
     /* chart Option Setting */
     function setChartOption(sensor_data_list, sensor_data){
-
         $("#chart").empty();
-
-        let options;
-
-        if(sensor_data == null || sensor_data_list == null){
-            options = {
-                chart: {
-                    height: '400px',
-                },
-                series: [
-                    {
-                        data: []
-                    }
-                ],
-                yaxis: {
-                    labels: {
-                        show: true,
-                        formatter: function (val) {
-                            if (sensor_data_list === null || sensor_data_list.length === 0)
-                                return 'No data'
-                            else
-                                return val
-                        }
-                    }
-                },
-            };
-        }else{
             var min = 0;
             var max = sensor_data.managementStandard*2;
             options = {
@@ -333,7 +304,7 @@
                 }],
                 chart: {
                     height: '400px',
-                    type: 'bar',
+                    type: 'line',
                     toolbar:{
                         show:true,
                         tools: {
@@ -365,7 +336,7 @@
                     x: {
                         show: true,
                         format: 'HH:mm:ss',
-                        formatter: undefined,
+                        // formatter: undefined,
                     },
                 },
                 annotations: {
@@ -409,7 +380,7 @@
                             }
                         }]
                 },
-                plotOptions: {
+                /*plotOptions: {
                     bar: {
                         colors: {
                             ranges: [{
@@ -432,9 +403,9 @@
                         },
                         columnWidth: '30%'
                     },
-                },
+                },*/
                 stroke: {
-                    width: 0,
+                    width: 1,
                 },
                 dataLabels: {
                     enabled: false
@@ -445,11 +416,22 @@
                 yaxis: {
                     tickAmount: 2,
                     decimalsInFloat: 2, //소수점아래
-                    // min: min, //최소
-                    // max: max //최대
+                    min: min, //최소
+                    max: max, //최대
+                    // labels: {
+                    //     show: true,
+                    //     formatter: function (val) {
+                    //         if (data == null || data.length == 0)
+                    //             return 'No data'
+                    //         else
+                    //             return val
+                    //     }
+                    // }
                 },
                 xaxis: {
                     type: 'datetime',
+                    // tickAmount : 12, //시간이라 적용 X
+                    tickPlacement: 'on',
                     labels: {
                         show: true,
                         datetimeUTC: false,
@@ -457,10 +439,9 @@
                             year: 'yyyy년',
                             month: 'MM월',
                             day: 'dd일',
-                            hour: 'HH:mm:ss'
+                            hour: 'HH:mm:ss',
                         },
                     },
-                    tickPlacement: 'on',
                     axisBorder: {
                         show: true,
                         color: '#78909C',
@@ -479,7 +460,6 @@
                     },
                 }
             };
-        }
 
         chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
@@ -704,13 +684,13 @@
             async: false,
             success: function (data) {
                 // 데이터가 0 또는 null 일 경우 "-" 으로 치환
-                if(data.legalStandard == 0 || data.legalStandard == null){
+                if(data.legalStandard == 999 || data.legalStandard == null){
                     data.legalStandard = "-";
                 }
-                if(data.companyStandard == 0 || data.companyStandard == null){
+                if(data.companyStandard == 999 || data.companyStandard == null){
                     data.companyStandard = "-";
                 }
-                if(data.managementStandard == 0 || data.managementStandard == null){
+                if(data.managementStandard == 999 || data.managementStandard == null){
                     data.managementStandard = "-";
                 }
                 result = data;

@@ -245,7 +245,7 @@
                 setTimeout(function () {
                     draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
                 }, 0);
-                INTERVAL = setTimeout(interval_getData, 60000);
+                INTERVAL = setTimeout(interval_getData, 1000);
             }
         }, 0);
     }
@@ -440,13 +440,13 @@
             async: false,
             success: function (data) {
                 // 데이터가 0 또는 null 일 경우 "-" 으로 치환
-                if (data.legalStandard == 0 || data.legalStandard == null) {
-                    data.legalStandard = "-";
+                if (data.legalStandard == 999 || data.legalStandard == null) {
+                    data.legalStandard = "";
                 }
-                if (data.companyStandard == 0 || data.companyStandard == null) {
+                if (data.companyStandard == 999 || data.companyStandard == null) {
                     data.companyStandard = "-";
                 }
-                if (data.managementStandard == 0 || data.managementStandard == null) {
+                if (data.managementStandard == 999 || data.managementStandard == null) {
                     data.managementStandard = "-";
                 }
                 result = data;
@@ -504,10 +504,13 @@
     /* 최근, 이전데이터 비교하여 이미지 생성*/
     function draw_beforeDate(A , B){
         if(A > B){
+            console.log("down")
             return '<img src="static/images/down.jpg" class="img">' + B;
         } else if( B > A) {
+            console.log("up")
             return '<img src="static/images/up.png" class="img">' + B;
         } else{
+            console.log("-")
             return B;
         }
     }
