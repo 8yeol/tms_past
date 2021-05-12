@@ -108,9 +108,9 @@
     <div class="row">
         <div class="row1">
             <span>연간 배출 허용 기준 설정</span>
-           <!-- <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="insertSetting()"
+            <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="insertSetting()"
                     style="background-color:green;color:white"> 추가 버튼
-            </button>   -->
+            </button>
         </div>
         <div class="row2">
             <span>* 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량 계산에 활용됩니다.</span>
@@ -266,7 +266,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">코드</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="code" readonly>
+                            <input type="text" class="text-secondary" name="code">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -274,7 +274,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="sensorName" readonly>
+                            <input type="text" class="text-secondary" name="sensorName" >
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -334,22 +334,22 @@
         });
     });
 
-    // //기준 추가
-    // function insert() {
-    //     var unComma = $("input[name='standard']").val().replace(/,/g, '');
-    //     $("input[name='standard']").val(unComma);
-    //
-    //     var form = $('#addStandard').serialize();
-    //     standardAjax(form, "추가");
-    // }
-    // function insertSetting() {
-    //     $('.modal-title').html('센서 추가');
-    //     $('.btn-success').html('추가');
-    //     $('.btn-success').removeAttr("onclick");
-    //     $('.btn-success').attr("onclick", "insert()");
-    //     inputClean();
-    // }
-    //
+    //기준 추가
+    function insert() {
+        var unComma = $("input[name='standard']").val().replace(/,/g, '');
+        $("input[name='standard']").val(unComma);
+
+        var form = $('#addStandard').serialize();
+        standardAjax(form, "추가");
+    }
+    function insertSetting() {
+        $('.modal-title').html('센서 추가');
+        $('.btn-success').html('추가');
+        $('.btn-success').removeAttr("onclick");
+        $('.btn-success').attr("onclick", "insert()");
+        inputClean();
+    }
+
 
 
     //editModal 선택값 셋팅

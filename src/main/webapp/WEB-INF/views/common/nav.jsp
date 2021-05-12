@@ -214,7 +214,7 @@
                                 <li><a href="/dataStatistics" class="submenuLink ">통계자료 조회</a></li>
                             </ul>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="/alarmManagement">환경설정</a>
+                        <li class="topMenuLi"><a class="menuLink" href="/stationManagement">환경설정</a>
                             <ul class="submenu long_sub">
                                 <li><a href="/stationManagement" class="submenuLink ">측정소 관리</a></li>
                                 <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
@@ -253,8 +253,9 @@
     var current_page_URL = location.href; //현재 URL 주소
     $("#menu a").each(function() { //menu a 태그의 주소
         if ($(this).attr("href") !== "#") { // 주소링크가 # 아닐때
+
             var target_URL = $(this).prop("href"); // 이벤트 발생 a태그의 모든 주소들
-            if (target_URL == current_page_URL) { // 현재 URL 주소와 클릭된 주소가 같다면
+            if (target_URL == current_page_URL ) { // 현재 URL 주소와 클릭된 주소가 같다면
                 $(this).parent().find('.submenu').children('li').first().addClass('active'); //클래스 active 추가
                 $(this).parentsUntil('#menu').addClass('active'); //클래스 active 추가
                 return false; //종료
