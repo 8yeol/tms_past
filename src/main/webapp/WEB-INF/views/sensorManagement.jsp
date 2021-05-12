@@ -448,6 +448,15 @@
     }
 
     function addStandardSetting(){
+        if($('input[name=sensorName]').val()==''){
+            Swal.fire({
+                icon: 'error',
+                title: '경고',
+                html: '입력값을 확인 하세요.',
+            })
+            return;
+        }
+
         $("input[type=hidden]").val("");
         standardForm = $('#addStandard').serialize();
         addStandard(standardForm);
