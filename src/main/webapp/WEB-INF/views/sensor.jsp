@@ -295,7 +295,7 @@
     /* chart Option Setting */
     function setChartOption(sensor_data_list, sensor_data){
         $("#chart").empty();
-            var min = 0;
+            var min = 0; //rm05_
             var max = sensor_data.managementStandard*2;
             options = {
                 series: [{
@@ -416,7 +416,7 @@
                 yaxis: {
                     tickAmount: 2,
                     decimalsInFloat: 2, //소수점아래
-                    min: min, //최소
+                    // min: min, //최소
                     max: max, //최대
                     // labels: {
                     //     show: true,
@@ -512,10 +512,27 @@
                     const newCeil4 = newRow.insertCell(4);
                     const newCeil5 = newRow.insertCell(5);
 
+                    if(data[i].legalStandard == 999){
+                        legalStandard = '-';
+                    }else{
+                        legalStandard = data[i].legalStandard;
+                    }
+                    if(data[i].companyStandard == 999){
+                        companyStandard = '-';
+                    }else{
+                        companyStandard = data[i].companyStandard;
+                    }
+                    if(data[i].managementStandard == 999){
+                        managementStandard = '-';
+                    }else{
+                        managementStandard = data[i].managementStandard;
+                    }
+
+
                     newCeil0.innerHTML = data[i].naming+'<input type="hidden" value="'+ data[i].name+'">';
-                    newCeil1.innerHTML = '<div class="bg-danger text-light">'+data[i].legalStandard+'</div>';
-                    newCeil2.innerHTML = '<div class="bg-warning text-light">'+data[i].companyStandard+'</div>';
-                    newCeil3.innerHTML = '<div class="bg-success text-light">'+data[i].managementStandard+'</div>';
+                    newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
+                    newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
+                    newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
                     newCeil4.innerHTML = draw_beforeData((data[i].beforeValue).toFixed(2), (data[i].value).toFixed(2));
 
                     if(data[i].value > data[i].legalStandard){
@@ -613,7 +630,6 @@
             const legalStandard = sensorInfo.legalStandard;
             const companyStandard = sensorInfo.companyStandard;
             const managementStandard = sensorInfo.managementStandard;
-            const standard = recentData.standard;
 
             result =({
                 naming: naming, name:sensor,
@@ -683,16 +699,6 @@
             data: {"sensor": sensor},
             async: false,
             success: function (data) {
-                // 데이터가 0 또는 null 일 경우 "-" 으로 치환
-                if(data.legalStandard == 999 || data.legalStandard == null){
-                    data.legalStandard = "-";
-                }
-                if(data.companyStandard == 999 || data.companyStandard == null){
-                    data.companyStandard = "-";
-                }
-                if(data.managementStandard == 999 || data.managementStandard == null){
-                    data.managementStandard = "-";
-                }
                 result = data;
             },
             error: function (e) {
