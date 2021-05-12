@@ -49,7 +49,6 @@
                     <label class="me-3 col-xs-3 w-10 label">테이블명</label>
                     <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName('')">
                         <option>선택</option>
-                        <option value="124_O6_55">124_O6_55</option>
                         <c:forEach var="collection" items="${collections}" varStatus="status">
                             <option value="${collection}">${collection}</option>
                         </c:forEach>
@@ -517,11 +516,11 @@
             const id = str[1] + '_' + str[2];
             $('#m_id' + idx).val(id);
             $('#m_class' + idx).val(str[1]);
-            $('#naming' + idx).val(findNaming(tableName));
+            $('#naming' + idx).val(findNaming(str[1]));
         }
     }
 
-    function findNaming(tableName) {
+    function findNaming(classification) {
         let result = "";
         $.ajax({
             url: '/getNaming',
@@ -529,11 +528,9 @@
             dataType: 'json',
             async: false,
             cache: false,
+            data: {classification: classification},
             success: function (data) {
-                for (i = 0; i < data.length; i++) {
-                    if (tableName.includes(data[i].item))
-                        result = data[i].itemName;
-                }
+                result = data.naming;
             },
             error: function (request, status, error) {
                 console.log(error)

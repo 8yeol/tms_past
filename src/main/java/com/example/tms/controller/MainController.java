@@ -24,13 +24,13 @@ public class MainController {
     final EmissionsSettingRepository emissionsSettingRepository;
     final AnnualEmissionsRepository annualEmissionsRepository;
     final RankManagementRepository rank_managementRepository;
-    final ItemRepository itemRepository;
+    final EmissionsStandardSettingRepository itemRepository;
     final SensorListRepository sensorListRepository;
 
     final MongoConfig mongoConfig;
     final DataInquiryRepository dataInquiryRepository;
 
-    public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository, MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, ItemRepository itemRepository, SensorListRepository sensorListRepository, MongoConfig mongoConfig, DataInquiryRepository dataInquiryRepository) {
+    public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository, MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository itemRepository, SensorListRepository sensorListRepository, MongoConfig mongoConfig, DataInquiryRepository dataInquiryRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.memberRepository = memberRepository;
@@ -61,7 +61,7 @@ public class MainController {
         model.addAttribute("placelist", placeSet);
 
         //연간 배출기준값 가져오기
-        List<Item> standard = itemRepository.findAll();
+        List<EmissionsStandardSetting> standard = itemRepository.findAll();
         model.addAttribute("standard",standard);
 
         return "dashboard";
@@ -321,7 +321,7 @@ public class MainController {
         List<AnnualEmissions> yearlyEmissions = annualEmissionsRepository.findAll();
         model.addAttribute("yearlyEmissions", yearlyEmissions);
 
-        List<Item> standard =  itemRepository.findAll();
+        List<EmissionsStandardSetting> standard =  itemRepository.findAll();
         model.addAttribute("standard",standard);
 
         return "emissionsManagement";

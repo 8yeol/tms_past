@@ -30,7 +30,7 @@ public class JsonController {
     final NotificationSettingsRepository notification_settingsRepository;
     final NotificationListRepository notificationListRepository;
     final NotificationListCustomRepository notificationListCustomRepository;
-    final ItemRepository itemRepository;
+    final EmissionsStandardSettingRepository emissionsStandardSettingRepository;
     final SensorListRepository sensorListRepository;
     final NotificationStatisticsCustomRepository notificationStatisticsCustomRepository;
     final NotificationDayStatisticsRepository notificationDayStatisticsRepository;
@@ -38,13 +38,12 @@ public class JsonController {
     final AnnualEmissionsRepository annualEmissionsRepository;
     final EmissionsSettingRepository emissionsSettingRepository;
     final MongoTemplate mongoTemplate;
-
-
     final DataInquiryRepository dataInquiryCustomRepository;
-
     final MonthlyEmissionsRepository monthlyEmissionsRepository;
 
-    public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, ItemRepository itemRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository) {
+    final ItemRepository itemRepository;
+
+    public JsonController(PlaceRepository placeRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, MongoTemplate mongoTemplate, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository) {
         this.placeRepository = placeRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
@@ -52,16 +51,17 @@ public class JsonController {
         this.notification_settingsRepository = notification_settingsRepository;
         this.notificationListRepository = notificationListRepository;
         this.notificationListCustomRepository = notificationListCustomRepository;
-        this.itemRepository = itemRepository;
+        this.emissionsStandardSettingRepository = emissionsStandardSettingRepository;
         this.sensorListRepository = sensorListRepository;
         this.notificationStatisticsCustomRepository = notificationStatisticsCustomRepository;
         this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
         this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
+        this.annualEmissionsRepository = annualEmissionsRepository;
+        this.emissionsSettingRepository = emissionsSettingRepository;
         this.mongoTemplate = mongoTemplate;
         this.dataInquiryCustomRepository = dataInquiryCustomRepository;
         this.monthlyEmissionsRepository = monthlyEmissionsRepository;
-        this.annualEmissionsRepository = annualEmissionsRepository;
-        this.emissionsSettingRepository = emissionsSettingRepository;
+        this.itemRepository = itemRepository;
     }
 
 
@@ -603,13 +603,13 @@ public class JsonController {
     public List saveEmissionsStandard(@RequestParam(value = "code") String code, @RequestParam(value = "sensorName") String sensorName, @RequestParam(value = "standard") int standard, @RequestParam(value = "hiddenCode", required = false) String hiddenCode,
                                       @RequestParam(value = "percent") int percent, @RequestParam(value = "formula") String formula) {
 
-        Item setting;
+        EmissionsStandardSetting setting;
 
         //hidden 값이 있는지로 추가와 수정을 판별
         if (hiddenCode == "" || hiddenCode == null) {
-            setting = new Item();
+            setting = new EmissionsStandardSetting();
         } else {
-            setting = itemRepository.findByItem(hiddenCode);
+            setting = emissionsStandardSettingRepository.findByItem(hiddenCode);
         }
 
         setting.setItem(code);
@@ -617,9 +617,9 @@ public class JsonController {
         setting.setEmissionsStandard(standard);
         setting.setDensityStandard(percent);
         setting.setFormula(formula);
-        itemRepository.save(setting);
+        emissionsStandardSettingRepository.save(setting);
 
-        List<Item> standardList = itemRepository.findAll();
+        List<EmissionsStandardSetting> standardList = emissionsStandardSettingRepository.findAll();
         return standardList;
     }
 
@@ -627,26 +627,26 @@ public class JsonController {
     @RequestMapping(value = "/simpleSaveStandard")
     public void simpleSaveStandard(@RequestParam(value = "code") String code, @RequestParam(value = "sensorName") String sensorName) {
 
-        Item setting = new Item();
+        EmissionsStandardSetting setting = new EmissionsStandardSetting();
         setting.setItem(code);
         setting.setItemName(sensorName);
         setting.setEmissionsStandard(0);
         setting.setDensityStandard(0);
         setting.setFormula("");
-        itemRepository.save(setting);
+        emissionsStandardSettingRepository.save(setting);
     }
 
     //배출기준 삭제
     @RequestMapping(value = "/deleteEmissionsStandard")
     public List deleteEmissionsStandard(@RequestParam(value = "code") String code) {
 
-        Item setting;
+        EmissionsStandardSetting setting;
 
-        setting = itemRepository.findByItem(code);
+        setting = emissionsStandardSettingRepository.findByItem(code);
 
-        itemRepository.delete(setting);
+        emissionsStandardSettingRepository.delete(setting);
 
-        List<Item> standardList = itemRepository.findAll();
+        List<EmissionsStandardSetting> standardList = emissionsStandardSettingRepository.findAll();
         return standardList;
     }
 
@@ -743,8 +743,8 @@ public class JsonController {
     }
 
     @RequestMapping(value = "/getNaming")
-    public List getNaming() {
-        return itemRepository.findAll();
+    public Item getNaming(String classification) {
+        return itemRepository.findByClassification(classification);
     }
 
 }
