@@ -193,7 +193,7 @@
             clearTimeout(interval1);
         if(place_data.length != 0){
             setTimeout(function interval_getData() {
-                // console.log("g1: "+interval1);
+                console.log("g1: "+interval1);
                 draw_place_table(place_data);
                 for (var i = 0; i < place_data.length; i++) {
                     var recentData = getSensorRecent(place_data[i].name)
@@ -221,9 +221,8 @@
         }
     }
 
-
     function getData2(sensor_data) {
-        if(sensor_data==null||sensor_data==undefined){
+        if(sensor_data==null||sensor_data==undefined||sensor_data.value== null){
             sensor_data = [];
         }
         clearTimeout(interval2);
@@ -238,27 +237,39 @@
             }
 
             var sensor_data_list = getSensor(sensor_name, sensor_time_length);
+           chart = setChartOption(sensor_data_list, sensor_data);
 
             $("#radio_text").text(sensor_data.naming); /*+ " - 최근 " + textTime + " 자료"*/
             $("#standard_text").text(sensor_data.legalStandard+"/"+sensor_data.companyStandard+"/"+sensor_data.managementStandard+" mg/Sm³ 이하");
 
                 setTimeout(function interval_getData2() {
-                   // console.log("g2: "+interval2);
-                    setChartOption(sensor_data_list, sensor_data);
+                    //test
+                    var now =new Date();
+                   console.log("g2: "+interval2);
+                    chart.updateSeries([{
+                        data: sensor_data_list
+                    }]);
                     draw_sensor_table(sensor_data_list, sensor_data);
-
                     var sensor_data_list_recent = getSensorRecent(sensor_name);
                     if(sensor_data_list_recent.length != 0){ // null = []
-                        if(sensor_data_list[0].x != sensor_data_list_recent.up_time){
-                            sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value, standard: null});
-                            // sensor_data_list.pop();
+                        // if(sensor_data_list[0].x != sensor_data_list_recent.up_time){
+                        if(sensor_data_list[0].x != now){ //test
+                            random = sensor_data_list_recent.value + Math.random(); //test
+                            sensor_data_list.unshift({x:now, y: random, standard: null}); //test
+                            // sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value, standard: null});
+                            sensor_data_list.pop();
                         }
                     }
                     interval2 = setTimeout(interval_getData2, 5000);
                 }, 0);
-        } else{
+        } else{ // null 일 때
             draw_place_table(null);
-            setChartOption(null, null);
+            $("#chart").empty();
+            // chart = setChartOption(null, null);
+            // chart.updateSeries([{
+            //     name: null,
+            //     data: []
+            // }])
             draw_sensor_table(null);
             $("#radio_text").text("-") ;
             $("#standard_text").text("");
@@ -267,7 +278,6 @@
 
     /* 센서명 이전 데이터 조회 */
     function getSensorBeforeData(sensor) {
-        console.log("getSensorBeforeData")
         let result = new Array();
         $.ajax({
             url: 'getSensorBeforeData',
@@ -286,7 +296,7 @@
 
     /* chart Option Setting */
     function setChartOption(sensor_data_list, sensor_data){
-        console.log("draw chart")
+
         $("#chart").empty();
 
         let options;
@@ -437,6 +447,15 @@
                     decimalsInFloat: 2, //소수점아래
                     // min: min, //최소
                     // max: max //최대
+                    labels: {
+                        show: true,
+                        formatter: function (val) {
+                            if (sensor_data_list === null || sensor_data_list.length === 0)
+                                return 'No data'
+                            else
+                                return val
+                        }
+                    }
                 },
                 xaxis: {
                     type: 'datetime',
@@ -471,7 +490,9 @@
             };
         }
 
-        new ApexCharts(document.querySelector("#chart"), options).render();
+        chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+        return chart;
     }
 
 
@@ -504,7 +525,6 @@
 
     //측정소 전체 (상단 일반 테이블)
     function draw_place_table(data){
-        console.log("draw_place_table");
         try{
             $('#place-tbody-table').empty();
             if(data == null){
@@ -557,7 +577,6 @@
 
     // 측정소 명으로 센서 데이터 조회
     function getPlaceData(place){
-        console.log("getPlaceData")
         let result = new Array();
         $.ajax({
             url:'getPlaceSensor',
@@ -578,7 +597,6 @@
 
     // monitoring on/off 체크
     function getMonitoring(sensor){
-        console.log("getMonitoring")
         let result;
         $.ajax({
             url:'getMonitoring',
@@ -597,7 +615,6 @@
 
     // 센서 정보 조회
     function getSensorData(sensor){
-        console.log(sensor+"getSensorData----------------------------------")
         let result;
         const monitor = getMonitoring(sensor); //power on,off
         let sensorValue, sensorUptime, beforeValue;
@@ -639,7 +656,6 @@
 
     // 최근 1시간 데이터 / 최근 24 시간 데이터 불러오기
     function getSensor(sensor_name, hour) {
-        console.log("getSensor")
         let result = new Array();
         if(sensor_name==undefined){
             console.log('get sensor null 처리');
@@ -665,7 +681,6 @@
 
     // 최근 데이터 조회
     function getSensorRecent(sensor){
-        console.log("getSensorRecent")
         let result;
         // 파라미터로 넘어오는 sensor 값이 null 일때 처리(측정소에 맵핑되어있는 센서값이 없는 경우)
         if(sensor==undefined){
@@ -690,7 +705,6 @@
     }
 
     function getSensorInfo(sensor) {
-        console.log("getSensorInfo")
         let result;
         $.ajax({
             url:'getSensorInfo',
@@ -721,7 +735,6 @@
 
     // table 그리기
     function draw_sensor_table(sensor_data_list, sensor_data) {
-        console.log("draw_sensor_table");
         $("#sensor-table").DataTable().clear();
         $("#sensor-table").DataTable().destroy();
         if(sensor_data_list == null){
