@@ -630,8 +630,9 @@ public class JsonController {
         Item setting = new Item();
         setting.setItem(code);
         setting.setItemName(sensorName);
-        setting.setEmissionsStandard(999999999);
-        setting.setFormula("-");
+        setting.setEmissionsStandard(0);
+        setting.setDensityStandard(0);
+        setting.setFormula("");
         itemRepository.save(setting);
     }
 
