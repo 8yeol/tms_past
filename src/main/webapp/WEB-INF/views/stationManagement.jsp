@@ -52,7 +52,7 @@
     </div>
     <div class="row bg-light" style="height: 70%; padding: 0px 25px 25px 25px;">
         <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
-            <div>
+            <div style="padding-bottom: 10px;">
                 <span class="fw-bold" style="margin-right: 53%;">측정소 관리</span>
                 <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
                 <button onclick="removePlace()" class="removeBtn">삭제</button>
@@ -80,19 +80,15 @@
         <div class="col-3" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
 
             <div>
-                <div id="p_monitoring" class="fw-bold" style="display: flex; margin-top: 5px;">
+                <div id="p_monitoring" class="fw-bold" style="display: flex; margin-top: 5px; padding-bottom: 35px;">
                 </div>
-                <div style="width: 130px; position: relative; left: 82%; margin: 5px 0px;">
-                    <button data-bs-toggle="modal" data-bs-target="#addReference" class="addBtn">추가</button>
-                    <button onclick="removeReference()" class="removeBtn">삭제</button>
-                </div>
+
             </div>
             <table style="text-align: center; width: 100%">
                 <tr id="c" style="border-bottom: silver solid 2px; width: 100%; display: flex; padding-bottom: 5px;">
-                    <th style="width:5%;"><input name="selectall" class="form-check-input" type=checkbox
-                                                 onclick="selectAll(this)"></th>
+                    <th style="width: 4%;"></th>
                     <th style="width:15%;">측정항목</th>
-                    <th style="width:24%;">관리ID</th>
+                    <th style="width:25%;">관리ID</th>
                     <th style="width:14%;">법적기준</th>
                     <th style="width:14%;">사내기준</th>
                     <th style="width:14%;">관리기준</th>
@@ -101,7 +97,6 @@
                 <tr id="items" style="width: 100%;">
 
                 </tr>
-
             </table>
         </div>
 
@@ -146,34 +141,6 @@
 </div>
 <%--값 수정시 알림창--%>
 <div class="MultiSelecterModal" id="alert"></div>
-<!-- addReference -->
-<div class="modal" id="addReference" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">항목 추가</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-evenly">
-                <div>
-                    <h4>관리ID</h4>
-                    <h4>측정 항목</h4>
-                </div>
-                <div>
-                    <form>
-                        <select id="select" name="modalDropdown1" class="btn-secondary rounded-3 mdd mb-2"
-                                style="width:100%;">
-                        </select>
-                        <input type="text" id="sname" class="text-secondary d-block mb-2"/>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-primary" onclick="insertReference()">추가</button>
-                <button id=canBtn type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     //팝업창 드래그로 이동 가능
@@ -190,60 +157,8 @@
     $(document).ready(function () {
         placeDiv();
         placeChange($("#place0").text());
-        $("#select").on("change", function () {
-            var sel = $("#select option:selected").val();
-            if (sel == "선택") {
-                $('#sname').val("");
-            } else {
-                $.ajax({
-                    url: '<%=cp%>/getSensorManagementId',
-                    type: 'POST',
-                    dataType: 'json',
-                    async: false,
-                    cache: false,
-                    data: {"name": sel},
-                    success: function (data) {
-                        if (data.length < 1 || data == "" || data == null) {
-                            return false;
-                        }
-                        $('#sname').val(data.naming);
-                    },
-                    error: function (request, status, error) { // 결과 에러 콜백함수
-                        console.log(error)
-                    }
-                })
-            }
-        })
 
     });
-
-    //센서 체크박스 전체 선택, 해제
-    function checkSelectAll() {
-        // 전체 체크박스
-        const checkboxes
-            = document.querySelectorAll('input[name="item"]');
-        // 선택된 체크박스
-        const checked
-            = document.querySelectorAll('input[name="item"]:checked');
-        // select all 체크박스
-        const selectAll
-            = document.querySelector('input[name="selectall"]');
-
-        if (checkboxes.length === checked.length) {
-            selectAll.checked = true;
-        } else {
-            selectAll.checked = false;
-        }
-    }
-
-    function selectAll(selectAll) {
-        const checkboxes
-            = document.getElementsByName('item');
-
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = selectAll.checked
-        })
-    }
 
     //측정소 체크박스 전체 선택, 해제
     function checkPlaceAll() {
@@ -318,7 +233,6 @@
         $("#items").empty(); //div items 비우기
         $("#p_monitoring").empty(); //div p_monitoring 비우기
         const p_monitoring = findPlaceMonitor(place); //측정소monitor on/off 확인
-        findSensorList(name);
 
         let innerHTMLPlace =
             "<div id='pname'>" + place + "</div>" +
@@ -352,7 +266,7 @@
                         const monitoring = findMonitor(tableName); //모니터 on/off(checked)
                         if (value.size != 0) {
                             const innerHtml =
-                                "<td style='width:5%;'><input class='form-check-input' type='checkbox' id='" + value.get("name") + "' name='item' value='" + value.get("name") + "' onclick='checkSelectAll()'></td>" +
+                                "<td style='width: 4%;'></td>" +
                                 "<td style='width:15%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("naming") + "</label></td>" +
                                 "<td style='width:24%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("name") + "</label></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' onchange='legalupdate(this)'></td>" +
@@ -381,16 +295,14 @@
                         }
                     }
                 }
-                //측정소 변경시 센서 체크박스 해제
-                const selectAll
-                    = document.querySelector('input[name="selectall"]');
-                selectAll.checked = false;
+
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
             }
         })
     }
+
     //측정소 명 중복 확인
     function findPlace(name) {
         var data1 = "";
@@ -412,7 +324,9 @@
         })
         return data1;
     }
-    function findSensor(name){
+
+    //센서 유무 파악(모니터링 버튼 기능 제어)
+    function findSensor(name) {
         var have = "";
         $.ajax({
             url: '<%=cp%>/getPlaceSensor',
@@ -476,30 +390,6 @@
             }
         })
         return isChecked;
-    }
-
-    //sensorList 불러오기
-    function findSensorList(name) {
-        $("#select").empty();
-        $.ajax({
-            url: '<%=cp%>/getSensorList2',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"place": name},
-            success: function (data) {
-                $("#select").append('<option>선택</option>');
-                if (data.length != 0) {
-                    for (let i = 0; i < data.length; i++) {
-                        $("#select").append('<option value="' + data[i].tableName + '">' + data[i].tableName + '</option>');
-                    }
-                }
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
-        })
     }
 
     //센서 기준값 불러오기
@@ -587,55 +477,6 @@
         })
     }
 
-    //상세설정 항목 추가
-    function insertReference() {
-        const place = $("#pname").text();
-        const sel = $("#select option:selected").val();
-        const put = $("#sname").val();
-        if (sel != "선택" && put != "") {
-            $.ajax({
-                url: '<%=cp%>/saveReference',
-                type: 'POST',
-                async: false,
-                cache: false,
-                data: {
-                    "place": place,
-                    "name": sel,
-                    "naming": put
-                },
-                success: function (data) {
-                    if (data == "success") {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '저장완료'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                //location.reload();
-                                document.getElementById("canBtn").click();
-                                placeDiv();
-                                placeChange($("#pname").text());
-                            }
-                        })
-                    } else {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '이미 존재하는 데이터입니다.'
-                        })
-                    }
-
-                },
-                error: function (request, status, error) { // 결과 에러 콜백함수
-                    console.log(error)
-                }
-            })
-        } else {
-            Swal.fire({
-                icon: 'warning',
-                title: '입력 데이터를 확인해주세요.'
-            })
-        }
-    }
-
     function removePlace() {
         const placeList = new Array();
         $("input:checkbox[name=place]:checked").each(function () {
@@ -693,65 +534,12 @@
         })
     }
 
-    function removeReference() {
-        const referenceList = new Array();
-        $("input:checkbox[name=item]:checked").each(function () {
-            referenceList.push($(this).attr('id'));
-        });
-        if (referenceList.length == 0) {
-
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '삭제할 측정항목을 체크해주세요.'
-
-            })
-            return false;
-        }
-
-        swal.fire({
-            title: '측정항목 삭제',
-            text: '정말 삭제하시겠습니까?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: 'red',
-            cancelButtonColor: 'gray',
-            confirmButtonText: '삭제',
-            cancelButtonText: '취소'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '<%=cp%>/removeReference',
-                    type: 'POST',
-                    async: false,
-                    cache: false,
-                    data: {
-                        "referenceList": referenceList
-                    },
-
-                })
-                swal.fire(
-                    '삭제 완료',
-                    '',
-                    'success'
-                ).then((result) => {
-                    if (result.isConfirmed) {
-                        //location.reload();
-                        placeDiv();
-                        placeChange($("#pname").text());
-                    }
-                })
-
-            }
-        })
-    }
-
     //측정소 모니터링 onchange
     function p_monitoringupdate() {
         var check = $("#monitor").is(":checked"); //true/false
         var name = $("#pname").text(); //측정소 이름
 
-        if(findSensor(name) == 0){ //등록된 센서가 없을때
+        if (findSensor(name) == 0) { //등록된 센서가 없을때
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -810,6 +598,17 @@
         var manage = $("#" + managename).val(); //관리기준 값
         var value = $("#" + tablename).val(); //법적기준 값
         var pname = $("#pname").text();
+        if (value == "") {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
+
         if (isNaN(value) == true) {
 
             Swal.fire({
@@ -866,6 +665,16 @@
         var manage = $("#" + managename).val(); //관리기준 값
         var value = $("#" + tablename).val();
         var pname = $("#pname").text();
+        if (value == "") {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
         if (isNaN(value) == true) {
 
             Swal.fire({
@@ -923,6 +732,16 @@
         var company = $("#" + companyname).val(); //사내기준 값
         var value = $("#" + tablename).val(); //관리기준
         var pname = $("#pname").text();
+        if (value == "") {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+
+            })
+            placeChange($("#pname").text());
+            return false;
+        }
         if (isNaN(value) == true) {
 
             Swal.fire({
@@ -969,6 +788,7 @@
         placeChange($("#pname").text());
     }
 
+    //데이터 변경시 팝업창
     function MultiSelecterModal(place, name, standard, value) {
         const modal = $('#alert');
         if (standard == "legal") {
