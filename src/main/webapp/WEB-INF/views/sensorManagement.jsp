@@ -179,7 +179,7 @@
     </div>
 </div>
 
-
+<%--
 <!-- 배출허용 기준 추가 -->
 <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -219,6 +219,7 @@
         </div>
     </div>
 </div>
+--%>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
@@ -385,9 +386,8 @@
             })
             return;
         }
-
+/*
         if ($('#naming' + idx).val() == '') {
-
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -422,6 +422,7 @@
             });
             return;
         }
+*/
 
         let form = "";
         let str = "";
@@ -464,6 +465,7 @@
         });
     }
 
+    /*
     function addStandardSetting(){
         if($('input[name=sensorName]').val()==''){
             Swal.fire({
@@ -503,6 +505,7 @@
             }
         });
     }
+    */
 
     function changeTableName(idx) {
         const tableName = $("#tableName" + idx).val();
@@ -516,7 +519,13 @@
             const id = str[1] + '_' + str[2];
             $('#m_id' + idx).val(id);
             $('#m_class' + idx).val(str[1]);
-            $('#naming' + idx).val(findNaming(str[1]));
+
+            const naming = findNaming(str[1]);
+
+            if(naming=="")
+                $('#naming' + idx).val(str[1]);
+            else
+                $('#naming' + idx).val(naming)
         }
     }
 
