@@ -105,6 +105,10 @@
             left: 3%;
         }
     }
+
+    .card{
+        min-height: 100%;
+    }
 </style>
 
 <div class="container">
@@ -253,12 +257,12 @@
             </div>
             <div class="col text-end">
                 <span class="small">마지막 업데이트 : <span class="fw-bold" id="excess_update">업데이트 시간</span></span><br>
-                <span class="text-primary" style="font-size: 15%"> * 5분 단위로 업데이트 됩니다.</span>
+                <span class="text-primary" style="font-size: 15%"> * 실시간으로 업데이트 됩니다.</span>
             </div>
         </div>
         <div class="row pb-3 h-75 pb-3 margin-l">
             <div class="col">
-                <div class="card text-white bg-primary mb-3 h-100">
+                <div class="card text-white bg-primary mb-3">
                     <div class="card-header">정상</div>
                     <div class="card-body" id="normal">
                         <%--script--%>
@@ -266,7 +270,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card text-white bg-success mb-3 h-100">
+                <div class="card text-white bg-success mb-3">
                     <div class="card-header">관리기준 초과</div>
                     <div class="card-body" id="caution">
                         <%--script--%>
@@ -274,7 +278,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card text-dark bg-warning mb-3 h-100">
+                <div class="card text-dark bg-warning mb-3">
                     <div class="card-header">사내기준 초과</div>
                     <div class="card-body" id="warning">
                         <%--script--%>
@@ -282,7 +286,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card text-white bg-danger mb-3 h-100">
+                <div class="card text-white bg-danger mb-3">
                     <div class="card-header">법적기준 초과</div>
                     <div class="card-body" id="danger">
                         <%--script--%>
@@ -310,7 +314,8 @@
     // 관리등급 초과 모니터링 (처음 로딩될 때 한번, 그 후로 매 5분마다 실행) - 완료
     function excess() {
         addExcessData();
-        // 매 5분마다 실행되게 하는 평션
+        // 매 5분마다(5분, 10분, 15분..) 실행되게 하는 평션
+        /*
         const FIVE_MINUTES = 5 * 60 * 1000;
         const timeSinceBoundary = new Date() % FIVE_MINUTES;
         const timeToSetInterval = timeSinceBoundary === 0 ? 0 : (FIVE_MINUTES - timeSinceBoundary);
@@ -319,11 +324,13 @@
                 addExcessData();
             }, FIVE_MINUTES);
         }, timeToSetInterval);
+        */
+        setInterval(function(){
+            addExcessData();
+        }, 1000)
     }
 
     function addExcessData() {
-        console.log(" 실행시간 : " + moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
-
         $("#normal").empty();
         $("#caution").empty();
         $("#warning").empty();

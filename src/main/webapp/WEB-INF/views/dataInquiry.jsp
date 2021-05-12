@@ -732,6 +732,12 @@
             chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
             chartLine.render();
         }else{
+
+            if(chart==null&&data.length!=0){
+                console.log('search 0 ')
+                search(0);
+            }
+
             chart.updateSeries([{
                 data : data
             }])

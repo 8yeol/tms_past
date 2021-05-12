@@ -150,7 +150,7 @@ public class JsonController {
      */
     @RequestMapping(value = "/getMonitoringSensorOn", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getMonitoringSensorOn() {
-        return notification_settingsRepository.findByStatusIsTrue();
+        return reference_value_settingRepository.findByMonitoringIsTrue();
     }
 
     /**

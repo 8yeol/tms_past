@@ -392,7 +392,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
-                html: '항목명이 없습니다. <br>추가 하시겠습니까?',
+                html: '등록된 항목명이 없습니다. <br>항목명을 추가 하시겠습니까?',
                 showCancelButton: true,
                 confirmButtonColor: '#393',
                 confirmButtonText: '추가',
@@ -400,8 +400,25 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $('#sensorName').val('');
-                    $('input[name=code]').val($('#m_class').val());
-                    $('#addModal').modal('show');
+                    setTimeout(function() {
+                        $('input[name=code]').val($('#m_class').val());
+                        $('#addModal').modal('show');
+                    }, 300);
+                }
+                if(result.dismiss=="cancel"){
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '항목명 미 추가시 센서 등록을 하실 수 없습니다.',
+                        showCancelButton: true,
+                        confirmButtonText: '항목명 추가',
+                        cancelButtonText: '취소'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('input[name=code]').val($('#m_class').val());
+                            $('#addModal').modal('show');
+                        }
+                    });
                 }
             });
             return;
@@ -453,11 +470,10 @@
             Swal.fire({
                 icon: 'error',
                 title: '경고',
-                html: '입력값을 확인 하세요.',
+                html: '항목명을 입력해주세요.',
             })
             return;
         }
-
         $("input[type=hidden]").val("");
         standardForm = $('#addStandard').serialize();
         addStandard(standardForm);
@@ -475,7 +491,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: '추가 완료 ',
-                    html: '항목명이 설정 되었습니다.<br> 항목명 변경은 <b>[환경설정 - 연간 배출 허용 기준 설정]</b> 에서 <br>변경하실 수 있습니다.',
+                    html: '항목명 및 센서 추가가 완료되었습니다.<br> 항목명 변경은 <b>[환경설정 - 연간 배출 허용 기준 설정]</b> 에서 <br>변경하실 수 있습니다.',
                 })
                 changeTableName('');
                 setTimeout(function() {
