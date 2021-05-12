@@ -47,7 +47,7 @@
             <form id="saveForm">
                 <div class="pt-3 pe-5 ms-1">
                     <label class="me-3 col-xs-3 w-10 label">테이블명</label>
-                    <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName('')">
+                    <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName()">
                         <option>선택</option>
                         <c:forEach var="collection" items="${collections}" varStatus="status">
                             <option value="${collection}">${collection}</option>
@@ -118,23 +118,10 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">센서 수정</h5>
+                <h5 class="modal-title" id="modal_title"></h5>
             </div>
             <div class="modal-body d-flex justify-content-evenly">
                 <form id="editForm" method="post" autocomplete="off">
-                    <div class="row">
-                        <div class="col text-center" id="label">
-                            <span class="text-primary" style="font-size: 15%"> * 테이블명 선택시 자동 입력됩니다.</span>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">테이블명</span>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="text-secondary" name="tableName" id="tableName2" readonly>
-                        </div>
-                    </div>
                     <div class="row mt-3">
                         <div class="col">
                             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
@@ -142,30 +129,6 @@
                         <div class="col">
                             <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;">
                             </select>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">관리 ID</span>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="text-secondary" name="managementId" id="m_id2" readonly>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">분류</span>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="text-secondary" name="classification" id="m_class2" readonly>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="text-secondary" name="naming" id="naming2" readonly>
                         </div>
                     </div>
                     <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
@@ -179,47 +142,6 @@
     </div>
 </div>
 
-<%--
-<!-- 배출허용 기준 추가 -->
-<div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">항목명 추가</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-evenly">
-                <form id="addStandard" method="post" autocomplete="off">
-                    <div class="row">
-                        <div class="col text-center">
-                            <span class="text-danger" style="font-size: 15%"> * 설정된 분류 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">분류 코드</span>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="text-secondary" name="code" readonly>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
-                        </div>
-                        <div class="col">
-                            <input type="text" class="text-secondary" name="sensorName" id="sensorName">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" onclick="addStandardSetting()">추가</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
---%>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
@@ -283,8 +205,6 @@
                     cell7.innerHTML = status;
                     cell8.innerHTML = '<i type="button" class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editSetting(this)"></i>' +
                         '<i type="button" class="fas fa-times" onclick="deleteModal(this)"></i>';
-                    /* '<i class="btn fas fa-edit me-2" ata-bs-toggle="modal" data-bs-target="#exampleModal"></i>' +
-                     '<i class="fas fa-times" data-toggle="modal" data-target="#deleteSensor"></i>';*/
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
@@ -317,11 +237,9 @@
     function editSetting(obj) {
         var sensor = $(obj).parent().parent().children();
 
-        $("#tableName2").val(sensor.eq(3).html());             // -> tmsWP0001_NOX_01
-        $("#place2").val(sensor.eq(5).html());                 // -> 측정소 1
         $("input[name=hiddenCode]").val(sensor.eq(3).html());  // -> tmsWP0001_NOX_01
-
-        changeTableName(2);   // -> null= 추가 , 2 = 수정
+        $("#modal_title").html("관리 ID : <font class='text-primary'><b>"+sensor.eq(2).html()+"</b></font>");
+        $("#place2").val(sensor.eq(5).html());
     }
 
     function deleteModal(obj) {
@@ -386,53 +304,19 @@
             })
             return;
         }
-/*
-        if ($('#naming' + idx).val() == '') {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                html: '등록된 항목명이 없습니다. <br>항목명을 추가 하시겠습니까?',
-                showCancelButton: true,
-                confirmButtonColor: '#393',
-                confirmButtonText: '추가',
-                cancelButtonText: '취소'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $('#sensorName').val('');
-                    setTimeout(function() {
-                        $('input[name=code]').val($('#m_class').val());
-                        $('#addModal').modal('show');
-                    }, 300);
-                }
-                if(result.dismiss=="cancel"){
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '경고',
-                        text: '항목명 미 추가시 센서 등록을 하실 수 없습니다.',
-                        showCancelButton: true,
-                        confirmButtonText: '항목명 추가',
-                        cancelButtonText: '취소'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $('input[name=code]').val($('#m_class').val());
-                            $('#addModal').modal('show');
-                        }
-                    });
-                }
-            });
-            return;
-        }
-*/
 
         let form = "";
-        let str = "";
+        let title = "";
+        let content = "";
 
         if (idx == 2) {
             form = $('#editForm').serialize();
-            str = '수정';
+            content = '센서 측정소가 수정 되었습니다.';
+            title = '센서 수정';
         } else {
             form = $('#saveForm').serialize();
-            str = '추가';
+            content = '센서가 추가 되었습니다.';
+            title = '센서 추가';
             $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
         }
 
@@ -446,18 +330,12 @@
                 $('#editModal').modal('hide');
                 Swal.fire({
                     icon: 'success',
-                    title: '센서 ' + str,
-                    text: '관리 항목에 센서가 ' + str + ' 되었습니다.',
+                    title: title,
+                    text: content,
                 })
                 setTimeout(function () {
                     location.reload();
-                }, 3000);
-                /*
-                drawTable(data);
-                $("input[type=text]").val("");
-                $('#tableName option:eq(0)').attr('selected','selected');
-                $('#place option:eq(0)').attr('selected','selected');
-                */
+                }, 1500);
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
@@ -465,67 +343,26 @@
         });
     }
 
-    /*
-    function addStandardSetting(){
-        if($('input[name=sensorName]').val()==''){
-            Swal.fire({
-                icon: 'error',
-                title: '경고',
-                html: '항목명을 입력해주세요.',
-            })
-            return;
-        }
-        $("input[type=hidden]").val("");
-        standardForm = $('#addStandard').serialize();
-        addStandard(standardForm);
-    }
 
-    function addStandard(form){
-        $.ajax({
-            url: 'simpleSaveStandard',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: form,
-            success: function () {
-                $('#addModal').modal('hide');
-                Swal.fire({
-                    icon: 'success',
-                    title: '추가 완료 ',
-                    html: '항목명 및 센서 추가가 완료되었습니다.<br> 항목명 변경은 <b>[환경설정 - 연간 배출 허용 기준 설정]</b> 에서 <br>변경하실 수 있습니다.',
-                })
-                changeTableName('');
-                setTimeout(function() {
-                    saveSensor('');
-                }, 2000);
-
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error);
-            }
-        });
-    }
-    */
-
-    function changeTableName(idx) {
-        const tableName = $("#tableName" + idx).val();
+    function changeTableName() {
+        const tableName = $("#tableName").val();
         if (tableName == "선택") {
-            $('#m_id' + idx).val("");
-            $('#m_class' + idx).val("");
-            $('#naming' + idx).val("");
-            $('#place' + idx + ' option:eq(0)').attr('selected', 'selected');
+            $('#m_id').val("");
+            $('#m_class').val("");
+            $('#naming').val("");
+            $('#place option:eq(0)').attr('selected', 'selected');
         } else {
             const str = tableName.split('_');
             const id = str[1] + '_' + str[2];
-            $('#m_id' + idx).val(id);
-            $('#m_class' + idx).val(str[1]);
+            $('#m_id').val(id);
+            $('#m_class').val(str[1]);
 
             const naming = findNaming(str[1]);
 
             if(naming=="")
-                $('#naming' + idx).val(str[1]);
+                $('#naming').val(str[1]);
             else
-                $('#naming' + idx).val(naming)
+                $('#naming').val(naming)
         }
     }
 
