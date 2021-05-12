@@ -216,9 +216,9 @@
                         </li>
                         <li class="topMenuLi"><a class="menuLink" href="/alarmManagement">환경설정</a>
                             <ul class="submenu long_sub">
-                                <li><a href="/alarmManagement" class="submenuLink ">알림 설정</a></li>
                                 <li><a href="/stationManagement" class="submenuLink ">측정소 관리</a></li>
                                 <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
+                                <li><a href="/alarmManagement" class="submenuLink ">알림 설정</a></li>
                                 <li><a href="/emissionsManagement" class="submenuLink ">배출량 관리</a></li>
                                 <li><a href="/setting" class="submenuLink ">설정</a></li>
                             </ul>
