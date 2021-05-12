@@ -392,6 +392,27 @@
         })
     }
 
+    function findPlace(name) {
+        var data1 = "";
+        $.ajax({
+            url: '<%=cp%>/getPlace',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"place": name},
+            success: function (data) {
+                data1 = data;
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+                data1 = 0;
+
+            }
+        })
+        return data1;
+    }
+
     //센서 모니터링 on/off 불러오기
     function findMonitor(tableName) {
         let isChecked = "";
@@ -502,6 +523,24 @@
         const location = $("#lo").val();
         const tel = $("#te").val();
         const admin = $("#ad").val();
+
+        if (name == "") {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '측정소 명을 입력해주세요.'
+            })
+            return false;
+        } else {
+            if (findPlace(name) != 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '이미 등록된 측정소 입니다.'
+                })
+                return false;
+            }
+        }
 
         $.ajax({
             url: '<%=cp%>/savePlace',

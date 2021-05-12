@@ -446,7 +446,7 @@
                 /* 결과가 존재하지 않을 경우 센서명만 전달 */
                 result = {
                     "name": sensor, "naming": sensor,
-                    "legalStandard": "-", "companyStandard": "-", "managementStandard": "-", "power": "off"
+                    "legalStandard": 999, "companyStandard": 999, "managementStandard": 999, "power": "off"
                 }
             }
         });
