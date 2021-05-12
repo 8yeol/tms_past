@@ -441,7 +441,7 @@
             success: function (data) {
                 // 데이터가 0 또는 null 일 경우 "-" 으로 치환
                 if (data.legalStandard == 999 || data.legalStandard == null) {
-                    data.legalStandard = "";
+                    data.legalStandard = "-";
                 }
                 if (data.companyStandard == 999 || data.companyStandard == null) {
                     data.companyStandard = "-";
