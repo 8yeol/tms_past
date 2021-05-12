@@ -198,7 +198,7 @@
             $('#title').text(place_name);
             getPlaceAllSensorData(place_name, sensor_naming);
         }else{ //파라미터가 없을 경우
-            const place_name = "${place.get(0).name}"; // 기본값
+            const place_name = $('#place_name > li').attr('id'); // 기본값
             $("#place_name li").eq(0).addClass('active');
             $('#title').text(place_name);
             getPlaceAllSensorData(place_name);
@@ -208,25 +208,17 @@
 
     function stopI(){
         clearTimeout(interval3);
+        isPause = true;
     }
 
-    function timeI(){
-        var now = new Date();
-        setTimeout(function A() {
-            setTimeout(function () {
-                console.log("01"+now);
+    async function timeI(){
+        isPause = false;
+        if(!isPause) {
+            var now = new Date();
+            setTimeout(function A() {
+                interval3 = setTimeout(A, 4000);
             }, 0);
-            setTimeout(function () {
-                console.log("02"+now);
-            }, 1000);
-            setTimeout(function () {
-                console.log("03"+now);
-            }, 2000);
-            setTimeout(function () {
-                console.log("04"+now);
-            }, 3000);
-            interval3 = setTimeout(A, 4000);
-        }, 0);
+        }
     }
 
     // 측정소 변경 이벤트
@@ -322,10 +314,6 @@
                 setTimeout(function interval_getData2() {
                     //test
                     var now =new Date();
-                   // console.log("g2: "+interval2);
-                    chart.updateSeries([{
-                        data: sensor_data_list
-                    }]);
                     draw_sensor_table(sensor_data_list, sensor_data);
                     var sensor_data_list_recent = getSensorRecent(sensor_name);
                     if(sensor_data_list_recent.length != 0){ // null = []
@@ -335,15 +323,18 @@
                             sensor_data_list.unshift({x:now, y: random, standard: null}); //test
                             // sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value, standard: null});
                             sensor_data_list.pop();
+                            chart.updateSeries([{
+                                data: sensor_data_list
+                            }]);
                         }
                     }
                     interval2 = setTimeout(interval_getData2, 1000);
                 }, 0);
         } else{ // null 일 때
             draw_place_table(null);
-            chart.updateSeries([{
-                data: []
-            }]);
+            // chart.updateSeries([{
+            //     data: []
+            // }]);
             draw_sensor_table(null);
             $("#radio_text").text("-") ;
             $("#standard_text").text("");
@@ -374,8 +365,8 @@
         for(var i in sensor_data_list){
             arr.push(sensor_data_list[i].y);
         }
-        var max = Math.max.apply(null, arr);
-        var min = Math.min.apply(null, arr);
+        var max = Math.max.apply(null, arr)*1.5;
+        var min = Math.min.apply(null, arr)/2;
         $("#chart").empty();
            options = {
                 series: [{
@@ -561,7 +552,6 @@
             }else{
                 const tbody = document.getElementById('place-tbody-table');
                 for(let i=0; i<data.length; i++){
-                    console.log(data[i])
                     const newRow = tbody.insertRow(tbody.rows.length);
                     const newCeil0 = newRow.insertCell(0);
                     const newCeil1 = newRow.insertCell(1);
@@ -778,6 +768,7 @@
         }else{
             var arr = new Array();
             for(var i=0; i<sensor_data_list.length; i++){
+
                 if(sensor_data_list[i].y > sensor_data.legalStandard){
                     var standard = "법적기준 초과";
                 }else if(sensor_data_list[i].y > sensor_data.companyStandard){
@@ -787,10 +778,26 @@
                 }else if(sensor_data_list[i].y <= sensor_data.managementStandard){
                     var standard = "정상";
                 }
+
+                if(sensor_data.legalStandard == 999){
+                    legalStandard = '-';
+                }else{
+                    legalStandard = sensor_data.legalStandard;
+                }
+                if(sensor_data.companyStandard == 999){
+                    companyStandard = '-';
+                }else{
+                    companyStandard = sensor_data.companyStandard;
+                }
+                if(sensor_data.managementStandard == 999){
+                    managementStandard = '-';
+                }else{
+                    managementStandard = sensor_data.managementStandard;
+                }
                 arr.push({x:moment(sensor_data_list[i].x).format('YYYY-MM-DD HH:mm:ss'), y:(sensor_data_list[i].y).toFixed(2), z: standard});
             }
+            $("#standard_text").text(legalStandard+"/"+companyStandard+"/"+managementStandard+" mg/Sm³ 이하");
         }
-
         $('#sensor-table').dataTable({
                 data: arr,
                 columns:[
@@ -847,7 +854,7 @@
                     sheetName: 'Exported data'
                 }]
             });
-        $("#standard_text").text(sensor_data.legalStandard+"/"+sensor_data.companyStandard+"/"+sensor_data.managementStandard+" mg/Sm³ 이하");
+
     }
 
 
@@ -855,7 +862,7 @@
     function draw_place_frame() {
         var placeName = getPlace(); // 전체 측정소 이름 구함 (조건:파워ON, 모니터링 True)
         var active = document.querySelectorAll('.active')
-        var activeName = active[3];
+        // var activeName = active[3];
         // $('#place_name').empty();
         for(var i=0; i<placeName.length; i++){
             $('#place_name').append("<li class='place-item btn bg-lightGray d-block fs-3 mt-3 me-3' id='"+
@@ -864,7 +871,6 @@
                 "</li>"+
                 "<hr style='height: 2px;'>");
         }
-
         return placeName;
     }
 
@@ -878,7 +884,7 @@
             success: function (data) {
                 $.each(data, function (index, item) { //item (센서명)
                     monitoring = item.monitoring;
-                    if(monitoring){
+                    if(monitoring || monitoring == 'true'){
                         placeName.push(item.name);
                     }else{
 
