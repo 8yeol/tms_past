@@ -10,4 +10,5 @@ import java.util.List;
 public interface AnnualEmissionsRepository extends MongoRepository<AnnualEmissions, ObjectId> {
     AnnualEmissions findBySensor(String sensor);
     List<AnnualEmissions> findByStatusIsTrue();
+    void deleteBySensor(String sensor);
 }

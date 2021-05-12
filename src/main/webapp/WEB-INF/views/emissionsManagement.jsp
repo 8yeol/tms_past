@@ -46,11 +46,11 @@
     }
 
     .MultiSelecterModal {
-        width: 300px;
-        height: 55px;
+        width: 350px;
         border-radius: 10px;
         background-color: rgba(99, 130, 255, 0.7);
         position: absolute;
+        padding:10px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -40%);
@@ -548,8 +548,7 @@
     //Modal FadeIn FadeOut
     function fade(Modal) {
         Modal.finish();
-        Modal.fadeIn(300);
-        Modal.delay(2000).fadeOut(300);
+        Modal.fadeIn(300).delay(2000).fadeOut(300);
     }
 
     //센서 상태 업데이트

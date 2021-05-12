@@ -7,4 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface EmissionsSettingRepository extends MongoRepository<EmissionsSetting, ObjectId> {
     EmissionsSetting findBySensor(String sensor);
+    void deleteBySensor(String sensor);
 }

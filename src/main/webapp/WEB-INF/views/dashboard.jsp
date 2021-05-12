@@ -222,8 +222,7 @@
                 </div>
                <!-- <div class="line"
                      style="width: 1px; height: 70%; background-color: #a9a9a9; padding:0;position: relative; top: 60px;"></div>
-                측정소가 많아져서 col-md-4을 주니 라인이 레이아웃을 망가뜨립니다. -->
-
+                측정소가 많아져서 class='col-md-4' 을 주니 라인이 레이아웃을 망가뜨립니다. -->
             </c:forEach>
 
             <c:if test="${empty placelist}">

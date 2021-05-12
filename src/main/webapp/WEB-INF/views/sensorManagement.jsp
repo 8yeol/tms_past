@@ -471,7 +471,6 @@
             $('#naming' + idx).val("");
             $('#place' + idx + ' option:eq(0)').attr('selected', 'selected');
         } else {
-            console.log('ttt');
             const str = tableName.split('_');
             const id = str[1] + '_' + str[2];
             $('#m_id' + idx).val(id);

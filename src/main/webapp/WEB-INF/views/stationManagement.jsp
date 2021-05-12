@@ -583,6 +583,7 @@
         $("input:checkbox[name=place]:checked").each(function () {
             placeList.push($(this).attr('id'));
         });
+
         if (placeList.length == 0) {
 
             Swal.fire({

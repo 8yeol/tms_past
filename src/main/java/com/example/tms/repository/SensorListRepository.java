@@ -10,5 +10,5 @@ public interface SensorListRepository extends MongoRepository<SensorList, Object
     List<SensorList> findByPlace(String place);
     String findByTableName(String tableName);
     SensorList findByTableName(String tableName,String Null);  //오버로딩 위해 필요없는 인자 Null 받습니다.
-
+    void deleteByTableName(String tableName);
 }
