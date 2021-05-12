@@ -254,7 +254,7 @@
                 swal.fire({
                     icon: 'warning',
                     title: '경고',
-                    text: 'From 시간 보다 적거나 같은 시간을 입력하실 수 없습니다.'
+                    text: 'To 시간이 From 시간 보다 적거나 같을 수 없습니다.'
                 })
                 return;
             }
@@ -311,7 +311,24 @@
 
         let stime = $('#start' + idx).val();
         let etime = $('#end' + idx).val();
-
+        if(stime.length == 3){
+            swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '시간을 정확히 입력 해주세요.'
+            })
+            $("#start"+idx).val("");
+            return;
+        }
+        if(etime.length == 3){
+            swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '시간을 정확히 입력 해주세요.'
+            })
+            $("#end"+idx).val("");
+            return;
+        }
         if (etime != "") {
             if (stime >= etime) {
                 swal.fire({
