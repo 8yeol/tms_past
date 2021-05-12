@@ -232,11 +232,12 @@
 
             if(document.getElementsByName("chartRadio")[0].checked){
                 sensor_time_length = 1;
+                var sensor_data_list = getSensor(sensor_name, sensor_time_length);
             }else{
                 sensor_time_length = 24;
+                var sensor_data_list = getSensor("rm05_"+sensor_name, sensor_time_length);
             }
 
-            var sensor_data_list = getSensor(sensor_name, sensor_time_length);
            chart = setChartOption(sensor_data_list, sensor_data);
 
             $("#radio_text").text(sensor_data.naming); /*+ " - 최근 " + textTime + " 자료"*/
@@ -796,10 +797,10 @@
             sensor_time_length = 1;
         }else{
             sensor_time_length = 24;
-        }
         sensor_naming = $('#radio_text').text();
         var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
         sensor_name = temp[0].childNodes[1].value;
+        }
         sensor_data = getSensorData(sensor_name);
         getData2(sensor_data);
     });
