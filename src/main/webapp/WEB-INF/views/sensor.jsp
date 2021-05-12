@@ -164,6 +164,7 @@
             <hr>
             <%-- 차트의 데이터 테이블 --%>
             <div class="d-flex fw-bold pos-a align-self-end">
+<%--            <div class="offset-7">--%>
                 <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 :</div>
                 <div id="standard_text" style="color: #000;"></div>
             </div>
@@ -285,17 +286,17 @@
                     }
                 }
             }
+        }else{ //sensor_data==null||sensor_data==undefined||sensor_data.value== null
+            draw_place_table(null);
+            sensor_data = [];
         }
-            getData2(sensor_data);
+        getData2(sensor_data);
         }catch (e) {
             console.log(e);
         }
     }
 
     function getData2(sensor_data) {
-        if(sensor_data==null||sensor_data==undefined||sensor_data.value== null){
-            sensor_data = [];
-        }
         clearTimeout(interval2);
         if(sensor_data.length!=0){
             let sensor_name = sensor_data.name;
@@ -308,36 +309,43 @@
                 sensor_time_length = 24;
                 var sensor_data_list = getSensor("rm05_"+sensor_name, sensor_time_length);
             }
-            chart = setChartOption(sensor_data_list, sensor_data);
-            $("#radio_text").text(sensor_data.naming); /*+ " - 최근 " + textTime + " 자료"*/
+            if(sensor_data_list.length != 0){
+                chart = setChartOption(sensor_data_list, sensor_data);
+                $("#radio_text").text(sensor_data.naming); /*+ " - 최근 " + textTime + " 자료"*/
 
-                setTimeout(function interval_getData2() {
-                    //test
-                    var now =new Date();
-                    draw_sensor_table(sensor_data_list, sensor_data);
-                    var sensor_data_list_recent = getSensorRecent(sensor_name);
-                    if(sensor_data_list_recent.length != 0){ // null = []
-                        // if(sensor_data_list[0].x != sensor_data_list_recent.up_time){
-                        if(sensor_data_list[0].x != now){ //test
-                            random = sensor_data_list_recent.value + Math.random(); //test
-                            sensor_data_list.unshift({x:now, y: random, standard: null}); //test
-                            // sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value, standard: null});
-                            sensor_data_list.pop();
-                            chart.updateSeries([{
-                                data: sensor_data_list
-                            }]);
+                    setTimeout(function interval_getData2() {
+                        //test
+                        var now =new Date();
+                        draw_sensor_table(sensor_data_list, sensor_data);
+                        var sensor_data_list_recent = getSensorRecent(sensor_name);
+                        if(sensor_data_list_recent.length != 0){ // null = []
+                            // if(sensor_data_list[0].x != sensor_data_list_recent.up_time){
+                            if(sensor_data_list[0].x != now){ //test
+                                random = sensor_data_list_recent.value + Math.random(); //test
+                                sensor_data_list.unshift({x:now, y: random, standard: null}); //test
+                                // sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value, standard: null});
+                                sensor_data_list.pop();
+                                chart.updateSeries([{
+                                    data: sensor_data_list
+                                }]);
+                            }
                         }
-                    }
-                    interval2 = setTimeout(interval_getData2, 1000);
-                }, 0);
-        } else{ // null 일 때
-            draw_place_table(null);
+                        interval2 = setTimeout(interval_getData2, 1000);
+                    }, 0);
+            }else{
+                if(sensor_data){
+                    draw_sensor_table(null, sensor_data);
+                    setChartOption(null, sensor_data);
+                    $("#radio_text").text(sensor_data.naming);
+                }
+            }
+        }else{ // null 일 때
+            $("#radio_text").text("-") ;
+            $("#standard_text").text("");
+            draw_sensor_table(null);
             // chart.updateSeries([{
             //     data: []
             // }]);
-            draw_sensor_table(null);
-            $("#radio_text").text("-") ;
-            $("#standard_text").text("");
         }
     }
 
@@ -489,15 +497,15 @@
                     decimalsInFloat: 2, //소수점아래
                     min: min, //최소
                     max: max, //최대
-                    // labels: {
-                    //     show: true,
-                    //     formatter: function (val) {
-                    //         if (data == null || data.length == 0)
-                    //             return 'No data'
-                    //         else
-                    //             return val
-                    //     }
-                    // }
+                    labels: {
+                        show: true,
+                        formatter: function (val) {
+                            if (data == null || data == 0)
+                                return 'No data'
+                            else
+                                return val
+                        }
+                    }
                 },
                 xaxis: {
                     type: 'datetime',
@@ -543,7 +551,7 @@
         try{
             $('#place-tbody-table').empty();
             if(data == null){
-                const innerHtml = "<tr><td colspan='6'> 등록된 센서 데이터가 없습니다. </td></tr>";
+                const innerHtml = "<tr><td colspan='6'> 등록된 센서 데이터가 없거나 모니터링이 OFF 입니다. </td></tr>";
                 $('#place-tbody-table').append(innerHtml);
             }else{
                 const tbody = document.getElementById('place-tbody-table');
@@ -618,7 +626,9 @@
             async: false,
             success: function (data) {
                 $.each(data, function (index, item) { //item (센서명)
-                    result.push(getSensorData(item));
+                    if(getSensorData(item)){
+                        result.push(getSensorData(item));
+                    }
                 })
             },
             error: function (e) {
@@ -682,6 +692,8 @@
                 legalStandard: legalStandard, companyStandard: companyStandard, managementStandard: managementStandard,
                 beforeValue: beforeValue, monitoring: monitoring
             });
+        }else{
+            return null;
         }
         return result;
     }
@@ -699,12 +711,16 @@
                 data: {"sensor": sensor_name, "hour": hour},
                 async: false,
                 success: function (data) {
-                    $.each(data, function (index, item) {
-                        result.push({x: item.up_time, y: item.value});
-                    })
+                    if(data.length != 0){
+                        $.each(data, function (index, item) {
+                            result.push({x: item.up_time, y: item.value});
+                        })
+                    }else{
+                    // 조회 결과 없을 때 return [];
+                       result = [];
+                    }
                 },
                 error: function (e) {
-                    // 조회 결과 없을 때 return [];
                 }
             });
         }
@@ -714,10 +730,8 @@
     // 최근 데이터 조회
     function getSensorRecent(sensor){
         let result;
-        // 파라미터로 넘어오는 sensor 값이 null 일때 처리(측정소에 맵핑되어있는 센서값이 없는 경우)
         if(sensor==undefined){
-            console.log('get sensor recent null 처리');
-            return null;
+            result = null;
         } else{
             $.ajax({
                 url:'getSensorRecent',
@@ -728,8 +742,6 @@
                     result = {value: data.value, status: data.status, up_time:data.up_time};
                 },
                 error: function (e) {
-                    // 결과가 존재하지 않을 경우 null 처리
-                    result = {value: null, status: false, up_time:null};
                 }
             });
         }
@@ -774,23 +786,24 @@
                 }else if(sensor_data_list[i].y <= sensor_data.managementStandard){
                     var standard = "정상";
                 }
-
-                if(sensor_data.legalStandard == 999){
-                    legalStandard = '-';
-                }else{
-                    legalStandard = sensor_data.legalStandard;
-                }
-                if(sensor_data.companyStandard == 999){
-                    companyStandard = '-';
-                }else{
-                    companyStandard = sensor_data.companyStandard;
-                }
-                if(sensor_data.managementStandard == 999){
-                    managementStandard = '-';
-                }else{
-                    managementStandard = sensor_data.managementStandard;
-                }
                 arr.push({x:moment(sensor_data_list[i].x).format('YYYY-MM-DD HH:mm:ss'), y:(sensor_data_list[i].y).toFixed(2), z: standard});
+            }
+        }
+        if(sensor_data != null){
+            if(sensor_data.legalStandard == 999){
+                legalStandard = '-';
+            }else{
+                legalStandard = sensor_data.legalStandard;
+            }
+            if(sensor_data.companyStandard == 999){
+                companyStandard = '-';
+            }else{
+                companyStandard = sensor_data.companyStandard;
+            }
+            if(sensor_data.managementStandard == 999){
+                managementStandard = '-';
+            }else{
+                managementStandard = sensor_data.managementStandard;
             }
             $("#standard_text").text(legalStandard+"/"+companyStandard+"/"+managementStandard+" mg/Sm³ 이하");
         }
