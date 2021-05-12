@@ -45,6 +45,7 @@ public class Schedule {
     }
 
     //@Scheduled(cron = "0 0/5 * * * *")
+    //@Scheduled(cron = "*/1 * * * * *")
     public void scheduling(){
         List<NotificationSettings> notification = notification_settingsRepository.findByStatusIsTrue();
 

@@ -160,6 +160,11 @@
 
 <div class="container">
     <div class="ms-3 mt-3 add-bg row">
+        <div class="row m-0 p-0">
+            <div class="col text-end">
+                <span class="text-primary" style="font-size: 15%">* 검색기간이 7일 미만일 경우 5분 평균데이터, 7일 이상인 경우 30분 평균데이터로 표시됩니다.</span>
+            </div>
+        </div>
         <div class="col-3 picker">
             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
             <div class="btn-group w-50 ms-3">
@@ -322,6 +327,7 @@
                 }
             },
             error : function(request, status, error) {
+                console.log('add table error');
                 console.log(error)
             }
         })
@@ -488,7 +494,8 @@
                 $("#"+item).prop("checked",true);
             },
             error : function(request, status, error) {
-                console.log(error)
+                console.log(' get place sensor error');
+                console.log(error);
             }
         })
     }
@@ -508,7 +515,7 @@
     function search(flag){
         const date_start =  $('#date_start').val();
         const date_end = $('#date_end').val();
-        const item = $('input[name="item"]:checked').val();
+        let item = $('input[name="item"]:checked').val();
         const off = $('#off').is(":checked"); // false : 선택안됨(표시X) , true : 선택(표시)
 
         if(item==undefined){
@@ -531,6 +538,7 @@
                 title: '경고',
                 text: '검색 날짜를 입력해주세요.'
             })
+            return false;
         }
 
         $.ajax({
@@ -560,6 +568,7 @@
                 }
             },
             error : function(request, status, error) {
+                console.log('search error');
                 console.log(error)
             }
         })
@@ -578,6 +587,7 @@
                 reference.set("legal",data.legalStandard);
             },
             error: function(request, status, error) {
+                console.log('get reference value error');
                 console.log(error)
             }
         });

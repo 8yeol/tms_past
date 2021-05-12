@@ -3,6 +3,7 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.mongo.MongoConfig;
 import com.example.tms.repository.*;
+import com.example.tms.repository.DataInquiry.DataInquiryRepository;
 import com.example.tms.repository.ReferenceValueSettingRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +27,10 @@ public class MainController {
     final ItemRepository itemRepository;
     final SensorListRepository sensorListRepository;
 
-    public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository, MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, ItemRepository itemRepository, SensorListRepository sensorListRepository) {
+    final MongoConfig mongoConfig;
+    final DataInquiryRepository dataInquiryRepository;
+
+    public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository, MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, ItemRepository itemRepository, SensorListRepository sensorListRepository, MongoConfig mongoConfig, DataInquiryRepository dataInquiryRepository) {
         this.placeRepository = placeRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.memberRepository = memberRepository;
@@ -36,6 +40,8 @@ public class MainController {
         this.rank_managementRepository = rank_managementRepository;
         this.itemRepository = itemRepository;
         this.sensorListRepository = sensorListRepository;
+        this.mongoConfig = mongoConfig;
+        this.dataInquiryRepository = dataInquiryRepository;
     }
 
 
@@ -94,7 +100,17 @@ public class MainController {
     @RequestMapping("/sensorManagement")
     public String sensorManagement(Model model) {
 
-       //model.addAttribute("collections", mongoConfig.getCollections());
+       List<String> result = mongoConfig.getCollection();
+
+       for(SensorList sensorList : sensorListRepository.findAll()){
+           for(String tableName : mongoConfig.getCollection()){
+               if(tableName.equals(sensorList.getTableName())){
+                   result.remove(tableName);
+               }
+           }
+       }
+        model.addAttribute("collections", result);
+
 
         List<Place> places = placeRepository.findAll();
 

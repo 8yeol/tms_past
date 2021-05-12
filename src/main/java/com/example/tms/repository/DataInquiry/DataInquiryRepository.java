@@ -8,7 +8,10 @@ import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -57,7 +60,9 @@ public class DataInquiryRepository {
                 sort
         );
 
-        AggregationResults<ChartData> results = mongoTemplate.aggregate(agg, item, ChartData.class);
+        String tableName = getDiffDay(date_start, date_end, item);
+
+        AggregationResults<ChartData> results = mongoTemplate.aggregate(agg, tableName, ChartData.class);
 
         List<ChartData> result = results.getMappedResults();
 
@@ -102,10 +107,37 @@ public class DataInquiryRepository {
                 sort
         );
 
-        AggregationResults<Sensor> results = mongoTemplate.aggregate(agg, item, Sensor.class);
+        String tableName = getDiffDay(date_start, date_end, item);
+
+        AggregationResults<Sensor> results = mongoTemplate.aggregate(agg, tableName, Sensor.class);
 
         List<Sensor> result = results.getMappedResults();
 
         return result;
+    }
+
+    /**
+     * 두 날짜 차이 계산해서 7일 초과이면 30분 평균 데이터 연산, 이하이면 5분 평균 데이터로 연산
+     * @param from 검색 시작날짜
+     * @param to 검색 종료날짜
+     * @param item table Name
+     * @return 테이블명 (7분 미만일 경우 5분 평균 테이블명, 7분 이상일 경우 30분 평균 테이블명 리턴)
+     */
+    public String getDiffDay(String from, String to, String item){
+        try {
+            Date s_day = new SimpleDateFormat("yyyy-MM-dd").parse(from);
+            Date e_day = new SimpleDateFormat("yyyy-MM-dd").parse(to);
+
+            long diff = (e_day.getTime()- s_day.getTime()) / (24*60*60*1000);
+
+            if(diff > 7){
+                item = "RM30_" + item;
+            }else{
+                item = "RM05_" + item;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return item;
     }
 }

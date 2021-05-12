@@ -47,10 +47,8 @@
             <form id="saveForm">
                 <div class="pt-3 pe-5 ms-1">
                     <label class="me-3 col-xs-3 w-10 label">테이블명</label>
-                    <%-- mongoCollection 불러와서 tms~~~형식(센서)으로 된 테이블 명 뿌려주기 --%>
                     <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName('')">
                         <option>선택</option>
-                        <option value="lghausys_NOX_001">lghausys_NOX_001</option>
                         <c:forEach var="collection" items="${collections}" varStatus="status">
                             <option value="${collection}">${collection}</option>
                         </c:forEach>
