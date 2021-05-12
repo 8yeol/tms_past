@@ -44,7 +44,7 @@ public class JsonController {
     final ItemRepository itemRepository;
 
 
-    public JsonController(PlaceRepository placeRepository, ItemRepository itemRepository,SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository) {
+    public JsonController(PlaceRepository placeRepository, ItemRepository itemRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository) {
         this.placeRepository = placeRepository;
         this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
@@ -342,50 +342,45 @@ public class JsonController {
     // 측정항목 상세설정 모니터링 on/off
     @RequestMapping(value = "/getMonitoring")
     public Boolean getMonitoring(@RequestParam("name") String tableName) {
-        try{
+        try {
             return reference_value_settingRepository.findByName(tableName).getMonitoring();
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
     //측정소 상세설정 항목 추가
-    public void saveReference(String placename,String name,String naming) {
-//        if (reference_value_settingRepository.findByName(name) == null) {
+    public void saveReference(String placename, String name, String naming) {
 
-            if (placeRepository.findBySensorIsIn(name) != null) { //기존 센서가 존재
-                //place 업데이트 시간 수정
-                Place place = placeRepository.findBySensorIsIn(name);
-                ObjectId id = place.get_id();
+        if (placeRepository.findBySensorIsIn(name) != null) { //기존 센서가 존재
+            //place 업데이트 시간 수정
+            Place place = placeRepository.findBySensorIsIn(name);
+            ObjectId id = place.get_id();
 
-                Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
-                updatePlace.set_id(id);
-                placeRepository.save(updatePlace);
+            Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
+            updatePlace.set_id(id);
+            placeRepository.save(updatePlace);
 
 
-            } else { //최초 입력
-                Place placesensor = placeRepository.findByName(placename);
-                ObjectId id = placesensor.get_id();
-                List<String> sensor = placesensor.getSensor();
-                sensor.add(name);
-                Place updatePlace = new Place(placename, placesensor.getLocation(), placesensor.getAdmin(), placesensor.getTel(), placesensor.getMonitoring(), new Date(), sensor);
-                updatePlace.set_id(id);
-                placeRepository.save(updatePlace);
+        } else { //최초 입력
+            Place placesensor = placeRepository.findByName(placename);
+            ObjectId id = placesensor.get_id();
+            List<String> sensor = placesensor.getSensor();
+            sensor.add(name);
+            Place updatePlace = new Place(placename, placesensor.getLocation(), placesensor.getAdmin(), placesensor.getTel(), placesensor.getMonitoring(), new Date(), sensor);
+            updatePlace.set_id(id);
+            placeRepository.save(updatePlace);
 
-            }
-            float legal = 999.0f;
-            float management = 999.0f;
-            float company = 999.0f;
-            Boolean monitoring = false;
+        }
+        float legal = 999.0f;
+        float management = 999.0f;
+        float company = 999.0f;
+        Boolean monitoring = false;
 
-            //reference document 생성
-            ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
-            reference_value_settingRepository.save(saveReference);
+        //reference document 생성
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
+        reference_value_settingRepository.save(saveReference);
 
-//            return "success";
-//        } else {
-//            return "fail";
-//        }
     }
 
     //측정 항목 모니터링 업데이트
@@ -470,8 +465,8 @@ public class JsonController {
     //상세설정값 삭제 및 측정소 업데이트 시간 수정
     public void removeReferencePlaceUpdate(String name) {
         //상세설정 값 삭제
-        if(reference_value_settingRepository.findByName(name) != null){
-        reference_value_settingRepository.deleteByName(name);
+        if (reference_value_settingRepository.findByName(name) != null) {
+            reference_value_settingRepository.deleteByName(name);
         }
 
         //알림설정값 삭제
@@ -479,7 +474,7 @@ public class JsonController {
             notification_settingsRepository.deleteByName(name);
         }
         //place 업데이트 시간 수정
-        if(placeRepository.findBySensorIsIn(name) !=null) {
+        if (placeRepository.findBySensorIsIn(name) != null) {
             Place place = placeRepository.findBySensorIsIn(name);
             ObjectId id = place.get_id();
 
@@ -651,8 +646,8 @@ public class JsonController {
 
     //센서관리 항목 추가,수정
     @RequestMapping(value = "/saveSensor")
-    public void saveSensor(@RequestParam(value = "managementId" ,required = false) String managementId, @RequestParam(value = "classification",required = false) String classification, @RequestParam(value = "naming",required = false) String naming, @RequestParam(value = "place") String place,
-                           @RequestParam(value = "tableName",required = false) String tableName, @RequestParam(value = "hiddenCode", required = false) String hiddenCode) {
+    public void saveSensor(@RequestParam(value = "managementId", required = false) String managementId, @RequestParam(value = "classification", required = false) String classification, @RequestParam(value = "naming", required = false) String naming, @RequestParam(value = "place") String place,
+                           @RequestParam(value = "tableName", required = false) String tableName, @RequestParam(value = "hiddenCode", required = false) String hiddenCode) {
 
         SensorList sensor;
 
@@ -685,11 +680,13 @@ public class JsonController {
             emissions.setSensorNaming(naming);
             emissionsSettingRepository.save(emissions);
 
+            saveReference(place, tableName, naming); //상세설정 항목 추가
+
         } else { //수정
             sensor = sensorListRepository.findByTableName(hiddenCode, "");
             sensor.setPlace(place);
 
-            AnnualEmissions aemis =  annualEmissionsRepository.findBySensor(hiddenCode);
+            AnnualEmissions aemis = annualEmissionsRepository.findBySensor(hiddenCode);
             aemis.setPlace(place);
             aemis.setStatus(false);
             annualEmissionsRepository.save(aemis);
@@ -698,12 +695,43 @@ public class JsonController {
             emis.setPlace(place);
             emis.setStatus(false);
             emissionsSettingRepository.save(emis);
+            //측정소 센서 삭제 or sensor가 없을때 monitoring false
+            //place 업데이트 시간 수정
+            Place placeremove = placeRepository.findBySensorIsIn(hiddenCode);
+            ObjectId id = placeremove.get_id();
 
-            //센서 상세설정, 알림설정 삭제 , 업데이트 시간 수정
-            removeReferencePlaceUpdate(hiddenCode);
+            //센서리스트에서 센서 제거
+            List<String> sensorremove = placeremove.getSensor();
+            sensorremove.remove(hiddenCode);
+            boolean monitoring = placeremove.getMonitoring();
+            if (placeremove.getSensor().size() == 0) {
+                monitoring = false;
+            }
+            Place updatePlace = new Place(placeremove.getName(), placeremove.getLocation(), placeremove.getAdmin(), placeremove.getTel(), monitoring, new Date(), sensorremove);
+            updatePlace.set_id(id);
+            placeRepository.save(updatePlace);
+
+            //측정소 센서 추가 및 시간 업데이트
+            System.out.println(place);
+            Place placeadd = placeRepository.findByName(place); //측정소 정보
+            System.out.println(placeadd);
+            ObjectId idadd = placeadd.get_id(); //수정할 아이디
+
+            List<String> sensoradd = placeadd.getSensor();
+            System.out.println(sensoradd);
+            sensoradd.add(hiddenCode);
+            System.out.println(sensoradd);
+
+            Place placeUp = new Place(placeadd.getName(), placeadd.getLocation(), placeadd.getAdmin(), placeadd.getTel(), placeadd.getMonitoring(), new Date(), sensoradd);
+            placeUp.set_id(idadd);
+            System.out.println(placeUp);
+
+            placeRepository.save(placeUp);
+            System.out.println(placeRepository.findAll());
+
         }
         sensorListRepository.save(sensor);
-        saveReference(place, tableName, naming);
+
     }
 
     //센서관리 삭제

@@ -286,9 +286,9 @@
 
                         } else {
                             if (i == 0) {
-                                const none =
-                                    "<div>등록된 센서 데이터가 없습니다.</div>" +
-                                    "<div>센서 등록 후 이용 가능합니다.</div>";
+                                const none = "<div class='fw-bold' style='padding-top : 20px;'>" +
+                                    "<div style='padding-bottom:5px;'>등록된 센서 데이터가 없습니다.</div>" +
+                                    "<div>센서 등록 후 이용 가능합니다.</div></div>";
 
                                 $('#items').append(none); //센서 없을때
                             }
