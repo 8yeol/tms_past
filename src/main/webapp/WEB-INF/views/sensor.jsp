@@ -115,12 +115,12 @@
     <div class="row">
         <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 32px; text-align: -webkit-center;">
             <ul id="place_name">
-                <c:forEach var="place" items="${place}" varStatus="cnt">
-                    <li class="place-item btn bg-lightGray d-block fs-3 mt-3 me-3" id="${place.name}">
-                        <span>${place.name}</span>
-                    </li>
-                    <hr style="height: 2px;">
-                </c:forEach>
+<%--                <c:forEach var="place" items="${place}" varStatus="cnt">--%>
+<%--                    <li class="place-item btn bg-lightGray d-block fs-3 mt-3 me-3" id="${place.name}">--%>
+<%--                        <span>${place.name}</span>--%>
+<%--                    </li>--%>
+<%--                    <hr style="height: 2px;">--%>
+<%--                </c:forEach>--%>
             </ul>
         </div>
         <div class="col-md-10 bg-light rounded p-0">
@@ -157,14 +157,14 @@
                         <label>&nbsp;최근 24시간</label>
                     </div>
                 </div>
-                <span class="text-primary" style="font-size: 15%"> * 5분 단위로 업데이트 됩니다.</span>
+                <span class="text-primary" style="font-size: 15%" id="textUpdate"> * 최근 1시간 - 1분 단위로 업데이트 됩니다.</span>
             </div>
             <%-- 차트 --%>
             <div id="chart"></div>
             <hr>
             <%-- 차트의 데이터 테이블 --%>
             <div class="d-flex fw-bold pos-a align-self-end">
-                <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 -</div>
+                <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 :</div>
                 <div id="standard_text" style="color: #000;"></div>
             </div>
             <%-- 차트의 데이터 테이블 --%>
@@ -180,9 +180,88 @@
         </div>
     </div>
 </div>
+<button onclick="stopI()">123</button>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
-    var interval1, interval2;
+    var interval1, interval2, interval3;
+    var isPause = false;
+
+    $(document).ready(function () {
+        /* URI로부터 파라미터 확인 */
+        const url = new URL(window.location.href);
+        const urlParams = url.searchParams;
+        draw_place_frame();
+        if(urlParams.has(('place')) && urlParams.has('sensor')){ //place와 sensor 파라미터가 있을 경우
+            const place_name = urlParams.get('place');
+            const sensor_naming = urlParams.get('sensor');
+            $("#"+place_name).addClass('active');
+            $('#title').text(place_name);
+            getPlaceAllSensorData(place_name, sensor_naming);
+        }else{ //파라미터가 없을 경우
+            const place_name = "${place.get(0).name}"; // 기본값
+            $("#place_name li").eq(0).addClass('active');
+            $('#title').text(place_name);
+            getPlaceAllSensorData(place_name);
+            timeI();
+        }
+    }); //ready
+
+    function stopI(){
+        clearTimeout(interval3);
+    }
+
+    function timeI(){
+        var now = new Date();
+        setTimeout(function A() {
+            setTimeout(function () {
+                console.log("01"+now);
+            }, 0);
+            setTimeout(function () {
+                console.log("02"+now);
+            }, 1000);
+            setTimeout(function () {
+                console.log("03"+now);
+            }, 2000);
+            setTimeout(function () {
+                console.log("04"+now);
+            }, 3000);
+            interval3 = setTimeout(A, 4000);
+        }, 0);
+    }
+
+    // 측정소 변경 이벤트
+    $("#place_name").on('click', 'li', function () {
+        const place_name = $(this).attr('id');
+        $('#title').text(place_name);
+        $("#place_name li").removeClass('active');
+        $(this).addClass('active');
+        getPlaceAllSensorData(place_name);
+    });
+
+    /* 센서명 클릭 이벤트 */
+    $("#place-tbody-table").on('click', 'tr', function(){
+        const name = $(this).find('input').val();
+        sensor_data = getSensorData(name);
+        getData2(sensor_data);
+    });
+
+    /* 차트 1시간 / 24시간 이벤트 */
+    $("input[name=chartRadio]").on('click' , function (){
+        if(document.getElementsByName("chartRadio")[0].checked){
+            sensor_time_length = 1;
+            $('#textUpdate').text("* 최근 1시간 - 1분 단위로 업데이트 됩니다.");
+        }else{
+            sensor_time_length = 24;
+            $('#textUpdate').text("* 최근 24시간 - 5분 평균데이터로 1분 단위로 업데이트 됩니다.");
+            sensor_naming = $('#radio_text').text();
+            var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
+            sensor_name = temp[0].childNodes[1].value;
+        }
+        sensor_data = getSensorData(sensor_name);
+        getData2(sensor_data);
+    });
+
+
 
     // 측정소 별 항목 데이터 전체 (기존 getData 함수명 변경)
     function getPlaceAllSensorData(place_name, sensor_naming){
@@ -193,7 +272,7 @@
             clearTimeout(interval1);
         if(place_data.length != 0){
             setTimeout(function interval_getData() {
-                console.log("g1: "+interval1);
+                // console.log("g1: "+interval1);
                 draw_place_table(place_data);
                 for (var i = 0; i < place_data.length; i++) {
                     var recentData = getSensorRecent(place_data[i].name)
@@ -202,12 +281,12 @@
                         place_data[i].up_time = recentData.up_time;
                     }
                 }
-                interval1 = setTimeout(interval_getData, 1000);
+                // interval1 = setTimeout(interval_getData, 1000);
             }, 0);
             // $('#sensorInfo2').text("(경고:"+warning + "/ 위험:"+danger + ")");
-            if (!sensor_naming) { //파라미터로 넘어오는 값이 없을 경우
+            if (!sensor_naming) {  //파라미터 X
                 var sensor_data = place_data[0];
-            } else {
+            } else {   // 파라미터 O
                 for (var i = 0; i < place_data.length; i++) {
                     if (sensor_naming == place_data[i].naming) {
                         var sensor_data = place_data[i];
@@ -215,7 +294,7 @@
                 }
             }
         }
-        getData2(sensor_data);
+            getData2(sensor_data);
         }catch (e) {
             console.log(e);
         }
@@ -237,16 +316,13 @@
                 sensor_time_length = 24;
                 var sensor_data_list = getSensor("rm05_"+sensor_name, sensor_time_length);
             }
-
-           chart = setChartOption(sensor_data_list, sensor_data);
-
+            chart = setChartOption(sensor_data_list, sensor_data);
             $("#radio_text").text(sensor_data.naming); /*+ " - 최근 " + textTime + " 자료"*/
-            $("#standard_text").text(sensor_data.legalStandard+"/"+sensor_data.companyStandard+"/"+sensor_data.managementStandard+" mg/Sm³ 이하");
 
                 setTimeout(function interval_getData2() {
                     //test
                     var now =new Date();
-                   console.log("g2: "+interval2);
+                   // console.log("g2: "+interval2);
                     chart.updateSeries([{
                         data: sensor_data_list
                     }]);
@@ -268,7 +344,6 @@
             chart.updateSeries([{
                 data: []
             }]);
-
             draw_sensor_table(null);
             $("#radio_text").text("-") ;
             $("#standard_text").text("");
@@ -295,10 +370,14 @@
 
     /* chart Option Setting */
     function setChartOption(sensor_data_list, sensor_data){
+        var arr =new Array();
+        for(var i in sensor_data_list){
+            arr.push(sensor_data_list[i].y);
+        }
+        var max = Math.max.apply(null, arr);
+        var min = Math.min.apply(null, arr);
         $("#chart").empty();
-            var min = 0; //rm05_
-            var max = sensor_data.managementStandard*2;
-            options = {
+           options = {
                 series: [{
                     name: sensor_data.naming,
                     data: sensor_data_list
@@ -417,7 +496,7 @@
                 yaxis: {
                     tickAmount: 2,
                     decimalsInFloat: 2, //소수점아래
-                    // min: min, //최소
+                    min: min, //최소
                     max: max, //최대
                     // labels: {
                     //     show: true,
@@ -468,32 +547,9 @@
     }
 
 
-    $(document).ready(function () {
-        /* URI로부터 파라미터 확인 */
-        const url = new URL(window.location.href);
-        const urlParams = url.searchParams;
-        if(urlParams.has(('place')) && urlParams.has('sensor')){ //place와 sensor 파라미터가 있을 경우
-            const place_name = urlParams.get('place');
-            const sensor_naming = urlParams.get('sensor');
-            $("#"+place_name).addClass('active');
-            $('#title').text(place_name);
-            getPlaceAllSensorData(place_name, sensor_naming);
-        }else{ //파라미터가 없을 경우
-            const place_name = "${place.get(0).name}"; // 기본값
-            $("#place_name li").eq(0).addClass('active');
-            $('#title').text(place_name);
-            getPlaceAllSensorData(place_name);
-        }
-    }); //ready
 
-    // 측정소 변경 이벤트
-    $("#place_name").on('click', 'li', function () {
-        const place_name = $(this).attr('id');
-        $('#title').text(place_name);
-        $("#place_name li").removeClass('active');
-        $(this).addClass('active');
-        getPlaceAllSensorData(place_name);
-    });
+
+
 
     //측정소 전체 (상단 일반 테이블)
     function draw_place_table(data){
@@ -505,6 +561,7 @@
             }else{
                 const tbody = document.getElementById('place-tbody-table');
                 for(let i=0; i<data.length; i++){
+                    console.log(data[i])
                     const newRow = tbody.insertRow(tbody.rows.length);
                     const newCeil0 = newRow.insertCell(0);
                     const newCeil1 = newRow.insertCell(1);
@@ -546,6 +603,7 @@
                         newCeil5.innerHTML =  "정상";
                     }
                     $('#update').text(data[i].up_time);
+
                 }
             }
         }catch (e) {
@@ -789,28 +847,51 @@
                     sheetName: 'Exported data'
                 }]
             });
+        $("#standard_text").text(sensor_data.legalStandard+"/"+sensor_data.companyStandard+"/"+sensor_data.managementStandard+" mg/Sm³ 이하");
     }
 
-    /* 차트 1시간 / 24시간 이벤트 */
-    $("input[name=chartRadio]").on('click' , function (){
-        if(document.getElementsByName("chartRadio")[0].checked){
-            sensor_time_length = 1;
-        }else{
-            sensor_time_length = 24;
-        sensor_naming = $('#radio_text').text();
-        var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
-        sensor_name = temp[0].childNodes[1].value;
-        }
-        sensor_data = getSensorData(sensor_name);
-        getData2(sensor_data);
-    });
 
-    /* 센서명 클릭 이벤트 */
-    $("#place-tbody-table").on('click', 'tr', function(){
-        const name = $(this).find('input').val();
-        sensor_data = getSensorData(name);
-        getData2(sensor_data);
-    });
+    /* 측정소별 센서의 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)*/
+    function draw_place_frame() {
+        var placeName = getPlace(); // 전체 측정소 이름 구함 (조건:파워ON, 모니터링 True)
+        var active = document.querySelectorAll('.active')
+        var activeName = active[3];
+        // $('#place_name').empty();
+        for(var i=0; i<placeName.length; i++){
+            $('#place_name').append("<li class='place-item btn bg-lightGray d-block fs-3 mt-3 me-3' id='"+
+                placeName[i]+"'>"+
+                "<span>"+placeName[i]+"</span>"+
+                "</li>"+
+                "<hr style='height: 2px;'>");
+        }
+
+        return placeName;
+    }
+
+    // 전체 측정소 이름 구함 (조건: 파워 On, 모니터링 True)
+    function getPlace(){
+        const placeName = new Array();
+        $.ajax({
+            url: 'getPlaceList',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                $.each(data, function (index, item) { //item (센서명)
+                    monitoring = item.monitoring;
+                    if(monitoring){
+                        placeName.push(item.name);
+                    }else{
+
+                    }
+                })
+
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+        return placeName;
+    }
 
 
 </script>
