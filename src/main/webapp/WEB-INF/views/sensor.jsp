@@ -364,7 +364,7 @@
                     enbaled: true,
                     x: {
                         show: true,
-                        format: 'HH:mm',
+                        format: 'HH:mm:ss',
                         formatter: undefined,
                     },
                 },
@@ -447,15 +447,6 @@
                     decimalsInFloat: 2, //소수점아래
                     // min: min, //최소
                     // max: max //최대
-                    labels: {
-                        show: true,
-                        formatter: function (val) {
-                            if (sensor_data_list === null || sensor_data_list.length === 0)
-                                return 'No data'
-                            else
-                                return val
-                        }
-                    }
                 },
                 xaxis: {
                     type: 'datetime',
@@ -466,7 +457,7 @@
                             year: 'yyyy년',
                             month: 'MM월',
                             day: 'dd일',
-                            hour: 'HH:mm'
+                            hour: 'HH:mm:ss'
                         },
                     },
                     tickPlacement: 'on',
