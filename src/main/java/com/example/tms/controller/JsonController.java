@@ -329,7 +329,11 @@ public class JsonController {
     // 측정항목 상세설정 모니터링 on/off
     @RequestMapping(value = "/getMonitoring")
     public Boolean getMonitoring(@RequestParam("name") String tableName) {
-        return reference_value_settingRepository.findByName(tableName).getMonitoring();
+        try{
+            return reference_value_settingRepository.findByName(tableName).getMonitoring();
+        }catch (Exception e){
+            return false;
+        }
     }
 
     //측정소 상세설정 항목 추가
