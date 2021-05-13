@@ -49,7 +49,6 @@ public class MainController {
     public String dashboard(Model model) {
         //선택된 센서 (findByStatusIsTrue) 가져오기
         List<AnnualEmissions> setting = annualEmissionsRepository.findByStatusIsTrue();
-
         model.addAttribute("sensorlist",setting);
 
         //선택된 센서 측정소 중복제거  List -> Set
@@ -60,9 +59,22 @@ public class MainController {
         TreeSet<String> placeSet = new TreeSet<>(placelist);
         model.addAttribute("placelist", placeSet);
 
-        //연간 배출기준값 가져오기
+
+        /*연간 배출기준값 가져오기
+          JSTL을 최소화 하고자 센서객체의 필요없는값 SensorNaming에 매핑된 기준값을 넣습니다
+          setting.get(i).setSensor( 기준값 );
+         */
         List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
-        model.addAttribute("standard",standard);
+
+        for (int i =0;i < setting.size();i++) {
+            for (int k = 0; k < standard.size(); k++) {
+                if (setting.get(i).getSensorNaming().equals(standard.get(k).getItemName())) {
+                    setting.get(i).setSensor(standard.get(k).getEmissionsStandard() +"");
+                    break;
+                }
+             setting.get(i).setSensor("-1");  //맵핑된 값 없으면 판별하기위해 -1
+            }
+        }
 
         return "dashboard";
     }
