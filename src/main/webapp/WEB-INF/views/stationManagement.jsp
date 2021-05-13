@@ -86,13 +86,13 @@
             </div>
             <table style="text-align: center; width: 100%">
                 <tr id="c" style="border-bottom: silver solid 2px; width: 100%; display: flex; padding-bottom: 5px;">
-                    <th style="width: 4%;"></th>
-                    <th style="width:15%;">측정항목</th>
+                    <th style="width: 2%;"></th>
+                    <th style="width:18%;">측정항목</th>
                     <th style="width:25%;">관리ID</th>
                     <th style="width:14%;">법적기준</th>
                     <th style="width:14%;">사내기준</th>
                     <th style="width:14%;">관리기준</th>
-                    <th style="width:14%;">모니터링</th>
+                    <th style="width:13%;">모니터링</th>
                 </tr>
                 <tr id="items" style="width: 100%;">
 
@@ -266,8 +266,8 @@
                         const monitoring = findMonitor(tableName); //모니터 on/off(checked)
                         if (value.size != 0) {
                             const innerHtml =
-                                "<td style='width: 4%;'></td>" +
-                                "<td style='width:15%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("naming") + "</label></td>" +
+                                "<td style='width: 2%;'></td>" +
+                                "<td style='width:18%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("naming") + "</label></td>" +
                                 "<td style='width:24%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("name") + "</label></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' onchange='legalupdate(this)'></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "c' value='" + value.get("company") + "' onchange='companyupdate(this)'></td>" +

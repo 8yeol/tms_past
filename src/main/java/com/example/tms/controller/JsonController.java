@@ -684,25 +684,30 @@ public class JsonController {
             saveReference(place, tableName, naming); //상세설정 항목 추가
 
         } else { //수정
+            System.out.println(hiddenCode);
             sensor = sensorListRepository.findByTableName(hiddenCode, "");
             sensor.setPlace(place);
-
+            System.out.println(11111);
             AnnualEmissions aemis = annualEmissionsRepository.findBySensor(hiddenCode);
             aemis.setPlace(place);
             aemis.setStatus(false);
             annualEmissionsRepository.save(aemis);
-
+            System.out.println(22222);
             EmissionsSetting emis = emissionsSettingRepository.findBySensor(hiddenCode);
             emis.setPlace(place);
             emis.setStatus(false);
             emissionsSettingRepository.save(emis);
             //측정소 센서 삭제 or sensor가 없을때 monitoring false
             //place 업데이트 시간 수정
+            System.out.println(33333);
             Place placeremove = placeRepository.findBySensorIsIn(hiddenCode);
+            System.out.println(placeremove);
             ObjectId id = placeremove.get_id();
 
             //센서리스트에서 센서 제거
             List<String> sensorremove = placeremove.getSensor();
+            System.out.println(id);
+            System.out.println(sensorremove);
             sensorremove.remove(hiddenCode);
             boolean monitoring = placeremove.getMonitoring();
             if (placeremove.getSensor().size() == 0) {
@@ -713,8 +718,10 @@ public class JsonController {
             placeRepository.save(updatePlace);
             //측정소 센서 추가 및 시간 업데이트
             Place placeadd = placeRepository.findByName(place); //측정소 정보
+            System.out.println(placeadd);
             ObjectId idadd = placeadd.get_id(); //수정할 아이디
             List<String> sensoradd = placeadd.getSensor();
+            System.out.println(sensoradd);
             sensoradd.add(hiddenCode);
             Place placeUp = new Place(placeadd.getName(), placeadd.getLocation(), placeadd.getAdmin(), placeadd.getTel(), placeadd.getMonitoring(), new Date(), sensoradd);
             placeUp.set_id(idadd);
