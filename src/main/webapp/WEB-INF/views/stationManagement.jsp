@@ -503,31 +503,60 @@
             cancelButtonText: '취소'
         }).then((result) => {
             if (result.isConfirmed) {
-                $.ajax({
-                    url: '<%=cp%>/removePlace',
-                    type: 'POST',
-                    async: false,
-                    cache: false,
-                    data: {"placeList": placeList},
-                    success: function (data) {
-
-                    },
-                    error: function (request, status, error) { // 결과 에러 콜백함수
-                        console.log(error)
-                    }
-                })
                 swal.fire({
-                    title: '삭제 완료',
-                    icon: 'success',
-                    timer: 1500
-                })
-                //location.reload();
-                placeDiv();
-                placeChange($("#place0").text());
-
+                    title: '센서 삭제',
+                    text: '해당 측정소의 센서도 삭제 하시겠습니까?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: 'red',
+                    cancelButtonColor: 'gray',
+                    confirmButtonText: '포함된 센서 삭제',
+                    cancelButtonText: '측정소만 삭제'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '<%=cp%>/removePlace',
+                            type: 'POST',
+                            async: false,
+                            cache: false,
+                            data: {"placeList": placeList,"flag":true},
+                            success: function (data) {
+                                swal.fire({
+                                    title: '삭제 완료',
+                                    icon: 'success',
+                                    timer: 1500
+                                });
+                            },
+                            error: function (request, status, error) { // 결과 에러 콜백함수
+                                console.log(error)
+                            }
+                        })
+                    }else{
+                        $.ajax({
+                            url: '<%=cp%>/removePlace',
+                            type: 'POST',
+                            async: false,
+                            cache: false,
+                            data: {"placeList": placeList, "flag":false},
+                            success: function (data) {
+                                swal.fire({
+                                    title: '삭제 완료',
+                                    icon: 'success',
+                                    timer: 1500
+                                });
+                            },
+                            error: function (request, status, error) { // 결과 에러 콜백함수
+                                console.log(error)
+                            }
+                        })
+                    }
+                        placeDiv();
+                        placeChange($("#place0").text());
+                });
             }
-        })
+        });
     }
+
 
     //측정소 모니터링 onchange
     function p_monitoringupdate() {

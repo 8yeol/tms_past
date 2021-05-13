@@ -183,15 +183,53 @@ public class JsonController {
 
     //측정소 삭제
     @RequestMapping(value = "/removePlace")
-    public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList) {
-        if (placeList == null || "".equals(placeList)) {
-        } else {
+    public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList,boolean flag) {
+
             for (int i = 0; i < placeList.size(); i++) {
-                removePlaceSensorInfo(placeList.get(i));
+                if(flag)
+                    removePlaceRemoveSensor(placeList.get(i));       //센서 포함 삭제
+                if(!flag)
+                    removePlaceChangeSensor(placeList.get(i));       //측정소만 삭제
+            }
+    }
+
+    public void removePlaceChangeSensor(String place){
+        Place placeInfo = placeRepository.findByName(place);
+        List<String> sensor = placeInfo.getSensor();
+        for (int i = 0; i < sensor.size(); i++) {
+            //알림설정 False 설정
+            if (notification_settingsRepository.findByName(sensor.get(i)) != null) {
+               NotificationSettings no = notification_settingsRepository.findByName(sensor.get(i));
+               no.setStatus(false);
+               notification_settingsRepository.save(no);
+            }
+            //배출량 관리 - 모니터링 대상 False 설정
+            if (emissionsSettingRepository.findBySensor(sensor.get(i)) != null) {
+               EmissionsSetting em =  emissionsSettingRepository.findBySensor(sensor.get(i));
+               em.setStatus(false);
+               em.setPlace("");
+               emissionsSettingRepository.save(em);
+            }
+            //배출량 관리 - 연간 모니터링 대상 False 설정
+            if (annualEmissionsRepository.findBySensor(sensor.get(i)) != null) {
+                AnnualEmissions aem = annualEmissionsRepository.findBySensor(sensor.get(i));
+                aem.setStatus(false);
+                aem.setPlace("");
+                annualEmissionsRepository.save(aem);
+            }
+            //센서 관리 - 측정소 값 삭제
+            if (sensorListRepository.findByTableName(sensor.get(i)) != null) {
+               SensorList sl =  sensorListRepository.findByTableName(sensor.get(i),"");
+               sl.setPlace("");
+               sensorListRepository.save(sl);
             }
         }
+        //측정소 삭제
+        placeRepository.deleteByName(place);
     }
-    public void removePlaceSensorInfo(String place) {
+
+
+    public void removePlaceRemoveSensor(String place) {
         Place placeInfo = placeRepository.findByName(place);
         List<String> sensor = placeInfo.getSensor();
         for (int i = 0; i < sensor.size(); i++) {
@@ -694,18 +732,20 @@ public class JsonController {
             //측정소 센서 삭제 or sensor가 없을때 monitoring false
             //place 업데이트 시간 수정
             Place placeremove = placeRepository.findBySensorIsIn(hiddenCode);
-            //센서리스트에서 센서 제거
-            placeremove.getSensor().remove(hiddenCode);
-            if (placeremove.getSensor().size() == 0) {
-                placeremove.setMonitoring(false);
+            if(placeremove != null){
+                //센서리스트에서 센서 제거
+                placeremove.getSensor().remove(hiddenCode);
+                if (placeremove.getSensor().size() == 0) {
+                    placeremove.setMonitoring(false);
+                }
+                placeremove.setUp_time(new Date());
+                placeRepository.save(placeremove);
             }
-            placeremove.setUp_time(new Date());
-            placeRepository.save(placeremove);
-            //측정소 센서 추가 및 시간 업데이트
-            Place placeadd = placeRepository.findByName(place); //측정소 정보
-            placeadd.getSensor().add(hiddenCode);
-            placeadd.setUp_time(new Date());
-            placeRepository.save(placeadd);
+                //측정소 센서 추가 및 시간 업데이트
+                Place placeadd = placeRepository.findByName(place); //측정소 정보
+                placeadd.getSensor().add(hiddenCode);
+                placeadd.setUp_time(new Date());
+                placeRepository.save(placeadd);
 
         }
         sensorListRepository.save(sensor);
