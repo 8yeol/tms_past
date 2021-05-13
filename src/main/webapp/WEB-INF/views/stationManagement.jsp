@@ -53,7 +53,7 @@
     <div class="row bg-light" style="height: 70%; padding: 0px 25px 25px 25px;">
         <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div style="padding-bottom: 15px; padding-top: 3px;">
-                <span class="fw-bold" style="margin-right: 35%; font-size: 1.25rem;">측정소 관리</span>
+                <span class="fw-bold" style="margin-right: 34%; font-size: 1.25rem;">측정소 관리</span>
                 <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
                 <button data-bs-toggle="modal" data-bs-target="#updatePlace" class="updateBtn"
                         onclick="updatePlaceSetting()">수정
