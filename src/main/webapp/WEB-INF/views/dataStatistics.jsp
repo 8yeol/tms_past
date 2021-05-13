@@ -55,8 +55,8 @@
 <div class="container">
     <div class="row  ms-3 mt-4">
         <div class="col text-end">
-            <span class="text-primary" style="font-size: 15%"> * 매월 1일 전월 통계값이 업데이트 됩니다.</span>
             <p class="small m-0"> 업데이트 : <span class="small fw-bold" id="update"></span></p>
+            <span class="text-primary" style="font-size: 15%"> * 매월 1일 전월 통계값이 업데이트 됩니다.</span>
         </div>
     </div>
     <div class="row mt-2 p-3 add-bg" style="margin-left: 5px;">
@@ -294,7 +294,7 @@
                 $('#information > tfoot').empty();
                 $('#information > tbody').empty();
 
-                const innerHtml = "<tr><td colspan='14' rowspan='3'> 저장된 센서 데이터가 없습니다. </td></tr>";
+                const innerHtml = "<tr><td colspan='14' rowspan='3'> 통계 데이터가 없습니다. <br> 통계 데이터는 매월 1일 전월 통계값이 업데이트 됩니다. </td></tr>";
                 $('#information > tbody').append(innerHtml);
                 return false
             }

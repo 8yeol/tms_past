@@ -255,55 +255,51 @@
     </div>
 </div>
 
-<div class="row mt-4 bg-light margin-l h-px" style="width: 98%; margin: 0.2rem;">
-    <div class="row p-3 pb-0 margin-l">
-        <div class="col fs-5 fw-bold">
-            관리등급 초과 모니터링
-        </div>
-        <div class="col text-end">
-            <span class="small">마지막 업데이트 : <span class="fw-bold" id="excess_update">업데이트 시간</span></span><br>
-            <span class="text-primary" style="font-size: 15%"> * 실시간으로 업데이트 됩니다.</span>
-        </div>
-    </div>
-    <div class="row pb-3 h-75 pb-3 margin-l">
-        <div class="col">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-header">정상</div>
-                <div class="card-body" id="normal">
-                    <%--script--%>
-                    <h5> 모니터링 센서가 없습니다.</h5>
-                </div>
+    <div class="row mt-4 bg-light margin-l h-px" style="width: 98%; margin: 0.2rem;">
+        <div class="row p-3 pb-0 margin-l">
+            <div class="col fs-5 fw-bold">
+                관리등급 초과 모니터링
+            </div>
+            <div class="col text-end">
+                <span class="small">마지막 업데이트 : <span class="fw-bold" id="excess_update">업데이트 시간</span></span><br>
+                <span class="text-primary" style="font-size: 15%"> * 실시간으로 업데이트 됩니다.</span>
             </div>
         </div>
-        <div class="col">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-header">관리기준 초과</div>
-                <div class="card-body" id="caution">
-                    <%--script--%>
-                    <h5> 모니터링 센서가 없습니다.</h5>
+        <div class="row pb-3 h-75 pb-3 margin-l">
+            <div class="col">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">정상</div>
+                    <div class="card-body" id="normal">
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card text-dark bg-warning mb-3">
-                <div class="card-header">사내기준 초과</div>
-                <div class="card-body" id="warning">
-                    <%--script--%>
-                    <h5> 모니터링 센서가 없습니다.</h5>
+            <div class="col">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">관리기준 초과</div>
+                    <div class="card-body" id="caution">
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-danger mb-3">
-                <div class="card-header">법적기준 초과</div>
-                <div class="card-body" id="danger">
-                    <%--script--%>
-                    <h5> 모니터링 센서가 없습니다.</h5>
+            <div class="col">
+                <div class="card text-dark bg-warning mb-3">
+                    <div class="card-header">사내기준 초과</div>
+                    <div class="card-body" id="warning">
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-header">법적기준 초과</div>
+                    <div class="card-body" id="danger">
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <script>
@@ -388,13 +384,13 @@
                                         });
 
                                         if (value > data.legalStandard) {
-                                            $("#danger").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                            $("#danger").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         } else if (value > data.companyStandard) {
-                                            $("#warning").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                            $("#warning").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         } else if (value > data.managementStandard) {
-                                            $("#caution").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                            $("#caution").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         } else {
-                                            $("#normal").append("<h5 class='card-title'>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                            $("#normal").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         }
                                     },
                                     error: function (request, status, error) {

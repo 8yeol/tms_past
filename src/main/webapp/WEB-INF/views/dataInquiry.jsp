@@ -222,7 +222,7 @@
                     <div class="col">
                         <div class="float-end">
                             <div class="form-check pt-2">
-                                <input class="form-check-input" type="checkbox" value="" id="off">
+                                <input class="form-check-input" type="checkbox" value="" id="off" checked>
                                 <label class="form-check-label fw-bold small" for="off">
                                     Off 데이터 표시
                                 </label>
@@ -542,6 +542,7 @@
             return false;
         }
 
+        const reference = getReferenceValue(item);
         $.ajax({
             url: '<%=cp%>/searchChart',
             type: 'POST',
@@ -551,7 +552,7 @@
             data: {"date_start":date_start,
                 "date_end":date_end,
                 "item":item,
-                "off":off,
+                "off":off
             },
             success : function(data) {
                 if(data.length==0){
@@ -563,16 +564,15 @@
                     reset();
                     return false;
                 }else{
-                    const reference = getReferenceValue(item);
                     addChart(data, category, reference, flag);
-                    addTable(reference);
                 }
             },
             error : function(request, status, error) {
-                console.log('search error');
+                console.log('search off error');
                 console.log(error)
             }
         })
+        addTable(reference);
     }
 
     function getReferenceValue(tableName){

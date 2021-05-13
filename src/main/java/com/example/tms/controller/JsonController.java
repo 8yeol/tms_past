@@ -630,10 +630,11 @@ public class JsonController {
     }
 
     @RequestMapping(value = "/searchChart", method = RequestMethod.POST)
-    public List<ChartData> searchChart(String date_start, String date_end, String item, boolean off) {
+    public List<HashMap> searchOnChart(String date_start, String date_end, String item, boolean off) {
 
         return dataInquiryCustomRepository.searchChart(date_start, date_end, item, off);
     }
+
 
     @RequestMapping(value = "/searchInformatin", method = RequestMethod.POST)
     public List<Sensor> searchInformatin(String date_start, String date_end, String item, boolean off) {
