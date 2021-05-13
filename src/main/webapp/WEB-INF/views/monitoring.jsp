@@ -457,7 +457,7 @@
         if(data.length == 0){
             const newRow = tbody.insertRow(tbody.rows);
             const newCeil0 = newRow.insertCell();
-            newCeil0.innerHTML = '<div>'+'noData'+'</div>';
+            newCeil0.innerHTML = '<div>'+'등록된 센서 데이터가 없거나 모니터링이 OFF 입니다.'+'</div>';
             newCeil0.colSpan = 5;
             $("#update-" + index).text("-");
         }else{
