@@ -173,12 +173,30 @@ public class JsonController {
     //측정소 추가
     @RequestMapping(value = "/savePlace")
     public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "location") String location, @RequestParam(value = "admin") String admin,
-                          @RequestParam(value = "tel") String tel) {
-        Date up_time = new Date();
-        Boolean monitoring = false;
-        List sensor = new ArrayList();
-        Place savePlace = new Place(name, location, admin, tel, monitoring, up_time, sensor);
-        placeRepository.save(savePlace);
+                          @RequestParam(value = "tel") String tel, @RequestParam(value = "hiddenCode") String hiddenCode) {
+        Date date = new Date();
+        if (hiddenCode == "" || hiddenCode == null) { //추가
+            Boolean monitoring = false;
+            List sensor = new ArrayList();
+            Place newplace = new Place(name, location, admin, tel, monitoring, date, sensor);
+            placeRepository.save(newplace);
+        } else { //수정
+            Place place = placeRepository.findByName(hiddenCode); //기존 측정소 정보 불러오기
+            place.setName(name);
+            place.setUp_time(date);
+            place.setLocation(location);
+            place.setAdmin(admin);
+            place.setTel(tel);
+            placeRepository.save(place);
+
+            List<SensorList> sensorlist = sensorListRepository.findByPlace(hiddenCode);
+            for (int i = 0; i < sensorlist.size(); i++) {
+                SensorList sensor = sensorlist.get(i);
+                sensor.setPlace(name);
+                sensor.setUpTime(date);
+                sensorListRepository.save(sensor);
+            }
+        }
     }
 
     //측정소 삭제

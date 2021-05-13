@@ -55,6 +55,9 @@
             <div style="padding-bottom: 15px; padding-top: 3px;">
                 <span class="fw-bold" style="margin-right: 49%; font-size: 1.25rem;">측정소 관리</span>
                 <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
+                <button data-bs-toggle="modal" data-bs-target="#updatePlace" class="updateBtn"
+                        onclick="updatePlaceSetting()">수정
+                </button>
                 <button onclick="removePlace()" class="removeBtn">삭제</button>
             </div>
             <div class="text-center">
@@ -114,27 +117,65 @@
                     <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text"
                                                                                                class="modal-input"
                                                                                                name="name"
-                                                                                               id="na"
+                                                                                               id="na1"
                                                                                                style="position: relative; left: 15%;">
 
                     </div>
                     <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
-                                                                          id="lo"
+                                                                          id="lo1"
                                                                           style="position: relative; left: 23.5%;"></div>
                     <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
-                                                                             id="ad"
+                                                                             id="ad1"
                                                                              style="position: relative; left: 14.5%;">
                     </div>
                     <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
-                                                                           id="te"
+                                                                           id="te1"
                                                                            style="position: relative; left: 19.5%;"></div>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button id="saveBtn" type="button" class="btn btn-primary" onclick="insertPlace()">추가</button>
+                <button id="saveBtn" type="button" class="btn btn-primary" onclick="insertPlace(1)">추가</button>
                 <button id="cancelBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- updatePlace -->
+<div class="modal" id="updatePlace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title">측정소 수정</h5>
+            </div>
+            <div class="modal-body d-flex" style="flex-wrap: wrap;">
+                <form id="placeupdate" method="post" style="width:100%; ">
+                    <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text"
+                                                                                               class="modal-input"
+                                                                                               name="name"
+                                                                                               id="na2"
+                                                                                               style="position: relative; left: 15%;">
+
+                    </div>
+                    <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
+                                                                          name="location"
+                                                                          id="lo2"
+                                                                          style="position: relative; left: 22%;"></div>
+                    <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
+                                                                             name="admin"
+                                                                             id="ad2"
+                                                                             style="position: relative; left: 15%;">
+                    </div>
+                    <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
+                                                                           id="te2"
+                                                                           style="position: relative; left: 19%;"></div>
+                    <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button id="updateBtn" type="button" class="btn btn-primary" onclick="insertPlace(2)">수정</button>
+                <button id="cancelBtn1" type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -325,6 +366,57 @@
         return data1;
     }
 
+    //측정소 정보
+    function updatePlaceSetting() {
+
+
+        if ($("input:checkbox[name=place]:checked").length == 0) {
+            document.getElementById("cancelBtn1").click();
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '측정소를 체크해 주세요.'
+            })
+            placeDiv();
+            placeChange($("#pname").text());
+            return false;
+        }
+        if ($("input:checkbox[name=place]:checked").length != 1) {
+            document.getElementById("cancelBtn1").click();
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '측정소를 한개만 체크해 주세요.'
+            })
+            const placeall
+                = document.querySelector('input[name="placeall"]');
+            placeall.checked = false;
+            placeDiv();
+            placeChange($("#pname").text());
+            return false;
+        }
+        const place = $("input:checkbox[name=place]:checked").attr('id');
+        $.ajax({
+            url: '<%=cp%>/getPlace',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"place": place},
+            success: function (data) {
+                $('input[id=na2]').attr('value', data.name);
+                $('input[id=lo2]').attr('value', data.location);
+                $('input[id=ad2]').attr('value', data.admin);
+                $('input[id=te2]').attr('value', data.tel);
+                $('input[name=hiddenCode]').attr('value', data.name);
+
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        })
+    }
+
     //센서 유무 파악(모니터링 버튼 기능 제어)
     function findSensor(name) {
         var have = "";
@@ -426,29 +518,59 @@
     }
 
     //측정소 추가
-    function insertPlace() {
-        const na = $("#na").val();
+    function insertPlace(idx) {
+
+        const na = $("#na" + idx).val();
         const name = na.replace(/(\s*)/g, "");
-        const location = $("#lo").val();
-        const tel = $("#te").val();
-        const admin = $("#ad").val();
-
-        if (name == "") {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '측정소 명을 입력해주세요.'
-
-            })
-            return false;
-        } else {
-            if (findPlace(name) != 0) {
+        const location = $("#lo" + idx).val();
+        const tel = $("#te" + idx).val();
+        const admin = $("#ad" + idx).val();
+        const hiddenCode = $("input[name=hiddenCode]").val();
+        let title = "";
+        let content = "";
+        if (idx == 2) { //수정
+            if (name == "") {
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
-                    text: '이미 등록된 측정소 입니다.'
+                    text: '측정소 명을 입력해주세요.'
+
                 })
                 return false;
+            }
+            if (findPlace(name) != 0) {  //측정소명 중복확인
+                if (hiddenCode != name) { //기존 측정소 명과 바꾼 측정도 명이 다를때
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '이미 등록된 측정소 입니다.'
+                    })
+                    return false;
+                }
+            }
+            content = '측정소가 수정 되었습니다.';
+            title = '측정소 수정';
+        } else { //추가
+            if (name == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '측정소 명을 입력해주세요.'
+
+                })
+                return false;
+            } else {
+                if (findPlace(name) != 0) { //측정소 명 중복 확인
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '이미 등록된 측정소 입니다.'
+                    })
+                    return false;
+                }
+                content = '측정소가 추가 되었습니다.';
+                title = '측정소 추가';
+                $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
             }
         }
 
@@ -461,18 +583,21 @@
                 "name": name,
                 "location": location,
                 "tel": tel,
-                "admin": admin
+                "admin": admin,
+                "hiddenCode": $("input[name=hiddenCode]").val()
             }
 
         })
         Swal.fire({
             icon: 'success',
-            title: '저장완료',
+            title: title,
+            text: content,
             timer: 1500
         })
         document.getElementById("cancelBtn").click();
+        document.getElementById("cancelBtn1").click();
         placeDiv();
-        placeChange($("#pname").text());
+        placeChange(name);
     }
 
     function removePlace() {
@@ -556,7 +681,6 @@
             }
         });
     }
-
 
     //측정소 모니터링 onchange
     function p_monitoringupdate() {

@@ -75,6 +75,13 @@ button.removeBtn {
     margin-top: 5px;
     width: 60px;
 }
+button.updateBtn{
+    border: 2px solid #000;
+    background-color: white;
+    border-radius: 20px;
+    margin-top: 5px;
+    width: 60px;
+}
 
 #placeDiv li {
     text-align: justify;

@@ -235,8 +235,8 @@
     }
 
     function editSetting(obj) {
-        var sensor = $(obj).parent().parent().children();
 
+        var sensor = $(obj).parent().parent().children();
         $("input[name=hiddenCode]").val(sensor.eq(3).html());  // -> tmsWP0001_NOX_01
         $("#modal_title").html("관리 ID : <font class='text-primary'><b>"+sensor.eq(2).html()+"</b></font>");
         $("#place2").val(sensor.eq(5).html());
@@ -311,6 +311,14 @@
 
         if (idx == 2) {
             form = $('#editForm').serialize();
+            if($("#place2").val() == null){
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '측정소를 선택 해주세요.'
+                })
+                return;
+            }
             content = '센서 측정소가 수정 되었습니다.';
             title = '센서 수정';
         } else {
@@ -342,7 +350,6 @@
             }
         });
     }
-
 
     function changeTableName() {
         const tableName = $("#tableName").val();
