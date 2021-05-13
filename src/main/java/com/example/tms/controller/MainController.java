@@ -1,10 +1,8 @@
 package com.example.tms.controller;
 
 import com.example.tms.entity.*;
-import com.example.tms.mongo.MongoConfig;
+import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
-import com.example.tms.repository.DataInquiry.DataInquiryRepository;
-import com.example.tms.repository.ReferenceValueSettingRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,30 +16,23 @@ import java.util.*;
 public class MainController {
 
     final PlaceRepository placeRepository;
-    final ReferenceValueSettingRepository reference_value_settingRepository;
     final MemberRepository memberRepository;
-    final NotificationStatisticsCustomRepository notification_statistics_customRepository;
     final EmissionsSettingRepository emissionsSettingRepository;
     final AnnualEmissionsRepository annualEmissionsRepository;
     final RankManagementRepository rank_managementRepository;
     final EmissionsStandardSettingRepository emissionsStandardSettingRepository;
     final SensorListRepository sensorListRepository;
+    final MongoQuary mongoQuary;
 
-    final MongoConfig mongoConfig;
-    final DataInquiryRepository dataInquiryRepository;
-
-    public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository, MemberRepository memberRepository, NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoConfig mongoConfig, DataInquiryRepository dataInquiryRepository) {
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary) {
         this.placeRepository = placeRepository;
-        this.reference_value_settingRepository = reference_value_settingRepository;
         this.memberRepository = memberRepository;
-        this.notification_statistics_customRepository = notification_statistics_customRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
         this.annualEmissionsRepository = annualEmissionsRepository;
         this.rank_managementRepository = rank_managementRepository;
         this.emissionsStandardSettingRepository = emissionsStandardSettingRepository;
         this.sensorListRepository = sensorListRepository;
-        this.mongoConfig = mongoConfig;
-        this.dataInquiryRepository = dataInquiryRepository;
+        this.mongoQuary = mongoQuary;
     }
 
 
@@ -111,10 +102,10 @@ public class MainController {
     @RequestMapping("/sensorManagement")
     public String sensorManagement(Model model) {
 
-       List<String> result = mongoConfig.getCollection();
+       List<String> result = mongoQuary.getCollection();
 
        for(SensorList sensorList : sensorListRepository.findAll()){
-           for(String tableName : mongoConfig.getCollection()){
+           for(String tableName : mongoQuary.getCollection()){
                if(tableName.equals(sensorList.getTableName())){
                    result.remove(tableName);
                }
@@ -152,12 +143,9 @@ public class MainController {
 
     @RequestMapping("/dataStatistics")
     public String statistics(Model model) {
-        List<Place> places = placeRepository.findAll();
-        List<String> placelist = new ArrayList<>();
-        for (Place place : places) {
-            placelist.add(place.getName());
-        }
-        model.addAttribute("place", placelist);
+
+        model.addAttribute("place", mongoQuary.findPlaceSensorNotEmpty());
+
         return "dataStatistics";
     }
 
@@ -282,14 +270,7 @@ public class MainController {
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model) {
 
-        List<Place> places = placeRepository.findAll();
-
-        List<String> placelist = new ArrayList<>();
-        for (Place place : places) {
-            placelist.add(place.getName());
-        }
-
-        model.addAttribute("place", placelist);
+        model.addAttribute("place", mongoQuary.findPlaceSensorNotEmpty());
 
         return "dataInquiry";
     }
