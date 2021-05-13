@@ -123,7 +123,7 @@
 <%--                </c:forEach>--%>
             </ul>
         </div>
-        <div class="col-md-10 bg-light rounded p-0">
+        <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
             <div class="d-flex justify-content-end">
                 <span class="fs-7 mb-2">업데이트 : <a id="update"></a></span>
             </div>
