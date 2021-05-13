@@ -50,7 +50,7 @@
         border-radius: 10px;
         background-color: rgba(99, 130, 255, 0.7);
         position: absolute;
-        padding:10px;
+        padding: 10px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -40%);
@@ -132,8 +132,8 @@
                 <tbody id="tbody">
                 <c:forEach items="${standard}" var="standard" varStatus="i">
                     <tr>
-                        <td>${standard.item}</td>
-                        <td>${standard.itemName}</td>
+                        <td class="tableCode">${standard.item}</td>
+                        <td class="tableNaming">${standard.itemName}</td>
                         <td><fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/></td>
                         <td>${standard.densityStandard}</td>
                         <td>${standard.formula}</td>
@@ -274,7 +274,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="sensorName" >
+                            <input type="text" class="text-secondary" name="sensorName">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -302,6 +302,7 @@
                         </div>
                     </div>
                     <input type="hidden" name="hiddenCode"> <!-- 추가 수정 판별할 데이터 -->
+                    <input type="hidden" name="hiddenName"> <!-- 추가 수정 판별할 데이터 -->
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -336,12 +337,16 @@
 
     //기준 추가
     function insert() {
+
+        if (!valueCheck(-1)) return;
+
         var unComma = $("input[name='standard']").val().replace(/,/g, '');
         $("input[name='standard']").val(unComma);
 
         var form = $('#addStandard').serialize();
-        standardAjax(form, "추가");
+        standardAjax(form, '추가')
     }
+
     function insertSetting() {
         $('.modal-title').html('센서 추가');
         $('.btn-success').html('추가');
@@ -349,8 +354,6 @@
         $('.btn-success').attr("onclick", "insert()");
         inputClean();
     }
-
-
 
     //editModal 선택값 셋팅
     function editSetting(obj) {
@@ -364,25 +367,15 @@
         $("input[name='code']").val(tdList.eq(0).html());
         $("input[name='hiddenCode']").val(tdList.eq(0).html());
         $("input[name='sensorName']").val(tdList.eq(1).html());
+        $("input[name='hiddenName']").val(tdList.eq(1).html());
         $("input[name='standard']").val(tdList.eq(2).html());
         $("input[name='percent']").val(tdList.eq(3).html());
         $("input[name='formula']").val(tdList.eq(4).html());
     }
 
-
     //기준 수정
     function editStandard() {
-        formula = $('input[name=formula]').val();
-        percent = $('input[name=percent]').val();
-        standard = $('input[name=standard]').val();
-        if (formula == '' || percent == '' || standard == ''){
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력값을 확인 해주세요.'
-            })
-            return;
-        }
+        if (!valueCheck()) return;
 
         var unComma = $("input[name='standard']").val().replace(/,/g, '');
         $("input[name='standard']").val(unComma);
@@ -390,6 +383,7 @@
         var form = $('#addStandard').serialize();
         standardAjax(form, "수정");
     }
+
 
     function standardAjax(form, str) {
         $.ajax({
@@ -463,8 +457,8 @@
         for (i = 0; i < data.length; i++) {
             var innerHTML = "";
             innerHTML = " <tr>" +
-                " <td>" + data[i].item + "</td>" +
-                " <td>" + data[i].itemName + "</td>" +
+                " <td class='tableCode'>" + data[i].item + "</td>" +
+                " <td class='tableNaming'>" + data[i].itemName + "</td>" +
                 " <td>" + numberWithCommas(data[i].emissionsStandard) + "</td>" +
                 " <td>" + data[i].densityStandard + "</td>" +
                 " <td>" + data[i].formula + "</td>" +
@@ -483,6 +477,41 @@
         $("input[type=hidden]").val("");
     }
 
+    //입력값 체크
+    function valueCheck() {
+        let formula = $('input[name=formula]').val();
+        let percent = $('input[name=percent]').val();
+        let standard = $('input[name=standard]').val();
+        let code = $('input[name=code]').val();
+        let sensorName = $('input[name=sensorName]').val();
+        let hiddenCode = $("input[name='hiddenCode']").val();
+        let hiddenName = $("input[name='hiddenName']").val();
+
+        //Null 체크
+        if (formula == '' || percent == '' || standard == '' || code == '' || sensorName == '') {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력값을 확인 해주세요.'
+            })
+            return false;
+        }
+
+        //중복 검사
+        for (i = 0; i < $('.tableCode').length; i++) {
+            if (($('.tableNaming').eq(i).html() == sensorName) && ($('.tableNaming').eq(i).html() != hiddenName)
+                || ($('.tableCode').eq(i).html() == code) && $('.tableCode').eq(i).html() != hiddenCode) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '이미 존재하는 코드와 항목명입니다.'
+                })
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     //선택된 옵션 이벤트 적용
     function moveEvent(from, to) {

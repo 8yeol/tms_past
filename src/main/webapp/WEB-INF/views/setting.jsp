@@ -10,6 +10,9 @@
     hr {
         color: white;
     }
+    label{
+        margin-bottom: 20px;
+    }
 </style>
 
     <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
@@ -149,17 +152,17 @@
                     <div class="d-flex justify-content-start">
                         <input type="radio" class="form-check-input me-2" name="grandRadio" id="root"
                                onclick="rankRadioChanged(id)" checked>
-                        <p>최고 관리자</p>
+                        <label for="root">최고 관리자</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
                         <input type="radio" class="form-check-input me-2" name="grandRadio" id="admin"
                                onclick="rankRadioChanged(id)">
-                        <p>관리자</p>
+                        <label for="admin">관리자</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
                         <input type="radio" class="form-check-input me-2" name="grandRadio" id="normal"
                                onclick="rankRadioChanged(id)">
-                        <p>일반</p>
+                        <label for="normal">일반</label>
                     </div>
                 </div>
             </div>
@@ -169,23 +172,23 @@
                     <div>
                         <div class="d-flex justify-content-start">
                             <input type="checkbox" class="form-check-input me-2 " id="dashBoardChk">
-                            <p>대시보드 메뉴 열람</p>
+                            <label for="dashBoardChk">대시보드 메뉴 열람</label>>
                         </div>
                         <div class="d-flex justify-content-start mt-4">
                             <input type="checkbox" class="form-check-input me-2" id="alarmChk">
-                            <p>알림 메뉴 열람</p>
+                            <label for="alarmChk">알림 메뉴 열람</label>
                         </div>
                         <div class="d-flex justify-content-start mt-4">
                             <input type="checkbox" class="form-check-input me-2" id="monitoringChk">
-                            <p>모니터링 메뉴 열람</p>
+                            <label for="monitoringChk">모니터링 메뉴 열람</label>
                         </div>
                         <div class="d-flex justify-content-start mt-4">
                             <input type="checkbox" class="form-check-input me-2" id="statisticsChk">
-                            <p>분석 및 통계 메뉴 열람</p>
+                            <label for="statisticsChk">분석 및 통계 메뉴 열람</label>
                         </div>
                         <div class="d-flex justify-content-start mt-4">
                             <input type="checkbox" class="form-check-input me-2" id="settingChk">
-                            <p>환경설정 메뉴 열람</p>
+                            <label for="settingChk">환경설정 메뉴 열람</label>
                         </div>
                     </div>
                     <div class="d-flex align-items-end">

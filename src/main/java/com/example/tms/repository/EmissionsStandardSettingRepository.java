@@ -8,4 +8,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface EmissionsStandardSettingRepository extends MongoRepository<EmissionsStandardSetting, ObjectId> {
     EmissionsStandardSetting findByItem(String Item);
+    EmissionsStandardSetting findByItemName(String itemName);
 }
