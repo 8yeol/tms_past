@@ -70,14 +70,15 @@ button.addBtn {
     width: 60px;
 }
 button.removeBtn {
-    border: 2px solid #000;
+    border: 2px solid #dc3545;
+    color: #fff;
+    background-color: #dc3545;
     border-radius: 20px;
     margin-top: 5px;
     width: 60px;
 }
 button.updateBtn{
     border: 2px solid #000;
-    background-color: white;
     border-radius: 20px;
     margin-top: 5px;
     width: 60px;
