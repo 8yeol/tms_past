@@ -191,7 +191,6 @@ public class JsonController {
             }
         }
     }
-
     public void removePlaceSensorInfo(String place) {
         Place placeInfo = placeRepository.findByName(place);
         List<String> sensor = placeInfo.getSensor();
@@ -476,15 +475,12 @@ public class JsonController {
         //place 업데이트 시간 수정
         if (placeRepository.findBySensorIsIn(name) != null) {
             Place place = placeRepository.findBySensorIsIn(name);
-            ObjectId id = place.get_id();
-
-            //센서리스트에서 센서 제거
-            List<String> sensor = place.getSensor();
-            sensor.remove(name);
-
-            Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), sensor);
-            updatePlace.set_id(id);
-            placeRepository.save(updatePlace);
+            place.getSensor().remove(name); //리스트에서 센서 제거
+            place.setUp_time(new Date()); //시간 업데이트
+            if(place.getSensor().size()==0){
+                place.setMonitoring(false);
+            }
+            placeRepository.save(place);
         }
 
     }
@@ -697,26 +693,18 @@ public class JsonController {
             //측정소 센서 삭제 or sensor가 없을때 monitoring false
             //place 업데이트 시간 수정
             Place placeremove = placeRepository.findBySensorIsIn(hiddenCode);
-            ObjectId id = placeremove.get_id();
-
             //센서리스트에서 센서 제거
-            List<String> sensorremove = placeremove.getSensor();
-            sensorremove.remove(hiddenCode);
-            boolean monitoring = placeremove.getMonitoring();
+            placeremove.getSensor().remove(hiddenCode);
             if (placeremove.getSensor().size() == 0) {
-                monitoring = false;
+                placeremove.setMonitoring(false);
             }
-            Place updatePlace = new Place(placeremove.getName(), placeremove.getLocation(), placeremove.getAdmin(), placeremove.getTel(), monitoring, new Date(), sensorremove);
-            updatePlace.set_id(id);
-            placeRepository.save(updatePlace);
+            placeremove.setUp_time(new Date());
+            placeRepository.save(placeremove);
             //측정소 센서 추가 및 시간 업데이트
             Place placeadd = placeRepository.findByName(place); //측정소 정보
-            ObjectId idadd = placeadd.get_id(); //수정할 아이디
-            List<String> sensoradd = placeadd.getSensor();
-            sensoradd.add(hiddenCode);
-            Place placeUp = new Place(placeadd.getName(), placeadd.getLocation(), placeadd.getAdmin(), placeadd.getTel(), placeadd.getMonitoring(), new Date(), sensoradd);
-            placeUp.set_id(idadd);
-            placeRepository.save(placeUp);
+            placeadd.getSensor().add(hiddenCode);
+            placeadd.setUp_time(new Date());
+            placeRepository.save(placeadd);
 
         }
         sensorListRepository.save(sensor);
