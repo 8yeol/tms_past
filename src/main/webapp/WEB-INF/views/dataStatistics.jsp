@@ -55,7 +55,8 @@
 <div class="container">
     <div class="row  ms-3 mt-4">
         <div class="col text-end">
-            <p class="small m-0"> 마지막 업데이트 : <span class="small fw-bold" id="update"> </span></p>
+            <span class="text-primary" style="font-size: 15%"> * 매월 1일 전월 통계값이 업데이트 됩니다.</span>
+            <p class="small m-0"> 업데이트 : <span class="small fw-bold" id="update"></span></p>
         </div>
     </div>
     <div class="row mt-2 p-3 add-bg" style="margin-left: 5px;">
@@ -129,7 +130,6 @@
 <script>
     $( document ).ready(function() {
         placeChange();
-        $("#update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
     });
 
     function placeChange(){
@@ -213,6 +213,7 @@
                         previousYearData.push(data.nov);
                         previousYearData.push(data.dec);
                     }
+                    $("#update").text(moment(data.updateTime).format('YYYY-MM-DD'));
                 },
                 error : function(request, status, error) {
                     console.log(error);

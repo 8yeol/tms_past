@@ -234,17 +234,24 @@
                         cell1.innerHTML = data[i].place;
                     }
 
-                    cell2.innerHTML = data[i].sensor + " 센서 " + data[i].notify;
+                    let notify;
+                    if(data[i].grade==1){
+                        notify = '법적기준 초과';
+                    }else if(data[i].grade==2){
+                        notify = '사내기준 초과';
+                    }else if(data[i].grade==3){
+                        notify = '관리기준 초과';
+                    }
+
+                    cell2.innerHTML = data[i].sensor + " 센서 " + notify;
                     cell3.innerHTML = data[i].value.toFixed(2);
                     cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
                     if(data[i].grade==1){
-                        cell5.innerHTML = '<div class="bg-danger text-light">'+data[i].notify+'</div>'
+                        cell5.innerHTML = '<div class="bg-danger text-light">'+notify+'</div>'
                     }else if(data[i].grade==2){
-                        cell5.innerHTML = '<div class="bg-warning text-light">'+data[i].notify+'</div>'
+                        cell5.innerHTML = '<div class="bg-warning text-light">'+notify+'</div>'
                     }else if(data[i].grade==3){
-                        cell5.innerHTML = '<div class="bg-success text-light">'+data[i].notify+'</div>'
-                    }else{
-                        cell5.innerHTML = data[i].notify;
+                        cell5.innerHTML = '<div class="bg-success text-light">'+notify+'</div>'
                     }
                 }
             },

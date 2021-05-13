@@ -266,6 +266,7 @@
                     <div class="card-header">정상</div>
                     <div class="card-body" id="normal">
                         <%--script--%>
+                        <h5> 모니터링 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -274,6 +275,7 @@
                     <div class="card-header">관리기준 초과</div>
                     <div class="card-body" id="caution">
                         <%--script--%>
+                        <h5> 모니터링 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -282,6 +284,7 @@
                     <div class="card-header">사내기준 초과</div>
                     <div class="card-body" id="warning">
                         <%--script--%>
+                        <h5> 모니터링 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -290,6 +293,7 @@
                     <div class="card-header">법적기준 초과</div>
                     <div class="card-body" id="danger">
                         <%--script--%>
+                        <h5> 모니터링 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -331,11 +335,6 @@
     }
 
     function addExcessData() {
-        $("#normal").empty();
-        $("#caution").empty();
-        $("#warning").empty();
-        $("#danger").empty();
-
         // 정상 값이 필요 없으면 센서 목록 불러와서 5분전 데이터 계산해서 넣어주면 되는데, 정상 값도 필요하기 때문에 해당 로직으로 작성
         $.ajax({
             url: '<%=cp%>/getMonitoringSensorOn',
@@ -359,6 +358,11 @@
                             const value = (data.value).toFixed(2);
                             let place; //측정소 명
                             if (minutes <= 5) {
+                                $("#normal").empty();
+                                $("#caution").empty();
+                                $("#warning").empty();
+                                $("#danger").empty();
+
                                 $.ajax({
                                     url: '<%=cp%>/getReferenceValue',
                                     dataType: 'json',
@@ -393,6 +397,7 @@
                                     }
                                 });
                             }
+                            //$("#excess_update").text(moment(data.up_time).format('YYYY-MM-DD HH:mm:ss'));
                         },
                         error: function (request, status, error) {
                             console.log(error)
@@ -404,7 +409,6 @@
                 console.log(error)
             }
         })
-
         $("#excess_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
     }
 

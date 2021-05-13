@@ -46,7 +46,9 @@ public class Schedule {
 
     //@Scheduled(cron = "0 0/5 * * * *")
     //@Scheduled(cron = "*/1 * * * * *")
+    // mqtt 서버에서 처리되도록 이동
     public void scheduling(){
+        /*
         List<NotificationSettings> notification = notification_settingsRepository.findByStatusIsTrue();
 
         // 설정 된 알림 시간에만 알림되도록 수정 (from ~ to)
@@ -85,8 +87,10 @@ public class Schedule {
                 }
             }
         }
+        */
     }
 
+/*
     public void notification(String place, String sensor, int grade, String notify, float value){
         NotificationList notificationList = new NotificationList();
         notificationList.setPlace(place);
@@ -97,6 +101,7 @@ public class Schedule {
         notificationList.setUp_time(new Date());
         notificationListRepository.save(notificationList);
     }
+*/
 
 
     @Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
@@ -135,6 +140,8 @@ public class Schedule {
             }else if(from.getMonthValue()==12){
                 monthlyEmissions.setDec(value);
             }
+
+            monthlyEmissions.setUpdateTime(new Date());
             monthlyEmissionsRepository.save(monthlyEmissions);
         }
     }

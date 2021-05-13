@@ -359,6 +359,7 @@
 
     $("#date_start").datepicker({
         language:'ko',
+        minDate: new Date("2021-05-12"),
         maxDate:new Date()
         //timepicker: true,
         //timeFormat: "hh:ii AA"
@@ -681,6 +682,12 @@
                             }
                         }
                     ]
+                },
+                tooltip: {
+                    enabled : true,
+                    x: {
+                        format : 'yyyy-MM-dd HH:mm'
+                    }
                 }
             };
 
@@ -734,7 +741,6 @@
         }else{
 
             if(chart==null&&data.length!=0){
-                console.log('search 0 ')
                 search(0);
             }
 

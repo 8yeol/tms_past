@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Data
 @Document(collection = "monthly_emissions")
 public class MonthlyEmissions {
@@ -23,4 +25,5 @@ public class MonthlyEmissions {
     public Double oct;
     public Double nov;
     public Double dec;
+    public Date updateTime;
 }

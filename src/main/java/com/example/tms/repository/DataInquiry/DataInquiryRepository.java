@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,8 +66,34 @@ public class DataInquiryRepository {
         AggregationResults<ChartData> results = mongoTemplate.aggregate(agg, tableName, ChartData.class);
 
         List<ChartData> result = results.getMappedResults();
-
+        //test(tableName);
         return result;
+    }
+
+    public void test(String tableName){
+        List<ConditionalOperators.Switch.CaseOperator> cases = new ArrayList<>();
+        ConditionalOperators.Switch.CaseOperator cond1 = ConditionalOperators.Switch.CaseOperator
+                .when(BooleanOperators.And.and(
+                        ComparisonOperators.valueOf("status").equalToValue(false))).then(0);
+        cases.add(cond1);
+
+        ProjectionOperation projectionOperation  = Aggregation.project()
+                .and(ConditionalOperators.switchCases(cases)).as("value")
+                .and("value").as("y")
+                .and("up_time").as("x")
+                .and("status").as("status");
+
+
+        Aggregation agg = Aggregation.newAggregation(
+                projectionOperation
+        );
+
+        AggregationResults<ChartData> results = mongoTemplate.aggregate(agg, tableName, ChartData.class);
+
+        List<ChartData> result = results.getMappedResults();
+
+        System.out.println(result);
+
     }
 
     public List<Sensor> searchInformatin(String date_start, String date_end, String item, boolean off) {
