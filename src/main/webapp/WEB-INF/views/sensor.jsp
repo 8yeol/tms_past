@@ -454,7 +454,7 @@
     }
 
     /**
-     * 센서의 직전 데이터 조회
+     * 센서의 직전 데이터 리턴
      */
     function getSensorBeforeData(sensor) {
         let result = new Array();
