@@ -222,7 +222,7 @@
                 </c:if>
                 <c:if test="${emissions.sensor eq '-1'}"> <!--sensor = standard -->
                 <div class="pb-4 text-center">
-                    연간 배출 허용 기준이 없습니다.
+                    연간 배출 허용 기준 미등록 &nbsp;<br><a href="/emissionsManagement" class="small">등록하기</a> <%--관리자만 보이게 설정--%>
                 </div>
             </div>
             </c:if>
@@ -307,6 +307,7 @@
         integrated();
         excess();
 
+        $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD')+ " 00:00");
         $('.line').eq($('.line').length - 1).remove();
     });
 
