@@ -115,12 +115,6 @@
     <div class="row">
         <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 32px; text-align: -webkit-center;">
             <ul id="place_name">
-<%--                <c:forEach var="place" items="${place}" varStatus="cnt">--%>
-<%--                    <li class="place-item btn bg-lightGray d-block fs-3 mt-3 me-3" id="${place.name}">--%>
-<%--                        <span>${place.name}</span>--%>
-<%--                    </li>--%>
-<%--                    <hr style="height: 2px;">--%>
-<%--                </c:forEach>--%>
             </ul>
         </div>
         <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
@@ -181,17 +175,18 @@
         </div>
     </div>
 </div>
-<button onclick="stopI()">123</button>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 <script>
-    var interval1, interval2, interval3;
-    var isPause = false;
+    var interval1, interval2;
+    var chart;
 
     $(document).ready(function () {
         /* URI로부터 파라미터 확인 */
         const url = new URL(window.location.href);
         const urlParams = url.searchParams;
         draw_place_frame();
+        chart = new ApexCharts(document.querySelector("#chart"), setChartOption());
+        chart.render();
         if(urlParams.has(('place')) && urlParams.has('sensor')){ //place와 sensor 파라미터가 있을 경우
             const place_name = urlParams.get('place');
             const sensor_naming = urlParams.get('sensor');
@@ -203,24 +198,8 @@
             $("#place_name li").eq(0).addClass('active');
             $('#title').text(place_name);
             getPlaceAllSensorData(place_name);
-            timeI();
         }
     }); //ready
-
-    function stopI(){
-        clearTimeout(interval3);
-        isPause = true;
-    }
-
-    async function timeI(){
-        isPause = false;
-        if(!isPause) {
-            var now = new Date();
-            setTimeout(function A() {
-                interval3 = setTimeout(A, 4000);
-            }, 0);
-        }
-    }
 
     // 측정소 변경 이벤트
     $("#place_name").on('click', 'li', function () {
@@ -247,9 +226,9 @@
             sensor_time_length = 24;
             $('#textUpdate').text("* 최근 24시간 - 5분 평균데이터로 1분 단위로 업데이트 됩니다.");
             sensor_naming = $('#radio_text').text();
-            var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
-            sensor_name = temp[0].childNodes[1].value;
         }
+        var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
+        sensor_name = temp[0].childNodes[1].value;
         sensor_data = getSensorData(sensor_name);
         getData2(sensor_data);
     });
@@ -274,7 +253,7 @@
                         place_data[i].up_time = recentData.up_time;
                     }
                 }
-                // interval1 = setTimeout(interval_getData, 1000);
+                interval1 = setTimeout(interval_getData, 5000);
             }, 0);
             // $('#sensorInfo2').text("(경고:"+warning + "/ 위험:"+danger + ")");
             if (!sensor_naming) {  //파라미터 X
@@ -302,50 +281,40 @@
             let sensor_name = sensor_data.name;
             let sensor_time_length;
 
-            if(document.getElementsByName("chartRadio")[0].checked){
+            if(document.getElementsByName("chartRadio")[0].checked){ //최근 1시간
                 sensor_time_length = 1;
                 var sensor_data_list = getSensor(sensor_name, sensor_time_length);
-            }else{
+            }else{ //최근 24시간
                 sensor_time_length = 24;
-                var sensor_data_list = getSensor("rm05_"+sensor_name, sensor_time_length);
+                var sensor_data_list = getSensor("RM05_"+sensor_name, sensor_time_length);
             }
             if(sensor_data_list.length != 0){
-                chart = setChartOption(sensor_data_list, sensor_data);
                 $("#radio_text").text(sensor_data.naming); /*+ " - 최근 " + textTime + " 자료"*/
-
                     setTimeout(function interval_getData2() {
-                        //test
-                        var now =new Date();
                         draw_sensor_table(sensor_data_list, sensor_data);
                         var sensor_data_list_recent = getSensorRecent(sensor_name);
                         if(sensor_data_list_recent.length != 0){ // null = []
-                            // if(sensor_data_list[0].x != sensor_data_list_recent.up_time){
-                            if(sensor_data_list[0].x != now){ //test
-                                random = sensor_data_list_recent.value + Math.random(); //test
-                                sensor_data_list.unshift({x:now, y: random, standard: null}); //test
-                                // sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value, standard: null});
+                            if(sensor_data_list[0].x != sensor_data_list_recent.up_time){
+                                sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value, standard: null});
                                 sensor_data_list.pop();
-                                chart.updateSeries([{
-                                    data: sensor_data_list
-                                }]);
+                                updateChart(sensor_data_list, sensor_data);
                             }
                         }
-                        interval2 = setTimeout(interval_getData2, 1000);
+                        interval2 = setTimeout(interval_getData2, 5000);
                     }, 0);
-            }else{
+            }else{ // sensor_data_list (최근데이터) 가 없을 때
                 if(sensor_data){
-                    draw_sensor_table(null, sensor_data);
-                    setChartOption(null, sensor_data);
+                    draw_sensor_table(sensor_data_list, sensor_data);
                     $("#radio_text").text(sensor_data.naming);
+                    updateChart(sensor_data_list, sensor_data);
                 }
             }
         }else{ // null 일 때
+
             $("#radio_text").text("-") ;
             $("#standard_text").text("");
             draw_sensor_table(null);
-            // chart.updateSeries([{
-            //     data: []
-            // }]);
+            updateChart(sensor_data_list, sensor_data);
         }
     }
 
@@ -368,181 +337,145 @@
     }
 
     /* chart Option Setting */
-    function setChartOption(sensor_data_list, sensor_data){
+    function setChartOption(){
+       options = {
+            series: [{
+                data: [],
+            }],
+            chart: {
+                height: '400px',
+                type: 'line',
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download: true,
+                        selection: true,
+                        zoom: true,
+                        zoomin: true,
+                        zoomout: true,
+                        pan: true,
+                        reset: true,
+                    },
+                }
+            },
+           tooltip:{
+               enbaled: true,
+               x: {
+                   show: true,
+                   format: 'HH:mm:ss',
+                   // formatter: undefined,
+               },
+           },
+           stroke: {
+               width: 1,
+           },
+           dataLabels: {
+               enabled: false
+           },
+           xaxis: {
+               type: 'datetime',
+               labels: {
+                   show: true,
+                   datetimeUTC: false,
+                   datetimeFormatter: {
+                       year: 'yyyy년',
+                       month: 'MM월',
+                       day: 'dd일',
+                       hour: 'HH:mm:ss',
+                   },
+               },
+           },
+           yaxis:{
+               labels: {
+                   show: true,
+                   formatter: function (val) {
+                           return 'No data'
+                   }
+               }
+           }
+        };
+        return options;
+    }
+
+    function updateChart(sensor_data_list, sensor_data){
         var arr =new Array();
-        for(var i in sensor_data_list){
-            arr.push(sensor_data_list[i].y);
+        if(sensor_data_list.length != 0){
+            for(var i in sensor_data_list){
+                arr.push(sensor_data_list[i].y);
+            }
+            var max = Math.max.apply(null, arr);
+            var min = Math.min.apply(null, arr);
+        }else{
+            sensor_data_list = [];
         }
-        var max = Math.max.apply(null, arr)*1.5;
-        var min = Math.min.apply(null, arr)/2;
-        $("#chart").empty();
-           options = {
-                series: [{
-                    name: sensor_data.naming,
-                    data: sensor_data_list
-                }],
-                chart: {
-                    height: '400px',
-                    type: 'line',
-                    toolbar:{
-                        show:true,
-                        tools: {
-                            download: true,
-                            selection: true,
-                            zoom: true,
-                            zoomin: true,
-                            zoomout: true,
-                            pan: true,
-                            reset: true,
-                        },
-                    },
-                    animations: {
-                        enabled: true,
-                        easing: 'linear',
-                        speed: 10,
-                        animateGradually: {
-                            enabled: true,
-                            delay: 0
-                        },
-                        dynamicAnimation: {
-                            enabled: true,
-                            speed: 10
-                        }
-                    },
-                },
-                tooltip:{
-                    enbaled: true,
-                    x: {
-                        show: true,
-                        format: 'HH:mm:ss',
-                        // formatter: undefined,
-                    },
-                },
-                annotations: {
-                    yaxis: [{
-                        y: sensor_data.managementStandard,
+        if(sensor_data.length != 0){
+            managementStandard = sensor_data.managementStandard;
+            companyStandard = sensor_data.companyStandard;
+            legalStandard = sensor_data.legalStandard;
+        }
+
+        chart.updateOptions({
+            series: [{
+                name: sensor_data.naming,
+                data: sensor_data_list
+            }],
+            annotations: {
+                yaxis: [{
+                    y: managementStandard,
+                    borderColor: '#00E396',
+                    label: {
                         borderColor: '#00E396',
+                        style: {
+                            color: '#fff',
+                            background: '#00E396'
+                        },
+                        text: '관리기준',
+                        offsetX: -970
+                    }
+                },
+                    {
+                        y: companyStandard,
+                        borderColor: '#FEB019',
                         label: {
-                            borderColor: '#00E396',
+                            borderColor: '#FEB019',
                             style: {
                                 color: '#fff',
-                                background: '#00E396'
+                                background: '#FEB019'
                             },
-                            text: '관리기준',
+                            text: '사내기준',
                             offsetX: -970
                         }
                     },
-                        {
-                            y: sensor_data.companyStandard,
-                            borderColor: '#FEB019',
-                            label: {
-                                borderColor: '#FEB019',
-                                style: {
-                                    color: '#fff',
-                                    background: '#FEB019'
-                                },
-                                text: '사내기준',
-                                offsetX: -970
-                            }
-                        },
-                        {
-                            y: sensor_data.legalStandard,
+                    {
+                        y: legalStandard,
+                        borderColor: '#FF4560',
+                        label: {
                             borderColor: '#FF4560',
-                            label: {
-                                borderColor: '#FF4560',
-                                style: {
-                                    color: '#fff',
-                                    background: '#FF4560'
-                                },
-                                text: '법적기준',
-                                offsetX: -970
-                            }
-                        }]
-                },
-                /*plotOptions: {
-                    bar: {
-                        colors: {
-                            ranges: [{
-                                from: min,
-                                to: sensor_data.managementStandard-0.001,
-                                color: '#97bef8'
-                            }, { //관리
-                                from: sensor_data.managementStandard,
-                                to: sensor_data.companyStandard-0.001,
-                                color: '#a2d674'
-                            }, { //사내
-                                from: sensor_data.companyStandard,
-                                to: sensor_data.legalStandard-0.001,
-                                color: '#ffc55a'
-                            }, { //법적
-                                from: sensor_data.legalStandard,
-                                to: max,
-                                color: '#ff9d5a'
-                            }]
-                        },
-                        columnWidth: '30%'
-                    },
-                },*/
-                stroke: {
-                    width: 1,
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                fill: {
-                    opacity: 1,
-                },
-                yaxis: {
-                    tickAmount: 2,
-                    decimalsInFloat: 2, //소수점아래
-                    min: min, //최소
-                    max: max, //최대
-                    labels: {
-                        show: true,
-                        formatter: function (val) {
-                            if (data == null || data == 0)
-                                return 'No data'
-                            else
-                                return val
+                            style: {
+                                color: '#fff',
+                                background: '#FF4560'
+                            },
+                            text: '법적기준',
+                            offsetX: -970
                         }
+                    }]
+            },
+            yaxis: {
+                tickAmount: 2,
+                decimalsInFloat: 2,
+                min: min,
+                max: max,
+                labels: {
+                    show: true,
+                    formatter: function (val) {
+                        if (sensor_data_list == null || sensor_data_list.length == 0)
+                            return 'No data'
+                        else
+                            return val
                     }
-                },
-                xaxis: {
-                    type: 'datetime',
-                    // tickAmount : 12, //시간이라 적용 X
-                    tickPlacement: 'on',
-                    labels: {
-                        show: true,
-                        datetimeUTC: false,
-                        datetimeFormatter: {
-                            year: 'yyyy년',
-                            month: 'MM월',
-                            day: 'dd일',
-                            hour: 'HH:mm:ss',
-                        },
-                    },
-                    axisBorder: {
-                        show: true,
-                        color: '#78909C',
-                        height: 2,
-                        width: '100%',
-                        offsetX: 0,
-                        offsetY: 0
-                    },
-                    axisTicks: {
-                        show: true,
-                        borderType: 'solid',
-                        color: '#78909C',
-                        height: 8,
-                        offsetX: 0,
-                        offsetY: 0
-                    },
                 }
-            };
-
-        chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
-        return chart;
+            }
+        })
     }
 
 
@@ -618,24 +551,27 @@
 
     // 측정소 명으로 센서 데이터 조회
     function getPlaceData(place){
-        let result = new Array();
-        $.ajax({
-            url:'getPlaceSensor',
-            dataType: 'json',
-            data:  {"place": place},
-            async: false,
-            success: function (data) {
-                $.each(data, function (index, item) { //item (센서명)
-                    if(getSensorData(item)){
-                        result.push(getSensorData(item));
-                    }
-                })
-            },
-            error: function (e) {
-
-            }
-        });
-        return result;
+        if(place != undefined){
+            let result = new Array();
+            $.ajax({
+                url:'getPlaceSensor',
+                dataType: 'json',
+                data:  {"place": place},
+                async: false,
+                success: function (data) {
+                    $.each(data, function (index, item) { //item (센서명)
+                        if(getSensorData(item)){
+                            result.push(getSensorData(item));
+                        }
+                    })
+                },
+                error: function (e) {
+                }
+            });
+            return result;
+        }else{
+            return [];
+        }
     }
 
     // monitoring on/off 체크
@@ -707,7 +643,8 @@
         }else{
             $.ajax({
                 url:'getSensor',
-                dataType: 'json',
+                dataType: 'JSON',
+                contentType: "application/json",
                 data: {"sensor": sensor_name, "hour": hour},
                 async: false,
                 success: function (data) {
@@ -735,7 +672,7 @@
         } else{
             $.ajax({
                 url:'getSensorRecent',
-                dataType: 'json',
+                dataType: 'JSON',
                 data:  {"sensor": sensor},
                 async: false,
                 success: function (data) {
