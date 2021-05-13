@@ -59,7 +59,6 @@ public class MainController {
         TreeSet<String> placeSet = new TreeSet<>(placelist);
         model.addAttribute("placelist", placeSet);
 
-
         /*연간 배출기준값 가져오기
           JSTL을 최소화 하고자 센서객체의 필요없는값 SensorNaming에 매핑된 기준값을 넣습니다
           setting.get(i).setSensor( 기준값 );

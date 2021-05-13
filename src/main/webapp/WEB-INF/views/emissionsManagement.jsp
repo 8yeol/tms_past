@@ -504,13 +504,13 @@
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
-                    text: '이미 존재하는 코드와 항목명입니다.'
+                    text: '이미 존재하는 코드 혹은 항목명입니다.'
                 })
                 return false;
             }
         }
 
-        return true;
+        return true; // 입력값 체크 완료
     }
 
     //선택된 옵션 이벤트 적용
@@ -553,8 +553,7 @@
         }
     }
 
-
-    function optionCount_Delete(Modal, opts) {
+   function optionCount_Delete(Modal, opts) {
         if (opts.length == 1) {
             Modal.html(opts.text() + ' 센서가 <br> 모니터링 대상 가스에서 제외 되었습니다. ');
             fade(Modal);
