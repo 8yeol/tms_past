@@ -327,9 +327,19 @@ public class MainController {
     public String emissionsManagement(Model model) {
 
         List<EmissionsSetting> emissions = emissionsSettingRepository.findAll();
+        for (int i = 0 ; i< emissions.size(); i++){
+            if(emissions.get(i).getPlace().equals("")){        //측정소 없으면 제외
+                emissions.remove(i);
+            }
+        }
         model.addAttribute("emissions", emissions);
 
         List<AnnualEmissions> yearlyEmissions = annualEmissionsRepository.findAll();
+        for (int i = 0 ; i< yearlyEmissions.size(); i++){
+            if(yearlyEmissions.get(i).getPlace().equals("")){   //측정소 없으면 제외
+                yearlyEmissions.remove(i);
+            }
+        }
         model.addAttribute("yearlyEmissions", yearlyEmissions);
 
         List<EmissionsStandardSetting> standard =  emissionsStandardSettingRepository.findAll();
