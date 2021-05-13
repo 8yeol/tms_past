@@ -31,12 +31,6 @@
         border-right-width: 1px;
     }
 
-    .img {
-        width: 10px;
-        height: 10px;
-        margin-right: 10px;
-    }
-
     .emoji {
         width: 60px;
         height: 60px;
@@ -48,6 +42,7 @@
         background-color: #97bef8;
         color: #fff;
     }
+
 </style>
 
 
@@ -139,10 +134,10 @@
             <div class="col text-center border">
                 <div class="row p-3">
                     <div class="col">
-                        <span class="small fw-bold"><img src="static/images/up.png" class="img">직전 데이터보다 높아진 경우</span>
+                        <span class="small fw-bold"><i class="fas fa-sort-up fa-fw" style="color: red"></i>직전 데이터보다 높아진 경우</span>
                     </div>
                     <div class="col">
-                        <span class="small fw-bold"><img src="static/images/down.jpg" class="img">직전 데이터보다 낮아진 경우</span>
+                        <span class="small fw-bold"><i class="fas fa-sort-down fa-fw" style="color: blue"></i>직전 데이터보다 낮아진 경우</span>
                     </div>
                     <div class="col">
                         <span class="small fw-bold"> <b> - </b> 직전 데이터와 같은 경우</span>
@@ -469,13 +464,13 @@
                 newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
 
                 if(data[i].value > data[i].legalStandard){
-                    newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareDate(data[i].beforeValue, data[i].value) + '</span>';
+                    newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
                 } else if( data[i].value > data[i].companyStandard){
-                    newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareDate(data[i].beforeValue, data[i].value) + '</span>';
+                    newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
                 } else if( data[i].value > data[i].managementStandard){
-                    newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareDate(data[i].beforeValue, data[i].value) + '</span>';
+                    newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
                 } else{
-                    newCeil4.innerHTML = draw_compareDate(data[i].beforeValue, data[i].value);
+                    newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
                 }
 
                 $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
@@ -486,11 +481,11 @@
     /**
      * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
      */
-    function draw_compareDate(beforeData , nowData){
+    function draw_compareData(beforeData , nowData){
         if(beforeData > nowData){
-            return '<img src="static/images/down.jpg" class="img">' + nowData;
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData;
         } else if( nowData > beforeData) {
-            return '<img src="static/images/up.png" class="img">' + nowData;
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData;
         } else{
             return nowData;
         }

@@ -21,12 +21,6 @@
         color: #fff;
     }
 
-    .img{
-        width: 10px;
-        height: 10px;
-        margin-right: 10px;
-    }
-
     /* 데이터테이블 */
     table.dataTable {
         width:98% !important;
@@ -307,11 +301,11 @@
                 sensor_name = "RM05_"+sensor_name;
             }
             var sensor_data_list = getSensor(sensor_name, sensor_time_length); //센서 데이터 (최근 1시간, 24시간)
-
+            draw_sensor_table(sensor_data_list, sensor_data); // 센서 테이블 생성 (측정시간, 측정값, 관리등급)
             if(sensor_data_list.length != 0){
                 $("#radio_text").text(sensor_data.naming); // 선택된 센서명 텍스트 출력
                     setTimeout(function interval_getData2() { //$초 마다 업데이트
-                        draw_sensor_table(sensor_data_list, sensor_data); // 센서 테이블 생성 (측정시간, 측정값, 관리등급)
+
                         updateChart(sensor_data_list, sensor_data); //차트 업데이트
                         // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
                         var sensor_data_list_recent = getSensorRecent(sensor_name);
@@ -780,11 +774,11 @@
      */
     function draw_compareData(beforeData , nowData){
         if(beforeData > nowData){
-            return '<img src="static/images/down.jpg" class="img">' + nowData;
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData;
         } else if( nowData > beforeData) {
-            return '<img src="static/images/up.png" class="img">' + nowData;
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData;
         } else{
-            return ' - ' + nowData;
+            return nowData;
         }
     }
 
