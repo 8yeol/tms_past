@@ -356,6 +356,7 @@
                 extend: 'excelHtml5',
                 autoFilter: true,
                 sheetName: 'Exported data',
+                text:'엑셀 다운로드',
                 filename: function(){
                     const d = moment(new Date()).format('YYYYMMDDHHmmss');
                     return d + '_' + $("#place").val() + '_' + $("label[for='"+$('input[name="item"]:checked').val()+"']").text();

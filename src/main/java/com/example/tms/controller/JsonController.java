@@ -120,13 +120,13 @@ public class JsonController {
      *
      * @return 전체 알람 목록
      */
-    @RequestMapping(value = "/notificationList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object notificationList(@RequestParam("week") String week, @RequestParam("today") String today) {
+    @RequestMapping(value = "/getNotificationList")
+    public Object getNotificationList(String from, String to) {
         MatchOperation where = Aggregation.match(
                 new Criteria().andOperator(
                         Criteria.where("up_time")
-                                .gte(LocalDateTime.parse(week + "T00:00:00"))
-                                .lte(LocalDateTime.parse(today + "T23:59:59"))
+                                .gte(LocalDateTime.parse(from + "T00:00:00"))
+                                .lte(LocalDateTime.parse(to + "T23:59:59"))
                 )
         );
 

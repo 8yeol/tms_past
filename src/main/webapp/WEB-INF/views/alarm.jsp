@@ -14,10 +14,13 @@
 %>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
+<link rel="stylesheet" href="static/css/datepicker.min.css">
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
+<script src="static/js/datepicker.min.js"></script>
+<script src="static/js/datepicker.ko.js"></script>
 
 <style>
     .new {
@@ -97,12 +100,39 @@
 
     <div class="row m-3 mt-3 bg-light ms-1">
         <div class="row p-3 pb-0 ms-1">
-            <div class="col fs-5 fw-bold">
-                실시간 알림 목록 <span class="small"><a id="period"></a></span>
+            <div class="col-auto fs-5 fw-bold">
+                알림 목록 <button class="btn" onclick="search('refresh')"> <i class="fas fa-sync-alt"></i> </button>
             </div>
-            <div class="col text-end">
-                <span class="small">마지막 업데이트 : <span class="fw-bold" id="notify_info">업데이트 시간</span></span><br>
-                <span class="text-primary" style="font-size: 15%"> * 5분 단위으로 업데이트 됩니다.</span>
+            <div class="col text-center">
+                <div class="search">
+                    <span class="fs-5 fw-bold p-3 f-sizing">검색기간</span>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="s_day" id="s_day" checked>
+                        <label class="form-check-label" for="s_day">
+                            오늘
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="s_day" id="s_week">
+                        <label class="form-check-label" for="s_week">
+                            일주일
+                        </label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="s_day" id="s_custom">
+                        <label class="form-check-label" for="s_custom">
+                            사용자 정의
+                        </label>
+                    </div>
+
+                    <input type="text" id="date_start" class="text-center p-1" disabled>
+                    <label class="ms-3 me-3">-</label>
+                    <input type="text" id="date_end" class="text-center p-1" disabled>
+
+                    <button type="button" class="btn btn-primary ms-3" onClick="search()">검색</button>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -160,9 +190,11 @@
 
 <script>
     $( document ).ready(function() {
-        $("#notify_info").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
+        $("#date_start").val(getDays());
+        $("#date_end").val(getDays());
+
         $("#notify_chart").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
-        addTable();
+        search();
 
         if($("input[id=week]:radio" ).is( ":checked")){
             var chartData = getWeekChartData();
@@ -170,49 +202,122 @@
         addChart(chartData);
     });
 
-    $("input[name=day]").on('click' , function (){
-        var chartData = null;
-        if($("input[id=week]:radio" ).is( ":checked")){
-            chartData = getWeekChartData();
-        }else{
-            chartData = getMonthChartData();
-        }
-        addChart(chartData);
+    $("#date_start").datepicker({
+        language:'ko',
+        minDate: new Date("2021-05-12"),
+        maxDate:new Date()
+        //timepicker: true,
+        //timeFormat: "hh:ii AA"
+    });
+    $("#date_end").datepicker({
+        language:'ko',
+        maxDate:new Date()
+        //timepicker: true,
+        //timeFormat: "hh:ii AA"
     });
 
-    function addTable() {
-        addTableData();
-        // 매 5분마다 실행되게 하는 평션
-        const FIVE_MINUTES = 5 * 60 * 1000;
-        const timeSinceBoundary = new Date() % FIVE_MINUTES;
-        const timeToSetInterval = timeSinceBoundary === 0 ? 0 : (FIVE_MINUTES - timeSinceBoundary);
-        setTimeout(function () {
-            setInterval(function () {
-                addTableData();
-            }, FIVE_MINUTES);
-        }, timeToSetInterval);
+    datePickerSet($("#date_start"), $("#date_end"), true); // 시작하는 달력 , 끝달력
+
+    function datePickerSet(sDate, eDate, flag) {
+        const sDay = sDate.val();
+        const eDay = eDate.val();
+
+        if (flag && !isValidStr(sDay) && !isValidStr(eDay)) { //처음 입력 날짜 설정, update...
+            const sdp = sDate.datepicker().data("datepicker");
+            sdp.selectDate(new Date(sDay.replace(/-/g, "/")));  //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
+
+            const edp = eDate.datepicker().data("datepicker");
+            edp.selectDate(new Date(eDay.replace(/-/g, "/")));  //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
+        }
+
+        //시작일자 세팅하기
+        if (!isValidStr(eDay)) {
+            sDate.datepicker({
+                maxDate: new Date(eDay.replace(/-/g, "/"))
+            });
+        }
+
+        sDate.datepicker({
+            language: 'ko',
+            autoClose: true,
+            onSelect: function () {
+                datePickerSet(sDate, eDate);
+            }
+        });
+
+        //종료일자 세팅하기
+        if (!isValidStr(sDay)) {
+            eDate.datepicker({
+                minDate: new Date(sDay.replace(/-/g, "/"))
+            });
+        }
+
+        eDate.datepicker({
+            language: 'ko',
+            autoClose: true,
+            onSelect: function () {
+                datePickerSet(sDate, eDate);
+            }
+        });
+        function isValidStr(str) {
+            if (str == null || str == undefined || str == "")
+                return true;
+            else
+                return false;
+        }
     }
 
-    function addTableData(){
-        console.log(" 실행시간 : " + moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
+    $("input:radio[name=s_day]").click(function() {
+        $("#date_start").val("");
+        $("#date_end").val("");
 
+        const id = $(this).attr('id');
+
+        if(id == 's_custom'){
+            $("#date_start").attr('disabled',false);
+            $("#date_end").attr('disabled',false);
+        } else {
+            $("#date_start").attr('disabled',true);
+            $("#date_end").attr('disabled',true);
+
+            $("#date_end").val(getDays());
+
+            if(id == 's_week'){
+                $("#date_start").val(getDays('week'));
+            } else {
+                $("#date_start").val(getDays());
+            }
+        }
+    });
+
+    function getDays(dayType){
+        if(dayType == 'week'){
+            return moment(new Date()).subtract(7, 'd').format('YYYY-MM-DD');
+        }
+        return moment(new Date).format('YYYY-MM-DD');
+    }
+
+    function search(type){
         $('#information').DataTable().clear();
         $('#information').DataTable().destroy();
 
-        const today = moment(new Date()).format('YYYY-MM-DD');
-        const week = moment(new Date()).subtract(7, 'd').format('YYYY-MM-DD');
+        let from = $('#date_start').val();
+        const to =$('#date_end').val();
 
-        $("#period").text("( "+ week + " ~ " + today + " )");
+        if(type=='refresh'){
+            from = to;
+            $("input:radio[id='s_day']").prop("checked",true);
+        }
 
         $.ajax({
-            url: '<%=cp%>/notificationList',
+            url: '<%=cp%>/getNotificationList',
             type: 'POST',
             dataType: 'json',
             async: false,
             cache: false,
             data: {
-                "week" : week,
-                "today" : today
+                "from" : from,
+                "to" : to
             },
             success : function(data) {
                 const tbody = document.getElementById('informationBody');
@@ -270,7 +375,7 @@
                 info: "현재 _START_ - _END_ / _TOTAL_건",
                 infoEmpty: "데이터 없음",
                 infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
-                search: "전체검색 : ",
+                search: "테이블 내용 검색 : ",
                 zeroRecords: "일치하는 데이터가 없어요.",
                 loadingRecords: "로딩중...",
                 processing: "잠시만 기다려 주세요...",
@@ -280,9 +385,17 @@
                 },
             },
         });
-
-        $("#notify_info").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
     }
+
+    $("input[name=day]").on('click' , function (){
+        var chartData = null;
+        if($("input[id=week]:radio" ).is( ":checked")){
+            chartData = getWeekChartData();
+        }else{
+            chartData = getMonthChartData();
+        }
+        addChart(chartData);
+    });
 
     function  getWeekChartData() {
         var getData = new Array();
@@ -307,6 +420,7 @@
         });
         return getData;
     }
+
     function  getMonthChartData() {
         var getData = new Array();
         $.ajax({
@@ -383,6 +497,7 @@
         const chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
     }
+
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
