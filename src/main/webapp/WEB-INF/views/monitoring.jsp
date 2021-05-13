@@ -166,72 +166,10 @@
         // flashing();
     });
 
-    // 센서명 클릭 이벤트 -> 상세페이지 이동
-    $("#place_table").on('click', 'tbody tr', function () {
-        const placeName = $(this).parents('#place_table div').eq(0).children().eq(0).children().eq(0).text();
-        const sensorName = $(this).find('td').eq(0).text();
-        location.replace("/sensor?place=" + placeName + "&sensor=" + sensorName);
-    });
-
-    // 점멸 효과
-    function flashing() {
-        const element = $(".row ");
-        setTimeout(function flashInterval() {
-            setTimeout(function () {
-                element.css({"opacity": 0});
-            }, 0);
-            setTimeout(function () {
-                element.css({"opacity": 1});
-            }, 200); //0.2초 숨김
-            setTimeout(flashInterval, 1000); //0.8초 보여줌
-        }, 0)
-    }
-
-    /* 대시보드 */
-    function draw_sensor_info(data) {
-        var sensorMonitoringOn=0, sensorMonitoringOff=0, sensorStatusSuccess=0, sensorStatusFail=0, legalSCount =0, companySCount =0, managementSCount=0;
-        for(var i=0; i<data.length; i++){
-            for(var z=0; z<data[i].length; z++){
-                sensorData = data[i][z];
-                monitoring = sensorData.monitoring;
-                status = sensorData.status;
-                value = sensorData.value;
-                legalStandard = sensorData.legalStandard;
-                companyStandard = sensorData.companyStandard;
-                managementStandard = sensorData.managementStandard;
-                if(monitoring){
-                    sensorMonitoringOn +=1;
-                }else{
-                    sensorMonitoringOff +=1;
-                }
-                if(status){
-                    sensorStatusSuccess +=1;
-                    if(value > legalStandard){
-                        legalSCount +=1;
-                    }else if(value > companyStandard){
-                        companySCount +=1;
-                    }else if(value > managementStandard){
-                        managementSCount +=1;
-                    }
-                }else{
-                    sensorStatusFail += 1;
-                }
-            }
-        }
-        $("#statusPercent").text(((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0) + "%");
-        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail));
-        $("#statusOn").text(sensorStatusSuccess);
-        $("#statusOff").text(sensorStatusFail);
-        $("#monitoringOff").text(sensorMonitoringOff);
-        $("#legal_standard_text_A").text(((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
-        $("#legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess + sensorStatusFail));
-        $("#company_standard_text_A").text(((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
-        $("#company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess + sensorStatusFail));
-        $("#management_standard_text_A").text(((managementSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
-        $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess + sensorStatusFail));
-    }
-
-
+    /**
+     * 페이지 로딩시 측정소 테이블 틀을 생성하고
+     * 측정소 별로 센서 정보 테이블 생성 및 대시보드 생성
+     */
     function getData() {
         setTimeout(function interval_getData() { //실시간 처리위한 setTimeout
             const placeName = getPlace(); // 전체 측정소 이름 구함 (조건: 파워 On, 모니터링 True)
@@ -250,7 +188,34 @@
         }, 0);
     }
 
-    // 전체 측정소 이름 구함 (조건: 파워 On, 모니터링 True)
+    /**
+     *  센서명 클릭 이벤트 (해당센서의 상세페이지 이동)
+     */
+    $("#place_table").on('click', 'tbody tr', function () {
+        const placeName = $(this).parents('#place_table div').eq(0).children().eq(0).children().eq(0).text();
+        const sensorName = $(this).find('td').eq(0).text();
+        location.replace("/sensor?place=" + placeName + "&sensor=" + sensorName);
+    });
+
+    /**
+     *  점멸 효과
+     */
+    function flashing() {
+        const element = $(".row ");
+        setTimeout(function flashInterval() {
+            setTimeout(function () {
+                element.css({"opacity": 0});
+            }, 0);
+            setTimeout(function () {
+                element.css({"opacity": 1});
+            }, 100); //0.2초 숨김
+            setTimeout(flashInterval, 1000); //0.9초 보여줌
+        }, 0)
+    }
+
+    /**
+     * 전체 측정소명 리턴 (조건 : 모니터링 True)
+     */
     function getPlace(){
         const placeName = new Array();
         $.ajax({
@@ -272,7 +237,9 @@
         return placeName;
     }
 
-    /* 측정소별 센서의 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)*/
+    /**
+     * 측정소의 갯수에 따라 테이블 틀 생성 (홀수 : 테이블 1개, 짝수: 테이블 2개 씩 출력)
+     */
     function draw_place_table_frame(placeName) {
         $('#place_table').empty();
         var col_md_size;
@@ -303,7 +270,9 @@
         }
     }
 
-    /* 측정소의 최근, 이전, 정보데이터 구함 (조건: 센서의 모니터링 On)*/
+    /**
+     * 센서의 모니터링 True인 최근, 직전, 기준 데이터 등을 리턴
+     */
     function getPlaceData(place) {
         const getData = new Array();
         $.ajax({  //측정소의 센서명을 구함
@@ -372,7 +341,9 @@
         return getData;
     }
 
-    // 모니터링 on/off 조회
+    /**
+     * 센서의 모니터링 상태값 리턴 (true , false)
+     */
     function getMonitoring(sensor) {
         let result;
         $.ajax({
@@ -390,7 +361,9 @@
         return result;
     }
 
-    // 최근 데이터 조회
+    /**
+     * 센서의 최근 데이터 리턴
+     */
     function getSensorRecent(sensor) {
         let result;
         $.ajax({
@@ -408,7 +381,9 @@
         return result;
     }
 
-    /* 센서명 이전 데이터 조회 */
+    /**
+     * 센서의 직전 데이터 리턴
+     */
     function getSensorBeforeData(sensor) {
         let result;
         $.ajax({
@@ -420,14 +395,15 @@
                 result = ({up_time: moment(data.up_time).format('YYYY-MM-DD HH:mm:ss'), value: data.value});
             },
             error: function (e) {
-                // console.log("getSensor Error");
-                // 조회 결과 없을 때 return [];
+                return [];
             }
         }); //ajax
         return result;
     }
 
-    /* 센서명으로 센서정보 조회 */
+    /**
+     * 센서의 기준값, 모니터링, 한글명 리턴
+     */ 
     function getSensorInfo(sensor) {
         let result;
         $.ajax({
@@ -450,7 +426,9 @@
         return result;
     }
 
-    /* 테이블 생성 */
+    /**
+     * 측정소 테이블 생성
+     */ 
     function draw_place_table(data, index) {
         $('#sensor-table-' + index).empty();
         const tbody = document.getElementById('sensor-table-' + index);
@@ -491,13 +469,13 @@
                 newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
 
                 if(data[i].value > data[i].legalStandard){
-                    newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
+                    newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareDate(data[i].beforeValue, data[i].value) + '</span>';
                 } else if( data[i].value > data[i].companyStandard){
-                    newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
+                    newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareDate(data[i].beforeValue, data[i].value) + '</span>';
                 } else if( data[i].value > data[i].managementStandard){
-                    newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_beforeDate(data[i].beforeValue, data[i].value) + '</span>';
+                    newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareDate(data[i].beforeValue, data[i].value) + '</span>';
                 } else{
-                    newCeil4.innerHTML = draw_beforeDate(data[i].beforeValue, data[i].value);
+                    newCeil4.innerHTML = draw_compareDate(data[i].beforeValue, data[i].value);
                 }
 
                 $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
@@ -505,14 +483,62 @@
         }
     }
 
-    /* 최근, 이전데이터 비교하여 이미지 생성*/
-    function draw_beforeDate(A , B){
-        if(A > B){
-            return '<img src="static/images/down.jpg" class="img">' + B;
-        } else if( B > A) {
-            return '<img src="static/images/up.png" class="img">' + B;
+    /**
+     * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
+     */
+    function draw_compareDate(beforeData , nowData){
+        if(beforeData > nowData){
+            return '<img src="static/images/down.jpg" class="img">' + nowData;
+        } else if( nowData > beforeData) {
+            return '<img src="static/images/up.png" class="img">' + nowData;
         } else{
-            return B;
+            return nowData;
         }
+    }
+
+    /**
+     *  대시보드 생성 (가동률, 통신 상태, 기준값 등)
+     */
+    function draw_sensor_info(data) {
+        var sensorMonitoringOn=0, sensorMonitoringOff=0, sensorStatusSuccess=0, sensorStatusFail=0, legalSCount =0, companySCount =0, managementSCount=0;
+        for(var i=0; i<data.length; i++){
+            for(var z=0; z<data[i].length; z++){
+                sensorData = data[i][z];
+                monitoring = sensorData.monitoring;
+                status = sensorData.status;
+                value = sensorData.value;
+                legalStandard = sensorData.legalStandard;
+                companyStandard = sensorData.companyStandard;
+                managementStandard = sensorData.managementStandard;
+                if(monitoring){
+                    sensorMonitoringOn +=1;
+                }else{
+                    sensorMonitoringOff +=1;
+                }
+                if(status){
+                    sensorStatusSuccess +=1;
+                    if(value > legalStandard){
+                        legalSCount +=1;
+                    }else if(value > companyStandard){
+                        companySCount +=1;
+                    }else if(value > managementStandard){
+                        managementSCount +=1;
+                    }
+                }else{
+                    sensorStatusFail += 1;
+                }
+            }
+        }
+        $("#statusPercent").text(((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0) + "%");
+        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail));
+        $("#statusOn").text(sensorStatusSuccess);
+        $("#statusOff").text(sensorStatusFail);
+        $("#monitoringOff").text(sensorMonitoringOff);
+        $("#legal_standard_text_A").text(((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
+        $("#legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess + sensorStatusFail));
+        $("#company_standard_text_A").text(((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
+        $("#company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess + sensorStatusFail));
+        $("#management_standard_text_A").text(((managementSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
+        $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess + sensorStatusFail));
     }
 </script>
