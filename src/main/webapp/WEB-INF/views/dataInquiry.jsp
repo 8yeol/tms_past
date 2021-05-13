@@ -25,6 +25,10 @@
 <script src="static/js/moment.min.js"></script>
 <%--공통코드--%>
 <script src="static/js/common/common.js"></script>
+<%-- export excel --%>
+<script src="static/js/jszip.min.js"></script>
+<script src="static/js/dataTables.buttons.min.js"></script>
+<script src="static/js/buttons.html5.min.js"></script>
 
 <style>
     .search {
@@ -334,6 +338,15 @@
 
         $('#information').dataTable({
             dom: '<"toolbar">Bfrtip',
+            buttons: [{
+                extend: 'excelHtml5',
+                autoFilter: true,
+                sheetName: 'Exported data',
+                filename: function(){
+                    const d = moment(new Date()).format('YYYYMMDDHHmmss');
+                    return d + '_' + $("#place").val() + '_' + $("label[for='"+$('input[name="item"]:checked').val()+"']").text();
+                },
+            }],
             lengthChange : false,
             pageLength: 8,
             info: false,
