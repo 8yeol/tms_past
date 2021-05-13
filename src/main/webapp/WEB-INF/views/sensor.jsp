@@ -108,6 +108,10 @@
     }
     .buttons-excel {
         margin-left: 10px;
+        background-color: #000;
+        color: #fff;
+        border: 0px;
+        border-radius: 5px;
     }
 </style>
 

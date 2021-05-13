@@ -80,6 +80,7 @@
     .toolbar>b {
         font-size: 1.25rem;
     }
+    /*.toolbar:after {content:""; display: block; clear: both;}*/
 
     .dataTables_wrapper .dataTables_paginate .paginate_button {
         box-sizing: border-box;
@@ -127,6 +128,19 @@
 
     #information_filter label {
         margin-bottom: 5px;
+    }
+
+    .buttons-excel {
+        background-color: #000;
+        color: #fff;
+        border: 0px;
+        border-radius: 5px;
+        position: relative;
+        margin-top: 2px;
+    }
+    .dt-buttons {
+        margin: 0 10px;
+        display: inline-block;
     }
 
     /* 미디어쿼리 */
