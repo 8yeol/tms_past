@@ -268,11 +268,11 @@
                             const innerHtml =
                                 "<td style='width: 2%;'></td>" +
                                 "<td style='width:18%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("naming") + "</label></td>" +
-                                "<td style='width:24%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("name") + "</label></td>" +
+                                "<td style='width:25%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("name") + "</label></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' onchange='legalupdate(this)'></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "c' value='" + value.get("company") + "' onchange='companyupdate(this)'></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "m' value='" + value.get("management") + "' onchange='managementupdate(this)'></td>" +
-                                "<td style='width:14%;'><label class='switch'>" +
+                                "<td style='width:13%;'><label class='switch'>" +
                                 "<input id='" + value.get("name") + "a' type='checkbox' name='" + value.get("naming") + "' " + monitoring + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +
                                 "</label></td>";
@@ -438,6 +438,7 @@
                 icon: 'warning',
                 title: '경고',
                 text: '측정소 명을 입력해주세요.'
+
             })
             return false;
         } else {
@@ -466,15 +467,12 @@
         })
         Swal.fire({
             icon: 'success',
-            title: '저장완료'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                //location.reload();
-                document.getElementById("cancelBtn").click();
-                placeDiv();
-                placeChange($("#pname").text());
-            }
+            title: '저장완료',
+            timer: 1500
         })
+        document.getElementById("cancelBtn").click();
+        placeDiv();
+        placeChange($("#pname").text());
     }
 
     function removePlace() {
@@ -518,17 +516,14 @@
                         console.log(error)
                     }
                 })
-                swal.fire(
-                    '삭제 완료',
-                    '',
-                    'success'
-                ).then((result) => {
-                    if (result.isConfirmed) {
-                        //location.reload();
-                        placeDiv();
-                        placeChange($("#place0").text());
-                    }
+                swal.fire({
+                    title: '삭제 완료',
+                    icon: 'success',
+                    timer: 1500
                 })
+                //location.reload();
+                placeDiv();
+                placeChange($("#place0").text());
 
             }
         })
