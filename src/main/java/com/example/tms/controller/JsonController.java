@@ -223,6 +223,12 @@ public class JsonController {
                sl.setPlace("");
                sensorListRepository.save(sl);
             }
+            //상세설정 값 False
+            if (reference_value_settingRepository.findByName(sensor.get(i)) != null) {
+                ReferenceValueSetting rv = reference_value_settingRepository.findByName(sensor.get(i));
+                rv.setMonitoring(false);
+                reference_value_settingRepository.save(rv);
+            }
         }
         //측정소 삭제
         placeRepository.deleteByName(place);
