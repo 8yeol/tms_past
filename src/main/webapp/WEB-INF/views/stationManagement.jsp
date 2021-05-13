@@ -52,8 +52,8 @@
     </div>
     <div class="row bg-light" style="height: 70%; padding: 0px 25px 25px 25px;">
         <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
-            <div style="padding-bottom: 10px;">
-                <span class="fw-bold" style="margin-right: 53%;">측정소 관리</span>
+            <div style="padding-bottom: 15px; padding-top: 3px;">
+                <span class="fw-bold" style="margin-right: 49%; font-size: 1.25rem;">측정소 관리</span>
                 <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
                 <button onclick="removePlace()" class="removeBtn">삭제</button>
             </div>
@@ -107,10 +107,10 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">측정소 추가</h5>
+                <h5 class="modal-title fw-bold">측정소 추가</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <form id="placeinfo" method="post" style="width:100%; ">
+                <form id="placeinfo" method="post" style="width:80%; margin: 0 auto;">
                     <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text"
                                                                                                class="modal-input"
                                                                                                name="name"
@@ -121,15 +121,15 @@
                     <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
                                                                           id="lo"
-                                                                          style="position: relative; left: 22%;"></div>
+                                                                          style="position: relative; left: 23.5%;"></div>
                     <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
                                                                              id="ad"
-                                                                             style="position: relative; left: 15%;">
+                                                                             style="position: relative; left: 14.5%;">
                     </div>
                     <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
                                                                            id="te"
-                                                                           style="position: relative; left: 19%;"></div>
+                                                                           style="position: relative; left: 19.5%;"></div>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">

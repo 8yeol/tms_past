@@ -1,6 +1,8 @@
 /* The switch - the box around the slider */
 .switch {
     position: relative;
+    top: -29px;
+    left: 50px;
     display: inline-block;
     width: 60px;
     height: 34px;
@@ -149,4 +151,12 @@ h6 {
 
 button>img {
     line-height: 27px;
+}
+
+.label-form>label:nth-child(1) {
+    width: 75%;
+}
+
+.label-form>label.switch {
+
 }
