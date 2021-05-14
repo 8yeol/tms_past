@@ -92,7 +92,7 @@
                             <img src="/static/images/sad.png" class="emoji">
                         </div>
                         <div class="col" style="margin-top: 5px;">
-                            <p class="mb-0" id="legal_standard_text_A" style="font-size: 2.4rem;"></p>
+                            <p class="mb-0" id="legal_standard_text_A" style="font-size: 2.3rem;"></p>
                             <hr class="m-0">
                             <p id="legal_standard_text_B"></p>
                         </div>
@@ -105,7 +105,7 @@
                             `<img src="/static/images/thinking.png" class="emoji">`
                         </div>
                         <div class="col" style="margin-top: 5px;">
-                            <p class="mb-0" id="company_standard_text_A" style="font-size: 2.4rem;"></p>
+                            <p class="mb-0" id="company_standard_text_A" style="font-size: 2.3rem;"></p>
                             <hr class="m-0">
                             <p id="company_standard_text_B"></p>
                         </div>
@@ -118,7 +118,7 @@
                             <img src="/static/images/sceptic.png" class="emoji">
                         </div>
                         <div class="col" style="margin-top: 5px;">
-                            <p class="mb-0" id="management_standard_text_A" style="font-size: 2.4rem;"></p>
+                            <p class="mb-0" id="management_standard_text_A" style="font-size: 2.3rem;"></p>
                             <hr class="m-0">
                             <p id="management_standard_text_B"></p>
                         </div>
