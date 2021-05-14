@@ -577,12 +577,12 @@
                     show: true,
                     tools: {
                         download: true,
-                        selection: true,
-                        zoom: true,
-                        zoomin: true,
-                        zoomout: true,
-                        pan: true,
-                        reset: true,
+                        selection: false,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
+                        pan: false,
+                        reset: false,
                     },
                 }
             },
@@ -595,12 +595,16 @@
                 },
             },
             stroke: {
-                width: 1,
+                show: true,
+                width: 2,
+                curve: 'smooth'
             },
             dataLabels: {
                 enabled: false
             },
             xaxis: {
+                forceNiceScale: true,
+                hideOverlappingLabels: true,
                 type: 'datetime',
                 labels: {
                     show: true,
@@ -630,7 +634,7 @@
      */
     function updateChart(sensor_data_list, sensor_data){
         var arr =new Array();
-        if(sensor_data_list.length != 0){
+        if(sensor_data_list != null){
             for(var i in sensor_data_list){
                 arr.push(sensor_data_list[i].y);
             }
