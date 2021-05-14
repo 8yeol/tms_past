@@ -13,27 +13,31 @@
         background-color: #EDF2F8;
         font-family: 'Noto Sans KR', sans-serif;
     }
+    #id, #password {
+        height: 50px;
+        margin-bottom: 5px;
+    }
 </style>
 
 <body>
 <div class="container">
     <div class="row h-100">
         <div class="col h-100 align-self-center">
-            <div class="h-100 bg-white d-flex justify-content-center text-center">
+            <div class="h-100 d-flex justify-content-center text-center">
                 <div class="align-self-center">
-                    <img src="static/images/logo.png" class="emoji">
-                    <h1 class="py-5 fw-bold">Login</h1>
+                    <img src="static/images/logo.png" class="emoji" style="width:300px; margin-bottom: 30px;">
+<%--                    <h1 class="py-5 fw-bold">Login</h1>--%>
                     <form method='post' name='username' value='admin'>
                         <div class="">
-                            <p class="text-start text-secondary fs-4 fw-bold">아이디</p>
-                            <input class="form-control" type='text' name='username' value='' id="id">
+<%--                            <p class="text-start text-secondary fs-4 fw-bold">아이디</p>--%>
+                            <input class="form-control" type='text' name='username' value='' id="id" placeholder="아이디">
                         </div>
                         <div class="">
-                            <p class="text-start text-secondary fs-4 fw-bold mt-3">비밀번호</p>
-                            <input class="form-control" type='password' name='password' value='' id="password">
+<%--                            <p class="text-start text-secondary fs-4 fw-bold mt-3">비밀번호</p>--%>
+                            <input class="form-control" type='password' name='password' value='' id="password" placeholder="비밀번호">
                         </div>
                         <div>
-                            <input class="btn btn-primary mt-5 fs-3 px-5" onclick="login()" type='submit' value="로그인">
+                            <input class="btn btn-primary mt-5 fs-4 px-5" onclick="login()" type='submit' value="로그인" style="width:300px;">
                         </div>
                         <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
                     </form>
