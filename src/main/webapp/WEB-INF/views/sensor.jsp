@@ -122,7 +122,7 @@
             </div>
             <span class="fs-4 fw-bold d-flex justify-content-center bg-lightGray" id="title"></span>
             <div id="place_table">
-                <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: 15%"> * 항목 클릭시 차트/표 값이 변경됩니다.</span></div>
+                <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: .875em"> * 항목 클릭시 차트/표 값이 변경됩니다.</span></div>
                 <table class="table table-bordered table-hover text-center">
                     <thead>
                     <tr>
@@ -150,7 +150,7 @@
                         <label>&nbsp;최근 24시간</label>
                     </div>
                 </div>
-                <span class="text-primary" style="font-size: 15%" id="textUpdate"> * 최근 1시간 - 1분 단위로 업데이트 됩니다.</span>
+                <span class="text-primary" style="font-size: .875em" id="textUpdate"> * 최근 1시간 - 1분 단위로 업데이트 됩니다.</span>
             </div>
             <%-- 차트 --%>
             <div id="chart"></div>
