@@ -633,6 +633,7 @@
      *  차트 업데이트
      */
     function updateChart(sensor_data_list, sensor_data){
+        chart.resetSeries();
         var arr =new Array();
         if(sensor_data_list != null){
             for(var i in sensor_data_list){
@@ -647,6 +648,10 @@
             managementStandard = sensor_data.managementStandard;
             companyStandard = sensor_data.companyStandard;
             legalStandard = sensor_data.legalStandard;
+        }else{
+            managementStandard = 999;
+            companyStandard = 999;
+            legalStandard = 999;
         }
 
         chart.updateOptions({
