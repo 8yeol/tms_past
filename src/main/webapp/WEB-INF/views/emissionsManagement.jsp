@@ -107,10 +107,10 @@
 <div class="container">
     <div class="row">
         <div class="row1">
-            <span>연간 배출 허용 기준 설정</span>
-            <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="insertSetting()"
-                    style="background-color:green;color:white"> 추가 버튼
-            </button>
+            <span>연간 배출 허용 기준 설정${param.tableName} </span>
+            <!-- <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="insertSetting()"
+                     style="background-color:green;color:white"> 추가 버튼
+             </button> -->
         </div>
         <div class="row2">
             <span>* 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량 계산에 활용됩니다.</span>
@@ -120,8 +120,8 @@
 
                 <thead>
                 <tr>
-                    <th>코드</th>
-                    <th>항목명</th>
+                    <th>측정소명</th>
+                    <th>센서명</th>
                     <th>연간 배출 허용 기준</th>
                     <th>배출 허용 기준 농도</th>
                     <th>산출식(참고용)</th>
@@ -132,15 +132,15 @@
                 <tbody id="tbody">
                 <c:forEach items="${standard}" var="standard" varStatus="i">
                     <tr>
-                        <td class="tableCode">${standard.item}</td>
-                        <td class="tableNaming">${standard.itemName}</td>
+                        <td class="tableCode">${standard.place}</td>
+                        <td class="tableNaming">${standard.naming}</td>
                         <td><fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/></td>
                         <td>${standard.densityStandard}</td>
                         <td>${standard.formula}</td>
                         <td>
                             <i onclick="editSetting(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
-                               data-bs-target="#addModal"></i>
-                            <i class="fas fa-times" onclick="deleteModal(this)"></i>
+                               data-bs-target="#addModal" id="${standard.tableName}"></i>
+                            <!--<i class="fas fa-times" onclick="deleteModal(${standard.tableName})"></i>-->
                         </td>
                     </tr>
                 </c:forEach>
@@ -251,30 +251,30 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">센서 추가</h5>
+                <h5 class="modal-title">센서 수정</h5>
             </div>
             <div class="modal-body d-flex justify-content-evenly">
                 <form id="addStandard" method="post" autocomplete="off">
                     <div class="row">
                         <div class="col text-center">
-                            <span class="text-danger"
-                                  style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>
+                            <!--<span class="text-danger"
+                                  style="font-size: 15%"> * 설정된 코드와 항목명을 기준으로 모니터링 항목명(한글명)이 적용됩니다.</span>-->
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">코드</span>
+                            <span class="fs-5 fw-bold add-margin f-sizing">측정소명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="code">
+                            <input type="text" class="text-secondary" name="place" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
                         <div class="col">
-                            <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
+                            <span class="fs-5 fw-bold add-margin f-sizing">센서명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="sensorName">
+                            <input type="text" class="text-secondary" name="naming" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -301,8 +301,10 @@
                             <input type="text" class="text-secondary" name="formula">
                         </div>
                     </div>
-                    <input type="hidden" name="hiddenCode"> <!-- 추가 수정 판별할 데이터 -->
-                    <input type="hidden" name="hiddenName"> <!-- 추가 수정 판별할 데이터 -->
+                    <input type="hidden" name="hiddenTableName"> <!-- 추가 수정 판별할 데이터 -->
+                    <c:if test="${ empty param.tableName}">
+                        test
+                    </c:if>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -318,6 +320,7 @@
 
 <script>
     $(function () {     // modal drag and drop move
+        alert(${param.tableName});
         $('.modal-dialog').draggable({handle: ".modal-header"});
         //콤마 자동 찍기, 숫자만 입력 가능
         $("input[name='standard']").bind('keyup', function (e) {
@@ -347,27 +350,28 @@
         standardAjax(form, '추가')
     }
 
-    function insertSetting() {
-        $('.modal-title').html('센서 추가');
-        $('.btn-success').html('추가');
-        $('.btn-success').removeAttr("onclick");
-        $('.btn-success').attr("onclick", "insert()");
-        inputClean();
-    }
+    // function insertSetting() {
+    //     $('.modal-title').html('센서 추가');
+    //     $('.btn-success').html('추가');
+    //     $('.btn-success').removeAttr("onclick");
+    //     $('.btn-success').attr("onclick", "insert()");
+    //     inputClean();
+    // }
 
     //editModal 선택값 셋팅
     function editSetting(obj) {
+
         $('.modal-title').html('센서 수정');
         $('.btn-success').html('수정');
         $('.btn-success').removeAttr("onclick");
         $('.btn-success').attr("onclick", "editStandard()");
 
-        var tdList = $(obj).parent().parent().children();
+        let tdList = $(obj).parent().parent().children();
+        let tableName = $(obj).attr('id');
 
-        $("input[name='code']").val(tdList.eq(0).html());
-        $("input[name='hiddenCode']").val(tdList.eq(0).html());
-        $("input[name='sensorName']").val(tdList.eq(1).html());
-        $("input[name='hiddenName']").val(tdList.eq(1).html());
+        $("input[name='hiddenTableName']").val(tableName);
+        $("input[name='place']").val(tdList.eq(0).html());
+        $("input[name='naming']").val(tdList.eq(1).html());
         $("input[name='standard']").val(tdList.eq(2).html());
         $("input[name='percent']").val(tdList.eq(3).html());
         $("input[name='formula']").val(tdList.eq(4).html());
@@ -409,44 +413,42 @@
         });
     }
 
-    function deleteModal(obj) {
-        var code = $(obj).parent().parent().children().eq(0).html();  //console.log(code); -> NOX
-
-        Swal.fire({
-            icon: 'error',
-            title: '삭제',
-            text: '정말 삭제 하시겠습니까?',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            confirmButtonText: '삭제',
-            cancelButtonText: '취소'
-        }).then((result) => {
-            if (result.isConfirmed) {   //삭제 버튼 누를때
-                deleteAjax(code);
-            }
-        });
-    }
-
-    function deleteAjax(code) {
-        $.ajax({
-            url: 'deleteEmissionsStandard',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: {code: code},
-            success: function (data) {
-                Swal.fire(
-                    '삭제 완료',
-                    '삭제 되었습니다.',
-                    'warning'
-                );
-                drawTable(data);
-            },
-            error: function (request, status, error) {
-                console.log(error)
-            }
-        });
-    }
+    // function deleteModal(tableName) {
+    //     Swal.fire({
+    //         icon: 'error',
+    //         title: '삭제',
+    //         text: '정말 삭제 하시겠습니까?',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#d33',
+    //         confirmButtonText: '삭제',
+    //         cancelButtonText: '취소'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {   //삭제 버튼 누를때
+    //             deleteAjax(tableName);
+    //         }
+    //     });
+    // }
+    //
+    // function deleteAjax(tableName) {
+    //     $.ajax({
+    //         url: 'deleteEmissionsStandard',
+    //         type: 'POST',
+    //         async: false,
+    //         cache: false,
+    //         data: {tableName: tableName},
+    //         success: function (data) {
+    //             Swal.fire(
+    //                 '삭제 완료',
+    //                 '삭제 되었습니다.',
+    //                 'warning'
+    //             );
+    //             drawTable(data);
+    //         },
+    //         error: function (request, status, error) {
+    //             console.log(error)
+    //         }
+    //     });
+    // }
 
 
     //테이블 모두 삭제하고 새로운 데이터로 다시 그립니다.
@@ -455,16 +457,16 @@
         $('#tbody').children().remove();
 
         for (i = 0; i < data.length; i++) {
-            var innerHTML = "";
+            let innerHTML = "";
             innerHTML = " <tr>" +
-                " <td class='tableCode'>" + data[i].item + "</td>" +
-                " <td class='tableNaming'>" + data[i].itemName + "</td>" +
+                " <td class='tableCode'>" + data[i].place + "</td>" +
+                " <td class='tableNaming'>" + data[i].naming + "</td>" +
                 " <td>" + numberWithCommas(data[i].emissionsStandard) + "</td>" +
                 " <td>" + data[i].densityStandard + "</td>" +
                 " <td>" + data[i].formula + "</td>" +
                 " <td>" +
-                "<i class='fas fa-edit me-2'  data-bs-toggle='modal' data-bs-target='#addModal' onclick='editSetting(this)'></i>" +
-                "<i class='fas fa-times' onclick='deleteModal(this)'></i>" +
+                "<i class='fas fa-edit me-2'  data-bs-toggle='modal' data-bs-target='#addModal' onclick='editSetting(this)' id='" + data[i].tableName + "'></i>" +
+                //"<i class='fas fa-times' onclick='deleteModal('+data[i].tableName+')'></i>" +
                 "</td>" +
                 "</tr>";
             $('#tbody').append(innerHTML);
@@ -482,13 +484,9 @@
         let formula = $('input[name=formula]').val();
         let percent = $('input[name=percent]').val();
         let standard = $('input[name=standard]').val();
-        let code = $('input[name=code]').val();
-        let sensorName = $('input[name=sensorName]').val();
-        let hiddenCode = $("input[name='hiddenCode']").val();
-        let hiddenName = $("input[name='hiddenName']").val();
 
         //Null 체크
-        if (formula == '' || percent == '' || standard == '' || code == '' || sensorName == '') {
+        if (formula == '' || percent == '' || standard == '') {
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -496,22 +494,9 @@
             })
             return false;
         }
-
-        //중복 검사
-        for (i = 0; i < $('.tableCode').length; i++) {
-            if (($('.tableNaming').eq(i).html() == sensorName) && ($('.tableNaming').eq(i).html() != hiddenName)
-                || ($('.tableCode').eq(i).html() == code) && $('.tableCode').eq(i).html() != hiddenCode) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '이미 존재하는 코드 혹은 항목명입니다.'
-                })
-                return false;
-            }
-        }
-
-        return true; // 입력값 체크 완료
+        return true;
     }
+
 
     //선택된 옵션 이벤트 적용
     function moveEvent(from, to) {
@@ -553,7 +538,7 @@
         }
     }
 
-   function optionCount_Delete(Modal, opts) {
+    function optionCount_Delete(Modal, opts) {
         if (opts.length == 1) {
             Modal.html(opts.text() + ' 센서가 <br> 모니터링 대상 가스에서 제외 되었습니다. ');
             fade(Modal);

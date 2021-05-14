@@ -258,9 +258,11 @@
                     <div class="fw-bold" style="margin-bottom: 2px;">
                             ${emissions.sensorNaming}
                     </div>
-                    <c:if test="${emissions.sensor ne '-1'}"> <!--sensor = standard -->
-                    <fmt:parseNumber var="standard" integerOnly="true" value="${emissions.sensor}"/>
-                    <c:set var="percent" value="${(emissions.yearlyValue*100)/(standard)}"/>
+                    <c:forEach items="${standard}" var="standard">
+                    <c:if test="${emissions.sensor eq standard.tableName}">
+                    <c:if test="${standard.emissionsStandard ne '0'}"> <!--sensor = standard -->
+                    <fmt:parseNumber var="emissionsStandard" integerOnly="true" value="${standard.emissionsStandard}"/>
+                    <c:set var="percent" value="${(emissions.yearlyValue*100)/(emissionsStandard)}"/>
                     <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
                     <div class="col">
                         <div class="progress h-100">
@@ -291,15 +293,18 @@
                 </div>
                 <div class="standard">
                     <fmt:formatNumber
-                            value="${emissions.sensor}" groupingUsed="true"/>
+                            value="${standard.emissionsStandard}" groupingUsed="true"/>
                 </div>
                 </c:if>
-                <c:if test="${emissions.sensor eq '-1'}"> <!--sensor = standard -->
+                <c:if test="${standard.emissionsStandard eq '0'}"> <!--sensor = standard -->
                 <div class="pb-4 text-center">
-                    연간 배출 허용 기준 미등록 &nbsp;<br><a href="/emissionsManagement" class="small">등록하기</a> <%--관리자만 보이게 설정--%>
+                    연간 배출 허용 기준 미등록 &nbsp;<br><a href="/emissionsManagement?tableName=${standard.tableName}" class="small">등록하기
+                    (관리자만!!!!!!!)</a> <%--관리자만 보이게 설정--%>
                 </div>
             </div>
             </c:if>
+            </c:if>
+            </c:forEach>
             </c:if>
             </c:forEach>
         </div>
@@ -329,51 +334,51 @@
     </div>
 </div>
 
-    <div class="row mt-4 bg-light margin-l h-px" style="width: 98%; margin: 0.2rem;">
-        <div class="row p-3 pb-0 margin-l">
-            <div class="col fs-5 fw-bold">
-                관리등급 초과 모니터링
-            </div>
-            <div class="col text-end">
-                <span class="small">마지막 업데이트 : <span class="fw-bold" id="excess_update">업데이트 시간</span></span><br>
-                <span class="text-primary" style="font-size: 15%"> * 실시간으로 업데이트 됩니다.</span>
+<div class="row mt-4 bg-light margin-l h-px" style="width: 98%; margin: 0.2rem;">
+    <div class="row p-3 pb-0 margin-l">
+        <div class="col fs-5 fw-bold">
+            관리등급 초과 모니터링
+        </div>
+        <div class="col text-end">
+            <span class="small">마지막 업데이트 : <span class="fw-bold" id="excess_update">업데이트 시간</span></span><br>
+            <span class="text-primary" style="font-size: 15%"> * 실시간으로 업데이트 됩니다.</span>
+        </div>
+    </div>
+    <div class="row pb-3 h-75 pb-3 margin-l">
+        <div class="col">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">정상</div>
+                <div class="card-body" id="normal">
+                    <h5> 가동중인 센서가 없습니다.</h5>
+                </div>
             </div>
         </div>
-        <div class="row pb-3 h-75 pb-3 margin-l">
-            <div class="col">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-header">정상</div>
-                    <div class="card-body" id="normal">
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                    </div>
+        <div class="col">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">관리기준 초과</div>
+                <div class="card-body" id="caution">
+                    <h5> 가동중인 센서가 없습니다.</h5>
                 </div>
             </div>
-            <div class="col">
-                <div class="card text-white bg-success mb-3">
-                    <div class="card-header">관리기준 초과</div>
-                    <div class="card-body" id="caution">
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                    </div>
+        </div>
+        <div class="col">
+            <div class="card text-dark bg-warning mb-3">
+                <div class="card-header">사내기준 초과</div>
+                <div class="card-body" id="warning">
+                    <h5> 가동중인 센서가 없습니다.</h5>
                 </div>
             </div>
-            <div class="col">
-                <div class="card text-dark bg-warning mb-3">
-                    <div class="card-header">사내기준 초과</div>
-                    <div class="card-body" id="warning">
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-white bg-danger mb-3">
-                    <div class="card-header">법적기준 초과</div>
-                    <div class="card-body" id="danger">
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                    </div>
+        </div>
+        <div class="col">
+            <div class="card text-white bg-danger mb-3">
+                <div class="card-header">법적기준 초과</div>
+                <div class="card-body" id="danger">
+                    <h5> 가동중인 센서가 없습니다.</h5>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <script>
@@ -381,7 +386,7 @@
         integrated();
         excess();
 
-        $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD')+ " 00:00");
+        $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD') + " 00:00");
         $('.line').eq($('.line').length - 1).remove();
     });
 

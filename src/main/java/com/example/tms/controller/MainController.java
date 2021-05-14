@@ -17,9 +17,7 @@ import java.util.*;
 public class MainController {
 
     final PlaceRepository placeRepository;
-    final ReferenceValueSettingRepository reference_value_settingRepository;
     final MemberRepository memberRepository;
-    final NotificationStatisticsCustomRepository notification_statistics_customRepository;
     final EmissionsSettingRepository emissionsSettingRepository;
     final AnnualEmissionsRepository annualEmissionsRepository;
     final RankManagementRepository rank_managementRepository;
@@ -31,15 +29,15 @@ public class MainController {
 
     final RankManagementService rankManagementService;
 
-    public MainController(PlaceRepository placeRepository, ReferenceValueSettingRepository reference_value_settingRepository, MemberRepository memberRepository,
-                          NotificationStatisticsCustomRepository notification_statistics_customRepository, EmissionsSettingRepository emissionsSettingRepository,
-                          AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository,
-                          SensorListRepository sensorListRepository, LogRepository logRepository, com.example.tms.repository.placeTotalMonitoringRepository placeTotalMonitoringRepository,RankManagementService rankManagementService,MongoQuary mongoQuary)
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository
+                          , EmissionsSettingRepository emissionsSettingRepository,
+                          AnnualEmissionsRepository annualEmissionsRepository,
+                          RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository,
+                          SensorListRepository sensorListRepository, LogRepository logRepository,
+                          placeTotalMonitoringRepository placeTotalMonitoringRepository,RankManagementService rankManagementService,MongoQuary mongoQuary)
     {
         this.placeRepository = placeRepository;
-        this.reference_value_settingRepository = reference_value_settingRepository;
         this.memberRepository = memberRepository;
-        this.notification_statistics_customRepository = notification_statistics_customRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
         this.annualEmissionsRepository = annualEmissionsRepository;
         this.rank_managementRepository = rank_managementRepository;
@@ -47,11 +45,9 @@ public class MainController {
         this.sensorListRepository = sensorListRepository;
         this.mongoQuary = mongoQuary;
         this.logRepository = logRepository;
-
         this.rankManagementService = rankManagementService;
         this.placeTotalMonitoringRepository = placeTotalMonitoringRepository;
     }
-
 
 
     @RequestMapping("/")
@@ -68,12 +64,15 @@ public class MainController {
         TreeSet<String> placeSet = new TreeSet<>(placelist);
         model.addAttribute("placelist", placeSet);
 
-        /*연간 배출기준값 가져오기
-          JSTL을 최소화 하고자 센서객체의 필요없는값 SensorNaming에 매핑된 기준값을 넣습니다
-          setting.get(i).setSensor( 기준값 );
-         */
-        List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
+        /*연간 배출기준값 가져오기*/
 
+        List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
+        model.addAttribute("standard",standard);
+
+        System.out.println(setting);
+        System.out.println(setting.get(1));
+        System.out.println(standard);
+        
         for (int i =0;i < setting.size();i++) {
             for (int k = 0; k < standard.size(); k++) {
                 if (setting.get(i).getSensorNaming().equals(standard.get(k).getItemName())) {
@@ -159,7 +158,6 @@ public class MainController {
 
         return "sensorManagement";
     }
-
 
     @RequestMapping("/alarmSetting")
     public String alarmSetting() {

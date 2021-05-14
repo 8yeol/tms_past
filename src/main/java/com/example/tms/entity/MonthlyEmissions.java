@@ -1,6 +1,7 @@
 package com.example.tms.entity;
 
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,7 +11,7 @@ import java.util.Date;
 @Document(collection = "monthly_emissions")
 public class MonthlyEmissions {
     @Id
-    public Object _id;
+    public ObjectId _id;
     public String sensor;
     public int year;
     public Double jan;
