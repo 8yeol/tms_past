@@ -57,10 +57,27 @@
                 </div>
             </div>
 
+            <div class="row bg-info" style="display:none;" id="passwordBox">
+                <div class="mb-3 row">
+                    <label for="password" class="col-sm-2 col-form-label">비밀번호</label>
+                   <div class="col-sm-10">
+                        <input type="test" class="form-control" id="password">
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="passwordCheck" class="col-sm-2 col-form-label">비밀번호 확인</label>
+                    <div class="col-sm-10">
+                        <input type="test" class="form-control" id="passwordCheck">
+                    </div>
+                </div>
+
+            </div>
+
             <div class="row">
                 <div class="col text-center">
-                    <button class="btn btn-primary m-3">회원정보 수정</button>
-                    <%--<button class="btn btn-primary m-3" onclick="submit()">정보수정</button>--%>
+                    <button class="btn btn-outline-primary m-3" onclick="setLayout()">회원정보 수정</button>
+                    <button class="btn btn-primary m-3" onclick="submit()" style="display:none;" id="up_btn">정보수정</button>
                 </div>
             </div>
         </div>
@@ -70,6 +87,10 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
+    function setLayout(){
+        $("#up_btn").attr('style','display:""');
+        $("#passwordBox").attr('style','display:""');
+    }
     function submit() {
         if ($("#id").val() != "" && $("#password").val() && $("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "") {
             var settings = {
