@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
 <link rel="stylesheet" href="static/css/common.css">
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
-<link rel="shortcut icon" href="#">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-3.6.0.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
@@ -14,69 +13,69 @@
         background-color: #EDF2F8;
         font-family: 'Noto Sans KR', sans-serif;
     }
-    #id, #password {
-        height: 50px;
-        margin-bottom: 5px;
+    .join>div input {
+        width:1000px;
+        height: 40px;
     }
 </style>
 
 <div class="container h-100">
     <div class="row bg-white">
-        <span class="fs-1 text-center">회원가입</span>
-        <div class="col p-5">
+        <span class="fs-1 text-center" style="margin: 15px 0px 0px;">회원가입</span>
+        <div class="col join" style="padding: 2rem;">
 
-            <div class="mb-3 row">
-                <label for="id" class="col-sm-2 col-form-label">아이디</label>
+            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+                <label for="id" class="col-form-label">아이디</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="id">
                 </div>
             </div>
-            <div class="mb-3 row">
-                <label for="password" class="col-sm-2 col-form-label">비밀번호</label>
+            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+                <label for="password" class="col-form-label">비밀번호</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="password">
-                    <span class="text-primary" style="font-size: 15%"> * 6자 이상 입력해주세요.</span>
+                    <input type="password" class="form-control" id="password" placeholder="6자 이상 입력해 주세요">
+<%--                    <span class="text-primary" style="font-size: 15%"> * 6자 이상 입력해주세요.</span>--%>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="passwordCheck" class="col-sm-2 col-form-label">비밀번호 확인</label>
+            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+                <label for="passwordCheck" class="col-form-label">비밀번호 확인</label>
                 <div class="col-sm-10">
                     <input type="password" class="form-control" id="passwordCheck">
                     <span class="text-primary" style="font-size: 15%"> * 입력한 비밀번호와 동일하지 않습니다.</span>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="name" class="col-sm-2 col-form-label">이름</label>
+            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+                <label for="name" class="col-form-label">이름</label>
                 <div class="col-sm-10">
                     <input type="test" class="form-control" id="name">
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="email" class="col-sm-2 col-form-label">이메일</label>
+            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+                <label for="email" class="col-form-label">이메일</label>
                 <div class="col-sm-10">
                     <input type="test" class="form-control" id="email" onkeyup="autoEmail('email',this.value)">
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="tel" class="col-sm-2 col-form-label">연락처</label>
+            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+                <label for="tel" class="col-form-label">연락처</label>
                 <div class="col-sm-10">
                     <input type="test" class="form-control" id="tel" onkeyup="inputPhoneNumber(this)">
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="department" class="col-sm-2 col-form-label">부서명</label>
+            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+                <label for="department" class="col-form-label">부서명</label>
                 <div class="col-sm-10">
                     <input type="test" class="form-control" id="department">
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="grade" class="col-sm-2 col-form-label">직급</label>
+            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+                <label for="grade" class="col-form-label">직급</label>
                 <div class="col-sm-10">
                     <input type="test" class="form-control" id="grade">
                 </div>

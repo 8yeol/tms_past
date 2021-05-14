@@ -106,9 +106,6 @@
         }
     }
 
-    .card {
-        min-height: 100%;
-    }
 </style>
 
 <div class="container">
@@ -139,11 +136,11 @@
         <div class="row pb-3 h-75 margin-l">
 
             <div class="col-3">
-                <div class="card h-100 border-2 border-primary">
+                <div class="card border-2 border-primary" style="height: 90%;">
                     <div class="card-body">
                         <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(%)</h5>
                         <div class="d-flex justify-content-center p-3">
-                            <p class="fw-bold me-3">전년대비</p>
+                            <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                             <p class="fw-bold fs-3"><fmt:formatNumber value="${(present.totalEmissions - past.totalEmissions) / past.totalEmissions * 100}" pattern=".0"/>%</p>
                         </div>
                         <hr class="text-primary m-0">
@@ -163,11 +160,11 @@
             </div>
 
             <div class="col-3 h-100">
-                <div class="card h-100 border-2 border-primary">
+                <div class="card border-2 border-primary" style="height: 90%;">
                     <div class="card-body">
                         <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(mg/L)</h5>
                         <div class="d-flex justify-content-center p-3">
-                            <p class="fw-bold me-3">전년대비</p>
+                            <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                             <p class="fw-bold fs-3"><fmt:formatNumber value="${present.totalEmissions - past.totalEmissions}" pattern=",000"/></p>
                         </div>
                         <hr class="text-primary m-0">
@@ -187,11 +184,11 @@
             </div>
 
             <div class="col-3">
-                <div class="card h-100 border-2 border-primary">
+                <div class="card border-2 border-primary" style="height: 90%;">
                     <div class="card-body">
                         <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(%)</h5>
                         <div class="d-flex justify-content-center p-3">
-                            <p class="fw-bold me-3">전년대비</p>
+                            <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                             <p class="fw-bold fs-3"><fmt:formatNumber value="${(presentQuater - pastQuater) / pastQuater * 100}" pattern=".0"/>%</p>
                         </div>
                         <hr class="text-primary m-0">
@@ -211,11 +208,11 @@
             </div>
 
             <div class="col-3 h-100">
-                <div class="card h-100 border-2 border-primary">
+                <div class="card border-2 border-primary" style="height: 90%;">
                     <div class="card-body">
                         <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
                         <div class="d-flex justify-content-center p-3">
-                            <p class="fw-bold me-3">전년대비</p>
+                            <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                             <p class="fw-bold fs-3"><fmt:formatNumber value="${presentQuater - pastQuater}" pattern=",000"/></p>
                         </div>
                         <hr class="text-primary m-0">
@@ -346,7 +343,7 @@
     </div>
     <div class="row pb-3 h-75 pb-3 margin-l">
         <div class="col">
-            <div class="card text-white bg-primary mb-3">
+            <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
                 <div class="card-header">정상</div>
                 <div class="card-body" id="normal">
                     <h5> 가동중인 센서가 없습니다.</h5>
@@ -354,7 +351,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-success mb-3">
+            <div class="card text-white bg-success mb-3" style="min-height: 100%;">
                 <div class="card-header">관리기준 초과</div>
                 <div class="card-body" id="caution">
                     <h5> 가동중인 센서가 없습니다.</h5>
@@ -362,7 +359,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-dark bg-warning mb-3">
+            <div class="card text-dark bg-warning mb-3" style="min-height: 100%;">
                 <div class="card-header">사내기준 초과</div>
                 <div class="card-body" id="warning">
                     <h5> 가동중인 센서가 없습니다.</h5>
@@ -370,7 +367,7 @@
             </div>
         </div>
         <div class="col">
-            <div class="card text-white bg-danger mb-3">
+            <div class="card text-white bg-danger mb-3" style="min-height: 100%;">
                 <div class="card-header">법적기준 초과</div>
                 <div class="card-body" id="danger">
                     <h5> 가동중인 센서가 없습니다.</h5>
