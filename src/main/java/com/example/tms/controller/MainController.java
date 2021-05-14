@@ -29,12 +29,10 @@ public class MainController {
 
     final RankManagementService rankManagementService;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository
-                          , EmissionsSettingRepository emissionsSettingRepository,
-                          AnnualEmissionsRepository annualEmissionsRepository,
-                          RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository,
-                          SensorListRepository sensorListRepository, LogRepository logRepository,
-                          placeTotalMonitoringRepository placeTotalMonitoringRepository,RankManagementService rankManagementService,MongoQuary mongoQuary)
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository,
+                          AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository,
+                          EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository,
+                          LogRepository logRepository, placeTotalMonitoringRepository placeTotalMonitoringRepository,RankManagementService rankManagementService,MongoQuary mongoQuary)
     {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
@@ -74,7 +72,7 @@ public class MainController {
         List<ArrayList<placeTotalMonitoring>> ptmsList = new ArrayList<>();
         //선택된 값들의 년도별 total값들 리스트에 넣어주기
         //for(int i = 0; i < emissionsSettings.size();i++){
-        for(int i = 0; i < 2;i++){
+        for(int i = 0; i < 1;i++){
             //EmissionsSetting emissionsSetting = emissionsSettings.get(i);
             //List<placeTotalMonitoring> ptms = placeTotalMonitoringRepository.findByTableNameOrderByYearDesc(emissionsSetting.getSensor());
             List<placeTotalMonitoring> ptms = placeTotalMonitoringRepository.findByTableNameOrderByYearDesc("lghausys_NOX_001");
