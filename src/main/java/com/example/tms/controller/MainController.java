@@ -86,6 +86,7 @@ public class MainController {
         Member member = memberRepository.findById(principal.getName());
         model.addAttribute("member", member);
 
+
         return "dashboard";
     }
 
@@ -359,17 +360,20 @@ public class MainController {
     public String emissionsManagement(Model model) {
 
         List<EmissionsSetting> emissions = emissionsSettingRepository.findAll();
-        for (int i = 0 ; i< emissions.size(); i++){
-            if(emissions.get(i).getPlace().equals("")){        //측정소 없으면 제외
+        for (int i = 0 ; i<emissions.size(); i++){
+            if(emissions.get(i).getPlace().equals("") || emissions.get(i).getPlace() == null){        //측정소 없으면 제외
                 emissions.remove(i);
+                i--;
             }
         }
         model.addAttribute("emissions", emissions);
 
+
         List<AnnualEmissions> yearlyEmissions = annualEmissionsRepository.findAll();
-        for (int i = 0 ; i< yearlyEmissions.size(); i++){
-            if(yearlyEmissions.get(i).getPlace().equals("")){   //측정소 없으면 제외
+        for (int i = 0 ; i< yearlyEmissions.size(); i++) {
+            if (yearlyEmissions.get(i).getPlace().equals("") || yearlyEmissions.get(i).getPlace() == null) {   //측정소 없으면 제외
                 yearlyEmissions.remove(i);
+                i--;
             }
         }
         model.addAttribute("yearlyEmissions", yearlyEmissions);

@@ -131,11 +131,29 @@
 
                 <tbody id="tbody">
                 <c:forEach items="${standard}" var="standard" varStatus="i">
+
                     <tr>
                         <td class="tableCode">${standard.place}</td>
                         <td class="tableNaming">${standard.naming}</td>
-                        <td><fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/></td>
-                        <td>${standard.densityStandard}</td>
+
+                        <c:choose>
+                            <c:when test="${standard.emissionsStandard eq 0}">
+                                <td></td>
+                            </c:when>
+                            <c:when test="${standard.emissionsStandard ne 0}">
+                                <td><fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/></td>
+                            </c:when>
+                        </c:choose>
+
+                        <c:choose>
+                            <c:when test="${standard.densityStandard eq 0}">
+                                <td></td>
+                            </c:when>
+                            <c:when test="${standard.densityStandard ne 0}">
+                                <td>${standard.densityStandard}</td>
+                            </c:when>
+                        </c:choose>
+
                         <td>${standard.formula}</td>
                         <td>
                             <i onclick="clickModal(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
@@ -302,7 +320,8 @@
                         </div>
                     </div>
                     <input type="hidden" name="hiddenTableName"> <!-- 추가 수정 판별할 데이터 -->
-                    <c:if test="${!empty param.tableName}">
+
+                    <c:if test="${!empty param.tableName}"> <!--모달 띄울 데이터 -->
                         <input type="hidden" id="paramModalShow" value="${param.tableName}">
                     </c:if>
                 </form>
@@ -321,7 +340,7 @@
 <script>
     $(function () {     // modal drag and drop move
 
-        if($('#paramModalShow').val() != null){
+        if ($('#paramModalShow').val() != null) {
             paramModal($('#paramModalShow').val());
         }
 
@@ -342,17 +361,15 @@
         });
     });
 
-    //기준 추가
-    function insert() {
-
-        if (!valueCheck(-1)) return;
-
-        var unComma = $("input[name='standard']").val().replace(/,/g, '');
-        $("input[name='standard']").val(unComma);
-
-        var form = $('#addStandard').serialize();
-        standardAjax(form, '추가')
-    }
+    // //기준 추가
+    // function insert() {
+    //
+    //     var unComma = $("input[name='standard']").val().replace(/,/g, '');
+    //     $("input[name='standard']").val(unComma);
+    //
+    //     var form = $('#addStandard').serialize();
+    //     standardAjax(form, '추가')
+    // }
 
     // function insertSetting() {
     //     $('.modal-title').html('센서 추가');
@@ -363,9 +380,9 @@
     // }
 
     //param 인자로 모달 생성
-    function paramModal(tableName){
+    function paramModal(tableName) {
 
-        let obj = $('#'+tableName);
+        let obj = $('#' + tableName);
         editSetting(obj);
 
         $('#addModal').modal('show');
@@ -377,7 +394,7 @@
     }
 
     //editModal 선택값 셋팅
-    function editSetting(obj){
+    function editSetting(obj) {
         let tdList = $(obj).parent().parent().children();
         let tableName = $(obj).attr('id');
 
@@ -392,7 +409,7 @@
 
     //기준 수정
     function editStandard() {
-        if (!valueCheck()) return;
+        valueCheck();
 
         var unComma = $("input[name='standard']").val().replace(/,/g, '');
         $("input[name='standard']").val(unComma);
@@ -409,21 +426,22 @@
             cache: false,
             data: form,
             success: function (data) {
-                drawTable(data);
+                //drawTable(data);
                 $('#addModal').modal('hide');
+
+                inputClean();
+
+                $('#paramModalShow').remove();
+
+                setTimeout(function () {
+                location.href = '/emissionsManagement';
+                }, 1500);
 
                 Swal.fire({
                     icon: 'success',
                     title: '수정 완료',
                     text: '연간 배출 허용 기준이 수정 되었습니다.'
                 })
-                inputClean();
-
-                $('#paramModalShow').remove();
-
-                setTimeout(function () {
-                    location.href='/emissionsManagement';
-                }, 2000);
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error)
@@ -470,26 +488,26 @@
 
 
     //테이블 모두 삭제하고 새로운 데이터로 다시 그립니다.
-    function drawTable(data) {
-        $('#nullStandard').remove();
-        $('#tbody').children().remove();
-
-        for (i = 0; i < data.length; i++) {
-            let innerHTML = "";
-            innerHTML = " <tr>" +
-                " <td class='tableCode'>" + data[i].place + "</td>" +
-                " <td class='tableNaming'>" + data[i].naming + "</td>" +
-                " <td>" + numberWithCommas(data[i].emissionsStandard) + "</td>" +
-                " <td>" + data[i].densityStandard + "</td>" +
-                " <td>" + data[i].formula + "</td>" +
-                " <td>" +
-                "<i class='fas fa-edit me-2'  data-bs-toggle='modal' data-bs-target='#addModal' onclick='editSetting(this)' id='" + data[i].tableName + "'></i>" +
-                //"<i class='fas fa-times' onclick='deleteModal('+data[i].tableName+')'></i>" +
-                "</td>" +
-                "</tr>";
-            $('#tbody').append(innerHTML);
-        }
-    }
+    // function drawTable(data) {
+    //     $('#nullStandard').remove();
+    //     $('#tbody').children().remove();
+    //
+    //     for (i = 0; i < data.length; i++) {
+    //         let innerHTML = "";
+    //         innerHTML = " <tr>" +
+    //             " <td class='tableCode'>" + data[i].place + "</td>" +
+    //             " <td class='tableNaming'>" + data[i].naming + "</td>" +
+    //             " <td>" + numberWithCommas(data[i].emissionsStandard) + "</td>" +
+    //             " <td>" + data[i].densityStandard + "</td>" +
+    //             " <td>" + data[i].formula + "</td>" +
+    //             " <td>" +
+    //             "<i class='fas fa-edit me-2'  data-bs-toggle='modal' data-bs-target='#addModal' onclick='editSetting(this)' id='" + data[i].tableName + "'></i>" +
+    //             //"<i class='fas fa-times' onclick='deleteModal('+data[i].tableName+')'></i>" +
+    //             "</td>" +
+    //             "</tr>";
+    //         $('#tbody').append(innerHTML);
+    //     }
+    // }
 
     //Modal 초기화
     function inputClean() {
@@ -499,20 +517,11 @@
 
     //입력값 체크
     function valueCheck() {
-        let formula = $('input[name=formula]').val();
         let percent = $('input[name=percent]').val();
         let standard = $('input[name=standard]').val();
 
-        //Null 체크
-        if (formula == '' || percent == '' || standard == '') {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력값을 확인 해주세요.'
-            })
-            return false;
-        }
-        return true;
+        if (percent == '') $('input[name=percent]').val(0);
+        if (standard == '') $('input[name=standard]').val(0);
     }
 
 
