@@ -1,12 +1,12 @@
 /* The switch - the box around the slider */
 .switch {
     position: relative;
-    top: -29px;
-    left: 50px;
+    /*top: -29px;*/
+    /*left: 50px;*/
     display: inline-block;
     width: 60px;
     height: 34px;
-    float: right;
+    /*float: right;*/
     margin-right: 20px;
 }
 
@@ -125,9 +125,11 @@ input:checked + .slider:before {
     font-size: 18px;
 }
 .label-form{
-    width: 50%;
-    padding:30px;
-    margin-left: 100px;
+    width: 40%;
+    height: 55px;
+    padding:10px 20px;
+    margin-left: 45px;
+    display: inline-block;
 }
 
 .timePicker {
@@ -136,10 +138,14 @@ input:checked + .slider:before {
 
 .saveBtn, .cancelBtn {
     position: absolute;
-    bottom:0px;
 }
 .cancelBtn {
-    left: 75px;
+    right: 150px;
+    bottom:15px;
+}
+.saveBtn {
+    bottom:10px;
+    right: 0px;
 }
 div.col-3.end {
     position: relative;
@@ -159,4 +165,11 @@ button>img {
 
 .label-form>label.switch {
 
+}
+
+.dp>div {
+    display: inline-block;
+}
+.dp>div:nth-child(2) {
+    margin-left: 50px;
 }

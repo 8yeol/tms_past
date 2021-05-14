@@ -178,11 +178,6 @@
 
 <div class="container">
     <div class="ms-3 mt-3 add-bg row">
-        <div class="row m-0 p-0">
-            <div class="col text-end">
-                <span class="text-primary" style="font-size: 15%">* 검색기간이 7일 미만일 경우 5분 평균데이터, 7일 이상인 경우 30분 평균데이터로 표시됩니다.</span>
-            </div>
-        </div>
         <div class="col-3 picker">
             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
             <div class="btn-group w-50 ms-3">
@@ -222,6 +217,11 @@
             <input type="text" id="date_end" class="text-center p-1" disabled>
 
             <button type="button" class="btn btn-primary ms-3" onClick="search(1)">검색</button>
+        </div>
+        <div class="row m-0 p-0">
+            <div class="col text-end">
+                <span class="text-primary" style="font-size: 0.8rem; margin-right: 20px;">* 검색기간이 7일 미만일 경우 5분 평균데이터, 7일 이상인 경우 30분 평균데이터로 표시됩니다.</span>
+            </div>
         </div>
     </div>
 

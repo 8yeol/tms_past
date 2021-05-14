@@ -27,7 +27,7 @@
 <style>
     .border-bottom-custom {
         border-bottom: 2px solid #a9a9a9;
-        padding: 16px 16px 40px 16px;
+        padding: 16px 16px 25px 16px;
     }
 
     .border-tom-custom {
@@ -59,22 +59,22 @@
                 <div class="row bg-light border-bottom-custom">
 
                     <span class="fs-5 placeName" style="margin-bottom: 20px;" id="place${status.index}">${place}</span>
-                    <div style="display: flex" id="div${status.index}">
-                        <div class="col-3" style="width: 45%;">
-                            <span style="margin-left: 130px;" class="textSpanParent"> 센서 목록</span>
-                            <div id="items${status.index}">
-                                    <%-- script --%>
-                            </div>
-                        </div>
-                        <div class="col-3" style="width: 30%">
-                            <div class="a1" id="alarm${status.index}"></div>
-                        </div>
-                        <div class="col-3 end w-25">
-                            <button type="button" class="btn btn-primary saveBtn" onClick="insert(${status.index})">저장
-                            </button>
+                    <div style="" id="div${status.index}">
+                        <div style="position: relative; padding-bottom: 5px;">
+                            <div class="dp" id="alarm${status.index}" style="width: 65%; margin: 0 auto 10px;"></div>
                             <button type="button" class="cancelBtn" onClick="cancel(${status.index})"><img
                                     src="static/images/reload.png" width="23" height="23"></button>
                         </div>
+                        <hr>
+                        <div class="add-dp" style="width: 75%; margin: 0 auto; position: relative;">
+                            <span style="margin-left: 60px;" class="textSpanParent"> 센서 목록</span>
+                            <div style="padding-top: 10px;" id="items${status.index}">
+                                    <%-- script --%>
+                            </div>
+                            <button type="button" class="btn btn-primary saveBtn" onClick="insert(${status.index})">저장
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             </div>
