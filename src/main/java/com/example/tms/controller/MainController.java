@@ -49,7 +49,8 @@ public class MainController {
 
 
     @RequestMapping("/")
-    public String dashboard(Model model) {
+    public String dashboard(Model model,Principal principal) {
+
         //선택된 센서 (findByStatusIsTrue) 가져오기
         List<AnnualEmissions> setting = annualEmissionsRepository.findByStatusIsTrue();
         model.addAttribute("sensorlist",setting);
@@ -81,6 +82,9 @@ public class MainController {
             }
         }
         model.addAttribute("ptmsList", ptmsList);
+
+        Member member = memberRepository.findById(principal.getName());
+        model.addAttribute("member", member);
 
         return "dashboard";
     }

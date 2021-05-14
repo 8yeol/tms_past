@@ -296,10 +296,10 @@
                             value="${standard.emissionsStandard}" groupingUsed="true"/>
                 </div>
                 </c:if>
-                <c:if test="${standard.emissionsStandard eq '0'}"> <!--sensor = standard -->
+                <c:if test="${standard.emissionsStandard eq '0' and (member.state == '4' || member.state == '3')}"> <!--sensor = standard -->
                 <div class="pb-4 text-center">
-                    연간 배출 허용 기준 미등록 &nbsp;<br><a href="/emissionsManagement?tableName=${standard.tableName}" class="small">등록하기
-                    (관리자만!!!!!!!)</a> <%--관리자만 보이게 설정--%>
+                    연간 배출 허용 기준 미등록 &nbsp;<br>
+                    <a href="/emissionsManagement?tableName=${standard.tableName}" class="small">등록하기</a>
                 </div>
             </div>
             </c:if>
