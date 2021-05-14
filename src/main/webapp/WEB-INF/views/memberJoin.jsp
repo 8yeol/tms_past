@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
 <link rel="stylesheet" href="static/css/common.css">
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
+<link rel="shortcut icon" href="#">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-3.6.0.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
@@ -19,33 +20,76 @@
     }
 </style>
 
-<div class="container">
-    <div class="row justify-content-center bg-white p-5 mt-5 rounded">
-        <h1 class="py-5 fw-bold text-center">Sing Up</h1>
-        <div class="col-xs-12 d-flex justify-content-center bg-white px-5">
-            <div class="me-5">
-                <h3 class="text text-secondary fw-bold">아이디</h3>
-                <h3 class="text text-secondary fw-bold">비밀번호</h3>
-                <h3 class="text text-secondary fw-bold">비밀번호확인</h3>
-                <h3 class="text text-secondary fw-bold">이름</h3>
-                <h3 class="text text-secondary fw-bold">이메일</h3>
-                <h3 class="text text-secondary fw-bold">연락처</h3>
-                <h3 class="text text-secondary fw-bold">부서명</h3>
-                <h3 class="text text-secondary fw-bold">직급</h3>
+<div class="container h-100">
+    <div class="row bg-white">
+        <span class="fs-1 text-center">회원가입</span>
+        <div class="col p-5">
+
+            <div class="mb-3 row">
+                <label for="id" class="col-sm-2 col-form-label">아이디</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="id">
+                </div>
             </div>
-            <div>
-                <input class="form-control" type="text" id="id">
-                <input class="form-control mt-1" type="password" id="password">
-                <input class="form-control mt-1" type="password" id="passwordCheck">
-                <input class="form-control mt-1" type="text" id="name">
-                <input class="form-control mt-1" type="email" id="email" onkeyup="autoEmail('email',this.value)">
-                <input class="form-control mt-1" type="tel" id="tel" onkeyup="inputPhoneNumber(this)">
-                <input class="form-control mt-1" type="text" id="department">
-                <input class="form-control mt-1" type="text" id="grade">
+            <div class="mb-3 row">
+                <label for="password" class="col-sm-2 col-form-label">비밀번호</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="password">
+                    <span class="text-primary" style="font-size: 15%"> * 6자 이상 입력해주세요.</span>
+                </div>
             </div>
+
+            <div class="mb-3 row">
+                <label for="passwordCheck" class="col-sm-2 col-form-label">비밀번호 확인</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="passwordCheck">
+                    <span class="text-primary" style="font-size: 15%"> * 입력한 비밀번호와 동일하지 않습니다.</span>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="name" class="col-sm-2 col-form-label">이름</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" id="name">
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="email" class="col-sm-2 col-form-label">이메일</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" id="email" onkeyup="autoEmail('email',this.value)">
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="tel" class="col-sm-2 col-form-label">연락처</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" id="tel" onkeyup="inputPhoneNumber(this)">
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="department" class="col-sm-2 col-form-label">부서명</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" id="department">
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="grade" class="col-sm-2 col-form-label">직급</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" id="grade">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-primary px-5 py-2 w-auto h-auto mt-3" onclick="join_submit()">가입신청</button>
+                    <button class="btn btn-outline-primary px-5 py-2 w-auto h-auto mt-3 ms-5" onClick="location.href='/login'">취소</button>
+                </div>
+            </div>
+
         </div>
-        <button class="btn btn-primary fs-3 px-5 py-2 w-auto h-auto mt-3" onclick="join_submit()">가입신청</button>
-        <button class="btn btn-outline-primary fs-3 px-5 py-2 w-auto h-auto mt-3 ms-5" onClick="location.href='/login'">취소</button>
     </div>
 </div>
 
