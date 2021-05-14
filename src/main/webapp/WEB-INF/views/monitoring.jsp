@@ -42,7 +42,6 @@
         background-color: #97bef8;
         color: #fff;
     }
-
 </style>
 
 
@@ -92,8 +91,8 @@
                         <div class="col">
                             <img src="/static/images/sad.png" class="emoji">
                         </div>
-                        <div class="col">
-                            <p class="fs-1 mb-0" id="legal_standard_text_A"></p>
+                        <div class="col" style="margin-top: 5px;">
+                            <p class="mb-0" id="legal_standard_text_A" style="font-size: 2.4rem;"></p>
                             <hr class="m-0">
                             <p id="legal_standard_text_B"></p>
                         </div>
@@ -105,8 +104,8 @@
                         <div class="col">
                             <img src="/static/images/thinking.png" class="emoji">
                         </div>
-                        <div class="col">
-                            <p class="fs-1 mb-0" id="company_standard_text_A"></p>
+                        <div class="col" style="margin-top: 5px;">
+                            <p class="mb-0" id="company_standard_text_A" style="font-size: 2.4rem;"></p>
                             <hr class="m-0">
                             <p id="company_standard_text_B"></p>
                         </div>
@@ -118,8 +117,8 @@
                         <div class="col">
                             <img src="/static/images/sceptic.png" class="emoji">
                         </div>
-                        <div class="col">
-                            <p class="fs-1 mb-0" id="management_standard_text_A"></p>
+                        <div class="col" style="margin-top: 5px;">
+                            <p class="mb-0" id="management_standard_text_A" style="font-size: 2.4rem;"></p>
                             <hr class="m-0">
                             <p id="management_standard_text_B"></p>
                         </div>
@@ -524,16 +523,33 @@
                 }
             }
         }
-        $("#statusPercent").text(((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0) + "%");
+        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0);
+        var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0);
+        var companyPercent = ((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0);
+        var managementPercent = ((managementSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0);
+        if(runPercent == 'NaN'){
+            runPercent = 0;
+        }
+        if(legalPercent == 'NaN'){
+            legalPercent = 0;
+        }
+        if(companyPercent == 'NaN'){
+            companyPercent = 0;
+        }
+        if(managementPercent == 'NaN'){
+            managementPercent = 0;
+        }
+
+        $("#statusPercent").text(runPercent + "%");
         $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail));
         $("#statusOn").text(sensorStatusSuccess);
         $("#statusOff").text(sensorStatusFail);
         $("#monitoringOff").text(sensorMonitoringOff);
-        $("#legal_standard_text_A").text(((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
+        $("#legal_standard_text_A").text(legalPercent + "%");
         $("#legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess + sensorStatusFail));
-        $("#company_standard_text_A").text(((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
+        $("#company_standard_text_A").text(companyPercent + "%");
         $("#company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess + sensorStatusFail));
-        $("#management_standard_text_A").text(((managementSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
+        $("#management_standard_text_A").text(managementPercent + "%");
         $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess + sensorStatusFail));
     }
 </script>

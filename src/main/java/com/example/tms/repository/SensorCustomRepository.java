@@ -50,7 +50,7 @@ public class SensorCustomRepository {
                 MatchOperation matchOperation = Aggregation.match(new Criteria().andOperator(Criteria.where("up_time")
                         .gte(A).lte(B)
                 ));
-                SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
+                SortOperation sortOperation = Aggregation.sort(Sort.Direction.ASC, "up_time");
                 Aggregation aggregation = Aggregation.newAggregation(projectionOperation, matchOperation, sortOperation);
 
                 AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);

@@ -10,6 +10,7 @@
 <script src="static/js/vue-apexcharts.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
 <script src="static/js/moment.min.js"></script>
+
 <%-- export excel --%>
 <script src="static/js/jszip.min.js"></script>
 <script src="static/js/dataTables.buttons.min.js"></script>
@@ -301,11 +302,10 @@
                 sensor_name = "RM05_"+sensor_name;
             }
             var sensor_data_list = getSensor(sensor_name, sensor_time_length); //센서 데이터 (최근 1시간, 24시간)
-            draw_sensor_table(sensor_data_list, sensor_data); // 센서 테이블 생성 (측정시간, 측정값, 관리등급)
+            var dt = draw_sensor_table(sensor_data_list, sensor_data); // 센서 테이블 생성 (측정시간, 측정값, 관리등급)
             if(sensor_data_list.length != 0){
                 $("#radio_text").text(sensor_data.naming); // 선택된 센서명 텍스트 출력
                     setTimeout(function interval_getData2() { //$초 마다 업데이트
-
                         updateChart(sensor_data_list, sensor_data); //차트 업데이트
                         // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
                         var sensor_data_list_recent = getSensorRecent(sensor_name);
@@ -313,6 +313,7 @@
                             if(sensor_data_list[0].x != sensor_data_list_recent.up_time){
                                 sensor_data_list.unshift({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value});
                                 sensor_data_list.pop();
+                                sensor_table_update(dt, sensor_data_list[0], sensor_data);
                             }
                         }
                         interval2 = setTimeout(interval_getData2, 5000);
@@ -618,7 +619,7 @@
                     formatter: function (val) {
                         return 'No data'
                     }
-                }
+                },
             }
         };
         return options;
@@ -701,7 +702,7 @@
                         if (sensor_data_list == null || sensor_data_list.length == 0)
                             return 'No data'
                         else
-                            return val
+                            return val.toFixed(2);
                     }
                 }
             }
@@ -826,7 +827,7 @@
             $("#standard_text").text(legalStandard+"/"+companyStandard+"/"+managementStandard+" mg/Sm³ 이하");
         }
 
-        $('#sensor-table').dataTable({
+        var dt = $('#sensor-table').dataTable({
             data: arr,
             columns:[
                 {"data": "x"},
@@ -839,7 +840,7 @@
             bInfo: false,
             ordering: true,
             pagingType: 'numbers',
-            order:[[0, 'desc']],
+            // order:[[0, 'desc']],
             /*'rowCallback': function(row, data, index){
                 if(sensor_data.legalStandard != "-"){
                     if(data.y >= sensor_data.legalStandard){
@@ -879,8 +880,48 @@
             buttons: [{
                 extend: 'excelHtml5',
                 autoFilter: true,
-                sheetName: 'Exported data'
+                sheetName: 'Exported data',
+                text:'엑셀 다운로드',
+                filename: function(){
+                    const d = moment(new Date()).format('YYYYMMDDHHmmss');
+                    return d + '_' + sensor_data.naming + '(' + sensor_data.name + ')';
+                },
             }]
         });
+        return dt;
+    }
+    
+    function sensor_table_update(table, recentData, sensorData) {
+        upDate = moment(recentData.x).format('YYYY-MM-DD HH:mm:ss');
+        value = (recentData.y).toFixed(2);
+        if(sensorData.legalStandard == 999){
+            legalStandard = '-';
+        }else{
+            legalStandard = sensorData.legalStandard;
+        }
+        if(sensorData.companyStandard == 999){
+            companyStandard = '-';
+        }else{
+            companyStandard = sensorData.companyStandard;
+        }
+        if(sensorData.managementStandard == 999){
+            managementStandard = '-';
+        }else{
+            managementStandard = sensorData.managementStandard;
+        }
+
+        if(recentData.value > sensorData.legalStandard){
+            standard =  "법적기준 초과";
+        } else if( recentData.value > sensorData.companyStandard){
+            standard =  "사내기준 초과";
+        } else if( recentData.value > sensorData.managementStandard){
+            standard =  "관리기준 초과";
+        } else {
+            standard =  "정상";
+        }
+
+        table.fnAddData([{'x':upDate, 'y': value, 'z':standard}]);
+        table.fnDeleteRow(0);
+        table.fnSort([0, 'desc']);
     }
 </script>

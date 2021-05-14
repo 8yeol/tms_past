@@ -104,7 +104,7 @@
                 알림 목록 <button class="btn" onclick="search('refresh')"> <i class="fas fa-sync-alt"></i> </button>
             </div>
             <div class="col text-center">
-                <div class="search">
+                <div class="search" style="margin-left:70px;">
                     <span class="fs-5 fw-bold p-3 f-sizing">검색기간</span>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" name="s_day" id="s_day" checked>
