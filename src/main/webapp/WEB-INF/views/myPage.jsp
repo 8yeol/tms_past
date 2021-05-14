@@ -4,6 +4,19 @@
     .bg-lightGrey {
         background-color: lightgrey;
     }
+    .edit {
+        background-color: #0d6efd;
+        color: #fff;
+        border-radius: 5px;
+        border: 2px solid #0d6efd;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    }
+    @media all and (min-width:1981px) {
+        .mypage-bg {position: relative; top:18%;}
+    }
+    @media all and (max-width: 1980px) {
+        .mypage-bg {position: relative; top: 10%;}
+    }
 </style>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
@@ -11,7 +24,7 @@
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
 <script src="static/js/jquery-ui.js"></script>
 
-<div class="container bg-light rounded p-5 text-center mt-5">
+<div class="container bg-light rounded p-5 text-center mt-5 mypage-bg">
     <div class="row">
         <span class="fs-1 text-center">MY PAGE</span>
         <div class="col m-3">
@@ -57,8 +70,8 @@
                 </div>
             </div>
 
-            <div class="row bg-info" style="display:none;" id="passwordBox">
-                <div class="mb-3 row">
+            <div class="row edit" style="display:none;" id="passwordBox">
+                <div class="mb-3 row" style="margin-top: 1rem;">
                     <label for="password" class="col-sm-2 col-form-label">비밀번호</label>
                    <div class="col-sm-10">
                         <input type="test" class="form-control" id="password">

@@ -17,10 +17,13 @@
         width:1000px;
         height: 40px;
     }
+    @media all and (min-width:1981px) {
+        .join-bg {position: relative; top:12%;}
+    }
 </style>
 
 <div class="container h-100">
-    <div class="row bg-white">
+    <div class="row bg-white join-bg">
         <span class="fs-1 text-center" style="margin: 15px 0px 0px;">회원가입</span>
         <div class="col join" style="padding: 2rem;">
 
