@@ -231,7 +231,7 @@
             <div class="text-end">
 
                 <div class="dropdown">
-                    <button class="dropbtn rounded"> <%--<sec:authentication property="principal.Username"/> --%>--- 님 <i class="fas fa-caret-down"></i></button>
+                    <button class="dropbtn rounded" id="dropBtn"><i class="fas fa-caret-down"></i></button>
                     <div class="dropdown-content text-start">
                         <a href="/myPage">마이페이지</a>
                         <a href="/logout">로그아웃</a>
@@ -250,6 +250,13 @@
 
 
 <script>
+    $( document ).ready(function() {
+        var settings = {"url": "http://localhost:8090/getUsername", "method": "POST",};
+        $.ajax(settings).done(function (response) {
+            $('#dropBtn').prepend(response+" 님");
+        });
+    });
+
     var current_page_URL = location.href; //현재 URL 주소
     $("#menu a").each(function() { //menu a 태그의 주소
         if ($(this).attr("href") !== "#") { // 주소링크가 # 아닐때
