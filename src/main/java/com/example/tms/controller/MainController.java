@@ -55,10 +55,6 @@ public class MainController {
         List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
         model.addAttribute("standard",standard);
 
-        System.out.println(setting);
-        System.out.println(setting.get(1));
-        System.out.println(standard);
-
         return "dashboard";
     }
 

@@ -107,7 +107,7 @@
 <div class="container">
     <div class="row">
         <div class="row1">
-            <span>연간 배출 허용 기준 설정${param.tableName} </span>
+            <span>연간 배출 허용 기준 설정</span>
             <!-- <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="insertSetting()"
                      style="background-color:green;color:white"> 추가 버튼
              </button> -->
@@ -138,7 +138,7 @@
                         <td>${standard.densityStandard}</td>
                         <td>${standard.formula}</td>
                         <td>
-                            <i onclick="editSetting(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
+                            <i onclick="clickModal(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
                                data-bs-target="#addModal" id="${standard.tableName}"></i>
                             <!--<i class="fas fa-times" onclick="deleteModal(${standard.tableName})"></i>-->
                         </td>
@@ -302,13 +302,13 @@
                         </div>
                     </div>
                     <input type="hidden" name="hiddenTableName"> <!-- 추가 수정 판별할 데이터 -->
-                    <c:if test="${ empty param.tableName}">
-                        test
+                    <c:if test="${!empty param.tableName}">
+                        <input type="hidden" id="paramModalShow" value="${param.tableName}">
                     </c:if>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" onclick="insert()">추가</button>
+                <button type="button" class="btn btn-success me-5" onclick="editStandard()">수정</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
@@ -320,7 +320,11 @@
 
 <script>
     $(function () {     // modal drag and drop move
-        alert(${param.tableName});
+
+        if($('#paramModalShow').val() != null){
+            paramModal($('#paramModalShow').val());
+        }
+
         $('.modal-dialog').draggable({handle: ".modal-header"});
         //콤마 자동 찍기, 숫자만 입력 가능
         $("input[name='standard']").bind('keyup', function (e) {
@@ -358,14 +362,22 @@
     //     inputClean();
     // }
 
+    //param 인자로 모달 생성
+    function paramModal(tableName){
+
+        let obj = $('#'+tableName);
+        editSetting(obj);
+
+        $('#addModal').modal('show');
+    }
+
+    //클릭하여 모달 생성
+    function clickModal(obj) {
+        editSetting(obj);
+    }
+
     //editModal 선택값 셋팅
-    function editSetting(obj) {
-
-        $('.modal-title').html('센서 수정');
-        $('.btn-success').html('수정');
-        $('.btn-success').removeAttr("onclick");
-        $('.btn-success').attr("onclick", "editStandard()");
-
+    function editSetting(obj){
         let tdList = $(obj).parent().parent().children();
         let tableName = $(obj).attr('id');
 
@@ -377,6 +389,7 @@
         $("input[name='formula']").val(tdList.eq(4).html());
     }
 
+
     //기준 수정
     function editStandard() {
         if (!valueCheck()) return;
@@ -385,11 +398,10 @@
         $("input[name='standard']").val(unComma);
 
         var form = $('#addStandard').serialize();
-        standardAjax(form, "수정");
+        standardAjax(form);
     }
 
-
-    function standardAjax(form, str) {
+    function standardAjax(form) {
         $.ajax({
             url: 'saveEmissionsStandard',
             type: 'POST',
@@ -402,10 +414,16 @@
 
                 Swal.fire({
                     icon: 'success',
-                    title: str + ' 완료',
-                    text: '연간 배출 허용 기준이 ' + str + '되었습니다.'
+                    title: '수정 완료',
+                    text: '연간 배출 허용 기준이 수정 되었습니다.'
                 })
                 inputClean();
+
+                $('#paramModalShow').remove();
+
+                setTimeout(function () {
+                    location.href='/emissionsManagement';
+                }, 2000);
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error)
