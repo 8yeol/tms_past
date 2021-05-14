@@ -320,6 +320,7 @@
                     }, 0);
             }else{ // sensor_data_list (최근데이터) 가 없을 때
                 if(sensor_data){
+                    console.log("최근 데이터가 없습니다.");
                     draw_sensor_table(sensor_data_list, sensor_data);
                     $("#radio_text").text(sensor_data.naming);
                     updateChart(sensor_data_list, sensor_data);

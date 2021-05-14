@@ -574,7 +574,7 @@ public class JsonController {
      * 알림 현황 저장 (일 - 1월1부터 ~ 어제 날짜 / 월 - 1월1부터 이번달)
      * notification_day_statistics(일) , notification_month_statistics(월)
      */
-    @RequestMapping(value = "saveNotiStatistics")
+    @RequestMapping(value = "saveNS")
     public void saveNotiStatistics() {
         LocalDate nowDate = LocalDate.now(); //현재시간
         int getYear = nowDate.getYear();
