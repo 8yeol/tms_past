@@ -174,12 +174,12 @@
                         <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
                             <div class="fw-bold">
                                 <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>
-                                    ${present.year} 2분기
+                                    ${present.year} 년 현재 배출량
                             </div>
                             <p class="fs-3 mx-2">/</p>
                             <div class="fw-bold">
                                 <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>
-                                    ${past.year} 2분기
+                                    ${past.year} 년 총 배출량
                             </div>
                         </div>
                     </div>
@@ -198,12 +198,12 @@
                         <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
                             <div class="fw-bold">
                                 <p class="m-0 text-center text-primary"><fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/></p>
-                                    ${present.year}년 현재 배출량
+                                    ${present.year}년 2분기
                             </div>
                             <p class="fs-3 mx-2">/</p>
                             <div class="fw-bold">
                                 <p class="m-0 text-center"><fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/></p>
-                                    ${past.year}년 총 배출량
+                                    ${past.year}년 2분기
                             </div>
                         </div>
                     </div>
@@ -213,7 +213,7 @@
             <div class="col-3 h-100">
                 <div class="card h-100 border-2 border-primary">
                     <div class="card-body">
-                        <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(mg/L)</h5>
+                        <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
                         <div class="d-flex justify-content-center p-3">
                             <p class="fw-bold me-3">전년대비</p>
                             <p class="fw-bold fs-3"><fmt:formatNumber value="${presentQuater - pastQuater}" pattern=",000"/></p>
@@ -222,12 +222,12 @@
                         <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
                             <div class="fw-bold">
                                 <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>
-                                    ${present.year} 2분기
+                                    ${present.year}년 2분기
                             </div>
                             <p class="fs-3 mx-2">/</p>
                             <div class="fw-bold">
                                 <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>
-                                    ${past.year} 2분기
+                                    ${past.year}년 2분기
                             </div>
                         </div>
                     </div>

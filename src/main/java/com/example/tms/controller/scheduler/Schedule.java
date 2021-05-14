@@ -34,8 +34,8 @@ public class Schedule {
     public void monthlyEmissionsScheduling(){
         LocalDate today = LocalDate.now();
         LocalDate lastMonth = today.minus(1, ChronoUnit.MONTHS);
-        LocalDate from = today.withDayOfMonth(1);
-        LocalDate to = today.withDayOfMonth(lastMonth.lengthOfMonth());
+        LocalDate from = lastMonth.withDayOfMonth(1);
+        LocalDate to = lastMonth.withDayOfMonth(lastMonth.lengthOfMonth());
 
         for(SensorList sensorList : sensorListRepository.findAll()){
             MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(sensorList.getTableName(), from.getYear());

@@ -102,7 +102,7 @@
                 <div class="col border-right">
                     <div class="row text-center">
                         <div class="col">
-                            <img src="/static/images/thinking.png" class="emoji">
+                            `<img src="/static/images/thinking.png" class="emoji">`
                         </div>
                         <div class="col" style="margin-top: 5px;">
                             <p class="mb-0" id="company_standard_text_A" style="font-size: 2.4rem;"></p>

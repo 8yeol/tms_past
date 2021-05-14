@@ -389,14 +389,11 @@
         language:'ko',
         minDate: new Date("2021-05-12"),
         maxDate:new Date()
-        //timepicker: true,
-        //timeFormat: "hh:ii AA"
     });
     $("#date_end").datepicker({
         language:'ko',
+        minDate: new Date("2021-05-12"),
         maxDate:new Date()
-        //timepicker: true,
-        //timeFormat: "hh:ii AA"
     });
 
     datePickerSet($("#date_start"), $("#date_end"), true); // 시작하는 달력 , 끝달력
