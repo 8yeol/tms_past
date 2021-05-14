@@ -196,19 +196,33 @@ public class JsonController {
                 sensor.setUpTime(date);
                 sensorListRepository.save(sensor);
             }
+
+            List<EmissionsStandardSetting> ess = emissionsStandardSettingRepository.findByPlace(hiddenCode);
+            for(int i = 0; i<ess.size(); i++){
+                ess.get(i).setPlace(name);
+                emissionsStandardSettingRepository.save(ess.get(i));
+            }
+            List<AnnualEmissions> ae = annualEmissionsRepository.findByPlace(hiddenCode);
+            for(int i = 0; i<ae.size(); i++){
+                ae.get(i).setPlace(name);
+                annualEmissionsRepository.save(ae.get(i));
+            }
+            List<EmissionsSetting> es = emissionsSettingRepository.findByPlace(hiddenCode);
+            for(int i = 0; i<es.size(); i++){
+                es.get(i).setPlace(name);
+                emissionsSettingRepository.save(es.get(i));
+            }
         }
     }
 
     //측정소 삭제
     @RequestMapping(value = "/removePlace")
     public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList, boolean flag) {
-        System.out.println("44"+placeList);
+
         for (int i = 0; i < placeList.size(); i++) {
             if (flag) {
-                System.out.println("센서 포함 삭제");
                 removePlaceRemoveSensor(placeList.get(i));       //센서 포함 삭제
             }else {
-                System.out.println("측정소만 삭제");
                 removePlaceChangeSensor(placeList.get(i));       //측정소만 삭제
             }
         }
@@ -817,6 +831,16 @@ public class JsonController {
     @RequestMapping(value = "/getNaming")
     public Item getNaming(String classification) {
         return itemRepository.findByClassification(classification);
+    }
+
+    @RequestMapping(value = "/isStandardEmpty")
+    public boolean isStandardEmpty(String tableName) {
+
+        if(emissionsStandardSettingRepository.findByTableNameIsIn(tableName)==null){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @RequestMapping(value = "/saveStandard")

@@ -291,7 +291,7 @@
             async: false,
             cache: false,
             data: form,
-            success: function (data) {
+            success: function () {
                 Swal.fire({
                     icon: 'success',
                     title:'허용 기준 생성',
@@ -330,8 +330,6 @@
             return;
         }
 
-
-
         if (idx == 2) {
             form = $('#editForm').serialize();
             if($("#place2").val() == null){
@@ -346,7 +344,9 @@
             title = '센서 수정';
         } else {
             form = $('#saveForm').serialize();
-            saveStandard(form);
+            if(isStandardEmpty($('#tableName').val())){
+                saveStandard(form);
+            }
             content = '센서가 추가 되었습니다.';
             title = '센서 추가';
             $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
@@ -373,6 +373,24 @@
                 console.log(error);
             }
         });
+    }
+
+    function isStandardEmpty(tableName){
+        let flag= false;
+        $.ajax({
+            url: 'isStandardEmpty',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {'tableName' : tableName},
+            success: function (data) {
+                if(data)flag=true;
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        });
+        return flag;
     }
 
     function changeTableName() {
