@@ -70,7 +70,7 @@
     }
 
     .h-px {
-        height: 340px;
+        height: 300px;
     }
 
     .standard {
@@ -138,16 +138,16 @@
                 <div class="col text-end">
                     <span class="small">마지막 업데이트 : <span class="fw-bold"
                                                          id="integrated_update">업데이트 시간</span></span><br>
-                    <span class="text-primary" style="font-size: 15%"> * 매월 마지막 날 업데이트 됩니다.</span>
+                    <span class="text-primary" style="font-size: 0.8rem"> * 매월 마지막 날 업데이트 됩니다.</span>
                 </div>
             </div>
             <div class="row pb-3 h-75 margin-l">
 
                 <div class="col-3">
-                    <div class="card border-2 border-primary" style="height: 90%;">
+                    <div class="card border-2 border-primary" style="height: 95%;">
                         <div class="card-body">
                             <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(%)</h5>
-                            <div class="d-flex justify-content-center p-3">
+                            <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                 <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                 <p class="fw-bold fs-3"><fmt:formatNumber
                                         value="${(present.totalEmissions - past.totalEmissions) / past.totalEmissions * 100}"
@@ -160,7 +160,7 @@
                                             value="${present.totalEmissions}" pattern=",000"/></p>
                                         ${present.year}년 현재 배출량
                                 </div>
-                                <p class="fs-3 mx-2">/</p>
+                                <p class="fs-3" style="margin: 0 0.5rem 0;">/</p>
                                 <div class="fw-bold">
                                     <p class="m-0 text-center"><fmt:formatNumber value="${past.totalEmissions}"
                                                                                  pattern=",000"/></p>
@@ -172,10 +172,10 @@
                 </div>
 
                 <div class="col-3 h-100">
-                    <div class="card border-2 border-primary" style="height: 90%;">
+                    <div class="card border-2 border-primary" style="height: 95%;">
                         <div class="card-body">
                             <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(mg/L)</h5>
-                            <div class="d-flex justify-content-center p-3">
+                            <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                 <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                 <p class="fw-bold fs-3"><fmt:formatNumber
                                         value="${present.totalEmissions - past.totalEmissions}" pattern=",000"/></p>
@@ -199,10 +199,10 @@
                 </div>
 
                 <div class="col-3">
-                    <div class="card border-2 border-primary" style="height: 90%;">
+                    <div class="card border-2 border-primary" style="height: 95%;">
                         <div class="card-body">
                             <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(%)</h5>
-                            <div class="d-flex justify-content-center p-3">
+                            <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                 <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                 <p class="fw-bold fs-3"><fmt:formatNumber
                                         value="${(presentQuater - pastQuater) / pastQuater * 100}" pattern=".0"/>%</p>
@@ -226,10 +226,10 @@
                 </div>
 
                 <div class="col-3 h-100">
-                    <div class="card border-2 border-primary" style="height: 90%;">
+                    <div class="card border-2 border-primary" style="height: 95%;">
                         <div class="card-body">
                             <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
-                            <div class="d-flex justify-content-center p-3">
+                            <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                 <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                 <p class="fw-bold fs-3"><fmt:formatNumber value="${presentQuater - pastQuater}"
                                                                           pattern=",000"/></p>
@@ -262,7 +262,7 @@
             </div>
             <div class="col text-end">
                 <span class="small">마지막 업데이트 : <span class="fw-bold" id="accumulate_update">업데이트 시간</span></span><br>
-                <span class="text-primary" style="font-size: 15%"> * 매일 자정 업데이트 됩니다.</span>
+                <span class="text-primary" style="font-size: 0.8rem"> * 매일 자정 업데이트 됩니다.</span>
             </div>
         </div>
 
@@ -357,7 +357,7 @@
         </div>
         <div class="col text-end">
             <span class="small">마지막 업데이트 : <span class="fw-bold" id="excess_update">업데이트 시간</span></span><br>
-            <span class="text-primary" style="font-size: 15%"> * 실시간으로 업데이트 됩니다.</span>
+            <span class="text-primary" style="font-size: 0.8rem"> * 실시간으로 업데이트 됩니다.</span>
         </div>
     </div>
     <div class="row pb-3 h-75 pb-3 margin-l">

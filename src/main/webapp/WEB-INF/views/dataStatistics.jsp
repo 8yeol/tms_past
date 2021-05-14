@@ -56,7 +56,7 @@
     <div class="row  ms-3 mt-4">
         <div class="col text-end">
             <p class="small m-0"> 업데이트 : <span class="small fw-bold" id="update"></span></p>
-            <span class="text-primary" style="font-size: 15%"> * 매월 1일 전월 통계값이 업데이트 됩니다.</span>
+            <span class="text-primary" style="font-size: 0.8rem;"> * 매월 1일 전월 통계값이 업데이트 됩니다.</span>
         </div>
     </div>
     <div class="row mt-2 p-3 add-bg" style="margin-left: 5px;">

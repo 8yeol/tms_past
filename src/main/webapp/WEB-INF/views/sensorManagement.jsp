@@ -62,7 +62,7 @@
                     <div class="row bg-white m-3">
                         <div class="row">
                             <div class="col text-end">
-                                <span class="text-primary" style="font-size: 15%"> * 테이블명 선택시 자동 입력됩니다.</span>
+                                <span class="text-primary" style="font-size: 0.8rem;"> * 테이블명 선택시 자동 입력됩니다.</span>
                             </div>
                         </div>
                         <div class="row p-5">
