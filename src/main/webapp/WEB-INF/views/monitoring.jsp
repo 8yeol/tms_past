@@ -102,7 +102,7 @@
                 <div class="col border-right">
                     <div class="row text-center">
                         <div class="col">
-                            `<img src="/static/images/thinking.png" class="emoji">`
+                            <img src="/static/images/thinking.png" class="emoji">
                         </div>
                         <div class="col" style="margin-top: 5px;">
                             <p class="mb-0" id="company_standard_text_A" style="font-size: 2.3rem;"></p>
@@ -238,10 +238,10 @@
         $('#place_table').empty();
         var col_md_size;
         for(var i=0; i<placeName.length; i++){
-            if(placeName.length%2==0){ //짝수개
-                col_md_size = 6;
-            }else if(placeName.length%2==1){ //홀수개
+            if(placeName.length==1){ //1개
                 col_md_size = 12;
+            }else {
+                col_md_size = 6;
             }
 
             $('#place_table').append("<div class='col-md-"+col_md_size+" mb-3 mt-2'>" +
@@ -250,11 +250,11 @@
                 "<table class='table table-bordered table-hover text-center'>" +
                 "<thead>" +
                 "<tr class='add-bg-color'>" +
-                "<th>항목</th>" +
-                "<th>법적기준</th>" +
-                "<th>사내기준</th>" +
-                "<th>관리기준</th>" +
-                "<th>실시간</th>" +
+                "<th width=30%'>항목</th>" +
+                "<th width=15%'>법적기준</th>" +
+                "<th width=15%'>사내기준</th>" +
+                "<th width=15%'>관리기준</th>" +
+                "<th width=25%'>실시간</th>" +
                 "</tr>" +
                 "</thead>"+
                 "<tbody id='sensor-table-"+i+"'>"+
