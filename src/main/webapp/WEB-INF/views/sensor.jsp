@@ -144,10 +144,10 @@
                 <div class="d-flex radio">
                     <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px;"></span>
                     <div class="align-self-end">
-                        <input class="form-check-input" type="radio" name="chartRadio" id="hourRadio" checked>
-                        <label>&nbsp;최근 1시간</label> &emsp;
-                        <input class="form-check-input" type="radio" name="chartRadio" id="dayRadio">
-                        <label>&nbsp;최근 24시간</label>
+                        <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
+                        <label for='hour'>&nbsp;최근 1시간</label> &emsp;
+                        <input class="form-check-input" type="radio" name="chartRadio" id="day">
+                        <label for="day">&nbsp;최근 24시간</label>
                     </div>
                 </div>
                 <span class="text-primary" style="font-size: .875em" id="textUpdate"> * 최근 1시간 - 1분 단위로 업데이트 됩니다.</span>
@@ -310,10 +310,10 @@
                         var sensor_data_list_recent = getSensorRecent(sensor_name);
                         if(sensor_data_list_recent.length != 0){ // null = []
                             if(sensor_data_list[sensor_data_list.length-1].x != sensor_data_list_recent.up_time){
-                                sensor_data_list.push({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value});
                                 sensor_data_list.shift();
+                                sensor_data_list.push({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value});
                                 updateChart(sensor_data_list, sensor_data); //차트 업데이트
-                                sensor_table_update(dt, sensor_data_list[sensor_data_list.length-1], sensor_data);
+                                sensor_table_update(dt, sensor_data_list[sensor_data_list.length-1], sensor_data); //테이블 업데이트
                             }
                         }
                         interval2 = setTimeout(interval_getData2, 5000);
