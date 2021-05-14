@@ -215,8 +215,7 @@ public class MainController {
     }           // memberUpdate
 
     @RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
-    @ResponseBody
-    public void loginCheck(@RequestBody Member member, HttpServletResponse response) throws Exception {
+    public void loginCheck( Member member, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
         if(!memberRepository.existsById(member.getId())){ // ID가 존재하지않으면
             out.print("id");

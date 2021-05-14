@@ -72,7 +72,7 @@
 
             <div class="row edit" style="display:none;" id="passwordBox">
                 <div class="mb-3 row" style="margin-top: 1rem;">
-                    <label for="password" class="col-sm-2 col-form-label">비밀번호</label>
+                    <label for="password" class="col-sm-2 col-form-label">비밀번호 변경</label>
                    <div class="col-sm-10">
                         <input type="test" class="form-control" id="password">
                     </div>
