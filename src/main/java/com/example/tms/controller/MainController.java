@@ -72,7 +72,7 @@ public class MainController {
         System.out.println(setting);
         System.out.println(setting.get(1));
         System.out.println(standard);
-        
+
         for (int i =0;i < setting.size();i++) {
             for (int k = 0; k < standard.size(); k++) {
                 if (setting.get(i).getSensorNaming().equals(standard.get(k).getItemName())) {
