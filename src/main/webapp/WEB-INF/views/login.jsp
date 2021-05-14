@@ -13,10 +13,6 @@
         background-color: #EDF2F8;
         font-family: 'Noto Sans KR', sans-serif;
     }
-    #id, #password {
-        height: 50px;
-        margin-bottom: 5px;
-    }
 </style>
 
 <body>
@@ -24,17 +20,17 @@
     <div class="row h-100">
         <div class="col h-100 align-self-center">
             <div class="h-100 d-flex justify-content-center text-center">
-                <div class="align-self-center">
-                    <img src="static/images/logo.png" class="emoji" style="width:300px; margin-bottom: 30px;">
+                <div class="align-self-center bg-white" style="width: 400px; height: 410px;">
+                    <img src="static/images/logo.png" class="emoji" style="width:300px; margin: 20px auto;">
 <%--                    <h1 class="py-5 fw-bold">Login</h1>--%>
                     <form method='post' name='username' value='admin'>
                         <div class="">
 <%--                            <p class="text-start text-secondary fs-4 fw-bold">아이디</p>--%>
-                            <input class="form-control" type='text' name='username' value='' id="id" placeholder="아이디">
+                            <input class="form-control" type='text' name='username' value='' id="id" placeholder="아이디" style="width:300px; height:50px; margin: 0 auto 5px;">
                         </div>
                         <div class="">
 <%--                            <p class="text-start text-secondary fs-4 fw-bold mt-3">비밀번호</p>--%>
-                            <input class="form-control" type='password' name='password' value='' id="password" placeholder="비밀번호">
+                            <input class="form-control" type='password' name='password' value='' id="password" placeholder="비밀번호" style="width:300px; height:50px; margin: 0 auto 5px;">
                         </div>
                         <div>
                             <input class="btn btn-primary mt-5 fs-4 px-5" onclick="login()" type='submit' value="로그인" style="width:300px;">
