@@ -3,6 +3,7 @@
 
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
 <link rel="stylesheet" href="static/css/common.css">
+<script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-3.6.0.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
 
@@ -50,12 +51,14 @@
                 "data": "{\r\n    \"id\": \"" + $("#id").val() + "\",\r\n    \"password\": \"" + $("#password").val() + "\"\r\n}",
             };
             $.ajax(settings).done(function (response) {
-                if (response == "id") {
-                    alert("아이디가 틀립니다.");
+                if(response == "id") {
+                    alert("아이디가 존재하지 않습니다.");
                     location.reload();
                 } else if (response == "password") {
-                    alert("비밀번호가 틀립니다.");
+                    alert("비밀번호가 틀립니다");
                     location.reload();
+                } else {
+                    inputLog($("#id").val(), "로그인", "로그인");
                 }
             });
         } else {

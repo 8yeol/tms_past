@@ -22,7 +22,6 @@ public class Member {
     private String department;
     private String grade;
 
-
     public ObjectId get_id() {
         return _id;
     }

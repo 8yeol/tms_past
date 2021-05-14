@@ -25,3 +25,20 @@ function findSensorCategory(tableName){
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+// 로그 생성
+function inputLog(id,content,type){
+    var settings = {
+        "url": "http://localhost:8090/inputLog",
+        "method": "POST",
+        "headers": {
+            "accept": "application/json",
+            "content-type": "application/json;charset=UTF-8"
+        },
+        "data": "{\r\n    \"id\": \""+id+"\"," +
+            "\r\n    \"content\": \""+content+"\"," +
+            "\r\n    \"type\": \""+type+"\"\r\n}",
+    };
+    $.ajax(settings).done(function (response) {
+    });
+}

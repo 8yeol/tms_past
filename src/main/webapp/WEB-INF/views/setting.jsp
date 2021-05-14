@@ -7,6 +7,7 @@
     .bg-lightGray {
         background: #d3d3d3;
     }
+
     hr {
         color: white;
     }
@@ -15,32 +16,33 @@
     }
 </style>
 
-    <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
-    <script src="static/js/jquery-ui.js"></script>
-    <script src="static/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+<script src="static/js/common/common.js"></script>
+<script src="static/js/jquery-ui.js"></script>
+<script src="static/js/jquery.dataTables.min.js"></script>
 
-    <script type="text/javascript">
-        jQuery(function ($) {
-            $("#member-Table").DataTable({
-                "language": {
-                    "emptyTable": "데이터가 없어요.",
-                    "lengthMenu": "페이지당 _MENU_ 개씩 보기",
-                    "info": "현재 _START_ - _END_ / _TOTAL_건",
-                    "infoEmpty": "데이터 없음",
-                    "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
-                    "search": "전체검색 : ",
-                    "zeroRecords": "일치하는 데이터가 없어요.",
-                    "loadingRecords": "로딩중...",
-                    "processing": "잠시만 기다려 주세요...",
-                    "paginate": {
-                        "next": "다음",
-                        "previous": "이전"
-                    },
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#member-Table").DataTable({
+            "language": {
+                "emptyTable": "데이터가 없어요.",
+                "lengthMenu": "페이지당 _MENU_ 개씩 보기",
+                "info": "현재 _START_ - _END_ / _TOTAL_건",
+                "infoEmpty": "데이터 없음",
+                "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
+                "search": "전체검색 : ",
+                "zeroRecords": "일치하는 데이터가 없어요.",
+                "loadingRecords": "로딩중...",
+                "processing": "잠시만 기다려 주세요...",
+                "paginate": {
+                    "next": "다음",
+                    "previous": "이전"
                 },
-                pageLength: 10
-            });
+            },
+            pageLength: 10
         });
-    </script>
+    });
+</script>
 
 <div class="container">
 
@@ -115,18 +117,19 @@
                                 <td>
                                     <button class="btn btn-success py-0 px-2" style="font-size: 12px;"
                                             data-bs-toggle="modal" data-bs-target="#okModal"
-                                            onclick="ID_Set('${mList.id}')">승인
+                                            onclick="Info_Set('${mList.id}')">승인
                                     </button>
                                     <button class="btn btn-danger py-0 px-2" style="font-size: 12px;"
                                             data-bs-toggle="modal" data-bs-target="#noModal"
-                                            onclick="ID_Set('${mList.id}')">거절
+                                            onclick="Info_Set('${mList.id}')">거절
                                     </button>
                                 </td>
                             </c:when>
                             <c:when test="${mList.state eq '2' || mList.state eq '3' || mList.state eq '4'}">
                                 <td>
                                     <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
-                                       data-bs-target="#managementModal" onclick="ID_Set('${mList.id}')"></i>
+                                       data-bs-target="#managementModal"
+                                       onclick="Info_Set('${mList.id}','${mList.state}')"></i>
                                 </td>
                             </c:when>
                             <c:otherwise>
@@ -172,7 +175,7 @@
                     <div>
                         <div class="d-flex justify-content-start">
                             <input type="checkbox" class="form-check-input me-2 " id="dashBoardChk">
-                            <label for="dashBoardChk">대시보드 메뉴 열람</label>>
+                            <label for="dashBoardChk">대시보드 메뉴 열람</label>
                         </div>
                         <div class="d-flex justify-content-start mt-4">
                             <input type="checkbox" class="form-check-input me-2" id="alarmChk">
@@ -192,9 +195,12 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-end">
-                        <button class="btn btn-primary align-text-bottom me-2 mb-2 py-1 px-3 fw-bold fs-6"
-                                onclick="rankSettingSave()">저장
-                        </button>
+                        <c:set var="member" value="${member}"/>
+                        <c:if test="${member.state == '4'}">
+                            <button class="btn btn-primary align-text-bottom me-2 mb-2 py-1 px-3 fw-bold fs-6"
+                                    onclick="rankSettingSave()">저장
+                            </button>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -430,9 +436,12 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
-                            data-bs-target="#userGrantManagementModal">회원 권한 관리
-                    </button>
+                    <c:set var="member" value="${member}"/>
+                    <c:if test="${member.state == '4'}">
+                        <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
+                                data-bs-target="#userGrantManagementModal">회원 권한 관리
+                        </button>
+                    </c:if>
                     <button class="btn btn-primary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
                             data-bs-target="#userPwdmodal">회원 비밀번호 초기화
                     </button>
@@ -524,26 +533,37 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
+    var ID = ""; //데이터테이블 해당항목의 ID정보
+    var state = ""; //해당항목의 등급 정보
+    var rName = "root"; // 권한관리영역 checkBox 변수
+    var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
+    var user_id = "${member.id}"; // 페이지에 접근한 유저의 ID
+
     $(document).ready(function () {
         rankRadioChanged("root"); //기본값
     }); //ready
 
-    var ID = ""; //사용자 ID 변수
-    var rName = "root"; // 권한관리 name 변수 기본값 root
-
-    function ID_Set(str_id) {
+    function Info_Set(str_id, str_state) {
         ID = str_id;
+        state = str_state;
     }// row 의 승인 및 거절 버튼 클릭시 전역변수 ID에 해당row 의 ID가 저장됨
 
     function sing_Up(iNumber) {
+        var content = ID;
+        if(iNumber == "1"){
+            content += " 계정 가입승인 ";
+        }else{
+            content += " 계정 가입거절 ";
+        }
         var settings = {
             "url": "http://localhost:8090/signUp?id=" + ID + "&iNumber=" + iNumber,
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
+            inputLog(user_id,content,"회원관리");
             alert(response);
             location.reload();
-        });
+        })
     }           // sing_Up
 
     function gave_Rank(value) {
@@ -558,25 +578,36 @@
     }           // gave_Rank
 
     function resetPassword() {
-        var settings = {
-            "url": "http://localhost:8090/resetPassword?id=" + ID,
-            "method": "POST"
-        };
-        $.ajax(settings).done(function (response) {
-            alert(response);
-            location.reload();
-        });
-    }           // gave_Rank
+        if (user_state != '4' && state == '4') {
+            alert("최고관리자의 비밀번호는 초기화하실수 없습니다.");
+            return;
+        } else {
+            var settings = {
+                "url": "http://localhost:8090/resetPassword?id=" + ID,
+                "method": "POST"
+            };
+            $.ajax(settings).done(function (response) {
+                alert(response);
+                location.reload();
+            });
+        }
+    }           // resetPassword
 
     function kickMember() {
-        var settings = {
-            "url": "http://localhost:8090/kickMember?id=" + ID,
-            "method": "POST"
-        };
-        $.ajax(settings).done(function (response) {
-            alert(response);
-            location.reload();
-        });
+        if (user_state != '4' && state == '4') {
+            alert("최고관리자는 추방하실수 없습니다.");
+            return;
+        } else {
+            var settings = {
+                "url": "http://localhost:8090/kickMember?id=" + ID,
+                "method": "POST"
+            };
+            $.ajax(settings).done(function (response) {
+                inputLog(user_id,ID+" 계정 추방처리","회원관리");
+                alert(response);
+                location.reload();
+            });
+        }
     }           // kickMember
 
     function rankRadioChanged(name) {
@@ -588,7 +619,14 @@
             $("#alarmChk").prop("checked", ("${rank_managements.alarm}" == "true") ? true : false);
             $("#monitoringChk").prop("checked", ("${rank_managements.monitoring}" == "true") ? true : false);
             $("#statisticsChk").prop("checked", ("${rank_managements.statistics}" == "true") ? true : false);
-            $("#settingChk").prop("checked", ("${rank_managements.setting}" == "true") ? true : false);
+            var settingChk = $("#settingChk");
+            if (name == "normal") {
+                settingChk.prop("checked", false);
+                settingChk.prop("disabled", true);
+            } else {
+                settingChk.prop("disabled", false);
+                settingChk.prop("checked", ("${rank_managements.setting}" == "true") ? true : false);
+            }
         }
         </c:forEach>
     }       //rankRadioChanged
@@ -609,6 +647,10 @@
                 "\r\n    \"setting\": " + $('#settingChk').prop("checked") + "\r\n}",
         };
         $.ajax(settings).done(function (response) {
+            var str = (rName == "root") ? "최고 관리자 " : (rName == "admin") ? "관리자 " : "일반유저 ";
+            var content = str;
+            content += response;
+            inputLog(user_id,content,"권한관리");
             alert("권한관리 설정이 저장되었습니다.");
             location.reload();
         });
