@@ -54,7 +54,7 @@
 <script>
     function login() {
         if ($("#id").val() != "" && $("#password").val() != "") {
-            var settings = {``
+            var settings = {
                 "url": "http://localhost:8090/loginCheck",
                 "method": "POST",
                 "timeout": 0,

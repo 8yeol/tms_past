@@ -8,7 +8,17 @@
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/jquery-ui.js"></script>
 
-<body class="bg-secondary">
+<style>
+    body {
+        background-color: #EDF2F8;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+    #id, #password {
+        height: 50px;
+        margin-bottom: 5px;
+    }
+</style>
+
 <div class="container">
     <div class="row justify-content-center bg-white p-5 mt-5 rounded">
         <h1 class="py-5 fw-bold text-center">Sing Up</h1>
@@ -34,14 +44,12 @@
                 <input class="form-control mt-1" type="text" id="grade">
             </div>
         </div>
-        <button class="btn btn-success fs-3 px-5 py-2 w-auto h-auto mt-3" onclick="join_submit()">가입신청</button>
-        <a class="text-decoration-none text-center mt-3" href="/login">취소</a>
+        <button class="btn btn-primary fs-3 px-5 py-2 w-auto h-auto mt-3" onclick="join_submit()">가입신청</button>
+        <button class="btn btn-outline-primary fs-3 px-5 py-2 w-auto h-auto mt-3 ms-5" onClick="location.href='/login'">취소</button>
     </div>
 </div>
 
-
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-</body>
 
 <script>
     function join_submit() {
