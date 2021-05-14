@@ -202,50 +202,66 @@ public class JsonController {
     //측정소 삭제
     @RequestMapping(value = "/removePlace")
     public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList, boolean flag) {
-
+        System.out.println(placeList);
         for (int i = 0; i < placeList.size(); i++) {
-            if (flag)
+            if (flag) {
+                System.out.println("센서 포함 삭제");
                 removePlaceRemoveSensor(placeList.get(i));       //센서 포함 삭제
-            if (!flag)
+            }else {
+                System.out.println("측정소만 삭제");
                 removePlaceChangeSensor(placeList.get(i));       //측정소만 삭제
+            }
         }
     }
 
     public void removePlaceChangeSensor(String place) {
         Place placeInfo = placeRepository.findByName(place);
+
         List<String> sensor = placeInfo.getSensor();
         for (int i = 0; i < sensor.size(); i++) {
             //알림설정 False 설정
             NotificationSettings no = notification_settingsRepository.findByName(sensor.get(i));
-            no.setStatus(false);
-            notification_settingsRepository.save(no);
+            if(no!=null){
+                no.setStatus(false);
+                notification_settingsRepository.save(no);
+            }
 
             //배출량 관리 - 모니터링 대상 False 설정
             EmissionsSetting em = emissionsSettingRepository.findBySensor(sensor.get(i));
-            em.setStatus(false);
-            em.setPlace("");
-            emissionsSettingRepository.save(em);
+            if(em!=null){
+                em.setStatus(false);
+                em.setPlace("");
+                emissionsSettingRepository.save(em);
+            }
 
             //배출량 관리 - 연간 모니터링 대상 False 설정
             AnnualEmissions aem = annualEmissionsRepository.findBySensor(sensor.get(i));
-            aem.setStatus(false);
-            aem.setPlace("");
-            annualEmissionsRepository.save(aem);
+            if(aem!=null){
+                aem.setStatus(false);
+                aem.setPlace("");
+                annualEmissionsRepository.save(aem);
+            }
 
             //센서 관리 - 측정소 값 삭제
             SensorList sl = sensorListRepository.findByTableName(sensor.get(i), "");
-            sl.setPlace("");
-            sensorListRepository.save(sl);
+            if(sl!=null){
+                sl.setPlace("");
+                sensorListRepository.save(sl);
+            }
 
             //상세설정 모니터링 값 False
             ReferenceValueSetting rv = reference_value_settingRepository.findByName(sensor.get(i));
-            rv.setMonitoring(false);
-            reference_value_settingRepository.save(rv);
+            if(rv!=null){
+                rv.setMonitoring(false);
+                reference_value_settingRepository.save(rv);
+            }
 
             //배출 관리 기준 측정소값 삭제
             EmissionsStandardSetting ess= emissionsStandardSettingRepository.findByTableNameIsIn(sensor.get(i));
-            ess.setPlace("");
-            emissionsStandardSettingRepository.save(ess);
+            if(ess!=null){
+                ess.setPlace("");
+                emissionsStandardSettingRepository.save(ess);
+            }
         }
         //측정소 삭제
         placeRepository.deleteByName(place);
@@ -268,6 +284,8 @@ public class JsonController {
             emissionsStandardSettingRepository.deleteByTableName(sensor.get(i));
             //센서 관리 - 센서 삭제
             sensorListRepository.deleteByTableName(sensor.get(i));
+            // 분석 및 통계 - 통계자료 조회 데이터 삭제
+            monthlyEmissionsRepository.deleteBySensor(sensor.get(i));
         }
         //측정소 삭제
         placeRepository.deleteByName(place);
@@ -781,6 +799,9 @@ public class JsonController {
 
         //배출량 관리 - 연간 모니터링 대상 삭제
         annualEmissionsRepository.deleteBySensor(tableName);
+
+        // 분석 및 통계 - 통계자료 조회 데이터 삭제
+        monthlyEmissionsRepository.deleteBySensor(tableName);
 
         //센서 삭제
         SensorList sensor = sensorListRepository.findByTableName(tableName, "");
