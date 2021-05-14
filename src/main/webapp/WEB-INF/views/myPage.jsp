@@ -12,31 +12,59 @@
 <script src="static/js/jquery-ui.js"></script>
 
 <div class="container bg-light rounded p-5 text-center mt-5">
-    <p class="bg-lightGrey rounded-pill fs-3">마이 페이지</p>
+    <div class="row">
+        <span class="fs-1 text-center">MY PAGE</span>
+        <div class="col m-3">
+            <div class="mb-3 row">
+                <label for="id" class="col-sm-2 col-form-label">아이디</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="${member.id}" id="id" readonly>
+                </div>
+            </div>
 
-    <div class="d-flex justify-content-center">
-        <div class="me-5 mt-1">
-            <p class="badge bg-primary fs-6">아이디</p><br>
-            <p class="badge bg-primary fs-6">비밀번호</p><br>
-            <p class="badge bg-primary fs-6">이름</p><br>
-            <p class="badge bg-primary fs-6">이메일</p><br>
-            <p class="badge bg-primary fs-6">전화번호</p><br>
-            <p class="badge bg-primary fs-6">부서명</p><br>
-            <p class="badge bg-primary fs-6">직급</p>
-        </div>
-        <div class="">
-            <input type="text" class="form-control text-center" value="${member.id}" readonly id="id">
-            <input type="password" class="form-control text-center mt-1" id="password">
-            <input type="text" class="form-control text-center mt-1" value="${member.name}" id="name">
-            <input type="email" class="form-control text-center mt-1" value="${member.email}" id="email"
-                   onkeyup="autoEmail('email',this.value)">
-            <input type="tel" class="form-control text-center mt-1" value="${member.tel}" id="tel"
-                   onkeyup="inputPhoneNumber(this)">
-            <input type="text" class="form-control text-center mt-1" value="${member.department}" id="department">
-            <input type="text" class="form-control text-center mt-1" value="${member.grade}" id="grade">
+            <div class="mb-3 row">
+                <label for="name" class="col-sm-2 col-form-label">이름</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" value="${member.name}" id="name" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="email" class="col-sm-2 col-form-label">이메일</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" value="${member.email}" id="email" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="tel" class="col-sm-2 col-form-label">연락처</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" value="${member.tel}" id="tel" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="department" class="col-sm-2 col-form-label">부서명</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" value="${member.department}" id="department" readonly>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="grade" class="col-sm-2 col-form-label">직급</label>
+                <div class="col-sm-10">
+                    <input type="test" class="form-control" value="${member.grade}" id="grade" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col text-center">
+                    <button class="btn btn-primary m-3">회원정보 수정</button>
+                    <%--<button class="btn btn-primary m-3" onclick="submit()">정보수정</button>--%>
+                </div>
+            </div>
         </div>
     </div>
-    <button class="btn btn-primary mt-3" onclick="submit()">정보수정</button>
 </div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
