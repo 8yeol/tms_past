@@ -202,7 +202,7 @@ public class JsonController {
     //측정소 삭제
     @RequestMapping(value = "/removePlace")
     public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList, boolean flag) {
-        System.out.println(placeList);
+        System.out.println("44"+placeList);
         for (int i = 0; i < placeList.size(); i++) {
             if (flag) {
                 System.out.println("센서 포함 삭제");

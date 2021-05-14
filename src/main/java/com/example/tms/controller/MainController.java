@@ -65,23 +65,9 @@ public class MainController {
         model.addAttribute("placelist", placeSet);
 
         /*연간 배출기준값 가져오기*/
-
         List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
         model.addAttribute("standard",standard);
 
-        System.out.println(setting);
-        System.out.println(setting.get(1));
-        System.out.println(standard);
-
-        for (int i =0;i < setting.size();i++) {
-            for (int k = 0; k < standard.size(); k++) {
-                if (setting.get(i).getSensorNaming().equals(standard.get(k).getItemName())) {
-                    setting.get(i).setSensor(standard.get(k).getEmissionsStandard() +"");
-                    break;
-                }
-             setting.get(i).setSensor("-1");  //맵핑된 값 없으면 판별하기위해 -1
-            }
-        }
         //모니터링 대상에 선택된 값들 찾기
         List<EmissionsSetting> emissionsSettings = emissionsSettingRepository.findByStatus(true);
         //model에 넣어줄 리스트타입의 리스트변수
