@@ -50,21 +50,14 @@ public class MainController {
         TreeSet<String> placeSet = new TreeSet<>(placelist);
         model.addAttribute("placelist", placeSet);
 
-        /*연간 배출기준값 가져오기
-          JSTL을 최소화 하고자 센서객체의 필요없는값 SensorNaming에 매핑된 기준값을 넣습니다
-          setting.get(i).setSensor( 기준값 );
-         */
-        List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
+        /*연간 배출기준값 가져오기*/
 
-        for (int i =0;i < setting.size();i++) {
-            for (int k = 0; k < standard.size(); k++) {
-                if (setting.get(i).getSensorNaming().equals(standard.get(k).getItemName())) {
-                    setting.get(i).setSensor(standard.get(k).getEmissionsStandard() +"");
-                    break;
-                }
-             setting.get(i).setSensor("-1");  //맵핑된 값 없으면 판별하기위해 -1
-            }
-        }
+        List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
+        model.addAttribute("standard",standard);
+
+        System.out.println(setting);
+        System.out.println(setting.get(1));
+        System.out.println(standard);
 
         return "dashboard";
     }
