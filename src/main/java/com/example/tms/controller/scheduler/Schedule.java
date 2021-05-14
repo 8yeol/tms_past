@@ -14,28 +14,14 @@ import java.util.*;
 @Component
 public class Schedule {
 
-    final PlaceRepository placeRepository;
-    final NotificationListRepository notificationListRepository;
-    final SensorCustomRepository sensorCustomRepository;
-    final NotificationSettingsRepository notification_settingsRepository;
-    final ReferenceValueSettingRepository reference_value_settingRepository;
     final NotificationDayStatisticsRepository notificationDayStatisticsRepository;
     final NotificationMonthStatisticsRepository notificationMonthStatisticsRepository;
     final NotificationListCustomRepository notificationListCustomRepository;
-
     final MonthlyEmissionsRepository monthlyEmissionsRepository;
     final MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository;
     final SensorListRepository sensorListRepository;
 
-    public Schedule(PlaceRepository placeRepository, NotificationListRepository notificationListRepository,
-                    SensorCustomRepository sensorCustomRepository, NotificationSettingsRepository notification_settingsRepository,
-                    ReferenceValueSettingRepository reference_value_settingRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository,
-                    NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository, SensorListRepository sensorListRepository) {
-        this.placeRepository = placeRepository;
-        this.notificationListRepository = notificationListRepository;
-        this.sensorCustomRepository = sensorCustomRepository;
-        this.notification_settingsRepository = notification_settingsRepository;
-        this.reference_value_settingRepository = reference_value_settingRepository;
+    public Schedule(NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository, SensorListRepository sensorListRepository) {
         this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
         this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
         this.notificationListCustomRepository = notificationListCustomRepository;
@@ -44,76 +30,22 @@ public class Schedule {
         this.sensorListRepository = sensorListRepository;
     }
 
-    //@Scheduled(cron = "0 0/5 * * * *")
-    //@Scheduled(cron = "*/1 * * * * *")
-    // mqtt 서버에서 처리되도록 이동
-    public void scheduling(){
-        /*
-        List<NotificationSettings> notification = notification_settingsRepository.findByStatusIsTrue();
-
-        // 설정 된 알림 시간에만 알림되도록 수정 (from ~ to)
-        for(int i=0; i<notification.size(); i++){
-            String sensorName = notification.get(i).getName();
-            ReferenceValueSetting reference = reference_value_settingRepository.findByName(sensorName);
-
-            Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName);
-            Float value = sensor.getValue();
-            Date update = sensor.getUp_time();
-
-            Float legal = reference.getLegalStandard(); // 법적기준
-            Float company = reference.getCompanyStandard(); //사내기준
-            Float standard = reference.getManagementStandard(); //관리기준
-
-            String naming = reference.getNaming();
-            String place = placeRepository.findBySensorIsIn(sensorName).getName();
-
-            // collection 에 마지막 업데이트 된 날짜와 비교해서 5분 이상이면 알림X (이하인 경우만 아래 로직 실행)
-            long minute = (new Date().getTime() - update.getTime())/60000;
-            String notify; //초과알림
-            int grade;
-            if(minute <= 5) {
-                if (value > legal) {
-                    notify = "법적기준 초과";
-                    grade = 1;
-                    notification(place, naming, grade, notify, value);
-                } else if (value > company) {
-                    notify = "사내기준 초과";
-                    grade = 2;
-                    notification(place, naming, grade, notify, value);
-                } else if (value >= standard) {
-                    notify = "관리기준 초과";
-                    grade = 3;
-                    notification(place, naming, grade, notify, value);
-                }
-            }
-        }
-        */
-    }
-
-/*
-    public void notification(String place, String sensor, int grade, String notify, float value){
-        NotificationList notificationList = new NotificationList();
-        notificationList.setPlace(place);
-        notificationList.setSensor(sensor);
-        notificationList.setValue(value);
-        notificationList.setGrade(grade);
-        notificationList.setNotify(notify);
-        notificationList.setUp_time(new Date());
-        notificationListRepository.save(notificationList);
-    }
-*/
-
-
     @Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
     public void monthlyEmissionsScheduling(){
         LocalDate today = LocalDate.now();
         LocalDate lastMonth = today.minus(1, ChronoUnit.MONTHS);
-        LocalDate from = lastMonth.withDayOfMonth(1);
-        LocalDate to = lastMonth.withDayOfMonth(lastMonth.lengthOfMonth());
+        LocalDate from = today.withDayOfMonth(1);
+        LocalDate to = today.withDayOfMonth(lastMonth.lengthOfMonth());
 
         for(SensorList sensorList : sensorListRepository.findAll()){
             MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(sensorList.getTableName(), from.getYear());
             Double value = monthlyEmissionsCustomRepository.addStatisticsData(sensorList.getTableName(), from.toString(), to.toString());
+
+            if(monthlyEmissions==null){
+                monthlyEmissions = new MonthlyEmissions();
+                monthlyEmissions.setYear(from.getYear());
+                monthlyEmissions.setSensor(sensorList.getTableName());
+            }
 
             if(from.getMonthValue()==1){
                 monthlyEmissions.setJan(value);
@@ -142,10 +74,10 @@ public class Schedule {
             }
 
             monthlyEmissions.setUpdateTime(new Date());
+
             monthlyEmissionsRepository.save(monthlyEmissions);
         }
     }
-
 
     /* 알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산 */
     @Scheduled(cron = "0 1 0 * * *") //매일 00시 01분에 처리
@@ -190,8 +122,6 @@ public class Schedule {
         } catch (Exception e) {
 
         }
-
     }
-
 
 }

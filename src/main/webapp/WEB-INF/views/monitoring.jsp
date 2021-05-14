@@ -523,16 +523,33 @@
                 }
             }
         }
-        $("#statusPercent").text(((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0) + "%");
+        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0);
+        var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0);
+        var companyPercent = ((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0);
+        var managementPercent = ((managementSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0);
+        if(runPercent == 'NaN'){
+            runPercent = 0;
+        }
+        if(legalPercent == 'NaN'){
+            legalPercent = 0;
+        }
+        if(companyPercent == 'NaN'){
+            companyPercent = 0;
+        }
+        if(managementPercent == 'NaN'){
+            managementPercent = 0;
+        }
+
+        $("#statusPercent").text(runPercent + "%");
         $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail));
         $("#statusOn").text(sensorStatusSuccess);
         $("#statusOff").text(sensorStatusFail);
         $("#monitoringOff").text(sensorMonitoringOff);
-        $("#legal_standard_text_A").text(((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
+        $("#legal_standard_text_A").text(legalPercent + "%");
         $("#legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess + sensorStatusFail));
-        $("#company_standard_text_A").text(((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
+        $("#company_standard_text_A").text(companyPercent + "%");
         $("#company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess + sensorStatusFail));
-        $("#management_standard_text_A").text(((managementSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0) + "%");
+        $("#management_standard_text_A").text(managementPercent + "%");
         $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess + sensorStatusFail));
     }
 </script>

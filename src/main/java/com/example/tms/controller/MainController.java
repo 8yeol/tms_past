@@ -3,6 +3,7 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
+import com.example.tms.service.RankManagementService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,16 @@ public class MainController {
     final EmissionsStandardSettingRepository emissionsStandardSettingRepository;
     final SensorListRepository sensorListRepository;
     final MongoQuary mongoQuary;
+    final LogRepository logRepository;
+    final placeTotalMonitoringRepository placeTotalMonitoringRepository;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary) {
+    final RankManagementService rankManagementService;
+
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository,
+                          AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository,
+                          EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository,
+                          LogRepository logRepository, placeTotalMonitoringRepository placeTotalMonitoringRepository,RankManagementService rankManagementService,MongoQuary mongoQuary)
+    {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -33,6 +42,9 @@ public class MainController {
         this.emissionsStandardSettingRepository = emissionsStandardSettingRepository;
         this.sensorListRepository = sensorListRepository;
         this.mongoQuary = mongoQuary;
+        this.logRepository = logRepository;
+        this.rankManagementService = rankManagementService;
+        this.placeTotalMonitoringRepository = placeTotalMonitoringRepository;
     }
 
 
@@ -50,21 +62,25 @@ public class MainController {
         TreeSet<String> placeSet = new TreeSet<>(placelist);
         model.addAttribute("placelist", placeSet);
 
-        /*연간 배출기준값 가져오기
-          JSTL을 최소화 하고자 센서객체의 필요없는값 SensorNaming에 매핑된 기준값을 넣습니다
-          setting.get(i).setSensor( 기준값 );
-         */
+        /*연간 배출기준값 가져오기*/
         List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
+        model.addAttribute("standard",standard);
 
-        for (int i =0;i < setting.size();i++) {
-            for (int k = 0; k < standard.size(); k++) {
-                if (setting.get(i).getSensorNaming().equals(standard.get(k).getItemName())) {
-                    setting.get(i).setSensor(standard.get(k).getEmissionsStandard() +"");
-                    break;
-                }
-             setting.get(i).setSensor("-1");  //맵핑된 값 없으면 판별하기위해 -1
+        //모니터링 대상에 선택된 값들 찾기
+        List<EmissionsSetting> emissionsSettings = emissionsSettingRepository.findByStatus(true);
+        //model에 넣어줄 리스트타입의 리스트변수
+        List<ArrayList<placeTotalMonitoring>> ptmsList = new ArrayList<>();
+        //선택된 값들의 년도별 total값들 리스트에 넣어주기
+        //for(int i = 0; i < emissionsSettings.size();i++){
+        for(int i = 0; i < 1;i++){
+            //EmissionsSetting emissionsSetting = emissionsSettings.get(i);
+            //List<placeTotalMonitoring> ptms = placeTotalMonitoringRepository.findByTableNameOrderByYearDesc(emissionsSetting.getSensor());
+            List<placeTotalMonitoring> ptms = placeTotalMonitoringRepository.findByTableNameOrderByYearDesc("lghausys_NOX_001");
+            if(ptms.size() > 0){
+                ptmsList.add((ArrayList<placeTotalMonitoring>) ptms);
             }
         }
+        model.addAttribute("ptmsList", ptmsList);
 
         return "dashboard";
     }
@@ -102,15 +118,15 @@ public class MainController {
     @RequestMapping("/sensorManagement")
     public String sensorManagement(Model model) {
 
-       List<String> result = mongoQuary.getCollection();
+        List<String> result = mongoQuary.getCollection();
 
-       for(SensorList sensorList : sensorListRepository.findAll()){
-           for(String tableName : mongoQuary.getCollection()){
-               if(tableName.equals(sensorList.getTableName())){
-                   result.remove(tableName);
-               }
-           }
-       }
+        for(SensorList sensorList : sensorListRepository.findAll()){
+            for(String tableName : mongoQuary.getCollection()){
+                if(tableName.equals(sensorList.getTableName())){
+                    result.remove(tableName);
+                }
+            }
+        }
         model.addAttribute("collections", result);
 
 
@@ -133,9 +149,11 @@ public class MainController {
     }
 
     @RequestMapping("/setting")
-    public String setting(Model model) {
+    public String setting(Model model,Principal principal) {
         List<Member> members = memberRepository.findAll();
         List<RankManagement> rank_managements = rank_managementRepository.findAll();
+        Member member = memberRepository.findById(principal.getName());
+        model.addAttribute("member", member);
         model.addAttribute("members", members);
         model.addAttribute("rank_managements", rank_managements);
         return "setting";
@@ -158,22 +176,17 @@ public class MainController {
     @ResponseBody
     public void memberJoinPost(@RequestBody Member member, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
-/*        memberRepository.deleteAll();
-        for(int i=0;i < 51; i++){
-            Member member1 = new Member();
-            member1.setId("testId"+i);
-            member1.setPassword((UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10));
-            member1.setTel("010-"+"12"+i+"-123"+i);
-            member1.setName("testName"+i);
-            member1.setEmail("testEmail"+i+"@dot.com");
-            member1.setState("1");
-            memberRepository.save(member1);
-        }*/
-        if (!memberRepository.existsById(member.getId())) {
+
+        if(memberRepository.findAll().size() == 0){ // 최초회원가입시
+            member.setState("4"); // 최고관리자 설정
+            memberRepository.save(member);
+            rankManagementService.defaultRankSetting();
+            out.print("root");
+        } else if (!memberRepository.existsById(member.getId())) {
             member.setState("1"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
             memberRepository.save(member);
             out.print("true");
-        }else{
+        } else {
             out.print("false");
         }
     }           // memberJoinPost
@@ -250,14 +263,27 @@ public class MainController {
     @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
     public @ResponseBody String kickMember(String id){
         memberRepository.deleteById(id);
-        return "탈퇴처리 되었습니다.";
+        return "추방처리 되었습니다.";
     }           // kickMember
 
 
     @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
     @ResponseBody
-    public void rankSettingSave(@RequestBody RankManagement rankManagement) {
+    public void rankSettingSave(@RequestBody RankManagement rankManagement, HttpServletResponse response) throws Exception {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
         RankManagement newRankManagement = rank_managementRepository.findByName(rankManagement.getName());
+
+        String str = "";
+        str += (rankManagement.isDashboard() == newRankManagement.isDashboard()) ? "" : (rankManagement.isDashboard()) ? "대시보드 메뉴열람 권한부여  " : "대시보드 메뉴열람 권한해제  " ;
+        str += (rankManagement.isAlarm() == newRankManagement.isAlarm()) ? "" : (rankManagement.isAlarm()) ? "알림 메뉴열람 권한부여  " : "알림 메뉴열람 권한해제  " ;
+        str += (rankManagement.isMonitoring() == newRankManagement.isMonitoring()) ? "" : (rankManagement.isMonitoring()) ? "모니터링 메뉴열람 권한부여  " : "모니터링 메뉴열람 권한해제  " ;
+        str += (rankManagement.isStatistics() == newRankManagement.isStatistics()) ? "" : (rankManagement.isStatistics()) ? "분석및통계 메뉴열람 권한부여  " : "분석및통계 메뉴열람 권한해제  " ;
+        str += (rankManagement.isSetting() == newRankManagement.isSetting()) ? "" : (rankManagement.isSetting()) ? "환경설정 메뉴열람 권한부여" : "환경설정 메뉴열람 권한해제" ;
+        out.print(str);
+
         newRankManagement.setDashboard(rankManagement.isDashboard());
         newRankManagement.setAlarm(rankManagement.isAlarm());
         newRankManagement.setMonitoring(rankManagement.isMonitoring());
@@ -265,6 +291,19 @@ public class MainController {
         newRankManagement.setSetting(rankManagement.isSetting());
         rank_managementRepository.save(newRankManagement);
     }           // rankSettingSave
+
+    @RequestMapping(value = "/inputLog", method = RequestMethod.POST)
+    @ResponseBody
+    public void inputLog(@RequestBody Log log) {
+        logRepository.save(log);
+    }           // inputLog
+
+
+    @RequestMapping(value = "/InputPlaceTotalMonitoring", method = RequestMethod.POST)
+    @ResponseBody
+    public void InputPlaceTotalMonitoring(@RequestBody placeTotalMonitoring placeTotalMonitoring) {
+        placeTotalMonitoringRepository.save(placeTotalMonitoring);
+    }           // InputPlaceTotalMonitoring
 
 
     @RequestMapping("/dataInquiry")
@@ -304,6 +343,7 @@ public class MainController {
         return "stationManagement";
     }
 
+
     @RequestMapping("emissionsManagement")
     public String emissionsManagement(Model model) {
 
@@ -329,12 +369,13 @@ public class MainController {
         return "emissionsManagement";
     }
 
+
     //배출량 대상 설정
     @ResponseBody
     @RequestMapping("emissionsState")
     public void emissionsState(String sensor, boolean isCollection) {
 
-            //배출량 설정
+        //배출량 설정
         if (isCollection) {
             EmissionsSetting target = emissionsSettingRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
@@ -347,5 +388,6 @@ public class MainController {
             annualEmissionsRepository.save(target);
         }
     }
+
 
 }

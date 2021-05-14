@@ -53,7 +53,7 @@
     <div class="row bg-light" style="height: 70%; padding: 0px 25px 25px 25px;">
         <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div style="padding-bottom: 15px; padding-top: 3px;">
-                <span class="fw-bold" style="margin-right: 34%; font-size: 1.25rem;">측정소 관리</span>
+                <span class="fw-bold" style="margin-right: 32%; font-size: 1.25rem;">측정소 관리</span>
                 <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
                 <button data-bs-toggle="modal" data-bs-target="#updatePlace" class="updateBtn"
                         onclick="updatePlaceSetting()">수정
@@ -638,45 +638,34 @@
                     confirmButtonText: '포함된 센서 삭제',
                     cancelButtonText: '측정소만 삭제'
                 }).then((result) => {
+                    let flag;
+
                     if (result.isConfirmed) {
-                        $.ajax({
-                            url: '<%=cp%>/removePlace',
-                            type: 'POST',
-                            async: false,
-                            cache: false,
-                            data: {"placeList": placeList,"flag":true},
-                            success: function (data) {
-                                swal.fire({
-                                    title: '삭제 완료',
-                                    icon: 'success',
-                                    timer: 1500
-                                });
-                            },
-                            error: function (request, status, error) { // 결과 에러 콜백함수
-                                console.log(error)
-                            }
-                        })
+                        flag = true;
                     }else{
-                        $.ajax({
-                            url: '<%=cp%>/removePlace',
-                            type: 'POST',
-                            async: false,
-                            cache: false,
-                            data: {"placeList": placeList, "flag":false},
-                            success: function (data) {
-                                swal.fire({
-                                    title: '삭제 완료',
-                                    icon: 'success',
-                                    timer: 1500
-                                });
-                            },
-                            error: function (request, status, error) { // 결과 에러 콜백함수
-                                console.log(error)
-                            }
-                        })
+                        flag = false;
                     }
-                        placeDiv();
-                        placeChange($("#place0").text());
+
+                    $.ajax({
+                        url: '<%=cp%>/removePlace',
+                        type: 'POST',
+                        async: false,
+                        cache: false,
+                        data: {"placeList": placeList,"flag":flag},
+                        success: function (data) {
+                            swal.fire({
+                                title: '삭제 완료',
+                                icon: 'success',
+                                timer: 1500
+                            });
+                        },
+                        error: function (request, status, error) { // 결과 에러 콜백함수
+                            console.log(error)
+                        }
+                    })
+
+                    placeDiv();
+                    placeChange($("#place0").text());
                 });
             }
         });

@@ -1,0 +1,43 @@
+package com.example.tms.service;
+
+
+import com.example.tms.entity.RankManagement;
+import com.example.tms.repository.RankManagementRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class RankManagementService {
+
+    @Autowired
+    RankManagementRepository rankManagementRepository;
+
+    public void defaultRankSetting () {
+        RankManagement user = new RankManagement();
+        user.setName("normal");
+        user.setDashboard(false);
+        user.setAlarm(false);
+        user.setMonitoring(false);
+        user.setStatistics(false);
+        user.setSetting(false);
+        rankManagementRepository.save(user);
+
+        RankManagement admin = new RankManagement();
+        admin.setName("admin");
+        admin.setDashboard(false);
+        admin.setAlarm(false);
+        admin.setMonitoring(false);
+        admin.setStatistics(false);
+        admin.setSetting(false);
+        rankManagementRepository.save(admin);
+
+        RankManagement root = new RankManagement();
+        root.setName("root");
+        root.setDashboard(true);
+        root.setAlarm(true);
+        root.setMonitoring(true);
+        root.setStatistics(true);
+        root.setSetting(true);
+        rankManagementRepository.save(root);
+    }
+}

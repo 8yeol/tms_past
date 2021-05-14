@@ -10,9 +10,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class EmissionsStandardSetting {
     @Id
     private ObjectId _id;
-    private String item;
-    private String itemName;
+    private String place;
+    private String naming;
     private int emissionsStandard;
     private int densityStandard;
+    private String tableName;
     private String formula;
 }

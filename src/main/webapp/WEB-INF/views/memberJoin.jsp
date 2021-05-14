@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
 <link rel="stylesheet" href="static/css/common.css">
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
-
+<script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-3.6.0.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/jquery-ui.js"></script>
@@ -70,13 +70,18 @@
             };
             $.ajax(settings).done(function (response) {
                 if (response == "true") {
+                    inputLog($("#id").val(),"회원가입신청","회원가입");
                     alert("가입신청성공!");
+                    location.href = "/login";
                 } else if (response == "false") {
                     alert("중복되는 ID입니다.");
+                } else if( response == "root") {
+                    inputLog($("#id").val(),"회원가입신청","회원가입");
+                    alert("최초가입시 최고관리자로 임명됩니다.");
+                    location.href = "/login";
                 } else {
                     alert("가입신청실패");
                 }
-                location.reload();
             });
         } else {
             alert("빈칸없이 입력하여 주세요");

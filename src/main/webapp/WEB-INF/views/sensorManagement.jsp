@@ -87,7 +87,7 @@
             </form>
             <div class="row">
                 <div class="col text-end">
-                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor('')">센서 추가</button>
+                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor('')" >센서 추가</button>
                 </div>
             </div>
         </div>
@@ -266,7 +266,7 @@
             async: false,
             cache: false,
             data: {tableName: tableName},
-            success: function (data) {
+            success: function () {
                 Swal.fire({
                     icon: 'warning',
                     title: '삭제 완료',
@@ -283,11 +283,36 @@
         });
     }
 
+    //배출량 관리 - 허용 기준 생성
+    function saveStandard(form){
+        $.ajax({
+            url: 'saveStandard',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: form,
+            success: function (data) {
+                Swal.fire({
+                    icon: 'success',
+                    title:'허용 기준 생성',
+                    text: '허용 기준이 없으므로 자동으로 생성합니다.',
+                });
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        });
+
+    }
+
 
     //데이터 저장 후 페이지 새로고침
     function saveSensor(idx) {
+        let form = "";
+        let title = "";
+        let content = "";
 
-        if ($('#tableName' + idx).val() == '선택') {
+        if ($('#tableName'+idx).val() == '선택') {
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -305,9 +330,7 @@
             return;
         }
 
-        let form = "";
-        let title = "";
-        let content = "";
+
 
         if (idx == 2) {
             form = $('#editForm').serialize();
@@ -323,6 +346,7 @@
             title = '센서 수정';
         } else {
             form = $('#saveForm').serialize();
+            saveStandard(form);
             content = '센서가 추가 되었습니다.';
             title = '센서 추가';
             $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
