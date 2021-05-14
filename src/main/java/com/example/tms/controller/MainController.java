@@ -309,6 +309,13 @@ public class MainController {
         placeTotalMonitoringRepository.save(placeTotalMonitoring);
     }           // InputPlaceTotalMonitoring
 
+    @RequestMapping(value = "/getUsername", method = RequestMethod.POST)
+    @ResponseBody
+    public String getUsername(Principal principal) {
+        Member member = memberRepository.findById(principal.getName());
+        return member.getName();
+    }           // getUsername
+
 
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model) {

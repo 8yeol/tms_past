@@ -834,33 +834,12 @@
                 {"data": "y"},
                 {"data": "z"}
             ],
-            // aLengthMenu: [10, 25, 50],
+            "bStateSave": true,
             search: false,
             searching: false,
             bInfo: false,
             ordering: true,
             pagingType: 'numbers',
-            // order:[[0, 'desc']],
-            /*'rowCallback': function(row, data, index){
-                if(sensor_data.legalStandard != "-"){
-                    if(data.y >= sensor_data.legalStandard){
-                        $(row).find('td:eq(2)').css('color', '#ff9d5a');
-                        $(row).find('td:eq(2)').css('font-weight', 'bold');
-                    }
-                }
-                if(sensor_data.companyStandard != "-"){
-                    if(data.y < sensor_data.legalStandard && data.y >= sensor_data.companyStandard){
-                        $(row).find('td:eq(2)').css('color', '#ffc55a');
-                        $(row).find('td:eq(2)').css('font-weight', 'bold');
-                    }
-                }
-                if(sensor_data.managementStandard != "-"){
-                    if(data.y <= sensor_data.companyStandard && data.y > sensor_data.managementStandard){
-                        $(row).find('td:eq(2)').css('color', '#a2d674');
-                        $(row).find('td:eq(2)').css('font-weight', 'bold');
-                    }
-                }
-            },*/
             "language": {
                 "emptyTable": "등록된 센서 데이터가 없습니다.",
                 "lengthMenu": "페이지당 _MENU_ 개씩 보기",

@@ -124,7 +124,8 @@
                     <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
                                                                           id="lo1"
-                                                                          style="position: relative; left: 23.5%;"></div>
+                                                                          style="position: relative; left: 23.5%;">
+                    </div>
                     <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
                                                                              id="ad1"
@@ -132,7 +133,8 @@
                     </div>
                     <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
                                                                            id="te1"
-                                                                           style="position: relative; left: 19.5%;"></div>
+                                                                           style="position: relative; left: 19.5%;">
+                    </div>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -247,7 +249,7 @@
                     } else {
                         onoff = "OFF";
                     }
-                    const innerHTML = "<div id='" + name + "p' style='border-bottom: silver solid 2px;' onclick=\"placeChange('" + name + "')\" >" +
+                    const innerHTML = "<div id='" + name + "p' style='border-bottom: silver solid 2px; cursor: pointer;' onclick=\"placeChange('" + name + "')\" >" +
                         "<li style='display: flex; text-align: center'>" +
                         "<span ><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'></span>" +
                         "<span style='width: 30%;' id='place" + i + "'>" + name + "</span>" +
@@ -526,6 +528,8 @@
         const tel = $("#te" + idx).val();
         const admin = $("#ad" + idx).val();
         const hiddenCode = $("input[name=hiddenCode]").val();
+        var pattern3 = /[~!@#$%^&*()_+|<>?:{}]/;
+
         let title = "";
         let content = "";
         if (idx == 2) { //수정
@@ -534,6 +538,15 @@
                     icon: 'warning',
                     title: '경고',
                     text: '측정소 명을 입력해주세요.'
+
+                })
+                return false;
+            }
+            if (pattern3.test(name) == true) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '특수문자를 입력할 수 없습니다.'
 
                 })
                 return false;
@@ -556,6 +569,15 @@
                     icon: 'warning',
                     title: '경고',
                     text: '측정소 명을 입력해주세요.'
+
+                })
+                return false;
+
+            } else if (pattern3.test(name) == true) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '특수문자를 입력할 수 없습니다.'
 
                 })
                 return false;
@@ -642,7 +664,7 @@
 
                     if (result.isConfirmed) {
                         flag = true;
-                    }else{
+                    } else {
                         flag = false;
                     }
 
@@ -651,7 +673,7 @@
                         type: 'POST',
                         async: false,
                         cache: false,
-                        data: {"placeList": placeList,"flag":flag},
+                        data: {"placeList": placeList, "flag": flag},
                         success: function (data) {
                             swal.fire({
                                 title: '삭제 완료',
