@@ -8,8 +8,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
-
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 
 <script src="static/js/sweetalert2.min.js"></script>
@@ -420,7 +424,7 @@
 
     function standardAjax(form) {
         $.ajax({
-            url: 'saveEmissionsStandard',
+            url: '<%=cp%>/saveEmissionsStandard',
             type: 'POST',
             async: false,
             cache: false,
@@ -467,7 +471,7 @@
     //
     // function deleteAjax(tableName) {
     //     $.ajax({
-    //         url: 'deleteEmissionsStandard',
+    //         url: '<%=cp%>/deleteEmissionsStandard',
     //         type: 'POST',
     //         async: false,
     //         cache: false,
@@ -594,7 +598,7 @@
     //센서 상태 업데이트
     function stateUpdate(sensor, isCollection) {
         $.ajax({
-            url: '/emissionsState',
+            url: '<%=cp%>/emissionsState',
             type: 'POST',
             async: false,
             cache: false,

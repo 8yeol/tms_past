@@ -16,7 +16,10 @@
 %>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+
 <script src="static/js/moment.min.js"></script>
+<script src="static/js/sweetalert2.min.js"></script>
 
 <style>
     #blue {
@@ -78,6 +81,9 @@
         font-size: 0.6rem;
         margin-top: 2px;
         padding-right: 25px;
+    }
+    .aTag_cursor:hover{
+        cursor: pointer;
     }
 
     @media all and (max-width: 1399px) and (min-width: 1200px) {
@@ -315,7 +321,7 @@
                 <!--sensor = standard -->
                 <div class="pb-4 text-center">
                     연간 배출 허용 기준 미등록 &nbsp;<br>
-                    <a href="/emissionsManagement?tableName=${standard.tableName}" class="small">등록하기</a>
+                    <a onclick="standardModal(this)" class="small aTag_cursor" id="${standard.tableName}">등록하기</a>
                 </div>
             </div>
             </c:if>
@@ -405,6 +411,21 @@
         $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD') + " 00:00");
         $('.line').eq($('.line').length - 1).remove();
     });
+    function standardModal(obj){
+        Swal.fire({
+                    icon: 'warning',
+                    title: '등록 하기',
+                    html: '<b>[연간 배출 허용 기준 설정]</b> 페이지로 이동 하시겠습니까?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#0C64E8',
+                    confirmButtonText: '이동',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {   //삭제 버튼 누를때
+                       location.href='<%=cp%>/emissionsManagement?tableName='+obj.getAttribute('id');
+                    }
+                });
+            }
 
     // 측정소 통합 모니터링
     // DB 저장(매월 마지막날 Sheduler 돌려서 update)

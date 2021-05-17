@@ -39,6 +39,8 @@ function inputLog(id,content,type){
             "\r\n    \"content\": \""+content+"\"," +
             "\r\n    \"type\": \""+type+"\"\r\n}",
     };
-    $.ajax(settings).done(function (response) {
-    });
+    $.ajax(settings)
+        .done(function (response) {
+        })
+
 }

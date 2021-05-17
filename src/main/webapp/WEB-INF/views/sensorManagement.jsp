@@ -152,7 +152,7 @@
 
     function getPlace() {
         $.ajax({
-            url: 'getPlaceList',
+            url: '<%=cp%>/getPlaceList',
             type: 'POST',
             async: false,
             cache: false,
@@ -174,7 +174,7 @@
         $('#tbody').children().remove();  //테이블 비우기
 
         $.ajax({
-            url: 'getSensorList',
+            url: '<%=cp%>/getSensorList',
             type: 'POST',
             async: false,
             cache: false,
@@ -261,7 +261,7 @@
 
     function deleteSensor(tableName) {
         $.ajax({
-            url: 'deleteSensor',
+            url: '<%=cp%>/deleteSensor',
             type: 'POST',
             async: false,
             cache: false,
@@ -286,7 +286,7 @@
     //배출량 관리 - 허용 기준 생성
     function saveStandard(form){
         $.ajax({
-            url: 'saveStandard',
+            url: '<%=cp%>/saveStandard',
             type: 'POST',
             async: false,
             cache: false,
@@ -353,7 +353,7 @@
         }
 
         $.ajax({
-            url: 'saveSensor',
+            url: '<%=cp%>/saveSensor',
             type: 'POST',
             async: false,
             cache: false,
@@ -378,7 +378,7 @@
     function isStandardEmpty(tableName){
         let flag= false;
         $.ajax({
-            url: 'isStandardEmpty',
+            url: '<%=cp%>/isStandardEmpty',
             type: 'POST',
             async: false,
             cache: false,
@@ -418,7 +418,7 @@
     function findNaming(classification) {
         let result = "";
         $.ajax({
-            url: '/getNaming',
+            url: '<%=cp%>/getNaming',
             type: 'POST',
             dataType: 'json',
             async: false,
