@@ -189,7 +189,11 @@ public class AjaxController {
         }
     }
 
-    //측정소 삭제
+    /**
+     * 측정소 +센서 삭제, 측정소만 삭제를 판별
+     * @param placeList 측정소 배열
+     * @param flag 어떻게 삭제할지 판별할 데이터
+     */
     @RequestMapping(value = "/removePlace")
     public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList, boolean flag) {
 
@@ -202,6 +206,10 @@ public class AjaxController {
         }
     }
 
+    /**
+     * 측정소만 삭제 , 센서는 측정소명 ""으로 변경, 상세설정 비활성화
+     * @param place 측정소명
+     */
     public void removePlaceChangeSensor(String place) {
         Place placeInfo = placeRepository.findByName(place);
 
@@ -256,6 +264,10 @@ public class AjaxController {
     }
 
 
+    /**
+     * 측정소와 센서,상세설정값 동시에 삭제
+     * @param place 측정소명
+     */
     public void removePlaceRemoveSensor(String place) {
         Place placeInfo = placeRepository.findByName(place);
         List<String> sensor = placeInfo.getSensor();
@@ -502,7 +514,10 @@ public class AjaxController {
         placeRepository.save(savePlace);
     }
 
-    //측정소 상세설정 항목 삭제
+    /**
+     * 센서 상세설정 삭제
+     * @param referenceList 상세설정 리스트
+     */
     @RequestMapping(value = "/removeReference")
     public void removeReference(@RequestParam(value = "referenceList[]") List<String> referenceList) {
         if (referenceList == null || "".equals(referenceList)) {
@@ -513,7 +528,10 @@ public class AjaxController {
         }
     }
 
-    //상세설정값 삭제 및 측정소 업데이트 시간 수정
+    /**
+     * 상세설정값 삭제 및 측정소 업데이트 시간 수정
+     * @param name Reference Value
+     */
     public void removeReferencePlaceUpdate(String name) {
         //상세설정 값 삭제
         if (reference_value_settingRepository.findByName(name) != null) {
@@ -640,8 +658,14 @@ public class AjaxController {
         return notificationStatisticsCustomRepository.getNotificationMonthStatistics();
     }
 
-
-    //배출기준 추가, 수정
+    /**
+     * 배출기준 추가, 수정
+     * @param standard 기준값
+     * @param hiddenTableName 테이블 명
+     * @param percent 허용 기준 농도
+     * @param formula 산출식
+     * @return
+     */
     @RequestMapping(value = "/saveEmissionsStandard")
     public List saveEmissionsStandard(@RequestParam(value = "standard") int standard, @RequestParam(value = "hiddenTableName", required = false) String hiddenTableName,
                                       @RequestParam(value = "percent") int percent, @RequestParam(value = "formula") String formula) {
@@ -658,7 +682,11 @@ public class AjaxController {
     }
 
 
-    //배출기준 삭제
+    /**
+     * 배출기준 삭제
+     * @param tableName 테이블 명
+     * @return 삭제후 모든 데이터 다시 검색
+     */
     @RequestMapping(value = "/deleteEmissionsStandard")
     public List deleteEmissionsStandard(@RequestParam(value = "tableName") String tableName) {
 
@@ -685,7 +713,15 @@ public class AjaxController {
         return dataInquiryCustomRepository.searchInformatin(date_start, date_end, item, off);
     }
 
-    //센서관리 항목 추가,수정
+    /**
+     * 센서 추가, 수정  / 센서 상세설정 추가, 수정
+     * @param managementId 관리 ID
+     * @param classification 센서 분류
+     * @param naming 센서 네이밍
+     * @param place 측정소
+     * @param tableName  테이블 명
+     * @param hiddenCode 추가,수정을 판별하는 데이터
+     */
     @RequestMapping(value = "/saveSensor")
     public void saveSensor(@RequestParam(value = "managementId", required = false) String managementId, @RequestParam(value = "classification", required = false) String classification, @RequestParam(value = "naming", required = false) String naming, @RequestParam(value = "place") String place,
                            @RequestParam(value = "tableName", required = false) String tableName, @RequestParam(value = "hiddenCode", required = false) String hiddenCode) {
@@ -765,7 +801,10 @@ public class AjaxController {
 
     }
 
-    //센서관리 삭제
+    /**
+     * 센서 상세설정값 삭제, 센서 삭제
+     * @param tableName 테이블 명
+     */
     @RequestMapping(value = "/deleteSensor")
     public void deleteSensor(String tableName) {
 
@@ -795,11 +834,21 @@ public class AjaxController {
         return monthlyEmissionsRepository.findBySensorAndYear(sensor, year);
     }
 
+    /**
+     * 센서분류값으로 센서 네이밍 검색
+     * @param classification 센서분류
+     * @return 센서 네이밍
+     */
     @RequestMapping(value = "/getNaming")
     public Item getNaming(String classification) {
         return itemRepository.findByClassification(classification);
     }
 
+    /**
+     * 연간 배출 허용기준값 있는지 검사
+     * @param tableName 테이블명
+     * @return boolean
+     */
     @RequestMapping(value = "/isStandardEmpty")
     public boolean isStandardEmpty(String tableName) {
 
@@ -810,6 +859,12 @@ public class AjaxController {
         }
     }
 
+    /**
+     * 연간 배출량 허용 기준 수정
+     * @param naming 센서 네이밍
+     * @param place  측정소
+     * @param tableName 테이블명
+     */
     @RequestMapping(value = "/saveStandard")
     public void saveStandard(@RequestParam(value = "naming") String naming, @RequestParam(value = "place") String place,
                              @RequestParam(value = "tableName") String tableName) {

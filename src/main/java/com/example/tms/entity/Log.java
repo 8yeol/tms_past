@@ -4,6 +4,8 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Document(collection = "log")
 public class Log {
 
@@ -12,6 +14,8 @@ public class Log {
     private String id;
     private String content;
     private String type;
+    private Date date;
+
 
     public ObjectId get_id() {
         return _id;
@@ -45,6 +49,14 @@ public class Log {
         this.type = type;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "Log{" +
@@ -52,6 +64,7 @@ public class Log {
                 ", id='" + id + '\'' +
                 ", content='" + content + '\'' +
                 ", type='" + type + '\'' +
+                ", date='" + date + '\'' +
                 '}';
     }
 }
