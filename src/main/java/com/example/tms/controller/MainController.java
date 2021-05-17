@@ -64,7 +64,7 @@ public class MainController {
 
         //선택된 센서 (findByStatusIsTrue) 가져오기
         List<AnnualEmissions> setting = annualEmissionsRepository.findByStatusIsTrue();
-        model.addAttribute("sensorlist",setting);
+        model.addAttribute("sensorList",setting);
 
         //선택된 센서 측정소 중복제거  List -> Set
         List<String> placelist = new ArrayList<>();

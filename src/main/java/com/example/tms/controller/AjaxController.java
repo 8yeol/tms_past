@@ -55,7 +55,6 @@ public class AjaxController {
         this.mongoQuary = mongoQuary;
     }
 
-
     /**
      * 전체 측정소 정보를 읽어오기 위한 메소드
      *
@@ -89,6 +88,7 @@ public class AjaxController {
     }
 
     //측정소 모니터링 업데이트
+
     @RequestMapping(value = "/placeMonitoringUpdate")
     public void placeMonitoringUpdate(@RequestParam("name") String name, @RequestParam("check") Boolean check) {
         Place place = placeRepository.findByName(name);

@@ -379,6 +379,7 @@
             lengthChange : false,
             pageLength: 10,
             info: false,
+            order :[3, 'desc'],
             language: {
                 emptyTable: "데이터가 없어요.",
                 lengthMenu: "페이지당 _MENU_ 개씩 보기",
