@@ -111,9 +111,9 @@
         <span class="fs-4 fw-bold">대시보드</span>
     </div>
 
-    <c:forEach var="ptmsList" items="${ptmsList}">
-        <c:set var="present" value="${ptmsList.get(0)}"></c:set> <%--이 부분 수정--%>
-        <c:set var="past" value="${ptmsList.get(1)}"></c:set> <%--이 부분 수정--%>
+    <c:forEach var="emissionList" items="${emissionList}">
+        <c:set var="present" value="${emissionList.get(0)}"></c:set> <%--이 부분 수정--%>
+        <c:set var="past" value="${emissionList.get(1)}"></c:set> <%--이 부분 수정--%>
         <c:set var="date" value="<%=new java.util.Date()%>"></c:set>
         <c:choose>
             <c:when test="${(date.month+1 > 0) and (date.month+1) < 4}">
@@ -147,7 +147,7 @@
                 <span class="text-primary" style="font-size: 0.8rem"> * 매월 마지막 날 업데이트 됩니다.</span>
             </div>
         </div>
-        <c:forEach items="${emissionList}" var="emissionList">
+        <c:forEach items="${emissionSettingList}" var="emissionSettingList">
         <div class="row pb-3 margin-l">
             <div class="col-3">
                 <div class="card border-2 border-primary" style="height: 95%;">
@@ -243,12 +243,12 @@
             </div>
         </div>
         </c:forEach>
-        <c:if test="${empty emissionList}">
-        <div class="row pb-3 h-75 margin-l">
+        <c:if test="${empty emissionSettingList}">
+        <div class="row pb-3 margin-l" style="height: 230px">
             <div class="col align-self-center text-center" style="font-size: 1.2rem">
                 측정소 통합 모니터링 설정 된 센서가 없습니다. <br>
                 <b>[환경설정 - 배출량 관리] > 배출량 추이 모니터링 대상 설정 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
-                <a href="/emissionsManagement">모니터링 대상 설정</a>
+                <a href="<%=cp%>/emissionsManagement">모니터링 대상 설정</a>
             </div>
         </div>
         </c:if>
@@ -267,57 +267,50 @@
 
         <div class="row pb-1 px-3 margin-l mt-3">
             <c:forEach items="${placeList}" var="placelist" varStatus="i">
-                <c:if test="${placeList.size() <=3}"> <div class="col pb-5 pt-1" id="div${i.index}"></c:if>
-                <c:if test="${placeList.size() >3}"> <div class="col-md-4 pb-5 pt-1" id="div${i.index}" style="width: 33%;"></c:if>
-
+                <c:if test="${placeList.size() <= 3}">
+                    <div class="col pt-1" id="div${i.index}">
+                </c:if>
+                <c:if test="${placeList.size() > 3}">
+                    <div class="col-md-4 pt-1" id="div${i.index}" style="width: 33%;float: left;">
+                </c:if>
                 <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
                 <c:forEach items="${sensorList}" var="emissions">
                     <c:if test="${emissions.place eq placelist}">
                         <div class="row pe-3 margin-l">
-                        <div class="fw-bold" style="margin-bottom: 2px;">
-                                ${emissions.sensorNaming}
-                        </div>
+                        <div class="fw-bold" style="margin-bottom: 2px;">${emissions.sensorNaming}</div>
                         <c:forEach items="${standard}" var="standard">
                             <c:if test="${emissions.sensor eq standard.tableName}">
                                 <c:if test="${standard.emissionsStandard ne '0'}"> <!--sensor = standard -->
-                                    <fmt:parseNumber var="emissionsStandard" integerOnly="true"
-                                                     value="${standard.emissionsStandard}"/>
+                                    <fmt:parseNumber var="emissionsStandard" integerOnly="true" value="${standard.emissionsStandard}"/>
                                     <c:set var="percent" value="${(emissions.yearlyValue*100)/(emissionsStandard)}"/>
                                     <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
                                     <div class="col">
                                         <div class="progress h-100">
                                             <c:choose>
-                                            <c:when test="${percent le 50}">
-                                                <div class="progress-bar progress-blue" role="progressbar"
-                                                     style="width:${percent}%;"
-                                            </c:when>
-                                            <c:when test="${percent le 80}">
-                                                <div class="progress-bar progress-yellow" role="progressbar"
-                                                     style="width: ${percent}%;"
-                                            </c:when>
-                                            <c:when test="${percent gt 80}">
-                                            <div class="progress-bar progress-red" role="progressbar"
-                                                 style="width: ${percent}%;"
-                                            </c:when>
-                                            </c:choose>
-                                                 aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100">
-                                                <fmt:formatNumber value="${emissions.yearlyValue}" groupingUsed="true"/>
-                                            </div>
+                                                <c:when test="${percent le 50}">
+                                                    <div class="progress-bar progress-blue" role="progressbar" style="width:${percent}%;"
+                                                </c:when>
+                                                <c:when test="${percent le 80}">
+                                                    <div class="progress-bar progress-yellow" role="progressbar" style="width: ${percent}%;"
+                                                </c:when>
+                                                <c:when test="${percent gt 80}">
+                                                    <div class="progress-bar progress-red" role="progressbar" style="width: ${percent}%;"
+                                                </c:when>
+                                                </c:choose>
+                                                     aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"><fmt:formatNumber value="${emissions.yearlyValue}" groupingUsed="true"/>
+                                                    </div>
                                         </div>
                                     </div>
                                     ${percent}%
                                     </div>
                                     <div class="standard">
-                                        <fmt:formatNumber
-                                                value="${standard.emissionsStandard}" groupingUsed="true"/>
+                                        <fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/>
                                     </div>
                                 </c:if>
                                 <c:if test="${standard.emissionsStandard eq '0' and (member.state == '4' || member.state == '3')}">
-                                    <!--sensor = standard -->
                                     <div class="pb-4 text-center">
                                         연간 배출 허용 기준 미등록 &nbsp;<br>
-                                        <a onclick="standardModal(this)" class="small aTag_cursor"
-                                           id="${standard.tableName}">등록하기</a>
+                                        <a onclick="standardModal(this)" class="small aTag_cursor" id="${standard.tableName}">등록하기</a>
                                     </div>
                                     </div>
                                 </c:if>
@@ -335,12 +328,12 @@
                 <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
                     연간 배출량 누적 모니터링 설정 된 센서가 없습니다. <br>
                     <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
-                    <a href="/emissionsManagement">모니터링 대상 설정</a>
+                    <a href="<%=cp%>/emissionsManagement">모니터링 대상 설정</a>
                 </div>
             </c:if>
         </div>
 
-        <div class="row text-center margin-l center-position">
+        <div class="row pt-3 text-center margin-l center-position m-3">
             <div class="progress-info">
                 <div id="blue" class="align-self-center"></div> &emsp;0 ~ 50%
             </div>
@@ -353,7 +346,7 @@
         </div>
     </div>
 
-    <div class="row mt-4 bg-light margin-l h-px" style="width: 98%; margin: 0.2rem;">
+    <div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: 330px;">
         <div class="row p-3 pb-0 margin-l">
             <div class="col fs-5 fw-bold">
                 관리등급 초과 모니터링
@@ -403,7 +396,7 @@
 <script>
     $(document).ready(function () {
         //div의 크기에 비례하는 라인높이, 마진값 계산후 적용
-        for (i = 0; i <${placeList.size()}; i++) {
+        for (let i=0; i<${placeList.size()}; i++) {
             $('#line' + i).height($('#div' + i).height() / 1.5);
             $('#line' + i).css({"margin-top": ($('#div' + i).height() - $('#line' + i).height()) / 2 + "px"});
         }

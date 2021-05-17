@@ -6,11 +6,10 @@ import com.example.tms.repository.*;
 import com.example.tms.service.MemberService;
 import com.example.tms.service.RankManagementService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import javax.management.remote.rmi._RMIConnection_Stub;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.security.Principal;
@@ -33,11 +32,7 @@ public class MainController {
     final MemberService memberService;
     final PasswordEncoder passwordEncoder;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository,
-                          AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository,
-                          EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository,
-                          LogRepository logRepository, RankManagementService rankManagementService, MongoQuary mongoQuary, MemberService memberService, PasswordEncoder passwordEncoder,
-                          EmissionsTransitionRepository emissionsTransitionRepository){
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, RankManagementService rankManagementService, MemberService memberService, PasswordEncoder passwordEncoder) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -53,7 +48,6 @@ public class MainController {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     /**
      *
      * @param model
@@ -67,25 +61,23 @@ public class MainController {
      */
     @RequestMapping("/")
     public String dashboard(Model model,Principal principal) {
-
+        // 연간 배출량 추이 모니터링
         // [환경설정 > 배출량 관리] - 배출량 추이 모니터링 대상 설정 ON 되어있는 센서 정보
         List<EmissionsSetting> emissionsSettings = emissionsSettingRepository.findByStatus(true);
-        model.addAttribute("emissionList", emissionsSettings);
+        model.addAttribute("emissionSettingList", emissionsSettings);
 
-        List<ArrayList<EmissionsTransition>> ptmsList = new ArrayList<>();
+        // 모니터링 ON 되어있는 센서의 연간 배출량 추이 정보
+        List<ArrayList<EmissionsTransition>> emissionList = new ArrayList<>();
         for(int i = 0; i < emissionsSettings.size();i++){
             int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<EmissionsTransition> emissionsSettingList = new ArrayList<>();
             for (int j = 0; j <= 1; j++) {
-                EmissionsTransition ptms = emissionsTransitionRepository.findByTableNameAndYearEquals(emissionsSettings.get(i).getSensor(),year-1);
+                EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(emissionsSettings.get(i).getSensor(),year-1);
+                emissionsSettingList.add(emissionsTransition);
             }
-            /*
-            if(ptms.size() > 0){
-                ptmsList.add((ArrayList<EmissionsTransition>) ptms);
-            }
-            */
+            emissionList.add((ArrayList<EmissionsTransition>) emissionsSettingList);
         }
-        model.addAttribute("ptmsList", ptmsList);
-
+        model.addAttribute("emissionList", emissionList);
 
         // 연간 배출량 누적 모니터링
         // [환경설정 > 배출량 관리] - 연간 배출량 누적 모니터링 대상 설정 ON
