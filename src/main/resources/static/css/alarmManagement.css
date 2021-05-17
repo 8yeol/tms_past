@@ -104,12 +104,13 @@ input:checked + .slider:before {
     color:#777;
 }
 .cancelBtn{
-    width: 55px;
-    height: 38px;
+    width: 50px;
+    height: 30px;
     background-color: white;
     color: rgb(99,130,255);
     border: 3px solid rgb(99,130,255);
     border-radius: 5px;
+    position: relative;
 }
 .cancelBtn:hover{
     background-color: rgba(99,130,255,0.1);
@@ -136,12 +137,8 @@ input:checked + .slider:before {
     margin-top: 28px;
 }
 
-.saveBtn, .cancelBtn {
+.saveBtn {
     position: absolute;
-}
-.cancelBtn {
-    right: 150px;
-    bottom:15px;
 }
 .saveBtn {
     bottom:10px;

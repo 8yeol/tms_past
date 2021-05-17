@@ -10,13 +10,15 @@
         border-radius: 5px;
         border: 2px solid #0d6efd;
         box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        position: relative;
+        left: 35px;
     }
-    @media all and (min-width:1981px) {
-        .mypage-bg {position: relative; top:18%;}
-    }
-    @media all and (max-width: 1980px) {
-        .mypage-bg {position: relative; top: 10%;}
-    }
+    /*@media all and (min-width:1981px) {*/
+    /*    .mypage-bg {position: relative; top:18%;}*/
+    /*}*/
+    /*@media all and (max-width: 1980px) {*/
+    /*    .mypage-bg {position: relative; top: 10%;}*/
+    /*}*/
 </style>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
@@ -24,63 +26,63 @@
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
 <script src="static/js/jquery-ui.js"></script>
 
-<div class="container bg-light rounded p-5 text-center mt-5 mypage-bg">
+<div class="container bg-light rounded p-5 mt-5 mypage-bg">
     <div class="row">
-        <span class="fs-1 text-center">MY PAGE</span>
-        <div class="col m-3">
-            <div class="mb-3 row">
-                <label for="id" class="col-sm-2 col-form-label">아이디</label>
-                <div class="col-sm-10">
+        <span class="fs-1 text-center" style="display: inline-block; width: 100%;">MY PAGE</span>
+        <div class="text-center" style="width: 50%; margin: 2rem auto 1rem;">
+            <div class="mb-3">
+                <label for="id" class="col-sm-2 col-form-label" style="display: inline-block;">아이디</label>
+                <div class="col-sm-10" style="width: 50%; display: inline-block;">
                     <input type="text" class="form-control" value="${member.id}" id="id" readonly>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="name" class="col-sm-2 col-form-label">이름</label>
-                <div class="col-sm-10">
+            <div class="mb-3">
+                <label for="name" class="col-sm-2 col-form-label" style="display: inline-block;">이름</label>
+                <div class="col-sm-10" style="width: 50%; display: inline-block;">
                     <input type="test" class="form-control" value="${member.name}" id="name" readonly>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="email" class="col-sm-2 col-form-label">이메일</label>
-                <div class="col-sm-10">
+            <div class="mb-3">
+                <label for="email" class="col-sm-2 col-form-label" style="display: inline-block;">이메일</label>
+                <div class="col-sm-10" style="width: 50%; display: inline-block;">
                     <input type="test" class="form-control" value="${member.email}" id="email" readonly>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="tel" class="col-sm-2 col-form-label">연락처</label>
-                <div class="col-sm-10">
+            <div class="mb-3">
+                <label for="tel" class="col-sm-2 col-form-label" style="display: inline-block;">연락처</label>
+                <div class="col-sm-10" style="width: 50%; display: inline-block;">
                     <input type="test" class="form-control" value="${member.tel}" id="tel" readonly>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="department" class="col-sm-2 col-form-label">부서명</label>
-                <div class="col-sm-10">
+            <div class="mb-3">
+                <label for="department" class="col-sm-2 col-form-label" style="display: inline-block;">부서명</label>
+                <div class="col-sm-10" style="width: 50%; display: inline-block;">
                     <input type="test" class="form-control" value="${member.department}" id="department" readonly>
                 </div>
             </div>
 
-            <div class="mb-3 row">
-                <label for="grade" class="col-sm-2 col-form-label">직급</label>
-                <div class="col-sm-10">
+            <div class="mb-3">
+                <label for="grade" class="col-sm-2 col-form-label" style="display: inline-block;">직급</label>
+                <div class="col-sm-10" style="width: 50%; display: inline-block;">
                     <input type="test" class="form-control" value="${member.grade}" id="grade" readonly>
                 </div>
             </div>
 
-            <div class="row edit" style="display:none;" id="passwordBox">
-                <div class="mb-3 row" style="margin-top: 1rem;">
-                    <label for="password" class="col-sm-2 col-form-label">비밀번호 변경</label>
-                   <div class="col-sm-10">
+            <div class="edit" style="display:none;" id="passwordBox">
+                <div class="mb-3" style="margin-top: 1rem; width: 80%;">
+                    <label for="password" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 변경</label>
+                   <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="test" class="form-control" id="password">
                     </div>
                 </div>
 
-                <div class="mb-3 row">
-                    <label for="passwordCheck" class="col-sm-2 col-form-label">비밀번호 확인</label>
-                    <div class="col-sm-10">
+                <div class="mb-3" style="width: 80%;">
+                    <label for="passwordCheck" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 확인</label>
+                    <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="test" class="form-control" id="passwordCheck">
                     </div>
                 </div>

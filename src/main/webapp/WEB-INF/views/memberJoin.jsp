@@ -14,7 +14,6 @@
         font-family: 'Noto Sans KR', sans-serif;
     }
     .join>div input {
-        width:1000px;
         height: 40px;
     }
     @media all and (min-width:1981px) {
@@ -27,58 +26,58 @@
         <span class="fs-1 text-center" style="margin: 15px 0px 0px;">회원가입</span>
         <div class="col join" style="padding: 2rem;">
 
-            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+            <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="id" class="col-form-label">아이디</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" style="width:100%;">
                     <input type="text" class="form-control" id="id">
                 </div>
             </div>
-            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+            <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="password" class="col-form-label">비밀번호</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" style="width:100%;">
                     <input type="password" class="form-control" id="password" placeholder="6자 이상 입력해 주세요.">
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+            <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="passwordCheck" class="col-form-label">비밀번호 확인</label>
-                <div class="col-sm-10">
+                <span class="text-primary" style="font-size: 0.65rem; position: relative; left: 50%;"> * 입력한 비밀번호와 동일하지 않습니다.</span>
+                <div class="col-sm-10" style="width:100%;">
                     <input type="password" class="form-control" id="passwordCheck">
-                    <span class="text-primary" style="font-size: 15%"> * 입력한 비밀번호와 동일하지 않습니다.</span>
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+            <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="name" class="col-form-label">이름</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" style="width:100%;">
                     <input type="test" class="form-control" id="name">
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+            <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="email" class="col-form-label">이메일</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" style="width:100%;">
                     <input type="test" class="form-control" id="email" onkeyup="autoEmail('email',this.value)">
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+            <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="tel" class="col-form-label">연락처</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" style="width:100%;">
                     <input type="test" class="form-control" id="tel" onkeyup="inputPhoneNumber(this)">
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+            <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="department" class="col-form-label">부서명</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" style="width:100%;">
                     <input type="test" class="form-control" id="department">
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 80%; margin: 0 auto;">
+            <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="grade" class="col-form-label">직급</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" style="width:100%;">
                     <input type="test" class="form-control" id="grade">
                 </div>
             </div>

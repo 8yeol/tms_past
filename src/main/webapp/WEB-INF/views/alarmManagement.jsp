@@ -42,11 +42,6 @@
     </div>
 
     <div class="row m-3 mt-3 bg-light">
-        <div class="row p-3" style="border-bottom: 2px solid #a9a9a9; margin: auto;">
-            <div class="col fs-5 fw-bold">
-                알림설정
-            </div>
-        </div>
         <div id="noneDiv" style="border-bottom: 2px solid #a9a9a9; margin: auto;">
             <div class="fw-bold fs-5" style='margin: auto; text-align: center; height: 151px; padding-top: 35px;'>
                 모니터링 ON 설정된 측정소가 없습니다. <br> <b>[환경설정 > 측정소 관리]</b> 에서 측정소 모니터링을 설정해주세요.
@@ -58,12 +53,14 @@
 
                 <div class="row bg-light border-bottom-custom">
 
-                    <span class="fs-5 placeName" style="margin-bottom: 20px;" id="place${status.index}">${place}</span>
+                    <span class="fs-5 placeName" style="margin-bottom: 20px; display: inline-block; width: auto" id="place${status.index}">${place}</span>
+                    <button type="button" class="cancelBtn" onClick="cancel(${status.index})"><img
+                            src="static/images/reload.png" width="22" height="22"></button>
+
                     <div style="" id="div${status.index}">
                         <div style="position: relative; padding-bottom: 5px;">
                             <div class="dp" id="alarm${status.index}" style="width: 65%; margin: 0 auto 10px;"></div>
-                            <button type="button" class="cancelBtn" onClick="cancel(${status.index})"><img
-                                    src="static/images/reload.png" width="23" height="23"></button>
+
                         </div>
                         <hr>
                         <div class="add-dp" style="width: 75%; margin: 0 auto; position: relative;">
@@ -116,7 +113,7 @@
         let innerHTMLTimePicker = "";
         innerHTMLTimePicker += '<div><span class="textSpanParent">알림 시간</span></div>';
         innerHTMLTimePicker += '<div><span class="textSpan">From </span><input type="text" id="start' + idx + '" name="start" class="timePicker" readonly/></div>';
-        innerHTMLTimePicker += '<div><span class="textSpan">To </span><input style="margin-left: 40px;" type="text" id="end' + idx + '" name="end" class="timePicker" readonly/></div>';
+        innerHTMLTimePicker += '<div><span class="textSpan">To </span><input type="text" id="end' + idx + '" name="end" class="timePicker" readonly/></div>';
 
         $('#alarm' + idx).append(innerHTMLTimePicker);
 
