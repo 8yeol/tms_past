@@ -44,7 +44,7 @@
     }
 </style>
 <div class="container">
-    <div class="col" style="font-weight: bolder;margin: 30px 0px; font-size: 27px">
+    <div class="col " style="font-weight: bolder;margin: 30px 0px; font-size: 27px">
         환경설정 > 측정소 관리
     </div>
 

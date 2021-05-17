@@ -19,6 +19,8 @@
 <script type="text/javascript">
     jQuery(function ($) {
         $("#member-Table").DataTable({
+            order: [[4, 'desc']],
+                ordering: true,
             "language": {
                 "emptyTable": "데이터가 없어요.",
                 "lengthMenu": "페이지당 _MENU_ 개씩 보기",
@@ -64,8 +66,7 @@
                         <td>${log.content}</td>
                         <td>${log.type}</td>
                         <td><fmt:formatDate value="${log.date}" pattern="yyyy년 MM월 dd일"/> &nbsp;
-                            <fmt:formatDate value="${log.date}" pattern="hh시 mm분 ss초"/></td>
-
+                            <fmt:formatDate value="${log.date}" pattern="HH시 mm분 ss초"/></td>
                     </tr>
                 </c:forEach>
                 <tbody>

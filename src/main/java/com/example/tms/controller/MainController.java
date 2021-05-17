@@ -130,17 +130,30 @@ public class MainController {
 
     /**
      * 로그 페이지로 이동
+     * 원하는 id 있을시 id에대한 로그정보만 출력
      * @param model 로그 리스트를 들고갑니다.
      * @return log.JSP
      */
     @RequestMapping("/log")
-    public String log(Model model) {
-        List logList= logRepository.findAll();
-        model.addAttribute("logList",logList);
+    public String log(Model model,@RequestParam(value = "id", required = false) String id) {
 
+        if(id==null) {
+            List logList = logRepository.findAll();
+            model.addAttribute("logList", logList);
+        }else{
+            List logList = logRepository.findById(id);
+            model.addAttribute("logList", logList);
+        }
         return "log";
     }
 
+    /**
+     * 센서, 측정소 데이터들고 센서관리 접속
+     * @param model
+     * - collections - 생성하지않은 센서리스트
+     * - place - 모든 측정소
+     * @return sensorManagement.JSP
+     */
     @RequestMapping("/sensorManagement")
     public String sensorManagement(Model model) {
 
@@ -155,16 +168,8 @@ public class MainController {
         }
         model.addAttribute("collections", result);
 
-
         List<Place> places = placeRepository.findAll();
-
-        List<String> placelist = new ArrayList<>();
-        for (Place place : places) {
-            placelist.add(place.getName());
-        }
-
-        model.addAttribute("place", placelist);
-
+        model.addAttribute("place", places);
 
         return "sensorManagement";
     }
@@ -317,6 +322,10 @@ public class MainController {
         rank_managementRepository.save(newRankManagement);
     }           // rankSettingSave
 
+    /**
+     * 로그정보를 날짜추가하여 DB에 저장
+     * @param log Log정보
+     */
     @RequestMapping(value = "/inputLog", method = RequestMethod.POST)
     @ResponseBody
     public void inputLog(@RequestBody Log log){

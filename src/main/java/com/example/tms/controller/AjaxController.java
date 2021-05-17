@@ -9,6 +9,7 @@ import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsRepository;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -35,8 +36,9 @@ public class AjaxController {
     final MonthlyEmissionsRepository monthlyEmissionsRepository;
     final ItemRepository itemRepository;
     final MongoQuary mongoQuary;
+    final LogRepository logRepository;
 
-    public AjaxController(PlaceRepository placeRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary) {
+    public AjaxController(PlaceRepository placeRepository, LogRepository logRepository,SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary) {
         this.placeRepository = placeRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
@@ -53,11 +55,11 @@ public class AjaxController {
         this.monthlyEmissionsRepository = monthlyEmissionsRepository;
         this.itemRepository = itemRepository;
         this.mongoQuary = mongoQuary;
+        this.logRepository = logRepository;
     }
 
     /**
      * 전체 측정소 정보를 읽어오기 위한 메소드
-     *
      * @return 전체 측정소 정보
      */
     @RequestMapping(value = "/getPlaceList")
@@ -885,5 +887,8 @@ public class AjaxController {
         ess.setFormula("");
         emissionsStandardSettingRepository.save(ess);
     }
+
+
+
 
 }

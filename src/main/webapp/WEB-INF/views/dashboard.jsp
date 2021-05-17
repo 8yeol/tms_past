@@ -82,8 +82,7 @@
         margin-top: 2px;
         padding-right: 25px;
     }
-
-    .aTag_cursor:hover {
+    .aTag_cursor:hover{
         cursor: pointer;
     }
 
@@ -268,138 +267,145 @@
 
         <div class="row pb-1 px-3 margin-l mt-3">
             <c:forEach items="${placeList}" var="placelist" varStatus="i">
-               <c:if test="${placeList.size() <=3}"> <div class="col pb-5 pt-1" id="div${i.index}"></c:if>
-               <c:if test="${placeList.size() >3}"> <div class="col-md-4 pb-5 pt-1" id="div${i.index}" style="width: 33%;float: left;"></c:if>
+                <c:if test="${placeList.size() <=3}"> <div class="col pb-5 pt-1" id="div${i.index}"></c:if>
+                <c:if test="${placeList.size() >3}"> <div class="col-md-4 pb-5 pt-1" id="div${i.index}" style="width: 33%;"></c:if>
 
                 <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
                 <c:forEach items="${sensorList}" var="emissions">
-                <c:if test="${emissions.place eq placelist}">
-                <div class="row pe-3  margin-l">
-                    <div class="fw-bold" style="margin-bottom: 2px;">
-                            ${emissions.sensorNaming}
-                    </div>
-                    <c:forEach items="${standard}" var="standard">
-                    <c:if test="${emissions.sensor eq standard.tableName}">
-                    <c:if test="${standard.emissionsStandard ne '0'}"> <!--sensor = standard -->
-                    <fmt:parseNumber var="emissionsStandard" integerOnly="true" value="${standard.emissionsStandard}"/>
-                    <c:set var="percent" value="${(emissions.yearlyValue*100)/(emissionsStandard)}"/>
-                    <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
-                    <div class="col">
-                        <div class="progress h-100">
-                            <c:choose>
-                            <c:when test="${percent le 50}">
-                                <div class="progress-bar progress-blue" role="progressbar" style="width:${percent}%;"
-                            </c:when>
-                            <c:when test="${percent le 80}">
-                                <div class="progress-bar progress-yellow" role="progressbar" style="width: ${percent}%;"
-                            </c:when>
-                            <c:when test="${percent gt 80}">
-                            <div class="progress-bar progress-red" role="progressbar" style="width: ${percent}%;"
-                            </c:when>
-                            </c:choose>
-                                 aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"><fmt:formatNumber value="${emissions.yearlyValue}" groupingUsed="true"/>
-                            </div>
+                    <c:if test="${emissions.place eq placelist}">
+                        <div class="row pe-3 margin-l">
+                        <div class="fw-bold" style="margin-bottom: 2px;">
+                                ${emissions.sensorNaming}
                         </div>
-                    </div>
-                        ${percent}%
+                        <c:forEach items="${standard}" var="standard">
+                            <c:if test="${emissions.sensor eq standard.tableName}">
+                                <c:if test="${standard.emissionsStandard ne '0'}"> <!--sensor = standard -->
+                                    <fmt:parseNumber var="emissionsStandard" integerOnly="true"
+                                                     value="${standard.emissionsStandard}"/>
+                                    <c:set var="percent" value="${(emissions.yearlyValue*100)/(emissionsStandard)}"/>
+                                    <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
+                                    <div class="col">
+                                        <div class="progress h-100">
+                                            <c:choose>
+                                            <c:when test="${percent le 50}">
+                                                <div class="progress-bar progress-blue" role="progressbar"
+                                                     style="width:${percent}%;"
+                                            </c:when>
+                                            <c:when test="${percent le 80}">
+                                                <div class="progress-bar progress-yellow" role="progressbar"
+                                                     style="width: ${percent}%;"
+                                            </c:when>
+                                            <c:when test="${percent gt 80}">
+                                            <div class="progress-bar progress-red" role="progressbar"
+                                                 style="width: ${percent}%;"
+                                            </c:when>
+                                            </c:choose>
+                                                 aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100">
+                                                <fmt:formatNumber value="${emissions.yearlyValue}" groupingUsed="true"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    ${percent}%
+                                    </div>
+                                    <div class="standard">
+                                        <fmt:formatNumber
+                                                value="${standard.emissionsStandard}" groupingUsed="true"/>
+                                    </div>
+                                </c:if>
+                                <c:if test="${standard.emissionsStandard eq '0' and (member.state == '4' || member.state == '3')}">
+                                    <!--sensor = standard -->
+                                    <div class="pb-4 text-center">
+                                        연간 배출 허용 기준 미등록 &nbsp;<br>
+                                        <a onclick="standardModal(this)" class="small aTag_cursor"
+                                           id="${standard.tableName}">등록하기</a>
+                                    </div>
+                                    </div>
+                                </c:if>
+                            </c:if>
+                        </c:forEach>
+                    </c:if>
+                </c:forEach>
                 </div>
-                <div class="standard">
-                    <fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/>
-                </div>
-                </c:if>
-                <c:if test="${standard.emissionsStandard eq '0' and (member.state == '4' || member.state == '3')}">
-                <!--sensor = standard -->
-                <div class="pb-4 text-center">
-                    연간 배출 허용 기준 미등록 &nbsp;<br>
-                    <a onclick="standardModal(this)" class="small aTag_cursor" id="${standard.tableName}">등록하기</a>
-                </div>
-            </div>
-            </c:if>
-            </c:if>
-            </c:forEach>
-            </c:if>
-            </c:forEach>
-        </div>
                 <c:if test="${(i.index+1)%3!=0 && placeList.size() !=1}">
                     <div id="line${i.index}" style="width: 1px;float: right;background-color: black;padding: 0"></div>
                 </c:if>
-        </c:forEach>
+            </c:forEach>
 
-        <c:if test="${empty placeList}">
-            <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
-                연간 배출량 누적 모니터링 설정 된 센서가 없습니다. <br>
-                <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
-                <a href="/emissionsManagement">모니터링 대상 설정</a>
+            <c:if test="${empty placeList}">
+                <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
+                    연간 배출량 누적 모니터링 설정 된 센서가 없습니다. <br>
+                    <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
+                    <a href="/emissionsManagement">모니터링 대상 설정</a>
+                </div>
+            </c:if>
+        </div>
+
+        <div class="row text-center margin-l center-position">
+            <div class="progress-info">
+                <div id="blue" class="align-self-center"></div> &emsp;0 ~ 50%
             </div>
-        </c:if>
+            <div class="progress-info">
+                <div id="yellow" class="align-self-center"></div> &emsp;50 ~ 80%
+            </div>
+            <div class="progress-info">
+                <div id="red" class="align-self-center"></div> &emsp;80 ~ 100%
+            </div>
+        </div>
     </div>
 
-    <div class="row text-center margin-l center-position">
-        <div class="progress-info">
-            <div id="blue" class="align-self-center"></div> &emsp;0 ~ 50%
-        </div>
-        <div class="progress-info">
-            <div id="yellow" class="align-self-center"></div> &emsp;50 ~ 80%
-        </div>
-        <div class="progress-info">
-            <div id="red" class="align-self-center"></div> &emsp;80 ~ 100%
-        </div>
-    </div>
-</div>
-
-<div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: 330px;">
-    <div class="row p-3 pb-0 margin-l">
-        <div class="col fs-5 fw-bold">
-            관리등급 초과 모니터링
-        </div>
-        <div class="col text-end">
-            <span class="small">마지막 업데이트 : <span class="fw-bold" id="excess_update">업데이트 시간</span></span><br>
-            <span class="text-primary" style="font-size: 0.8rem"> * 실시간으로 업데이트 됩니다.</span>
-        </div>
-    </div>
-    <div class="row pb-3 h-75 pb-3 margin-l">
-        <div class="col">
-            <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
-                <div class="card-header">정상</div>
-                <div class="card-body" id="normal">
-                    <h5> 가동중인 센서가 없습니다.</h5>
-                </div>
+    <div class="row mt-4 bg-light margin-l h-px" style="width: 98%; margin: 0.2rem;">
+        <div class="row p-3 pb-0 margin-l">
+            <div class="col fs-5 fw-bold">
+                관리등급 초과 모니터링
+            </div>
+            <div class="col text-end">
+                <span class="small">마지막 업데이트 : <span class="fw-bold" id="excess_update">업데이트 시간</span></span><br>
+                <span class="text-primary" style="font-size: 0.8rem"> * 실시간으로 업데이트 됩니다.</span>
             </div>
         </div>
-        <div class="col">
-            <div class="card text-white bg-success mb-3" style="min-height: 100%;">
-                <div class="card-header">관리기준 초과</div>
-                <div class="card-body" id="caution">
-                    <h5> 가동중인 센서가 없습니다.</h5>
+        <div class="row pb-3 h-75 pb-3 margin-l">
+            <div class="col">
+                <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
+                    <div class="card-header">정상</div>
+                    <div class="card-body" id="normal">
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card text-dark bg-warning mb-3" style="min-height: 100%;">
-                <div class="card-header">사내기준 초과</div>
-                <div class="card-body" id="warning">
-                    <h5> 가동중인 센서가 없습니다.</h5>
+            <div class="col">
+                <div class="card text-white bg-success mb-3" style="min-height: 100%;">
+                    <div class="card-header">관리기준 초과</div>
+                    <div class="card-body" id="caution">
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card text-white bg-danger mb-3" style="min-height: 100%;">
-                <div class="card-header">법적기준 초과</div>
-                <div class="card-body" id="danger">
-                    <h5> 가동중인 센서가 없습니다.</h5>
+            <div class="col">
+                <div class="card text-dark bg-warning mb-3" style="min-height: 100%;">
+                    <div class="card-header">사내기준 초과</div>
+                    <div class="card-body" id="warning">
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-white bg-danger mb-3" style="min-height: 100%;">
+                    <div class="card-header">법적기준 초과</div>
+                    <div class="card-body" id="danger">
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <script>
     $(document).ready(function () {
         //div의 크기에 비례하는 라인높이, 마진값 계산후 적용
-        for (i=0;i<${placeList.size()};i++) {
+        for (i = 0; i <${placeList.size()}; i++) {
             $('#line' + i).height($('#div' + i).height() / 1.5);
-            $('#line' + i).css({"margin-top":($('#div' + i).height()-$('#line' + i).height())/2 +"px"});
+            $('#line' + i).css({"margin-top": ($('#div' + i).height() - $('#line' + i).height()) / 2 + "px"});
         }
         const placeListSize = ${placeList.size()};
         if(placeListSize==2) $('#line1').remove();
@@ -408,6 +414,7 @@
         excess();
 
         $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD') + " 00:00");
+
     });
 
     function standardModal(obj) {

@@ -114,6 +114,9 @@
                     <label class="me-3 col-xs-3 w-10 label">측정소</label>
                     <select name="place" id="place" class="btn btn-outline-dark">
                         <option>선택</option>
+                        <c:forEach var="place" items="${place}" varStatus="status">
+                            <option value="${place.name}">${place.name}</option>
+                        </c:forEach>
                     </select>
                 </div>
                 <div class="row pe-5 ms-1">
@@ -186,6 +189,9 @@
                         </div>
                         <div class="col">
                             <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;">
+                                <c:forEach var="place" items="${place}" varStatus="status">
+                                    <option value="${place.name}">${place.name}</option>
+                                </c:forEach>
                             </select>
                         </div>
                     </div>
@@ -205,27 +211,8 @@
 <script>
     $(function () {
         getSensor();
-        getPlace();
     });
 
-    function getPlace() {
-        $.ajax({
-            url: '<%=cp%>/getPlaceList',
-            type: 'POST',
-            async: false,
-            cache: false,
-            success: function (data) {
-                for (i = 0; i < data.length; i++) {
-                    innerHTML = '<option value="'+data[i].name+'">'+data[i].name+'</option>';
-                    $('#place').append(innerHTML);
-                    $('#place2').append(innerHTML);
-                }
-            },
-            error: function (request, status, error) {
-                console.log(error)
-            }
-        });
-    }
 
     //데이터 가져와서 그리기
     function getSensor() {

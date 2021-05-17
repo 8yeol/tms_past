@@ -1,7 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <style>
     .bg-lightGray {
@@ -11,12 +15,13 @@
     hr {
         color: white;
     }
-    label{
+
+    label {
         margin-bottom: 20px;
     }
 
     /* 데이터테이블 */
-    .toolbar>b {
+    .toolbar > b {
         font-size: 1.25rem;
     }
 
@@ -76,9 +81,19 @@
         position: relative;
         margin-top: 2px;
     }
+
     .dt-buttons {
         margin: 0 10px;
         display: inline-block;
+    }
+
+    .userLog {
+        font-size: 13px;
+    }
+
+    .userLog:hover {
+        cursor: pointer;
+        background-color: rgba(99, 130, 255, 0.3);
     }
 </style>
 
@@ -111,11 +126,12 @@
 </script>
 
 <div class="container">
-
-    <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold">환경설정 > 설정</h3>
+    <div class="row1 mt-4 mb-4">
+        <span style=" font-size: 27px;font-weight: bold">환경설정 > 설정</span>
+    </div>
     <div class="row bg-light rounded py-3 px-5">
 
-<%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
+        <%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
         <span style=";font-size: 22px; font-weight: bolder;padding: 0px 20px 30px 20px;">회원관리</span>
         <div class="col-xs-12">
             <table class="table table-striped" id="member-Table">
@@ -137,7 +153,10 @@
 
                 <tbody>
                 <c:forEach items="${members}" var="mList" varStatus="cnt">
-                    <tr class="text-center" style="font-size: 13px">
+                    <tr class="text-center userLog" onclick="userLog('${mList.id}')">
+                        <form id="${mList.id}" method="post" action="log">   <!-- tr 클릭시 log페이지 이동하는 폼-->
+                            <input type="hidden" value="${mList.id}" name="id">
+                        </form>
                         <td>${cnt.index+1}</td>
                         <td>${mList.id}</td>
                         <td>${mList.name}</td>
@@ -618,9 +637,9 @@
 
     function sing_Up(iNumber) {
         var content = ID;
-        if(iNumber == "1"){
+        if (iNumber == "1") {
             content += " 계정 가입승인 ";
-        }else{
+        } else {
             content += " 계정 가입거절 ";
         }
         var settings = {
@@ -628,7 +647,7 @@
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
-            inputLog(user_id,content,"회원관리");
+            inputLog(user_id, content, "회원관리");
             alert(response);
             location.reload();
         })
@@ -671,7 +690,7 @@
                 "method": "POST"
             };
             $.ajax(settings).done(function (response) {
-                inputLog(user_id,ID+" 계정 추방처리","회원관리");
+                inputLog(user_id, ID + " 계정 추방처리", "회원관리");
                 alert(response);
                 location.reload();
             });
@@ -718,7 +737,7 @@
             var str = (rName == "root") ? "최고 관리자 " : (rName == "admin") ? "관리자 " : "일반유저 ";
             var content = str;
             content += response;
-            inputLog(user_id,content,"권한관리");
+            inputLog(user_id, content, "권한관리");
             alert("권한관리 설정이 저장되었습니다.");
             location.reload();
         });
@@ -729,6 +748,10 @@
         $('.modal-dialog').draggable({handle: ".modal-header"});
     });         // modal drag and drop move
 
+    function userLog(id) {
+        let frm = $('#'+id);
+        frm.submit();
+    }
 
 </script>
 

@@ -62,7 +62,6 @@
         color: white;
         font-weight: bold;
         display: none;
-
     }
 
     .multiSelect {

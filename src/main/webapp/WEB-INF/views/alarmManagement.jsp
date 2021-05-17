@@ -38,7 +38,7 @@
 
 <div class="container">
     <div class="row m-3 mt-3 ms-1">
-        <span class="fs-4 fw-bold">환경설정 > 알림설정</span>
+        <span class=" fw-bold" style="font-size: 27px;">환경설정 > 알림설정</span>
     </div>
 
     <div class="row m-3 mt-3 bg-light">
