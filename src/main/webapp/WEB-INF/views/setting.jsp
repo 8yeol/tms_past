@@ -154,7 +154,7 @@
                 <tbody>
                 <c:forEach items="${members}" var="mList" varStatus="cnt">
                     <tr class="text-center userLog" onclick="userLog('${mList.id}')">
-                        <form id="${mList.id}" method="post" action="log">   <!-- tr 클릭시 log페이지 이동하는 폼-->
+                        <form id="${mList.id}" method="post" action="<%=cp%>/log">   <!-- tr 클릭시 log페이지 이동하는 폼-->
                             <input type="hidden" value="${mList.id}" name="id">
                         </form>
                         <td>${cnt.index+1}</td>
@@ -201,7 +201,8 @@
                         </c:choose>
                         <c:choose>
                             <c:when test="${mList.state eq '1'}">
-                                <td>
+                                <td onclick="event.cancelBubble=true">
+
                                     <button class="btn btn-success py-0 px-2" style="font-size: 12px;"
                                             data-bs-toggle="modal" data-bs-target="#okModal"
                                             onclick="Info_Set('${mList.id}')">승인
@@ -213,7 +214,7 @@
                                 </td>
                             </c:when>
                             <c:when test="${mList.state eq '2' || mList.state eq '3' || mList.state eq '4'}">
-                                <td>
+                                <td  onclick="event.cancelBubble=true">
                                     <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
                                        data-bs-target="#managementModal"
                                        onclick="Info_Set('${mList.id}','${mList.state}')"></i>
@@ -643,7 +644,7 @@
             content += " 계정 가입거절 ";
         }
         var settings = {
-            "url": "http://localhost:8090/signUp?id=" + ID + "&iNumber=" + iNumber,
+            "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + iNumber,
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
@@ -655,7 +656,7 @@
 
     function gave_Rank(value) {
         var settings = {
-            "url": "http://localhost:8090/gaveRank?id=" + ID + "&value=" + value,
+            "url": "<%=cp%>/gaveRank?id=" + ID + "&value=" + value,
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
@@ -670,7 +671,7 @@
             return;
         } else {
             var settings = {
-                "url": "http://localhost:8090/resetPassword?id=" + ID,
+                "url": "<%=cp%>/resetPassword?id=" + ID,
                 "method": "POST"
             };
             $.ajax(settings).done(function (response) {
@@ -686,7 +687,7 @@
             return;
         } else {
             var settings = {
-                "url": "http://localhost:8090/kickMember?id=" + ID,
+                "url": "<%=cp%>/kickMember?id=" + ID,
                 "method": "POST"
             };
             $.ajax(settings).done(function (response) {
@@ -720,7 +721,7 @@
 
     function rankSettingSave() {
         var settings = {
-            "url": "http://localhost:8090/rankSettingSave",
+            "url": "<%=cp%>/rankSettingSave",
             "method": "POST",
             "headers": {
                 "accept": "application/json",
