@@ -14,6 +14,72 @@
     label{
         margin-bottom: 20px;
     }
+
+    /* 데이터테이블 */
+    .toolbar>b {
+        font-size: 1.25rem;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        color: #333 !important;
+        border: 0px solid transparent !important;
+        border-radius: 50px !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        color: #fff !important;
+        border: 0px !important;
+        background: #97bef8 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+        cursor: default;
+        color: #666 !important;
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        color: white !important;
+        border: 0px !important;
+        background: #254069 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+        outline: none;
+        background-color: #2b2b2b;
+        box-shadow: inset 0 0 3px #111;
+    }
+
+    #information_filter label {
+        margin-bottom: 5px;
+    }
+
+    .buttons-excel {
+        background-color: #000;
+        color: #fff;
+        border: 0px;
+        border-radius: 5px;
+        position: relative;
+        margin-top: 2px;
+    }
+    .dt-buttons {
+        margin: 0 10px;
+        display: inline-block;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
@@ -48,7 +114,9 @@
 
     <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold">환경설정 > 설정</h3>
     <div class="row bg-light rounded py-3 px-5">
-        <h4 class="d-flex justify-content-start">회원관리</h4>
+
+<%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
+        <span style=";font-size: 22px; font-weight: bolder;padding: 0px 20px 30px 20px;">회원관리</span>
         <div class="col-xs-12">
             <table class="table table-striped" id="member-Table">
 

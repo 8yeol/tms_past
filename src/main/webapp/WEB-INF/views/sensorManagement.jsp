@@ -36,12 +36,70 @@
         font-size: 1.3rem;
     }
 
+    /* 데이터테이블 */
+    .toolbar>b {
+        font-size: 1.25rem;
+    }
+
+    table thead {
+        background-color: #97bef8;
+        color: #fff;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        color: #333 !important;
+        border: 0px solid transparent;
+        border-radius: 50px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        color: #fff !important;
+        border: 0px;
+        background: #97bef8;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+        cursor: default;
+        color: #666 !important;
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        color: white !important;
+        border: 0px;
+        background: #254069;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+        outline: none;
+        background-color: #2b2b2b;
+        box-shadow: inset 0 0 3px #111;
+    }
+
+    #sensorTable_filter label {
+        margin-bottom: 5px;
+        margin-top: 5px;
+    }
 </style>
 
 <div class="container">
     <div class="row">
-        <div class="d-flex justify-content-between my-3">
-            <h3>센서 관리</h3>
+        <div class="row m-3 mt-3 ms-1">
+            <span class="fs-4 fw-bold">센서 관리</span>
         </div>
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
             <form id="saveForm">

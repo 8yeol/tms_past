@@ -111,7 +111,7 @@
         color: #666 !important;
         border: 1px solid transparent;
         background: transparent;
-        box-shadow: none
+        box-shadow: none;
     }
 
     .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
@@ -123,7 +123,7 @@
     .dataTables_wrapper .dataTables_paginate .paginate_button:active {
         outline: none;
         background-color: #2b2b2b;
-        box-shadow: inset 0 0 3px #111
+        box-shadow: inset 0 0 3px #111;
     }
 
     #information_filter label {
