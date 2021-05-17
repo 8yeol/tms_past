@@ -10,8 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    RankManagementRepository rank_managementRepository;
+    final RankManagementRepository rank_managementRepository;
+
+    public SecurityConfig(RankManagementRepository rank_managementRepository) {
+        this.rank_managementRepository = rank_managementRepository;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

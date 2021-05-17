@@ -30,6 +30,10 @@ public class Schedule {
         this.sensorListRepository = sensorListRepository;
     }
 
+    /**
+     * [분석 및 통계 > 통계자료 조회]
+     * 해당 시점에 등록된 센서목록 읽어와서 해당 컬렉션의 통계자료 DB 저장
+     */
     @Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
     public void monthlyEmissionsScheduling(){
         LocalDate today = LocalDate.now();

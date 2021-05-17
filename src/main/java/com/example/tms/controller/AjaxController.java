@@ -2,33 +2,27 @@ package com.example.tms.controller;
 
 
 import com.example.tms.entity.*;
+import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
 import com.example.tms.repository.DataInquiry.DataInquiryRepository;
 import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsRepository;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.*;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 
 @RestController
 @Log4j2
-public class JsonController {
+public class AjaxController {
 
     final PlaceRepository placeRepository;
-    final SensorRepository sensorRepository;
     final SensorCustomRepository sensorCustomRepository;
     final ReferenceValueSettingRepository reference_value_settingRepository;
     final NotificationSettingsRepository notification_settingsRepository;
-    final NotificationListRepository notificationListRepository;
     final NotificationListCustomRepository notificationListCustomRepository;
     final EmissionsStandardSettingRepository emissionsStandardSettingRepository;
     final SensorListRepository sensorListRepository;
@@ -37,41 +31,30 @@ public class JsonController {
     final NotificationMonthStatisticsRepository notificationMonthStatisticsRepository;
     final AnnualEmissionsRepository annualEmissionsRepository;
     final EmissionsSettingRepository emissionsSettingRepository;
-    final MongoTemplate mongoTemplate;
     final DataInquiryRepository dataInquiryCustomRepository;
     final MonthlyEmissionsRepository monthlyEmissionsRepository;
-
     final ItemRepository itemRepository;
+    final MongoQuary mongoQuary;
 
-
-    public JsonController(PlaceRepository placeRepository, ItemRepository itemRepository, SensorRepository sensorRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListRepository notificationListRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, MongoTemplate mongoTemplate, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository) {
+    public AjaxController(PlaceRepository placeRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary) {
         this.placeRepository = placeRepository;
-        this.sensorRepository = sensorRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.notification_settingsRepository = notification_settingsRepository;
-        this.notificationListRepository = notificationListRepository;
         this.notificationListCustomRepository = notificationListCustomRepository;
         this.emissionsStandardSettingRepository = emissionsStandardSettingRepository;
         this.sensorListRepository = sensorListRepository;
         this.notificationStatisticsCustomRepository = notificationStatisticsCustomRepository;
         this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
         this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
-        this.mongoTemplate = mongoTemplate;
-        this.dataInquiryCustomRepository = dataInquiryCustomRepository;
-        this.monthlyEmissionsRepository = monthlyEmissionsRepository;
         this.annualEmissionsRepository = annualEmissionsRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
+        this.dataInquiryCustomRepository = dataInquiryCustomRepository;
+        this.monthlyEmissionsRepository = monthlyEmissionsRepository;
         this.itemRepository = itemRepository;
+        this.mongoQuary = mongoQuary;
     }
 
-
-    // *********************************************************************************************************************
-// Place
-// *********************************************************************************************************************
-
-    // =================================================================================================================
-    // 김규아 추가
 
     /**
      * 전체 측정소 정보를 읽어오기 위한 메소드
@@ -83,20 +66,25 @@ public class JsonController {
         return placeRepository.findAll();
     }
 
-
     /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
      *
      * @param place 측정소 이름
-     * @return 해당 측정소의 센서 값 (테이블 명)
+     * @return 해당 측정소 정보
      */
-    @RequestMapping(value = "/getPlace", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getPlace(@RequestParam("place") String place) {
+    @RequestMapping(value = "/getPlace")
+    public Object getPlace(String place) {
         return placeRepository.findByName(place);
     }
 
-    @RequestMapping(value = "/getPlaceSensor", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getPlaceSensor(@RequestParam("place") String place) {
+    /**
+     * 해당 측정소 명에 등록된 센서 리스트 목록
+     *
+     * @param place 측정소명
+     * @return 해당 측정소에 등록된 센서 값
+     */
+    @RequestMapping(value = "/getPlaceSensor")
+    public Object getPlaceSensor(String place) {
         return placeRepository.findByName(place).getSensor();
     }
 
@@ -116,32 +104,13 @@ public class JsonController {
     }
 
     /**
-     * 설정된 기준 값을 초과하는 경우 알람 발생 - 해당 발생된 알람의 목록 리스트 (ALL) > 페이징 가능하게 수정할 것.
+     * 설정된 기준 값을 초과하는 경우 알람 발생 - 해당 발생된 알람의 목록 리스트 (from - to 사이 데이터)
      *
      * @return 전체 알람 목록
      */
     @RequestMapping(value = "/getNotificationList")
     public Object getNotificationList(String from, String to) {
-        MatchOperation where = Aggregation.match(
-                new Criteria().andOperator(
-                        Criteria.where("up_time")
-                                .gte(LocalDateTime.parse(from + "T00:00:00"))
-                                .lte(LocalDateTime.parse(to + "T23:59:59"))
-                )
-        );
-
-        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "up_time");
-
-        Aggregation agg = Aggregation.newAggregation(
-                where,
-                sort
-        );
-
-        AggregationResults<NotificationList> results = mongoTemplate.aggregate(agg, "notification_list", NotificationList.class);
-
-        List<NotificationList> result = results.getMappedResults();
-
-        return result;
+        return mongoQuary.getNotificationList(from, to);
     }
 
     /**
@@ -165,6 +134,11 @@ public class JsonController {
         return reference_value_settingRepository.findByName(tableName);
     }
 
+    /**
+     * 넘겨받은 센서명이 포함된 측정소 이름 받아오기
+     * @param tableName 센서명
+     * @return 센서명이 포함된 측정소 이름
+     */
     @RequestMapping(value = "/getPlaceName", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getPlaceName(@RequestParam("tableName") String tableName) {
         return placeRepository.findBySensorIsIn(tableName).getName();
@@ -304,9 +278,6 @@ public class JsonController {
         //측정소 삭제
         placeRepository.deleteByName(place);
     }
-// *********************************************************************************************************************
-// Sensor
-// *********************************************************************************************************************
 
     /**
      * @param sensor - 센서명
@@ -330,7 +301,6 @@ public class JsonController {
         return sensorListRepository.findByTableName(tablename);
     }
 
-    // 김규아 추가
     @RequestMapping(value = "/getMonitoringPlace")
     public List<Place> getMonitoringPlace() {
         return placeRepository.findByMonitoringIsTrue();
@@ -367,7 +337,6 @@ public class JsonController {
         return sensorCustomRepository.getSenor(sensor, hour);
     }
 
-    //김규아 수정
     @RequestMapping(value = "/getNotifyInfo")
     public NotificationSettings getNotifyInfo(@RequestParam("name") String name) {
 

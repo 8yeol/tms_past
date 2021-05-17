@@ -1,10 +1,13 @@
 package com.example.tms.mongo;
 
+import com.example.tms.entity.NotificationList;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,4 +69,26 @@ public class MongoQuary {
         return place;
     }
 
+    public Object getNotificationList(String from, String to) {
+        MatchOperation where = Aggregation.match(
+                new Criteria().andOperator(
+                        Criteria.where("up_time")
+                                .gte(LocalDateTime.parse(from + "T00:00:00"))
+                                .lte(LocalDateTime.parse(to + "T23:59:59"))
+                )
+        );
+
+        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "up_time");
+
+        Aggregation agg = Aggregation.newAggregation(
+                where,
+                sort
+        );
+
+        AggregationResults<NotificationList> results = mongoTemplate.aggregate(agg, "notification_list", NotificationList.class);
+
+        List<NotificationList> result = results.getMappedResults();
+
+        return result;
+    }
 }

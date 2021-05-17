@@ -4,7 +4,6 @@ import com.example.tms.entity.Member;
 import com.example.tms.entity.RankManagement;
 import com.example.tms.repository.MemberRepository;
 import com.example.tms.repository.RankManagementRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -12,14 +11,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthChecker {
 
-    @Autowired
-    private RankManagementRepository rankManagementRepository;
+    private final RankManagementRepository rankManagementRepository;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    public AuthChecker(RankManagementRepository rankManagementRepository, MemberRepository memberRepository) {
+        this.rankManagementRepository = rankManagementRepository;
+        this.memberRepository = memberRepository;
+    }
 
     public boolean check(Authentication authentication,String url){
-
         Object principalObj = authentication.getPrincipal();
         //로그인 체크
         if(principalObj.equals("anonymousUser")){ return false; }

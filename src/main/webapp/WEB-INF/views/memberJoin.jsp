@@ -36,7 +36,7 @@
             <div class="mb-3" style="width: 80%; margin: 0 auto;">
                 <label for="password" class="col-form-label">비밀번호</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="password" placeholder="6자 이상 입력해 주세요">
+                    <input type="password" class="form-control" id="password" placeholder="6자 이상 입력해 주세요.">
                 </div>
             </div>
 
