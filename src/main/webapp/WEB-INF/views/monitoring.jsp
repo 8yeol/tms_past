@@ -177,21 +177,12 @@
                 clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
                 // console.log(INTERVAL);
                 const data = getPlaceData(placeName[i]); //측정소 별 센서 데이터 (최근데이터, 이전데이터, 정보)
-                if(data != 0){
                     draw_place_table(data, i); // 로딩되면 테이블 생성
                     placeData.push(data); //측정소 별 센서 데이터 통합
                     setTimeout(function () {
                         draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
                     }, 0);
                     INTERVAL = setTimeout(interval_getData, 10000);
-                }else{
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '경고',
-                        text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
-                    });
-                    draw_place_table(data, i);
-                }
             }
         }, 0);
     }
@@ -234,20 +225,20 @@
                     $.each(data, function (index, item) { //item (센서명)
                         monitoring = item.monitoring;
                         if(monitoring){
-                           placeName.push(item.name);
-                        }else{
-                            Swal.fire({
-                                icon: 'warning',
-                                title: '경고',
-                                text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
-                            })
+                            placeName.push(item.name);
                         }
                     })
             },
             error: function (request, status, error) {
-                // console.log(error)
             }
         });
+        if(placeName.length ==0){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
+            })
+        }
         return placeName;
     }
 
@@ -257,30 +248,31 @@
     function draw_place_table_frame(placeName) {
         $('#place_table').empty();
         var col_md_size;
-        for(var i=0; i<placeName.length; i++){
-            if(placeName.length==1){ //1개
-                col_md_size = 12;
-            }else {
-                col_md_size = 6;
+        if(placeName.length != 0){
+            for(var i=0; i<placeName.length; i++){
+                if(placeName.length==1){ //1개
+                    col_md_size = 12;
+                }else {
+                    col_md_size = 6;
+                }
+                $('#place_table').append("<div class='col-md-"+col_md_size+" mb-3 mt-2'>" +
+                    "<div class='bg-info m-2 text-center'><span class='fs-5'>"+placeName[i]+"</span></div>" +
+                    "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
+                    "<table class='table table-bordered table-hover text-center'>" +
+                    "<thead>" +
+                    "<tr class='add-bg-color'>" +
+                        "<th width=30%'>항목</th>" +
+                        "<th width=15%'>법적기준</th>" +
+                        "<th width=15%'>사내기준</th>" +
+                        "<th width=15%'>관리기준</th>" +
+                        "<th width=25%'>실시간</th>" +
+                    "</tr>" +
+                    "</thead>"+
+                        "<tbody id='sensor-table-"+i+"'>"+
+                    "</tbody>" +
+                    "</table>" +
+                    "</div>");
             }
-
-            $('#place_table').append("<div class='col-md-"+col_md_size+" mb-3 mt-2'>" +
-                "<div class='bg-info m-2 text-center'><span class='fs-5'>"+placeName[i]+"</span></div>" +
-                "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
-                "<table class='table table-bordered table-hover text-center'>" +
-                "<thead>" +
-                "<tr class='add-bg-color'>" +
-                    "<th width=30%'>항목</th>" +
-                    "<th width=15%'>법적기준</th>" +
-                    "<th width=15%'>사내기준</th>" +
-                    "<th width=15%'>관리기준</th>" +
-                    "<th width=25%'>실시간</th>" +
-                "</tr>" +
-                "</thead>"+
-                    "<tbody id='sensor-table-"+i+"'>"+
-                "</tbody>" +
-                "</table>" +
-                "</div>");
         }
     }
 
