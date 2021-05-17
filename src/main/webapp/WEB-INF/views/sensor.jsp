@@ -16,6 +16,12 @@
 <script src="static/js/dataTables.buttons.min.js"></script>
 <script src="static/js/buttons.html5.min.js"></script>
 
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
+
 <style>
     table#place-table thead, table#sensor-table thead { /* 테이블 제목 셀 배경, 글자색 설정 */
         background-color: #97bef8;
@@ -109,6 +115,9 @@
         border-radius: 5px;
     }
 </style>
+
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<script src="static/js/sweetalert2.min.js"></script>
 
 <div class="container">
     <div class="row">
@@ -241,9 +250,11 @@
             sensor_naming = $('#radio_text').text();
         }
         var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
-        sensor_name = temp[0].childNodes[1].value; //측정소 테이블로부터 센서명을 구함
-        sensor_data = getSensorData(sensor_name);
-        getData2(sensor_data);
+        if(temp.length != 0){
+            sensor_name = temp[0].childNodes[1].value; //측정소 테이블로부터 센서명을 구함
+            sensor_data = getSensorData(sensor_name);
+            getData2(sensor_data);
+        }
     });
 
     /**
@@ -255,7 +266,6 @@
             clearTimeout(interval1);
         if(place_data.length != 0){
             setTimeout(function interval_getData() { // $초 마다 업데이트
-                // console.log("g1: "+interval1);
                 draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
                 for (var i = 0; i < place_data.length; i++) {
                     // 측정소의 센서별로 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
@@ -320,7 +330,11 @@
                     }, 0);
             }else{ // sensor_data_list (최근데이터) 가 없을 때
                 if(sensor_data){
-                    console.log("최근 데이터가 없습니다.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '최근 '+sensor_time_length+'시간의 결과가 없습니다.'
+                    })
                     draw_sensor_table(sensor_data_list, sensor_data);
                     $("#radio_text").text(sensor_data.naming);
                     updateChart(sensor_data_list, sensor_data);
@@ -341,7 +355,7 @@
     function getPlace(){
         const placeName = new Array();
         $.ajax({
-            url: 'getPlaceList',
+            url: '<%=cp%>/getPlaceList',
             dataType: 'json',
             async: false,
             success: function (data) { //전체 측정소명
@@ -349,7 +363,15 @@
                     monitoring = item.monitoring;
                     if(monitoring || monitoring == 'true'){ //모니터링 True 인 측정소만 추가
                         placeName.push(item.name);
+                    }else{
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '경고',
+                            text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
+                        })
+                        return false;
                     }
+
                 });
             },
             error: function (request, status, error) {
@@ -366,7 +388,7 @@
         if(place != undefined){
             let result = new Array();
             $.ajax({
-                url:'getPlaceSensor',
+                url:'<%=cp%>/getPlaceSensor',
                 dataType: 'json',
                 data:  {"place": place},
                 async: false,
@@ -392,7 +414,6 @@
     function getSensorData(sensor){
         let result;
         let sensorValue, sensorUptime, beforeValue;
-
         const monitor = getMonitoring(sensor);
         if(monitor === 'true'){
             const recentData = getSensorRecent(sensor); //최근데이터
@@ -424,6 +445,11 @@
                 beforeValue: beforeValue, monitoring: monitoring
             });
         }else{ //모니터링 False 인 경우
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '등록된 센서가 없거나 모니터링이 OFF 입니다.'
+            })
             return null;
         }
         return result;
@@ -435,7 +461,7 @@
     function getMonitoring(sensor){
         let result;
         $.ajax({
-            url:'getMonitoring',
+            url:'<%=cp%>/getMonitoring',
             dataType: 'text',
             data:  {"name": sensor},
             async: false,
@@ -455,7 +481,7 @@
     function getSensorBeforeData(sensor) {
         let result = new Array();
         $.ajax({
-            url: 'getSensorBeforeData',
+            url: '<%=cp%>/getSensorBeforeData',
             dataType: 'json',
             data: {"sensor": sensor},
             async: false,
@@ -479,7 +505,7 @@
             result = null;
         } else{
             $.ajax({
-                url:'getSensorRecent',
+                url:'<%=cp%>/getSensorRecent',
                 dataType: 'JSON',
                 data:  {"sensor": sensor},
                 async: false,
@@ -499,7 +525,7 @@
     function getSensorInfo(sensor) {
         let result;
         $.ajax({
-            url:'getSensorInfo',
+            url:'<%=cp%>/getSensorInfo',
             dataType: 'json',
             data: {"sensor": sensor},
             async: false,
@@ -525,7 +551,7 @@
             return null;
         }else{
             $.ajax({
-                url:'getSensor',
+                url:'<%=cp%>/getSensor',
                 dataType: 'JSON',
                 contentType: "application/json",
                 data: {"sensor": sensor_name, "hour": hour},
@@ -726,7 +752,7 @@
         try{
             $('#place-tbody-table').empty();
             if(data == null){
-                const innerHtml = "<tr><td colspan='6'> 등록된 센서 데이터가 없거나 모니터링이 OFF 입니다. </td></tr>";
+                const innerHtml = "<tr><td colspan='6'> 데이터가 없어요. </td></tr>";
                 $('#place-tbody-table').append(innerHtml);
             }else{
                 const tbody = document.getElementById('place-tbody-table');
@@ -851,7 +877,7 @@
             ordering: true,
             pagingType: 'numbers',
             "language": {
-                "emptyTable": "등록된 센서 데이터가 없습니다.",
+                "emptyTable": "데이터가 없어요.",
                 "lengthMenu": "페이지당 _MENU_ 개씩 보기",
                 "info": "현재 _START_ - _END_ / _TOTAL_건",
                 "infoEmpty": "데이터 없음",

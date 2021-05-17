@@ -45,6 +45,10 @@
 </style>
 
 
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<script src="static/js/sweetalert2.min.js"></script>
+
+
 <div class="container">
     <div class="row m-3 mt-3">
         <div class="col">
@@ -171,13 +175,23 @@
             const placeData = new Array();
             for (let i = 0; i < placeName.length; i++) {
                 clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
+                // console.log(INTERVAL);
                 const data = getPlaceData(placeName[i]); //측정소 별 센서 데이터 (최근데이터, 이전데이터, 정보)
-                draw_place_table(data, i); // 로딩되면 테이블 생성
-                placeData.push(data); //측정소 별 센서 데이터 통합
-                setTimeout(function () {
-                    draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
-                }, 0);
-                INTERVAL = setTimeout(interval_getData, 10000);
+                if(data != 0){
+                    draw_place_table(data, i); // 로딩되면 테이블 생성
+                    placeData.push(data); //측정소 별 센서 데이터 통합
+                    setTimeout(function () {
+                        draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
+                    }, 0);
+                    INTERVAL = setTimeout(interval_getData, 10000);
+                }else{
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
+                    });
+                    draw_place_table(data, i);
+                }
             }
         }, 0);
     }
@@ -217,12 +231,18 @@
             dataType: 'json',
             async: false,
             success: function (data) {
-                $.each(data, function (index, item) { //item (센서명)
-                    monitoring = item.monitoring;
-                    if(monitoring){
-                       placeName.push(item.name);
-                    }
-                })
+                    $.each(data, function (index, item) { //item (센서명)
+                        monitoring = item.monitoring;
+                        if(monitoring){
+                           placeName.push(item.name);
+                        }else{
+                            Swal.fire({
+                                icon: 'warning',
+                                title: '경고',
+                                text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
+                            })
+                        }
+                    })
             },
             error: function (request, status, error) {
                 // console.log(error)
@@ -250,14 +270,14 @@
                 "<table class='table table-bordered table-hover text-center'>" +
                 "<thead>" +
                 "<tr class='add-bg-color'>" +
-                "<th width=30%'>항목</th>" +
-                "<th width=15%'>법적기준</th>" +
-                "<th width=15%'>사내기준</th>" +
-                "<th width=15%'>관리기준</th>" +
-                "<th width=25%'>실시간</th>" +
+                    "<th width=30%'>항목</th>" +
+                    "<th width=15%'>법적기준</th>" +
+                    "<th width=15%'>사내기준</th>" +
+                    "<th width=15%'>관리기준</th>" +
+                    "<th width=25%'>실시간</th>" +
                 "</tr>" +
                 "</thead>"+
-                "<tbody id='sensor-table-"+i+"'>"+
+                    "<tbody id='sensor-table-"+i+"'>"+
                 "</tbody>" +
                 "</table>" +
                 "</div>");
@@ -270,7 +290,7 @@
     function getPlaceData(place) {
         const getData = new Array();
         $.ajax({  //측정소의 센서명을 구함
-            url: 'getPlaceSensor',
+            url: '<%=cp%>/getPlaceSensor',
             dataType: 'json',
             data: {"place": place},
             async: false,
@@ -341,7 +361,7 @@
     function getMonitoring(sensor) {
         let result;
         $.ajax({
-            url: 'getMonitoring',
+            url: '<%=cp%>/getMonitoring',
             dataType: 'text',
             data: {"name": sensor},
             async: false,
@@ -361,7 +381,7 @@
     function getSensorRecent(sensor) {
         let result;
         $.ajax({
-            url: 'getSensorRecent',
+            url: '<%=cp%>/getSensorRecent',
             dataType: 'json',
             data: {"sensor": sensor},
             async: false,
@@ -381,7 +401,7 @@
     function getSensorBeforeData(sensor) {
         let result;
         $.ajax({
-            url: 'getSensorBeforeData',
+            url: '<%=cp%>/getSensorBeforeData',
             dataType: 'json',
             data: {"sensor": sensor},
             async: false,
@@ -401,7 +421,7 @@
     function getSensorInfo(sensor) {
         let result;
         $.ajax({
-            url: 'getSensorInfo',
+            url: '<%=cp%>/getSensorInfo',
             dataType: 'json',
             data: {"sensor": sensor},
             async: false,
@@ -429,7 +449,7 @@
         if(data.length == 0){
             const newRow = tbody.insertRow(tbody.rows);
             const newCeil0 = newRow.insertCell();
-            newCeil0.innerHTML = '<div>'+'등록된 센서 데이터가 없거나 모니터링이 OFF 입니다.'+'</div>';
+            newCeil0.innerHTML = '<div>'+'데이터가 없어요.'+'</div>';
             newCeil0.colSpan = 5;
             $("#update-" + index).text("-");
         }else{
