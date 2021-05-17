@@ -364,12 +364,7 @@
                     if(monitoring || monitoring == 'true'){ //모니터링 True 인 측정소만 추가
                         placeName.push(item.name);
                     }else{
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '경고',
-                            text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
-                        })
-                        return false;
+                        return [];
                     }
 
                 });
@@ -385,7 +380,6 @@
      *  측정소명으로 센서데이터 (최근데이터, 직전데이터, 기준값 등) 리턴
      */
     function getPlaceData(place){
-        if(place != undefined){
             let result = new Array();
             $.ajax({
                 url:'<%=cp%>/getPlaceSensor',
@@ -402,10 +396,12 @@
                 error: function (e) {
                 }
             });
-            return result;
-        }else{
-            return [];
-        }
+            if(result.length != 0){
+                return result;
+            }else {
+                Swal.fire({icon: 'warning', title: '경고', text: '등록된 센서가 없거나 모니터링이 OFF 입니다.'})
+                return [];
+            }
     }
 
     /**
@@ -423,14 +419,12 @@
                 sensorValue = recentData.value;
                 sensorUptime = moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss');
             }
-
             const beforeData = getSensorBeforeData(sensor);  // 직전 데이터(up/down 표시하기 위함)
             if(beforeData.length == 0){
                 beforeValue = "-";
             }else{
                 beforeValue = beforeData[0].value;
             }
-
             const sensorInfo = getSensorInfo(sensor); //기준데이터, 센서한글명, 센서 모니터링
             const naming = sensorInfo.naming;
             const monitoring = sensorInfo.monitoring;
@@ -445,11 +439,6 @@
                 beforeValue: beforeValue, monitoring: monitoring
             });
         }else{ //모니터링 False 인 경우
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '등록된 센서가 없거나 모니터링이 OFF 입니다.'
-            })
             return null;
         }
         return result;

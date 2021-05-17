@@ -173,6 +173,7 @@
             const placeName = getPlace(); // 전체 측정소 이름 구함 (조건: 파워 On, 모니터링 True)
             draw_place_table_frame(placeName); // 측정소별 센서의 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
             const placeData = new Array();
+            var sensorDataNullCheck = true;
             for (let i = 0; i < placeName.length; i++) {
                 clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
                 // console.log(INTERVAL);
@@ -182,7 +183,13 @@
                     setTimeout(function () {
                         draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
                     }, 0);
+                    if(placeData[i].length != 0){
+                        sensorDataNullCheck = false;
+                    }
                     INTERVAL = setTimeout(interval_getData, 10000);
+            }
+            if(sensorDataNullCheck){
+                Swal.fire({icon: 'warning',title: '경고',text: '등록된 센서가 없거나 모니터링이 OFF 입니다.'})
             }
         }, 0);
     }
@@ -339,11 +346,6 @@
                             beforeValue: beforeValue, monitoring: monitoring, standard : standard, status: status
                         });
                     }else{ //모니터링 False 인 경우
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '경고',
-                        text: '등록된 센서가 없거나 모니터링이 OFF 입니다.'
-                    })
                     return null;
                 }
                 });
