@@ -338,7 +338,14 @@
                             legalStandard: legalStandard, companyStandard: companyStandard, managementStandard: managementStandard,
                             beforeValue: beforeValue, monitoring: monitoring, standard : standard, status: status
                         });
-                    }
+                    }else{ //모니터링 False 인 경우
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '등록된 센서가 없거나 모니터링이 OFF 입니다.'
+                    })
+                    return null;
+                }
                 });
             },
             error: function () {
