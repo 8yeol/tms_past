@@ -42,6 +42,10 @@
         background-color: #97bef8;
         color: #fff;
     }
+
+    .m-l {
+        margin-left: 50px;
+    }
 </style>
 
 
@@ -66,13 +70,13 @@
             <div class="row">
                 <div class="col text-center">
                     <p class="fs-1 mb-0" id="statusPercent"></p>
-                    <hr class="m-0">
+                    <hr style="margin: 0 30px 0;">
                     <p id="statusMore"></p>
                 </div>
                 <div class="col">
-                    <p class="fs-6">정상 : <a style="text-align: right" id="statusOn"></a></p>
-                    <p class="fs-6">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
-                    <p class="fs-6">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
+                    <p class="fs-6 m-l">정상 : <a style="text-align: right" id="statusOn"></a></p>
+                    <p class="fs-6 m-l">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
+                    <p class="fs-6 m-l">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
                 </div>
             </div>
         </div>
@@ -133,7 +137,7 @@
     </div>
 
     <div class="row m-3 mt-3 bg-light">
-        <div class="row m-3">
+        <div style="margin-top: 12px;">
             <div class="col text-center border">
                 <div class="row p-3">
                     <div class="col">
@@ -148,7 +152,7 @@
                 </div>
             </div>
         </div>
-        <div class="row table m-3" id="place_table">
+        <div class="row table" id="place_table" style="margin: 0 auto">
 
         </div>
     </div>
@@ -263,7 +267,7 @@
                     col_md_size = 6;
                 }
                 $('#place_table').append("<div class='col-md-"+col_md_size+" mb-3 mt-2'>" +
-                    "<div class='bg-info m-2 text-center'><span class='fs-5'>"+placeName[i]+"</span></div>" +
+                    "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'><span class='fs-5'>"+placeName[i]+"</span></div>" +
                     "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
                     "<table class='table table-bordered table-hover text-center'>" +
                     "<thead>" +

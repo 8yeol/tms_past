@@ -143,6 +143,10 @@
         display: inline-block;
     }
 
+    .dataTables_wrapper {
+        min-height: 450px;
+    }
+
     /* 미디어쿼리 */
     @media all and (max-width: 1399px) and (min-width: 1200px) {
         .sizing {width:937px;}

@@ -114,6 +114,10 @@
         border: 0px;
         border-radius: 5px;
     }
+
+    #sensor-table_wrapper {
+        margin-bottom: 5px;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
@@ -130,8 +134,8 @@
                 <span class="fs-7 mb-2">업데이트 : <a id="update"></a></span>
             </div>
             <span class="fs-4 fw-bold d-flex justify-content-center bg-lightGray" id="title"></span>
-            <div id="place_table">
-                <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: .875em"> * 항목 클릭시 차트/표 값이 변경됩니다.</span></div>
+            <div id="place_table" style="margin:0 10px 0;">
+                <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: .875em; margin-right: 10px;"> * 항목 클릭시 차트/표 값이 변경됩니다.</span></div>
                 <table class="table table-bordered table-hover text-center">
                     <thead>
                     <tr>
@@ -159,10 +163,10 @@
                         <label for="day">&nbsp;최근 24시간</label>
                     </div>
                 </div>
-                <span class="text-primary" style="font-size: .875em" id="textUpdate"> * 최근 1시간 - 1분 단위로 업데이트 됩니다.</span>
+                <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간 - 1분 단위로 업데이트 됩니다.</span>
             </div>
             <%-- 차트 --%>
-            <div id="chart"></div>
+            <div id="chart" style=" margin-right: 10px;"></div>
             <hr>
             <%-- 차트의 데이터 테이블 --%>
             <div class="d-flex fw-bold pos-a align-self-end">
