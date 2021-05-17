@@ -289,12 +289,6 @@ public class AjaxController {
     }
 
 
-    //센서리스트 불러오기
-    @RequestMapping(value = "/getSensorList2")
-    public List<SensorList> getSensorList2(@RequestParam("place") String place) {
-        return sensorListRepository.findByPlace(place);
-    }
-
     //센서리스트 측정항목 불러오기
     @RequestMapping(value = "/getSensorManagementId")
     public String getSensorManagementId(@RequestParam("name") String tablename) {
@@ -392,7 +386,11 @@ public class AjaxController {
         }
     }
 
-    // 측정항목 상세설정 모니터링 on/off
+    /**
+     * 센서 모니터링 상태 조회 메소드
+     * @param tableName 센서명
+     * @return true / false
+     */
     @RequestMapping(value = "/getMonitoring")
     public Boolean getMonitoring(@RequestParam("name") String tableName) {
         try {
@@ -602,11 +600,11 @@ public class AjaxController {
     }
 
     /**
-     * 당일 알림 현황 조회
+     * 당일 알림 현황 조회 메소드
      *
      * @return day(현재날짜), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
-    @RequestMapping(value = "getNotiStatisticsNow")
+    @RequestMapping(value = "getNSNow")
     public ArrayList getNotificationStatistics() {
         ArrayList al = new ArrayList();
         try {
@@ -627,7 +625,7 @@ public class AjaxController {
      *
      * @return day(' yyyy - MM - dd '), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
-    @RequestMapping(value = "getNotificationWeekStatistics")
+    @RequestMapping(value = "getNSWeek")
     public List<NotificationDayStatistics> getNotificationWeekStatistics() {
         return notificationStatisticsCustomRepository.getNotificationWeekStatistics();
     }
@@ -637,7 +635,7 @@ public class AjaxController {
      *
      * @return month(' yyyy - MM '), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
-    @RequestMapping(value = "getNotificationMonthStatistics")
+    @RequestMapping(value = "getNSMonth")
     public List<NotificationMonthStatistics> getNotificationMonthStatistics() {
         return notificationStatisticsCustomRepository.getNotificationMonthStatistics();
     }
