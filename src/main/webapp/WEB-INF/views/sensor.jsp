@@ -321,7 +321,6 @@
                 $("#radio_text").text(sensor_data.naming); // 선택된 센서명 텍스트 출력
                     setTimeout(function interval_getData2() { //$초 마다 업데이트
                         // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
-                        updateChart(sensor_data_list, sensor_data); //차트 업데이트
                         var sensor_data_list_recent = getSensorRecent(sensor_name);
                         if(sensor_data_list_recent.length != 0){ // null = []
                             if(sensor_data_list[sensor_data_list.length-1].x != sensor_data_list_recent.up_time){
@@ -330,6 +329,7 @@
                                 sensor_table_update(dt, sensor_data_list[sensor_data_list.length-1], sensor_data); //테이블 업데이트
                             }
                         }
+                        updateChart(sensor_data_list, sensor_data); //차트 업데이트
                         interval2 = setTimeout(interval_getData2, 5000);
                     }, 0);
             }else{ // sensor_data_list (최근데이터) 가 없을 때
@@ -593,6 +593,9 @@
             chart: {
                 height: '400px',
                 type: 'line',
+                animations: {
+                    enabled: false,
+                },
                 toolbar: {
                     show: true,
                     tools: {
@@ -616,15 +619,12 @@
             },
             stroke: {
                 show: true,
-                width: 2,
-                curve: 'smooth'
+                width: 3,
             },
             dataLabels: {
                 enabled: false
             },
             xaxis: {
-                forceNiceScale: true,
-                hideOverlappingLabels: true,
                 type: 'datetime',
                 labels: {
                     show: true,
@@ -734,7 +734,7 @@
                             return val.toFixed(2);
                     }
                 }
-            }
+            },
         })
     }
 
