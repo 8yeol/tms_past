@@ -408,22 +408,21 @@
         addChart(chartData);
     });
 
+    /**
+     * 일주일 ~ 현재 알림현황 리턴
+     */
     function  getWeekChartData() {
         var getData = new Array();
-
-        /* 현재 데이터 */
-        $.ajax({
-           url: '<%=cp%>/getNotiStatisticsNow',
+        $.ajax({  /* 현재 데이터 */
+           url: '<%=cp%>/getNSNow',
            dataType: 'json',
            async: false,
            success: function (data) {
                 getData.push({day: data[0], legalCount:data[1], companyCount:data[2], managementCount: data[3]});
            }
         });
-
-        /* 일주일 ~ 전날 데이터 */
-        $.ajax({
-            url: '<%=cp%>/getNotificationWeekStatistics',
+        $.ajax({ /* 일주일 ~ 전날 데이터 */
+            url: '<%=cp%>/getNSWeek',
             dataType: 'json',
             async: false,
             success: function (data) {
@@ -438,10 +437,14 @@
         return getData;
     }
 
+    /**
+     * 최근 12개 
+     * @returns {any[]}
+     */
     function  getMonthChartData() {
         var getData = new Array();
         $.ajax({
-            url: '<%=cp%>/getNotificationMonthStatistics',
+            url: '<%=cp%>/getNSMonth',
             dataType: 'json',
             async: false,
             success: function (data) {

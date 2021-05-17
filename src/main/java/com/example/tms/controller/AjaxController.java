@@ -630,7 +630,11 @@ public class AjaxController {
             al.add(nowDate);
             for (int grade = 1; grade <= 3; grade++) {
                 List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(nowDate), String.valueOf(nowDate));
-                al.add(list.get(0).get("count"));
+                if(list.size() != 0){
+                  al.add(list.get(0).get("count"));
+                }else{
+                    al.add(null);
+                }
             }
         } catch (Exception e) {
         }

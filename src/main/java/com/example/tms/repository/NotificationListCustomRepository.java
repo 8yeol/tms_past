@@ -40,7 +40,7 @@ public class NotificationListCustomRepository {
                 SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
 
                 GroupOperation groupOperation = Aggregation
-                        .group("grade"/*, "sensor", "grade", "notify"*/).count().as("count");
+                        .group("grade").count().as("count");
                 Aggregation aggregation = Aggregation.newAggregation(projectionOperation, matchOperation, sortOperation, groupOperation);
 
                 AggregationResults<HashMap> results = mongoTemplate.aggregate(aggregation, "notification_list", HashMap.class);
