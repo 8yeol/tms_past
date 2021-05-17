@@ -73,7 +73,7 @@
     }
 
     .h-px {
-        height: 300px;
+        height: auto;
     }
 
     .standard {
@@ -91,17 +91,11 @@
         .center-position {
             left: 20%;
         }
-        .h-px {
-            height: 365px;
-        }
     }
 
     @media all and (max-width: 1199px) and (min-width: 990px) {
         .center-position {
             left: 15%;
-        }
-        .h-px {
-            height: 326px;
         }
     }
 
@@ -155,7 +149,7 @@
             </div>
         </div>
         <c:forEach items="${emissionList}" var="emissionList">
-        <div class="row pb-3 h-75 margin-l">
+        <div class="row pb-3 margin-l">
             <div class="col-3">
                 <div class="card border-2 border-primary" style="height: 95%;">
                     <div class="card-body">
@@ -353,7 +347,7 @@
     </div>
 </div>
 
-<div class="row mt-4 bg-light margin-l h-px" style="width: 98%; margin: 0.2rem;">
+<div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: 330px;">
     <div class="row p-3 pb-0 margin-l">
         <div class="col fs-5 fw-bold">
             관리등급 초과 모니터링
