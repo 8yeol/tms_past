@@ -806,6 +806,18 @@ public class AjaxController {
             placeadd.setUp_time(new Date());
             placeRepository.save(placeadd);
 
+            //센서 관련 notification 값 제거
+            notification_settingsRepository.deleteByName(hiddenCode);
+            //센서 관련 reference 값 초기화
+            ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
+            float legal = 999.0f;
+            float management = 999.0f;
+            float company = 999.0f;
+            Boolean monitoring = false;
+            reference.setLegalStandard(legal);
+            reference.setCompanyStandard(company);
+            reference.setManagementStandard(management);
+            reference.setMonitoring(monitoring);
         }
         sensorListRepository.save(sensor);
 

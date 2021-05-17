@@ -118,6 +118,7 @@
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na1"
+                                                                                               maxlength="15"
                                                                                                style="position: relative; left: 15%;">
 
                     </div>
@@ -157,6 +158,7 @@
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na2"
+                                                                                               maxlength='15'
                                                                                                style="position: relative; left: 15%;">
 
                     </div>
@@ -199,7 +201,7 @@
 <script>
     $(document).ready(function () {
         placeDiv();
-        placeChange($("#place0").text());
+        placeChange("place0");
 
     });
 
@@ -249,9 +251,9 @@
                     } else {
                         onoff = "OFF";
                     }
-                    const innerHTML = "<div id='" + name + "p' style='border-bottom: silver solid 2px; cursor: pointer;' onclick=\"placeChange('" + name + "')\" >" +
+                    const innerHTML = "<div id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' onclick=\"placeChange('place" + i + "')\" >" +
                         "<li style='display: flex; text-align: center'>" +
-                        "<span ><input class='form-check-input' id='" + name + "' name='place' type='checkbox' onclick='checkPlaceAll()'></span>" +
+                        "<span ><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></span>" +
                         "<span style='width: 30%;' id='place" + i + "'>" + name + "</span>" +
                         "<span style='width: 40%; '>" + time + "</span>" +
                         "<span style='width: 24%;'>" + onoff + "</span>" +
@@ -270,9 +272,10 @@
 
     //측정소 변경
     function placeChange(name) {
-        const place = name; // 측정소1 입력
+        const place = $("#" + name).text(); // 측정소1 입력
+        const num = name.replace(/[^0-9]/g, ''); //place0 -> 0
         $('#placeDiv div').removeClass('active'); //텍스트 색상 제거
-        $("#" + place + "p").addClass('active'); // 텍스트 색상 변경
+        $("#p" + num).addClass('active'); // 텍스트 색상 변경
         $("#items").empty(); //div items 비우기
         $("#p_monitoring").empty(); //div p_monitoring 비우기
         const p_monitoring = findPlaceMonitor(place); //측정소monitor on/off 확인
@@ -284,7 +287,8 @@
             "<div><label class='switch'>" +
             "<input id='monitor' type='checkbox' " + p_monitoring + " onchange='p_monitoringupdate()'>" +
             "<span class='slider round'></span>" +
-            "</label></div>";
+            "</label></div>" +
+            "<input type='hidden' id='nickname' value='" + name + "'>";
         $('#p_monitoring').append(innerHTMLPlace); //측정소 명 + 모니터링 on/off div
 
         const none = "<div class='fw-bold' style='padding-top : 20px;'>" +
@@ -310,13 +314,13 @@
                         if (value.size != 0) {
                             const innerHtml =
                                 "<td style='width: 2%;'></td>" +
-                                "<td style='width:18%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("naming") + "</label></td>" +
-                                "<td style='width:25%;'><label class='form-check-label' for='" + value.get("name") + "'>" + value.get("name") + "</label></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "l' value='" + value.get("legal") + "' onchange='legalupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "c' value='" + value.get("company") + "' onchange='companyupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='" + value.get("naming") + "' type='text' id='" + tableName + "m' value='" + value.get("management") + "' onchange='managementupdate(this)'></td>" +
+                                "<td style='width:18%;'><span id='naming" + i + "' >" + value.get("naming") + "</span></td>" +
+                                "<td style='width:25%;'><span id='name" + i + "'>" + value.get("name") + "</span></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='legal' type='text' id='legal" + i + "' value='" + value.get("legal") + "' onchange='legalupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='company' type='text' id='company" + i + "' value='" + value.get("company") + "' onchange='companyupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='management' type='text' id='management" + i + "' value='" + value.get("management") + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch'>" +
-                                "<input id='" + value.get("name") + "a' type='checkbox' name='" + value.get("naming") + "' " + monitoring + " onchange='monitoringupdate(this)'>" +
+                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + value.get("name") + "' " + monitoring + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +
                                 "</label></td>";
 
@@ -362,7 +366,6 @@
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
                 data1 = 0;
-
             }
         })
         return data1;
@@ -370,7 +373,6 @@
 
     //측정소 정보
     function updatePlaceSetting() {
-
 
         if ($("input:checkbox[name=place]:checked").length == 0) {
             document.getElementById("cancelBtn1").click();
@@ -397,7 +399,7 @@
             placeChange($("#pname").text());
             return false;
         }
-        const place = $("input:checkbox[name=place]:checked").attr('id');
+        const place = $("input:checkbox[name=place]:checked").attr('value');
         $.ajax({
             url: '<%=cp%>/getPlace',
             type: 'POST',
@@ -542,7 +544,7 @@
                 })
                 return false;
             }
-            if (pattern3.test(name) == true) {
+            if (pattern3.test(name) == true) { //특수문자
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
@@ -625,7 +627,7 @@
     function removePlace() {
         const placeList = new Array();
         $("input:checkbox[name=place]:checked").each(function () {
-            placeList.push($(this).attr('id'));
+            placeList.push($(this).attr('value'));
         });
 
         if (placeList.length == 0) {
@@ -687,7 +689,7 @@
                     })
 
                     placeDiv();
-                    placeChange($("#place0").text());
+                    placeChange("place0");
                 });
             }
         });
@@ -704,7 +706,8 @@
                 title: '경고',
                 text: '등록된 센서가 없어 모니터링 기능을 사용할 수 없습니다.'
             })
-            placeChange($("#pname").text());
+
+            placeChange(document.getElementById('nickname').value);
             return false;
         }
 
@@ -719,15 +722,18 @@
             }
 
         })
+
         MultiSelecterModal(name, "", "monitor", check);
         placeDiv();
-        placeChange($("#pname").text());
+        placeChange(document.getElementById('nickname').value);
     }
 
     //측정항목 모니터링 onchange
     function monitoringupdate(name) {
-        var tablename = name.id;
-        var str = tablename.slice(0, -1);
+        var id = name.id;
+        const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
+        const naming = $("#naming" + num).text(); //관리ID
+        var tablename = name.value;
         var check = $("#" + name.id).is(":checked");
         var pname = $("#pname").text();
 
@@ -737,25 +743,27 @@
             async: false,
             cache: false,
             data: {
-                "tablename": str,
+                "tablename": tablename,
                 "check": check,
                 "place": pname
             }
         })
-        MultiSelecterModal(pname, name.name, "monitor", check);
+        MultiSelecterModal(pname, naming, "monitor", check);
         placeDiv();
-        placeChange($("#pname").text());
+        placeChange(document.getElementById('nickname').value);
     }
 
     //legal onchange
     function legalupdate(name) {
-        var tablename = name.id;
-        var str = tablename.slice(0, -1);
-        var companyname = str + "c";
+        var id = name.id;
+        const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
+        const naming = $("#naming" + num).text(); //관리ID
+        var tablename = $("#name" + num).text(); //측정항목 명
+        var companyname = "company" + num;
         var company = $("#" + companyname).val(); //사내기준 값
-        var managename = str + "m";
+        var managename = "management" + num;
         var manage = $("#" + managename).val(); //관리기준 값
-        var value = $("#" + tablename).val(); //법적기준 값
+        var value = name.value; //법적기준 값
         var pname = $("#pname").text();
         if (value == "") {
             Swal.fire({
@@ -764,7 +772,7 @@
                 text: '입력 데이터를 체크해주세요.'
 
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return false;
         }
 
@@ -776,7 +784,7 @@
                 text: '입력 데이터를 체크해주세요.'
 
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return false;
         }
         if (parseFloat(value) <= parseFloat(company)) { //법적기준 값이 사내기준 값보다 작을때
@@ -785,7 +793,7 @@
                 title: '경고',
                 text: '법적기준 값은 사내기준 값보다 작거나 같을 수 없습니다.'
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return;
         }
         if (parseFloat(value) <= parseFloat(manage)) { //법적기준 값이 관리기준 값보다 작을때
@@ -794,7 +802,7 @@
                 title: '경고',
                 text: '법적기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return;
         }
 
@@ -804,25 +812,27 @@
             async: false,
             cache: false,
             data: {
-                "tablename": str,
+                "tablename": tablename,
                 "value": value,
                 "place": pname
             }
         })
-        MultiSelecterModal(pname, name.name, "legal", value);
+        MultiSelecterModal(pname, naming, "legal", value);
         placeDiv();
-        placeChange($("#pname").text());
+        placeChange(document.getElementById('nickname').value);
     }
 
     //company onchange
     function companyupdate(name) {
-        var tablename = name.id;
-        var str = tablename.slice(0, -1);
-        var legalname = str + "l";
+        var id = name.id;
+        const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
+        const naming = $("#naming" + num).text(); //관리ID
+        var tablename = $("#name" + num).text(); //측정항목 명
+        var legalname = "legal" + num;
         var legal = $("#" + legalname).val(); //법적기준 값
-        var managename = str + "m";
+        var managename = "management" + num;
         var manage = $("#" + managename).val(); //관리기준 값
-        var value = $("#" + tablename).val();
+        var value = name.value;
         var pname = $("#pname").text();
         if (value == "") {
             Swal.fire({
@@ -831,7 +841,7 @@
                 text: '입력 데이터를 체크해주세요.'
 
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return false;
         }
         if (isNaN(value) == true) {
@@ -842,7 +852,7 @@
                 text: '입력 데이터를 체크해주세요.'
 
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return false;
         }
 
@@ -852,7 +862,7 @@
                 title: '경고',
                 text: '사내기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return;
         }
         if (parseFloat(legal) <= parseFloat(value)) {  //
@@ -861,7 +871,7 @@
                 title: '경고',
                 text: '사내기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return;
         }
 
@@ -871,25 +881,27 @@
             async: false,
             cache: false,
             data: {
-                "tablename": str,
+                "tablename": tablename,
                 "value": value,
                 "place": pname
             }
         })
-        MultiSelecterModal(pname, name.name, "company", value);
+        MultiSelecterModal(pname, naming, "company", value);
         placeDiv();
-        placeChange($("#pname").text());
+        placeChange(document.getElementById('nickname').value);
     }
 
     //management onchange
     function managementupdate(name) {
-        var tablename = name.id;
-        var str = tablename.slice(0, -1);
-        var legalname = str + "l";
+        var id = name.id;
+        const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
+        const naming = $("#naming" + num).text(); //관리ID
+        var tablename = $("#name" + num).text(); //측정항목 명
+        var legalname = "legal" + num;
         var legal = $("#" + legalname).val(); //법적기준 값
-        var companyname = str + "c";
+        var companyname = "company" + num;
         var company = $("#" + companyname).val(); //사내기준 값
-        var value = $("#" + tablename).val(); //관리기준
+        var value = name.value; //관리기준
         var pname = $("#pname").text();
         if (value == "") {
             Swal.fire({
@@ -898,7 +910,7 @@
                 text: '입력 데이터를 체크해주세요.'
 
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return false;
         }
         if (isNaN(value) == true) {
@@ -909,7 +921,7 @@
                 text: '입력 데이터를 체크해주세요.'
 
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return false;
         }
         if (parseFloat(company) <= parseFloat(value)) {  //
@@ -918,7 +930,7 @@
                 title: '경고',
                 text: '관리기준 값은 사내기준 값보다 크거나 같을 수 없습니다.'
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return;
         }
         if (parseFloat(legal) <= parseFloat(value)) {  //
@@ -927,7 +939,7 @@
                 title: '경고',
                 text: '관리기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
             })
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return;
         }
 
@@ -937,14 +949,14 @@
             async: false,
             cache: false,
             data: {
-                "tablename": str,
+                "tablename": tablename,
                 "value": value,
                 "place": pname
             }
         })
-        MultiSelecterModal(pname, name.name, "manage", value);
+        MultiSelecterModal(pname, naming, "manage", value);
         placeDiv();
-        placeChange($("#pname").text());
+        placeChange(document.getElementById('nickname').value);
     }
 
     //데이터 변경시 팝업창

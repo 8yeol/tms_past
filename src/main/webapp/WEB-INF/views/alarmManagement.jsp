@@ -16,12 +16,12 @@
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<link rel="stylesheet" type="text/css" href="static/css/chung-timepicker.css">
+<link rel="stylesheet" type="text/css" href="static/jquery-timepicker-12-hour-format/stylesheets/wickedpicker.css">
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <%--make css--%>
 <link rel="stylesheet" type="text/css" href="static/css/alarmManagement.css">
 <script src="static/js/common/common.js"></script>
-<script src="static/js/chung-timepicker.js"></script>
+<script src="static/jquery-timepicker-12-hour-format/src/wickedpicker.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
 <style>
@@ -53,7 +53,8 @@
 
                 <div class="row bg-light border-bottom-custom">
 
-                    <span class="fs-5 placeName" style="margin-bottom: 20px; display: inline-block; width: auto" id="place${status.index}">${place}</span>
+                    <span class="fs-5 placeName" style="margin-bottom: 20px; display: inline-block; width: auto"
+                          id="place${status.index}">${place}</span>
                     <button type="button" class="cancelBtn" onClick="cancel(${status.index})"><img
                             src="static/images/reload.png" width="22" height="22"></button>
 
@@ -98,12 +99,13 @@
 
             }
         }
-        //각각 타임피커 셋팅
         for (let i = 0; i < placeLength; i++) {
-            $('#start' + i).chungTimePicker({viewType: 1});
-            $('#end' + i).chungTimePicker({viewType: 1});
+            $('#start' + i).wickedpicker();
+            $('#end' + i).wickedpicker();
         }
+
     });
+
 
     //측정소 생성
     function placeMake(name, idx) {
@@ -147,8 +149,47 @@
                         if (i % data.length == 0) {
                             const time = data[0];
                             const getTime = getNotifyTime(time);
-                            $("#start" + idx).val(getTime.get("from"));
-                            $("#end" + idx).val(getTime.get("to"));
+                            // $("#start" + idx).val(getTime.get("from"));
+                            // $("#end" + idx).val(getTime.get("to"));
+                            $("#start" + idx).wickedpicker({
+                                now: getTime.get("from"),
+                                twentyFour: true,
+                                upArrow: 'wickedpicker__controls__control-up',
+                                downArrow: 'wickedpicker__controls__control-down',
+                                close: 'wickedpicker__close',
+                                hoverState: 'hover-state',
+                                title: '시간 입력',
+                                showSeconds: false,
+                                timeSeparator: ':',
+                                secondsInterval: 1,
+                                minutesInterval: 1,
+                                beforeShow: null,
+                                afterShow: null,
+                                show: null,
+                                clearable: false,
+                                closeOnClickOutside: true,
+                                onClickOutside: function() {},
+                            });
+                            $("#end" + idx).wickedpicker({
+                                now: getTime.get("to"),
+                                twentyFour: true,
+                                upArrow: 'wickedpicker__controls__control-up',
+                                downArrow: 'wickedpicker__controls__control-down',
+                                close: 'wickedpicker__close',
+                                hoverState: 'hover-state',
+                                title: '시간 입력',
+                                showSeconds: false,
+                                timeSeparator: ':',
+                                secondsInterval: 1,
+                                minutesInterval: 1,
+                                beforeShow: null,
+                                afterShow: null,
+                                show: null,
+                                clearable: false,
+                                closeOnClickOutside: true,
+                                onClickOutside: function() {},
+
+                            });
                         }
                     }
                 } else {
@@ -228,7 +269,7 @@
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 map.set("from", "00:00");
-                map.set("to", "23:55");
+                map.set("to", "23:59");
                 console.log(error);
             }
         })
@@ -239,7 +280,6 @@
     function insert(idx) {
         const start = $("#start" + idx).val();
         const end = $("#end" + idx).val();
-
         if (start == "" || end == "") {
             Swal.fire({
                 icon: 'warning',
@@ -304,28 +344,27 @@
 
     //시작 시간이 종료시간보다 클때 endTime 변경
     //TimePicker 객체에서 아이디->인덱스 추출
-    function changeEndTime(obj) {
+    function changeEndTime(self) {
         let objId = obj.ele[0].id;               //console.log(objId) -> start0
         let idx = objId.replace(/[^0-9]/g, ''); //console.log(idx) -> 0
-
         let stime = $('#start' + idx).val();
         let etime = $('#end' + idx).val();
-        if(stime.length == 3){
+        if (stime.length == 3) {
             swal.fire({
                 icon: 'warning',
                 title: '경고',
                 text: '시간을 정확히 입력 해주세요.'
             })
-            $("#start"+idx).val("");
+            $("#start" + idx).val("");
             return;
         }
-        if(etime.length == 3){
+        if (etime.length == 3) {
             swal.fire({
                 icon: 'warning',
                 title: '경고',
                 text: '시간을 정확히 입력 해주세요.'
             })
-            $("#end"+idx).val("");
+            $("#end" + idx).val("");
             return;
         }
         if (etime != "") {
@@ -335,7 +374,7 @@
                     title: '경고',
                     text: 'To 시간이 From 시간 보다 적거나 같을 수 없습니다.'
                 })
-                $("#end"+idx).val("");
+                $("#end" + idx).val("");
                 return;
             }
         }
@@ -347,8 +386,8 @@
         $('#items' + idx).empty();
 
         placeMake($("#place" + idx).text(), idx);
-        $('#start' + idx).chungTimePicker({viewType: 1});
-        $('#end' + idx).chungTimePicker({viewType: 1});
+        $('#start' + idx).wickedpicker();
+        $('#end' + idx).wickedpicker();
     }
 </script>
 
