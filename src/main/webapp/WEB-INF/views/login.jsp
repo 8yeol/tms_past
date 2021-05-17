@@ -71,14 +71,14 @@
                         Swal.fire({
                             icon: 'warning',
                             title: '로그인 오류',
-                            text: '존재하지 않는 아이디입니다.',
+                            text: '등록되지 않는 아이디입니다.',
                             timer: 1500
                         })
                     } else if (data == "password") {
                         Swal.fire({
                             icon: 'warning',
                             title: '로그인 오류',
-                            text: '비밀번호가 틀립니다.',
+                            text: '비밀번호가 틀립니다. 다시 확인해주세요.',
                             timer: 1500
                         })
                         $("#password").text("");
