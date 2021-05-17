@@ -299,9 +299,7 @@ public class MainController {
     @RequestMapping(value = "/inputLog", method = RequestMethod.POST)
     @ResponseBody
     public void inputLog(@RequestBody Log log){
-        System.out.println(log);
         logRepository.save(log);
-        System.out.println("controller 완료");
     }           // inputLog
 
 
