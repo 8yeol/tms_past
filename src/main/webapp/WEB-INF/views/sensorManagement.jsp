@@ -99,7 +99,7 @@
 <div class="container">
     <div class="row">
         <div class="row m-3 mt-3 ms-1">
-            <span class="fs-4 fw-bold">센서 관리</span>
+            <span class="fs-4 fw-bold">환경설정 > 센서 관리</span>
         </div>
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
             <form id="saveForm">

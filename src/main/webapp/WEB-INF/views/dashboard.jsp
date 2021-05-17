@@ -90,7 +90,6 @@
         .center-position {
             left: 20%;
         }
-
         .h-px {
             height: 365px;
         }
@@ -100,7 +99,6 @@
         .center-position {
             left: 15%;
         }
-
         .h-px {
             height: 326px;
         }
@@ -190,11 +188,13 @@
                             <hr class="text-primary m-0">
                             <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
                                 <div class="fw-bold">
-                                    <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>${present.year} 년 현재 배출량
+                                    <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>
+                                        ${present.year}년 ${quarter}분기
                                 </div>
                                 <p class="fs-3 mx-2">/</p>
                                 <div class="fw-bold">
-                                    <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>${past.year} 년 총 배출량
+                                    <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>
+                                        ${past.year}년 ${quarter}분기
                                 </div>
                             </div>
                         </div>
@@ -212,13 +212,17 @@
                             <hr class="text-primary m-0">
                             <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
                                 <div class="fw-bold">
-                                    <p class="m-0 text-center text-primary"><fmt:formatNumber
-                                            value="${present.totalEmissions}" pattern=",000"/></p>${present.year}년 ${quarter}분기
+                                    <p class="m-0 text-center text-primary">
+                                        <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/>
+                                    </p>
+                                        ${present.year}년 현재 배출량
                                 </div>
                                 <p class="fs-3 mx-2">/</p>
                                 <div class="fw-bold">
-                                    <p class="m-0 text-center"><fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/></p>
-                                        ${past.year}년 ${quarter}분기
+                                    <p class="m-0 text-center"
+                                    ><fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/>
+                                    </p>
+                                        ${past.year} 년 총 배출량
                                 </div>
                             </div>
                         </div>
@@ -265,9 +269,9 @@
 
         <div class="row pb-1 px-3 margin-l mt-3">
             <c:forEach items="${placelist}" var="placelist" varStatus="i">
-            <div class="col-md-4 pb-5 pt-1">
+            <div class="col pb-5 pt-1">
                 <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
-                <c:forEach items="${sensorlist}" var="emissions">
+                <c:forEach items="${sensorList}" var="emissions">
                 <c:if test="${emissions.place eq placelist}">
                 <div class="row pe-3  margin-l">
                     <div class="fw-bold" style="margin-bottom: 2px;">
@@ -283,21 +287,16 @@
                         <div class="progress h-100">
                             <c:choose>
                             <c:when test="${percent le 50}">
-                                <div class="progress-bar progress-blue" role="progressbar"
-                                     style="width:${percent}%;"
+                                <div class="progress-bar progress-blue" role="progressbar" style="width:${percent}%;"
                             </c:when>
                             <c:when test="${percent le 80}">
-                                <div class="progress-bar progress-yellow" role="progressbar"
-                                     style="width: ${percent}%;"
+                                <div class="progress-bar progress-yellow" role="progressbar" style="width: ${percent}%;"
                             </c:when>
                             <c:when test="${percent gt 80}">
-                            <div class="progress-bar progress-red" role="progressbar"
-                                 style="width: ${percent}%;"
+                            <div class="progress-bar progress-red" role="progressbar" style="width: ${percent}%;"
                             </c:when>
                             </c:choose>
-                                 aria-valuenow="${percent}"
-                                 aria-valuemin="0" aria-valuemax="100"><fmt:formatNumber
-                                    value="${emissions.yearlyValue}" groupingUsed="true"/>
+                                 aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"><fmt:formatNumber value="${emissions.yearlyValue}" groupingUsed="true"/>
                             </div>
                         </div>
                     </div>
@@ -321,15 +320,14 @@
             </c:if>
             </c:forEach>
         </div>
-        <!-- <div class="line"
-        style="width: 1px; height: 70%; background-color: #a9a9a9; padding:0;position: relative; top: 60px;"></div>
-        측정소가 많아져서 class='col-md-4' 을 주니 라인이 레이아웃을 망가뜨립니다. -->
+        <div class="line" style="width: 1px; height: 70%; background-color: #a9a9a9; padding:0;position: relative; top: 60px;"></div>
         </c:forEach>
 
         <c:if test="${empty placelist}">
             <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
                 연간 배출량 누적 모니터링 설정 된 센서가 없습니다. <br>
-                <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.
+                <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
+                <a href="/emissionsManagement">모니터링 대상 설정</a>
             </div>
         </c:if>
     </div>
@@ -402,21 +400,22 @@
         $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD') + " 00:00");
         $('.line').eq($('.line').length - 1).remove();
     });
+
     function standardModal(obj){
         Swal.fire({
-                    icon: 'warning',
-                    title: '등록 하기',
-                    html: '<b>[연간 배출 허용 기준 설정]</b> 페이지로 이동 하시겠습니까?',
-                    showCancelButton: true,
-                    confirmButtonColor: '#0C64E8',
-                    confirmButtonText: '이동',
-                    cancelButtonText: '취소'
-                }).then((result) => {
-                    if (result.isConfirmed) {   //삭제 버튼 누를때
-                       location.href='<%=cp%>/emissionsManagement?tableName='+obj.getAttribute('id');
-                    }
-                });
+            icon: 'warning',
+            title: '등록 하기',
+            html: '<b>[연간 배출 허용 기준 설정]</b> 페이지로 이동 하시겠습니까?',
+            showCancelButton: true,
+            confirmButtonColor: '#0C64E8',
+            confirmButtonText: '이동',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {   //삭제 버튼 누를때
+                location.href='<%=cp%>/emissionsManagement?tableName='+obj.getAttribute('id');
             }
+        });
+    }
 
     // 측정소 통합 모니터링
     // DB 저장(매월 마지막날 Sheduler 돌려서 update)

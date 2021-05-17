@@ -111,7 +111,7 @@
 <div class="container">
     <div class="row">
         <div class="row1">
-            <span>연간 배출 허용 기준 설정</span>
+            <span  style=" font-size: 27px;font-weight: bold">환경설정 > 배출량 관리</span>
             <!-- <button data-bs-toggle="modal" data-bs-target="#addModal" onclick="insertSetting()"
                      style="background-color:green;color:white"> 추가 버튼
              </button> -->

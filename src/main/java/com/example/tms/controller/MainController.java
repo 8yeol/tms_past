@@ -48,12 +48,23 @@ public class MainController {
     }
 
 
+    /**
+     *
+     * @param model
+     * - sensorList - 연간 배출량 누적 모니터링 대상 센서중 관리자가 선택한 센서만 가져오기
+     * - placeList - sensorList의 측정소를 중복제거,정렬한 값
+     * - standard - 연간 배출 허용 기준치 가져오기
+     * - ptmsList
+     * - member
+     * @param principal
+     * @return DashBoard.JSP
+     */
     @RequestMapping("/")
     public String dashboard(Model model,Principal principal) {
 
         //선택된 센서 (findByStatusIsTrue) 가져오기
         List<AnnualEmissions> setting = annualEmissionsRepository.findByStatusIsTrue();
-        model.addAttribute("sensorlist",setting);
+        model.addAttribute("sensorList",setting);
 
         //선택된 센서 측정소 중복제거  List -> Set
         List<String> placelist = new ArrayList<>();
@@ -116,10 +127,27 @@ public class MainController {
 
     @RequestMapping("/alarm")
     public String alarm() {
-
         return "alarm";
     }
 
+    /**
+     * 로그 페이지로 이동
+     * @param model 로그 리스트를 들고갑니다.
+     * @return log.JSP
+     */
+    @RequestMapping("/log")
+    public String log(Model model) {
+        List logList= logRepository.findAll();
+        model.addAttribute("logList",logList);
+
+        return "log";
+    }
+
+    /**
+     *
+     * @param model
+     * @return
+     */
     @RequestMapping("/sensorManagement")
     public String sensorManagement(Model model) {
 
@@ -299,6 +327,7 @@ public class MainController {
     @RequestMapping(value = "/inputLog", method = RequestMethod.POST)
     @ResponseBody
     public void inputLog(@RequestBody Log log){
+        log.setDate(new Date());
         logRepository.save(log);
     }           // inputLog
 
@@ -350,11 +379,19 @@ public class MainController {
 // =====================================================================================================================
     @RequestMapping("/stationManagement")
     public String stationManagement() {
-
         return "stationManagement";
     }
 
 
+    /**
+     *  데이터 검색후  배출량 관리 페이지에 접근
+     * @param model
+     * 연간배출 허용기준 - standard
+     * 배출량 추이 모니터링 대상 - emissions
+     * 연간 배출량 누적 모니터링 대상 - yearlyEmissions
+     *
+     * @return emissionsManagement.JSP
+     * */
     @RequestMapping("emissionsManagement")
     public String emissionsManagement(Model model) {
 
@@ -384,12 +421,16 @@ public class MainController {
     }
 
 
-    //배출량 대상 설정
+    /**
+     * 배출량 모니터링 상태값을 변경
+     * @param sensor 상태값 변경할 센서
+     * @param isCollection 배출량 추이 모니터링 <->연간 배출량 누적 모니터링   판별할 데이터
+     */
     @ResponseBody
     @RequestMapping("emissionsState")
     public void emissionsState(String sensor, boolean isCollection) {
 
-        //배출량 설정
+           //배출량 설정
         if (isCollection) {
             EmissionsSetting target = emissionsSettingRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());

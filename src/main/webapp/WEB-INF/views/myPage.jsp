@@ -1,9 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <style>
-    .bg-lightGrey {
-        background-color: lightgrey;
-    }
     .edit {
         background-color: #0d6efd;
         color: #fff;
