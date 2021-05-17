@@ -152,7 +152,7 @@
         color: #F7C259;
         font-weight: bold;
     }
-        /* 드롭다운 버튼 style*/
+    /* 드롭다운 버튼 style*/
     .dropbtn {
         background-color: #0d6efd;
         color: white;
@@ -200,22 +200,21 @@
 
                 <nav id="topMenu">
                     <ul id="menu">
-                        <li class="topMenuLi"><a class="menuLink" href="/">대시보드</a></li>
-                        <li class="topMenuLi"><a class="menuLink shortLink" href="/alarm">알림</a></li>
-                        <li class="topMenuLi"><a class="menuLink" href="/monitoring">모니터링</a>
+                        <li class="topMenuLi"><a class="menuLink" href="/" id="dashboard">대시보드</a></li>
+                        <li class="topMenuLi"><a class="menuLink shortLink" href="/alarm" id="alarm">알림</a></li>
+                        <li class="topMenuLi"><a class="menuLink" href="/monitoring" id="monitoring">모니터링</a>
                             <ul class="submenu short_sub">
                                 <li><a href="/monitoring" class="submenuLink">실시간 모니터링</a></li>
                                 <li><a href="/sensor" class="submenuLink">상세화면</a></li>
                             </ul>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="/dataInquiry">분석 및 통계</a>
+                        <li class="topMenuLi"><a class="menuLink" href="/dataInquiry" id="statistics">분석 및 통계</a>
                             <ul class="submenu short_sub">
                                 <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
                                 <li><a href="/dataStatistics" class="submenuLink ">통계자료 조회</a></li>
                             </ul>
                         </li>
-                        <sec:authorize access="hasAnyRole('ROLE_4')">
-                        <li class="topMenuLi"><a class="menuLink" href="/stationManagement">환경설정</a>
+                        <li class="topMenuLi"><a class="menuLink" href="/stationManagement" id="setting">환경설정</a>
                             <ul class="submenu long_sub">
                                 <li><a href="/stationManagement" class="submenuLink ">측정소 관리</a></li>
                                 <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
@@ -224,7 +223,6 @@
                                 <li><a href="/setting" class="submenuLink ">설정</a></li>
                             </ul>
                         </li>
-                        </sec:authorize>
                     </ul>
                 </nav>
 
@@ -245,26 +243,39 @@
         </div>
     </div>
 
-    <%--    <form id="actionForm"  action="" method="get">
 
-        </form>--%>
 </header>
-
 
 <script>
     $( document ).ready(function() {
         var settings = {"url": "http://localhost:8090/getUsername", "method": "POST",};
-        $.ajax(settings).done(function (response) {
-            $('#dropBtn').prepend(response+" 님");
+        $.ajax(settings).done(function (name) {
+            $('#dropBtn').prepend(name+" 님");
+            getRank();
         });
     });
 
-    var current_page_URL = location.href.split('?'); //현재 URL 주소
+    function getRank() {
+        var settings = {"url": "http://localhost:8090/getRank", "method": "POST",};
+        $.ajax(settings).done(function (rank) {
+            if(!rank.dashboard)
+                $('#dashboard').hide();
+            if(!rank.alarm)
+                $('#alarm').hide();
+            if(!rank.monitoring)
+                $('#monitoring').hide();
+            if(!rank.statistics)
+                $('#statistics').hide();
+            if(!rank.setting)
+                $('#setting').hide();
+        });
+    }
+    var current_page_URL = location.href; //현재 URL 주소
     $("#menu a").each(function() { //menu a 태그의 주소
         if ($(this).attr("href") !== "#") { // 주소링크가 # 아닐때
 
             var target_URL = $(this).prop("href"); // 이벤트 발생 a태그의 모든 주소들
-            if (target_URL == current_page_URL[0] ) { // 현재 URL 주소와 클릭된 주소가 같다면
+            if (target_URL == current_page_URL ) { // 현재 URL 주소와 클릭된 주소가 같다면
                 $(this).parent().find('.submenu').children('li').first().addClass('active'); //클래스 active 추가
                 $(this).parentsUntil('#menu').addClass('active'); //클래스 active 추가
                 return false; //종료

@@ -3,6 +3,7 @@ package com.example.tms.entity;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
 
@@ -125,5 +126,9 @@ public class Member {
                 ", department='" + department + '\'' +
                 ", grade='" + grade + '\'' +
                 '}';
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(this.password);
     }
 }

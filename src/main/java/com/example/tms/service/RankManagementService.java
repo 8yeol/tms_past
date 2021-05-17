@@ -13,9 +13,19 @@ public class RankManagementService {
     RankManagementRepository rankManagementRepository;
 
     public void defaultRankSetting () {
+        RankManagement denie = new RankManagement();
+        denie.setName("denie");
+        denie.setDashboard(false);
+        denie.setAlarm(false);
+        denie.setMonitoring(false);
+        denie.setStatistics(false);
+        denie.setSetting(false);
+        rankManagementRepository.save(denie);
+
+
         RankManagement user = new RankManagement();
         user.setName("normal");
-        user.setDashboard(false);
+        user.setDashboard(true);
         user.setAlarm(false);
         user.setMonitoring(false);
         user.setStatistics(false);

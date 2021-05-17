@@ -3,12 +3,13 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
+import com.example.tms.service.MemberService;
 import com.example.tms.service.RankManagementService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.management.remote.rmi._RMIConnection_Stub;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -29,8 +30,14 @@ public class MainController {
     final LogRepository logRepository;
     final EmissionsTransitionRepository emissionsTransitionRepository;
     final RankManagementService rankManagementService;
+    final MemberService memberService;
+    final PasswordEncoder passwordEncoder;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, RankManagementService rankManagementService) {
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository,
+                          AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository,
+                          EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository,
+                          LogRepository logRepository, RankManagementService rankManagementService, MongoQuary mongoQuary, MemberService memberService, PasswordEncoder passwordEncoder,
+                          EmissionsTransitionRepository emissionsTransitionRepository){
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -42,6 +49,8 @@ public class MainController {
         this.logRepository = logRepository;
         this.emissionsTransitionRepository = emissionsTransitionRepository;
         this.rankManagementService = rankManagementService;
+        this.memberService = memberService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -209,13 +218,16 @@ public class MainController {
         PrintWriter out = response.getWriter();
 
         if(memberRepository.findAll().size() == 0){ // 최초회원가입시
-            member.setState("4"); // 최고관리자 설정
-            memberRepository.save(member);
-            rankManagementService.defaultRankSetting();
+/*            member.setState("4"); // 최고관리자 설정
+            memberRepository.save(member);*/
+            memberService.memberSave(member,"4");
+            if(rank_managementRepository.findAll().size() == 0)
+                rankManagementService.defaultRankSetting();
             out.print("root");
         } else if (!memberRepository.existsById(member.getId())) {
-            member.setState("1"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
-            memberRepository.save(member);
+/*            member.setState("1"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
+            memberRepository.save(member);*/
+            memberService.memberSave(member,"1");
             out.print("true");
         } else {
             out.print("false");
@@ -245,7 +257,7 @@ public class MainController {
         PrintWriter out = response.getWriter();
         if(!memberRepository.existsById(member.getId())){ // ID가 존재하지않으면
             out.print("id");
-        } else if(!memberRepository.findById(member.getId()).getPassword().equals(member.getPassword())){ // password가 틀리면
+        } else if(!passwordEncoder.matches(member.getPassword(),memberRepository.findById(member.getId()).getPassword())){ // password가 틀리면
             out.print("password");
         } else { // 로그인성공
             Member newMember = memberRepository.findById(member.getId());
@@ -339,6 +351,24 @@ public class MainController {
         Member member = memberRepository.findById(principal.getName());
         return member.getName();
     }           // getUsername
+
+    @RequestMapping(value = "/getRank", method = RequestMethod.POST)
+    @ResponseBody
+    public RankManagement getRank(Principal principal) {
+        Member member = memberRepository.findById(principal.getName());
+        String state = member.getState();
+        String str;
+        if(state.equals("2")){
+            str = "normal";
+        } else if (state.equals("3")){
+            str = "admin";
+        } else if (state.equals("4")){
+            str = "root";
+        } else {
+            str = "denie";
+        }
+        return rank_managementRepository.findByName(str);
+    }           // getRank
 
 
     @RequestMapping("/dataInquiry")

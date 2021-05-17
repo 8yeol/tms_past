@@ -37,35 +37,35 @@
             <div class="mb-3">
                 <label for="name" class="col-sm-2 col-form-label" style="display: inline-block;">이름</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="test" class="form-control" value="${member.name}" id="name" readonly>
+                    <input type="text" class="form-control" value="${member.name}" id="name" readonly>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="email" class="col-sm-2 col-form-label" style="display: inline-block;">이메일</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="test" class="form-control" value="${member.email}" id="email" readonly>
+                    <input type="text" class="form-control" value="${member.email}" id="email" readonly>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="tel" class="col-sm-2 col-form-label" style="display: inline-block;">연락처</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="test" class="form-control" value="${member.tel}" id="tel" readonly>
+                    <input type="text" class="form-control" value="${member.tel}" id="tel" readonly>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="department" class="col-sm-2 col-form-label" style="display: inline-block;">부서명</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="test" class="form-control" value="${member.department}" id="department" readonly>
+                    <input type="text" class="form-control" value="${member.department}" id="department" readonly>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="grade" class="col-sm-2 col-form-label" style="display: inline-block;">직급</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="test" class="form-control" value="${member.grade}" id="grade" readonly>
+                    <input type="text" class="form-control" value="${member.grade}" id="grade" readonly>
                 </div>
             </div>
 
@@ -73,14 +73,14 @@
                 <div class="mb-3" style="margin-top: 1rem; width: 80%;">
                     <label for="password" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 변경</label>
                    <div class="col-sm-10" style="width: 60%; display: inline-block;">
-                        <input type="test" class="form-control" id="password">
+                        <input type="password" class="form-control" id="password">
                     </div>
                 </div>
 
                 <div class="mb-3" style="width: 80%;">
                     <label for="passwordCheck" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 확인</label>
                     <div class="col-sm-10" style="width: 60%; display: inline-block;">
-                        <input type="test" class="form-control" id="passwordCheck">
+                        <input type="password" class="form-control" id="passwordCheck">
                     </div>
                 </div>
 
@@ -88,7 +88,7 @@
 
             <div class="row">
                 <div class="col text-center">
-                    <button class="btn btn-outline-primary m-3" onclick="setLayout()">회원정보 수정</button>
+                    <button class="btn btn-outline-primary m-3" onclick="setLayout()" id="update_btn">회원정보 수정</button>
                     <button class="btn btn-primary m-3" onclick="submit()" style="display:none;" id="up_btn">정보수정</button>
                 </div>
             </div>
@@ -99,12 +99,20 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
+    var bool = false;
     function setLayout(){
-        $("#up_btn").attr('style','display:""');
-        $("#passwordBox").attr('style','display:""');
-    }
+        if($("#update_btn").html() == "회원정보 수정"){
+            $("#update_btn").html("취소");
+        } else {
+            $("#update_btn").html("회원정보 수정");
+        }
+
+        $("#up_btn").toggle();
+        $("#passwordBox").toggle();
+        readonlyToggle();
+    }       // setLayout
     function submit() {
-        if ($("#id").val() != "" && $("#password").val() && $("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "") {
+        if (blankCheck() && passwordCheck() && emailCheck()) {
             var settings = {
                 "url": "http://localhost:8090/memberUpdate",
                 "method": "POST",
@@ -127,12 +135,10 @@
                 } else if (response == "false") {
                     alert("비밀번호가 틀립니다.");
                 } else {
-                    alert("가입신청실패");
+                    alert("변경실패");
                 }
                 location.reload();
             });
-        } else {
-            alert("빈칸없이 입력하여 주세요");
         }
     }           // join_submit()
 
@@ -175,4 +181,53 @@
             }
         });
     }           // autoEmail 이메일 자동완성 도우미
+
+    function readonlyToggle() {
+        $("#name").attr("readonly", bool);
+        $("#email").attr("readonly", bool);
+        $("#tel").attr("readonly", bool);
+        $("#department").attr("readonly", bool);
+        $("#grade").attr("readonly", bool);
+
+        if(bool){
+            bool = false;
+        } else {
+            bool = true;
+        }
+    }       // readonlyToggle
+
+    function blankCheck(){
+        if ($("#password").val() != "" && $("#passwordCheck").val() != "" && $("#name").val() != "" &&
+            $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != ""){
+            return true;
+        } else {
+            alert("빈칸없이 입력하여 주세요");
+            return false;
+        }
+    }       // blankCheck
+
+    function passwordCheck(){
+        if($("#password").val().length < 5 ){
+            alert("변경할 비밀번호를 6자리이상 입력해주세요.");
+            $("#password").focus();
+            return false;
+        } else if ($("#password").val().length > 20){
+            alert("변경할 비밀번호를 20자리 이내로 입력해주세요.");
+            $("#password").focus();
+            return false;
+        } else {
+            return true;
+        }
+    }       // passwordCheck
+
+    function emailCheck(){
+        var email_rule =  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+        if(!email_rule.test($("#email").val())){
+            alert("이메일을 형식에 맞게 입력해주세요.");
+            $("#email").focus();
+            return false;
+        } else{
+            return true;
+        }
+    }       // passwordCheck
 </script>
