@@ -4,10 +4,12 @@ import com.example.tms.entity.*;
 import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
 import com.example.tms.service.RankManagementService;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.remote.rmi._RMIConnection_Stub;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.security.Principal;
@@ -25,15 +27,10 @@ public class MainController {
     final SensorListRepository sensorListRepository;
     final MongoQuary mongoQuary;
     final LogRepository logRepository;
-    final placeTotalMonitoringRepository placeTotalMonitoringRepository;
-
+    final EmissionsTransitionRepository emissionsTransitionRepository;
     final RankManagementService rankManagementService;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository,
-                          AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository,
-                          EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository,
-                          LogRepository logRepository, placeTotalMonitoringRepository placeTotalMonitoringRepository,RankManagementService rankManagementService,MongoQuary mongoQuary)
-    {
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rank_managementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, RankManagementService rankManagementService) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -43,8 +40,8 @@ public class MainController {
         this.sensorListRepository = sensorListRepository;
         this.mongoQuary = mongoQuary;
         this.logRepository = logRepository;
+        this.emissionsTransitionRepository = emissionsTransitionRepository;
         this.rankManagementService = rankManagementService;
-        this.placeTotalMonitoringRepository = placeTotalMonitoringRepository;
     }
 
 
@@ -62,42 +59,42 @@ public class MainController {
     @RequestMapping("/")
     public String dashboard(Model model,Principal principal) {
 
-        //선택된 센서 (findByStatusIsTrue) 가져오기
-        List<AnnualEmissions> setting = annualEmissionsRepository.findByStatusIsTrue();
-        model.addAttribute("sensorList",setting);
-
-        //선택된 센서 측정소 중복제거  List -> Set
-        List<String> placelist = new ArrayList<>();
-        for (AnnualEmissions place : setting) {
-            placelist.add(place.getPlace());
-        }
-        TreeSet<String> placeSet = new TreeSet<>(placelist);
-        model.addAttribute("placeList", placeSet);
-
-
-        /*연간 배출기준값 가져오기*/
-        List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
-        model.addAttribute("standard",standard);
-
-        //모니터링 대상에 선택된 값들 찾기
+        // [환경설정 > 배출량 관리] - 배출량 추이 모니터링 대상 설정 ON 되어있는 센서 정보
         List<EmissionsSetting> emissionsSettings = emissionsSettingRepository.findByStatus(true);
-        //model에 넣어줄 리스트타입의 리스트변수
-        List<ArrayList<placeTotalMonitoring>> ptmsList = new ArrayList<>();
-        //선택된 값들의 년도별 total값들 리스트에 넣어주기
-        //for(int i = 0; i < emissionsSettings.size();i++){
-        for(int i = 0; i < 1;i++){
-            //EmissionsSetting emissionsSetting = emissionsSettings.get(i);
-            //List<placeTotalMonitoring> ptms = placeTotalMonitoringRepository.findByTableNameOrderByYearDesc(emissionsSetting.getSensor());
-            List<placeTotalMonitoring> ptms = placeTotalMonitoringRepository.findByTableNameOrderByYearDesc("lghausys_NOX_001");
-            if(ptms.size() > 0){
-                ptmsList.add((ArrayList<placeTotalMonitoring>) ptms);
+        model.addAttribute("emissionList", emissionsSettings);
+
+        List<ArrayList<EmissionsTransition>> ptmsList = new ArrayList<>();
+        for(int i = 0; i < emissionsSettings.size();i++){
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            for (int j = 0; j <= 1; j++) {
+                EmissionsTransition ptms = emissionsTransitionRepository.findByTableNameAndYearEquals(emissionsSettings.get(i).getSensor(),year-1);
             }
+            /*
+            if(ptms.size() > 0){
+                ptmsList.add((ArrayList<EmissionsTransition>) ptms);
+            }
+            */
         }
         model.addAttribute("ptmsList", ptmsList);
 
+
+        // 연간 배출량 누적 모니터링
+        // [환경설정 > 배출량 관리] - 연간 배출량 누적 모니터링 대상 설정 ON
+        List<AnnualEmissions> setting = annualEmissionsRepository.findByStatusIsTrue();
+        model.addAttribute("sensorList",setting);
+        // 모니터링 On 설정된 센서가 포함되어있는 측정소(측정소 중복제거)
+        List<String> placeList = new ArrayList<>();
+        for (AnnualEmissions place : setting) {
+            placeList.add(place.getPlace());
+        }
+        TreeSet<String> placeSet = new TreeSet<>(placeList);
+        model.addAttribute("placeList", placeSet);
+        // [환경설정 > 배출량 관리] - 배출 허용 기준 설정에 설정된 기준값 > 모니터링 설정된 배출량 기준값만 받아오도록 변경
+        List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
+        model.addAttribute("standard",standard);
+        // 연간 배출량 누적 모니터링 > 등록하기 버튼(관리자만 보이게 하기 위함)
         Member member = memberRepository.findById(principal.getName());
         model.addAttribute("member", member);
-
 
         return "dashboard";
     }
@@ -327,13 +324,6 @@ public class MainController {
         logRepository.save(log);
     }           // inputLog
 
-
-    @RequestMapping(value = "/InputPlaceTotalMonitoring", method = RequestMethod.POST)
-    @ResponseBody
-    public void InputPlaceTotalMonitoring(@RequestBody placeTotalMonitoring placeTotalMonitoring) {
-        placeTotalMonitoringRepository.save(placeTotalMonitoring);
-    }           // InputPlaceTotalMonitoring
-
     @RequestMapping(value = "/getUsername", method = RequestMethod.POST)
     @ResponseBody
     public String getUsername(Principal principal) {
@@ -385,6 +375,7 @@ public class MainController {
      * 연간배출 허용기준 - standard
      * 배출량 추이 모니터링 대상 - emissions
      * 연간 배출량 누적 모니터링 대상 - yearlyEmissions
+     *
      * @return emissionsManagement.JSP
      * */
     @RequestMapping("emissionsManagement")

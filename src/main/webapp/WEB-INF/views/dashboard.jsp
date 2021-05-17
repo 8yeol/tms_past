@@ -82,7 +82,8 @@
         margin-top: 2px;
         padding-right: 25px;
     }
-    .aTag_cursor:hover{
+
+    .aTag_cursor:hover {
         cursor: pointer;
     }
 
@@ -118,9 +119,8 @@
     </div>
 
     <c:forEach var="ptmsList" items="${ptmsList}">
-
-        <c:set var="present" value="${ptmsList.get(0)}"></c:set>
-        <c:set var="past" value="${ptmsList.get(1)}"></c:set>
+        <c:set var="present" value="${ptmsList.get(0)}"></c:set> <%--이 부분 수정--%>
+        <c:set var="past" value="${ptmsList.get(1)}"></c:set> <%--이 부분 수정--%>
         <c:set var="date" value="<%=new java.util.Date()%>"></c:set>
         <c:choose>
             <c:when test="${(date.month+1 > 0) and (date.month+1) < 4}">
@@ -144,117 +144,122 @@
                 <c:set var="quarter" value="4"/>
             </c:when>
         </c:choose>
+    </c:forEach>
 
-        <div class="row m-3 mt-3 bg-white ms-1 h-px" style="width: 98%;">
-            <div class="row p-3 h-25 margin-l">
-                <div class="col fs-5 fw-bold">측정소 통합 모니터링 (${present.sensorName})</div>
-                <div class="col text-end">
-                    <span class="small">마지막 업데이트 : <span class="fw-bold" id="integrated_update">업데이트 시간</span></span><br>
-                    <span class="text-primary" style="font-size: 0.8rem"> * 매월 마지막 날 업데이트 됩니다.</span>
+    <div class="row m-3 mt-3 bg-white ms-1 h-px" style="width: 98%;">
+        <div class="row p-3 h-25 margin-l">
+            <div class="col fs-5 fw-bold">연간 배출량 추이 모니터링</div>
+            <div class="col text-end">
+                <span class="small">마지막 업데이트 : <span class="fw-bold" id="integrated_update">업데이트 시간</span></span><br>
+                <span class="text-primary" style="font-size: 0.8rem"> * 매월 마지막 날 업데이트 됩니다.</span>
+            </div>
+        </div>
+        <c:forEach items="${emissionList}" var="emissionList">
+        <div class="row pb-3 h-75 margin-l">
+            <div class="col-3">
+                <div class="card border-2 border-primary" style="height: 95%;">
+                    <div class="card-body">
+                        <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(%)</h5>
+                        <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
+                            <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
+                            <p class="fw-bold fs-3"><fmt:formatNumber value="${(present.totalEmissions - past.totalEmissions) / past.totalEmissions * 100}" pattern=".0"/>%</p>
+                        </div>
+                        <hr class="text-primary m-0">
+                        <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
+                            <div class="fw-bold">
+                                <p class="m-0 text-center text-primary">
+                                    <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/></p>${present.year}년 현재 배출량
+                            </div>
+                            <p class="fs-3" style="margin: 0 0.5rem 0;">/</p>
+                            <div class="fw-bold">
+                                <p class="m-0 text-center">
+                                    <fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/></p>${past.year}년 총 배출량
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row pb-3 h-75 margin-l">
-
-                <div class="col-3">
-                    <div class="card border-2 border-primary" style="height: 95%;">
-                        <div class="card-body">
-                            <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(%)</h5>
-                            <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
-                                <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
-                                <p class="fw-bold fs-3"><fmt:formatNumber value="${(present.totalEmissions - past.totalEmissions) / past.totalEmissions * 100}" pattern=".0"/>%</p>
+            <div class="col-3 h-100">
+                <div class="card border-2 border-primary" style="height: 95%;">
+                    <div class="card-body">
+                        <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(mg/L)</h5>
+                        <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
+                            <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
+                            <p class="fw-bold fs-3">
+                                <fmt:formatNumber value="${present.totalEmissions - past.totalEmissions}" pattern=",000"/></p>
+                        </div>
+                        <hr class="text-primary m-0">
+                        <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
+                            <div class="fw-bold">
+                                <p class="m-0 text-center text-primary">
+                                    <fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>${present.year}년 ${quarter}분기
                             </div>
-                            <hr class="text-primary m-0">
-                            <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
-                                <div class="fw-bold">
-                                    <p class="m-0 text-center text-primary"><fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/></p>${present.year}년 현재 배출량
-                                </div>
-                                <p class="fs-3" style="margin: 0 0.5rem 0;">/</p>
-                                <div class="fw-bold">
-                                    <p class="m-0 text-center"><fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/></p>${past.year}년 총 배출량
-                                </div>
+                            <p class="fs-3 mx-2">/</p>
+                            <div class="fw-bold">
+                                <p class="m-0 text-center">
+                                    <fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>${past.year}년 ${quarter}분기
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-3 h-100">
-                    <div class="card border-2 border-primary" style="height: 95%;">
-                        <div class="card-body">
-                            <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(mg/L)</h5>
-                            <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
-                                <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
-                                <p class="fw-bold fs-3"><fmt:formatNumber value="${present.totalEmissions - past.totalEmissions}" pattern=",000"/></p>
+            </div>
+            <div class="col-3">
+                <div class="card border-2 border-primary" style="height: 95%;">
+                    <div class="card-body">
+                        <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(%)</h5>
+                        <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
+                            <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
+                            <p class="fw-bold fs-3">
+                                <fmt:formatNumber value="${(presentQuater - pastQuater) / pastQuater * 100}" pattern=".0"/>%</p>
+                        </div>
+                        <hr class="text-primary m-0">
+                        <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
+                            <div class="fw-bold">
+                                <p class="m-0 text-center text-primary"><fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/></p>
+                                    ${present.year}년 현재 배출량
                             </div>
-                            <hr class="text-primary m-0">
-                            <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
-                                <div class="fw-bold">
-                                    <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>
-                                        ${present.year}년 ${quarter}분기
-                                </div>
-                                <p class="fs-3 mx-2">/</p>
-                                <div class="fw-bold">
-                                    <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>
-                                        ${past.year}년 ${quarter}분기
-                                </div>
+                            <p class="fs-3 mx-2">/</p>
+                            <div class="fw-bold">
+                                <p class="m-0 text-center"><fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/></p>
+                                    ${past.year} 년 총 배출량
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-3">
-                    <div class="card border-2 border-primary" style="height: 95%;">
-                        <div class="card-body">
-                            <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(%)</h5>
-                            <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
-                                <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
-                                <p class="fw-bold fs-3"><fmt:formatNumber value="${(presentQuater - pastQuater) / pastQuater * 100}" pattern=".0"/>%</p>
-                            </div>
-                            <hr class="text-primary m-0">
-                            <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
-                                <div class="fw-bold">
-                                    <p class="m-0 text-center text-primary">
-                                        <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/>
-                                    </p>
-                                        ${present.year}년 현재 배출량
-                                </div>
-                                <p class="fs-3 mx-2">/</p>
-                                <div class="fw-bold">
-                                    <p class="m-0 text-center"
-                                    ><fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/>
-                                    </p>
-                                        ${past.year} 년 총 배출량
-                                </div>
-                            </div>
+            </div>
+            <div class="col-3 h-100">
+                <div class="card border-2 border-primary" style="height: 95%;">
+                    <div class="card-body">
+                        <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
+                        <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
+                            <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
+                            <p class="fw-bold fs-3"><fmt:formatNumber value="${presentQuater - pastQuater}" pattern=",000"/></p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-3 h-100">
-                    <div class="card border-2 border-primary" style="height: 95%;">
-                        <div class="card-body">
-                            <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
-                            <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
-                                <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
-                                <p class="fw-bold fs-3"><fmt:formatNumber value="${presentQuater - pastQuater}" pattern=",000"/></p>
+                        <hr class="text-primary m-0">
+                        <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
+                            <div class="fw-bold">
+                                <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>${present.year}년 ${quarter}분기
                             </div>
-                            <hr class="text-primary m-0">
-                            <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
-                                <div class="fw-bold">
-                                    <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>
-                                        ${present.year}년 ${quarter}분기
-                                </div>
-                                <p class="fs-3 mx-2">/</p>
-                                <div class="fw-bold">
-                                    <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>
-                                        ${past.year}년 ${quarter}분기
-                                </div>
+                            <p class="fs-3 mx-2">/</p>
+                            <div class="fw-bold">
+                                <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>${past.year}년 ${quarter}분기
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </c:forEach>
+        </c:forEach>
+        <c:if test="${empty emissionList}">
+        <div class="row pb-3 h-75 margin-l">
+            <div class="col align-self-center text-center" style="font-size: 1.2rem">
+                측정소 통합 모니터링 설정 된 센서가 없습니다. <br>
+                <b>[환경설정 - 배출량 관리] > 배출량 추이 모니터링 대상 설정 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
+                <a href="/emissionsManagement">모니터링 대상 설정</a>
+            </div>
+        </div>
+        </c:if>
+    </div>
 
     <div class="row mt-4 bg-light margin-l pb-4" style="width: 98%; margin: 0.2rem;">
         <div class="row p-3 h-25 margin-l">
@@ -305,8 +310,7 @@
                         ${percent}%
                 </div>
                 <div class="standard">
-                    <fmt:formatNumber
-                            value="${standard.emissionsStandard}" groupingUsed="true"/>
+                    <fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/>
                 </div>
                 </c:if>
                 <c:if test="${standard.emissionsStandard eq '0' and (member.state == '4' || member.state == '3')}">
@@ -397,27 +401,22 @@
 </div>
 
 <script>
-    let ready = $(document).ready(function () {
-
+    $(document).ready(function () {
         //div의 크기에 비례하는 라인높이, 마진값 계산후 적용
         for (i=0;i<${placeList.size()};i++) {
             $('#line' + i).height($('#div' + i).height() / 1.5);
             $('#line' + i).css({"margin-top":($('#div' + i).height()-$('#line' + i).height())/2 +"px"});
         }
-
-        let placeListSize = ${placeList.size()}
+        const placeListSize = ${placeList.size()};
         if(placeListSize==2) $('#line1').remove();
 
         integrated();
         excess();
 
         $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD') + " 00:00");
-
-
-
     });
 
-    function standardModal(obj){
+    function standardModal(obj) {
         Swal.fire({
             icon: 'warning',
             title: '등록 하기',
@@ -428,12 +427,12 @@
             cancelButtonText: '취소'
         }).then((result) => {
             if (result.isConfirmed) {   //삭제 버튼 누를때
-                location.href='<%=cp%>/emissionsManagement?tableName='+obj.getAttribute('id');
+                location.href = '<%=cp%>/emissionsManagement?tableName=' + obj.getAttribute('id');
             }
         });
     }
 
-    // 측정소 통합 모니터링
+    // 연간 배출량 추이 모니터링
     // DB 저장(매월 마지막날 Sheduler 돌려서 update)
     function integrated() {
         $("#integrated_update").text(moment(new Date()).subtract(1, 'months').endOf('month').format('YYYY-MM-DD'));
@@ -459,7 +458,6 @@
     }
 
     function addExcessData() {
-        // 정상 값이 필요 없으면 센서 목록 불러와서 5분전 데이터 계산해서 넣어주면 되는데, 정상 값도 필요하기 때문에 해당 로직으로 작성
         $.ajax({
             url: '<%=cp%>/getMonitoringSensorOn',
             type: 'POST',
@@ -521,7 +519,6 @@
                                     }
                                 });
                             }
-                            //$("#excess_update").text(moment(data.up_time).format('YYYY-MM-DD HH:mm:ss'));
                         },
                         error: function (request, status, error) {
                             console.log(error)
@@ -535,7 +532,6 @@
         })
         $("#excess_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
     }
-
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
