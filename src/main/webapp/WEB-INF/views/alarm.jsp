@@ -91,6 +91,10 @@
     #information_filter label {
         margin-bottom: 5px;
     }
+
+    .dataTables_wrapper {
+        min-height: 570px;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
