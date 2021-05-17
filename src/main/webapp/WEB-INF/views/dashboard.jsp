@@ -268,8 +268,10 @@
         </div>
 
         <div class="row pb-1 px-3 margin-l mt-3">
-            <c:forEach items="${placelist}" var="placelist" varStatus="i">
-            <div class="col pb-5 pt-1">
+            <c:forEach items="${placeList}" var="placelist" varStatus="i">
+               <c:if test="${placeList.size() <=3}"> <div class="col pb-5 pt-1" id="div${i.index}"></c:if>
+               <c:if test="${placeList.size() >3}"> <div class="col-md-4 pb-5 pt-1" id="div${i.index}" style="width: 33%;float: left;"></c:if>
+
                 <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
                 <c:forEach items="${sensorList}" var="emissions">
                 <c:if test="${emissions.place eq placelist}">
@@ -320,10 +322,12 @@
             </c:if>
             </c:forEach>
         </div>
-        <div class="line" style="width: 1px; height: 70%; background-color: #a9a9a9; padding:0;position: relative; top: 60px;"></div>
+                <c:if test="${(i.index+1)%3!=0 && placeList.size() !=1}">
+                    <div id="line${i.index}" style="width: 1px;float: right;background-color: black;padding: 0"></div>
+                </c:if>
         </c:forEach>
 
-        <c:if test="${empty placelist}">
+        <c:if test="${empty placeList}">
             <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
                 연간 배출량 누적 모니터링 설정 된 센서가 없습니다. <br>
                 <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
@@ -393,12 +397,24 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    let ready = $(document).ready(function () {
+
+        //div의 크기에 비례하는 라인높이, 마진값 계산후 적용
+        for (i=0;i<${placeList.size()};i++) {
+            $('#line' + i).height($('#div' + i).height() / 1.5);
+            $('#line' + i).css({"margin-top":($('#div' + i).height()-$('#line' + i).height())/2 +"px"});
+        }
+
+        let placeListSize = ${placeList.size()}
+        if(placeListSize==2) $('#line1').remove();
+
         integrated();
         excess();
 
         $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD') + " 00:00");
-        $('.line').eq($('.line').length - 1).remove();
+
+
+
     });
 
     function standardModal(obj){

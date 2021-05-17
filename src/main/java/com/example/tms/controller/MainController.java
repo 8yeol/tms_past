@@ -72,7 +72,8 @@ public class MainController {
             placelist.add(place.getPlace());
         }
         TreeSet<String> placeSet = new TreeSet<>(placelist);
-        model.addAttribute("placelist", placeSet);
+        model.addAttribute("placeList", placeSet);
+
 
         /*연간 배출기준값 가져오기*/
         List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
@@ -143,11 +144,6 @@ public class MainController {
         return "log";
     }
 
-    /**
-     *
-     * @param model
-     * @return
-     */
     @RequestMapping("/sensorManagement")
     public String sensorManagement(Model model) {
 
@@ -389,7 +385,6 @@ public class MainController {
      * 연간배출 허용기준 - standard
      * 배출량 추이 모니터링 대상 - emissions
      * 연간 배출량 누적 모니터링 대상 - yearlyEmissions
-     *
      * @return emissionsManagement.JSP
      * */
     @RequestMapping("emissionsManagement")

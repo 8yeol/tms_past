@@ -301,7 +301,11 @@ public class AjaxController {
     }
 
 
-    //센서리스트 측정항목 불러오기
+    /**
+     * 테이블 명으로 센서 가져오기
+     * @param tablename 테이블명
+     * @return 센서
+     */
     @RequestMapping(value = "/getSensorManagementId")
     public String getSensorManagementId(@RequestParam("name") String tablename) {
         return sensorListRepository.findByTableName(tablename);
