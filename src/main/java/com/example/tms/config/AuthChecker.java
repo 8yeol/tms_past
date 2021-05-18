@@ -28,12 +28,12 @@ public class AuthChecker {
         Member member = memberRepository.findById(userDetails.getUsername());
         RankManagement rankManagement;
 
-        //등급 체크
-        if(member.getState().equals("2")){
+        // 5: 거절 - 4: 가입대기 - 3: 일반 - 2: 관리자 - 1: 최고관리자
+        if(member.getState().equals("3")){
             rankManagement = rankManagementRepository.findByName("normal");
-        } else if (member.getState().equals("3")){
+        } else if (member.getState().equals("2")){
             rankManagement = rankManagementRepository.findByName("admin");
-        } else if (member.getState().equals("4")) {
+        } else if (member.getState().equals("1")) {
             rankManagement = rankManagementRepository.findByName("root");
         } else {
             return false;

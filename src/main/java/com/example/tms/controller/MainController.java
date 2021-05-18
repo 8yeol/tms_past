@@ -210,12 +210,12 @@ public class MainController {
         PrintWriter out = response.getWriter();
 
         if(memberRepository.findAll().size() == 0){ // 최초회원가입시
-            memberService.memberSave(member,"4");
+            memberService.memberSave(member,"1");
             if(rank_managementRepository.findAll().size() == 0)
                 rankManagementService.defaultRankSetting();
             out.print("root");
         } else if (!memberRepository.existsById(member.getId())) {
-            memberService.memberSave(member,"1");
+            memberService.memberSave(member,"4");
             out.print("true");
         } else {
             out.print("false");
@@ -247,9 +247,9 @@ public class MainController {
             out.print("id");
         } else if(!passwordEncoder.matches(member.getPassword(),memberRepository.findById(member.getId()).getPassword())){ // password가 틀리면
             out.print("password");
-        } else  if (memberRepository.findById(member.getId()).getState().equals("0")){ // 가입거절
+        } else  if (memberRepository.findById(member.getId()).getState().equals("5")){ // 가입거절
             out.print("denie");
-        } else  if (memberRepository.findById(member.getId()).getState().equals("1")){ // 가입대기
+        } else  if (memberRepository.findById(member.getId()).getState().equals("4")){ // 가입대기
             out.print("waiting");
         }else {
             Member newMember = memberRepository.findById(member.getId());
@@ -265,10 +265,10 @@ public class MainController {
         String msg = "";
         Member newMember = memberRepository.findById(id);
         if(iNumber.equals("0")){
-            newMember.setState("0");
+            newMember.setState("5");
             msg = "가입 거절 되었습니다.";
         }else{
-            newMember.setState("2"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
+            newMember.setState("3"); // 5: 거절 - 4: 가입대기 - 3: 일반 - 2: 관리자 - 1: 최고관리자
             Date time = new Date();
             newMember.setJoined(time); // 가입승인일 설정
             msg = "가입 승인 되었습니다.";
@@ -351,11 +351,11 @@ public class MainController {
         Member member = memberRepository.findById(principal.getName());
         String state = member.getState();
         String str;
-        if(state.equals("2")){
+        if(state.equals("3")){
             str = "normal";
-        } else if (state.equals("3")){
+        } else if (state.equals("2")){
             str = "admin";
-        } else if (state.equals("4")){
+        } else if (state.equals("1")){
             str = "root";
         } else {
             str = "denie";

@@ -163,19 +163,19 @@
                         <td>${mList.id}</td>
                         <td>${mList.name}</td>
                         <c:choose>
-                            <c:when test="${mList.state eq '0'}">
+                            <c:when test="${mList.state eq '5'}">
                                 <td class="text-danger">거절</td>
                             </c:when>
-                            <c:when test="${mList.state eq '1'}">
+                            <c:when test="${mList.state eq '4'}">
                                 <td>가입대기</td>
                             </c:when>
-                            <c:when test="${mList.state eq '2'}">
+                            <c:when test="${mList.state eq '3'}">
                                 <td>일반</td>
                             </c:when>
-                            <c:when test="${mList.state eq '3'}">
+                            <c:when test="${mList.state eq '2'}">
                                 <td>관리자</td>
                             </c:when>
-                            <c:when test="${mList.state eq '4'}">
+                            <c:when test="${mList.state eq '1'}">
                                 <td>최고 관리자</td>
                             </c:when>
                         </c:choose>
@@ -202,7 +202,7 @@
                             </c:otherwise>
                         </c:choose>
                         <c:choose>
-                            <c:when test="${mList.state eq '1'}">
+                            <c:when test="${mList.state eq '4'}">
                                 <td onclick="event.cancelBubble=true">
 
                                     <button class="btn btn-success py-0 px-2" style="font-size: 12px;"
@@ -215,7 +215,7 @@
                                     </button>
                                 </td>
                             </c:when>
-                            <c:when test="${mList.state eq '2' || mList.state eq '3' || mList.state eq '4'}">
+                            <c:when test="${mList.state eq '1' || mList.state eq '2' || mList.state eq '3'}">
                                 <td  onclick="event.cancelBubble=true">
                                     <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
                                        data-bs-target="#managementModal"
@@ -286,7 +286,7 @@
                     </div>
                     <div class="d-flex align-items-end">
                         <c:set var="member" value="${member}"/>
-                        <c:if test="${member.state == '4'}">
+                        <c:if test="${member.state == '1'}">
                             <button class="btn btn-primary align-text-bottom me-2 mb-2 py-1 px-3 fw-bold fs-6"
                                     onclick="rankSettingSave()">저장
                             </button>
@@ -527,7 +527,7 @@
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
                     <c:set var="member" value="${member}"/>
-                    <c:if test="${member.state == '4'}">
+                    <c:if test="${member.state == '1'}">
                         <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
                                 data-bs-target="#userGrantManagementModal">회원 권한 관리
                         </button>
@@ -599,13 +599,13 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="2"
+                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="3"
                             onclick="gave_Rank(value)">일반회원 등급부여
                     </button>
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="3"
+                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="2"
                             onclick="gave_Rank(value)">관리자 등급부여
                     </button>
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="4"
+                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="1"
                             onclick="gave_Rank(value)">최고관리자 등급부여
                     </button>
                 </div>
@@ -671,7 +671,7 @@
     }           // gave_Rank
 
     function resetPassword() {
-        if (user_state != '4' && state == '4') {
+        if (user_state != '1' && state == '1') {
             warning("최고관리자의 비밀번호는 초기화하실수 없습니다.");
             return;
         } else {
@@ -689,7 +689,7 @@
     }           // resetPassword
 
     function kickMember() {
-        if (user_state != '4' && state == '4') {
+        if (user_state != '1' && state == '1') {
             warning("최고관리자는 추방하실수 없습니다.");
             return;
         } else {
