@@ -327,7 +327,7 @@ public class MainController {
     }           // rankSettingSave
 
     /**
-     * 로그정보를 날짜추가하여 DB에 저장
+     * 로그정보를 날짜추가후 DB에 저장
      * @param log Log정보
      */
     @RequestMapping(value = "/inputLog", method = RequestMethod.POST)
@@ -343,6 +343,7 @@ public class MainController {
         Member member = memberRepository.findById(principal.getName());
         return member.getName();
     }           // getUsername
+
 
     @RequestMapping(value = "/getRank", method = RequestMethod.POST)
     @ResponseBody
@@ -363,6 +364,11 @@ public class MainController {
     }           // getRank
 
 
+    /**
+     * 분석 및 통계 - 측정 자료 조회
+     * @param model 측정소와 센서
+     * @return dataInquiry.JSP
+     */
     @RequestMapping("/dataInquiry")
     public String dataInquiry(Model model) {
 
@@ -371,11 +377,11 @@ public class MainController {
         return "dataInquiry";
     }
 
-// =====================================================================================================================
-// 알림 설정페이지 (ppt-8페이지)
-// param # key : String place (place.name)
-// =====================================================================================================================
-
+    /**
+     * 알림 설정페이지 (ppt-8페이지)
+     * @param model - 측정소명
+     * @return alarmManagement.JSP
+     */
     @RequestMapping(value = "/alarmManagement")
     public String alarmManagement(Model model) {
         List<Place> places = placeRepository.findAll();
@@ -390,10 +396,10 @@ public class MainController {
         return "alarmManagement";
     }
 
-    // =====================================================================================================================
-// 측정소 관리페이지 (ppt-9페이지)
-//
-// =====================================================================================================================
+    /**
+     * 측정소 관리 페이지
+     * @return stationManagement.JSP
+     */
     @RequestMapping("/stationManagement")
     public String stationManagement() {
         return "stationManagement";
@@ -446,13 +452,11 @@ public class MainController {
     @ResponseBody
     @RequestMapping("emissionsState")
     public void emissionsState(String sensor, boolean isCollection) {
-
            //배출량 설정
         if (isCollection) {
             EmissionsSetting target = emissionsSettingRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
             emissionsSettingRepository.save(target);
-
             //연간 배출량 설정
         } else {
             AnnualEmissions target = annualEmissionsRepository.findBySensor(sensor);

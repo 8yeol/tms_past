@@ -437,7 +437,7 @@
                 $('#paramModalShow').remove();
 
                 setTimeout(function () {
-                location.href = '/emissionsManagement';
+                location.href = '<%=cp%>/emissionsManagement';
                 }, 1500);
 
                 Swal.fire({

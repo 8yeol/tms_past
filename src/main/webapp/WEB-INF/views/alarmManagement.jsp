@@ -328,7 +328,6 @@
                 "to": end
             },
             success: function (data) {
-
             },
             error: function (request, status, error) {
                 console.log(error)

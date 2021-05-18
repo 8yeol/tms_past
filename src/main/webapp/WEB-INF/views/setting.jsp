@@ -98,9 +98,11 @@
 </style>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
+<script src="static/js/sweetalert2.min.js"></script>
 
 <script type="text/javascript">
     jQuery(function ($) {
@@ -614,7 +616,6 @@
         </div>
     </div>
 </div>
-
 <%--                                           ↑↑↑ 모달영역 ↑↑↑                                                              --%>
 
 
@@ -649,8 +650,10 @@
         };
         $.ajax(settings).done(function (response) {
             inputLog(user_id, content, "회원관리");
-            alert(response);
-            location.reload();
+            success(response);
+            setTimeout(function () {
+                location.reload();
+            }, 2000);
         })
     }           // sing_Up
 
@@ -660,14 +663,16 @@
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
-            alert(response);
-            location.reload();
+            success(response);
+            setTimeout(function () {
+                location.reload();
+            }, 2000);
         });
     }           // gave_Rank
 
     function resetPassword() {
         if (user_state != '4' && state == '4') {
-            alert("최고관리자의 비밀번호는 초기화하실수 없습니다.");
+            warning("최고관리자의 비밀번호는 초기화하실수 없습니다.");
             return;
         } else {
             var settings = {
@@ -675,15 +680,17 @@
                 "method": "POST"
             };
             $.ajax(settings).done(function (response) {
-                alert(response);
-                location.reload();
+                success(response);
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
             });
         }
     }           // resetPassword
 
     function kickMember() {
         if (user_state != '4' && state == '4') {
-            alert("최고관리자는 추방하실수 없습니다.");
+            warning("최고관리자는 추방하실수 없습니다.");
             return;
         } else {
             var settings = {
@@ -692,8 +699,10 @@
             };
             $.ajax(settings).done(function (response) {
                 inputLog(user_id, ID + " 계정 추방처리", "회원관리");
-                alert(response);
-                location.reload();
+                success(response);
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
             });
         }
     }           // kickMember
@@ -739,8 +748,10 @@
             var content = str;
             content += response;
             inputLog(user_id, content, "권한관리");
-            alert("권한관리 설정이 저장되었습니다.");
-            location.reload();
+            success("권한관리 설정이 저장되었습니다.");
+            setTimeout(function () {
+                  location.reload();
+            }, 2000);
         });
     }       //rankSettingSave
 
@@ -753,6 +764,14 @@
         let frm = $('#'+id);
         frm.submit();
     }
+    function warning(str){
+        Swal.fire('경고',str,'warning');
+    }
+    function success(str){
+        Swal.fire('확인',str,'success');
+    }
+
+
 
 </script>
 

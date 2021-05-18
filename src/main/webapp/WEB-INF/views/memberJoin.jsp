@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
 <link rel="stylesheet" href="static/css/common.css">
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
@@ -113,7 +117,7 @@
     function join_submit() {
         if (blankCheck() && passwordCheck() && emailCheck()) {
             var settings = {
-                "url": "http://localhost:8090/memberJoin",
+                "url": "<%=cp%>/memberJoin",
                 "method": "POST",
                 "timeout": 0,
                 "headers": {

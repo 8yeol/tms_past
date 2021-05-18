@@ -1,5 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
 <style>
     .edit {
         background-color: #0d6efd;
@@ -115,7 +119,7 @@
     function submit() {
         if (blankCheck() && passwordCheck() && emailCheck()) {
             var settings = {
-                "url": "http://localhost:8090/memberUpdate",
+                "url": "<%=cp%>/memberUpdate",
                 "method": "POST",
                 "timeout": 0,
                 "headers": {
