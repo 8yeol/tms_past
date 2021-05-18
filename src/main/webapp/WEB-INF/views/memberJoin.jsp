@@ -2,11 +2,13 @@
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
 <link rel="stylesheet" href="static/css/common.css">
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="shortcut icon" href="#">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-3.6.0.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/jquery-ui.js"></script>
+<script src="static/js/sweetalert2.min.js"></script>
 
 <%
     pageContext.setAttribute("br", "<br/>");
@@ -111,82 +113,132 @@
     </div>
 </div>
 
-
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
     function join_submit() {
         if (blankCheck() && passwordCheck() && emailCheck()) {
-            var settings = {
-                "url": "<%=cp%>/memberJoin",
-                "method": "POST",
-                "timeout": 0,
-                "headers": {
-                    "accept": "application/json",
-                    "content-type": "application/json;charset=UTF-8"
+
+            $.ajax({
+                url: '<%=cp%>/memberJoin',
+                type: 'POST',
+                dataType: 'text',
+                async: false,
+                cache: false,
+                data: { "id" : $("#id").val(),
+                    "password" : $("#password").val(),
+                    "name" : $("#name").val(),
+                    "email" : $("#email").val(),
+                    "department" : $("#department").val(),
+                    "grade" : $("#grade").val(),
+                    "tel" : $("#tel").val()
                 },
-                "data": "{\r\n    \"id\": \"" + $("#id").val() + "\"," +
-                    "\r\n    \"password\": \"" + $("#password").val() + "\"," +
-                    "\r\n    \"name\": \"" + $("#name").val() + "\"," +
-                    "\r\n    \"email\": \"" + $("#email").val() + "\"," +
-                    "\r\n    \"department\": \"" + $("#department").val() + "\"," +
-                    "\r\n    \"grade\": \"" + $("#grade").val() + "\"," +
-                    "\r\n    \"tel\": \"" + $("#tel").val() + "\"\r\n}",
-            };
-            $.ajax(settings).done(function (response) {
-                if (response == "true") {
-                    inputLog($("#id").val(), "회원가입신청", "회원가입");
-                    alert("가입신청성공!");
-                    location.href = "/login";
-                } else if (response == "false") {
-                    alert("중복되는 ID입니다.");
-                } else if (response == "root") {
-                    inputLog($("#id").val(), "회원가입신청", "회원가입");
-                    alert("최초가입시 최고관리자로 임명됩니다.");
-                    location.href = "/login";
-                } else {
-                    alert("가입신청실패");
+                success : function(data) {
+                    if (data == "success") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '회원가입 성공',
+                            timer: 1500
+                        })
+                        setTimeout(function () {
+                            inputLog($("#id").val(), "회원가입신청", "회원가입");
+                            location.href = '<%=cp%>/login';
+                        }, 1800);
+                    } else if (data == "failed") {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '회원가입 실패',
+                            text: '중복되는 ID 입니다.',
+                            timer: 1500
+                        })
+                    } else if (data == "root") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '회원가입 성공',
+                            text: '최초 가입계정으로 최고관리자 계정으로 지정됩니다.',
+                            timer: 1500
+                        })
+                        setTimeout(function () {
+                            inputLog($("#id").val(), "회원가입신청", "회원가입");
+                            location.href = '<%=cp%>/login';
+                        }, 1800);
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '회원가입 실패',
+                            timer: 1500
+                        })
+                    }
+                },
+                error : function(request, status, error) {
+                    console.log('member join error');
+                    console.log(error);
                 }
-            });
+            })
         }
-    }           // join_submit()
+    }
+
+    // 빈값 체크
     function blankCheck(){
         if ($("#id").val() != "" && $("#password").val() != "" && $("#passwordCheck").val() != "" && $("#name").val() != "" &&
             $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != ""){
             return true;
         } else {
-            alert("빈칸없이 입력하여 주세요");
+            Swal.fire({
+                icon: 'warning',
+                title: '가입신청실패',
+                text: '빈칸 없이 입력해주세요.',
+                timer: 1500
+            })
             return false;
         }
-    }       // blankCheck
+    }
+
+    //가입신청 password check
     function passwordCheck(){
-        if($("#password").val().length < 5 ){
-            alert("비밀번호를 6자리이상 입력해주세요.");
-            $("#password").focus();
+        if($("#passwordText").text() != ""){
+            Swal.fire({
+                icon: 'warning',
+                title: '비밀번호형식 오류',
+                text: '6자리 이상 20자리 미만 비밀번호를 설정해주세요.',
+                timer: 1500
+            })
+
+            $("#passwordText").focus();
             return false;
-        } else if ($("#password").val().length > 20){
-            alert("비밀번호를 20자리 이내로 입력해주세요.");
-            $("#password").focus();
-            return false;
-        }
-        if ($("#password").val() != $("#passwordCheck").val()) {
-            alert("비밀번호가 틀립니다.");
+        }else if($("#passwordCheckText").text() != ""){
+            Swal.fire({
+                icon: 'warning',
+                title: '비밀번호오류',
+                text: '비밀번호가 틀립니다. 다시 설정해주세요.',
+                timer: 1500
+            })
+
             $("#passwordCheck").focus();
             return false;
-        } else {
+        } else{
             return true;
         }
-    }       // passwordCheck
+    }
+
+    // 이메일 형식 체크
     function emailCheck(){
-        var email_rule =  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+        const email_rule =  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if(!email_rule.test($("#email").val())){
-            alert("이메일을 형식에 맞게 입력해주세요.");
+            Swal.fire({
+                icon: 'warning',
+                title: '이메일 형식 오류',
+                text: '이메일을 형식에 맞게 입력해주세요.',
+                timer: 1500
+            })
             $("#email").focus();
             return false;
         } else{
             return true;
         }
-    }       // passwordCheck
+    }
+
+    // 비밀번호 체크 (6자리 이상 20자리 미만)
     function passwordCheckMsg(){
         if($("#password").val().length < 6 ){
             $("#passwordText").html("6자리 이상 입력해주세요.");
@@ -202,11 +254,13 @@
         } else {
             $("#passwordCheckText").html("");
         }
-    }       // passwordCheckMsg
+    }
+
+    // 전화번호 자동완성 도우미
     function inputPhoneNumber(obj) {
         obj.value = obj.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-        var number = obj.value.replace(/[^0-9]/g, "");
-        var phone = "";
+        const number = obj.value.replace(/[^0-9]/g, "");
+        let phone = "";
         if (number.length < 4) {
             return number;
         } else if (number.length < 7) {
@@ -227,7 +281,7 @@
             phone += number.substr(7);
         }
         obj.value = phone;
-    }       // inputPhoneNumber 정규식
+    }
 
     // 이메일 자동완성 도우미
     function autoEmail(a, b) {

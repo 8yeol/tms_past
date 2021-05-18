@@ -204,24 +204,6 @@ public class MainController {
         return "memberJoin";
     }
 
-    @RequestMapping(value = "/memberJoin", method = RequestMethod.POST)
-    @ResponseBody
-    public void memberJoinPost(@RequestBody Member member, HttpServletResponse response) throws Exception {
-        PrintWriter out = response.getWriter();
-
-        if(memberRepository.findAll().size() == 0){ // 최초회원가입시
-            memberService.memberSave(member,"1");
-            if(rank_managementRepository.findAll().size() == 0)
-                rankManagementService.defaultRankSetting();
-            out.print("root");
-        } else if (!memberRepository.existsById(member.getId())) {
-            memberService.memberSave(member,"4");
-            out.print("true");
-        } else {
-            out.print("false");
-        }
-    }           // memberJoinPost
-
     @RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
     @ResponseBody
     public void memberUpdate(@RequestBody Member member, HttpServletResponse response) throws Exception {

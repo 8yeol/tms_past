@@ -6,10 +6,11 @@ import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
 import com.example.tms.repository.DataInquiry.DataInquiryRepository;
 import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsRepository;
+import com.example.tms.service.MemberService;
+import com.example.tms.service.RankManagementService;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -38,7 +39,12 @@ public class AjaxController {
     final MongoQuary mongoQuary;
     final LogRepository logRepository;
 
-    public AjaxController(PlaceRepository placeRepository, LogRepository logRepository,SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary) {
+    final MemberRepository memberRepository;
+    final MemberService memberService;
+    final RankManagementRepository rankManagementRepository;
+    final RankManagementService rankManagementService;
+
+    public AjaxController(PlaceRepository placeRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService) {
         this.placeRepository = placeRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
@@ -56,6 +62,10 @@ public class AjaxController {
         this.itemRepository = itemRepository;
         this.mongoQuary = mongoQuary;
         this.logRepository = logRepository;
+        this.memberRepository = memberRepository;
+        this.memberService = memberService;
+        this.rankManagementRepository = rankManagementRepository;
+        this.rankManagementService = rankManagementService;
     }
 
     /**
@@ -915,7 +925,24 @@ public class AjaxController {
         emissionsStandardSettingRepository.save(ess);
     }
 
-
-
+    /**
+     * 회원가입
+     * @param member 가입 회원 정보
+     * @return 회원가입 성공여부 (root : 최초가입시 최고 관리자로 지정하기 위함)
+     */
+    @RequestMapping(value = "/memberJoin")
+    public String memberJoinPost(Member member){
+        if(memberRepository.findAll().size() == 0){
+            memberService.memberSave(member,"1");
+            if(rankManagementRepository.findAll().size() == 0)
+                rankManagementService.defaultRankSetting();
+            return "root";
+        } else if (!memberRepository.existsById(member.getId())) {
+            memberService.memberSave(member,"4");
+            return "success";
+        } else {
+            return "failed";
+        }
+    }
 
 }

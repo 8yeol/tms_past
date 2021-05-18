@@ -7,8 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<link rel="stylesheet" href="/static/css/fontawesome.css">
-<script src="/static/js/fontawesome.js"></script>
+<link rel="stylesheet" href="static/css/fontawesome.css">
+<script src="static/js/fontawesome.js"></script>
 
 <%
     pageContext.setAttribute("br", "<br/>");
