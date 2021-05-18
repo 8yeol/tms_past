@@ -270,17 +270,17 @@
                     "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'><span class='fs-5'>"+placeName[i]+"</span></div>" +
                     "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
                     "<table class='table table-bordered table-hover text-center'>" +
-                    "<thead>" +
-                    "<tr class='add-bg-color'>" +
-                        "<th width=30%'>항목</th>" +
-                        "<th width=15%'>법적기준</th>" +
-                        "<th width=15%'>사내기준</th>" +
-                        "<th width=15%'>관리기준</th>" +
-                        "<th width=25%'>실시간</th>" +
-                    "</tr>" +
-                    "</thead>"+
-                        "<tbody id='sensor-table-"+i+"'>"+
-                    "</tbody>" +
+                        "<thead>" +
+                            "<tr class='add-bg-color'>" +
+                                "<th width=28%'>항목</th>" +
+                                "<th width=17%'>법적기준</th>" +
+                                "<th width=17%'>사내기준</th>" +
+                                "<th width=17%'>관리기준</th>" +
+                                "<th width=21%'>실시간</th>" +
+                            "</tr>" +
+                        "</thead>"+
+                            "<tbody id='sensor-table-"+i+"'>"+
+                        "</tbody>" +
                     "</table>" +
                     "</div>");
             }
