@@ -7,8 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<link rel="stylesheet" href="/static/css/fontawesome.css">
-<script src="/static/js/fontawesome.js"></script>
+<link rel="stylesheet" href="static/css/fontawesome.css">
+<script src="static/js/fontawesome.js"></script>
 
 <%
     pageContext.setAttribute("br", "<br/>");
@@ -17,7 +17,10 @@
 %>
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+    @font-face {
+        font-family: "Noto Sans KR";
+        src: url("static/font/NotoSansKR-Regular.otf");
+    }
 
     body {
         background-color: #EDF2F8;
