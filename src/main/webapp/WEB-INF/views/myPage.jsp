@@ -21,6 +21,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
+<link rel="shortcut icon" href="#">
 <script src="static/js/jquery-ui.js"></script>
 
 <div class="container bg-light rounded p-5 mt-5 mypage-bg">
@@ -44,14 +45,14 @@
             <div class="mb-3">
                 <label for="email" class="col-sm-2 col-form-label" style="display: inline-block;">이메일</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="text" class="form-control" value="${member.email}" id="email" readonly>
+                    <input type="text" class="form-control" value="${member.email}" id="email" onkeyup="autoEmail('email',this.value)" readonly>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="tel" class="col-sm-2 col-form-label" style="display: inline-block;">연락처</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="text" class="form-control" value="${member.tel}" id="tel" readonly>
+                    <input type="text" class="form-control" value="${member.tel}" id="tel" readonly onkeyup="inputPhoneNumber(this)">
                 </div>
             </div>
 
@@ -143,6 +144,7 @@
     }           // join_submit()
 
     function inputPhoneNumber(obj) {
+        obj.value = obj.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
         var number = obj.value.replace(/[^0-9]/g, "");
         var phone = "";
         if (number.length < 4) {

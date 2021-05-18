@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
 <link rel="stylesheet" href="static/css/common.css">
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
+<link rel="shortcut icon" href="#">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-3.6.0.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
@@ -34,7 +35,7 @@
             </div>
             <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="password" class="col-form-label">비밀번호</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10 d-flex" style="width:100%;">
                     <input type="password" class="form-control" id="password" onkeyup="passwordCheckMsg()" placeholder="6자 이상 입력해 주세요">
                     <span style="font-size: 15%; color: red" id="passwordText"></span>
                 </div>
@@ -42,7 +43,7 @@
 
             <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="passwordCheck" class="col-form-label">비밀번호 확인</label>
-                <div class="col-sm-10">
+                <div class="col-sm-10" style="width:100%;">
                     <input type="password" class="form-control" id="passwordCheck" onkeyup="passwordCheckMsg()">
                     <span style="font-size: 15%" id="passwordCheckText"></span>
                 </div>
