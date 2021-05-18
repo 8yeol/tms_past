@@ -65,11 +65,11 @@
                                                                             type=checkbox
                                                                             onclick="placeAll(this)">
                     </th>
-                    <th style="width: 30%">측정소 명</th>
+                    <th style="width: 34%">측정소 명</th>
                     <th style="width: 40%;">업데이트</th>
                     <th style="width: 24%;">모니터링 사용</th>
                 </tr>
-                <tr id="placeDiv" style="list-style: none; padding: 0px;">
+                <tr id="placeDiv" style="padding: 0px;">
 
                 </tr>
 
@@ -249,7 +249,7 @@
                     }
                     const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '"+name+"' onclick=\"placeChange('p" + i + "')\" >" +
                         "<td style='padding-left:6px;'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
-                        "<td style='width: 30%;' id='place" + i + "'>" + name + "</td>" +
+                        "<td style='width: 34%;' id='place" + i + "'>" + name + "</td>" +
                         "<td style='width: 40%;'>" + time + "</td>" +
                         "<td style='width: 24%; padding:5px;'><label class='switch'>" +
                         "<input id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
