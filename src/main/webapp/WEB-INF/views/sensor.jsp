@@ -316,20 +316,24 @@
                 sensor_name = "RM05_"+sensor_name;
             }
             var sensor_data_list = getSensor(sensor_name, sensor_time_length); //센서 데이터 (최근 1시간, 24시간)
+            var sensorDataLength = sensor_data_list.length;
             var dt = draw_sensor_table(sensor_data_list, sensor_data); // 센서 테이블 생성 (측정시간, 측정값, 관리등급)
             if(sensor_data_list.length != 0){
                 $("#radio_text").text(sensor_data.naming); // 선택된 센서명 텍스트 출력
                     setTimeout(function interval_getData2() { //$초 마다 업데이트
                         // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
                         var sensor_data_list_recent = getSensorRecent(sensor_name);
-                        if(sensor_data_list_recent.length != 0){ // null = []
-                            if(sensor_data_list[sensor_data_list.length-1].x != sensor_data_list_recent.up_time){
-                                sensor_data_list.shift();
+                        // if(sensor_data_list_recent.length != 0){ // null = []
+                        if(sensor_data_list[sensor_data_list.length-1].x != sensor_data_list_recent.up_time){
+                            if(true){
                                 sensor_data_list.push({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value});
                                 sensor_table_update(dt, sensor_data_list[sensor_data_list.length-1], sensor_data); //테이블 업데이트
                             }
                         }
                         updateChart(sensor_data_list, sensor_data); //차트 업데이트
+                        if(sensor_data_list.length > sensorDataLength*2){
+                            sensor_data_list = getSensor(sensor_name, sensor_time_length);
+                        }
                         interval2 = setTimeout(interval_getData2, 5000);
                     }, 0);
             }else{ // sensor_data_list (최근데이터) 가 없을 때
@@ -594,7 +598,11 @@
                 height: '400px',
                 type: 'line',
                 animations: {
-                    enabled: false,
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 1000
+                    }
                 },
                 toolbar: {
                     show: true,
@@ -620,6 +628,7 @@
             stroke: {
                 show: true,
                 width: 3,
+                curve: 'smooth'
             },
             dataLabels: {
                 enabled: false
@@ -653,7 +662,7 @@
      *  차트 업데이트
      */
     function updateChart(sensor_data_list, sensor_data){
-        chart.resetSeries();
+        // chart.resetSeries();
         var arr =new Array();
         if(sensor_data_list != null){
             for(var i in sensor_data_list){
@@ -677,7 +686,7 @@
         chart.updateOptions({
             series: [{
                 name: sensor_data.naming,
-                data: sensor_data_list
+                data: sensor_data_list.slice()
             }],
             annotations: {
                 yaxis: [{
@@ -864,11 +873,12 @@
                 {"data": "z"}
             ],
             "bStateSave": true,
-            search: false,
-            searching: false,
-            bInfo: false,
-            ordering: true,
-            pagingType: 'numbers',
+            "stateSave" : true,
+            "search": false,
+            "searching": false,
+            "bInfo": false,
+            "ordering": true,
+            "pagingType": 'numbers',
             "language": {
                 "emptyTable": "데이터가 없어요.",
                 "lengthMenu": "페이지당 _MENU_ 개씩 보기",
