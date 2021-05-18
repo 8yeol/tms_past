@@ -325,10 +325,8 @@
                         var sensor_data_list_recent = getSensorRecent(sensor_name);
                         // if(sensor_data_list_recent.length != 0){ // null = []
                         if(sensor_data_list[sensor_data_list.length-1].x != sensor_data_list_recent.up_time){
-                            if(true){
-                                sensor_data_list.push({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value});
-                                sensor_table_update(dt, sensor_data_list[sensor_data_list.length-1], sensor_data); //테이블 업데이트
-                            }
+                            sensor_data_list.push({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value});
+                            sensor_table_update(dt, sensor_data_list[sensor_data_list.length-1], sensor_data); //테이블 업데이트
                         }
                         updateChart(sensor_data_list, sensor_data); //차트 업데이트
                         if(sensor_data_list.length > sensorDataLength*2){
