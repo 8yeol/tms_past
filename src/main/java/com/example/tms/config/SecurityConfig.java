@@ -23,7 +23,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
 /*
-        http.authorizeRequests().antMatchers("/memberJoin").anonymous()
+        http.authorizeRequests()
+                .antMatchers("/memberJoin").anonymous()
                 .antMatchers("/myPage").authenticated()
                 .antMatchers("/").access("@authChecker.check(authentication , 'dashboard')")
                 .antMatchers("/alarm").access("@authChecker.check(authentication , 'alarm')")

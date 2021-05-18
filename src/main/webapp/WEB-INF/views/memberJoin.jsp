@@ -34,18 +34,30 @@
                 </div>
             </div>
             <div class="mb-3" style="width: 48%; margin: 0 auto;">
-                <label for="password" class="col-form-label">비밀번호</label>
+                <div class="row">
+                    <div class="col">
+                        <label for="password" class="col-form-label">비밀번호</label>
+                    </div>
+                    <div class="col text-end">
+                        <span style="font-size: 15%; color: red" id="passwordText"></span>
+                    </div>
+                </div>
                 <div class="col-sm-10 d-flex" style="width:100%;">
                     <input type="password" class="form-control" id="password" onkeyup="passwordCheckMsg()" placeholder="6자 이상 입력해 주세요">
-                    <span style="font-size: 15%; color: red" id="passwordText"></span>
                 </div>
             </div>
 
             <div class="mb-3" style="width: 48%; margin: 0 auto;">
-                <label for="passwordCheck" class="col-form-label">비밀번호 확인</label>
+                <div class="row">
+                    <div class="col">
+                        <label for="passwordCheck" class="col-form-label">비밀번호 확인</label>
+                    </div>
+                    <div class="col text-end">
+                        <span style="font-size: 15%" id="passwordCheckText"></span>
+                    </div>
+                </div>
                 <div class="col-sm-10" style="width:100%;">
                     <input type="password" class="form-control" id="passwordCheck" onkeyup="passwordCheckMsg()">
-                    <span style="font-size: 15%" id="passwordCheckText"></span>
                 </div>
             </div>
 
@@ -183,8 +195,7 @@
             $("#passwordCheckText").html("비밀번호가 일치하지 않습니다.");
             $("#passwordCheckText").css("color","red");
         } else {
-            $("#passwordCheckText").html("비밀번호가 일치합니다.");
-            $("#passwordCheckText").css("color","blue");
+            $("#passwordCheckText").html("");
         }
     }       // passwordCheckMsg
     function inputPhoneNumber(obj) {
@@ -212,15 +223,13 @@
         }
         obj.value = phone;
     }       // inputPhoneNumber 정규식
+
+    // 이메일 자동완성 도우미
     function autoEmail(a, b) {
-        /*
-            a : input의 ID
-            b : 입력되는 input의 값
-        */
-        var mailId = b.split('@'); // 메일계정의 ID만 받아와서 처리하기 위함
-        var mailList = ['naver.com', 'gmail.com', 'daum.net', 'hanmail.net', 'korea.kr']; // 메일목록
-        var availableCity = new Array; // 자동완성 키워드 리스트
-        for (var i = 0; i < mailList.length; i++) {
+        const mailId = b.split('@'); // 메일계정의 ID만 받아와서 처리하기 위함
+        const mailList = ['lghausys.com']; // 메일목록
+        const availableCity = new Array; // 자동완성 키워드 리스트
+        for (let i = 0; i < mailList.length; i++) {
             availableCity.push(mailId[0] + '@' + mailList[i]); // 입력되는 텍스트와 메일목록을 조합
         }
         $("#" + a).autocomplete({
@@ -229,7 +238,7 @@
                 return false;
             }
         });
-    }           // autoEmail 이메일 자동완성 도우미
+    }
 </script>
 
 
