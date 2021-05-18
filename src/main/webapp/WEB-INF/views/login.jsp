@@ -88,7 +88,7 @@
                     }
                 },
                 error : function(request, status, error) {
-                    console.log('get place sensor error');
+                    console.log('login error');
                     console.log(error);
                 }
             })

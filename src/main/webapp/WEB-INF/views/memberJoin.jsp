@@ -144,7 +144,7 @@
                         $("#id").focus();
                         swal('warning', '회원가입 실패', '중복되는 ID 입니다.')
                     } else if (data == "root") {
-                        swal('success', '회원가입 성공', '최초 가입 계정 <br>최고관리자 계정으로 지정됩니다.')
+                        swal('success', '회원가입 성공', '최초 가입 계정으로 최고관리자 계정으로 지정됩니다.')
                         setTimeout(function () {
                             inputLog($("#id").val(), "가입신청", "회원가입");
                             location.href = '<%=cp%>/login';

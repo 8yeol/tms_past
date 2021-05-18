@@ -37,4 +37,9 @@ public class MemberService implements UserDetailsService {
         member.setState(state);
         return memberRepository.save(member);
     }
+
+    public Member memberSave(Member member){
+        member.encodePassword(passwordEncoder);
+        return memberRepository.save(member);
+    }
 }

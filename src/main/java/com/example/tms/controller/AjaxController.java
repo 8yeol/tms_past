@@ -984,15 +984,14 @@ public class AjaxController {
         Member updateMember = memberRepository.findById(member.getId());
 
         if (member.getPassword() != "") {
-            updateMember.setPassword(member.getPassword());
+            updateMember.setPassword(passwordEncoder.encode(member.getPassword()));
         }
-
         updateMember.setName(member.getName());
         updateMember.setEmail(member.getEmail());
         updateMember.setTel(member.getTel());
         updateMember.setDepartment(member.getDepartment());
         updateMember.setGrade(member.getGrade());
-        memberRepository.save(updateMember);
+        memberService.memberSave(updateMember);
 
         return "success";
     }
