@@ -119,7 +119,6 @@
 <script>
     function join_submit() {
         if (blankCheck() && passwordCheck() && emailCheck()) {
-
             $.ajax({
                 url: '<%=cp%>/memberJoin',
                 type: 'POST',
@@ -155,6 +154,7 @@
                     }
                 },
                 error : function(request, status, error) {
+                    swal('warning', '회원가입 실패')
                     console.log('member join error');
                     console.log(error);
                 }

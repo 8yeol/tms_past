@@ -204,24 +204,6 @@ public class MainController {
         return "memberJoin";
     }
 
-    @RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
-    @ResponseBody
-    public void memberUpdate(@RequestBody Member member, HttpServletResponse response) throws Exception {
-        PrintWriter out = response.getWriter();
-        Member newMember = memberRepository.findById(member.getId());
-        if( !(member.getPassword().equals(newMember.getPassword())) ) {// 들어온 pwd 값과 DB pwd 값이 같지않으면
-            out.print("false");
-        } else{
-            newMember.setName(member.getName());
-            newMember.setEmail(member.getEmail());
-            newMember.setTel(member.getTel());
-            newMember.setDepartment(member.getDepartment());
-            newMember.setGrade(member.getGrade());
-            memberRepository.save(newMember);
-            out.print("true");
-        }
-    }           // memberUpdate
-
     @RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
     public void loginCheck( Member member, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();

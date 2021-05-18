@@ -162,37 +162,39 @@
             blankCheck('block');
             if($("#nowPasswordText").text()!="인증완료"){
                 $("#now_password").focus();
-                swal('error', '현재 비밀번호 오류', '사용중인 비밀번호를 입력해주세요.')
+                swal('error', '현재 비밀번호 오류', '현재 비밀번호를 확인해주세요.')
                 return false;
             }
         }
 
         if (emailCheck()) {
-            var settings = {
-                "url": "<%=cp%>/memberUpdate",
-                "method": "POST",
-                "timeout": 0,
-                "headers": {
-                    "accept": "application/json",
-                    "content-type": "application/json;charset=UTF-8"
+            $.ajax({
+                url: '<%=cp%>/memberUpdate',
+                type: 'POST',
+                dataType: 'text',
+                async: false,
+                cache: false,
+                data: { "id" : $("#id").val(),
+                    "password" : $("#password").val(),
+                    "name" : $("#name").val(),
+                    "email" : $("#email").val(),
+                    "department" : $("#department").val(),
+                    "grade" : $("#grade").val(),
+                    "tel" : $("#tel").val()
                 },
-                "data": "{\r\n    \"id\": \"" + $("#id").val() + "\"," +
-                    "\r\n    \"password\": \"" + $("#password").val() + "\"," +
-                    "\r\n    \"name\": \"" + $("#name").val() + "\"," +
-                    "\r\n    \"email\": \"" + $("#email").val() + "\"," +
-                    "\r\n    \"department\": \"" + $("#department").val() + "\"," +
-                    "\r\n    \"grade\": \"" + $("#grade").val() + "\"," +
-                    "\r\n    \"tel\": \"" + $("#tel").val() + "\"\r\n}",
-            };
-            $.ajax(settings).done(function (response) {
-                if (response == "true") {
-                    alert("저장되었습니다.");
-                } else if (response == "false") {
-                    alert("비밀번호가 틀립니다.");
-                } else {
-                    alert("변경실패");
+                success : function(data) {
+                    if (data == "success") {
+                        swal('success', '수정완료', '성공적으로 수정되었습니다.');
+                    } else {
+                        swal('warning', '수정실패');
+                    }
+                },
+                error : function(request, status, error) {
+                    swal('warning', '수정실패');
+                    console.log('member update error');
+                    console.log(error);
                 }
-            });
+            })
         }
     }
 
@@ -212,10 +214,28 @@
     }
 
     function nowPasswordCheck(){
-        //현재 비밀번호 체크해서 다르면
-        $("#nowPasswordText").text("비밀번호가 틀립니다. 다시 확인해주세요.")
-        // 같으면
-        //$("#nowPasswordText").text("인증완료")
+        $.ajax({
+            url: '<%=cp%>/nowPasswordCheck',
+            type: 'POST',
+            dataType: 'text',
+            async: false,
+            cache: false,
+            data: { "id" : $("#id").val(),
+                "password" : $("#now_password").val(),
+            },
+            success : function(data) {
+                if (data == "success") {
+                    $("#nowPasswordText").text("인증완료")
+                } else if (data == "failed") {
+                    $("#nowPasswordText").text("비밀번호가 틀립니다. 다시 확인해주세요.")
+                }
+            },
+            error : function(request, status, error) {
+                console.log('member update error');
+                console.log(error);
+            }
+        })
+
     }
 
     function swal(icon, title, text){

@@ -11,6 +11,7 @@ import com.example.tms.service.RankManagementService;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -44,7 +45,9 @@ public class AjaxController {
     final RankManagementRepository rankManagementRepository;
     final RankManagementService rankManagementService;
 
-    public AjaxController(PlaceRepository placeRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService) {
+    final PasswordEncoder passwordEncoder;
+
+    public AjaxController(PlaceRepository placeRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService, PasswordEncoder passwordEncoder) {
         this.placeRepository = placeRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
@@ -66,6 +69,7 @@ public class AjaxController {
         this.memberService = memberService;
         this.rankManagementRepository = rankManagementRepository;
         this.rankManagementService = rankManagementService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -970,6 +974,36 @@ public class AjaxController {
             return "success";
         } else {
             return "failed";
+        }
+    }
+
+
+
+    @RequestMapping(value = "/memberUpdate")
+    public String memberUpdate(Member member) {
+        Member updateMember = memberRepository.findById(member.getId());
+
+        if (member.getPassword() != "") {
+            updateMember.setPassword(member.getPassword());
+        }
+
+        updateMember.setName(member.getName());
+        updateMember.setEmail(member.getEmail());
+        updateMember.setTel(member.getTel());
+        updateMember.setDepartment(member.getDepartment());
+        updateMember.setGrade(member.getGrade());
+        memberRepository.save(updateMember);
+
+        return "success";
+    }
+
+    @RequestMapping(value = "/nowPasswordCheck")
+    public String nowPasswordCheck(String id, String password) {
+        Member newMember = memberRepository.findById(id);
+        if( !passwordEncoder.matches(password,newMember.getPassword())) {
+            return "failed";
+        } else{
+            return "success";
         }
     }
 
