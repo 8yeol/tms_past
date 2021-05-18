@@ -196,10 +196,11 @@
                         </div>
                     </div>
                     <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
+                    <input type="hidden" name="isValueDelete"> <!--속성값 삭제 판별 데이터 -->
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" onclick="saveSensor(2)">수정</button>
+                <button type="button" class="btn btn-success me-5" onclick="isValueDelete()">수정</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
@@ -312,12 +313,7 @@
             cache: false,
             data: {tableName: tableName},
             success: function () {
-                Swal.fire({
-                    icon: 'warning',
-                    title: '삭제 완료',
-                    text: '삭제 되었습니다..',
-                    timer: 1500
-                })
+                customSwal('삭제 완료','삭제 되었습니다..');
                 setTimeout(function () {
                     location.reload();
                 }, 2000);
@@ -349,7 +345,25 @@
         });
 
     }
-
+    function isValueDelete(){
+        Swal.fire({
+            icon: 'warning',
+            title: '경고',
+            text: '센서의 속성값을 초기화 하시겠습니까?',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor:'#198754',
+            confirmButtonText: '속성값 초기화',
+            cancelButtonText: '속성값 유지'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('input[name=isValueDelete]').val('delete');
+                saveSensor(2);
+            }else if ( result.dismiss === Swal.DismissReason.cancel){
+                saveSensor(2);
+            }
+        });
+    }
 
     //데이터 저장 후 페이지 새로고침
     function saveSensor(idx) {
@@ -358,31 +372,20 @@
         let content = "";
 
         if ($('#tableName'+idx).val() == '선택') {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '테이블명을 선택 해주세요.'
-            })
+            customSwal('경고','테이블명을 선택 해주세요.');
             return;
         }
 
         if ($('#place' + idx).val() == '선택') {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '측정소를 선택 해주세요.'
-            })
+            customSwal('경고','측정소를 선택 해주세요.');
             return;
         }
 
         if (idx == 2) {
             form = $('#editForm').serialize();
             if($("#place2").val() == null){
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '측정소를 선택 해주세요.'
-                })
+                $('input[name=isValueDelete]').val('');
+                customSwal('경고','측정소를 선택 해주세요.');
                 return;
             }
             content = '센서 측정소가 수정 되었습니다.';
@@ -477,6 +480,15 @@
             }
         })
         return result;
+    }
+
+    function customSwal(title,text){
+        Swal.fire({
+            icon: 'warning',
+            title: title,
+            text: text,
+            timer: 1500
+        })
     }
 </script>
 

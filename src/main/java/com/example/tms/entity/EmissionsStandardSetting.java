@@ -1,11 +1,13 @@
 package com.example.tms.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@NoArgsConstructor
 @Document(collection = "emissions_standard_setting")
 public class EmissionsStandardSetting {
     @Id
@@ -16,4 +18,14 @@ public class EmissionsStandardSetting {
     private int densityStandard;
     private String tableName;
     private String formula;
+
+    public EmissionsStandardSetting(String place, String naming,  int emissionsStandard, int densityStandard,String tableName,String formula) {
+        this.place = place;
+        this.naming= naming;
+        this.emissionsStandard= emissionsStandard;
+        this.densityStandard= densityStandard;
+        this.tableName= tableName;
+        this.formula= formula;
+
+    }
 }

@@ -1,13 +1,16 @@
 package com.example.tms.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 @Document(collection = "sensor")
 public class SensorList {
     public ObjectId _id;
@@ -19,6 +22,17 @@ public class SensorList {
     public Date upTime; //업데이트 시간
     public String place; //측정소명
     public boolean status; //통신상태
+
+    public SensorList(String classification, String naming, String managementId, String tableName, Date date, String place, boolean b) {
+        this.classification = classification;
+        this.naming= naming;
+        this.managementId =managementId;
+        this.tableName= tableName;
+        this.upTime = date;
+        this.place = place;
+        this.status = b;
+
+    }
 
     @Override
     public String toString() {
