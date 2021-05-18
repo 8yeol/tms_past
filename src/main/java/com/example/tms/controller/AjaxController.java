@@ -566,7 +566,8 @@ public class AjaxController {
      * notification_day_statistics(일) , notification_month_statistics(월)
      */
     @RequestMapping(value = "saveNS")
-    public void saveNotiStatistics() {
+    public ArrayList saveNotiStatistics() {
+        ArrayList al = new ArrayList();
         LocalDate nowDate = LocalDate.now(); //현재시간
         int getYear = nowDate.getYear();
         int getMonth = nowDate.getMonthValue();
@@ -588,19 +589,21 @@ public class AjaxController {
                     int arr[] = new int[3];
                     for (int grade = 1; grade <= 3; grade++) {
                         List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(date2), String.valueOf(date2));
-                        arr[grade - 1] = (int) list.get(0).get("count");
+                        if(list.size() != 0) {
+                            arr[grade - 1] = (int) list.get(0).get("count");
+                        }else{
+                            arr[grade - 1] = 0;
+                        }
                     }
                     NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), arr[0], arr[1], arr[2]);
+                    al.add(date2+", "+arr[0]+", "+arr[1]+", "+arr[2]);
                     notificationDayStatisticsRepository.save(ns);
                 } catch (Exception e) {
                     NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), 0, 0, 0);
                     notificationDayStatisticsRepository.save(ns);
-//                        log.info(e.getMessage());
                 }
             }
         }
-
-
         /* 월데이터 입력 : 1월 ~ 이번 달 */
         for (int m = 1; m <= getMonth; m++) {
             LocalDate from_date = LocalDate.of(getYear, m, 1);
@@ -611,16 +614,21 @@ public class AjaxController {
                 int arr[] = new int[3];
                 for (int grade = 1; grade <= 3; grade++) {
                     List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(from_date), String.valueOf(to_date));
-                    arr[grade - 1] = (int) list.get(0).get("count");
+                    if(list.size() != 0) {
+                        arr[grade - 1] = (int) list.get(0).get("count");
+                    }else{
+                        arr[grade - 1] = 0;
+                    }
                 }
                 NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
+                al.add(date+", "+arr[0]+", "+arr[1]+", "+arr[2]);
                 notificationMonthStatisticsRepository.save(ns);
             } catch (Exception e) {
                 NotificationMonthStatistics ns = new NotificationMonthStatistics(date, 0, 0, 0);
                 notificationMonthStatisticsRepository.save(ns);
             }
         }
-
+        return al;
     }
 
     /**
