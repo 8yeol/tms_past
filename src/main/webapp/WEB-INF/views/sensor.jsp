@@ -325,10 +325,8 @@
                         var sensor_data_list_recent = getSensorRecent(sensor_name);
                         // if(sensor_data_list_recent.length != 0){ // null = []
                         if(sensor_data_list[sensor_data_list.length-1].x != sensor_data_list_recent.up_time){
-                            if(true){
-                                sensor_data_list.push({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value});
-                                sensor_table_update(dt, sensor_data_list[sensor_data_list.length-1], sensor_data); //테이블 업데이트
-                            }
+                            sensor_data_list.push({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value});
+                            sensor_table_update(dt, sensor_data_list[sensor_data_list.length-1], sensor_data); //테이블 업데이트
                         }
                         updateChart(sensor_data_list, sensor_data); //차트 업데이트
                         if(sensor_data_list.length > sensorDataLength*2){
@@ -911,6 +909,8 @@
     }
     
     function sensor_table_update(table, recentData, sensorData) {
+        var dt = $('#sensor-table').DataTable();
+        var pageNum = dt.page.info().page;
         upDate = moment(recentData.x).format('YYYY-MM-DD HH:mm:ss');
         value = (recentData.y).toFixed(2);
         if(sensorData.legalStandard == 999){
@@ -938,9 +938,9 @@
         } else {
             standard =  "정상";
         }
-
         table.fnAddData([{'x':upDate, 'y': value, 'z':standard}]);
         table.fnDeleteRow(0);
         table.fnSort([0, 'desc']);
+        table.fnPageChange(pageNum);
     }
 </script>
