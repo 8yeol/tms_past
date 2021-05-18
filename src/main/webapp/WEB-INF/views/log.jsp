@@ -65,7 +65,7 @@
                         <td>${log.id}</td>
                         <td>${log.content}</td>
                         <td>${log.type}</td>
-                        <td><fmt:formatDate value="${log.date}" pattern="yyyy년 MM월 dd일"/> &nbsp;
+                        <td><fmt:formatDate value="${log.date}" pattern="yyyy년 MM월 dd일"/> &nbsp;<!--<b style="font-size: 1.3rem;">/</b> -->
                             <fmt:formatDate value="${log.date}" pattern="HH시 mm분 ss초"/></td>
                     </tr>
                 </c:forEach>

@@ -1,11 +1,15 @@
 package com.example.tms.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Data
+@NoArgsConstructor
 @Document(collection = "annual_emissions")
 public class AnnualEmissions {
     @Id
@@ -15,4 +19,13 @@ public class AnnualEmissions {
     private String sensorNaming;
     private int yearlyValue;
     private boolean status;
+
+    public AnnualEmissions(String place, String sensor, String sensorNaming, int yearlyValue, boolean b) {
+        this.place = place;
+        this.sensor= sensor;
+        this.sensorNaming =sensorNaming;
+        this.yearlyValue= yearlyValue;
+        this.status = b;
+
+    }
 }
