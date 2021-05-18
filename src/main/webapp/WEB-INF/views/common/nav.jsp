@@ -247,15 +247,15 @@
 </header>
 
 <script>
-    $( document ).ready(function() {
+/*    $( document ).ready(function() {
         var settings = {"url": "http://localhost:8090/getUsername", "method": "POST",};
         $.ajax(settings).done(function (name) {
             $('#dropBtn').prepend(name+" 님");
             getRank();
         });
-    });
+    });*/
 
-    function getRank() {
+/*    function getRank() {
         var settings = {"url": "http://localhost:8090/getRank", "method": "POST",};
         $.ajax(settings).done(function (rank) {
             if(!rank.dashboard)
@@ -269,7 +269,7 @@
             if(!rank.setting)
                 $('#setting').hide();
         });
-    }
+    }*/
     var current_page_URL = location.href; //현재 URL 주소
     $("#menu a").each(function() { //menu a 태그의 주소
         if ($(this).attr("href") !== "#") { // 주소링크가 # 아닐때

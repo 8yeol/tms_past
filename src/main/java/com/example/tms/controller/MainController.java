@@ -93,9 +93,9 @@ public class MainController {
         // [환경설정 > 배출량 관리] - 배출 허용 기준 설정에 설정된 기준값 > 모니터링 설정된 배출량 기준값만 받아오도록 변경
         List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
         model.addAttribute("standard",standard);
-        // 연간 배출량 누적 모니터링 > 등록하기 버튼(관리자만 보이게 하기 위함)
+/*        // 연간 배출량 누적 모니터링 > 등록하기 버튼(관리자만 보이게 하기 위함)
         Member member = memberRepository.findById(principal.getName());
-        model.addAttribute("member", member);
+        model.addAttribute("member", member);*/
 
         return "dashboard";
     }
@@ -210,15 +210,11 @@ public class MainController {
         PrintWriter out = response.getWriter();
 
         if(memberRepository.findAll().size() == 0){ // 최초회원가입시
-/*            member.setState("4"); // 최고관리자 설정
-            memberRepository.save(member);*/
             memberService.memberSave(member,"4");
             if(rank_managementRepository.findAll().size() == 0)
                 rankManagementService.defaultRankSetting();
             out.print("root");
         } else if (!memberRepository.existsById(member.getId())) {
-/*            member.setState("1"); // 0: 거절 - 1: 가입대기 - 2: 일반 - 3: 관리자 - 4: 최고관리자
-            memberRepository.save(member);*/
             memberService.memberSave(member,"1");
             out.print("true");
         } else {
@@ -251,7 +247,11 @@ public class MainController {
             out.print("id");
         } else if(!passwordEncoder.matches(member.getPassword(),memberRepository.findById(member.getId()).getPassword())){ // password가 틀리면
             out.print("password");
-        } else { // 로그인성공
+        } else  if (memberRepository.findById(member.getId()).getState().equals("0")){ // 가입거절
+            out.print("denie");
+        } else  if (memberRepository.findById(member.getId()).getState().equals("1")){ // 가입대기
+            out.print("waiting");
+        }else {
             Member newMember = memberRepository.findById(member.getId());
             Date time = new Date();
             newMember.setLastLogin(time);

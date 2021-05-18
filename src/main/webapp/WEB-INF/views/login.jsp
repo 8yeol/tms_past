@@ -71,7 +71,7 @@
                         Swal.fire({
                             icon: 'warning',
                             title: '로그인 오류',
-                            text: '등록되지 않는 아이디입니다.',
+                            text: '등록되지 않은 아이디입니다.',
                             timer: 1500
                         })
                     } else if (data == "password") {
@@ -83,13 +83,27 @@
                         })
                         $("#password").text("");
                         document.getElementById("password").focus();
-                    } else {
+                    } else if(data == "waiting"){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '로그인 오류',
+                            text: '가입신청 대기중인 회원입니다.',
+                            timer: 1500
+                        })
+                    } else if(data == "denie"){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '로그인 오류',
+                            text: '가입신청이 거절된 회원입니다.',
+                            timer: 1500
+                        })
+                    }else{
                         login_from.submit();
                         inputLog($("#id").val(), "로그인", "로그인");
                     }
                 },
                 error : function(request, status, error) {
-                    console.log(' get place sensor error');
+                    console.log('get place sensor error');
                     console.log(error);
                 }
             })
