@@ -613,7 +613,7 @@
         $.ajax({
             url:'<%=cp%>/getSensorInfo',
             dataType: 'json',
-            data:  {"tableName": tableName},
+            data:  {"sensor": tableName},
             async: false,
             success: function (data) {
                 reference.set("management",data.managementStandard);
