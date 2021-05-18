@@ -70,6 +70,7 @@ public class AjaxController {
 
     /**
      * 전체 측정소 정보를 읽어오기 위한 메소드
+     *
      * @return 전체 측정소 정보
      */
     @RequestMapping(value = "/getPlaceList")
@@ -105,13 +106,30 @@ public class AjaxController {
      * @param name  측정소명
      * @param check 모니터링 true/false
      */
-    @RequestMapping(value = "/placeMonitoringUpdate")
-    public void placeMonitoringUpdate(@RequestParam("name") String name, @RequestParam("check") Boolean check) {
+    @RequestMapping(value = "/MonitoringUpdate")
+    public void MonitoringUpdate(@RequestParam("place") String name, @RequestParam("check") Boolean check) {
         Place place = placeRepository.findByName(name);
         ObjectId id = place.get_id();
         Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), check, new Date(), place.getSensor());
         savePlace.set_id(id);
         placeRepository.save(savePlace);
+    }
+
+    /**
+     * 측정항목 모니터링 변경
+     * 현재 모니터링값 반대로 적용
+     *
+     * @param name      측정소명
+     * @param tablename 센서명
+     */
+    @RequestMapping(value = "/referenceMonitoringUpdate")
+    public void referenceMonitoringUpdate(@RequestParam("place") String name, @RequestParam("sensor") String tablename) {
+        //측정항목 업데이트
+        ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
+        reference.setMonitoring(!reference.getMonitoring());
+        reference_value_settingRepository.save(reference);
+        //측정소 업데이트
+        placeUpTime(name);
     }
 
     /**
@@ -325,7 +343,6 @@ public class AjaxController {
         return reference_value_settingRepository.findByName(sensor);
     }
 
-
     /**
      * 테이블 명으로 센서 가져오기
      *
@@ -445,6 +462,7 @@ public class AjaxController {
 
     /**
      * 측정소 업데이트, 센서 추가
+     *
      * @param placename
      * @param name
      * @param naming
@@ -472,22 +490,6 @@ public class AjaxController {
         reference_value_settingRepository.save(saveReference);
     }
 
-    /**
-     * 측정항목 모니터링 변경
-     * 현재 모니터링값 반대로 적용
-     *
-     * @param name      측정소명
-     * @param tablename 테이블 명
-     */
-    @RequestMapping(value = "/referenceMonitoringUpdate")
-    public void referenceMonitoringUpdate(@RequestParam("place") String name, @RequestParam("tablename") String tablename) {
-        //측정항목 업데이트
-        ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
-        reference.setMonitoring(!reference.getMonitoring());
-        reference_value_settingRepository.save(reference);
-        //측정소 업데이트
-        placeUpTime(name);
-    }
 
     /**
      * 측정항목의 법적기준 업데이트
@@ -754,20 +756,20 @@ public class AjaxController {
      */
     @RequestMapping(value = "/saveSensor")
     public void saveSensor(@RequestParam(value = "managementId", required = false) String managementId, @RequestParam(value = "classification", required = false) String classification, @RequestParam(value = "naming", required = false) String naming, @RequestParam(value = "place") String place,
-                           @RequestParam(value = "tableName", required = false) String tableName, @RequestParam(value = "hiddenCode", required = false) String hiddenCode,@RequestParam(value="isValueDelete",required = false) String isValueDelete) {
+                           @RequestParam(value = "tableName", required = false) String tableName, @RequestParam(value = "hiddenCode", required = false) String hiddenCode, @RequestParam(value = "isValueDelete", required = false) String isValueDelete) {
 
         SensorList sensor;
         //hidden 값이 있는지로 추가와 수정을 판별
         //추가
         if (hiddenCode == "" || hiddenCode == null) {
 
-            sensor = new SensorList(classification,naming,managementId,tableName,new Date(),place,true);
+            sensor = new SensorList(classification, naming, managementId, tableName, new Date(), place, true);
 
             //연간 배출량 누적 모니터랑 대상 && 배출량 추이 모니터링 대상   설정에도 추가합니다.
-            AnnualEmissions aEmissions = new AnnualEmissions(place,tableName,naming,7000000,false);
+            AnnualEmissions aEmissions = new AnnualEmissions(place, tableName, naming, 7000000, false);
             annualEmissionsRepository.save(aEmissions);
 
-            EmissionsSetting emissions = new EmissionsSetting(place,tableName,naming,false);
+            EmissionsSetting emissions = new EmissionsSetting(place, tableName, naming, false);
             emissionsSettingRepository.save(emissions);
 
             saveReference(place, tableName, naming); //상세설정 항목 추가
@@ -807,7 +809,7 @@ public class AjaxController {
             }
 
             //센서관련 법적기준,사내기준,관리기준값 사용자 동의하에 삭제
-            if(isValueDelete.equals("delete")) {
+            if (isValueDelete.equals("delete")) {
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
                 float legal = 999.0f;
                 float management = 999.0f;
@@ -925,7 +927,7 @@ public class AjaxController {
     @RequestMapping(value = "/saveStandard")
     public void saveStandard(@RequestParam(value = "naming") String naming, @RequestParam(value = "place") String place,
                              @RequestParam(value = "tableName") String tableName) {
-        EmissionsStandardSetting ess = new EmissionsStandardSetting(place,naming,0,0,tableName,"");
+        EmissionsStandardSetting ess = new EmissionsStandardSetting(place, naming, 0, 0, tableName, "");
         emissionsStandardSettingRepository.save(ess);
     }
 

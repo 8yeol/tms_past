@@ -515,7 +515,7 @@
             title = '측정소 수정';
             const pnum = $("input:checkbox[name=place]:checked").attr('id');
             const num = pnum.replace(/[^0-9]/g, ''); //place0 -> 0
-            send = '#p' + num;
+            send = 'p' + num;
         } else { //추가
             if (name == "") {
                 Swal.fire({
@@ -652,7 +652,7 @@
 
         const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
         var check = $("#" + id).is(":checked"); //true/false
-        var name = $("#p" + num).attr("value");
+        var name = $("#p" + num).attr("value"); //측정소 명
 
 
         if (findSensor(name) == 0) { //등록된 센서가 없을때
@@ -666,12 +666,12 @@
             return;
         }
         $.ajax({
-            url: '<%=cp%>/placeMonitoringUpdate',
+            url: '<%=cp%>/MonitoringUpdate',
             type: 'POST',
             async: false,
             cache: false,
             data: {
-                "name": name,
+                "place": name,
                 "check": check
             }
 
@@ -687,8 +687,8 @@
         var id = name.id;
         const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
         const naming = $("#naming" + num).text(); //관리ID
-        var tablename = name.value;
-        var check = $("#" + name.id).is(":checked");
+        var tablename = name.value; //
+        var check = $("#" + id).is(":checked");
         var pname = $("#pname").text();
 
         $.ajax({
@@ -697,8 +697,7 @@
             async: false,
             cache: false,
             data: {
-                "tablename": tablename,
-                "check": check,
+                "sensor": tablename,
                 "place": pname
             }
         })
