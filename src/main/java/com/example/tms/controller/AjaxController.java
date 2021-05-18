@@ -90,7 +90,6 @@ public class AjaxController {
     }
 
     //측정소 모니터링 업데이트
-
     @RequestMapping(value = "/placeMonitoringUpdate")
     public void placeMonitoringUpdate(@RequestParam("name") String name, @RequestParam("check") Boolean check) {
         Place place = placeRepository.findByName(name);
@@ -146,7 +145,14 @@ public class AjaxController {
         return placeRepository.findBySensorIsIn(tableName).getName();
     }
 
-    //측정소 추가
+    /**
+     * 측정소 추가, 수정
+     * 수정시 센서 상세설정에서 측정소명도 같이 변경
+     * @param name  측정소명
+     * @param location  위치
+     * @param admin     담당자 명
+     * @param tel       연락처
+     * @param hiddenCode 수정하고 싶은 측정소명명     */
     @RequestMapping(value = "/savePlace")
     public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "location") String location, @RequestParam(value = "admin") String admin,
                           @RequestParam(value = "tel") String tel, @RequestParam(value = "hiddenCode") String hiddenCode) {
@@ -857,6 +863,7 @@ public class AjaxController {
         SensorList sensor = sensorListRepository.findByTableName(tableName, "");
         sensorListRepository.delete(sensor);
     }
+
 
     @RequestMapping(value = "/getStatisticsData", method = RequestMethod.POST)
     public MonthlyEmissions getStatisticsData(String sensor, int year) {

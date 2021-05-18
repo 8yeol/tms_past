@@ -204,7 +204,7 @@
     $("#place_table").on('click', 'tbody tr', function () {
         const placeName = $(this).parents('#place_table div').eq(0).children().eq(0).children().eq(0).text();
         const sensorName = $(this).find('td').eq(0).text();
-        location.replace("/sensor?place=" + placeName + "&sensor=" + sensorName);
+        location.replace("<%=cp%>/sensor?place=" + placeName + "&sensor=" + sensorName);
     });
 
     /**

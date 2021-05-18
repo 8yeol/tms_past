@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
 <link rel="stylesheet" href="static/css/common.css">
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
@@ -8,6 +7,12 @@
 <script src="static/js/jquery-3.6.0.min.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/jquery-ui.js"></script>
+
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
 
 <style>
     body {
@@ -99,7 +104,7 @@
             <div class="row">
                 <div class="col text-center">
                     <button type="submit" class="btn btn-primary px-5 py-2 w-auto h-auto mt-3" onclick="join_submit()">가입신청</button>
-                    <button class="btn btn-outline-primary px-5 py-2 w-auto h-auto mt-3 ms-5" onClick="location.href='/login'">취소</button>
+                    <button class="btn btn-outline-primary px-5 py-2 w-auto h-auto mt-3 ms-5" onClick="location.href='<%=cp%>/login'">취소</button>
                 </div>
             </div>
         </div>
@@ -113,7 +118,7 @@
     function join_submit() {
         if (blankCheck() && passwordCheck() && emailCheck()) {
             var settings = {
-                "url": "http://localhost:8090/memberJoin",
+                "url": "<%=cp%>/memberJoin",
                 "method": "POST",
                 "timeout": 0,
                 "headers": {

@@ -311,14 +311,14 @@
                                 </div>
                             </c:if>
 
-                            <c:if test="${standard.emissionsStandard eq '0' and (member.state == '4' || member.state == '3')}">
+                            <c:if test="${standard.emissionsStandard eq '0' and (member.state == '1' || member.state == '2')}">
                                 <div class="pb-4 text-center">
                                     연간 배출 허용 기준 미등록 &nbsp;<br>
                                     <a onclick="standardModal(this)" class="small aTag_cursor" id="${standard.tableName}">등록하기</a>
                                 </div>
                             </c:if>
 
-                            <c:if test="${standard.emissionsStandard eq '0' and (member.state == '0' || member.state == '1'|| member.state == '2')}">
+                            <c:if test="${standard.emissionsStandard eq '0' and (member.state == '3')}">
                                 <div class="pb-4 text-center">
                                     연간 배출 허용 기준 미등록 &nbsp;<br>
                                 </div>

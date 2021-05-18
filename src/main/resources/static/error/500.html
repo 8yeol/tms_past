@@ -25,12 +25,19 @@
             font-size: 2rem;
             font-weight: bold;
         }
+        .link {
+            width: 150px;
+            height: 50px;
+            line-height: 50px;
+            margin: 50px auto 0;
+            border: 3px solid #0d6efd;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div>
-            <h1><img src="../images/500-error.png" width="400"></h1>
+            <h1><img src="static/images/500-error.png" width="400"></h1>
             <p>Internet Server Error</p>
         </div>
         <div style="height: 50px;"></div>
@@ -38,6 +45,9 @@
             <p>서비스 이용에 불편을 드려 죄송합니다.</p>
             <p>시스템 에러가 발생하여 페이지를 표시할 수 없습니다.</p>
             <p>관리자에게 문의하시거나 잠시 후 다시 시도하세요.</p>
+        </div>
+        <div class="link">
+            <a href="javascript:history.back()">뒤로가기</a>
         </div>
     </div>
 </body>

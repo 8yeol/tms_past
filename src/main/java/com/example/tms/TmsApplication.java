@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootApplication
+@SpringBootApplication (exclude = DataSourceAutoConfiguration.class)
 @EnableScheduling
 public class TmsApplication extends SpringBootServletInitializer {
 

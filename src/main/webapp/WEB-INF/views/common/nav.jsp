@@ -10,6 +10,12 @@
 <link rel="stylesheet" href="/static/css/fontawesome.css">
 <script src="/static/js/fontawesome.js"></script>
 
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
+
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
@@ -194,33 +200,33 @@
     <div class="container">
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-around">
-                <a href="/" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
+                <a href="<%=cp%>/" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
                     대기 TMS 관제 시스템
                 </a>
 
                 <nav id="topMenu">
                     <ul id="menu">
-                        <li class="topMenuLi"><a class="menuLink" href="/" id="dashboard">대시보드</a></li>
-                        <li class="topMenuLi"><a class="menuLink shortLink" href="/alarm" id="alarm">알림</a></li>
-                        <li class="topMenuLi"><a class="menuLink" href="/monitoring" id="monitoring">모니터링</a>
+                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/" id="dashboard">대시보드</a></li>
+                        <li class="topMenuLi"><a class="menuLink shortLink" href="<%=cp%>/alarm" id="alarm">알림</a></li>
+                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/monitoring" id="monitoring">모니터링</a>
                             <ul class="submenu short_sub">
-                                <li><a href="/monitoring" class="submenuLink">실시간 모니터링</a></li>
-                                <li><a href="/sensor" class="submenuLink">상세화면</a></li>
+                                <li><a href="<%=cp%>/monitoring" class="submenuLink">실시간 모니터링</a></li>
+                                <li><a href="<%=cp%>/sensor" class="submenuLink">상세화면</a></li>
                             </ul>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="/dataInquiry" id="statistics">분석 및 통계</a>
+                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/dataInquiry" id="statistics">분석 및 통계</a>
                             <ul class="submenu short_sub">
-                                <li><a href="/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
-                                <li><a href="/dataStatistics" class="submenuLink ">통계자료 조회</a></li>
+                                <li><a href="<%=cp%>/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
+                                <li><a href="<%=cp%>/dataStatistics" class="submenuLink ">통계자료 조회</a></li>
                             </ul>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="/stationManagement" id="setting">환경설정</a>
+                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/stationManagement" id="setting">환경설정</a>
                             <ul class="submenu long_sub">
-                                <li><a href="/stationManagement" class="submenuLink ">측정소 관리</a></li>
-                                <li><a href="/sensorManagement" class="submenuLink ">센서 관리</a></li>
-                                <li><a href="/alarmManagement" class="submenuLink ">알림 설정</a></li>
-                                <li><a href="/emissionsManagement" class="submenuLink ">배출량 관리</a></li>
-                                <li><a href="/setting" class="submenuLink ">설정</a></li>
+                                <li><a href="<%=cp%>/stationManagement" class="submenuLink ">측정소 관리</a></li>
+                                <li><a href="<%=cp%>/sensorManagement" class="submenuLink ">센서 관리</a></li>
+                                <li><a href="<%=cp%>/alarmManagement" class="submenuLink ">알림 설정</a></li>
+                                <li><a href="<%=cp%>/emissionsManagement" class="submenuLink ">배출량 관리</a></li>
+                                <li><a href="<%=cp%>/setting" class="submenuLink ">설정</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -233,8 +239,8 @@
                 <div class="dropdown">
                     <button class="dropbtn rounded" id="dropBtn"><i class="fas fa-caret-down"></i></button>
                     <div class="dropdown-content text-start">
-                        <a href="/myPage">마이페이지</a>
-                        <a href="/logout">로그아웃</a>
+                        <a href="<%=cp%>/myPage">마이페이지</a>
+                        <a href="<%=cp%>/logout">로그아웃</a>
                     </div>
                 </div>
 
@@ -248,7 +254,7 @@
 
 <script>
     $( document ).ready(function() {
-        var settings = {"url": "http://localhost:8090/getUsername", "method": "POST",};
+        var settings = {"url": "<%=cp%>/getUsername", "method": "POST",};
         $.ajax(settings).done(function (name) {
             $('#dropBtn').prepend(name+" 님");
             getRank();
@@ -256,7 +262,8 @@
     });
 
     function getRank() {
-        var settings = {"url": "http://localhost:8090/getRank", "method": "POST",};
+
+        var settings = {"url": "<%=cp%>/getRank", "method": "POST",};
         $.ajax(settings).done(function (rank) {
             if(!rank.dashboard)
                 $('#dashboard').hide();
