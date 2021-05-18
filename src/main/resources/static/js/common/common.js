@@ -34,8 +34,13 @@ function numberWithCommas(x) {
 // 로그 생성
 function inputLog(id,content,type){
 
+    // console.log("location          "+location)
+    // console.log("location.href     "+location.href)
+    // console.log("location.host     "+location.host )
+    // console.log("getContextPath    "+getContextPath())
+
     var settings = {
-        "url": getContextPath()+"http://localhost:8090/inputLog",
+        "url": getContextPath()+"/inputLog",
         "method": "POST",
         "headers": {
             "accept": "application/json",
