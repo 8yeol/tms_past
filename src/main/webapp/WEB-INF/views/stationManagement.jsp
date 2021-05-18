@@ -904,7 +904,6 @@
                 icon: 'warning',
                 title: '경고',
                 text: '입력 데이터를 체크해주세요.'
-
             })
             placeChange(document.getElementById('nickname').value);
             return false;

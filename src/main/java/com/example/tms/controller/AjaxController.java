@@ -100,6 +100,13 @@ public class AjaxController {
     }
 
     //측정소 모니터링 업데이트
+
+    /**
+     * 측정소 모니터링 업데이트
+     *
+     * @param name 측정소명
+     * @param check 모니터링 true/false
+     */
     @RequestMapping(value = "/placeMonitoringUpdate")
     public void placeMonitoringUpdate(@RequestParam("name") String name, @RequestParam("check") Boolean check) {
         Place place = placeRepository.findByName(name);
@@ -109,6 +116,10 @@ public class AjaxController {
         placeRepository.save(savePlace);
     }
 
+    /**
+     * 전체 센서 정보 리스트
+     *
+     * @return 전체 센서 정보보     */
     @RequestMapping(value = "getSensorList")
     public List<SensorList> getSensorList() {
         return sensorListRepository.findAll();
@@ -314,7 +325,7 @@ public class AjaxController {
      * @return - 해당 센서의 센서 정보(한글명, 경고값, ...)
      */
     @RequestMapping(value = "/getSensorInfo")
-    public ReferenceValueSetting getSensorInfo(@RequestParam String sensor) {
+    public ReferenceValueSetting getSensorInfo(String sensor) {
         return reference_value_settingRepository.findByName(sensor);
     }
 
@@ -538,20 +549,6 @@ public class AjaxController {
         Place place = placeRepository.findByName(name);
         place.setUp_time(new Date());
         placeRepository.save(place);
-    }
-
-    /**
-     * 센서 상세설정 삭제
-     * @param referenceList 상세설정 리스트
-     */
-    @RequestMapping(value = "/removeReference")
-    public void removeReference(@RequestParam(value = "referenceList[]") List<String> referenceList) {
-        if (referenceList == null || "".equals(referenceList)) {
-        } else {
-            for (int i = 0; i < referenceList.size(); i++) {
-                removeReferencePlaceUpdate(referenceList.get(i));
-            }
-        }
     }
 
     /**
