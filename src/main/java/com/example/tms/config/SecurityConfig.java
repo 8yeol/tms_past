@@ -1,13 +1,9 @@
 package com.example.tms.config;
 import com.example.tms.repository.RankManagementRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -22,9 +18,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-/*
-        http.authorizeRequests()
-                .antMatchers("/memberJoin").anonymous()
+        http.authorizeRequests().antMatchers("/memberJoin").anonymous()
                 .antMatchers("/myPage").authenticated()
                 .antMatchers("/").access("@authChecker.check(authentication , 'dashboard')")
                 .antMatchers("/alarm").access("@authChecker.check(authentication , 'alarm')")
@@ -38,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic();
         http.exceptionHandling().accessDeniedPage("/accessDenied");
 
+/*
         http.authorizeRequests().anyRequest().permitAll();
         http.csrf().disable();
         http.httpBasic();
