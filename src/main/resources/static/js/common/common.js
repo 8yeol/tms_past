@@ -1,8 +1,13 @@
+function getContextPath() {
+    var hostIndex = location.href.indexOf( location.host ) + location.host.length;
+    return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
+};
+
 // 테이블 명 넘겨주면 측정항목 리턴해주는 메소드
 function findSensorCategory(tableName){
     let result;
     $.ajax({
-        url: '/getSensorManagementId',
+        url:getContextPath()+'/getSensorManagementId',
         type: 'POST',
         dataType: 'json',
         async: false,
@@ -28,8 +33,9 @@ function numberWithCommas(x) {
 
 // 로그 생성
 function inputLog(id,content,type){
+
     var settings = {
-        "url": "http://localhost:8090/inputLog",
+        "url": getContextPath()+"http://localhost:8090/inputLog",
         "method": "POST",
         "headers": {
             "accept": "application/json",
