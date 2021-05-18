@@ -72,18 +72,16 @@
                     "password" : pw },
                 success : function(data) {
                     if(data == "id") {
-                        customSwal('로그인 오류','등록되지 않은 아이디입니다.');
-
+                        $("#id").val("").focus();
+                        $("#password").val("").focus();
+                        swal('로그인 오류','등록되지 않은 아이디입니다.');
                     } else if (data == "password") {
                         $("#password").val("").focus();
-                        customSwal('로그인 오류','비밀번호가 틀립니다. 다시 확인해주세요.');
-
+                        swal('로그인 오류','비밀번호가 틀립니다. 다시 확인해주세요.');
                     } else if(data == "waiting"){
-                        customSwal('로그인 오류','가입신청 대기중인 회원입니다.');
-
+                        swal('로그인 오류','가입신청 대기중인 회원입니다.');
                     } else if(data == "denie"){
-                        customSwal('로그인 오류','가입신청이 거절된 회원입니다.');
-
+                        swal('로그인 오류','가입신청이 거절된 회원입니다.');
                     }else{
                         login_from.submit();
                         inputLog($("#id").val(), "로그인", "로그인");
@@ -95,11 +93,11 @@
                 }
             })
         }else{
-            customSwal('경고','아이디 및 패스워드를 입력해주세요.');
+            swal('경고','아이디 및 패스워드를 입력해주세요.');
         }
     }
 
-    function customSwal(title,text){
+    function swal(title, text){
         Swal.fire({
             icon: 'warning',
             title: title,

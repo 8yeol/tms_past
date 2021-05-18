@@ -14,19 +14,15 @@
         position: relative;
         left: 35px;
     }
-    /*@media all and (min-width:1981px) {*/
-    /*    .mypage-bg {position: relative; top:18%;}*/
-    /*}*/
-    /*@media all and (max-width: 1980px) {*/
-    /*    .mypage-bg {position: relative; top: 10%;}*/
-    /*}*/
 </style>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="shortcut icon" href="#">
 <script src="static/js/jquery-ui.js"></script>
+<script src="static/js/sweetalert2.min.js"></script>
 
 <div class="container bg-light rounded p-5 mt-5 mypage-bg">
     <div class="row">
@@ -227,9 +223,14 @@
     }       // passwordCheck
 
     function emailCheck(){
-        var email_rule =  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+        const email_rule =  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if(!email_rule.test($("#email").val())){
-            alert("이메일을 형식에 맞게 입력해주세요.");
+            Swal.fire({
+                icon: 'warning',
+                title: '이메일 형식 오류',
+                text: '이메일을 형식에 맞게 입력해주세요.',
+                timer: 1500
+            })
             $("#email").focus();
             return false;
         } else{

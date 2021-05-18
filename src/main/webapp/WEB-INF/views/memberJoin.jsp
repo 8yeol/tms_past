@@ -135,39 +135,22 @@
                 },
                 success : function(data) {
                     if (data == "success") {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '회원가입 성공',
-                            timer: 1500
-                        })
+                        swal('success', '회원가입 성공')
                         setTimeout(function () {
-                            inputLog($("#id").val(), "회원가입신청", "회원가입");
+                            inputLog($("#id").val(), "가입신청", "회원가입");
                             location.href = '<%=cp%>/login';
                         }, 1800);
                     } else if (data == "failed") {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '회원가입 실패',
-                            text: '중복되는 ID 입니다.',
-                            timer: 1500
-                        })
+                        $("#id").focus();
+                        swal('warning', '회원가입 실패', '중복되는 ID 입니다.')
                     } else if (data == "root") {
-                        Swal.fire({
-                            icon: 'success',
-                            title: '회원가입 성공',
-                            text: '최초 가입계정으로 최고관리자 계정으로 지정됩니다.',
-                            timer: 1500
-                        })
+                        swal('success', '회원가입 성공', '최초 가입 계정 <br>최고관리자 계정으로 지정됩니다.')
                         setTimeout(function () {
-                            inputLog($("#id").val(), "회원가입신청", "회원가입");
+                            inputLog($("#id").val(), "가입신청", "회원가입");
                             location.href = '<%=cp%>/login';
                         }, 1800);
                     } else {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '회원가입 실패',
-                            timer: 1500
-                        })
+                        swal('warning', '회원가입 실패')
                     }
                 },
                 error : function(request, status, error) {
@@ -184,12 +167,7 @@
             $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != ""){
             return true;
         } else {
-            Swal.fire({
-                icon: 'warning',
-                title: '가입신청실패',
-                text: '빈칸 없이 입력해주세요.',
-                timer: 1500
-            })
+            swal('warning', '가입신청실패', '빈칸 없이 입력해주세요.')
             return false;
         }
     }
@@ -197,24 +175,12 @@
     //가입신청 password check
     function passwordCheck(){
         if($("#passwordText").text() != ""){
-            Swal.fire({
-                icon: 'warning',
-                title: '비밀번호형식 오류',
-                text: '6자리 이상 20자리 미만 비밀번호를 설정해주세요.',
-                timer: 1500
-            })
-
             $("#passwordText").focus();
+            swal('warning', '비밀번호형식 오류', '6자리 이상 20자리 미만 비밀번호를 설정해주세요.')
             return false;
         }else if($("#passwordCheckText").text() != ""){
-            Swal.fire({
-                icon: 'warning',
-                title: '비밀번호오류',
-                text: '비밀번호가 틀립니다. 다시 설정해주세요.',
-                timer: 1500
-            })
-
             $("#passwordCheck").focus();
+            swal('warning', '비밀번호 오류', '비밀번호가 틀립니다. 다시 설정해주세요.')
             return false;
         } else{
             return true;
@@ -225,13 +191,8 @@
     function emailCheck(){
         const email_rule =  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
         if(!email_rule.test($("#email").val())){
-            Swal.fire({
-                icon: 'warning',
-                title: '이메일 형식 오류',
-                text: '이메일을 형식에 맞게 입력해주세요.',
-                timer: 1500
-            })
             $("#email").focus();
+            swal('warning', '이메일 형식 오류', '이메일 형식에 맞게 입력해주세요.')
             return false;
         } else{
             return true;
@@ -297,6 +258,15 @@
                 return false;
             }
         });
+    }
+
+    function swal(icon, title, text){
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+            timer: 1500
+        })
     }
 </script>
 
