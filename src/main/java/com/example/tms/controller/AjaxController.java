@@ -440,11 +440,8 @@ public class AjaxController {
         if (placeRepository.findBySensorIsIn(name) != null) { //기존 센서가 존재
             //place 업데이트 시간 수정
             Place place = placeRepository.findBySensorIsIn(name);
-            ObjectId id = place.get_id();
-
-            Place updatePlace = new Place(place.getName(), place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
-            updatePlace.set_id(id);
-            placeRepository.save(updatePlace);
+            place.setUp_time(new Date());
+            placeRepository.save(place);
 
 
         } else { //최초 입력
@@ -468,72 +465,79 @@ public class AjaxController {
 
     }
 
-    //측정 항목 모니터링 업데이트
+    /**
+     * 측정항목 모니터링 변경
+     * 현재 모니터링값 반대로 적용
+     * @param name    측정소명
+     * @param tablename 테이블 명
+     */
     @RequestMapping(value = "/referenceMonitoringUpdate")
-    public void referenceMonitoringUpdate(@RequestParam("place") String name, @RequestParam("check") Boolean check, @RequestParam("tablename") String tablename) {
+    public void referenceMonitoringUpdate(@RequestParam("place") String name, @RequestParam("tablename") String tablename) {
         //측정항목 업데이트
         ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
-        ObjectId id1 = reference.get_id();
-        ReferenceValueSetting saveReference = new ReferenceValueSetting(tablename, reference.getNaming(), reference.getLegalStandard(), reference.getCompanyStandard(), reference.getManagementStandard(), check);
-        saveReference.set_id(id1);
-        reference_value_settingRepository.save(saveReference);
+        reference.setMonitoring(!reference.getMonitoring());
+        reference_value_settingRepository.save(reference);
         //측정소 업데이트
-        Place place = placeRepository.findByName(name);
-        ObjectId id = place.get_id();
-        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
-        savePlace.set_id(id);
-        placeRepository.save(savePlace);
+        placeUpTime(name);
     }
 
-    //측정 항목 법적기준 업데이트
+    /**
+     * 측정항목의 법적기준 업데이트
+     * @param name 측정소명
+     * @param value 사내기준 값
+     * @param tablename 테이블 명
+     */
     @RequestMapping(value = "/legalUpdate")
     public void legalUpdate(@RequestParam("place") String name, @RequestParam("value") Float value, @RequestParam("tablename") String tablename) {
         //측정항목 업데이트
         ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
-        ObjectId id1 = reference.get_id();
-        ReferenceValueSetting saveReference = new ReferenceValueSetting(tablename, reference.getNaming(), value, reference.getCompanyStandard(), reference.getManagementStandard(), reference.getMonitoring());
-        saveReference.set_id(id1);
-        reference_value_settingRepository.save(saveReference);
+        reference.setLegalStandard(value);
+        reference_value_settingRepository.save(reference);
         //측정소 업데이트
-        Place place = placeRepository.findByName(name);
-        ObjectId id = place.get_id();
-        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
-        savePlace.set_id(id);
-        placeRepository.save(savePlace);
+        placeUpTime(name);
     }
 
-    //측정 항목 사내기준 업데이트
+    /**
+     * 측정항목의 사내기준 업데이트
+     * @param name 측정소명
+     * @param value  사내기준 값
+     * @param tablename 테이블 명
+     */
     @RequestMapping(value = "/companyUpdate")
     public void companyUpdate(@RequestParam("place") String name, @RequestParam("value") Float value, @RequestParam("tablename") String tablename) {
         //측정항목 업데이트
         ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
-        ObjectId id1 = reference.get_id();
-        ReferenceValueSetting saveReference = new ReferenceValueSetting(tablename, reference.getNaming(), reference.getLegalStandard(), value, reference.getManagementStandard(), reference.getMonitoring());
-        saveReference.set_id(id1);
-        reference_value_settingRepository.save(saveReference);
+        reference.setCompanyStandard(value);
+        reference_value_settingRepository.save(reference);
         //측정소 업데이트
-        Place place = placeRepository.findByName(name);
-        ObjectId id = place.get_id();
-        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
-        savePlace.set_id(id);
-        placeRepository.save(savePlace);
+        placeUpTime(name);
     }
 
-    //측정 항목 관리기준 업데이트
+    /**
+     * 측정항목의 관리기준 업데이트
+     * @param name 측정소명
+     * @param value 관리기준 값
+     * @param tablename 테이블 명
+     */
     @RequestMapping(value = "/managementUpdate")
     public void managementUpdate(@RequestParam("place") String name, @RequestParam("value") Float value, @RequestParam("tablename") String tablename) {
         //측정항목 업데이트
         ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
-        ObjectId id1 = reference.get_id();
-        ReferenceValueSetting saveReference = new ReferenceValueSetting(tablename, reference.getNaming(), reference.getLegalStandard(), reference.getCompanyStandard(), value, reference.getMonitoring());
-        saveReference.set_id(id1);
-        reference_value_settingRepository.save(saveReference);
+        reference.setManagementStandard(value);
+        reference_value_settingRepository.save(reference);
         //측정소 업데이트
+        placeUpTime(name);
+    }
+
+    /**
+     * 측정소 업데이트시간 변경
+     * @param name 측정소명
+     */
+    @RequestMapping(value = "/placeUpTime")
+    public void placeUpTime(@RequestParam("place") String name) {
         Place place = placeRepository.findByName(name);
-        ObjectId id = place.get_id();
-        Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), place.getMonitoring(), new Date(), place.getSensor());
-        savePlace.set_id(id);
-        placeRepository.save(savePlace);
+        place.setUp_time(new Date());
+        placeRepository.save(place);
     }
 
     /**
@@ -734,13 +738,29 @@ public class AjaxController {
         return standardList;
     }
 
+    /**
+     *분석 및 통계 - 측정자료 조회
+     * @param date_start 시작날짜
+     * @param date_end   끝나는 날짜
+     * @param item       아이템
+     * @param off        off 데이터도 표시할 것인지?
+     * @return 차트에 활용할 날짜, 속성값
+     */
     @RequestMapping(value = "/searchChart", method = RequestMethod.POST)
     public List<HashMap> searchOnChart(String date_start, String date_end, String item, boolean off) {
 
         return dataInquiryCustomRepository.searchChart(date_start, date_end, item, off);
     }
 
-
+    /**
+     *분석 및 통계 - 측정자료 조회
+     * 날짜,아이템으로 해당 기간의 데이터 추출
+     * @param date_start 시작날짜
+     * @param date_end   끝나는 날짜
+     * @param item       아이템
+     * @param off        off 데이터도 표시할 것인지?
+     * @return 해당 아이템의 기간 데이터
+     */
     @RequestMapping(value = "/searchInformatin", method = RequestMethod.POST)
     public List<Sensor> searchInformatin(String date_start, String date_end, String item, boolean off) {
 
@@ -875,6 +895,12 @@ public class AjaxController {
     }
 
 
+    /**
+     * 센서와 년도를 넣고 월별 데이터를 추출
+     * @param sensor 센서명
+     * @param year 년도
+     * @return 월별 데이터
+     */
     @RequestMapping(value = "/getStatisticsData", method = RequestMethod.POST)
     public MonthlyEmissions getStatisticsData(String sensor, int year) {
 

@@ -323,6 +323,8 @@
                 "off":$('#off').is(":checked")
             },
             success : function(data) {
+                console.log(data);
+                console.log('searchInformatin');
                 const tbody = document.getElementById('informationBody');
 
                 for(let i=0; i<data.length; i++){
@@ -584,6 +586,8 @@
                 "off":off
             },
             success : function(data) {
+                console.log(data);
+                console.log('searchChart ');
                 if(data.length==0){
                     Swal.fire({
                         icon: 'warning',

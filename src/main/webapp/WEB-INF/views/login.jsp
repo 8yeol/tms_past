@@ -72,35 +72,18 @@
                     "password" : pw },
                 success : function(data) {
                     if(data == "id") {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '로그인 오류',
-                            text: '등록되지 않은 아이디입니다.',
-                            timer: 1500
-                        })
+                        customSwal('로그인 오류','등록되지 않은 아이디입니다.');
+
                     } else if (data == "password") {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '로그인 오류',
-                            text: '비밀번호가 틀립니다. 다시 확인해주세요.',
-                            timer: 1500
-                        })
-                        $("#password").text("");
-                        document.getElementById("password").focus();
+                        $("#password").val("").focus();
+                        customSwal('로그인 오류','비밀번호가 틀립니다. 다시 확인해주세요.');
+
                     } else if(data == "waiting"){
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '로그인 오류',
-                            text: '가입신청 대기중인 회원입니다.',
-                            timer: 1500
-                        })
+                        customSwal('로그인 오류','가입신청 대기중인 회원입니다.');
+
                     } else if(data == "denie"){
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '로그인 오류',
-                            text: '가입신청이 거절된 회원입니다.',
-                            timer: 1500
-                        })
+                        customSwal('로그인 오류','가입신청이 거절된 회원입니다.');
+
                     }else{
                         login_from.submit();
                         inputLog($("#id").val(), "로그인", "로그인");
@@ -112,13 +95,17 @@
                 }
             })
         }else{
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '아이디 및 패스워드를 입력해주세요.',
-                timer: 1500
-            })
+            customSwal('경고','아이디 및 패스워드를 입력해주세요.');
         }
+    }
+
+    function customSwal(title,text){
+        Swal.fire({
+            icon: 'warning',
+            title: title,
+            text: text,
+            timer: 1500
+        })
     }
 </script>
 
