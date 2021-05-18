@@ -911,6 +911,8 @@
     }
     
     function sensor_table_update(table, recentData, sensorData) {
+        var dt = $('#sensor-table').DataTable();
+        var pageNum = dt.page.info().page;
         upDate = moment(recentData.x).format('YYYY-MM-DD HH:mm:ss');
         value = (recentData.y).toFixed(2);
         if(sensorData.legalStandard == 999){
@@ -938,9 +940,9 @@
         } else {
             standard =  "정상";
         }
-
         table.fnAddData([{'x':upDate, 'y': value, 'z':standard}]);
         table.fnDeleteRow(0);
         table.fnSort([0, 'desc']);
+        table.fnPageChange(pageNum);
     }
 </script>
