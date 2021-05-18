@@ -552,33 +552,6 @@ public class AjaxController {
     }
 
     /**
-     * 상세설정값 삭제 및 측정소 업데이트 시간 수정
-     * @param name Reference Value
-     */
-    public void removeReferencePlaceUpdate(String name) {
-        //상세설정 값 삭제
-        if (reference_value_settingRepository.findByName(name) != null) {
-            reference_value_settingRepository.deleteByName(name);
-        }
-
-        //알림설정값 삭제
-        if (notification_settingsRepository.findByName(name) != null) {
-            notification_settingsRepository.deleteByName(name);
-        }
-        //place 업데이트 시간 수정
-        if (placeRepository.findBySensorIsIn(name) != null) {
-            Place place = placeRepository.findBySensorIsIn(name);
-            place.getSensor().remove(name); //리스트에서 센서 제거
-            place.setUp_time(new Date()); //시간 업데이트
-            if (place.getSensor().size() == 0) {
-                place.setMonitoring(false);
-            }
-            placeRepository.save(place);
-        }
-
-    }
-
-    /**
      * 알림 현황 저장 (일 - 1월1부터 ~ 어제 날짜 / 월 - 1월1부터 이번달)
      * notification_day_statistics(일) , notification_month_statistics(월)
      */
@@ -874,8 +847,25 @@ public class AjaxController {
         //배출량 관리 기준 삭제
         emissionsStandardSettingRepository.deleteByTableName(tableName);
 
-        //센서 상세설정, 알림설정 삭제 , 업데이트 시간 수정
-        removeReferencePlaceUpdate(tableName);
+        //상세설정 값 삭제
+        if (reference_value_settingRepository.findByName(tableName) != null) {
+            reference_value_settingRepository.deleteByName(tableName);
+        }
+
+        //알림설정값 삭제
+        if (notification_settingsRepository.findByName(tableName) != null) {
+            notification_settingsRepository.deleteByName(tableName);
+        }
+        //place 업데이트 시간 수정
+        if (placeRepository.findBySensorIsIn(tableName) != null) {
+            Place place = placeRepository.findBySensorIsIn(tableName);
+            place.getSensor().remove(tableName); //리스트에서 센서 제거
+            place.setUp_time(new Date()); //시간 업데이트
+            if (place.getSensor().size() == 0) {
+                place.setMonitoring(false);
+            }
+            placeRepository.save(place);
+        }
 
         //배출량 관리 - 모니터링 대상 삭제
         emissionsSettingRepository.deleteBySensor(tableName);
