@@ -611,7 +611,7 @@
     function getReferenceValue(tableName){
         let reference = new Map();
         $.ajax({
-            url:'<%=cp%>/getReferenceValue',
+            url:'<%=cp%>/getSensorInfo',
             dataType: 'json',
             data:  {"tableName": tableName},
             async: false,

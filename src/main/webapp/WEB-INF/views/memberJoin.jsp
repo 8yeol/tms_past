@@ -9,6 +9,7 @@
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/common/member.js"></script>
 
 <%
     pageContext.setAttribute("br", "<br/>");
@@ -60,7 +61,7 @@
                         <label for="passwordCheck" class="col-form-label">비밀번호 확인</label>
                     </div>
                     <div class="col text-end">
-                        <span style="font-size: 15%" id="passwordCheckText"></span>
+                        <span style="font-size: 15%; color: red" id="passwordCheckText"></span>
                     </div>
                 </div>
                 <div class="col-sm-10" style="width:100%;">
@@ -170,94 +171,6 @@
             swal('warning', '가입신청실패', '빈칸 없이 입력해주세요.')
             return false;
         }
-    }
-
-    //가입신청 password check
-    function passwordCheck(){
-        if($("#passwordText").text() != ""){
-            $("#passwordText").focus();
-            swal('warning', '비밀번호형식 오류', '6자리 이상 20자리 미만 비밀번호를 설정해주세요.')
-            return false;
-        }else if($("#passwordCheckText").text() != ""){
-            $("#passwordCheck").focus();
-            swal('warning', '비밀번호 오류', '비밀번호가 틀립니다. 다시 설정해주세요.')
-            return false;
-        } else{
-            return true;
-        }
-    }
-
-    // 이메일 형식 체크
-    function emailCheck(){
-        const email_rule =  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-        if(!email_rule.test($("#email").val())){
-            $("#email").focus();
-            swal('warning', '이메일 형식 오류', '이메일 형식에 맞게 입력해주세요.')
-            return false;
-        } else{
-            return true;
-        }
-    }
-
-    // 비밀번호 체크 (6자리 이상 20자리 미만)
-    function passwordCheckMsg(){
-        if($("#password").val().length < 6 ){
-            $("#passwordText").html("6자리 이상 입력해주세요.");
-        } else if ($("#password").val().length > 20){
-            $("#passwordText").html("20자리 이내로 입력해주세요.");
-        } else {
-            $("#passwordText").html("");
-        }
-
-        if ($("#password").val() != $("#passwordCheck").val()) {
-            $("#passwordCheckText").html("비밀번호가 일치하지 않습니다.");
-            $("#passwordCheckText").css("color","red");
-        } else {
-            $("#passwordCheckText").html("");
-        }
-    }
-
-    // 전화번호 자동완성 도우미
-    function inputPhoneNumber(obj) {
-        obj.value = obj.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-        const number = obj.value.replace(/[^0-9]/g, "");
-        let phone = "";
-        if (number.length < 4) {
-            return number;
-        } else if (number.length < 7) {
-            phone += number.substr(0, 3);
-            phone += "-";
-            phone += number.substr(3);
-        } else if (number.length < 11) {
-            phone += number.substr(0, 3);
-            phone += "-";
-            phone += number.substr(3, 3);
-            phone += "-";
-            phone += number.substr(6);
-        } else {
-            phone += number.substr(0, 3);
-            phone += "-";
-            phone += number.substr(3, 4);
-            phone += "-";
-            phone += number.substr(7);
-        }
-        obj.value = phone;
-    }
-
-    // 이메일 자동완성 도우미
-    function autoEmail(a, b) {
-        const mailId = b.split('@'); // 메일계정의 ID만 받아와서 처리하기 위함
-        const mailList = ['lghausys.com']; // 메일목록
-        const availableCity = new Array; // 자동완성 키워드 리스트
-        for (let i = 0; i < mailList.length; i++) {
-            availableCity.push(mailId[0] + '@' + mailList[i]); // 입력되는 텍스트와 메일목록을 조합
-        }
-        $("#" + a).autocomplete({
-            source: availableCity, // jQuery 자동완성에 목록을 넣어줌
-            focus: function (event, ui) {
-                return false;
-            }
-        });
     }
 
     function swal(icon, title, text){

@@ -23,6 +23,8 @@
 <link rel="shortcut icon" href="#">
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/common/common.js"></script>
+<script src="static/js/common/member.js"></script>
 
 <div class="container bg-light rounded p-5 mt-5 mypage-bg">
     <div class="row">
@@ -72,25 +74,43 @@
 
             <div class="edit" style="display:none;" id="passwordBox">
                 <div class="mb-3" style="margin-top: 1rem; width: 80%;">
+                    <label for="password" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">현재 비밀번호</label>
+                    <div class="col-sm-10" style="width: 60%; display: inline-block;">
+                        <input type="password" class="form-control" id="now_password" onkeyup="nowPasswordCheck()">
+                    </div>
+                    <div class="col">
+                        <span class="text-danger" id="nowPasswordText">* 사용중인 비밀번호를 입력해주세요.</span>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="mb-3" style="margin-top: 1rem; width: 80%;">
                     <label for="password" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 변경</label>
                    <div class="col-sm-10" style="width: 60%; display: inline-block;">
-                        <input type="password" class="form-control" id="password">
+                        <input type="password" class="form-control" id="password" onkeyup="passwordCheckMsg()">
+                    </div>
+                    <div class="col">
+                        <span class="text-danger" id="passwordText">* 6자리 이상 20자리 미만의 비밀번호를 설정해주세요.</span>
                     </div>
                 </div>
 
                 <div class="mb-3" style="width: 80%;">
                     <label for="passwordCheck" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 확인</label>
                     <div class="col-sm-10" style="width: 60%; display: inline-block;">
-                        <input type="password" class="form-control" id="passwordCheck">
+                        <input type="password" class="form-control" id="passwordCheck" onkeyup="passwordCheckMsg()" >
+                    </div>
+                    <div class="col">
+                        <span class="text-danger" id="passwordCheckText">* 비밀번호가 일치하지 않습니다.</span>
                     </div>
                 </div>
-
             </div>
 
             <div class="row">
                 <div class="col text-center">
-                    <button class="btn btn-outline-primary m-3" onclick="setLayout()" id="update_btn">회원정보 수정</button>
-                    <button class="btn btn-primary m-3" onclick="submit()" style="display:none;" id="up_btn">정보수정</button>
+                    <button class="btn btn-outline-primary m-3"  style="display:none;" id="pw_button" onclick="changePassword()">비밀번호 변경</button>
+                    <button class="btn btn-outline-primary m-3" id="update_btn" onclick="setLayout()">회원정보 수정</button>
+                    <button class="btn btn-primary m-3" style="display:none;" id="up_btn" onclick="submit()" >정보수정</button>
                 </div>
             </div>
         </div>
@@ -108,12 +128,35 @@
             $("#update_btn").html("회원정보 수정");
         }
 
+        const passwordBox = document.getElementById('passwordBox');
+        if(passwordBox.style.display!="none"){
+            changePassword();
+        }
+
         $("#up_btn").toggle();
-        $("#passwordBox").toggle();
+        $("#pw_button").toggle();
         readonlyToggle();
     }       // setLayout
+
+    function changePassword(){
+        $("#passwordBox").toggle();
+    }
+
     function submit() {
-        if (blankCheck() && passwordCheck() && emailCheck()) {
+
+        const passwordBox = document.getElementById('passwordBox');
+        if(passwordBox.style.display!="none"){
+            passwordCheck()
+            blankCheck('block');
+
+            if($("#nowPasswordText").text()!="인증완료"){
+                $("#now_password").focus();
+                swal('error', '현재 비밀번호 오류', '사용중인 비밀번호를 입력해주세요.')
+                return false;
+            }
+        }
+
+        if (emailCheck()) {
             var settings = {
                 "url": "<%=cp%>/memberUpdate",
                 "method": "POST",
@@ -143,47 +186,6 @@
         }
     }           // join_submit()
 
-    function inputPhoneNumber(obj) {
-        obj.value = obj.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-        var number = obj.value.replace(/[^0-9]/g, "");
-        var phone = "";
-        if (number.length < 4) {
-            return number;
-        } else if (number.length < 7) {
-            phone += number.substr(0, 3);
-            phone += "-";
-            phone += number.substr(3);
-        } else if (number.length < 11) {
-            phone += number.substr(0, 3);
-            phone += "-";
-            phone += number.substr(3, 3);
-            phone += "-";
-            phone += number.substr(6);
-        } else {
-            phone += number.substr(0, 3);
-            phone += "-";
-            phone += number.substr(3, 4);
-            phone += "-";
-            phone += number.substr(7);
-        }
-        obj.value = phone;
-    }       // inputPhoneNumber 정규식
-
-    function autoEmail(a, b) {
-        var mailId = b.split('@'); // 메일계정의 ID만 받아와서 처리하기 위함
-        var mailList = ['naver.com', 'gmail.com', 'daum.net', 'hanmail.net', 'korea.kr']; // 메일목록
-        var availableCity = new Array; // 자동완성 키워드 리스트
-        for (var i = 0; i < mailList.length; i++) {
-            availableCity.push(mailId[0] + '@' + mailList[i]); // 입력되는 텍스트와 메일목록을 조합
-        }
-        $("#" + a).autocomplete({
-            source: availableCity, // jQuery 자동완성에 목록을 넣어줌
-            focus: function (event, ui) {
-                return false;
-            }
-        });
-    }           // autoEmail 이메일 자동완성 도우미
-
     function readonlyToggle() {
         $("#name").attr("readonly", bool);
         $("#email").attr("readonly", bool);
@@ -198,43 +200,32 @@
         }
     }       // readonlyToggle
 
-    function blankCheck(){
-        if ($("#password").val() != "" && $("#passwordCheck").val() != "" && $("#name").val() != "" &&
-            $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != ""){
+    function blankCheck(passwordBox){
+        if(passwordBox=='block'){
+            if ($("#password").val() == "" && $("#passwordCheck").val() == "") {
+                swal('warning', '수정 실패', '변경할 비밀번호를 입력해주세요.')
+                return false;
+            }
+        }
+        if ( $("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != ""){
             return true;
         } else {
-            alert("빈칸없이 입력하여 주세요");
+            swal('warning', '수정 실패', '빈칸 없이 입력해주세요.')
             return false;
         }
-    }       // blankCheck
+    }
 
-    function passwordCheck(){
-        if($("#password").val().length < 5 ){
-            alert("변경할 비밀번호를 6자리이상 입력해주세요.");
-            $("#password").focus();
-            return false;
-        } else if ($("#password").val().length > 20){
-            alert("변경할 비밀번호를 20자리 이내로 입력해주세요.");
-            $("#password").focus();
-            return false;
-        } else {
-            return true;
-        }
-    }       // passwordCheck
+    function nowPasswordCheck(){
+        $("#nowPasswordText").text("비밀번호가 틀립니다. 다시 확인해주세요.")
+        //$("#nowPasswordText").text("인증완료")
+    }
 
-    function emailCheck(){
-        const email_rule =  /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-        if(!email_rule.test($("#email").val())){
-            Swal.fire({
-                icon: 'warning',
-                title: '이메일 형식 오류',
-                text: '이메일을 형식에 맞게 입력해주세요.',
-                timer: 1500
-            })
-            $("#email").focus();
-            return false;
-        } else{
-            return true;
-        }
-    }       // passwordCheck
+    function swal(icon, title, text){
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+            timer: 1500
+        })
+    }
 </script>
