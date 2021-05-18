@@ -441,7 +441,7 @@
             dataType: 'json',
             async: false,
             cache: false,
-            data: {"tableName": tableName},
+            data: {"sensor": tableName},
             success: function (data) {
                 var monitoring = "";
                 if (data.legalStandard == 999) {

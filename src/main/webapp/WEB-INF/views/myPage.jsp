@@ -120,7 +120,20 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    var bool = false;
+    let TOGGLE = false;
+    function readonlyToggle() {
+        $("#name").attr("readonly", TOGGLE);
+        $("#email").attr("readonly", TOGGLE);
+        $("#tel").attr("readonly", TOGGLE);
+        $("#department").attr("readonly", TOGGLE);
+        $("#grade").attr("readonly", TOGGLE);
+        if(TOGGLE){
+            TOGGLE = false;
+        } else {
+            TOGGLE = true;
+        }
+    }
+
     function setLayout(){
         if($("#update_btn").html() == "회원정보 수정"){
             $("#update_btn").html("취소");
@@ -136,19 +149,17 @@
         $("#up_btn").toggle();
         $("#pw_button").toggle();
         readonlyToggle();
-    }       // setLayout
+    }
 
     function changePassword(){
         $("#passwordBox").toggle();
     }
 
     function submit() {
-
         const passwordBox = document.getElementById('passwordBox');
         if(passwordBox.style.display!="none"){
             passwordCheck()
             blankCheck('block');
-
             if($("#nowPasswordText").text()!="인증완료"){
                 $("#now_password").focus();
                 swal('error', '현재 비밀번호 오류', '사용중인 비밀번호를 입력해주세요.')
@@ -181,24 +192,9 @@
                 } else {
                     alert("변경실패");
                 }
-                location.reload();
             });
         }
-    }           // join_submit()
-
-    function readonlyToggle() {
-        $("#name").attr("readonly", bool);
-        $("#email").attr("readonly", bool);
-        $("#tel").attr("readonly", bool);
-        $("#department").attr("readonly", bool);
-        $("#grade").attr("readonly", bool);
-
-        if(bool){
-            bool = false;
-        } else {
-            bool = true;
-        }
-    }       // readonlyToggle
+    }
 
     function blankCheck(passwordBox){
         if(passwordBox=='block'){
@@ -216,7 +212,9 @@
     }
 
     function nowPasswordCheck(){
+        //현재 비밀번호 체크해서 다르면
         $("#nowPasswordText").text("비밀번호가 틀립니다. 다시 확인해주세요.")
+        // 같으면
         //$("#nowPasswordText").text("인증완료")
     }
 
