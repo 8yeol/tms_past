@@ -963,7 +963,7 @@ public class AjaxController {
         Member updateMember = memberRepository.findById(member.getId());
 
         if (member.getPassword() != "") {
-            updateMember.setPassword(passwordEncoder.encode(member.getPassword()));
+            updateMember.setPassword(member.getPassword());
         }
         updateMember.setName(member.getName());
         updateMember.setEmail(member.getEmail());
