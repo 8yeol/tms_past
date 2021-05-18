@@ -750,7 +750,6 @@
     });         // modal drag and drop move
 
     function userLog(id) {
-        alert(<%=cp%>);
         let frm = $('#'+id);
         frm.submit();
     }
