@@ -215,7 +215,7 @@
                                     </button>
                                 </td>
                             </c:when>
-                            <c:when test="${mList.state eq '1' || mList.state eq '2' || mList.state eq '3'}">
+                            <c:when test="${(mList.state eq '1' || mList.state eq '2' || mList.state eq '3') and (member.id != mList.id)}">
                                 <td  onclick="event.cancelBubble=true">
                                     <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
                                        data-bs-target="#managementModal"
@@ -302,125 +302,6 @@
 
 </div>
 
-<%--    <div class="row">
-        <h4 class="d-flex justify-content-start mt-5">연간 배출 허용 기준 설정</h4>
-        <div class="col-xs-12 bg-light">
-            <table class="table table-striped">
-
-                <thead>
-                <tr>
-                    <th>NO</th>
-                    <th>코드</th>
-                    <th>항목명</th>
-                    <th>연간 배출 허용 기준</th>
-                    <th>배출 허용 기준 농도</th>
-                    <th>산출식(참고용)</th>
-                    <th>관리</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr>
-                    <th>1</th>
-                    <td>TSP</td>
-                    <td>먼지</td>
-                    <td>1,500,000,000</td>
-                    <td>15</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
-                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>2</th>
-                    <td>SO2</td>
-                    <td>아황산가스</td>
-                    <td>1,500,000,000</td>
-                    <td>50</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶x76%22.4</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
-                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>3</th>
-                    <td>NOX</td>
-                    <td>질소산화물</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶x46%22.4</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
-                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>4</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
-                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>4</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
-                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>5</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
-                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>6</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
-                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <th>7</th>
-                    <td>dummy</td>
-                    <td>Dummy</td>
-                    <td>1,500,000,000</td>
-                    <td>25</td>
-                    <td>일일유량x배출허용기준초과농도x10⁶</td>
-                    <td>
-                        <i class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal"></i>
-                        <i class="fas fa-times" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>
-                    </td>
-                </tr>
-                </tbody>
-
-            </table>
-        </div>
-    </div>--%>
 
 <%--                                           ↓↓↓ 모달영역 ↓↓↓                                                              --%>
 
