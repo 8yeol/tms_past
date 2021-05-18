@@ -30,7 +30,11 @@
 
     /* 데이터테이블 */
     table.dataTable {
-        width:98% !important;
+        width:100% !important;
+    }
+
+    .toolbar {
+        float: left;
     }
 
     .toolbar>b {
@@ -125,9 +129,9 @@
 
 <div class="container">
     <div class="row">
+        <div class="row bg-white sizing">
         <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 32px; text-align: -webkit-center;">
-            <ul id="place_name">
-            </ul>
+            <ul id="place_name"></ul>
         </div>
         <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
             <div class="d-flex justify-content-end">
@@ -153,37 +157,53 @@
                 </table>
             </div>
             <hr>
-            <div class="d-flex justify-content-between">
-                <div class="d-flex radio">
-                    <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px;"></span>
-                    <div class="align-self-end">
-                        <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
-                        <label for='hour'>&nbsp;최근 1시간</label> &emsp;
-                        <input class="form-check-input" type="radio" name="chartRadio" id="day">
-                        <label for="day">&nbsp;최근 24시간</label>
+            <%-- 차트 --%>
+            <div class="row" style="margin-left: 1px; padding-bottom: 15px;">
+                <div class="col">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex radio">
+                                <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px;"></span>
+                                <div class="align-self-end">
+                                    <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
+                                    <label for='hour'>&nbsp;최근 1시간</label> &emsp;
+                                    <input class="form-check-input" type="radio" name="chartRadio" id="day">
+                                    <label for="day">&nbsp;최근 24시간</label>
+                                </div>
+                            </div>
+                            <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간 - 1분 단위로 업데이트 됩니다.</span>
+                        </div>
+                      <div id="chart" style=" margin-right: 10px;"></div>
+                    </div>
+            </div>
+            <%-- 차트의 데이터 테이블 --%>
+
+
+            <div class="row">
+                <div class="col">
+                    <div class="row bg-white m-top" style="margin-left: 1px;">
+                    <div class="row ms-2">
+                        <div class="col">
+                        <div class="d-flex fw-bold pos-a align-self-end">
+            <%--            <div class="offset-7">--%>
+                            <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 :</div>
+                            <div id="standard_text" style="color: #000;"></div>
+                        </div>
+                        <%-- 차트의 데이터 테이블 --%>
+                        <table id="sensor-table" class="table table-striped table-bordered table-hover text-center no-footer dataTable">
+                            <thead>
+                            <tr>
+                                <th>측정시간</th>
+                                <th>측정 값</th>
+                                <th>관리 등급</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        </div>
+                    </div>
                     </div>
                 </div>
-                <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간 - 1분 단위로 업데이트 됩니다.</span>
             </div>
-            <%-- 차트 --%>
-            <div id="chart" style=" margin-right: 10px;"></div>
-            <hr>
-            <%-- 차트의 데이터 테이블 --%>
-            <div class="d-flex fw-bold pos-a align-self-end">
-<%--            <div class="offset-7">--%>
-                <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 :</div>
-                <div id="standard_text" style="color: #000;"></div>
             </div>
-            <%-- 차트의 데이터 테이블 --%>
-            <table id="sensor-table" class="table-responsive bg-gradient col-md-12 mt-1">
-                <thead>
-                <tr>
-                    <th>측정시간</th>
-                    <th>측정 값</th>
-                    <th>관리 등급</th>
-                </tr>
-                </thead>
-            </table>
         </div>
     </div>
 </div>
@@ -250,7 +270,7 @@
             $('#textUpdate').text("* 최근 1시간 - 1분 단위로 업데이트 됩니다.");
         }else{ //최근 24시간 선택 시
             sensor_time_length = 24;
-            $('#textUpdate').text("* 최근 24시간 - 5분 평균데이터로 1분 단위로 업데이트 됩니다.");
+            $('#textUpdate').text("* 최근 24시간 - 5분 단위로 업데이트 됩니다.(5분 평균데이터)");
             sensor_naming = $('#radio_text').text();
         }
         var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
@@ -274,9 +294,10 @@
                 for (var i = 0; i < place_data.length; i++) {
                     // 측정소의 센서별로 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
                     var recentData = getSensorRecent(place_data[i].name)
-                    if(place_data[i].up_time == recentData.up_time){
+                    if(place_data[i].up_time != recentData.up_time){
                         place_data[i].value = recentData.value;
                         place_data[i].up_time = recentData.up_time;
+                        $('#update').text(moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss'));
                     }
                 }
                 interval1 = setTimeout(interval_getData, 5000);
@@ -323,14 +344,19 @@
                     setTimeout(function interval_getData2() { //$초 마다 업데이트
                         // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
                         var sensor_data_list_recent = getSensorRecent(sensor_name);
-                        // if(sensor_data_list_recent.length != 0){ // null = []
-                        if(sensor_data_list[sensor_data_list.length-1].x != sensor_data_list_recent.up_time){
-                            sensor_data_list.push({x:sensor_data_list_recent.up_time, y: sensor_data_list_recent.value});
-                            sensor_table_update(dt, sensor_data_list[sensor_data_list.length-1], sensor_data); //테이블 업데이트
-                        }
-                        updateChart(sensor_data_list, sensor_data); //차트 업데이트
-                        if(sensor_data_list.length > sensorDataLength*2){
-                            sensor_data_list = getSensor(sensor_name, sensor_time_length);
+                        if(sensor_data_list_recent.length != 0) { // null = []
+                            if (sensor_data_list[sensor_data_list.length - 1].x != sensor_data_list_recent.up_time) {
+                                sensor_data_list.push({
+                                    x: sensor_data_list_recent.up_time,
+                                    y: sensor_data_list_recent.value
+                                });
+                                sensor_table_update(dt, sensor_data_list[sensor_data_list.length - 1], sensor_data); //테이블 업데이트
+
+                            }
+                            updateChart(sensor_data_list, sensor_data); //차트 업데이트
+                            if (sensor_data_list.length > sensorDataLength * 2) { //차트 초기화
+                                sensor_data_list = getSensor(sensor_name, sensor_time_length);
+                            }
                         }
                         interval2 = setTimeout(interval_getData2, 5000);
                     }, 0);
@@ -625,8 +651,7 @@
             },
             stroke: {
                 show: true,
-                width: 3,
-                curve: 'smooth'
+                width: 3
             },
             dataLabels: {
                 enabled: false
@@ -797,8 +822,6 @@
                     } else {
                         newCeil5.innerHTML =  "정상";
                     }
-                    $('#update').text(data[i].up_time);
-
                 }
             }
         }catch (e) {
@@ -892,7 +915,7 @@
                     "previous": "이전"
                 }
             },
-            dom: 'Bfrtip',
+            dom: '<"toolbar">Bfrtip',
             buttons: [{
                 extend: 'excelHtml5',
                 autoFilter: true,
@@ -905,6 +928,7 @@
             }]
         });
         dt.fnSort([0,'desc']);
+        $("div.toolbar").html('<b>상세보기</b>');
         return dt;
     }
     
