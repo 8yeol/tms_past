@@ -10,6 +10,12 @@
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
+<%
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+    String cp = request.getContextPath();
+%>
+
 <style>
     body {
         background-color: #EDF2F8;
@@ -37,7 +43,7 @@
                         <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
                     </form>
 
-                    <a class="text-decoration-none " href="/memberJoin">회원가입</a>
+                    <a class="text-decoration-none " href="<%=cp%>/memberJoin">회원가입</a>
                 </div>
             </div>
         </div>
@@ -59,7 +65,7 @@
         const pw = $("#password").val();
         if(id != "" && pw != ""){
             $.ajax({
-                url: '/loginCheck',
+                url: '<%=cp%>/loginCheck',
                 type: 'POST',
                 dataType: 'text',
                 async: false,
