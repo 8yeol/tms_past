@@ -65,11 +65,11 @@
                                                                             type=checkbox
                                                                             onclick="placeAll(this)">
                     </th>
-                    <th style="width: 30%">측정소 명</th>
+                    <th style="width: 34%">측정소 명</th>
                     <th style="width: 40%;">업데이트</th>
                     <th style="width: 24%;">모니터링 사용</th>
                 </tr>
-                <tr id="placeDiv" style="list-style: none; padding: 0px;">
+                <tr id="placeDiv" style="padding: 0px;">
 
                 </tr>
 
@@ -247,9 +247,9 @@
                     } else {
                         onoff = "";
                     }
-                    const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '"+name+"' onclick=\"placeChange('p" + i + "')\" >" +
+                    const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
                         "<td style='padding-left:6px;'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
-                        "<td style='width: 30%;' id='place" + i + "'>" + name + "</td>" +
+                        "<td style='width: 34%;' id='place" + i + "'>" + name + "</td>" +
                         "<td style='width: 40%;'>" + time + "</td>" +
                         "<td style='width: 24%; padding:5px;'><label class='switch'>" +
                         "<input id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
@@ -270,7 +270,7 @@
     //측정소 변경
     function placeChange(name) {
         const place = $("#" + name).attr("value"); // 측정소1 입력
-        $('#placeDiv tr').css('color','black'); //텍스트 색상 제거
+        $('#placeDiv tr').css('color', 'black'); //텍스트 색상 제거
         var x = document.getElementById(name);
         x.style.color = '#0d6efd';
         $("#items").empty(); //div items 비우기
@@ -515,7 +515,7 @@
             title = '측정소 수정';
             const pnum = $("input:checkbox[name=place]:checked").attr('id');
             const num = pnum.replace(/[^0-9]/g, ''); //place0 -> 0
-            send = '#p'+num;
+            send = '#p' + num;
         } else { //추가
             if (name == "") {
                 Swal.fire({
@@ -729,6 +729,28 @@
             placeChange(document.getElementById('nickname').value);
             return false;
         }
+        if (value == 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: "법적기준은 '0'을 입력할 수 없습니다."
+            })
+            placeChange(document.getElementById('nickname').value);
+            return false;
+        }
+        if (value.indexOf('.') != -1) {
+            var value_dot = value.substring(value.indexOf('.') + 1);
+            if (value_dot.length > 2) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '소수점 2자리까지만 입력 가능합니다.'
+
+                })
+                placeChange(document.getElementById('nickname').value);
+                return false;
+            }
+        }
 
         if (isNaN(value) == true) {
 
@@ -798,13 +820,34 @@
             placeChange(document.getElementById('nickname').value);
             return false;
         }
+        if (value == 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: "사내기준은 '0'을 입력할 수 없습니다."
+
+            })
+            placeChange(document.getElementById('nickname').value);
+            return false;
+        }
+        if (value.indexOf('.') != -1) {
+            var value_dot = value.substring(value.indexOf('.') + 1);
+            if (value_dot.length > 2) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '소수점 2자리까지만 입력 가능합니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return false;
+            }
+        }
         if (isNaN(value) == true) {
 
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
                 text: '입력 데이터를 체크해주세요.'
-
             })
             placeChange(document.getElementById('nickname').value);
             return false;
@@ -828,7 +871,6 @@
             placeChange(document.getElementById('nickname').value);
             return;
         }
-
         $.ajax({
             url: '<%=cp%>/companyUpdate',
             type: 'POST',
@@ -862,7 +904,6 @@
                 icon: 'warning',
                 title: '경고',
                 text: '입력 데이터를 체크해주세요.'
-
             })
             placeChange(document.getElementById('nickname').value);
             return false;
@@ -877,6 +918,18 @@
             })
             placeChange(document.getElementById('nickname').value);
             return false;
+        }
+        if (value.indexOf('.') != -1) {
+            var value_dot = value.substring(value.indexOf('.') + 1);
+            if (value_dot.length > 2) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '소수점 2자리까지만 입력 가능합니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return false;
+            }
         }
         if (parseFloat(company) <= parseFloat(value)) {  //
             Swal.fire({
@@ -896,7 +949,6 @@
             placeChange(document.getElementById('nickname').value);
             return;
         }
-
         $.ajax({
             url: '<%=cp%>/managementUpdate',
             type: 'POST',
