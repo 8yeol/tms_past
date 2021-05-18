@@ -39,9 +39,6 @@
         padding: 10px;
     }
 
-    #placeDiv > div.active {
-        color: #0d6efd;
-    }
 </style>
 <div class="container">
     <div class="col " style="font-weight: bolder;margin: 30px 0px; font-size: 27px">
@@ -60,25 +57,23 @@
                 </button>
                 <button onclick="removePlace()" class="removeBtn">삭제</button>
             </div>
-            <div class="text-center">
-                <div class="fw-bold"
-                     style="border-bottom: silver solid 2px; display: flex; width:100%; position: relative; padding-bottom: 5px;">
-                    <div style="margin-left: 5px; margin-right: 5px;"><input name="placeall"
-                                                                             class="form-check-input"
-                                                                             type=checkbox
-                                                                             onclick="placeAll(this)">
-                    </div>
-                    <div style="width: 30%">측정소 명</div>
-                    <div style="width: 40%;">업데이트</div>
-                    <div style="width: 24%;">모니터링 사용</div>
-                </div>
-                <div>
-                    <ul id="placeDiv" style="list-style: none; padding: 0px;">
+            <table class="text-center" style="width: 100%;">
+                <tr class="fw-bold"
+                    style="border-bottom: silver solid 2px; display: flex; width:100%; position: relative; padding-bottom: 5px;">
+                    <th style="margin-left: 5px; margin-right: 5px;"><input name="placeall"
+                                                                            class="form-check-input"
+                                                                            type=checkbox
+                                                                            onclick="placeAll(this)">
+                    </th>
+                    <th style="width: 30%">측정소 명</th>
+                    <th style="width: 40%;">업데이트</th>
+                    <th style="width: 24%;">모니터링 사용</th>
+                </tr>
+                <tr id="placeDiv" style="list-style: none; padding: 0px;">
 
-                    </ul>
-                </div>
+                </tr>
 
-            </div>
+            </table>
         </div>
         <div class="col-3" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
 
@@ -201,7 +196,7 @@
 <script>
     $(document).ready(function () {
         placeDiv();
-        placeChange("place0");
+        placeChange("p0");
 
     });
 
@@ -236,6 +231,7 @@
     //측정소 목록 불러오기
     function placeDiv() {
         $("#placeDiv").empty();
+        var onoff = "";
         $.ajax({
             url: '<%=cp%>/getPlaceList',
             async: false,
@@ -247,18 +243,19 @@
                     const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
                     const monitoring = test.monitoring;
                     if (monitoring == true) {
-                        onoff = "ON";
+                        onoff = "checked";
                     } else {
-                        onoff = "OFF";
+                        onoff = "";
                     }
-                    const innerHTML = "<div id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' onclick=\"placeChange('place" + i + "')\" >" +
-                        "<li style='display: flex; text-align: center'>" +
-                        "<span ><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></span>" +
-                        "<span style='width: 30%;' id='place" + i + "'>" + name + "</span>" +
-                        "<span style='width: 40%; '>" + time + "</span>" +
-                        "<span style='width: 24%;'>" + onoff + "</span>" +
-                        "</li>" +
-                        "</div>";
+                    const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '"+name+"' onclick=\"placeChange('p" + i + "')\" >" +
+                        "<td style='padding-left:6px;'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
+                        "<td style='width: 30%;' id='place" + i + "'>" + name + "</td>" +
+                        "<td style='width: 40%;'>" + time + "</td>" +
+                        "<td style='width: 24%; padding:5px;'><label class='switch'>" +
+                        "<input id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
+                        "<span class='slider round'></span>" +
+                        "</label></td>" +
+                        "</tr>";
 
                     $('#placeDiv').append(innerHTML);
                 }
@@ -272,24 +269,18 @@
 
     //측정소 변경
     function placeChange(name) {
-        const place = $("#" + name).text(); // 측정소1 입력
-        const num = name.replace(/[^0-9]/g, ''); //place0 -> 0
-        $('#placeDiv div').removeClass('active'); //텍스트 색상 제거
-        $("#p" + num).addClass('active'); // 텍스트 색상 변경
+        const place = $("#" + name).attr("value"); // 측정소1 입력
+        $('#placeDiv tr').css('color','black'); //텍스트 색상 제거
+        var x = document.getElementById(name);
+        x.style.color = '#0d6efd';
         $("#items").empty(); //div items 비우기
         $("#p_monitoring").empty(); //div p_monitoring 비우기
-        const p_monitoring = findPlaceMonitor(place); //측정소monitor on/off 확인
 
         let innerHTMLPlace =
             "<div id='pname'>" + place + "</div>" +
             "<div>상세설정</div>" +
-            "<div>측정소 모니터링</div>" +
-            "<div><label class='switch'>" +
-            "<input id='monitor' type='checkbox' " + p_monitoring + " onchange='p_monitoringupdate()'>" +
-            "<span class='slider round'></span>" +
-            "</label></div>" +
             "<input type='hidden' id='nickname' value='" + name + "'>";
-        $('#p_monitoring').append(innerHTMLPlace); //측정소 명 + 모니터링 on/off div
+        $('#p_monitoring').append(innerHTMLPlace); //측정소 명  div
 
         const none = "<div class='fw-bold' style='padding-top : 20px;'>" +
             "<div style='padding-bottom:5px;'>등록된 센서 데이터가 없습니다.</div>" +
@@ -310,7 +301,6 @@
                     for (let i = 0; i < data.length; i++) {
                         const tableName = data[i]; //측정소에 저장된 센서명---> 이걸 reference컬렉션에서 가져와야함.
                         const value = findReference(tableName); //naming, name, legal, company, management //map이 비어있을때
-                        const monitoring = findMonitor(tableName); //모니터 on/off(checked)
                         if (value.size != 0) {
                             const innerHtml =
                                 "<td style='width: 2%;'></td>" +
@@ -320,7 +310,7 @@
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='company' type='text' id='company" + i + "' value='" + value.get("company") + "' onchange='companyupdate(this)'></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='management' type='text' id='management" + i + "' value='" + value.get("management") + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch'>" +
-                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + value.get("name") + "' " + monitoring + " onchange='monitoringupdate(this)'>" +
+                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + value.get("name") + "' " + value.get("monitoring") + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +
                                 "</label></td>";
 
@@ -382,7 +372,7 @@
                 text: '측정소를 체크해 주세요.'
             })
             placeDiv();
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return false;
         }
         if ($("input:checkbox[name=place]:checked").length != 1) {
@@ -396,7 +386,7 @@
                 = document.querySelector('input[name="placeall"]');
             placeall.checked = false;
             placeDiv();
-            placeChange($("#pname").text());
+            placeChange(document.getElementById('nickname').value);
             return false;
         }
         const place = $("input:checkbox[name=place]:checked").attr('value');
@@ -442,52 +432,6 @@
         return have;
     }
 
-    //센서 모니터링 on/off 불러오기
-    function findMonitor(tableName) {
-        let isChecked = "";
-        $.ajax({
-            url: '<%=cp%>/getReferenceValue',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"tableName": tableName},
-            success: function (data) {
-                const monitoring = data.monitoring;
-                if (monitoring == true) {
-                    isChecked = "checked";
-                }
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
-        })
-        return isChecked;
-    }
-
-    //측정소 모니터링 on/off 불러오기
-    function findPlaceMonitor(tableName) {
-        let isChecked = "";
-        $.ajax({
-            url: '<%=cp%>/getPlace',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"place": tableName},
-            success: function (data) {
-                const monitoring = data.monitoring;
-                if (monitoring == true) {
-                    isChecked = "checked";
-                }
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
-        })
-        return isChecked;
-    }
-
     //센서 기준값 불러오기
     function findReference(tableName) {
         let map = new Map();
@@ -499,6 +443,7 @@
             cache: false,
             data: {"tableName": tableName},
             success: function (data) {
+                var monitoring = "";
                 if (data.legalStandard == 999) {
                     data.legalStandard = "";
                 }
@@ -508,11 +453,15 @@
                 if (data.managementStandard == 999) {
                     data.managementStandard = "";
                 }
+                if (data.monitoring == true) {
+                    monitoring = "checked";
+                }
                 map.set("naming", data.naming);
                 map.set("name", data.name);
                 map.set("legal", data.legalStandard);
                 map.set("company", data.companyStandard);
                 map.set("management", data.managementStandard);
+                map.set("monitoring", monitoring);
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
@@ -530,26 +479,25 @@
         const tel = $("#te" + idx).val();
         const admin = $("#ad" + idx).val();
         const hiddenCode = $("input[name=hiddenCode]").val();
-        var pattern3 = /[~!@#$%^&*()_+|<>?:{}]/;
-
+        var pattern = /[~!@#$%^&*()_+|<>?:{}]/;
         let title = "";
         let content = "";
+        var send = "";
+
         if (idx == 2) { //수정
             if (name == "") {
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
                     text: '측정소 명을 입력해주세요.'
-
                 })
                 return false;
             }
-            if (pattern3.test(name) == true) { //특수문자
+            if (pattern.test(name) == true) { //특수문자
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
                     text: '특수문자를 입력할 수 없습니다.'
-
                 })
                 return false;
             }
@@ -565,6 +513,9 @@
             }
             content = '측정소가 수정 되었습니다.';
             title = '측정소 수정';
+            const pnum = $("input:checkbox[name=place]:checked").attr('id');
+            const num = pnum.replace(/[^0-9]/g, ''); //place0 -> 0
+            send = '#p'+num;
         } else { //추가
             if (name == "") {
                 Swal.fire({
@@ -575,7 +526,7 @@
                 })
                 return false;
 
-            } else if (pattern3.test(name) == true) {
+            } else if (pattern.test(name) == true) {
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
@@ -594,6 +545,7 @@
                 }
                 content = '측정소가 추가 되었습니다.';
                 title = '측정소 추가';
+                send = document.getElementById('nickname').value;
                 $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
             }
         }
@@ -621,7 +573,7 @@
         document.getElementById("cancelBtn").click();
         document.getElementById("cancelBtn1").click();
         placeDiv();
-        placeChange(name);
+        placeChange(send);
     }
 
     function removePlace() {
@@ -689,16 +641,19 @@
                     })
 
                     placeDiv();
-                    placeChange("place0");
+                    placeChange("p0");
                 });
             }
         });
     }
 
     //측정소 모니터링 onchange
-    function p_monitoringupdate() {
-        var check = $("#monitor").is(":checked"); //true/false
-        var name = $("#pname").text(); //측정소 이름
+    function p_monitoringupdate(id) {
+
+        const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
+        var check = $("#" + id).is(":checked"); //true/false
+        var name = $("#p" + num).attr("value");
+
 
         if (findSensor(name) == 0) { //등록된 센서가 없을때
             Swal.fire({
@@ -706,11 +661,10 @@
                 title: '경고',
                 text: '등록된 센서가 없어 모니터링 기능을 사용할 수 없습니다.'
             })
-
+            placeDiv();
             placeChange(document.getElementById('nickname').value);
-            return false;
+            return;
         }
-
         $.ajax({
             url: '<%=cp%>/placeMonitoringUpdate',
             type: 'POST',
