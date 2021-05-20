@@ -130,61 +130,55 @@
 <div class="container">
     <div class="row">
         <div class="row bg-white sizing">
-        <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 32px; text-align: -webkit-center;">
-            <ul id="place_name"></ul>
-        </div>
-        <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
-            <div class="d-flex justify-content-end">
-                <span class="fs-7 mb-2">업데이트 : <a id="update"></a></span>
+            <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 32px; text-align: -webkit-center;">
+                <ul id="place_name"></ul>
             </div>
-            <span class="fs-4 fw-bold d-flex justify-content-center bg-lightGray" id="title"></span>
-            <div id="place_table" style="margin:0 10px 0;">
-                <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: .875em; margin-right: 10px;"> * 항목 클릭시 해당 항목의 상세 데이터로 하단의 차트/표 변경</span></div>
-                <table class="table table-bordered table-hover text-center">
-                    <thead>
-                    <tr>
-                        <th width="20%">항목</th>
-                        <th width="15%">법적기준</th>
-                        <th width="15%">사내기준</th>
-                        <th width="15%">관리기준</th>
-                        <th width="15%">측정값</th>
-                        <th width="20%">관리등급</th>
-                    </tr>
-                    <thead>
-                    <tbody id="place-tbody-table">
-                        <%--script--%>
-                    </tbody>
-                </table>
-            </div>
-            <hr>
-            <%-- 차트 --%>
-            <div class="row" style="margin-left: 1px; padding-bottom: 15px;">
-                <div class="col">
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex radio">
-                                <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px;"></span>
-                                <div class="align-self-end">
-                                    <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
-                                    <label for='hour'>&nbsp;최근 1시간</label> &emsp;
-                                    <input class="form-check-input" type="radio" name="chartRadio" id="day">
-                                    <label for="day">&nbsp;최근 24시간</label>
+            <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
+                <div class="d-flex justify-content-end">
+                    <span class="fs-7 mb-2">업데이트 : <a id="update"></a></span>
+                </div>
+                <span class="fs-4 fw-bold d-flex justify-content-center bg-lightGray" id="title"></span>
+                <div id="place_table" style="margin:0 10px 0;">
+                    <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: .875em; margin-right: 10px;"> * 항목 클릭시 해당 항목의 상세 데이터로 하단의 차트/표 변경</span></div>
+                    <table class="table table-bordered table-hover text-center">
+                        <thead>
+                        <tr>
+                            <th width="20%">항목</th>
+                            <th width="15%">법적기준</th>
+                            <th width="15%">사내기준</th>
+                            <th width="15%">관리기준</th>
+                            <th width="15%">측정값</th>
+                            <th width="20%">관리등급</th>
+                        </tr>
+                        <thead>
+                        <tbody id="place-tbody-table">
+                            <%--script--%>
+                        </tbody>
+                    </table>
+                </div>
+                <hr>
+                <%-- 차트 --%>
+                <div class="row" style="margin-left: 1px; padding-bottom: 15px;">
+                    <div class="col">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex radio">
+                                    <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px;"></span>
+                                    <div class="align-self-end">
+                                        <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
+                                        <label for='hour'>&nbsp;최근 1시간</label> &emsp;
+                                        <input class="form-check-input" type="radio" name="chartRadio" id="day">
+                                        <label for="day">&nbsp;최근 24시간</label>
+                                    </div>
                                 </div>
+                                <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간(실시간 업데이트)</span>
                             </div>
-                            <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간(실시간 업데이트)</span>
+                          <div id="chart" style=" margin-right: 10px;"></div>
                         </div>
-                      <div id="chart" style=" margin-right: 10px;"></div>
-                    </div>
-            </div>
-            <%-- 차트의 데이터 테이블 --%>
-
-
-            <div class="row">
-                <div class="col">
-                    <div class="row bg-white m-top" style="margin-left: 1px;">
-                    <div class="row ms-2">
-                        <div class="col">
+                </div>
+                <%-- 차트의 데이터 테이블 --%>
+                <div class="row ms-2 pt-2 bg-white">
+                    <div class="col">
                         <div class="d-flex fw-bold pos-a align-self-end">
-            <%--            <div class="offset-7">--%>
                             <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 :</div>
                             <div id="standard_text" style="color: #000;"></div>
                         </div>
@@ -198,11 +192,8 @@
                             </tr>
                             </thead>
                         </table>
-                        </div>
-                    </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>

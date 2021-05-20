@@ -46,8 +46,13 @@
     .m-l {
         margin-left: 50px;
     }
+
     tbody tr:hover{
         cursor: pointer;
+    }
+
+    .place_border{
+        box-shadow: 0 0 2px 0 #2295DB inset;
     }
 </style>
 
@@ -267,16 +272,17 @@
         $('#place_table').empty();
         var col_md_size;
         if(placeName.length != 0){
-            for(var i=0; i<placeName.length; i++){
+            for(let i=0; i<placeName.length; i++){
                 if(placeName.length==1){ //1개
                     col_md_size = 12;
                 }else {
                     col_md_size = 6;
                 }
-                $('#place_table').append("<div class='col-md-"+col_md_size+" mb-3 mt-2'>" +
+                $('#place_table').append(
+                    "<div class='col-md-"+col_md_size+" mb-3 mt-2 place_border'>" +
                     "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'><span class='fs-5'>"+placeName[i]+"</span></div>" +
                     "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
-                    "<table class='table table-bordered table-hover text-center'>" +
+                    "<table class='table table-bordered table-hover text-center mt-1'>" +
                         "<thead>" +
                             "<tr class='add-bg-color'>" +
                                 "<th width=28%'>항목</th>" +

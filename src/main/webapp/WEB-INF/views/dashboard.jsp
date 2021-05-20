@@ -82,6 +82,7 @@
         margin-top: 2px;
         padding-right: 25px;
     }
+
     .aTag_cursor:hover{
         cursor: pointer;
     }
@@ -271,7 +272,6 @@
                 <span class="text-primary" style="font-size: 0.8rem"> * 매일 자정 업데이트 됩니다.</span>
             </div>
         </div>
-
         <div class="row pb-1 px-3 margin-l mt-3">
             <c:forEach items="${placeList}" var="placelist" varStatus="i">
                 <c:if test="${placeList.size() <= 3}">
@@ -313,20 +313,17 @@
                                     <fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/>
                                 </div>
                             </c:if>
-
                             <c:if test="${standard.emissionsStandard eq '0' and (member.state == '1' || member.state == '2')}">
                                 <div class="pb-4 text-center">
                                     연간 배출 허용 기준 미등록 &nbsp;<br>
                                     <a onclick="standardModal(this)" class="small aTag_cursor" id="${standard.tableName}">등록하기</a>
                                 </div>
                             </c:if>
-
                             <c:if test="${standard.emissionsStandard eq '0' and (member.state == '3')}">
                                 <div class="pb-4 text-center">
                                     연간 배출 허용 기준 미등록 &nbsp;<br>
                                 </div>
                             </c:if>
-
                             </c:if>
                         </c:forEach>
                         </div>
@@ -337,7 +334,6 @@
                     <div id="line${i.index}" style="width: 1px;float: right;background-color: black;padding: 0"></div>
                 </c:if>
             </c:forEach>
-
             <c:if test="${empty placeList}">
                 <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
                     연간 배출량 누적 모니터링 설정 된 센서가 없습니다. <br>
@@ -371,18 +367,11 @@
                 <span class="text-primary" style="font-size: 0.8rem"> * 실시간으로 업데이트 됩니다.</span>
             </div>
         </div>
-        <div class="row pb-3 h-75 pb-3 margin-l">
+        <div class="row pb-3 h-75 pb-3 margin-l mt-1">
             <div class="col">
                 <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
                     <div class="card-header">정상</div>
-                    <div class="card-body" id="normal">
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                        <h5> 가동중인 센서가 없습니다.</h5>
-                        <h5> 가동중인 센서가 없습니다.</h5>
+                    <div class="card-body" id="normal "style="min-height: 200px;">
                         <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
@@ -428,7 +417,7 @@
         integrated();
         //excess();
 
-        $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD') + " 00:00");
+        $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD'));
     });
 
 

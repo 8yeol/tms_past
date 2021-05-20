@@ -46,12 +46,13 @@
                     <div class="col">
                         <label for="password" class="col-form-label">비밀번호</label>
                     </div>
-                    <div class="col text-end">
-                        <span style="font-size: 15%; color: red" id="passwordText"></span>
-                    </div>
                 </div>
                 <div class="col-sm-10 d-flex" style="width:100%;">
                     <input type="password" class="form-control" id="password" onkeyup="passwordCheckMsg()" placeholder="6자 이상 입력해 주세요">
+                </div>
+
+                <div class="col mt-1" style="height: 10px">
+                    <span style="font-size: 15%; color: red" id="passwordText"></span>
                 </div>
             </div>
 
@@ -60,12 +61,12 @@
                     <div class="col">
                         <label for="passwordCheck" class="col-form-label">비밀번호 확인</label>
                     </div>
-                    <div class="col text-end">
-                        <span style="font-size: 15%; color: red" id="passwordCheckText"></span>
-                    </div>
                 </div>
                 <div class="col-sm-10" style="width:100%;">
                     <input type="password" class="form-control" id="passwordCheck" onkeyup="passwordCheckMsg()">
+                </div>
+                <div class="col mt-1" style="height: 8px">
+                    <span style="font-size: 15%; color: red" id="passwordCheckText"></span>
                 </div>
             </div>
 
