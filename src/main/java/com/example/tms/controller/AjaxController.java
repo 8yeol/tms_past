@@ -741,7 +741,7 @@ public class AjaxController {
         setting.setDate(new Date());
         emissionsStandardSettingRepository.save(setting);
 
-        inputLogSetting(setting.getPlace()+" - "+setting.getNaming()+"센서 기준치 변경 ","수정",principal);
+        inputLogSetting(setting.getPlace()+" - "+setting.getNaming()+"센서 연간 배출 허용 기준 변경 ","수정",principal);
 
         List<EmissionsStandardSetting> standardList = emissionsStandardSettingRepository.findAll();
         return standardList;
@@ -916,7 +916,7 @@ public class AjaxController {
         //배출량 관리 기준 삭제
         EmissionsStandardSetting ess = emissionsStandardSettingRepository.findByTableNameIsIn(tableName);
         emissionsStandardSettingRepository.deleteByTableName(tableName);
-        inputLogSetting(ess.getPlace() + " - " + ess.getNaming() + " 배출량 관리기준 삭제", "삭제", principal);
+        inputLogSetting(ess.getPlace() + " - " + ess.getNaming() + " 연간 허용 배출 기준 삭제", "삭제", principal);
 
         //상세설정 값 삭제
         if (reference_value_settingRepository.findByName(tableName) != null) {
@@ -1032,14 +1032,22 @@ public class AjaxController {
             EmissionsSetting target = emissionsSettingRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
             emissionsSettingRepository.save(target);
-            inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 배출량 추이 모니터링 대상 변경", "수정", principal);
+            if(target.isStatus()){
+                inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 배출량 추이 모니터링 대상 ON", "수정", principal);
+            }else{
+                inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 배출량 추이 모니터링 대상 OFF", "수정", principal);
+            }
 
             //연간 배출량 설정
         } else {
             AnnualEmissions target = annualEmissionsRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
             annualEmissionsRepository.save(target);
-            inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 연간 배출량 누적 모니터링 대상 변경", "수정", principal);
+            if(target.isStatus()){
+                inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 연간 배출량 누적 모니터링 대상 ON", "수정", principal);
+            }else{
+                inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 연간 배출량 누적 모니터링 대상 OFF", "수정", principal);
+            }
 
         }
     }
