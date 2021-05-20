@@ -228,7 +228,7 @@
         draw_place_frame(); //페이지 로딩 시 측정소 선택 화면 생성
         chart = new ApexCharts(document.querySelector("#chart"), setChartOption()); //차트 틀 생성
         chart.render();
-
+            
         /* URL로 파라미터 확인 (모니터링페이지에서 넘어온 경우 파라미터 있음)*/
         const url = new URL(window.location.href);
         const urlParams = url.searchParams;
@@ -240,6 +240,7 @@
             getPlaceAllSensorData(place_name, sensor_naming); //측정소의 항목 전체 데이터
         }else{ //파라미터가 없을 경우
             const place_name = $('#place_name > li').attr('id'); //기본값
+            console.log(place_name);
             if(place_name != undefined){
                 $("#place_name li").eq(0).addClass('active');
                 $('#title').text(place_name);
@@ -608,21 +609,14 @@
      * 페이지 로딩 시 측정소 선택 화면 생성
      */
     function draw_place_frame() {
-        setTimeout(function drawPlace() {
-            var placeName = getPlace(); // 전체 측정소 이름 구함 (조건:파워ON, 모니터링 True)
-            if(placeName.length == 0){
-                Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
-                setTimeout(drawPlace, 10000);
-            }else{
-                for(var i=0; i<placeName.length; i++){
-                    $('#place_name').append("<li class='place-item btn d-block fs-3 mt-3 me-3' id='"+
-                        placeName[i]+"'>"+
-                        "<span>"+placeName[i]+"</span>"+
-                        "</li>"+
-                        "<hr style='height: 2px;'>");
-                }
-            }
-        }, 0);
+        var placeName = getPlace(); // 전체 측정소 이름 구함 (조건:파워ON, 모니터링 True)
+        for(var i=0; i<placeName.length; i++){
+            $('#place_name').append("<li class='place-item btn d-block fs-3 mt-3 me-3' id='"+
+                placeName[i]+"'>"+
+                "<span>"+placeName[i]+"</span>"+
+                "</li>"+
+                "<hr style='height: 2px;'>");
+        }
     }
 
     /**
