@@ -467,10 +467,13 @@
         for (let i = 0; i < data.length; i++) {
             /* 측정소의 센서 모니터링 체크 확인 (한개라도 있으면 TRUE) */
             if(data[i] != 0){
-                monitoringIsCheck = false;
-            }else{
-                monitoringIsCheck = monitoringIsCheck&&true;
+                monitoringIsCheck = monitoringIsCheck && false;
+            }else {
+                monitoringIsCheck = monitoringIsCheck || true;
             }
+        }
+        for (let i = 0; i < data.length; i++) {
+            console.log(data[i]);
             /* 모니터링 ON 한개라도 있을 때 */
             if(!monitoringIsCheck){
                 if(data[i] != 0){
@@ -523,6 +526,7 @@
                     +'</div>';
                 newCeil0.colSpan = 5;
                 $("#update-" + index).text("-");
+                return false;
             }
         }
     }
