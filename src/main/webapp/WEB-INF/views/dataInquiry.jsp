@@ -285,7 +285,7 @@
 
         </div>
         <div class="col-lg-2 down">
-            <div class="mt-4 p-2 bg-white text-center">차트 항목 선택</div>
+            <div class="mt-4 p-2 bg-white text-center">측정 항목 선택</div>
 
             <div class="border p-2 bg-white h-fix" id="items">
                 <%-- script --%>
