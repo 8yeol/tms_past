@@ -203,13 +203,13 @@
     <div class="container">
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-around">
-                <a href="<%=cp%>/" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
+                <a href="<%=cp%>/monitoring" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
                     대기 TMS 관제 시스템
                 </a>
 
                 <nav id="topMenu">
                     <ul id="menu">
-                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/" id="dashboard">대시보드</a></li>
+                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/dashboard" id="dashboard">대시보드</a></li>
                         <li class="topMenuLi"><a class="menuLink shortLink" href="<%=cp%>/alarm" id="alarm">알림</a></li>
                         <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/monitoring" id="monitoring">모니터링</a>
                             <ul class="submenu short_sub">

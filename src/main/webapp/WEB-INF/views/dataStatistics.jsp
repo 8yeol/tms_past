@@ -213,6 +213,7 @@
                         previousYearData.push(data.nov);
                         previousYearData.push(data.dec);
                     }
+                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', $("#place").val() + '-'+ findSensorCategory(item) + ' 통계자료 조회','조회');
                     $("#update").text(moment(data.updateTime).format('YYYY-MM-DD'));
                 },
                 error : function(request, status, error) {

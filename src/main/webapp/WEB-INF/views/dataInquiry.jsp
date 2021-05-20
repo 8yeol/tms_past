@@ -596,7 +596,11 @@
                 }else{
                     addChart(data, category, reference, flag);
                 }
-                inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "측정자료 검색("+date_start+"~"+date_end+")","검색");
+                if(flag==0){
+                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place + '-'+ category + ' 측정자료 조회','조회');
+                } else{
+                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place + '-'+ category + ' 측정자료 검색('+date_start+' ~ '+date_end+')','검색');
+                }
             },
             error : function(request, status, error) {
                 console.log('search off error');

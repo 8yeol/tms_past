@@ -523,9 +523,9 @@
     function sing_Up(iNumber) {
         var content = ID;
         if (iNumber == "1") {
-            content += " 계정 가입승인 ";
+            content += " 계정 가입 승인 ";
         } else {
-            content += " 계정 가입거절 ";
+            content += " 계정 가입 거절 ";
         }
         var settings = {
             "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + iNumber,
@@ -533,9 +533,9 @@
         };
         $.ajax(settings).done(function (response) {
             if (iNumber == "1") {
-                inputLog(ID, "가입 승인 처리", "회원관리"); // 대상자로그
+                inputLog(ID, "가입 승인", "회원관리"); // 대상자로그
             } else {
-                inputLog(ID, "가입 거부 처리", "회원관리");
+                inputLog(ID, "가입 거절", "회원관리");
             }
             inputLog(user_id, content, "회원관리"); // 관리자로그
             success(response);
