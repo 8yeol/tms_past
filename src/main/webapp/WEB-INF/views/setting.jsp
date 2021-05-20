@@ -17,7 +17,7 @@
     }
 
     label {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 
     /* 데이터테이블 */
@@ -138,7 +138,7 @@
     <div class="row bg-light rounded py-3 px-5">
 
         <%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
-        <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 30px 20px;">회원관리</span>
+        <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">회원관리</span>
         <div class="col-xs-12">
             <table class="table table-striped" id="member-Table">
 
@@ -241,7 +241,7 @@
 
     <div class="row bg-light rounded mt-3 py-3 px-5">
 
-        <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 30px 20px;">권한관리</span>
+        <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">권한관리</span>
         <div class="d-flex mt-1 p-0">
 
             <div class="col-md-3">

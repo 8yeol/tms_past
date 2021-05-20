@@ -186,7 +186,7 @@
         <div class="col-3 picker">
             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
             <div class="btn-group w-50 ms-3">
-                <select name="place" id="place" class="btn btn-light" onchange="placeChange()">
+                <select name="place" id="place" class="btn btn-light" onchange="placeChange()" style="width: 150px;">
                     <c:forEach var="place" items="${place}" varStatus="status">
                         <option value="${place}">${place}</option>
                     </c:forEach>

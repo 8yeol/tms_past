@@ -16,6 +16,80 @@
     .dataTables_wrapper {
         min-height: 1000px;
     }
+
+    /* 데이터테이블 */
+    .toolbar>b {
+        font-size: 1.25rem;
+    }
+    /*.toolbar:after {content:""; display: block; clear: both;}*/
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        color: #333 !important;
+        border: 0px solid transparent;
+        border-radius: 50px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        color: #fff !important;
+        border: 0px;
+        background: #97bef8;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+        cursor: default;
+        color: #666 !important;
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        color: white !important;
+        border: 0px;
+        background: #254069;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+        outline: none;
+        background-color: #2b2b2b;
+        box-shadow: inset 0 0 3px #111;
+    }
+
+    #information_filter label {
+        margin-bottom: 5px;
+    }
+
+    .buttons-excel {
+        background-color: #000;
+        color: #fff;
+        border: 0px;
+        border-radius: 5px;
+        position: relative;
+        margin-top: 2px;
+    }
+    .dt-buttons {
+        margin: 0 10px;
+        display: inline-block;
+    }
+    label {
+        margin-bottom: 10px;
+    }
+    .backBtn, .backBtn:hover {
+        background-color: #0d6efd;
+        color: #fff;
+    }
 </style>
 <div class="container">
     <c:choose>
@@ -36,8 +110,8 @@
         </c:when>
     </c:choose>
 
-    <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold">활동 기록
-        <button class="btn btn-success"onclick="history.back(-1)" style="margin-left: 40px;">뒤로 가기</button></h3>
+    <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold" style="position: relative;">활동 기록
+        <button class="btn backBtn"onclick="history.back(-1)" style="margin-left: 40px; position: absolute; right: 0;">뒤로 가기</button></h3>
 
     <div class="row bg-light rounded py-3 px-5">
         <c:if test="${member.id == 'All'}">

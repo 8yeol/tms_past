@@ -100,7 +100,7 @@
 
     #place_name>li.active {
         background-color: #fff;
-        border-radius: 100px;
+        border-radius: 50px;
     }
     #place_name>li.active>span {
         font-weight: bold;
@@ -123,7 +123,7 @@
         margin-bottom: 5px;
     }
     .titleSpan{
-        background: linear-gradient( to bottom, #97bef8, #2295DB );
+        background-color: #97bef8;
         color:white;
     }
     .navPlace{
@@ -133,7 +133,9 @@
         margin-left: 0px;
     }
     .place-item{
-        background-color: red;
+        /*background-color: red;*/
+        /*font-size: 80% !important;*/
+        /*font-weight: bold;*/
     }
 </style>
 
@@ -143,11 +145,11 @@
 <div class="container" style="padding-left: 0;">
     <div class="row">
         <div class="row bg-white sizing">
-            <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0 navPlace">
+            <div class="col-md-2 rounded-0 pt-5 px-0 navPlace">
                 <ul id="place_name"></ul>
             </div>
             <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
-                <div class="d-flex justify-content-end"style="background-color: white;">
+                <div class="d-flex justify-content-end">
                     <span class="fs-7 mb-2" >업데이트 : <a id="update"></a></span>
                 </div>
                 <span class="fs-4 fw-bold d-flex justify-content-center titleSpan" id="title"></span>
@@ -189,7 +191,7 @@
                         </div>
                 </div>
                 <%-- 차트의 데이터 테이블 --%>
-                <div class="row ms-2 pt-2 bg-white">
+                <div class="row ms-2 bg-white" style="padding-top: 15px;">
                     <div class="col">
                         <div class="d-flex fw-bold pos-a align-self-end">
                             <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 :</div>
@@ -603,7 +605,7 @@
     function draw_place_frame() {
         var placeName = getPlace(); // 전체 측정소 이름 구함 (조건:파워ON, 모니터링 True)
         for(var i=0; i<placeName.length; i++){
-            $('#place_name').append("<li class='place-item btn bg-lightGray d-block fs-3 mt-3 me-3' id='"+
+            $('#place_name').append("<li class='place-item btn d-block fs-3 mt-3 me-3' id='"+
                 placeName[i]+"'>"+
                 "<span>"+placeName[i]+"</span>"+
                 "</li>"+

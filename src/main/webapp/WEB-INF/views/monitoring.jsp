@@ -67,6 +67,10 @@
         background-color: #2295DB;
         color: white;
     }
+
+    tr {
+        border-bottom: solid #dee2e6;
+    }
 </style>
 
 
@@ -85,26 +89,26 @@
     </div>
     <div class="row m-3 mt-3">
 
-        <div class="col bg-white fw-bold" style="margin-right: 5px;">
-            <div class="row titleDiv">
-                <span class="fs-5 text-center">가동률</span>
+        <div class="col bg-white fw-bold" style="margin-right: 5px;border-top-left-radius: 20px; border-top-right-radius: 20px;">
+            <div class="row titleDiv" style="border-top-left-radius: 20px; border-top-right-radius: 20px; height: 38px;">
+                <span class="fs-5 text-center" style="width: 80%; margin: 0 auto;">가동률</span>
             </div>
 
             <div class="row">
-                <div class="col text-center" style="border: 1px solid #2295DB;padding: 15px;" >
+                <div class="col text-center" style="border-right: 1px solid #2295DB;padding: 15px;" >
                     <p class="fs-1 mb-0" id="statusPercent"></p>
                     <hr style="margin: 0 30px 0;">
                     <p id="statusMore"></p>
                 </div>
 
                 <div class="col" style="padding: 0;">
-                    <div style="border: 1px solid #2295DB;">
+                    <div style="border-bottom: 1px solid #2295DB;">
                       <p class="fs-6" style="margin: 8px;">정상 : <a style="text-align: right" id="statusOn"></a></p>
                     </div>
-                    <div style="border: 1px solid #2295DB;">
+                    <div style="border-bottom: 1px solid #2295DB;">
                     <p class="fs-6" style="margin: 8px;">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
                     </div>
-                        <div style="border: 1px solid #2295DB;">
+                        <div>
                     <p class="fs-6" style="margin: 8px;">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
                         </div>
                 </div>
@@ -128,13 +132,13 @@
             <div class="row h-75">
 
                 <%-- 법적 기준 --%>
-                <div class="col standardImg" style="border-right: 2px solid #2295DB;padding-right: 16px;">
+                <div class="col standardImg" style="border-right: 2px solid #2295DB;padding-right: 16px; padding-top: 10px;">
                     <div class="row text-center">
                         <div class="col">
                             <img src="static/images/sad.png" class="emoji">
                         </div>
                         <div class="col" style="margin-top: 5px;">
-                            <p class="mb-0" id="legal_standard_text_A" style="font-size: 2.3rem;"></p>
+                            <p class="mb-0" id="legal_standard_text_A" style="font-size: 2rem;"></p>
                             <hr class="m-0">
                             <p id="legal_standard_text_B"></p>
                         </div>
@@ -142,13 +146,13 @@
                 </div>
 
                 <%-- 사내 기준 --%>
-                <div class="col standardImg" style="border-right: 2px solid #2295DB;">
+                <div class="col standardImg" style="border-right: 2px solid #2295DB; padding-top: 10px;">
                     <div class="row text-center">
                         <div class="col">
                             <img src="static/images/thinking.png" class="emoji">
                         </div>
                         <div class="col" style="margin-top: 5px;">
-                            <p class="mb-0" id="company_standard_text_A" style="font-size: 2.3rem;"></p>
+                            <p class="mb-0" id="company_standard_text_A" style="font-size: 2rem;"></p>
                             <hr class="m-0">
                             <p id="company_standard_text_B"></p>
                         </div>
@@ -156,13 +160,13 @@
                 </div>
 
                 <%-- 관리 기준 --%>
-                <div class="col standardImg" style="padding-left: 15px;">
+                <div class="col standardImg" style="padding-left: 15px; padding-top: 10px;">
                     <div class="row text-center" >
                         <div class="col">
                             <img src="static/images/sceptic.png" class="emoji">
                         </div>
                         <div class="col" style="margin-top: 5px;">
-                            <p class="mb-0" id="management_standard_text_A" style="font-size: 2.3rem;"></p>
+                            <p class="mb-0" id="management_standard_text_A" style="font-size: 2rem;"></p>
                             <hr class="m-0">
                             <p id="management_standard_text_B"></p>
                         </div>

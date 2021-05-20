@@ -112,6 +112,81 @@
     th{text-align: center;}
     td{text-align: center;}
 
+    /* 데이터테이블 */
+    label {
+        margin-bottom: 10px;
+    }
+
+    .toolbar>b {
+        font-size: 1.25rem;
+    }
+    /*.toolbar:after {content:""; display: block; clear: both;}*/
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        color: #333 !important;
+        border: 0px solid transparent;
+        border-radius: 50px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        color: #fff !important;
+        border: 0px;
+        background: #97bef8;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+        cursor: default;
+        color: #666 !important;
+        border: 1px solid transparent;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        color: white !important;
+        border: 0px;
+        background: #254069;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
+        outline: none;
+        background-color: #2b2b2b;
+        box-shadow: inset 0 0 3px #111;
+    }
+
+    #information_filter label {
+        margin-bottom: 5px;
+    }
+
+    .buttons-excel {
+        background-color: #000;
+        color: #fff;
+        border: 0px;
+        border-radius: 5px;
+        position: relative;
+        margin-top: 2px;
+    }
+    .dt-buttons {
+        margin: 0 10px;
+        display: inline-block;
+    }
+
+    .dataTables_wrapper {
+        min-height: 350px;
+    }
+
 </style>
 
 <div class="container">
@@ -126,7 +201,7 @@
             <span>* 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량 계산에 활용됩니다.</span>
         </div>
         <div class="col-xs-12 bg-light">
-        <h4 class="mt-2"style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
+        <h4 class="mt-2 fs-5 fw-bold"style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
             <table class="table table-striped">
 
                 <thead>
@@ -194,7 +269,7 @@
 <!--멀티셀렉터 콤보박스 -->
 <div class="multiSelectComboBox" >
     <div class="multiSelectParent">
-        <h4>배출량 추이 모니터링 대상 설정</h4><br>
+        <h4 class="fs-5 fw-bold">배출량 추이 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
             <select multiple class="form-control" id="lstBox1">
@@ -233,7 +308,7 @@
     </div>
 
     <div class="multiSelectParent">
-        <h4>연간 배출량 누적 모니터링 대상 설정</h4><br>
+        <h4 class="fs-5 fw-bold">연간 배출량 누적 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
             <select multiple class="form-control" id="lstBox3">
