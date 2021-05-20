@@ -575,10 +575,11 @@
             $.ajax(settings).done(function (response) {
                 inputLog(ID, "비밀번호 초기화", "회원관리");
                 inputLog(user_id, ID + " 계정 비밀번호 초기화 처리", "회원관리");
-                success(response);
-                setTimeout(function () {
-                    location.reload();
-                }, 2000);
+                Swal.fire({
+                    icon: 'success',
+                    title: '비밀번호 초기화가 완료되었습니다.',
+                    text: "임시비밀번호 : "+ response
+                })
             });
         }
     }           // resetPassword
@@ -664,6 +665,7 @@
                 }
             }
             success("권한관리 설정이 저장되었습니다.");
+
             setTimeout(function () {
                 location.reload();
             }, 2000);
