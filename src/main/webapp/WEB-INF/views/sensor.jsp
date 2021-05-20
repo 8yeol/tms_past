@@ -139,16 +139,16 @@
             </div>
             <span class="fs-4 fw-bold d-flex justify-content-center bg-lightGray" id="title"></span>
             <div id="place_table" style="margin:0 10px 0;">
-                <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: .875em; margin-right: 10px;"> * 항목 클릭시 차트/표 값이 변경됩니다.</span></div>
+                <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: .875em; margin-right: 10px;"> * 항목 클릭시 해당 항목의 상세 데이터로 하단의 차트/표 변경</span></div>
                 <table class="table table-bordered table-hover text-center">
                     <thead>
                     <tr>
-                        <th>항목</th>
-                        <th>법적기준</th>
-                        <th>사내기준</th>
-                        <th>관리기준</th>
-                        <th>측정값</th>
-                        <th>관리등급</th>
+                        <th width="20%">항목</th>
+                        <th width="15%">법적기준</th>
+                        <th width="15%">사내기준</th>
+                        <th width="15%">관리기준</th>
+                        <th width="15%">측정값</th>
+                        <th width="20%">관리등급</th>
                     </tr>
                     <thead>
                     <tbody id="place-tbody-table">
@@ -170,7 +170,7 @@
                                     <label for="day">&nbsp;최근 24시간</label>
                                 </div>
                             </div>
-                            <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간 - 1분 단위로 업데이트 됩니다.</span>
+                            <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간(실시간 업데이트)</span>
                         </div>
                       <div id="chart" style=" margin-right: 10px;"></div>
                     </div>
@@ -192,9 +192,9 @@
                         <table id="sensor-table" class="table table-striped table-bordered table-hover text-center no-footer dataTable">
                             <thead>
                             <tr>
-                                <th>측정시간</th>
-                                <th>측정 값</th>
-                                <th>관리 등급</th>
+                                <th width="35%">측정시간</th>
+                                <th width="30%">측정 값</th>
+                                <th width="35%">관리 등급</th>
                             </tr>
                             </thead>
                         </table>
@@ -267,10 +267,10 @@
     $("input[name=chartRadio]").on('click' , function (){
         if(document.getElementsByName("chartRadio")[0].checked){ //최근 1시간 선택 시
             sensor_time_length = 1;
-            $('#textUpdate').text("* 최근 1시간 - 1분 단위로 업데이트 됩니다.");
+            $('#textUpdate').text("* 최근 1시간(실시간 업데이트)");
         }else{ //최근 24시간 선택 시
             sensor_time_length = 24;
-            $('#textUpdate').text("* 최근 24시간 - 5분 단위로 업데이트 됩니다.(5분 평균데이터)");
+            $('#textUpdate').text("* 최근 24시간(실시간 업데이트) - 5분 평균데이터");
             sensor_naming = $('#radio_text').text();
         }
         var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
@@ -855,13 +855,13 @@
             for(var i=0; i<sensor_data_list.length; i++){
 
                 if(sensor_data_list[i].y > sensor_data.legalStandard){
-                    var standard = "법적기준 초과";
+                    standard =  '<div class="bg-danger text-light">'+"법적기준 초과"+'</div>';
                 }else if(sensor_data_list[i].y > sensor_data.companyStandard){
-                    var standard = "사내기준 초과";
+                    standard =  '<div class="bg-warning text-light">'+"사내기준 초과"+'</div>';
                 }else if(sensor_data_list[i].y > sensor_data.managementStandard){
-                    var standard = "관리기준 초과";
+                    standard =   '<div class="bg-success text-light">'+"관리기준 초과"+'</div>';
                 }else if(sensor_data_list[i].y <= sensor_data.managementStandard){
-                    var standard = "정상";
+                    standard = "정상";
                 }
                 arr.push({x:moment(sensor_data_list[i].x).format('YYYY-MM-DD HH:mm:ss'), y:(sensor_data_list[i].y).toFixed(2), z: standard});
             }
@@ -883,6 +883,10 @@
             }else{
                 managementStandard = sensor_data.managementStandard;
             }
+
+
+
+
             $("#standard_text").text(legalStandard+"/"+companyStandard+"/"+managementStandard+" mg/Sm³ 이하");
         }
 
@@ -954,11 +958,11 @@
         }
 
         if(sensorData.value > sensorData.legalStandard){
-            standard =  "법적기준 초과";
+            standard =  '<div class="bg-danger text-light">'+"법적기준 초과"+'</div>';
         } else if( sensorData.value > sensorData.companyStandard){
-            standard =  "사내기준 초과";
+            standard =  '<div class="bg-warning text-light">'+"사내기준 초과"+'</div>';
         } else if( sensorData.value > sensorData.managementStandard){
-            standard =  "관리기준 초과";
+            standard =   '<div class="bg-success text-light">'+"관리기준 초과"+'</div>';
         } else {
             standard =  "정상";
         }

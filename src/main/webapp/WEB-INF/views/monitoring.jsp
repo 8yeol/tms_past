@@ -59,7 +59,7 @@
             <span class="fs-4 flashToggle">모니터링 > 실시간 모니터링</span>
         </div>
         <div class="col text-end align-self-end">
-            <span class="text-primary small"> * 실시간으로 업데이트 됩니다.</span>
+            <span class="text-primary small"> * 실시간 업데이트</span>
         </div>
     </div>
     <div class="row m-3 mt-3">
