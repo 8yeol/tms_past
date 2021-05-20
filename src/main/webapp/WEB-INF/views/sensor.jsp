@@ -436,7 +436,7 @@
             if(result.length != 0){
                 return result;
             }else {
-                Swal.fire({icon: 'warning', title: '경고', text: '등록된 센서가 없거나 모니터링이 OFF 입니다.'})
+                Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 센서의 데이터가 없습니다.'})
                 return [];
             }
     }
