@@ -730,12 +730,7 @@ public class AjaxController {
     public List saveEmissionsStandard(@RequestParam(value = "standard") int standard, @RequestParam(value = "hiddenTableName", required = false) String hiddenTableName,
                                       @RequestParam(value = "percent") int percent, @RequestParam(value = "formula") String formula, Principal principal) {
 
-        Member member = memberRepository.findById(principal.getName());
-        Log log = new Log();
-        log.setId(member.getId());
-        log.setContent("연간 배출량 기준치 변경");
-        log.setType("설정 수정");
-        inputLog(log);
+
 
         EmissionsStandardSetting setting = emissionsStandardSettingRepository.findByTableNameIsIn(hiddenTableName);
 
@@ -745,12 +740,19 @@ public class AjaxController {
         setting.setDate(new Date());
         emissionsStandardSettingRepository.save(setting);
 
+        inputLogSetting(setting.getPlace()+"의 "+setting.getNaming()+"센서 기준치 변경 ","배출 허용 기준 수정",principal);
+
         List<EmissionsStandardSetting> standardList = emissionsStandardSettingRepository.findAll();
-
-
-
-
         return standardList;
+    }
+
+    public void inputLogSetting(String content,String type,Principal principal){
+        Member member = memberRepository.findById(principal.getName());
+        Log log = new Log();
+        log.setId(member.getId());
+        log.setContent(content);
+        log.setType(type);
+        inputLog(log);
     }
 
 
@@ -764,6 +766,7 @@ public class AjaxController {
     public List deleteEmissionsStandard(@RequestParam(value = "tableName") String tableName) {
         emissionsStandardSettingRepository.deleteByTableName(tableName);
         List<EmissionsStandardSetting> standardList = emissionsStandardSettingRepository.findAll();
+
         return standardList;
     }
 

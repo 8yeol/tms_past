@@ -16,12 +16,12 @@
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<link rel="stylesheet" type="text/css" href="static/jquery-timepicker-12-hour-format/stylesheets/wickedpicker.css">
+<link rel="stylesheet" type="text/css" href="static/css/timepicker.css">
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <%--make css--%>
 <link rel="stylesheet" type="text/css" href="static/css/alarmManagement.css">
 <script src="static/js/common/common.js"></script>
-<script src="static/jquery-timepicker-12-hour-format/src/wickedpicker.js"></script>
+<script src="static/js/timepicker.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
 
@@ -30,7 +30,6 @@
         border-bottom: 2px solid #a9a9a9;
         padding: 16px 16px 25px 16px;
     }
-
 </style>
 
 <div class="container">
@@ -96,8 +95,7 @@
             }
         }
         for (let i = 0; i < placeLength; i++) {
-            $('#start' + i).wickedpicker();
-            $('#end' + i).wickedpicker();
+            $(".example").timepicker();
         }
 
     });
@@ -108,10 +106,11 @@
         const parentElem = $('#items' + idx);
         let innerHTMLTimePicker = "";
         innerHTMLTimePicker += '<div><span class="textSpanParent">알림 시간</span></div>';
-        innerHTMLTimePicker += '<div><span class="textSpan">From </span><input type="text" id="start' + idx + '" name="start" class="timePicker" readonly/></div>';
-        innerHTMLTimePicker += '<div><span class="textSpan">To </span><input type="text" id="end' + idx + '" name="end" class="timePicker" readonly/></div>';
+        innerHTMLTimePicker += '<div><span class="textSpan">From </span>  <input style="background-color: white;"class="form-control example timePicker" name="start" type="text" id="start'+idx+'" readonly/></div>';
+        innerHTMLTimePicker += '<div><span class="textSpan">To </span>  <input style="background-color: white;"class="form-control example timePicker" name="end" type="text"id="end'+idx+'"readonly/></div>';
 
         $('#alarm' + idx).append(innerHTMLTimePicker);
+        $(".example").timepicker();
 
         $.ajax({
             url: '<%=cp%>/getPlaceSensor',
@@ -138,49 +137,13 @@
                     elem.innerHTML = innerHtml;
                     parentElem.append(elem);
 
+
+
                     if (i % data.length == 0) {
                         const time = data[0];
                         const getTime = getNotifyTime(time);
-                        $("#start" + idx).wickedpicker({
-                            now: getTime.get("from"),
-                            twentyFour: true,
-                            upArrow: 'wickedpicker__controls__control-up',
-                            downArrow: 'wickedpicker__controls__control-down',
-                            close: 'wickedpicker__close',
-                            hoverState: 'hover-state',
-                            title: '시간 입력',
-                            showSeconds: false,
-                            timeSeparator: ':',
-                            secondsInterval: 1,
-                            minutesInterval: 1,
-                            beforeShow: null,
-                            afterShow: null,
-                            show: null,
-                            clearable: false,
-                            closeOnClickOutside: true,
-                            onClickOutside: function () {
-                            },
-                        });
-                        $("#end" + idx).wickedpicker({
-                            now: getTime.get("to"),
-                            twentyFour: true,
-                            upArrow: 'wickedpicker__controls__control-up',
-                            downArrow: 'wickedpicker__controls__control-down',
-                            close: 'wickedpicker__close',
-                            hoverState: 'hover-state',
-                            title: '시간 입력',
-                            showSeconds: false,
-                            timeSeparator: ':',
-                            secondsInterval: 1,
-                            minutesInterval: 1,
-                            beforeShow: null,
-                            afterShow: null,
-                            show: null,
-                            clearable: false,
-                            closeOnClickOutside: true,
-                            onClickOutside: function () {
-                            },
-                        });
+                        $("#start" + idx).val(getTime.get("from"));
+                        $("#end" + idx).val(getTime.get("to"));
                     }
                 }
             },
@@ -349,8 +312,7 @@
         $('#items' + idx).empty();
 
         placeMake($("#place" + idx).text(), idx);
-        $('#start' + idx).wickedpicker();
-        $('#end' + idx).wickedpicker();
+        $(".example").timepicker();
     }
 </script>
 
