@@ -450,6 +450,9 @@
         const monitor = getMonitoring(sensor);
         if(monitor === 'true'){
             const recentData = getSensorRecent(sensor); //최근데이터
+            if(recentData == undefined){
+                return null;
+            }
             if(recentData.value == 0 || recentData.value == null){
                 recentData.value = "-";
             }else{
