@@ -162,12 +162,12 @@
                         </c:choose>
                         <td>${mList.email}</td>
                         <td>${mList.tel}</td>
-                        <td><fmt:formatDate value="${mList._id.date}" pattern="yyyy년 MM월 dd일 hh시"/></td>
+                        <td><fmt:formatDate value="${mList._id.date}" pattern="yyyy년 MM월 dd일 HH시"/></td>
 
 
                         <c:choose>
                             <c:when test="${mList.joined != null}">
-                                <td><fmt:formatDate value="${mList.joined}" pattern="yyyy년 MM월 dd일 hh시"/></td>
+                                <td><fmt:formatDate value="${mList.joined}" pattern="yyyy년 MM월 dd일 HH시"/></td>
                             </c:when>
                             <c:otherwise>
                                 <td></td>
@@ -176,7 +176,7 @@
 
                         <c:choose>
                             <c:when test="${mList.lastLogin != null}">
-                                <td><fmt:formatDate value="${mList.lastLogin}" pattern="yyyy년 MM월 dd일 hh시"/></td>
+                                <td><fmt:formatDate value="${mList.lastLogin}" pattern="yyyy년 MM월 dd일 HH시"/></td>
                             </c:when>
                             <c:otherwise>
                                 <td></td>
