@@ -344,7 +344,14 @@
         });
 
     }
+
+
+
     function isValueDelete(){
+        if($("#place2").val() == null){
+            customSwal('경고','측정소를 선택 해주세요.');
+            return;
+        }
         Swal.fire({
             icon: 'warning',
             title: '경고',

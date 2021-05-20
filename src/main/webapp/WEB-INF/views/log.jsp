@@ -19,7 +19,7 @@
             <c:set var="state" value="가입 거절"></c:set>
         </c:when>
         <c:when test="${member.state eq '4'}">
-            <c:set var="state" value="가입대기"></c:set>
+            <c:set var="state" value="가입 대기"></c:set>
         </c:when>
         <c:when test="${member.state eq '3'}">
             <c:set var="state" value="일반"></c:set>
@@ -34,7 +34,12 @@
 
     <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold">활동 기록</h3>
     <div class="row bg-light rounded py-3 px-5">
-        <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
+        <c:if test="${member.id == 'All'}">
+             <h4 class="d-flex justify-content-start"><b>모든</b>&nbsp;활동기록</h4>
+        </c:if>
+        <c:if test="${member.id != 'All'}">
+             <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
+        </c:if>
         <div class="col-xs-12">
             <table class="table table-striped " id="member-Table">
                 <thead>

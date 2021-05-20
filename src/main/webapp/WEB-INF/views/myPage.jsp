@@ -5,15 +5,33 @@
     String cp = request.getContextPath();
 %>
 <style>
-    .edit {
+    #passwordBox {
         background-color: #0d6efd;
         color: #fff;
-        border-radius: 5px;
+        border-radius: 15px;
         border: 2px solid #0d6efd;
         box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
         position: relative;
         left: 35px;
     }
+    #passwordBox2{
+        background-color: #86b7fe;
+        color: #fff;
+        border-radius: 15px;
+        border: 2px solid #86b7fe;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        position: relative;
+        left: 35px;
+        margin-bottom: 10px;
+    }
+    #memberOut{
+        width: 100px;
+        height: 40px;
+        float: right;
+        position: absolute;
+        left: 70%;
+    }
+
 </style>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
@@ -27,6 +45,7 @@
 <script src="static/js/common/member.js"></script>
 
 <div class="container bg-light rounded p-5 mt-5 mypage-bg">
+        <button class="btn btn-outline-danger m-3" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
     <div class="row">
         <span class="fs-1 text-center" style="display: inline-block; width: 100%;">MY PAGE</span>
         <div class="text-center" style="width: 50%; margin: 2rem auto 1rem;">
@@ -72,25 +91,25 @@
                 </div>
             </div>
 
-            <div class="edit" style="display:none;" id="passwordBox">
-                <div class="mb-3" style="margin-top: 1rem; width: 80%;">
+            <div class="edit" style="display:none;" id="passwordBox2">
+                <div class="mb-3" id="nowPassword" style="margin-top: 1rem; width: 80%;">
                     <label for="password" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">현재 비밀번호</label>
                     <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="password" class="form-control" id="now_password" onkeyup="nowPasswordCheck()">
                     </div>
-                    <div class="col">
+                    <div class="col" style="text-align: right;padding-right: 20px;">
                         <span class="text-danger" id="nowPasswordText">* 사용중인 비밀번호를 입력해주세요.</span>
                     </div>
                 </div>
+            </div>
 
-                <hr>
-
+            <div class="edit" style="display:none;" id="passwordBox">
                 <div class="mb-3" style="margin-top: 1rem; width: 80%;">
                     <label for="password" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 변경</label>
                    <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="password" class="form-control" id="password" onkeyup="passwordCheckMsg()">
                     </div>
-                    <div class="col">
+                    <div class="col" style="text-align: right;padding-right: 20px;">
                         <span class="text-danger" id="passwordText">* 6자리 이상 20자리 미만의 비밀번호를 설정해주세요.</span>
                     </div>
                 </div>
@@ -100,18 +119,17 @@
                     <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="password" class="form-control" id="passwordCheck" onkeyup="passwordCheckMsg()" >
                     </div>
-                    <div class="col">
+                    <div class="col" style="text-align: right;padding-right: 20px;">
                         <span class="text-danger" id="passwordCheckText">* 비밀번호가 일치하지 않습니다.</span>
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col text-center">
                     <button class="btn btn-outline-primary m-3"  style="display:none;" id="pw_button" onclick="changePassword()">비밀번호 변경</button>
+                <div class="col text-center">
                     <button class="btn btn-outline-primary m-3" id="update_btn" onclick="setLayout()">회원정보 수정</button>
                     <button class="btn btn-primary m-3" style="display:none;" id="up_btn" onclick="submit()" >정보수정</button>
-                    <button class="btn btn-outline-danger m-3" style="display:none;" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
                 </div>
             </div>
 
@@ -162,8 +180,10 @@
     function setLayout(){
         if($("#update_btn").html() == "회원정보 수정"){
             $("#update_btn").html("취소");
+             $("#pw_button").css('display','block');
         } else {
             $("#update_btn").html("회원정보 수정");
+             $("#pw_button").css('display','none');
         }
 
         const passwordBox = document.getElementById('passwordBox');
@@ -172,13 +192,14 @@
         }
 
         $("#up_btn").toggle();
-        $("#pw_button").toggle();
-        $("#memberOut").toggle();
         readonlyToggle();
     }
 
     function changePassword(){
         $("#passwordBox").toggle();
+        $("#passwordBox2").toggle();
+        $("#pw_button").css('display','none');
+
     }
 
     function submit() {
