@@ -125,7 +125,7 @@
             <c:when test="${empty emissionSettingList}">
                 <div class="row pb-3 margin-l" style="height: 230px">
                     <div class="col align-self-center text-center" style="font-size: 1.2rem">
-                        측정소 통합 모니터링 설정 된 센서가 없습니다. <br>
+                        측정소 통합 모니터링 설정된 센서가 없습니다. <br>
                         <b>[환경설정 - 배출량 관리] > 배출량 추이 모니터링 대상 설정 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
                         <a href="<%=cp%>/emissionsManagement">모니터링 대상 설정</a>
                     </div>
@@ -336,7 +336,7 @@
             </c:forEach>
             <c:if test="${empty placeList}">
                 <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
-                    연간 배출량 누적 모니터링 설정 된 센서가 없습니다. <br>
+                    연간 배출량 누적 모니터링 설정된 센서가 없습니다. <br>
                     <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
                     <a href="<%=cp%>/emissionsManagement">모니터링 대상 설정</a>
                 </div>

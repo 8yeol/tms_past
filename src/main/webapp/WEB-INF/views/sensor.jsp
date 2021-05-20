@@ -767,7 +767,11 @@
         try{
             $('#place-tbody-table').empty();
             if(data == null){
-                const innerHtml = "<tr><td colspan='6'> 데이터가 없어요. </td></tr>";
+                const innerHtml = '<tr><td colspan="6">'
+                +'<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서가 없습니다.'+'<br>'
+                +'<b>'+'[환경설정 - 측정소 관리]'+'</b>'+'에서 모니터링 설정을 해주세요.'+'<br>'
+                +'<a href=\"<%=cp%>/stationManagement\">측정소 관리</a>'
+                +'</div></td></tr>';
                 $('#place-tbody-table').append(innerHtml);
             }else{
                 const tbody = document.getElementById('place-tbody-table');
@@ -895,7 +899,7 @@
             "ordering": true,
             "pagingType": 'numbers',
             "language": {
-                "emptyTable": "데이터가 없어요.",
+                "emptyTable": "센서 데이터가 없습니다.",
                 "lengthMenu": "페이지당 _MENU_ 개씩 보기",
                 "info": "현재 _START_ - _END_ / _TOTAL_건",
                 "infoEmpty": "데이터 없음",
