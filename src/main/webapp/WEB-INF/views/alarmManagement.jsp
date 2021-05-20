@@ -212,7 +212,7 @@
         return isChecked;
     }
 
-    //모니터링 on/off 및 측정소 명
+    //모니터링 on/off
     function findPlace(tableName) {
 
         $.ajax({
@@ -265,7 +265,7 @@
                 title: '경고',
                 text: '알림시간을 입력해주세요.'
             })
-            return false;
+            return ;
         } else {
             //저장할때 시간 검사
             if (start >= end) {
@@ -273,15 +273,6 @@
                     icon: 'warning',
                     title: '경고',
                     text: 'To 시간이 From 시간 보다 적거나 같을 수 없습니다.'
-                })
-                return;
-            }
-            //시간과 분을 정확히 입력했는지 검사
-            if (start.length != 5 || end.length != 5) {
-                swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '시간을 정확히 입력 해주세요.'
                 })
                 return;
             }
@@ -305,19 +296,12 @@
                 "offList": offList,
                 "from": start,
                 "to": end
-            },
-            success: function (data) {
-            },
-            error: function (request, status, error) {
-                console.log(error)
             }
         })
-
         Swal.fire({
             icon: 'success',
             title: '저장완료'
         })
-
     }
 
     //시작 시간이 종료시간보다 클때 endTime 변경
@@ -357,7 +341,6 @@
             }
         }
     }
-
     //임시로 설정한값 삭제후 다시 생성
     function cancel(idx) {
         $('#alarm' + idx).empty();
