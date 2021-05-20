@@ -95,6 +95,10 @@
         cursor: pointer;
         background-color: rgba(99, 130, 255, 0.3);
     }
+
+    .dataTables_wrapper {
+        min-height: 350px;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">

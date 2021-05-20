@@ -158,13 +158,13 @@
                         </c:when>
                     </c:choose>
                     <div class="row pb-3 margin-l">
-                        <div class="row">
+                        <div class="row" style="margin-bottom: 15px;">
                             <div class="col">
                                 <div class="fs-6 fw-bold">${present.placeName} - ${present.sensorName}</div>
                             </div>
                         </div>
                         <div class="col-3">
-                            <div class="card border-2 border-primary" style="height: 95%;">
+                            <div class="card border-2 border-primary" style="height: 90%;">
                                 <div class="card-body">
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(%)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
@@ -186,8 +186,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3 h-100">
-                            <div class="card border-2 border-primary" style="height: 95%;">
+                        <div class="col-3">
+                            <div class="card border-2 border-primary" style="height: 90%;">
                                 <div class="card-body">
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(mg/L)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
@@ -211,7 +211,7 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <div class="card border-2 border-primary" style="height: 95%;">
+                            <div class="card border-2 border-primary" style="height: 90%;">
                                 <div class="card-body">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(%)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
@@ -234,8 +234,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3 h-100">
-                            <div class="card border-2 border-primary" style="height: 95%;">
+                        <div class="col-3">
+                            <div class="card border-2 border-primary" style="height: 90%;">
                                 <div class="card-body">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
@@ -348,7 +348,7 @@
         </div>
 
 
-        <div class="row pt-3 text-center margin-l center-position m-3">
+        <div class="row pt-3 text-center margin-l center-position m-3" style="width: auto;">
             <div class="progress-info">
                 <div id="blue" class="align-self-center"></div> &emsp;0 ~ 50%
             </div>
@@ -361,7 +361,7 @@
         </div>
     </div>
 
-<div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: 330px;">
+<div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: auto;">
         <div class="row p-3 pb-0 margin-l">
             <div class="col fs-5 fw-bold">
                 관리등급 초과 모니터링
