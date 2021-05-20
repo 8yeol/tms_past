@@ -290,7 +290,6 @@
             clearTimeout(interval1);
         if(place_data.length != 0){
             setTimeout(function interval_getData() { // $초 마다 업데이트
-                draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
                 for (var i = 0; i < place_data.length; i++) {
                     // 측정소의 센서별로 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
                     var recentData = getSensorRecent(place_data[i].name)
@@ -300,6 +299,7 @@
                         $('#update').text(moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss'));
                     }
                 }
+                draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
                 interval1 = setTimeout(interval_getData, 5000);
             }, 0); //setTimeout
             if (!sensor_naming) {  //파라미터 없을 경우
