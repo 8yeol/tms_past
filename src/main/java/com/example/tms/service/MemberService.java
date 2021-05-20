@@ -1,6 +1,8 @@
 package com.example.tms.service;
 
+import com.example.tms.entity.Log;
 import com.example.tms.entity.Member;
+import com.example.tms.repository.LogRepository;
 import com.example.tms.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -10,11 +12,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class MemberService implements UserDetailsService {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    LogRepository logRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -50,6 +57,24 @@ public class MemberService implements UserDetailsService {
         updateMember.setDepartment(member.getDepartment());
         updateMember.setGrade(member.getGrade());
         memberRepository.save(updateMember);
+    }
+
+    public void updateLog(Member member){
+        Date date = new Date();
+        Log pwdLog = new Log();
+        Log infoLog = new Log();
+        if(member.getPassword() != ""){
+            pwdLog.setId(member.getId());
+            pwdLog.setType("회원수정");
+            pwdLog.setContent("비밀번호 수정");
+            pwdLog.setDate(date);
+            logRepository.save(pwdLog);
+        }
+        infoLog.setId(member.getId());
+        infoLog.setType("회원수정");
+        infoLog.setContent("정보수정");
+        infoLog.setDate(date);
+        logRepository.save(infoLog);
     }
 
     public void deleteById(String id) {

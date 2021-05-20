@@ -1075,13 +1075,13 @@ public class AjaxController {
 
     /**
      * 회원정보 업데이트
-     *
      * @param member 입력한 회원의 정보객체
      * @return 업데이트 성공여부
      */
     @RequestMapping(value = "/memberUpdate")
     public String memberUpdate(Member member) {
         memberService.updateMember(member);
+        memberService.updateLog(member);
         return "success";
     }
 
