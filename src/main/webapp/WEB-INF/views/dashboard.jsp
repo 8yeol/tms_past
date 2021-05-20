@@ -160,7 +160,7 @@
                     <div class="row pb-3 margin-l">
                         <div class="row">
                             <div class="col">
-                                <div class="fs-6">${present.placeName} - ${present.sensorName}</div>
+                                <div class="fs-6 fw-bold">${present.placeName} - ${present.sensorName}</div>
                             </div>
                         </div>
                         <div class="col-3">

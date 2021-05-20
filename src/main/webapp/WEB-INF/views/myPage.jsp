@@ -111,12 +111,10 @@
                     <button class="btn btn-outline-primary m-3"  style="display:none;" id="pw_button" onclick="changePassword()">비밀번호 변경</button>
                     <button class="btn btn-outline-primary m-3" id="update_btn" onclick="setLayout()">회원정보 수정</button>
                     <button class="btn btn-primary m-3" style="display:none;" id="up_btn" onclick="submit()" >정보수정</button>
+                    <button class="btn btn-outline-danger m-3" style="display:none;" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
                 </div>
             </div>
 
-            <div class="row justify-content-center">
-                <button class="btn btn-outline-danger mt-5 w-25" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
-            </div>
         </div>
     </div>
 </div>
@@ -175,6 +173,7 @@
 
         $("#up_btn").toggle();
         $("#pw_button").toggle();
+        $("#memberOut").toggle();
         readonlyToggle();
     }
 

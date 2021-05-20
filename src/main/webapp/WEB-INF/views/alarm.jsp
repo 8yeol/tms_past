@@ -93,7 +93,7 @@
     }
 
     .dataTables_wrapper {
-        min-height: 570px;
+        min-height: 550px;
     }
 </style>
 

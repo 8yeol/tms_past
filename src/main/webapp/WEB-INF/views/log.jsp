@@ -13,58 +13,25 @@
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
 
-<style>
-</style>
-
-<script type="text/javascript">
-    jQuery(function ($) {
-        $("#member-Table").DataTable({
-            order: [[4, 'desc']],
-                ordering: true,
-            "language": {
-                "emptyTable": "데이터가 없어요.",
-                "lengthMenu": "페이지당 _MENU_ 개씩 보기",
-                "info": "현재 _START_ - _END_ / _TOTAL_건",
-                "infoEmpty": "데이터 없음",
-                "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
-                "search": "전체검색 : ",
-                "zeroRecords": "일치하는 데이터가 없어요.",
-                "loadingRecords": "로딩중...",
-                "processing": "잠시만 기다려 주세요...",
-                "paginate": {
-                    "next": "다음",
-                    "previous": "이전"
-                },
-            },
-            pageLength: 5
-        });
-    });
-</script>
-
 <div class="container">
 
     <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold">활동 기록</h3>
     <div class="row bg-light rounded py-3 px-5">
-        <h4 class="d-flex justify-content-start">내용</h4>
+        <h4 class="d-flex justify-content-start"><b>(user name)</b> 님의 활동기록</h4>
         <div class="col-xs-12">
             <table class="table table-striped " id="member-Table">
-
                 <thead>
                 <tr class="text-center">
-                    <th>번호</th>
-                    <th>ID</th>
-                    <th width="45%">내용</th>
-                    <th>분류</th>
-                    <th width="25%">해당 날짜</th>
+                    <th width="30%">분류</th>
+                    <th width="35%">내용</th>
+                    <th>해당 날짜</th>
                 </tr>
                 </thead>
                 </tbody>
                 <c:forEach items="${logList}" var="log" varStatus="i">
                     <tr class="text-center" style="font-size: 0.9rem;">
-                        <td>${i.index+1}</td>
-                        <td>${log.id}</td>
-                        <td>${log.content}</td>
                         <td>${log.type}</td>
+                        <td>${log.content}</td>
                         <td><fmt:formatDate value="${log.date}" pattern="yyyy년 MM월 dd일"/> &nbsp;<!--<b style="font-size: 1.3rem;">/</b> -->
                             <fmt:formatDate value="${log.date}" pattern="HH시 mm분 ss초"/></td>
                     </tr>
@@ -79,7 +46,28 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-
+    $("#member-Table").DataTable({
+        order: [[2, 'desc']],
+        ordering: true,
+        info: false,
+        lengthChange : false,
+        pageLength: 20,
+        language : {
+            "emptyTable": "데이터가 없어요.",
+            "lengthMenu": "페이지당 _MENU_ 개씩 보기",
+            "info": "현재 _START_ - _END_ / _TOTAL_건",
+            "infoEmpty": "데이터 없음",
+            "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
+            "search": "전체검색 : ",
+            "zeroRecords": "일치하는 데이터가 없어요.",
+            "loadingRecords": "로딩중...",
+            "processing": "잠시만 기다려 주세요...",
+            "paginate": {
+                "next": "다음",
+                "previous": "이전"
+            },
+        },
+    });
 </script>
 
 
