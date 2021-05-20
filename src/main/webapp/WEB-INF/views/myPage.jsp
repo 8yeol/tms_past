@@ -24,14 +24,6 @@
         left: 35px;
         margin-bottom: 10px;
     }
-    #memberOut{
-        width: 100px;
-        height: 40px;
-        float: right;
-        position: absolute;
-        left: 70%;
-    }
-
 </style>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
@@ -45,7 +37,6 @@
 <script src="static/js/common/member.js"></script>
 
 <div class="container bg-light rounded p-5 mt-5 mypage-bg">
-        <button class="btn btn-outline-danger m-3" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
     <div class="row">
         <span class="fs-1 text-center" style="display: inline-block; width: 100%;">MY PAGE</span>
         <div class="text-center" style="width: 50%; margin: 2rem auto 1rem;">
@@ -127,9 +118,10 @@
 
             <div class="row">
                     <button class="btn btn-outline-primary m-3"  style="display:none;" id="pw_button" onclick="changePassword()">비밀번호 변경</button>
-                <div class="col text-center">
-                    <button class="btn btn-outline-primary m-3" id="update_btn" onclick="setLayout()">회원정보 수정</button>
+                <div class="col text-center" style="padding-left: 50px;">
+                    <button class="btn btn-outline-primary m-3" id="update_btn" onclick="setLayout()" >회원정보 수정</button>
                     <button class="btn btn-primary m-3" style="display:none;" id="up_btn" onclick="submit()" >정보수정</button>
+                     <button class="btn btn-outline-danger m-3" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
                 </div>
             </div>
 

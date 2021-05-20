@@ -12,7 +12,11 @@
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
-
+<style>
+    .dataTables_wrapper {
+        min-height: 1000px;
+    }
+</style>
 <div class="container">
     <c:choose>
         <c:when test="${member.state eq '5'}">
@@ -32,7 +36,9 @@
         </c:when>
     </c:choose>
 
-    <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold">활동 기록</h3>
+    <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold">활동 기록
+        <button class="btn btn-success"onclick="history.back(-1)" style="margin-left: 40px;">뒤로 가기</button></h3>
+
     <div class="row bg-light rounded py-3 px-5">
         <c:if test="${member.id == 'All'}">
              <h4 class="d-flex justify-content-start"><b>모든</b>&nbsp;활동기록</h4>
@@ -51,7 +57,7 @@
                 </thead>
                 </tbody>
                 <c:forEach items="${logList}" var="log" varStatus="i">
-                    <tr class="text-center" style="font-size: 0.9rem;">
+                    <tr class="text-center" style="font-size: 0.9rem;height: 40px;">
                         <td>${log.type}</td>
                         <td>${log.content}</td>
                         <td><fmt:formatDate value="${log.date}" pattern="yyyy년 MM월 dd일"/> &nbsp;<!--<b style="font-size: 1.3rem;">/</b> -->
