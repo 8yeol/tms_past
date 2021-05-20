@@ -91,13 +91,13 @@
         <div class="col bg-white" style="margin-left: 5px;">
             <div class="row">
                 <div class="col">
-                    <span class="fs-6 fw-bold">법적기준</span>
+                    <span class="fs-6 fw-bold">법적기준 초과</span>
                 </div>
                 <div class="col">
-                    <span class="fs-6 fw-bold">사내기준</span>
+                    <span class="fs-6 fw-bold">사내기준 초과</span>
                 </div>
                 <div class="col">
-                    <span class="fs-6 fw-bold">관리기준</span>
+                    <span class="fs-6 fw-bold">관리기준 초과</span>
                 </div>
             </div>
             <div class="row h-75">
@@ -187,7 +187,6 @@
             var sensorDataNullCheck = true;
             for (let i = 0; i < placeName.length; i++) {
                 clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
-                // console.log(INTERVAL);
                 const data = getPlaceData(placeName[i]); //측정소 별 센서 데이터 (최근데이터, 이전데이터, 정보)
                     draw_place_table(data, i); // 로딩되면 테이블 생성
                     placeData.push(data); //측정소 별 센서 데이터 통합
@@ -363,7 +362,7 @@
                             beforeValue: beforeValue, monitoring: monitoring, standard : standard, status: status
                         });
                     }else{ //모니터링 False 인 경우
-                    return null;
+                    getData.push([]);
                 }
                 });
             },
@@ -464,53 +463,66 @@
     function draw_place_table(data, index) {
         $('#sensor-table-' + index).empty();
         const tbody = document.getElementById('sensor-table-' + index);
-        if(data.length == 0){
-            const newRow = tbody.insertRow(tbody.rows);
-            const newCeil0 = newRow.insertCell();
-            newCeil0.innerHTML = '<div>'+'데이터가 없어요.'+'</div>';
-            newCeil0.colSpan = 5;
-            $("#update-" + index).text("-");
-        }else{
-            for (let i = 0; i < data.length; i++) {
-                const newRow = tbody.insertRow(tbody.rows.length);
-                const newCeil0 = newRow.insertCell(0);
-                const newCeil1 = newRow.insertCell(1);
-                const newCeil2 = newRow.insertCell(2);
-                const newCeil3 = newRow.insertCell(3);
-                const newCeil4 = newRow.insertCell(4);
+        var monitoringIsCheck = true;
+        for (let i = 0; i < data.length; i++) {
+            /* 측정소의 센서 모니터링 체크 확인 (한개라도 있으면 TRUE) */
+            if(data[i] != 0){
+                monitoringIsCheck = false;
+            }else{
+                monitoringIsCheck = monitoringIsCheck&&true;
+            }
+            /* 모니터링 ON 한개라도 있을 때 */
+            if(!monitoringIsCheck){
+                if(data[i] != 0){
+                    const newRow = tbody.insertRow(tbody.rows.length);
+                    const newCeil0 = newRow.insertCell(0);
+                    const newCeil1 = newRow.insertCell(1);
+                    const newCeil2 = newRow.insertCell(2);
+                    const newCeil3 = newRow.insertCell(3);
+                    const newCeil4 = newRow.insertCell(4);
 
-                if(data[i].legalStandard == 999){
-                    legalStandard = '-';
-                }else{
-                    legalStandard = data[i].legalStandard;
-                }
-                if(data[i].companyStandard == 999){
-                    companyStandard = '-';
-                }else{
-                    companyStandard = data[i].companyStandard;
-                }
-                if(data[i].managementStandard == 999){
-                    managementStandard = '-';
-                }else{
-                    managementStandard = data[i].managementStandard;
-                }
+                    if(data[i].legalStandard == 999){
+                        legalStandard = '-';
+                    }else{
+                        legalStandard = data[i].legalStandard;
+                    }
+                    if(data[i].companyStandard == 999){
+                        companyStandard = '-';
+                    }else{
+                        companyStandard = data[i].companyStandard;
+                    }
+                    if(data[i].managementStandard == 999){
+                        managementStandard = '-';
+                    }else{
+                        managementStandard = data[i].managementStandard;
+                    }
 
-                newCeil0.innerHTML = data[i].naming;
-                newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
-                newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
-                newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
+                    newCeil0.innerHTML = data[i].naming;
+                    newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
+                    newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
+                    newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
 
-                if(data[i].value > data[i].legalStandard){
-                    newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                } else if( data[i].value > data[i].companyStandard){
-                    newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                } else if( data[i].value > data[i].managementStandard){
-                    newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                } else{
-                    newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
+                    if(data[i].value > data[i].legalStandard){
+                        newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
+                    } else if( data[i].value > data[i].companyStandard){
+                        newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
+                    } else if( data[i].value > data[i].managementStandard){
+                        newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
+                    } else{
+                        newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
+                    }
+
+                    $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                 }
-
-                $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
+            }else{ // 모니터링 OFF 일 때
+                const newRow = tbody.insertRow(tbody.rows);
+                const newCeil0 = newRow.insertCell();
+                newCeil0.innerHTML = '<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서가 없습니다.'+'<br>'
+                    +'<b>'+'[환경설정 - 측정소 관리]'+'</b>'+'에서 모니터링 설정을 해주세요.'+'<br>'
+                    +'<a href="<%=cp%>/stationManagement">측정소 관리</a>'
+                    +'</div>';
+                newCeil0.colSpan = 5;
+                $("#update-" + index).text("-");
             }
         }
     }
@@ -534,34 +546,34 @@
     function draw_sensor_info(data) {
         var sensorMonitoringOn=0, sensorMonitoringOff=0, sensorStatusSuccess=0, sensorStatusFail=0, legalSCount =0, companySCount =0, managementSCount=0;
         for(var i=0; i<data.length; i++){ //측정소별
-            if(data[i].length != 0){
                 for(var z=0; z<data[i].length; z++){ //측정소의 센서별 조회
                     sensorData = data[i][z];
-                    monitoring = sensorData.monitoring;
-                    status = sensorData.status;
-                    value = sensorData.value;
-                    legalStandard = sensorData.legalStandard;
-                    companyStandard = sensorData.companyStandard;
-                    managementStandard = sensorData.managementStandard;
-                    if(monitoring){
-                        sensorMonitoringOn +=1;
-                    }
-                    if(status){
-                        sensorStatusSuccess +=1;
-                        if(value > legalStandard){
-                            legalSCount +=1;
-                        }else if(value > companyStandard){
-                            companySCount +=1;
-                        }else if(value > managementStandard){
-                            managementSCount +=1;
+                    if(sensorData.length != 0){
+                        monitoring = sensorData.monitoring;
+                        status = sensorData.status;
+                        value = sensorData.value;
+                        legalStandard = sensorData.legalStandard;
+                        companyStandard = sensorData.companyStandard;
+                        managementStandard = sensorData.managementStandard;
+                        if(monitoring){
+                            sensorMonitoringOn +=1;
+                        }
+                        if(status){
+                            sensorStatusSuccess +=1;
+                            if(value > legalStandard){
+                                legalSCount +=1;
+                            }else if(value > companyStandard){
+                                companySCount +=1;
+                            }else if(value > managementStandard){
+                                managementSCount +=1;
+                            }
+                        }else{
+                            sensorStatusFail += 1;
                         }
                     }else{
-                        sensorStatusFail += 1;
+                        sensorMonitoringOff +=1;
                     }
                 }
-            }else{
-                sensorMonitoringOff +=1;
-            }
         }
         var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
         var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //법적기준 %
