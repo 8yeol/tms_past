@@ -721,7 +721,7 @@ public class AjaxController {
     }
 
     /**
-     * 배출기준 수정
+     * 배출기준 추가, 수정
      *
      * @param standard        기준값
      * @param hiddenTableName 테이블 명
@@ -1170,14 +1170,14 @@ public class AjaxController {
 
     /**
      * 입력받은 값으로 유저를 추방
-     *
-     * @param id 추방할 유저의 id
+     * @param id 제명할 유저의 id
      * @return 안내메시지 리턴
      */
     @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
     public String kickMember(String id) {
         memberRepository.deleteById(id);
-        return "추방처리 되었습니다.";
+        logRepository.deleteById(id);
+        return "제명처리 되었습니다.";
     }           // kickMember
 
     /**

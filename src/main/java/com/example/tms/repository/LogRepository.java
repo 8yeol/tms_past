@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface LogRepository extends MongoRepository<Log, Long> {
     List<Log> findById(String id);
+    void deleteById(String id);
 }
