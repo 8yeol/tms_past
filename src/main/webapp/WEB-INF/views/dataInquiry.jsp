@@ -18,6 +18,7 @@
 
 <link rel="stylesheet" href="static/css/datepicker.min.css">
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+<script src="static/js/common/common.js"></script>
 <script src="static/js/datepicker.min.js"></script>
 <script src="static/js/datepicker.ko.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
@@ -595,6 +596,7 @@
                 }else{
                     addChart(data, category, reference, flag);
                 }
+                inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "측정자료 검색("+date_start+"~"+date_end+")","검색");
             },
             error : function(request, status, error) {
                 console.log('search off error');

@@ -309,7 +309,6 @@
     }
 
     function search(type){
-        console.log('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}');
         $('#information').DataTable().clear();
         $('#information').DataTable().destroy();
 
