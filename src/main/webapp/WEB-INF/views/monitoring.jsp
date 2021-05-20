@@ -50,9 +50,22 @@
     tbody tr:hover{
         cursor: pointer;
     }
-
     .place_border{
         box-shadow: 0 0 2px 0 #2295DB inset;
+    }
+    .standardParent {
+        border: 5px solid #2295DB;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        background-color: #2295DB;
+        color: white;
+    }
+    .standardDiv{
+        text-align: center;
+    }
+    .titleDiv{
+        background-color: #2295DB;
+        color: white;
     }
 </style>
 
@@ -64,45 +77,58 @@
 <div class="container">
     <div class="row m-3 mt-3">
         <div class="col">
-            <span class="fs-4 flashToggle">모니터링 > 실시간 모니터링</span>
+            <span class="fs-4 flashToggle fw-bold">모니터링 > 실시간 모니터링</span>
         </div>
         <div class="col text-end align-self-end">
             <span class="text-primary small"> * 실시간 업데이트</span>
         </div>
     </div>
     <div class="row m-3 mt-3">
-        <div class="col bg-white" style="margin-right: 5px;">
-            <div class="row">
-                <span class="fs-5 fw-bold">가동률</span>
+
+        <div class="col bg-white fw-bold" style="margin-right: 5px;">
+            <div class="row titleDiv">
+                <span class="fs-5 text-center">가동률</span>
             </div>
+
             <div class="row">
-                <div class="col text-center">
+                <div class="col text-center" style="border: 1px solid #2295DB;padding: 15px;" >
                     <p class="fs-1 mb-0" id="statusPercent"></p>
                     <hr style="margin: 0 30px 0;">
                     <p id="statusMore"></p>
                 </div>
-                <div class="col">
-                    <p class="fs-6 m-l">정상 : <a style="text-align: right" id="statusOn"></a></p>
-                    <p class="fs-6 m-l">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
-                    <p class="fs-6 m-l">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
+
+                <div class="col" style="padding: 0;">
+                    <div style="border: 1px solid #2295DB;">
+                      <p class="fs-6" style="margin: 8px;">정상 : <a style="text-align: right" id="statusOn"></a></p>
+                    </div>
+                    <div style="border: 1px solid #2295DB;">
+                    <p class="fs-6" style="margin: 8px;">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
+                    </div>
+                        <div style="border: 1px solid #2295DB;">
+                    <p class="fs-6" style="margin: 8px;">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
+                        </div>
                 </div>
+
             </div>
         </div>
-        <div class="col bg-white" style="margin-left: 5px;">
-            <div class="row">
-                <div class="col">
-                    <span class="fs-6 fw-bold">법적기준 초과</span>
+
+
+        <div class="col bg-white" style="margin-left: 5px;border-top-left-radius: 20px;border-top-right-radius: 20px;">
+            <div class="row standardParent">
+                <div class="col fs-6 fw-bold standardDiv" style="border-right: 2px solid white;">
+                    법적기준 초과
                 </div>
-                <div class="col">
-                    <span class="fs-6 fw-bold">사내기준 초과</span>
+                <div class="col fs-6 fw-bold standardDiv"style="border-right:2px solid white;">
+                    사내기준 초과
                 </div>
-                <div class="col">
-                    <span class="fs-6 fw-bold">관리기준 초과</span>
+                <div class="col  fs-6 fw-bold standardDiv">
+                    관리기준 초과
                 </div>
             </div>
             <div class="row h-75">
+
                 <%-- 법적 기준 --%>
-                <div class="col border-right">
+                <div class="col standardImg" style="border-right: 2px solid #2295DB;padding-right: 16px;">
                     <div class="row text-center">
                         <div class="col">
                             <img src="static/images/sad.png" class="emoji">
@@ -114,8 +140,9 @@
                         </div>
                     </div>
                 </div>
+
                 <%-- 사내 기준 --%>
-                <div class="col border-right">
+                <div class="col standardImg" style="border-right: 2px solid #2295DB;">
                     <div class="row text-center">
                         <div class="col">
                             <img src="static/images/thinking.png" class="emoji">
@@ -127,9 +154,10 @@
                         </div>
                     </div>
                 </div>
+
                 <%-- 관리 기준 --%>
-                <div class="col">
-                    <div class="row text-center">
+                <div class="col standardImg" style="padding-left: 15px;">
+                    <div class="row text-center" >
                         <div class="col">
                             <img src="static/images/sceptic.png" class="emoji">
                         </div>
@@ -140,6 +168,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
