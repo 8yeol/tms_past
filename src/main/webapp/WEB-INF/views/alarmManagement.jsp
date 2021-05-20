@@ -127,7 +127,7 @@
                     const checked = findNotification(tableName);
 
                     const innerHtml =
-                        "<label style='font-size: 18px;' class='form-check-label' for='" + tableName + "'>" + category + "</label>" +
+                        "<label style='font-size: 18px;' class='form-check-label' id='" + tableName + "'for='" + tableName + "'>" + category + "</label>" +
                         "<label class='switch'>" +
                         "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + checked + ">" +
                         "<div class='slider round'></div>" +
@@ -279,14 +279,19 @@
             }
         }
         const onList = new Array();
+        const onList2 = new Array();
         const offList = new Array();
+        const offList2 = new Array();
         $("input:checkbox[name=status" + idx + "]:checked").each(function () {
             onList.push($(this).attr('id'));
+            sensorName = $(this).attr('id');
+            onList2.push($('#'+sensorName).text());
         });
         $("input:checkbox[name=status" + idx + "]:not(:checked)").each(function () {
             offList.push($(this).attr('id'));
+            sensorName = $(this).attr('id');
+            offList2.push($('#'+sensorName).text());
         });
-
         $.ajax({
             url: '<%=cp%>/saveNotification',
             type: 'POST',
@@ -299,7 +304,8 @@
                 "to": end
             }
         })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림("+start+"~"+end+", ["+ onList +"])","알림설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
+            "알림 저장("+start+"~"+end+", on:"+ onList2+", off:"+ offList2 + ")","알림 설정");
         Swal.fire({
             icon: 'success',
             title: '저장완료'
