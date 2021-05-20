@@ -600,7 +600,6 @@
     }           // kickMember
 
     function rankRadioChanged(name) {
-        console.log(name);
         rName = name;
         <c:forEach items="${rank_managements}" var="rank_managements">
         var rankName = "${rank_managements.name}";
