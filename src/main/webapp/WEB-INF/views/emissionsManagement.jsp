@@ -15,7 +15,8 @@
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
-
+<link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+<script src="static/js/jquery.dataTables.min.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-ui.js"></script>
@@ -26,12 +27,13 @@
         width: 100%;
         display: flex;
         justify-content: center;
-        margin-bottom: -60px;
     }
 
     .multiSelectParent {
-        margin-left: 30px;
-        margin-right: 30px;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 15px;
+        background-color: white;
         position: relative;
     }
 
@@ -66,7 +68,7 @@
 
     .multiSelect {
         width: 280px;
-        height: 400px;
+        height: 350px;
     }
 
     .form-control {
@@ -104,6 +106,9 @@
         width: 800px;
         text-align: end;
     }
+    .dataTables_wrapper {
+        min-height: 350px;
+    }
 
 </style>
 
@@ -119,6 +124,7 @@
             <span>* 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량 계산에 활용됩니다.</span>
         </div>
         <div class="col-xs-12 bg-light">
+        <h4 class="mt-2"style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
             <table class="table table-striped">
 
                 <thead>
@@ -181,7 +187,7 @@
 </div>
 
 <!--멀티셀렉터 콤보박스 -->
-<div class="multiSelectComboBox">
+<div class="multiSelectComboBox" >
     <div class="multiSelectParent">
         <h4>배출량 추이 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
@@ -262,7 +268,7 @@
 
     </div>
 </div>
-<div style="text-align: center;font-size: 0.95rem;">
+<div style="text-align: center;font-size: 0.95rem;margin-bottom: 30px;margin-top: 20px;">
     <span>* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 측정소 통합 모니터링] 화면에 표시됩니다</span>
     <span style="margin-left: 60px;">* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 연간 배출량 누적모니터링] 화면에 표시됩니다</span>
 </div>
@@ -610,6 +616,28 @@
             }
         });
     }
+
+    $(".table").DataTable({
+        ordering: false,
+        info: false,
+        lengthChange : false,
+        pageLength: 5,
+        language : {
+            "emptyTable": "데이터가 없어요.",
+            "lengthMenu": "페이지당 _MENU_ 개씩 보기",
+            "info": "현재 _START_ - _END_ / _TOTAL_건",
+            "infoEmpty": "데이터 없음",
+            "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
+            "search": "전체검색 : ",
+            "zeroRecords": "일치하는 데이터가 없어요.",
+            "loadingRecords": "로딩중...",
+            "processing": "잠시만 기다려 주세요...",
+            "paginate": {
+                "next": "다음",
+                "previous": "이전"
+            },
+        },
+    });
 </script>
 
 
