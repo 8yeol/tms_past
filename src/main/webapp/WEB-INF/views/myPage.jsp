@@ -113,6 +113,33 @@
                     <button class="btn btn-primary m-3" style="display:none;" id="up_btn" onclick="submit()" >정보수정</button>
                 </div>
             </div>
+
+            <div class="row justify-content-center">
+                <button class="btn btn-outline-danger mt-5 w-25" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- memberOutmodal -->
+<div class="modal" id="memberOutmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title text-danger">회원 탈퇴</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <div class="text-center">
+                    <p class="fs-6 fw-bold">탈퇴를 원하시면 아래 입력란에<br> 회원님의 ID를 기입해주세요.</p>
+                    <input type="text" class="form-control text-warning" id="outCheck_id"/>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-outline-danger me-5" data-bs-dismiss="modal" onclick="memberOut()">탈퇴
+                </button>
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">취소</button>
+            </div>
         </div>
     </div>
 </div>
@@ -236,7 +263,32 @@
                 console.log(error);
             }
         })
+    }
 
+    function memberOut(){
+        if(("${member.id}") == $("#outCheck_id").val()){
+            $.ajax({
+                url: '<%=cp%>/memberOut',
+                type: 'POST',
+                dataType: 'text',
+                async: false,
+                cache: false,
+                data: { "id" : $("#id").val(),
+                },
+                success : function(data) {
+                    swal('success', '회원탈퇴 완료', '탈퇴처리가 완료되었습니다.');
+                    setTimeout(function (){
+                        location.href = '<%=cp%>/logout';
+                    },2000);
+                },
+                error : function(request, status, error) {
+                    console.log('member out error');
+                    console.log(error);
+                }
+            })
+        } else {
+            swal('warning', '회원탈퇴 실패', '아이디가 틀립니다.');
+        }
     }
 
     function swal(icon, title, text){
@@ -244,7 +296,7 @@
             icon: icon,
             title: title,
             text: text,
-            timer: 1500
+            timer: 2000
         })
     }
 </script>

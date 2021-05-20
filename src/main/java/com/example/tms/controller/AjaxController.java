@@ -985,7 +985,6 @@ public class AjaxController {
 
     /**
      * 회원가입
-     *
      * @param member 가입 회원 정보
      * @return 회원가입 성공여부 (root : 최초가입시 최고 관리자로 지정하기 위함)
      */
@@ -1005,14 +1004,24 @@ public class AjaxController {
     }
 
     /**
-     * 멤버 업데이트
-     *
-     * @param member
-     * @return
+     * 회원정보 업데이트
+     * @param member 입력한 회원의 정보객체
+     * @return 업데이트 성공여부
      */
     @RequestMapping(value = "/memberUpdate")
     public String memberUpdate(Member member) {
         memberService.updateMember(member);
+        return "success";
+    }
+
+    /**
+     * 회원탈퇴
+     * @param id 탈퇴할 회원의 ID
+     * @return 회원탈퇴 성공여부
+     */
+    @RequestMapping(value = "/memberOut")
+    public String memberOut(String id) {
+        memberService.deleteById(id);
         return "success";
     }
 

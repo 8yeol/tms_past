@@ -51,4 +51,8 @@ public class MemberService implements UserDetailsService {
         updateMember.setGrade(member.getGrade());
         memberRepository.save(updateMember);
     }
+
+    public void deleteById(String id) {
+        memberRepository.deleteById(id);
+    }
 }
