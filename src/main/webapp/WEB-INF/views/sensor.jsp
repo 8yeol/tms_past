@@ -123,13 +123,13 @@
         margin-bottom: 5px;
     }
     .titleSpan{
-        background-color: #97bef8;
-        color:white;
+        background-color: #cbd1d9;
+        color: #000;
     }
     .navPlace{
         margin-top: 32px;
         text-align: -webkit-center;
-        background-color: #97bef8;
+        background-color: #cbd1d9;
         margin-left: 0px;
     }
     .place-item{
