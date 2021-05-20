@@ -72,7 +72,7 @@ public class MainController {
             int year = Calendar.getInstance().get(Calendar.YEAR);
             List<EmissionsTransition> emissionsSettingList = new ArrayList<>();
             for (int j = 0; j <= 1; j++) {
-                EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(emissionsSettings.get(i).getSensor(),year-1);
+                EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(emissionsSettings.get(i).getSensor(),year-j);
                 emissionsSettingList.add(emissionsTransition);
             }
             emissionList.add((ArrayList<EmissionsTransition>) emissionsSettingList);
