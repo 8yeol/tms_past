@@ -578,7 +578,7 @@
                     }
                 }
         }
-        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
+        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail+sensorMonitoringOff)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
         var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //법적기준 %
         var companyPercent = ((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //사내기준 %
         var managementPercent = ((managementSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); ////관리기준 %
@@ -590,7 +590,7 @@
         if(managementPercent == 'NaN'){ managementPercent = 0;}
 
         $("#statusPercent").text(runPercent + "%"); //가동률
-        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail)); // 통신정상/전체
+        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail+sensorMonitoringOff)); // 통신정상/전체
         $("#statusOn").text(sensorStatusSuccess); //정상
         $("#statusOff").text(sensorStatusFail); //통신불량
         $("#monitoringOff").text(sensorMonitoringOff); //모니터링OFF 개수
