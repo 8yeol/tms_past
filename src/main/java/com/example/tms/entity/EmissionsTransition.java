@@ -18,4 +18,5 @@ public class EmissionsTransition {
     private int thirdQuarter;
     private int fourthQuarter;
     private int totalEmissions;
+
 }

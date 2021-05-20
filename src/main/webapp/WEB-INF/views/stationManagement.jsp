@@ -722,11 +722,17 @@
             async: false,
             cache: false,
             data: {
-                "place": name,
-                "check": check
+                "place": name, //측정소 명
+                "check": check //true/false
             }
 
         })
+        if(check == true){
+            check = "ON";
+        }else{
+            check = "OFF";
+        }
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+name+" 모니터링 "+check+"","모니터링ON/OFF");
         MultiSelecterModal(name, "", "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -751,6 +757,12 @@
                 "place": pname
             }
         })
+        if(check == true){
+            check = "ON";
+        }else{
+            check = "OFF";
+        }
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+" - "+tablename+" 모니터링 "+check+"","모니터링ON/OFF");
         MultiSelecterModal(pname, naming, "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -758,6 +770,11 @@
 
     //legal onchange
     function legalupdate(name) {
+
+        var a = document.getElementById(name.id).value;
+        console.log(a);
+        console.log(name)
+        console.log(name.value)
         var id = name.id;
         const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
         const naming = $("#naming" + num).text(); //관리ID
@@ -842,6 +859,7 @@
                 "place": pname
             }
         })
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 법적 기준 값 변경 '"+value+"'","기준값 변경");
         MultiSelecterModal(pname, naming, "legal", value);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -931,6 +949,7 @@
                 "place": pname
             }
         })
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 사내 기준 값 변경 '"+value+"'","기준값 변경");
         MultiSelecterModal(pname, naming, "company", value);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -1009,6 +1028,7 @@
                 "place": pname
             }
         })
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 관리 기준 값 변경 '"+value+"'","기준값 변경");
         MultiSelecterModal(pname, naming, "manage", value);
         placeDiv();
         placeChange(document.getElementById('nickname').value);

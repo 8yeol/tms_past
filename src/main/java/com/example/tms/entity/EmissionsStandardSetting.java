@@ -22,7 +22,7 @@ public class EmissionsStandardSetting {
     private String formula;
     private Date date;
 
-    public EmissionsStandardSetting(String place, String naming,  int emissionsStandard, int densityStandard,String tableName,String formula,Date date) {
+    public EmissionsStandardSetting(String place, String naming, int emissionsStandard, int densityStandard, String tableName, String formula, Date date) {
         this.place = place;
         this.naming= naming;
         this.emissionsStandard= emissionsStandard;
