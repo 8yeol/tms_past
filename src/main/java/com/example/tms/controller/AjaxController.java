@@ -881,6 +881,8 @@ public class AjaxController {
             String oldPlace = sensor.getPlace();
             sensor.setPlace(place);
 
+            if(oldPlace.equals("")) oldPlace = "측정소 없음";
+
             inputLogSetting(oldPlace + " - " + sensor.getNaming() + " 센서 삭제 ", "삭제", principal);
 
             //연간 배출 모니터링 대상 수정
