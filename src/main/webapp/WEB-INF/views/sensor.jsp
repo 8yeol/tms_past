@@ -350,7 +350,7 @@
                                     x: sensor_data_list_recent.up_time,
                                     y: sensor_data_list_recent.value
                                 });
-                                sensor_table_update(dt, sensor_data_list[sensor_data_list.length - 1], sensor_data); //테이블 업데이트
+                                sensor_table_update(dt, sensor_data); //테이블 업데이트
 
                             }
                             updateChart(sensor_data_list, sensor_data); //차트 업데이트
@@ -932,11 +932,11 @@
         return dt;
     }
     
-    function sensor_table_update(table, recentData, sensorData) {
+    function sensor_table_update(table, sensorData) {
         var dt = $('#sensor-table').DataTable();
         var pageNum = dt.page.info().page;
-        upDate = moment(recentData.x).format('YYYY-MM-DD HH:mm:ss');
-        value = (recentData.y).toFixed(2);
+        upDate = moment(sensorData.up_time).format('YYYY-MM-DD HH:mm:ss');
+        value = (sensorData.value).toFixed(2);
         if(sensorData.legalStandard == 999){
             legalStandard = '-';
         }else{
@@ -953,18 +953,23 @@
             managementStandard = sensorData.managementStandard;
         }
 
-        if(recentData.value > sensorData.legalStandard){
+        if(sensorData.value > sensorData.legalStandard){
             standard =  "법적기준 초과";
-        } else if( recentData.value > sensorData.companyStandard){
+        } else if( sensorData.value > sensorData.companyStandard){
             standard =  "사내기준 초과";
-        } else if( recentData.value > sensorData.managementStandard){
+        } else if( sensorData.value > sensorData.managementStandard){
             standard =  "관리기준 초과";
         } else {
             standard =  "정상";
         }
-        table.fnAddData([{'x':upDate, 'y': value, 'z':standard}]);
-        table.fnDeleteRow(0);
         table.fnSort([0, 'desc']);
+        firstData = new Date(table.fnGetData()[0].x);1
+        lastData = new Date(table.fnGetData()[table.fnGetData().length-2].x);
+        timeDiff = lastData-firstData
+        if(timeDiff > 3600000 && timeDiff < 3660000 || timeDiff > 86400000 && timeDiff < 86700000){
+            table.fnDeleteRow(0);
+        }
+        table.fnAddData([{'x':upDate, 'y': value, 'z':standard}]);
         table.fnPageChange(pageNum);
     }
 </script>
