@@ -119,6 +119,13 @@
 <script>
     function join_submit() {
         if (blankCheck() && passwordCheck() && emailCheck()) {
+
+            if($("#password").val() !== $("#passwordCheck").val()){
+                $("#password").focus();
+                swal('warning', '비밀번호를 확인 하세요.');
+                return;
+            }
+
             $.ajax({
                 url: '<%=cp%>/memberJoin',
                 type: 'POST',

@@ -149,7 +149,7 @@ public class MainController {
     }
 
     /**
-     * 센서, 측정소 데이터들고 센서관리 접속
+     * 센서, 측정소 데이터들고 환경설정 - 센서관리 이동
      * @param model
      * - collections - 생성하지않은 센서리스트
      * - place - 모든 측정소

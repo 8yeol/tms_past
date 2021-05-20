@@ -913,7 +913,6 @@ public class AjaxController {
      */
     @RequestMapping(value = "/isStandardEmpty")
     public boolean isStandardEmpty(String tableName) {
-
         if (emissionsStandardSettingRepository.findByTableNameIsIn(tableName) == null) {
             return true;
         } else {
