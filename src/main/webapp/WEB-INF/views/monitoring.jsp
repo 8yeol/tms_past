@@ -494,11 +494,11 @@
         const tbody = document.getElementById('sensor-table-' + index);
         var monitoringIsCheck = true;
         for (let i = 0; i < data.length; i++) {
-            /* 측정소의 센서 모니터링 체크 확인 (한개라도 있으면 TRUE) */
+            /* 측정소의 센서 모니터링 체크 확인 (한개라도 있으면 false) */
             if(data[i] != 0){
                 monitoringIsCheck = monitoringIsCheck && false;
             }else {
-                monitoringIsCheck = monitoringIsCheck || true;
+                monitoringIsCheck = monitoringIsCheck && true;
             }
         }
         for (let i = 0; i < data.length; i++) {
