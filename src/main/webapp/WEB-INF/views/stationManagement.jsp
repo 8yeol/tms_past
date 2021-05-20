@@ -778,9 +778,6 @@
     function legalupdate(name) {
 
         var a = document.getElementById(name.id).value;
-        console.log(a);
-        console.log(name)
-        console.log(name.value)
         var id = name.id;
         const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
         const naming = $("#naming" + num).text(); //관리ID
