@@ -127,7 +127,6 @@
             cache: false,
             data: {"place": place},
             success: function (data) {
-                if (data != "") {
                     for (let i = 0; i < data.length; i++) {
 
                         const tableName = data[i];
@@ -192,17 +191,6 @@
                             });
                         }
                     }
-                } else {
-                    $("#div" + idx).empty();
-
-                    const none = "<div style='margin: auto; text-align: center; height: 151px; padding-top: 35px;' class='fw-bold fs-5'>" +
-                        "<div>등록된 센서 데이터가 없습니다.</div>" +
-                        "<div>센서 등록 후 이용 가능합니다.</div>" +
-                        "</div>";
-
-                    $('#div' + idx).append(none);
-                }
-
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
