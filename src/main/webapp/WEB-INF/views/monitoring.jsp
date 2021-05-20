@@ -56,10 +56,10 @@
 <div class="container">
     <div class="row m-3 mt-3">
         <div class="col">
-            <span class="fs-4">모니터링 > 실시간 모니터링</span>
+            <span class="fs-4 flashToggle">모니터링 > 실시간 모니터링</span>
         </div>
         <div class="col text-end align-self-end">
-            <span class="text-primary small"> * 5분 단위로 업데이트 됩니다.</span>
+            <span class="text-primary small"> * 10초 단위로 업데이트 됩니다.</span>
         </div>
     </div>
     <div class="row m-3 mt-3">
@@ -165,7 +165,6 @@
 
     $(document).ready(function () {
         getData();
-        // flashing();
     });
 
     /**
@@ -187,7 +186,7 @@
                     if(placeData[i].length != 0){
                         sensorDataNullCheck = false;
                     }
-                    INTERVAL = setTimeout(interval_getData, 100000);
+                    INTERVAL = setTimeout(interval_getData, 10000);
             }
             setTimeout(function () {
                 draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
@@ -210,17 +209,21 @@
     /**
      *  점멸 효과
      */
-    function flashing() {
+    function flashing(onOff) {
         const element = $(".row ");
-        setTimeout(function flashInterval() {
-            setTimeout(function () {
-                element.css({"opacity": 0});
-            }, 0);
-            setTimeout(function () {
-                element.css({"opacity": 1});
-            }, 100); //0.2초 숨김
-            setTimeout(flashInterval, 1000); //0.9초 보여줌
-        }, 0)
+        if(onOff){
+            setTimeout(function flashInterval() {
+                setTimeout(function () {
+                    element.css({"opacity": 0});
+                }, 0);
+                setTimeout(function () {
+                    element.css({"opacity": 1});
+                }, 100); //0.2초 숨김
+                flIn = setTimeout(flashInterval, 1000); //0.9초 보여줌
+            }, 0)
+        }else{
+            clearTimeout(flIn);
+        }
     }
 
     /**
@@ -249,6 +252,7 @@
                 title: '경고',
                 text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
             })
+            flashing(false);
         }
         return placeName;
     }
@@ -573,4 +577,14 @@
         $("#management_standard_text_A").text(managementPercent + "%"); //관리기준 Over
         $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess + sensorStatusFail)); //관리기준 Over 개수/전체
     }
+    
+    $('.flashToggle').on('click', function () {
+        if($(this).attr('data-click-state') == 1) {
+            $(this).attr('data-click-state', 0)
+            flashing(false);
+        } else {
+            $(this).attr('data-click-state', 1) //처음 클릭
+            flashing(true);
+        }
+    })
 </script>
