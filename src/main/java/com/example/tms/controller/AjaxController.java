@@ -1165,7 +1165,7 @@ public class AjaxController {
         String encodedPwd = passwordEncoder.encode(uuid);
         newMember.setPassword(encodedPwd);
         memberRepository.save(newMember);
-        return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : " + uuid;
+        return "임시비밀번호 : " + uuid;
     }           // resetPassword
 
     /**
