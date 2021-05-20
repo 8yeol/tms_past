@@ -377,6 +377,13 @@
                     <div class="card-header">정상</div>
                     <div class="card-body" id="normal">
                         <h5> 가동중인 센서가 없습니다.</h5>
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                        <h5> 가동중인 센서가 없습니다.</h5>
+                        <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -419,7 +426,7 @@
         if(placeListSize==2) $('#line1').remove();
 
         integrated();
-        excess();
+        //excess();
 
         $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD') + " 00:00");
     });

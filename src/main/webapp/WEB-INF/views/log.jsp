@@ -17,7 +17,7 @@
 
     <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold">활동 기록</h3>
     <div class="row bg-light rounded py-3 px-5">
-        <h4 class="d-flex justify-content-start"><b>(user name)</b> 님의 활동기록</h4>
+        <h4 class="d-flex justify-content-start"><b>티엠에스[최고 관리자]</b>&nbsp;님의 활동기록</h4>
         <div class="col-xs-12">
             <table class="table table-striped " id="member-Table">
                 <thead>
