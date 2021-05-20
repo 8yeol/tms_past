@@ -349,7 +349,7 @@
                         /* 센서의 최근 데이터 */
                         var recentData = getSensorRecent(item);
                         if(recentData.value == 0 || recentData.value == null){ //null 일때
-                            recentData.value = "-"; // "-" 출력(datatable)
+                            return null;
                         }else{
                             status = recentData.status; //센서의 상태
                             if(status){ //양호
@@ -387,7 +387,6 @@
                         }else{
                             standard = "-";
                         }
-
                         getData.push({
                             naming: naming, name:item,
                             value:sensorValue, up_time: sensorUptime,
@@ -505,61 +504,69 @@
                 monitoringIsCheck = monitoringIsCheck && true;
             }
         }
-        for (let i = 0; i < data.length; i++) {
-            /* 모니터링 ON 한개라도 있을 때 */
-            if(!monitoringIsCheck){
-                if(data[i] != 0){
-                    const newRow = tbody.insertRow(tbody.rows.length);
-                    const newCeil0 = newRow.insertCell(0);
-                    const newCeil1 = newRow.insertCell(1);
-                    const newCeil2 = newRow.insertCell(2);
-                    const newCeil3 = newRow.insertCell(3);
-                    const newCeil4 = newRow.insertCell(4);
+        console.log(data);
+        console.log(monitoringIsCheck);
+        if(data.length != 0){
+            for (let i = 0; i < data.length; i++) {
+                /* 모니터링 ON 한개라도 있을 때 */
+                if(!monitoringIsCheck){
+                    if(data[i] != 0){
+                        const newRow = tbody.insertRow(tbody.rows.length);
+                        const newCeil0 = newRow.insertCell(0);
+                        const newCeil1 = newRow.insertCell(1);
+                        const newCeil2 = newRow.insertCell(2);
+                        const newCeil3 = newRow.insertCell(3);
+                        const newCeil4 = newRow.insertCell(4);
 
-                    if(data[i].legalStandard == 999){
-                        legalStandard = '-';
-                    }else{
-                        legalStandard = data[i].legalStandard;
-                    }
-                    if(data[i].companyStandard == 999){
-                        companyStandard = '-';
-                    }else{
-                        companyStandard = data[i].companyStandard;
-                    }
-                    if(data[i].managementStandard == 999){
-                        managementStandard = '-';
-                    }else{
-                        managementStandard = data[i].managementStandard;
-                    }
+                        if(data[i].legalStandard == 999){
+                            legalStandard = '-';
+                        }else{
+                            legalStandard = data[i].legalStandard;
+                        }
+                        if(data[i].companyStandard == 999){
+                            companyStandard = '-';
+                        }else{
+                            companyStandard = data[i].companyStandard;
+                        }
+                        if(data[i].managementStandard == 999){
+                            managementStandard = '-';
+                        }else{
+                            managementStandard = data[i].managementStandard;
+                        }
 
-                    newCeil0.innerHTML = data[i].naming;
-                    newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
-                    newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
-                    newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
+                        newCeil0.innerHTML = data[i].naming;
+                        newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
+                        newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
+                        newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
 
-                    if(data[i].value > data[i].legalStandard){
-                        newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                    } else if( data[i].value > data[i].companyStandard){
-                        newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                    } else if( data[i].value > data[i].managementStandard){
-                        newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                    } else{
-                        newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
+                        if(data[i].value > data[i].legalStandard){
+                            newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
+                        } else if( data[i].value > data[i].companyStandard){
+                            newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
+                        } else if( data[i].value > data[i].managementStandard){
+                            newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
+                        } else{
+                            newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
+                        }
+
+                        $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                     }
-
-                    $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
+                }else{ // 모니터링 OFF 일 때
+                    noData();
                 }
-            }else{ // 모니터링 OFF 일 때
-                const newRow = tbody.insertRow(tbody.rows);
-                const newCeil0 = newRow.insertCell();
-                newCeil0.innerHTML = '<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서가 없습니다.'+'<br>'
-                    +'<b>'+'[환경설정 - 측정소 관리]'+'</b>'+'에서 모니터링 설정을 해주세요.'+'<br>'
-                    +'<a href="<%=cp%>/stationManagement">측정소 관리</a>'
-                    +'</div>';
-                newCeil0.colSpan = 5;
-                $("#update-" + index).text("-");
-                return false;
             }
+        }else{
+            noData();
+        }
+
+        function noData() {
+            const newRow = tbody.insertRow(tbody.rows);
+            const newCeil0 = newRow.insertCell();
+            newCeil0.innerHTML = '<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
+                +'</div>';
+            newCeil0.colSpan = 5;
+            $("#update-" + index).text("-");
+            return false;
         }
     }
 

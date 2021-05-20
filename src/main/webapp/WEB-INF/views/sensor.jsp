@@ -452,32 +452,33 @@
             const recentData = getSensorRecent(sensor); //최근데이터
             if(recentData == undefined){
                 return null;
-            }
-            if(recentData.value == 0 || recentData.value == null){
-                recentData.value = "-";
             }else{
-                sensorValue = recentData.value;
-                sensorUptime = moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss');
-            }
-            const beforeData = getSensorBeforeData(sensor);  // 직전 데이터(up/down 표시하기 위함)
-            if(beforeData.length == 0){
-                beforeValue = "-";
-            }else{
-                beforeValue = beforeData[0].value;
-            }
-            const sensorInfo = getSensorInfo(sensor); //기준데이터, 센서한글명, 센서 모니터링
-            const naming = sensorInfo.naming;
-            const monitoring = sensorInfo.monitoring;
-            const legalStandard = sensorInfo.legalStandard;
-            const companyStandard = sensorInfo.companyStandard;
-            const managementStandard = sensorInfo.managementStandard;
+                if(recentData.value == 0 || recentData.value == null){
+                    recentData.value = "-";
+                }else{
+                    sensorValue = recentData.value;
+                    sensorUptime = moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss');
+                }
+                const beforeData = getSensorBeforeData(sensor);  // 직전 데이터(up/down 표시하기 위함)
+                if(beforeData.length == 0){
+                    beforeValue = "-";
+                }else{
+                    beforeValue = beforeData[0].value;
+                }
+                const sensorInfo = getSensorInfo(sensor); //기준데이터, 센서한글명, 센서 모니터링
+                const naming = sensorInfo.naming;
+                const monitoring = sensorInfo.monitoring;
+                const legalStandard = sensorInfo.legalStandard;
+                const companyStandard = sensorInfo.companyStandard;
+                const managementStandard = sensorInfo.managementStandard;
 
-            result =({
-                naming: naming, name:sensor,
-                value:sensorValue, up_time: sensorUptime,
-                legalStandard: legalStandard, companyStandard: companyStandard, managementStandard: managementStandard,
-                beforeValue: beforeValue, monitoring: monitoring
-            });
+                result =({
+                    naming: naming, name:sensor,
+                    value:sensorValue, up_time: sensorUptime,
+                    legalStandard: legalStandard, companyStandard: companyStandard, managementStandard: managementStandard,
+                    beforeValue: beforeValue, monitoring: monitoring
+                });
+            }
         }else{ //모니터링 False 인 경우
             return null;
         }
@@ -786,9 +787,7 @@
             $('#place-tbody-table').empty();
             if(data == null){
                 const innerHtml = '<tr><td colspan="6">'
-                +'<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서가 없습니다.'+'<br>'
-                +'<b>'+'[환경설정 - 측정소 관리]'+'</b>'+'에서 모니터링 설정을 해주세요.'+'<br>'
-                +'<a href=\"<%=cp%>/stationManagement\">측정소 관리</a>'
+                +'<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
                 +'</div></td></tr>';
                 $('#place-tbody-table').append(innerHtml);
             }else{
