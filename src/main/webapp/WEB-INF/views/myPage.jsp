@@ -129,8 +129,8 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <p class="fs-6 fw-bold">탈퇴를 원하시면 아래 입력란에<br> 회원님의 ID를 기입해주세요.</p>
-                    <input type="text" class="form-control text-warning" id="outCheck_id"/>
+                    <p class="fs-6 fw-bold">탈퇴를 원하시면 아래 입력란에<br> 회원님의 password를 기입해주세요.</p>
+                    <input type="text" class="form-control text-warning" id="outCheck_password"/>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -265,7 +265,6 @@
     }
 
     function memberOut(){
-        if(("${member.id}") == $("#outCheck_id").val()){
             $.ajax({
                 url: '<%=cp%>/memberOut',
                 type: 'POST',
@@ -273,21 +272,23 @@
                 async: false,
                 cache: false,
                 data: { "id" : $("#id").val(),
+                        "password" : $("#outCheck_password").val(),
                 },
                 success : function(data) {
-                    swal('success', '회원탈퇴 완료', '탈퇴처리가 완료되었습니다.');
-                    setTimeout(function (){
-                        location.href = '<%=cp%>/logout';
-                    },2000);
+                    if(data == "success"){
+                        swal('success', '회원탈퇴 완료', '탈퇴처리가 완료되었습니다.');
+                        setTimeout(function (){
+                            location.href = '<%=cp%>/logout';
+                        },2000);
+                    } else {
+                        swal('warning', '회원탈퇴 실패', '비밀번호가 틀립니다.');
+                    }
                 },
                 error : function(request, status, error) {
                     console.log('member out error');
                     console.log(error);
                 }
             })
-        } else {
-            swal('warning', '회원탈퇴 실패', '아이디가 틀립니다.');
-        }
     }
 
     function swal(icon, title, text){

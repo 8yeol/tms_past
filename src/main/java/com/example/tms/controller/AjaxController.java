@@ -1020,9 +1020,14 @@ public class AjaxController {
      * @return 회원탈퇴 성공여부
      */
     @RequestMapping(value = "/memberOut")
-    public String memberOut(String id) {
-        memberService.deleteById(id);
-        return "success";
+    public String memberOut(String id,String password) {
+        Member member =  memberRepository.findById(id);
+        if(passwordEncoder.matches(password,member.getPassword())){
+            memberService.deleteById(id);
+            return "success";
+        } else {
+            return "fail";
+        }
     }
 
     /**
