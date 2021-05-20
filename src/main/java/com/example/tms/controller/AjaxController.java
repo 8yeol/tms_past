@@ -12,9 +12,12 @@ import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -243,6 +246,7 @@ public class AjaxController {
             List<EmissionsStandardSetting> ess = emissionsStandardSettingRepository.findByPlace(hiddenCode);
             for (int i = 0; i < ess.size(); i++) {
                 ess.get(i).setPlace(name);
+                ess.get(i).setDate(new Date());
                 emissionsStandardSettingRepository.save(ess.get(i));
             }
             List<AnnualEmissions> ae = annualEmissionsRepository.findByPlace(hiddenCode);
@@ -334,6 +338,7 @@ public class AjaxController {
             EmissionsStandardSetting ess = emissionsStandardSettingRepository.findByTableNameIsIn(sensor.get(i));
             if (ess != null) {
                 ess.setPlace("");
+                ess.setDate(new Date());
                 emissionsStandardSettingRepository.save(ess);
             }
 
@@ -716,7 +721,7 @@ public class AjaxController {
     }
 
     /**
-     * 배출기준 추가, 수정
+     * 배출기준 수정
      *
      * @param standard        기준값
      * @param hiddenTableName 테이블 명
@@ -726,16 +731,28 @@ public class AjaxController {
      */
     @RequestMapping(value = "/saveEmissionsStandard")
     public List saveEmissionsStandard(@RequestParam(value = "standard") int standard, @RequestParam(value = "hiddenTableName", required = false) String hiddenTableName,
-                                      @RequestParam(value = "percent") int percent, @RequestParam(value = "formula") String formula) {
+                                      @RequestParam(value = "percent") int percent, @RequestParam(value = "formula") String formula, Principal principal) {
+
+        Member member = memberRepository.findById(principal.getName());
+        Log log = new Log();
+        log.setId(member.getId());
+        log.setContent("연간 배출량 기준치 변경");
+        log.setType("설정 수정");
+        inputLog(log);
 
         EmissionsStandardSetting setting = emissionsStandardSettingRepository.findByTableNameIsIn(hiddenTableName);
 
         setting.setEmissionsStandard(standard);
         setting.setDensityStandard(percent);
         setting.setFormula(formula);
+        setting.setDate(new Date());
         emissionsStandardSettingRepository.save(setting);
 
         List<EmissionsStandardSetting> standardList = emissionsStandardSettingRepository.findAll();
+
+
+
+
         return standardList;
     }
 
@@ -748,13 +765,7 @@ public class AjaxController {
      */
     @RequestMapping(value = "/deleteEmissionsStandard")
     public List deleteEmissionsStandard(@RequestParam(value = "tableName") String tableName) {
-
-        EmissionsStandardSetting setting;
-
-        setting = emissionsStandardSettingRepository.findByTableNameIsIn(tableName);
-
-        emissionsStandardSettingRepository.delete(setting);
-
+        emissionsStandardSettingRepository.deleteByTableName(tableName);
         List<EmissionsStandardSetting> standardList = emissionsStandardSettingRepository.findAll();
         return standardList;
     }
@@ -839,6 +850,7 @@ public class AjaxController {
             //배출 관리 기준 수정
             EmissionsStandardSetting ess = emissionsStandardSettingRepository.findByTableNameIsIn(hiddenCode);
             ess.setPlace(place);
+            ess.setDate(new Date());
             emissionsStandardSettingRepository.save(ess);
 
             //분기별 배출량 데이터 수정
@@ -882,8 +894,6 @@ public class AjaxController {
 
             //센서 관련 notification 값 제거
             notification_settingsRepository.deleteByName(hiddenCode);
-
-
         }
         sensorListRepository.save(sensor);
 
@@ -984,7 +994,7 @@ public class AjaxController {
     @RequestMapping(value = "/saveStandard")
     public void saveStandard(@RequestParam(value = "naming") String naming, @RequestParam(value = "place") String place,
                              @RequestParam(value = "tableName") String tableName) {
-        EmissionsStandardSetting ess = new EmissionsStandardSetting(place, naming, 0, 0, tableName, "");
+        EmissionsStandardSetting ess = new EmissionsStandardSetting(place, naming, 0, 0, tableName, "",new Date());
         emissionsStandardSettingRepository.save(ess);
     }
 

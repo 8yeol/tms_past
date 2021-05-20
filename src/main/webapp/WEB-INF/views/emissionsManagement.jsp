@@ -109,6 +109,8 @@
     .dataTables_wrapper {
         min-height: 350px;
     }
+    th{text-align: center;}
+    td{text-align: center;}
 
 </style>
 
@@ -134,6 +136,7 @@
                     <th>연간 배출 허용 기준</th>
                     <th>배출 허용 기준 농도</th>
                     <th>산출식(참고용)</th>
+                    <th>최종 수정 날짜</th>
                     <th>관리</th>
                 </tr>
                 </thead>
@@ -164,6 +167,8 @@
                         </c:choose>
 
                         <td>${standard.formula}</td>
+                        <td><fmt:formatDate value="${standard.date}" pattern="yyyy년 MM월 dd일"/> &nbsp;<!--<b style="font-size: 1.3rem;">/</b> -->
+                            <fmt:formatDate value="${standard.date}" pattern="HH시 mm분 ss초"/></td>
                         <td>
                             <i onclick="clickModal(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
                                data-bs-target="#addModal" id="${standard.tableName}"></i>
@@ -618,7 +623,8 @@
     }
 
     $(".table").DataTable({
-        ordering: false,
+        order: [[5, 'desc']],
+        ordering: true,
         info: false,
         lengthChange : false,
         pageLength: 5,

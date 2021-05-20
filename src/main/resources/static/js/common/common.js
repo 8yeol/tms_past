@@ -88,12 +88,6 @@ function inputPhoneNumber(obj) {
 
 // 로그 생성
 function inputLog(id,content,type){
-
-    // console.log("location          "+location)
-    // console.log("location.href     "+location.href)
-    // console.log("location.host     "+location.host )
-    // console.log("getContextPath    "+getContextPath())
-
     var settings = {
         "url": getContextPath()+"/inputLog",
         "method": "POST",

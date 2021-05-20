@@ -122,22 +122,35 @@
     #sensor-table_wrapper {
         margin-bottom: 5px;
     }
+    .titleSpan{
+        background: linear-gradient( to bottom, #97bef8, #2295DB );
+        color:white;
+    }
+    .navPlace{
+        margin-top: 32px;
+        text-align: -webkit-center;
+        background-color: #97bef8;
+        margin-left: 0px;
+    }
+    .place-item{
+        background-color: red;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
 
-<div class="container">
+<div class="container" style="padding-left: 0;">
     <div class="row">
         <div class="row bg-white sizing">
-            <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0" style="margin-top: 32px; text-align: -webkit-center;">
+            <div class="col-md-2 bg-lightGray rounded-0 pt-5 px-0 navPlace">
                 <ul id="place_name"></ul>
             </div>
             <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
-                <div class="d-flex justify-content-end">
-                    <span class="fs-7 mb-2">업데이트 : <a id="update"></a></span>
+                <div class="d-flex justify-content-end"style="background-color: white;">
+                    <span class="fs-7 mb-2" >업데이트 : <a id="update"></a></span>
                 </div>
-                <span class="fs-4 fw-bold d-flex justify-content-center bg-lightGray" id="title"></span>
+                <span class="fs-4 fw-bold d-flex justify-content-center titleSpan" id="title"></span>
                 <div id="place_table" style="margin:0 10px 0;">
                     <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: .875em; margin-right: 10px;"> * 항목 클릭시 해당 항목의 상세 데이터로 하단의 차트/표 변경</span></div>
                     <table class="table table-bordered table-hover text-center">
