@@ -240,7 +240,6 @@
             getPlaceAllSensorData(place_name, sensor_naming); //측정소의 항목 전체 데이터
         }else{ //파라미터가 없을 경우
             const place_name = $('#place_name > li').attr('id'); //기본값
-            console.log(place_name);
             if(place_name != undefined){
                 $("#place_name li").eq(0).addClass('active');
                 $('#title').text(place_name);
