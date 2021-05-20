@@ -51,7 +51,7 @@ public class AjaxController {
 
     final PasswordEncoder passwordEncoder;
 
-    public AjaxController(PlaceRepository placeRepository,EmissionsTransitionRepository emissionsTransitionRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService, PasswordEncoder passwordEncoder) {
+    public AjaxController(PlaceRepository placeRepository, EmissionsTransitionRepository emissionsTransitionRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService, PasswordEncoder passwordEncoder) {
         this.placeRepository = placeRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
@@ -138,7 +138,20 @@ public class AjaxController {
         reference.setMonitoring(!reference.getMonitoring());
         reference_value_settingRepository.save(reference);
         //측정소 업데이트
-        placeUpTime(name);
+        Place place = placeRepository.findByName(name);
+        List<String> sensorlist = placeRepository.findByName(name).getSensor();
+        int a = 0;
+        for (int i = 0; i < sensorlist.size(); i++) {
+            Boolean monitoring = reference_value_settingRepository.findByName(sensorlist.get(i)).getMonitoring();
+            if (monitoring == false) { //모니터링 갯수 파악
+                a++;
+            }
+        }
+        if (a == sensorlist.size()) { //센서 모니터링이 전부 OFF일때
+            place.setMonitoring(false);
+        }
+        place.setUp_time(new Date());
+        placeRepository.save(place);
     }
 
     /**
@@ -240,7 +253,6 @@ public class AjaxController {
             }
 
 
-
         }
     }
 
@@ -318,7 +330,7 @@ public class AjaxController {
 
             //분기별 배출량 측정소 변경
             EmissionsTransition et = emissionsTransitionRepository.findByTableName(sensor.get(i));
-            if(et != null){
+            if (et != null) {
                 et.setPlaceName("");
                 emissionsTransitionRepository.save(et);
             }
@@ -327,6 +339,7 @@ public class AjaxController {
         //측정소 삭제
         placeRepository.deleteByName(place);
     }
+
     /**
      * 측정소와 센서,상세설정값 동시에 삭제
      *
@@ -378,6 +391,7 @@ public class AjaxController {
     public String getSensorManagementId(@RequestParam("name") String tablename) {
         return sensorListRepository.findByTableName(tablename);
     }
+
     /**
      * 선세의 최근 데이터 조회 (limit:1)
      *
@@ -446,6 +460,7 @@ public class AjaxController {
             }
         }
     }
+
     /**
      * [환경설정 - 알림설정] 모니터링 on/off 변경 및 알림 시간 변경
      *
@@ -488,8 +503,8 @@ public class AjaxController {
      * 측정소 업데이트, 센서 추가
      *
      * @param placename 측정소
-     * @param name 센서명
-     * @param naming 센서 네이밍
+     * @param name      센서명
+     * @param naming    센서 네이밍
      */
     public void saveReference(String placename, String name, String naming) {
 
@@ -819,7 +834,7 @@ public class AjaxController {
 
             //분기별 배출량 데이터 수정
             EmissionsTransition et = emissionsTransitionRepository.findByTableName(hiddenCode);
-            if(et !=null) {
+            if (et != null) {
                 et.setPlaceName(place);
                 emissionsTransitionRepository.save(et);
             }
@@ -880,7 +895,7 @@ public class AjaxController {
             reference_value_settingRepository.deleteByName(tableName);
         }
         //분기별 배출량 정보 삭제
-        if(emissionsTransitionRepository.findByTableName(tableName) != null){
+        if (emissionsTransitionRepository.findByTableName(tableName) != null) {
             emissionsTransitionRepository.deleteByTableName(tableName);
         }
 
@@ -963,9 +978,11 @@ public class AjaxController {
         EmissionsStandardSetting ess = new EmissionsStandardSetting(place, naming, 0, 0, tableName, "");
         emissionsStandardSettingRepository.save(ess);
     }
+
     /**
      * 배출량 모니터링 상태값을 변경
-     * @param sensor 상태값 변경할 센서
+     *
+     * @param sensor       상태값 변경할 센서
      * @param isCollection 배출량 추이 모니터링 <->연간 배출량 누적 모니터링   판별할 데이터
      */
     @RequestMapping("emissionsState")
@@ -985,6 +1002,7 @@ public class AjaxController {
 
     /**
      * 회원가입
+     *
      * @param member 가입 회원 정보
      * @return 회원가입 성공여부 (root : 최초가입시 최고 관리자로 지정하기 위함)
      */
@@ -1005,6 +1023,7 @@ public class AjaxController {
 
     /**
      * 회원정보 업데이트
+     *
      * @param member 입력한 회원의 정보객체
      * @return 업데이트 성공여부
      */
@@ -1016,13 +1035,14 @@ public class AjaxController {
 
     /**
      * 회원탈퇴
+     *
      * @param id 탈퇴할 회원의 ID
      * @return 회원탈퇴 성공여부
      */
     @RequestMapping(value = "/memberOut")
-    public String memberOut(String id,String password) {
-        Member member =  memberRepository.findById(id);
-        if(passwordEncoder.matches(password,member.getPassword())){
+    public String memberOut(String id, String password) {
+        Member member = memberRepository.findById(id);
+        if (passwordEncoder.matches(password, member.getPassword())) {
             memberService.deleteById(id);
             return "success";
         } else {
@@ -1032,6 +1052,7 @@ public class AjaxController {
 
     /**
      * 현재 비밀번호 체크
+     *
      * @param id
      * @param password
      * @return
@@ -1039,52 +1060,55 @@ public class AjaxController {
     @RequestMapping(value = "/nowPasswordCheck")
     public String nowPasswordCheck(String id, String password) {
         Member newMember = memberRepository.findById(id);
-        if( !passwordEncoder.matches(password,newMember.getPassword())) {
+        if (!passwordEncoder.matches(password, newMember.getPassword())) {
             return "failed";
-        } else{
+        } else {
             return "success";
         }
     }
 
     /**
      * 로그인시 입력받은 사용자 정보를 검사
-     * @param member 입력받은 사용자정보 객체
+     *
+     * @param member   입력받은 사용자정보 객체
      * @param response 뷰로 문자열을 전달하기위한 변수
      * @throws Exception 예외처리
      */
 
     @RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
-    public void loginCheck( Member member, HttpServletResponse response) throws Exception {
+    public void loginCheck(Member member, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
-        if(!memberRepository.existsById(member.getId())){ // ID가 존재하지않으면
+        if (!memberRepository.existsById(member.getId())) { // ID가 존재하지않으면
             out.print("id");
-        } else if(!passwordEncoder.matches(member.getPassword(),memberRepository.findById(member.getId()).getPassword())){ // password가 틀리면
+        } else if (!passwordEncoder.matches(member.getPassword(), memberRepository.findById(member.getId()).getPassword())) { // password가 틀리면
             out.print("password");
-        } else  if (memberRepository.findById(member.getId()).getState().equals("5")){ // 가입거절
+        } else if (memberRepository.findById(member.getId()).getState().equals("5")) { // 가입거절
             out.print("denie");
-        } else  if (memberRepository.findById(member.getId()).getState().equals("4")){ // 가입대기
+        } else if (memberRepository.findById(member.getId()).getState().equals("4")) { // 가입대기
             out.print("waiting");
-        }else {
+        } else {
             Member newMember = memberRepository.findById(member.getId());
             Date time = new Date();
             newMember.setLastLogin(time);
             memberRepository.save(newMember);
         }
     }           // loginCheck
+
     /**
      * 회원가입신청 한 유저의 승낙 여부를 결정
-     * @param id 가입신청한유저의 id
+     *
+     * @param id      가입신청한유저의 id
      * @param iNumber 0 - 거부 / 1 - 승인 을나타냄
      * @return 안내메시지를 리턴
      */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public String memberSignUp(String id, String iNumber){
+    public String memberSignUp(String id, String iNumber) {
         String msg = "";
         Member newMember = memberRepository.findById(id);
-        if(iNumber.equals("0")){
+        if (iNumber.equals("0")) {
             newMember.setState("5");
             msg = "가입 거절 되었습니다.";
-        }else{
+        } else {
             newMember.setState("3"); // 5: 거절 - 4: 가입대기 - 3: 일반 - 2: 관리자 - 1: 최고관리자
             Date time = new Date();
             newMember.setJoined(time); // 가입승인일 설정
@@ -1093,47 +1117,55 @@ public class AjaxController {
         memberRepository.save(newMember);
         return msg;
     }           // memberSignUp
+
     /**
      * 입력받은 값으로 유저의 등급을 결정
-     * @param id 등급을 결정할 유저의 id
+     *
+     * @param id    등급을 결정할 유저의 id
      * @param value 등급값
      * @return 안내메시지 리턴
      */
     @RequestMapping(value = "/gaveRank", method = RequestMethod.POST)
-    public String gaveRank(String id, String value){
+    public String gaveRank(String id, String value) {
         Member newMember = memberRepository.findById(id);
         newMember.setState(value);
         memberRepository.save(newMember);
         return "등급 부여 하였습니다.";
     }           // gaveRank
+
     /**
      * 입력받은 값으로 유저의 비밀번호를 초기화
+     *
      * @param id 초기화할 유저의 id
      * @return 안내메시지와 임시비밀번호 메시지 리턴
      */
     @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
-    public String resetPassword(String id){
+    public String resetPassword(String id) {
         Member newMember = memberRepository.findById(id);
-        String uuid = (UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10);
+        String uuid = (UUID.randomUUID().toString().replaceAll("-", "")).substring(0, 10);
         String encodedPwd = passwordEncoder.encode(uuid);
         newMember.setPassword(encodedPwd);
         memberRepository.save(newMember);
-        return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : "+ uuid;
+        return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : " + uuid;
     }           // resetPassword
+
     /**
      * 입력받은 값으로 유저를 추방
+     *
      * @param id 추방할 유저의 id
      * @return 안내메시지 리턴
      */
     @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
-    public String kickMember(String id){
+    public String kickMember(String id) {
         memberRepository.deleteById(id);
         return "추방처리 되었습니다.";
     }           // kickMember
+
     /**
      * 변경한 권한관리 값들을 저장
+     *
      * @param rankManagement 변경한 값들을 담고있는 객체
-     * @param response 뷰로문자열을 전달하기위한 변수
+     * @param response       뷰로문자열을 전달하기위한 변수
      * @throws Exception 예외처리
      */
     @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
@@ -1145,11 +1177,11 @@ public class AjaxController {
         RankManagement newRankManagement = rankManagementRepository.findByName(rankManagement.getName());
 
         String str = "";
-        str += (rankManagement.isDashboard() == newRankManagement.isDashboard()) ? "" : (rankManagement.isDashboard()) ? "대시보드 메뉴열람 권한부여  " : "대시보드 메뉴열람 권한해제  " ;
-        str += (rankManagement.isAlarm() == newRankManagement.isAlarm()) ? "" : (rankManagement.isAlarm()) ? "알림 메뉴열람 권한부여  " : "알림 메뉴열람 권한해제  " ;
-        str += (rankManagement.isMonitoring() == newRankManagement.isMonitoring()) ? "" : (rankManagement.isMonitoring()) ? "모니터링 메뉴열람 권한부여  " : "모니터링 메뉴열람 권한해제  " ;
-        str += (rankManagement.isStatistics() == newRankManagement.isStatistics()) ? "" : (rankManagement.isStatistics()) ? "분석및통계 메뉴열람 권한부여  " : "분석및통계 메뉴열람 권한해제  " ;
-        str += (rankManagement.isSetting() == newRankManagement.isSetting()) ? "" : (rankManagement.isSetting()) ? "환경설정 메뉴열람 권한부여" : "환경설정 메뉴열람 권한해제" ;
+        str += (rankManagement.isDashboard() == newRankManagement.isDashboard()) ? "" : (rankManagement.isDashboard()) ? "대시보드 메뉴열람 권한부여  " : "대시보드 메뉴열람 권한해제  ";
+        str += (rankManagement.isAlarm() == newRankManagement.isAlarm()) ? "" : (rankManagement.isAlarm()) ? "알림 메뉴열람 권한부여  " : "알림 메뉴열람 권한해제  ";
+        str += (rankManagement.isMonitoring() == newRankManagement.isMonitoring()) ? "" : (rankManagement.isMonitoring()) ? "모니터링 메뉴열람 권한부여  " : "모니터링 메뉴열람 권한해제  ";
+        str += (rankManagement.isStatistics() == newRankManagement.isStatistics()) ? "" : (rankManagement.isStatistics()) ? "분석및통계 메뉴열람 권한부여  " : "분석및통계 메뉴열람 권한해제  ";
+        str += (rankManagement.isSetting() == newRankManagement.isSetting()) ? "" : (rankManagement.isSetting()) ? "환경설정 메뉴열람 권한부여" : "환경설정 메뉴열람 권한해제";
         out.print(str);
 
         newRankManagement.setDashboard(rankManagement.isDashboard());
@@ -1159,17 +1191,21 @@ public class AjaxController {
         newRankManagement.setSetting(rankManagement.isSetting());
         rankManagementRepository.save(newRankManagement);
     }           // rankSettingSave
+
     /**
      * 로그정보를 날짜추가후 DB에 저장
+     *
      * @param log Log정보
      */
     @RequestMapping(value = "/inputLog", method = RequestMethod.POST)
-    public void inputLog(@RequestBody Log log){
+    public void inputLog(@RequestBody Log log) {
         log.setDate(new Date());
         logRepository.save(log);
     }           // inputLog
+
     /**
      * 현재 로그인한 유저의 이름을 문자로 리턴함
+     *
      * @param principal 로그인유저의 정보객체
      * @return 유저의 이름문자 리턴
      */
@@ -1178,8 +1214,10 @@ public class AjaxController {
         Member member = memberRepository.findById(principal.getName());
         return member.getName();
     }           // getUsername
+
     /**
      * 입력받은 값을 바탕으로 DB에 저장되어있는 권한값을 리턴함
+     *
      * @param principal
      * @return
      */
@@ -1188,18 +1226,17 @@ public class AjaxController {
         Member member = memberRepository.findById(principal.getName());
         String state = member.getState();
         String str;
-        if(state.equals("3")){
+        if (state.equals("3")) {
             str = "normal";
-        } else if (state.equals("2")){
+        } else if (state.equals("2")) {
             str = "admin";
-        } else if (state.equals("1")){
+        } else if (state.equals("1")) {
             str = "root";
         } else {
             str = "denie";
         }
         return rankManagementRepository.findByName(str);
     }           // getRank
-
 
 
 }

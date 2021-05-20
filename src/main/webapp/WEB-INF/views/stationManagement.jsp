@@ -434,13 +434,13 @@
                         b++;
                     }
                 }
-                if (a != 0) {//모니터링 OFF가 있을때
+                if (a != 0) {//모니터링 OFF가 있을때  a는 0이 아닐때
                     if (a == data.length) { //모니터링 전부 OFF일때
                         have = 1; //
                     }
-                } else if (b == 0) {//모니터링 OFF가 없고
+                } else if (b == 0) {//모니터링 OFF가 없고 a=0이고 b=0일때 ->센서가 없을때
                     have = 2;
-                } else {
+                } else { //모니터링 on이 하나라도 있을때
                     have = 0;
                 }
             },
