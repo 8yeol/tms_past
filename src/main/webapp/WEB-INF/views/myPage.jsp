@@ -174,13 +174,14 @@
                 dataType: 'text',
                 async: false,
                 cache: false,
-                data: { "id" : $("#id").val(),
-                    "password" : $("#password").val(),
-                    "name" : $("#name").val(),
-                    "email" : $("#email").val(),
-                    "department" : $("#department").val(),
-                    "grade" : $("#grade").val(),
-                    "tel" : $("#tel").val()
+                data: {
+                    "id": $("#id").val(),
+                    "password": $("#password").val(),
+                    "name": $("#name").val(),
+                    "email": $("#email").val(),
+                    "department": $("#department").val(),
+                    "grade": $("#grade").val(),
+                    "tel": $("#tel").val()
                 },
                 success : function(data) {
                     if (data == "success") {

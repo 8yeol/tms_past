@@ -54,8 +54,8 @@ public class MainController {
      * - sensorList - 연간 배출량 누적 모니터링 대상 센서중 관리자가 선택한 센서만 가져오기
      * - placeList - sensorList의 측정소를 중복제거,정렬한 값
      * - standard - 연간 배출 허용 기준치 가져오기
-     * - ptmsList
-     * - member
+     * - ptmsList - 연간배출량 데이터들을 Model 로넘겨주기위한 List 변수
+     * - member - 현재 로그인중인 사용자의 정보 객체
      * @param principal
      * @return DashBoard.JSP
      */
@@ -98,37 +98,43 @@ public class MainController {
         model.addAttribute("member", member);
 
         return "dashboard";
-    }
-
+    }       // dashboard
     @RequestMapping("/login")
     public String login() {
         return "login";
-    }
+    }       //login
+
+    /**
+     * 접근하는 URL에 권한이없을시 오는 페이지
+     * @return accessDenied.jsp
+     */
     @RequestMapping("/accessDenied")
     public String accessDenied() {
         return "accessDenied";
-    }
+    }       //accessDenied
+    /**
+     * 마이페이지로 이동
+     * @param principal - 로그인 유저 정보 객체
+     * @param model - principal을 기준으로 member객체를 add함
+     * @return myPage.jsp
+     */
     @RequestMapping("/myPage")
     public String myPage(Principal principal,Model model){
         Member member = memberRepository.findById(principal.getName());
         model.addAttribute("member", member);
         return "myPage";
-    }
-
+    }       //myPage
     @RequestMapping("/monitoring")
     public void monitoring() {
     }
-
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
     public void sensorInfo(Model model) {
         model.addAttribute("place", placeRepository.findAll());
     }
-
     @RequestMapping("/alarm")
     public String alarm() {
         return "alarm";
     }
-
     /**
      * 로그 페이지로 이동
      * 원하는 id 있을시 id에대한 로그정보만 출력
@@ -147,7 +153,6 @@ public class MainController {
         }
         return "log";
     }
-
     /**
      * 센서, 측정소 데이터들고 환경설정 - 센서관리 이동
      * @param model
@@ -174,12 +179,16 @@ public class MainController {
 
         return "sensorManagement";
     }
-
     @RequestMapping("/alarmSetting")
     public String alarmSetting() {
         return "alarmSetting";
     }
-
+    /**
+     * 환경설정 - 설정 페이지로 이동
+     * @param model - 회원목록, 로그인한회원, 관리할 등급데이터 들을 add
+     * @param principal - 로그인 유저 정보 객체
+     * @return setting.jsp
+     */
     @RequestMapping("/setting")
     public String setting(Model model,Principal principal) {
         List<Member> members = memberRepository.findAll();
@@ -190,7 +199,6 @@ public class MainController {
         model.addAttribute("rank_managements", rank_managements);
         return "setting";
     }
-
     @RequestMapping("/dataStatistics")
     public String statistics(Model model) {
 
@@ -198,11 +206,20 @@ public class MainController {
 
         return "dataStatistics";
     }
-
+    /**
+     * 회원가입페이지로 이동
+     * @return memberJoin.jsp
+     */
     @RequestMapping(value = "/memberJoin", method = RequestMethod.GET)
     public String memberJoinGet() {
         return "memberJoin";
     }
+    /**
+     * 로그인시 입력받은 사용자 정보를 검사
+     * @param member 입력받은 사용자정보 객체
+     * @param response 뷰로 문자열을 전달하기위한 변수
+     * @throws Exception 예외처리
+     */
 
     @RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
     public void loginCheck( Member member, HttpServletResponse response) throws Exception {
@@ -222,8 +239,12 @@ public class MainController {
             memberRepository.save(newMember);
         }
     }           // loginCheck
-
-
+    /**
+     * 회원가입신청 한 유저의 승낙 여부를 결정
+     * @param id 가입신청한유저의 id
+     * @param iNumber 0 - 거부 / 1 - 승인 을나타냄
+     * @return 안내메시지를 리턴
+     */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public @ResponseBody String memberSignUp(String id, String iNumber){
         String msg = "";
@@ -240,7 +261,12 @@ public class MainController {
         memberRepository.save(newMember);
         return msg;
     }           // memberSignUp
-
+    /**
+     * 입력받은 값으로 유저의 등급을 결정
+     * @param id 등급을 결정할 유저의 id
+     * @param value 등급값
+     * @return 안내메시지 리턴
+     */
     @RequestMapping(value = "/gaveRank", method = RequestMethod.POST)
     public @ResponseBody String gaveRank(String id, String value){
         Member newMember = memberRepository.findById(id);
@@ -248,23 +274,36 @@ public class MainController {
         memberRepository.save(newMember);
         return "등급 부여 하였습니다.";
     }           // gaveRank
-
+    /**
+     * 입력받은 값으로 유저의 비밀번호를 초기화
+     * @param id 초기화할 유저의 id
+     * @return 안내메시지와 임시비밀번호 메시지 리턴
+     */
     @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
     public @ResponseBody String resetPassword(String id){
         Member newMember = memberRepository.findById(id);
         String uuid = (UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10);
-        newMember.setPassword(uuid);
+        String encodedPwd = passwordEncoder.encode(uuid);
+        newMember.setPassword(encodedPwd);
         memberRepository.save(newMember);
         return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : "+ uuid;
     }           // resetPassword
-
+    /**
+     * 입력받은 값으로 유저를 추방
+     * @param id 추방할 유저의 id
+     * @return 안내메시지 리턴
+     */
     @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
     public @ResponseBody String kickMember(String id){
         memberRepository.deleteById(id);
         return "추방처리 되었습니다.";
     }           // kickMember
-
-
+    /**
+     * 변경한 권한관리 값들을 저장
+     * @param rankManagement 변경한 값들을 담고있는 객체
+     * @param response 뷰로문자열을 전달하기위한 변수
+     * @throws Exception 예외처리
+     */
     @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
     @ResponseBody
     public void rankSettingSave(@RequestBody RankManagement rankManagement, HttpServletResponse response) throws Exception {
@@ -289,7 +328,6 @@ public class MainController {
         newRankManagement.setSetting(rankManagement.isSetting());
         rank_managementRepository.save(newRankManagement);
     }           // rankSettingSave
-
     /**
      * 로그정보를 날짜추가후 DB에 저장
      * @param log Log정보
@@ -300,15 +338,22 @@ public class MainController {
         log.setDate(new Date());
         logRepository.save(log);
     }           // inputLog
-
+    /**
+     * 현재 로그인한 유저의 이름을 문자로 리턴함
+     * @param principal 로그인유저의 정보객체
+     * @return 유저의 이름문자 리턴
+     */
     @RequestMapping(value = "/getUsername", method = RequestMethod.POST)
     @ResponseBody
     public String getUsername(Principal principal) {
         Member member = memberRepository.findById(principal.getName());
         return member.getName();
     }           // getUsername
-
-
+    /**
+     * 입력받은 값을 바탕으로 DB에 저장되어있는 권한값을 리턴함
+     * @param principal
+     * @return
+     */
     @RequestMapping(value = "/getRank", method = RequestMethod.POST)
     @ResponseBody
     public RankManagement getRank(Principal principal) {
@@ -326,8 +371,6 @@ public class MainController {
         }
         return rank_managementRepository.findByName(str);
     }           // getRank
-
-
     /**
      * 분석 및 통계 - 측정 자료 조회
      * @param model 측정소와 센서
@@ -340,7 +383,6 @@ public class MainController {
 
         return "dataInquiry";
     }
-
     /**
      * 알림 설정페이지 (ppt-8페이지)
      * @param model - 측정소명
@@ -359,7 +401,6 @@ public class MainController {
 
         return "alarmManagement";
     }
-
     /**
      * 측정소 관리 페이지
      * @return stationManagement.JSP
@@ -368,8 +409,6 @@ public class MainController {
     public String stationManagement() {
         return "stationManagement";
     }
-
-
     /**
      *  데이터 검색후  배출량 관리 페이지에 접근
      * @param model
@@ -406,8 +445,6 @@ public class MainController {
 
         return "emissionsManagement";
     }
-
-
     /**
      * 배출량 모니터링 상태값을 변경
      * @param sensor 상태값 변경할 센서

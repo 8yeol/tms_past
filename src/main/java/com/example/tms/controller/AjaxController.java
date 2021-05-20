@@ -952,18 +952,7 @@ public class AjaxController {
 
     @RequestMapping(value = "/memberUpdate")
     public String memberUpdate(Member member) {
-        Member updateMember = memberRepository.findById(member.getId());
-
-        if (member.getPassword() != "") {
-            updateMember.setPassword(member.getPassword());
-        }
-        updateMember.setName(member.getName());
-        updateMember.setEmail(member.getEmail());
-        updateMember.setTel(member.getTel());
-        updateMember.setDepartment(member.getDepartment());
-        updateMember.setGrade(member.getGrade());
-        memberService.memberSave(updateMember);
-
+        memberService.updateMember(member);
         return "success";
     }
 
