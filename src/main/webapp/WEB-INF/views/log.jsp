@@ -36,7 +36,7 @@
                     "previous": "이전"
                 },
             },
-            pageLength: 10
+            pageLength: 5
         });
     });
 </script>
