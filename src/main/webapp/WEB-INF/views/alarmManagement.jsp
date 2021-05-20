@@ -267,8 +267,16 @@
                 "to": end
             }
         })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
-            "알림 저장("+start+"~"+end+", on:"+ onList2+", off:"+ offList2 + ")","알림 설정");
+        if(onList.length==0){
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
+                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+" 알림 off : "+ offList2 + ")","알림 설정");
+        }else if(offList2.length==0){
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
+                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", 알림 on : "+ onList2+")","알림 설정");
+        }else{
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
+                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", on : "+ onList2+", off : "+ offList2 + ")","알림 설정");
+        }
         Swal.fire({
             icon: 'success',
             title: '저장완료'

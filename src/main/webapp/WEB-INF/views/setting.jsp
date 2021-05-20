@@ -121,7 +121,6 @@
 
                 <thead>
                 <tr class="text-center">
-                    <th>번호</th>
                     <th>ID</th>
                     <th>이름</th>
                     <th>등급</th>
@@ -140,7 +139,6 @@
                         <form id="${mList.id}" method="post" action="<%=cp%>/log">   <!-- tr 클릭시 log페이지 이동하는 폼-->
                             <input type="hidden" value="${mList.id}" name="id">
                         </form>
-                        <td>${cnt.index+1}</td>
                         <td>${mList.id}</td>
                         <td>${mList.name}</td>
                         <c:choose>
@@ -504,6 +502,7 @@
         pageLength: 10,
         info: false,
         lengthChange : false,
+        order :[5, 'desc']
     });
 
     var ID = ""; //데이터테이블 해당항목의 ID정보
