@@ -118,9 +118,15 @@ public class AjaxController {
     @RequestMapping(value = "/MonitoringUpdate")
     public void MonitoringUpdate(@RequestParam("place") String name, @RequestParam("check") Boolean check) {
         Place place = placeRepository.findByName(name);
+        List<String> sensorlist = placeRepository.findByName(name).getSensor();
         ObjectId id = place.get_id();
         Place savePlace = new Place(name, place.getLocation(), place.getAdmin(), place.getTel(), check, new Date(), place.getSensor());
         savePlace.set_id(id);
+        if(check == false){
+            for(int j = 0; j<sensorlist.size(); j++){
+                notification_settingsRepository.deleteByName(sensorlist.get(j));
+            }
+        }
         placeRepository.save(savePlace);
     }
 
@@ -149,6 +155,9 @@ public class AjaxController {
         }
         if (a == sensorlist.size()) { //센서 모니터링이 전부 OFF일때
             place.setMonitoring(false);
+            for(int j = 0; j<sensorlist.size(); j++){
+                notification_settingsRepository.deleteByName(sensorlist.get(j));
+            }
         }
         place.setUp_time(new Date());
         placeRepository.save(place);
