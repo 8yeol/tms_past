@@ -48,6 +48,11 @@ public class MainController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @RequestMapping("/")
+    public String main(){
+        return "redirect:monitoring";
+    }
+
     /**
      *
      * @param model
@@ -59,7 +64,7 @@ public class MainController {
      * @param principal
      * @return DashBoard.JSP
      */
-    @RequestMapping("/")
+    @RequestMapping("/dashboard")
     public String dashboard(Model model,Principal principal) {
         // 연간 배출량 추이 모니터링
         // [환경설정 > 배출량 관리] - 배출량 추이 모니터링 대상 설정 ON 되어있는 센서 정보
@@ -98,7 +103,8 @@ public class MainController {
         model.addAttribute("member", member);
 
         return "dashboard";
-    }       // dashboard
+    }
+
     @RequestMapping("/login")
     public String login() {
         return "login";
