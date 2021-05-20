@@ -357,12 +357,6 @@ public class AjaxController {
     public String getSensorManagementId(@RequestParam("name") String tablename) {
         return sensorListRepository.findByTableName(tablename);
     }
-
-    @RequestMapping(value = "/getMonitoringPlace")
-    public List<Place> getMonitoringPlace() {
-        return placeRepository.findByMonitoringIsTrue();
-    }
-
     /**
      * 선세의 최근 데이터 조회 (limit:1)
      *
@@ -394,6 +388,12 @@ public class AjaxController {
         return sensorCustomRepository.getSenor(sensor, hour);
     }
 
+    /**
+     * 센서 알림설정 ON/OFF 확인
+     *
+     * @param name 센서명
+     * @return 센서 알림설정 true/false
+     */
     @RequestMapping(value = "/getNotifyInfo")
     public NotificationSettings getNotifyInfo(@RequestParam("name") String name) {
 

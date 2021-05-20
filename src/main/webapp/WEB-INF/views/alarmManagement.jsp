@@ -30,10 +30,6 @@
         padding: 16px 16px 25px 16px;
     }
 
-    .border-tom-custom {
-        border-top: 2px solid #a9a9a9;
-        padding: 16px 16px 40px 16px;
-    }
 </style>
 
 <div class="container">
@@ -96,7 +92,6 @@
                 placeMake($("#place" + i).text(), i);
             } else {
                 $("#placeDiv" + i).empty();
-
             }
         }
         for (let i = 0; i < placeLength; i++) {
@@ -106,10 +101,8 @@
 
     });
 
-
     //측정소 생성
     function placeMake(name, idx) {
-
         const place = name;
         const parentElem = $('#items' + idx);
         let innerHTMLTimePicker = "";
@@ -127,70 +120,68 @@
             cache: false,
             data: {"place": place},
             success: function (data) {
-                    for (let i = 0; i < data.length; i++) {
+                for (let i = 0; i < data.length; i++) {
+                    const tableName = data[i];
+                    const category = findSensorCategory(tableName);
+                    const checked = findNotification(tableName);
 
-                        const tableName = data[i];
-                        const category = findSensorCategory(tableName);
-                        const checked = findNotification(tableName);
+                    const innerHtml =
+                        "<label style='font-size: 18px;' class='form-check-label' for='" + tableName + "'>" + category + "</label>" +
+                        "<label class='switch'>" +
+                        "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + checked + ">" +
+                        "<div class='slider round'></div>" +
+                        "</label>"
 
-                        const innerHtml =
-                            "<label style='font-size: 18px;' class='form-check-label' for='" + tableName + "'>" + category + "</label>" +
-                            "<label class='switch'>" +
-                            "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + checked + ">" +
-                            "<div class='slider round'></div>" +
-                            "</label>"
+                    const elem = document.createElement('div');
+                    elem.setAttribute('class', 'label-form')
+                    elem.innerHTML = innerHtml;
+                    parentElem.append(elem);
 
-                        const elem = document.createElement('div');
-                        elem.setAttribute('class', 'label-form')
-                        elem.innerHTML = innerHtml;
-                        parentElem.append(elem);
-
-                        if (i % data.length == 0) {
-                            const time = data[0];
-                            const getTime = getNotifyTime(time);
-                            // $("#start" + idx).val(getTime.get("from"));
-                            // $("#end" + idx).val(getTime.get("to"));
-                            $("#start" + idx).wickedpicker({
-                                now: getTime.get("from"),
-                                twentyFour: true,
-                                upArrow: 'wickedpicker__controls__control-up',
-                                downArrow: 'wickedpicker__controls__control-down',
-                                close: 'wickedpicker__close',
-                                hoverState: 'hover-state',
-                                title: '시간 입력',
-                                showSeconds: false,
-                                timeSeparator: ':',
-                                secondsInterval: 1,
-                                minutesInterval: 1,
-                                beforeShow: null,
-                                afterShow: null,
-                                show: null,
-                                clearable: false,
-                                closeOnClickOutside: true,
-                                onClickOutside: function() {},
-                            });
-                            $("#end" + idx).wickedpicker({
-                                now: getTime.get("to"),
-                                twentyFour: true,
-                                upArrow: 'wickedpicker__controls__control-up',
-                                downArrow: 'wickedpicker__controls__control-down',
-                                close: 'wickedpicker__close',
-                                hoverState: 'hover-state',
-                                title: '시간 입력',
-                                showSeconds: false,
-                                timeSeparator: ':',
-                                secondsInterval: 1,
-                                minutesInterval: 1,
-                                beforeShow: null,
-                                afterShow: null,
-                                show: null,
-                                clearable: false,
-                                closeOnClickOutside: true,
-                                onClickOutside: function() {},
-
-                            });
-                        }
+                    if (i % data.length == 0) {
+                        const time = data[0];
+                        const getTime = getNotifyTime(time);
+                        $("#start" + idx).wickedpicker({
+                            now: getTime.get("from"),
+                            twentyFour: true,
+                            upArrow: 'wickedpicker__controls__control-up',
+                            downArrow: 'wickedpicker__controls__control-down',
+                            close: 'wickedpicker__close',
+                            hoverState: 'hover-state',
+                            title: '시간 입력',
+                            showSeconds: false,
+                            timeSeparator: ':',
+                            secondsInterval: 1,
+                            minutesInterval: 1,
+                            beforeShow: null,
+                            afterShow: null,
+                            show: null,
+                            clearable: false,
+                            closeOnClickOutside: true,
+                            onClickOutside: function () {
+                            },
+                        });
+                        $("#end" + idx).wickedpicker({
+                            now: getTime.get("to"),
+                            twentyFour: true,
+                            upArrow: 'wickedpicker__controls__control-up',
+                            downArrow: 'wickedpicker__controls__control-down',
+                            close: 'wickedpicker__close',
+                            hoverState: 'hover-state',
+                            title: '시간 입력',
+                            showSeconds: false,
+                            timeSeparator: ':',
+                            secondsInterval: 1,
+                            minutesInterval: 1,
+                            beforeShow: null,
+                            afterShow: null,
+                            show: null,
+                            clearable: false,
+                            closeOnClickOutside: true,
+                            onClickOutside: function () {
+                            },
+                        });
                     }
+                }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
