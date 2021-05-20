@@ -114,7 +114,6 @@
                         <c:forEach var="collection" items="${collections}" varStatus="status">
                             <option value="${collection}">${collection}</option>
                         </c:forEach>
-                            <option value="lghazz_CLM_001">lghazz_CLM_001</option>
                     </select>
                     <label class="me-3 col-xs-3 w-10 label">측정소</label>
                     <select name="place" id="place" class="btn btn-outline-dark">
