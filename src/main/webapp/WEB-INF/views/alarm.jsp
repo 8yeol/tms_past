@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <%
     pageContext.setAttribute("br", "<br/>");
@@ -16,6 +17,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="static/css/datepicker.min.css">
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+<script src="static/js/common/common.js"></script>
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
@@ -197,8 +199,12 @@
         </div>
 </div>
 
+
 <script>
+
+
     $( document ).ready(function() {
+
         $("#date_start").val(getDays());
         $("#date_end").val(getDays());
 
@@ -304,6 +310,7 @@
     }
 
     function search(type){
+        console.log('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}');
         $('#information').DataTable().clear();
         $('#information').DataTable().destroy();
 
@@ -366,6 +373,8 @@
                             cell5.innerHTML = '<div class="bg-success text-light">'+notify+'</div>'
                         }
                     }
+
+                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 검색("+from+"~"+to+")","검색");
                 }else{
                     Swal.fire({
                         icon: 'warning',
