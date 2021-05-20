@@ -733,7 +733,6 @@ public class AjaxController {
     @RequestMapping(value = "/saveEmissionsStandard")
     public List saveEmissionsStandard(@RequestParam(value = "standard") int standard, @RequestParam(value = "hiddenTableName", required = false) String hiddenTableName,
                                       @RequestParam(value = "percent") int percent, @RequestParam(value = "formula") String formula, Principal principal) {
-
         EmissionsStandardSetting setting = emissionsStandardSettingRepository.findByTableNameIsIn(hiddenTableName);
 
         setting.setEmissionsStandard(standard);
@@ -833,6 +832,8 @@ public class AjaxController {
             sensor = sensorListRepository.findByTableName(hiddenCode, "");
             String oldPlace = sensor.getPlace();
             sensor.setPlace(place);
+
+            inputLogSetting(oldPlace + "에서 " + sensor.getNaming() + " 센서 삭제 ", "삭제", principal);
 
             //연간 배출 모니터링 대상 수정
             AnnualEmissions aemis = annualEmissionsRepository.findBySensor(hiddenCode);
