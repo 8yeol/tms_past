@@ -240,6 +240,10 @@
             getPlaceAllSensorData(place_name, sensor_naming); //측정소의 항목 전체 데이터
         }else{ //파라미터가 없을 경우
             const place_name = $('#place_name > li').attr('id'); //기본값
+            console.log($('#place_name')[0]);
+            var asd = $('#place_name')[0];
+            console.log(asd);
+            console.log(asd);
             $("#place_name li").eq(0).addClass('active');
             $('#title').text(place_name);
             getPlaceAllSensorData(place_name); //측정소의 항목 전체 데이터
@@ -306,7 +310,7 @@
                     }
                 }
                 draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
-                interval1 = setTimeout(interval_getData, 5000);
+                interval1 = setTimeout(interval_getData, 50000);
             }, 0); //setTimeout
             if (!sensor_naming) {  //파라미터 없을 경우
                 var sensor_data = place_data[0]; // 기본값
@@ -407,7 +411,6 @@
                 });
             },
             error: function (request, status, error) {
-                console.log(error)
             }
         });
         return placeName;
@@ -436,7 +439,7 @@
             if(result.length != 0){
                 return result;
             }else {
-                Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 센서의 데이터가 없습니다.'})
+                Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 센서의 데이터가 없습니다.'});
                 return [];
             }
     }
@@ -607,14 +610,21 @@
      * 페이지 로딩 시 측정소 선택 화면 생성
      */
     function draw_place_frame() {
-        var placeName = getPlace(); // 전체 측정소 이름 구함 (조건:파워ON, 모니터링 True)
-        for(var i=0; i<placeName.length; i++){
-            $('#place_name').append("<li class='place-item btn d-block fs-3 mt-3 me-3' id='"+
-                placeName[i]+"'>"+
-                "<span>"+placeName[i]+"</span>"+
-                "</li>"+
-                "<hr style='height: 2px;'>");
-        }
+        setTimeout(function drawPlace() {
+            var placeName = getPlace(); // 전체 측정소 이름 구함 (조건:파워ON, 모니터링 True)
+            if(placeName.length == 0){
+                Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
+                setTimeout(drawPlace, 10000);
+            }else{
+                for(var i=0; i<placeName.length; i++){
+                    $('#place_name').append("<li class='place-item btn d-block fs-3 mt-3 me-3' id='"+
+                        placeName[i]+"'>"+
+                        "<span>"+placeName[i]+"</span>"+
+                        "</li>"+
+                        "<hr style='height: 2px;'>");
+                }
+            }
+        }, 0);
     }
 
 
