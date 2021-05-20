@@ -504,8 +504,6 @@
                 monitoringIsCheck = monitoringIsCheck && true;
             }
         }
-        console.log(data);
-        console.log(monitoringIsCheck);
         if(data.length != 0){
             for (let i = 0; i < data.length; i++) {
                 /* 모니터링 ON 한개라도 있을 때 */
