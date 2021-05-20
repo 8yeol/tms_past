@@ -941,7 +941,6 @@ public class AjaxController {
             if (place.getSensor().size() == 0) {
                 place.setMonitoring(false);
             }
-            inputLogSetting(ess.getPlace() + "의 "+ess.getNaming()+" 센서 삭제 ", "삭제", principal);
             placeRepository.save(place);
         }
 
