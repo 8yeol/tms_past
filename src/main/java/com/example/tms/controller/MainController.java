@@ -147,9 +147,15 @@ public class MainController {
         if(id==null) {
             List logList = logRepository.findAll();
             model.addAttribute("logList", logList);
+            Member member = new Member();
+            member.setId("All");
+            model.addAttribute("member",member);
+
         }else{
             List logList = logRepository.findById(id);
             model.addAttribute("logList", logList);
+            Member member = memberRepository.findById(id);
+            model.addAttribute("member",member);
         }
         return "log";
     }

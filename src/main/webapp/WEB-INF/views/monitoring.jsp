@@ -46,6 +46,9 @@
     .m-l {
         margin-left: 50px;
     }
+    tbody tr:hover{
+        cursor: pointer;
+    }
 </style>
 
 

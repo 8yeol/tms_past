@@ -14,10 +14,27 @@
 <script src="static/js/jquery.dataTables.min.js"></script>
 
 <div class="container">
+    <c:choose>
+        <c:when test="${member.state eq '5'}">
+            <c:set var="state" value="가입 거절"></c:set>
+        </c:when>
+        <c:when test="${member.state eq '4'}">
+            <c:set var="state" value="가입대기"></c:set>
+        </c:when>
+        <c:when test="${member.state eq '3'}">
+            <c:set var="state" value="일반"></c:set>
+        </c:when>
+        <c:when test="${member.state eq '2'}">
+            <c:set var="state" value="관리자"></c:set>
+        </c:when>
+        <c:when test="${member.state eq '1'}">
+            <c:set var="state" value="최고 관리자"></c:set>
+        </c:when>
+    </c:choose>
 
     <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold">활동 기록</h3>
     <div class="row bg-light rounded py-3 px-5">
-        <h4 class="d-flex justify-content-start"><b>티엠에스[최고 관리자]</b>&nbsp;님의 활동기록</h4>
+        <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
         <div class="col-xs-12">
             <table class="table table-striped " id="member-Table">
                 <thead>
