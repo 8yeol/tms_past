@@ -190,7 +190,7 @@ public class AjaxController {
      * @param location   위치
      * @param admin      담당자 명
      * @param tel        연락처
-     * @param hiddenCode 수정하고 싶은 측정소명명
+     * @param hiddenCode 수정하고 싶은 측정소명
      */
     @RequestMapping(value = "/savePlace")
     public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "location") String location, @RequestParam(value = "admin") String admin,

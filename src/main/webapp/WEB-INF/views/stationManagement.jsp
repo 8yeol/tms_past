@@ -129,7 +129,7 @@
                     </div>
                     <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
                                                                            id="te1"
-                                                                           style="position: relative; left: 19.5%;">
+                                                                           style="position: relative; left: 19.5%;"> >
                     </div>
                 </form>
             </div>
@@ -242,10 +242,12 @@
                     const name = test.name;
                     const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
                     const monitoring = test.monitoring;
-                    if (monitoring == true) {
-                        onoff = "checked";
-                    } else {
-                        onoff = "";
+                    if (findSensor(name) != 1) {
+                        if (monitoring == true) {
+                            onoff = "checked";
+                        } else {
+                            onoff = "";
+                        }
                     }
                     const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
                         "<td style='padding-left:6px;'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
@@ -258,6 +260,7 @@
                         "</tr>";
 
                     $('#placeDiv').append(innerHTML);
+                    onoff = "";
                 }
 
             },
@@ -413,7 +416,9 @@
 
     //센서 유무 파악(모니터링 버튼 기능 제어)
     function findSensor(name) {
-        var have = "";
+        var have = 0;
+        var a = 0;
+        var b = 0;
         $.ajax({
             url: '<%=cp%>/getPlaceSensor',
             type: 'POST',
@@ -422,14 +427,53 @@
             cache: false,
             data: {"place": name},
             success: function (data) {
-                have = data;
+                for (var i = 0; i < data.length; i++) {
+                    if (findSensorOn(data[i]) == 0) {
+                        a++;
+                    } else {
+                        b++;
+                    }
+                }
+                if (a != 0) {//모니터링 OFF가 있을때
+                    if (a == data.length) { //모니터링 전부 OFF일때
+                        have = 1; //
+                    }
+                } else if (b == 0) {//모니터링 OFF가 없고
+                    have = 2;
+                } else {
+                    have = 0;
+                }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error)
-                have = 0;
             }
         })
         return have;
+    }
+
+    //센서 모니터링 true/false 구분분
+    function findSensorOn(name) {
+        var onnum = "";
+        $.ajax({
+            url: '<%=cp%>/getSensorInfo',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"sensor": name},
+            success: function (data) {
+                if (data.monitoring == true) {
+                    onnum = 1;
+                } else {
+                    onnum = 0;
+                }
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+                onnum = 0;
+            }
+        })
+        return onnum;
     }
 
     //센서 기준값 불러오기
@@ -649,17 +693,24 @@
 
     //측정소 모니터링 onchange
     function p_monitoringupdate(id) {
-
         const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
         var check = $("#" + id).is(":checked"); //true/false
         var name = $("#p" + num).attr("value"); //측정소 명
 
-
-        if (findSensor(name) == 0) { //등록된 센서가 없을때
+        if (findSensor(name) == 2) { //등록된 센서가 없을때
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
                 text: '등록된 센서가 없어 모니터링 기능을 사용할 수 없습니다.'
+            })
+            placeDiv();
+            placeChange(document.getElementById('nickname').value);
+            return;
+        } else if (findSensor(name) == 1) {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '측정항목 모니터링이 전부 OFF 상태입니다.'
             })
             placeDiv();
             placeChange(document.getElementById('nickname').value);
@@ -676,7 +727,6 @@
             }
 
         })
-
         MultiSelecterModal(name, "", "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
