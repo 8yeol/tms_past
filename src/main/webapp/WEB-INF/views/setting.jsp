@@ -220,7 +220,7 @@
                                 </td>
                             </c:when>
                             <c:when test="${(mList.state eq '1' || mList.state eq '2' || mList.state eq '3') and (member.id != mList.id)}">
-                                <td  onclick="event.cancelBubble=true">
+                                <td onclick="event.cancelBubble=true">
                                     <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
                                        data-bs-target="#managementModal"
                                        onclick="Info_Set('${mList.id}','${mList.state}')"></i>
@@ -534,7 +534,7 @@
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
-            if(iNumber == "1"){
+            if (iNumber == "1") {
                 inputLog(ID, "가입 승인 처리", "회원관리"); // 대상자로그
             } else {
                 inputLog(ID, "가입 거부 처리", "회원관리");
@@ -554,8 +554,8 @@
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
-            inputLog(ID, str+"변경", "권한관리");
-            inputLog(user_id, ID + " 계정 "+ str +"변경 처리", "권한관리");
+            inputLog(ID, str + "변경", "권한관리");
+            inputLog(user_id, ID + " 계정 " + str + "변경 처리", "권한관리");
             success(response);
             setTimeout(function () {
                 location.reload();
@@ -606,33 +606,36 @@
         rName = name;
         <c:forEach items="${rank_managements}" var="rank_managements">
         var rankName = "${rank_managements.name}";
-        if (name == rankName) {
+        if (rName == rankName) {
             $("#dashBoardChk").prop("checked", ("${rank_managements.dashboard}" == "true") ? true : false);
             $("#alarmChk").prop("checked", ("${rank_managements.alarm}" == "true") ? true : false);
             $("#monitoringChk").prop("checked", ("${rank_managements.monitoring}" == "true") ? true : false);
             $("#statisticsChk").prop("checked", ("${rank_managements.statistics}" == "true") ? true : false);
             $("#settingChk").prop("checked", ("${rank_managements.setting}" == "true") ? true : false);
-            if (name == "normal") {
-                $("#settingChk").click(function (){
-                    if( $("#settingChk").is(":checked")) {
-                        Swal.fire({
-                            html: "환경설정 메뉴 열람 허용시 <br>일반 회원도 설정값을 변경할 수 있습니다. <br>일반 회원의 환경설정 메뉴 열람을 허용하시겠습니까?",
-                            title: '경고',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: "확인",
-                            cancelButtonColor: '#d33',
-                            cancelButtonText: "취소",
-                            reverseButtons: false,
-                            preConfirm: (function () {
-                                $("#settingChk").prop("checked", true);
-                            }),
-                        })
-                        $("#settingChk").prop("checked", false);
-                    }
-                })
+            if(rName == "root"){
+                $("#settingChk").prop("disabled", true);
+            } else {
+                $("#settingChk").prop("disabled", false);
             }
+            $("#settingChk").click(function () {
+                if ($("#settingChk").is(":checked") && rName == "normal") {
+                    Swal.fire({
+                        html: "환경설정 메뉴 열람 허용시 <br>일반 회원도 설정값을 변경할 수 있습니다. <br>일반 회원의 환경설정 메뉴 열람을 허용하시겠습니까?",
+                        title: '경고',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: "확인",
+                        cancelButtonColor: '#d33',
+                        cancelButtonText: "취소",
+                        reverseButtons: false,
+                        preConfirm: (function () {
+                            $("#settingChk").prop("checked", true);
+                        }),
+                    })
+                    $("#settingChk").prop("checked", false);
+                }
+            })
         }
         </c:forEach>
     }       //rankRadioChanged
@@ -659,7 +662,7 @@
             inputLog(user_id, content, "권한관리");
             success("권한관리 설정이 저장되었습니다.");
             setTimeout(function () {
-                  location.reload();
+                location.reload();
             }, 2000);
         });
     }       //rankSettingSave
@@ -670,16 +673,17 @@
     });         // modal drag and drop move
 
     function userLog(id) {
-        let frm = $('#'+id);
+        let frm = $('#' + id);
         frm.submit();
     }
-    function warning(str){
-        Swal.fire('경고',str,'warning');
-    }
-    function success(str){
-        Swal.fire('확인',str,'success');
+
+    function warning(str) {
+        Swal.fire('경고', str, 'warning');
     }
 
+    function success(str) {
+        Swal.fire('확인', str, 'success');
+    }
 
 
 </script>
