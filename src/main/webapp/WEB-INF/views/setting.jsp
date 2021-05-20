@@ -99,6 +99,7 @@
     .dataTables_wrapper {
         min-height: 550px;
     }
+
 </style>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
@@ -222,19 +223,16 @@
             <div class="col-md-3">
                 <div class="bg-lightGray p-4 me-4 fw-bold h-100">
                     <div class="d-flex justify-content-start">
-                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="root"
-                               onclick="rankRadioChanged(id)" checked>
-                        <label for="root" class="w-75">최고 관리자</label>
+                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="root_radio" value="root" onclick="rankRadioChanged(value)" checked>
+                        <label for="root_radio" class="w-75">최고 관리자</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
-                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="admin"
-                               onclick="rankRadioChanged(id)">
-                        <label for="admin" class="w-75">관리자</label>
+                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="admin_radio" value="admin" onclick="rankRadioChanged(value)">
+                        <label for="admin_radio" class="w-75">관리자</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
-                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="normal"
-                               onclick="rankRadioChanged(id)">
-                        <label for="normal" class="w-75">일반</label>
+                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="normal_radio" value="normal" onclick="rankRadioChanged(value)">
+                        <label for="normal_radio" class="w-75">일반</label>
                     </div>
                 </div>
             </div>
@@ -602,6 +600,7 @@
     }           // kickMember
 
     function rankRadioChanged(name) {
+        console.log(name);
         rName = name;
         <c:forEach items="${rank_managements}" var="rank_managements">
         var rankName = "${rank_managements.name}";
