@@ -215,6 +215,9 @@
     function getData() {
         setTimeout(function interval_getData() { //실시간 처리위한 setTimeout
             const placeName = getPlace(); // 전체 측정소 이름 구함 (조건: 파워 On, 모니터링 True)
+            if(placeName.length == 0){
+                INTERVAL = setTimeout(interval_getData, 10000)
+            }
             draw_place_table_frame(placeName); // 측정소별 센서의 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
             const placeData = new Array();
             var sensorDataNullCheck = true;
@@ -292,7 +295,6 @@
                 title: '경고',
                 text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
             })
-            flashing(false);
         }
         return placeName;
     }
