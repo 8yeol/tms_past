@@ -224,17 +224,17 @@
                     <div class="d-flex justify-content-start">
                         <input type="radio" class="form-check-input me-2" name="grandRadio" id="root"
                                onclick="rankRadioChanged(id)" checked>
-                        <label for="root">최고 관리자</label>
+                        <label for="root" class="w-75">최고 관리자</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
                         <input type="radio" class="form-check-input me-2" name="grandRadio" id="admin"
                                onclick="rankRadioChanged(id)">
-                        <label for="admin">관리자</label>
+                        <label for="admin" class="w-75">관리자</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
                         <input type="radio" class="form-check-input me-2" name="grandRadio" id="normal"
                                onclick="rankRadioChanged(id)">
-                        <label for="normal">일반</label>
+                        <label for="normal" class="w-75">일반</label>
                     </div>
                 </div>
             </div>
