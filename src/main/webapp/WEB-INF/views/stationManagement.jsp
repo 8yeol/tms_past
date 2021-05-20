@@ -589,7 +589,8 @@
                 }
                 content = '측정소가 추가 되었습니다.';
                 title = '측정소 추가';
-                send = document.getElementById('nickname').value;
+                send = "p0";
+
                 $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
             }
         }
