@@ -266,7 +266,7 @@
                 },
                 labels:{
                     formatter: function(value){
-                        return Math.round(value);
+                        return numberWithCommas(Math.round(value));
                     }
                 }
             },
@@ -276,7 +276,7 @@
             tooltip: {
                 y: {
                     formatter: function (value) {
-                        return Math.round(value) + " kg"
+                        return numberWithCommas(Math.round(value)) + " kg"
                     }
                 }
             }
