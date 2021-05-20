@@ -608,7 +608,12 @@
      * 페이지 로딩 시 측정소 선택 화면 생성
      */
     function draw_place_frame() {
+        setTimeout(function drawPlace() {
             var placeName = getPlace(); // 전체 측정소 이름 구함 (조건:파워ON, 모니터링 True)
+            if(placeName.length == 0){
+                Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
+                setTimeout(drawPlace, 10000);
+            }else{
                 for(var i=0; i<placeName.length; i++){
                     $('#place_name').append("<li class='place-item btn d-block fs-3 mt-3 me-3' id='"+
                         placeName[i]+"'>"+
@@ -616,12 +621,8 @@
                         "</li>"+
                         "<hr style='height: 2px;'>");
                 }
-            if(placeName.length == 0){
-                    setTimeout(function drawPlace() {
-                       Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
-                       setTimeout(draw_place_frame, 5000);
-                }, 0);
             }
+        }, 0);
     }
 
 
