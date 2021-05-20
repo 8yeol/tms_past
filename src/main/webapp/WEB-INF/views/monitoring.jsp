@@ -473,7 +473,6 @@
             }
         }
         for (let i = 0; i < data.length; i++) {
-            console.log(data[i]);
             /* 모니터링 ON 한개라도 있을 때 */
             if(!monitoringIsCheck){
                 if(data[i] != 0){
