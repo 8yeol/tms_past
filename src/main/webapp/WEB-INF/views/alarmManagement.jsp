@@ -23,6 +23,7 @@
 <script src="static/js/common/common.js"></script>
 <script src="static/jquery-timepicker-12-hour-format/src/wickedpicker.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/common/common.js"></script>
 
 <style>
     .border-bottom-custom {
@@ -298,6 +299,7 @@
                 "to": end
             }
         })
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림("+start+"~"+end+", ["+ onList +"])","알림설정");
         Swal.fire({
             icon: 'success',
             title: '저장완료'
