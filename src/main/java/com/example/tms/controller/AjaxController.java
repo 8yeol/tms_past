@@ -306,8 +306,6 @@ public class AjaxController {
         //측정소 삭제
         placeRepository.deleteByName(place);
     }
-
-
     /**
      * 측정소와 센서,상세설정값 동시에 삭제
      *
@@ -425,7 +423,6 @@ public class AjaxController {
             }
         }
     }
-
     /**
      * [환경설정 - 알림설정] 모니터링 on/off 변경 및 알림 시간 변경
      *
@@ -467,9 +464,9 @@ public class AjaxController {
     /**
      * 측정소 업데이트, 센서 추가
      *
-     * @param placename
-     * @param name
-     * @param naming
+     * @param placename 측정소
+     * @param name 센서명
+     * @param naming 센서 네이밍
      */
     public void saveReference(String placename, String name, String naming) {
 
@@ -483,7 +480,6 @@ public class AjaxController {
             placesensor.setSensor(sensor);
             placeRepository.save(placesensor);
         }
-
         float legal = 999.0f;
         float management = 999.0f;
         float company = 999.0f;
@@ -493,7 +489,6 @@ public class AjaxController {
         ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
         reference_value_settingRepository.save(saveReference);
     }
-
 
     /**
      * 측정항목의 법적기준 업데이트
@@ -954,8 +949,6 @@ public class AjaxController {
             return "failed";
         }
     }
-
-
 
     @RequestMapping(value = "/memberUpdate")
     public String memberUpdate(Member member) {
