@@ -350,8 +350,7 @@
                                     x: sensor_data_list_recent.up_time,
                                     y: sensor_data_list_recent.value
                                 });
-                                sensor_table_update(dt, sensor_data); //테이블 업데이트
-
+                                sensor_table_update(dt, sensor_data_list_recent, sensor_data); //테이블 업데이트
                             }
                             updateChart(sensor_data_list, sensor_data); //차트 업데이트
                             if (sensor_data_list.length > sensorDataLength * 2) { //차트 초기화
@@ -936,11 +935,11 @@
         return dt;
     }
     
-    function sensor_table_update(table, sensorData) {
+    function sensor_table_update(table, sensor_data_list_recent, sensorData) {
         var dt = $('#sensor-table').DataTable();
         var pageNum = dt.page.info().page;
-        upDate = moment(sensorData.up_time).format('YYYY-MM-DD HH:mm:ss');
-        value = (sensorData.value).toFixed(2);
+        upDate = moment(sensor_data_list_recent.up_time).format('YYYY-MM-DD HH:mm:ss');
+        value = (sensor_data_list_recent.value).toFixed(2);
         if(sensorData.legalStandard == 999){
             legalStandard = '-';
         }else{
@@ -957,11 +956,11 @@
             managementStandard = sensorData.managementStandard;
         }
 
-        if(sensorData.value > sensorData.legalStandard){
+        if(sensor_data_list_recent.value > sensorData.legalStandard){
             standard =  '<div class="bg-danger text-light">'+"법적기준 초과"+'</div>';
-        } else if( sensorData.value > sensorData.companyStandard){
+        } else if( sensor_data_list_recent.value > sensorData.companyStandard){
             standard =  '<div class="bg-warning text-light">'+"사내기준 초과"+'</div>';
-        } else if( sensorData.value > sensorData.managementStandard){
+        } else if( sensor_data_list_recent.value > sensorData.managementStandard){
             standard =   '<div class="bg-success text-light">'+"관리기준 초과"+'</div>';
         } else {
             standard =  "정상";
