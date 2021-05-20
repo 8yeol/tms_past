@@ -108,29 +108,6 @@
 <script src="static/js/jquery.dataTables.min.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
-<script type="text/javascript">
-    jQuery(function ($) {
-        $("#member-Table").DataTable({
-            "language": {
-                "emptyTable": "데이터가 없어요.",
-                "lengthMenu": "페이지당 _MENU_ 개씩 보기",
-                "info": "현재 _START_ - _END_ / _TOTAL_건",
-                "infoEmpty": "데이터 없음",
-                "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
-                "search": "전체검색 : ",
-                "zeroRecords": "일치하는 데이터가 없어요.",
-                "loadingRecords": "로딩중...",
-                "processing": "잠시만 기다려 주세요...",
-                "paginate": {
-                    "next": "다음",
-                    "previous": "이전"
-                },
-            },
-            pageLength: 10
-        });
-    });
-</script>
-
 <div class="container">
     <div class="row1 mt-4 mb-4">
         <span style=" font-size: 27px;font-weight: bold">환경설정 > 설정</span>
@@ -507,6 +484,28 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
+
+    $("#member-Table").DataTable({
+        language: {
+            emptyTable: "데이터가 없어요.",
+            lengthMenu: "페이지당 _MENU_ 개씩 보기",
+            info: "현재 _START_ - _END_ / _TOTAL_건",
+            infoEmpty: "데이터 없음",
+            infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
+            search: "전체검색 : ",
+            zeroRecords: "일치하는 데이터가 없어요.",
+            loadingRecords: "로딩중...",
+            processing: "잠시만 기다려 주세요...",
+            paginate: {
+                "next": "다음",
+                "previous": "이전"
+            },
+        },
+        pageLength: 10,
+        info: false,
+        lengthChange : false,
+    });
+
     var ID = ""; //데이터테이블 해당항목의 ID정보
     var state = ""; //해당항목의 등급 정보
     var rName = "root"; // 권한관리영역 checkBox 변수

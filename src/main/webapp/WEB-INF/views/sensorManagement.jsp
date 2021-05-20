@@ -284,7 +284,6 @@
     }
 
     function editSetting(obj) {
-
         var sensor = $(obj).parent().parent().children();
         $("input[name=hiddenCode]").val(sensor.eq(3).html());  // -> tmsWP0001_NOX_01
         $("#modal_title").html("관리 ID : <font class='text-primary'><b>"+sensor.eq(2).html()+"</b></font>");
@@ -292,7 +291,10 @@
     }
 
     function deleteModal(obj) {
-        let tableName = $(obj).parent().parent().children().eq(3).html(); //-> tmsWP0001_NOX_01
+        const tableName = $(obj).parent().parent().children().eq(3).html(); //-> tmsWP0001_NOX_01
+        const place = $(obj).parent().parent().children().eq(5).html();
+        const sensor = $(obj).parent().parent().children().eq(1).html();
+
         Swal.fire({
             icon: 'error',
             title: '삭제',
@@ -303,12 +305,12 @@
             cancelButtonText: '취소'
         }).then((result) => {
             if (result.isConfirmed) {
-                deleteSensor(tableName);
+                deleteSensor(tableName,place,sensor);
             }
         });
     }
 
-    function deleteSensor(tableName) {
+    function deleteSensor(tableName, place, sensor) {
         $.ajax({
             url: '<%=cp%>/deleteSensor',
             type: 'POST',
@@ -317,6 +319,7 @@
             data: {tableName: tableName},
             success: function () {
                 customSwal('삭제 완료','삭제 되었습니다..');
+                inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place+' - '+sensor+'센서 삭제','센서 삭제');
                 setTimeout(function () {
                     location.reload();
                 }, 2000);
@@ -346,10 +349,7 @@
                 console.log(error);
             }
         });
-
     }
-
-
 
     function isValueDelete(){
         if($("#place2").val() == null){
