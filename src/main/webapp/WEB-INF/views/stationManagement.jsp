@@ -366,7 +366,6 @@
 
     //측정소 정보
     function updatePlaceSetting() {
-
         if ($("input:checkbox[name=place]:checked").length == 0) {
             document.getElementById("cancelBtn1").click();
             Swal.fire({
@@ -516,7 +515,6 @@
 
     //측정소 추가
     function insertPlace(idx) {
-
         const na = $("#na" + idx).val();
         const name = na.replace(/(\s*)/g, "");
         const location = $("#lo" + idx).val();
@@ -606,8 +604,12 @@
                 "tel": tel,
                 "admin": admin,
                 "hiddenCode": $("input[name=hiddenCode]").val()
+            },success: function (data) {
+                console.log(data);
+            },
+            error: function (request, status, error) {
+                console.log(error)
             }
-
         })
         Swal.fire({
             icon: 'success',

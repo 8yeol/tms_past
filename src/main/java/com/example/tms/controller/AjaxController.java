@@ -246,7 +246,7 @@ public class AjaxController {
             Boolean monitoring = false;
             List sensor = new ArrayList();
             Place newplace = new Place(name, location, admin, tel, monitoring, date, sensor);
-            inputLogSetting("'"+name+"' 추가","측정소 관리",principal);
+            inputLogSetting("측정소 추가 > " + name,"측정소 관리",principal);
             placeRepository.save(newplace);
         } else { //수정
             Place place = placeRepository.findByName(hiddenCode); //기존 측정소 정보 불러오기
