@@ -371,7 +371,7 @@
             <div class="col">
                 <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
                     <div class="card-header">정상</div>
-                    <div class="card-body" id="normal "style="min-height: 200px;">
+                    <div class="card-body" id="normal" style="min-height: 200px;">
                         <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
@@ -415,7 +415,7 @@
         if(placeListSize==2) $('#line1').remove();
 
         integrated();
-        //excess();
+        excess();
 
         $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD'));
     });
@@ -490,7 +490,6 @@
                                 $("#caution").empty();
                                 $("#warning").empty();
                                 $("#danger").empty();
-
                                 $.ajax({
                                     url: '<%=cp%>/getSensorInfo',
                                     dataType: 'json',
