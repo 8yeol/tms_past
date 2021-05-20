@@ -22,7 +22,7 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findById(username);
-        if(member == null){
+        if (member == null) {
             throw new UsernameNotFoundException(username);
         }
         return User.builder()
@@ -32,14 +32,23 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
-    public Member memberSave(Member member, String state){
+    public Member memberSave(Member member, String state) {
         member.encodePassword(passwordEncoder);
         member.setState(state);
         return memberRepository.save(member);
     }
 
-    public Member memberSave(Member member){
-        member.encodePassword(passwordEncoder);
-        return memberRepository.save(member);
+    public void updateMember(Member member) {
+        Member updateMember = memberRepository.findById(member.getId());
+        updateMember.setName(member.getName());
+        if (member.getPassword() != ""){
+            updateMember.setPassword(member.getPassword());
+            updateMember.encodePassword(passwordEncoder);
+        }
+        updateMember.setEmail(member.getEmail());
+        updateMember.setTel(member.getTel());
+        updateMember.setDepartment(member.getDepartment());
+        updateMember.setGrade(member.getGrade());
+        memberRepository.save(updateMember);
     }
 }

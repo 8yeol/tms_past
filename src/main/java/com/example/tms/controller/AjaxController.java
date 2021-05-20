@@ -14,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -306,8 +309,6 @@ public class AjaxController {
         //측정소 삭제
         placeRepository.deleteByName(place);
     }
-
-
     /**
      * 측정소와 센서,상세설정값 동시에 삭제
      *
@@ -357,12 +358,6 @@ public class AjaxController {
     public String getSensorManagementId(@RequestParam("name") String tablename) {
         return sensorListRepository.findByTableName(tablename);
     }
-
-    @RequestMapping(value = "/getMonitoringPlace")
-    public List<Place> getMonitoringPlace() {
-        return placeRepository.findByMonitoringIsTrue();
-    }
-
     /**
      * 선세의 최근 데이터 조회 (limit:1)
      *
@@ -394,6 +389,12 @@ public class AjaxController {
         return sensorCustomRepository.getSenor(sensor, hour);
     }
 
+    /**
+     * 센서 알림설정 ON/OFF 확인
+     *
+     * @param name 센서명
+     * @return 센서 알림설정 true/false
+     */
     @RequestMapping(value = "/getNotifyInfo")
     public NotificationSettings getNotifyInfo(@RequestParam("name") String name) {
 
@@ -425,7 +426,6 @@ public class AjaxController {
             }
         }
     }
-
     /**
      * [환경설정 - 알림설정] 모니터링 on/off 변경 및 알림 시간 변경
      *
@@ -467,9 +467,9 @@ public class AjaxController {
     /**
      * 측정소 업데이트, 센서 추가
      *
-     * @param placename
-     * @param name
-     * @param naming
+     * @param placename 측정소
+     * @param name 센서명
+     * @param naming 센서 네이밍
      */
     public void saveReference(String placename, String name, String naming) {
 
@@ -483,7 +483,6 @@ public class AjaxController {
             placesensor.setSensor(sensor);
             placeRepository.save(placesensor);
         }
-
         float legal = 999.0f;
         float management = 999.0f;
         float company = 999.0f;
@@ -493,7 +492,6 @@ public class AjaxController {
         ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
         reference_value_settingRepository.save(saveReference);
     }
-
 
     /**
      * 측정항목의 법적기준 업데이트
@@ -913,7 +911,6 @@ public class AjaxController {
      */
     @RequestMapping(value = "/isStandardEmpty")
     public boolean isStandardEmpty(String tableName) {
-
         if (emissionsStandardSettingRepository.findByTableNameIsIn(tableName) == null) {
             return true;
         } else {
@@ -933,6 +930,25 @@ public class AjaxController {
                              @RequestParam(value = "tableName") String tableName) {
         EmissionsStandardSetting ess = new EmissionsStandardSetting(place, naming, 0, 0, tableName, "");
         emissionsStandardSettingRepository.save(ess);
+    }
+    /**
+     * 배출량 모니터링 상태값을 변경
+     * @param sensor 상태값 변경할 센서
+     * @param isCollection 배출량 추이 모니터링 <->연간 배출량 누적 모니터링   판별할 데이터
+     */
+    @RequestMapping("emissionsState")
+    public void emissionsState(String sensor, boolean isCollection) {
+        //배출량 설정
+        if (isCollection) {
+            EmissionsSetting target = emissionsSettingRepository.findBySensor(sensor);
+            target.setStatus(!target.isStatus());
+            emissionsSettingRepository.save(target);
+            //연간 배출량 설정
+        } else {
+            AnnualEmissions target = annualEmissionsRepository.findBySensor(sensor);
+            target.setStatus(!target.isStatus());
+            annualEmissionsRepository.save(target);
+        }
     }
 
     /**
@@ -956,25 +972,24 @@ public class AjaxController {
         }
     }
 
-
-
+    /**
+     * 멤버 업데이트
+     *
+     * @param member
+     * @return
+     */
     @RequestMapping(value = "/memberUpdate")
     public String memberUpdate(Member member) {
-        Member updateMember = memberRepository.findById(member.getId());
-
-        if (member.getPassword() != "") {
-            updateMember.setPassword(member.getPassword());
-        }
-        updateMember.setName(member.getName());
-        updateMember.setEmail(member.getEmail());
-        updateMember.setTel(member.getTel());
-        updateMember.setDepartment(member.getDepartment());
-        updateMember.setGrade(member.getGrade());
-        memberService.memberSave(updateMember);
-
+        memberService.updateMember(member);
         return "success";
     }
 
+    /**
+     * 현재 비밀번호 체크
+     * @param id
+     * @param password
+     * @return
+     */
     @RequestMapping(value = "/nowPasswordCheck")
     public String nowPasswordCheck(String id, String password) {
         Member newMember = memberRepository.findById(id);
@@ -984,5 +999,161 @@ public class AjaxController {
             return "success";
         }
     }
+
+    /**
+     * 로그인시 입력받은 사용자 정보를 검사
+     * @param member 입력받은 사용자정보 객체
+     * @param response 뷰로 문자열을 전달하기위한 변수
+     * @throws Exception 예외처리
+     */
+
+    @RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
+    public void loginCheck( Member member, HttpServletResponse response) throws Exception {
+        PrintWriter out = response.getWriter();
+        if(!memberRepository.existsById(member.getId())){ // ID가 존재하지않으면
+            out.print("id");
+        } else if(!passwordEncoder.matches(member.getPassword(),memberRepository.findById(member.getId()).getPassword())){ // password가 틀리면
+            out.print("password");
+        } else  if (memberRepository.findById(member.getId()).getState().equals("5")){ // 가입거절
+            out.print("denie");
+        } else  if (memberRepository.findById(member.getId()).getState().equals("4")){ // 가입대기
+            out.print("waiting");
+        }else {
+            Member newMember = memberRepository.findById(member.getId());
+            Date time = new Date();
+            newMember.setLastLogin(time);
+            memberRepository.save(newMember);
+        }
+    }           // loginCheck
+    /**
+     * 회원가입신청 한 유저의 승낙 여부를 결정
+     * @param id 가입신청한유저의 id
+     * @param iNumber 0 - 거부 / 1 - 승인 을나타냄
+     * @return 안내메시지를 리턴
+     */
+    @RequestMapping(value = "/signUp", method = RequestMethod.POST)
+    public String memberSignUp(String id, String iNumber){
+        String msg = "";
+        Member newMember = memberRepository.findById(id);
+        if(iNumber.equals("0")){
+            newMember.setState("5");
+            msg = "가입 거절 되었습니다.";
+        }else{
+            newMember.setState("3"); // 5: 거절 - 4: 가입대기 - 3: 일반 - 2: 관리자 - 1: 최고관리자
+            Date time = new Date();
+            newMember.setJoined(time); // 가입승인일 설정
+            msg = "가입 승인 되었습니다.";
+        }
+        memberRepository.save(newMember);
+        return msg;
+    }           // memberSignUp
+    /**
+     * 입력받은 값으로 유저의 등급을 결정
+     * @param id 등급을 결정할 유저의 id
+     * @param value 등급값
+     * @return 안내메시지 리턴
+     */
+    @RequestMapping(value = "/gaveRank", method = RequestMethod.POST)
+    public String gaveRank(String id, String value){
+        Member newMember = memberRepository.findById(id);
+        newMember.setState(value);
+        memberRepository.save(newMember);
+        return "등급 부여 하였습니다.";
+    }           // gaveRank
+    /**
+     * 입력받은 값으로 유저의 비밀번호를 초기화
+     * @param id 초기화할 유저의 id
+     * @return 안내메시지와 임시비밀번호 메시지 리턴
+     */
+    @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+    public String resetPassword(String id){
+        Member newMember = memberRepository.findById(id);
+        String uuid = (UUID.randomUUID().toString().replaceAll("-", "")).substring(0,10);
+        String encodedPwd = passwordEncoder.encode(uuid);
+        newMember.setPassword(encodedPwd);
+        memberRepository.save(newMember);
+        return "비밀번호가 초기화 되었습니다. \n임시비밀번호 : "+ uuid;
+    }           // resetPassword
+    /**
+     * 입력받은 값으로 유저를 추방
+     * @param id 추방할 유저의 id
+     * @return 안내메시지 리턴
+     */
+    @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
+    public String kickMember(String id){
+        memberRepository.deleteById(id);
+        return "추방처리 되었습니다.";
+    }           // kickMember
+    /**
+     * 변경한 권한관리 값들을 저장
+     * @param rankManagement 변경한 값들을 담고있는 객체
+     * @param response 뷰로문자열을 전달하기위한 변수
+     * @throws Exception 예외처리
+     */
+    @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
+    public void rankSettingSave(@RequestBody RankManagement rankManagement, HttpServletResponse response) throws Exception {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        RankManagement newRankManagement = rankManagementRepository.findByName(rankManagement.getName());
+
+        String str = "";
+        str += (rankManagement.isDashboard() == newRankManagement.isDashboard()) ? "" : (rankManagement.isDashboard()) ? "대시보드 메뉴열람 권한부여  " : "대시보드 메뉴열람 권한해제  " ;
+        str += (rankManagement.isAlarm() == newRankManagement.isAlarm()) ? "" : (rankManagement.isAlarm()) ? "알림 메뉴열람 권한부여  " : "알림 메뉴열람 권한해제  " ;
+        str += (rankManagement.isMonitoring() == newRankManagement.isMonitoring()) ? "" : (rankManagement.isMonitoring()) ? "모니터링 메뉴열람 권한부여  " : "모니터링 메뉴열람 권한해제  " ;
+        str += (rankManagement.isStatistics() == newRankManagement.isStatistics()) ? "" : (rankManagement.isStatistics()) ? "분석및통계 메뉴열람 권한부여  " : "분석및통계 메뉴열람 권한해제  " ;
+        str += (rankManagement.isSetting() == newRankManagement.isSetting()) ? "" : (rankManagement.isSetting()) ? "환경설정 메뉴열람 권한부여" : "환경설정 메뉴열람 권한해제" ;
+        out.print(str);
+
+        newRankManagement.setDashboard(rankManagement.isDashboard());
+        newRankManagement.setAlarm(rankManagement.isAlarm());
+        newRankManagement.setMonitoring(rankManagement.isMonitoring());
+        newRankManagement.setStatistics(rankManagement.isStatistics());
+        newRankManagement.setSetting(rankManagement.isSetting());
+        rankManagementRepository.save(newRankManagement);
+    }           // rankSettingSave
+    /**
+     * 로그정보를 날짜추가후 DB에 저장
+     * @param log Log정보
+     */
+    @RequestMapping(value = "/inputLog", method = RequestMethod.POST)
+    public void inputLog(@RequestBody Log log){
+        log.setDate(new Date());
+        logRepository.save(log);
+    }           // inputLog
+    /**
+     * 현재 로그인한 유저의 이름을 문자로 리턴함
+     * @param principal 로그인유저의 정보객체
+     * @return 유저의 이름문자 리턴
+     */
+    @RequestMapping(value = "/getUsername", method = RequestMethod.POST)
+    public String getUsername(Principal principal) {
+        Member member = memberRepository.findById(principal.getName());
+        return member.getName();
+    }           // getUsername
+    /**
+     * 입력받은 값을 바탕으로 DB에 저장되어있는 권한값을 리턴함
+     * @param principal
+     * @return
+     */
+    @RequestMapping(value = "/getRank", method = RequestMethod.POST)
+    public RankManagement getRank(Principal principal) {
+        Member member = memberRepository.findById(principal.getName());
+        String state = member.getState();
+        String str;
+        if(state.equals("3")){
+            str = "normal";
+        } else if (state.equals("2")){
+            str = "admin";
+        } else if (state.equals("1")){
+            str = "root";
+        } else {
+            str = "denie";
+        }
+        return rankManagementRepository.findByName(str);
+    }           // getRank
+
+
 
 }

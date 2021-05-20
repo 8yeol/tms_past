@@ -30,10 +30,6 @@
         padding: 16px 16px 25px 16px;
     }
 
-    .border-tom-custom {
-        border-top: 2px solid #a9a9a9;
-        padding: 16px 16px 40px 16px;
-    }
 </style>
 
 <div class="container">
@@ -96,7 +92,6 @@
                 placeMake($("#place" + i).text(), i);
             } else {
                 $("#placeDiv" + i).empty();
-
             }
         }
         for (let i = 0; i < placeLength; i++) {
@@ -106,10 +101,8 @@
 
     });
 
-
     //측정소 생성
     function placeMake(name, idx) {
-
         const place = name;
         const parentElem = $('#items' + idx);
         let innerHTMLTimePicker = "";
@@ -127,82 +120,68 @@
             cache: false,
             data: {"place": place},
             success: function (data) {
-                if (data != "") {
-                    for (let i = 0; i < data.length; i++) {
+                for (let i = 0; i < data.length; i++) {
+                    const tableName = data[i];
+                    const category = findSensorCategory(tableName);
+                    const checked = findNotification(tableName);
 
-                        const tableName = data[i];
-                        const category = findSensorCategory(tableName);
-                        const checked = findNotification(tableName);
+                    const innerHtml =
+                        "<label style='font-size: 18px;' class='form-check-label' for='" + tableName + "'>" + category + "</label>" +
+                        "<label class='switch'>" +
+                        "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + checked + ">" +
+                        "<div class='slider round'></div>" +
+                        "</label>"
 
-                        const innerHtml =
-                            "<label style='font-size: 18px;' class='form-check-label' for='" + tableName + "'>" + category + "</label>" +
-                            "<label class='switch'>" +
-                            "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + checked + ">" +
-                            "<div class='slider round'></div>" +
-                            "</label>"
+                    const elem = document.createElement('div');
+                    elem.setAttribute('class', 'label-form')
+                    elem.innerHTML = innerHtml;
+                    parentElem.append(elem);
 
-                        const elem = document.createElement('div');
-                        elem.setAttribute('class', 'label-form')
-                        elem.innerHTML = innerHtml;
-                        parentElem.append(elem);
-
-                        if (i % data.length == 0) {
-                            const time = data[0];
-                            const getTime = getNotifyTime(time);
-                            // $("#start" + idx).val(getTime.get("from"));
-                            // $("#end" + idx).val(getTime.get("to"));
-                            $("#start" + idx).wickedpicker({
-                                now: getTime.get("from"),
-                                twentyFour: true,
-                                upArrow: 'wickedpicker__controls__control-up',
-                                downArrow: 'wickedpicker__controls__control-down',
-                                close: 'wickedpicker__close',
-                                hoverState: 'hover-state',
-                                title: '시간 입력',
-                                showSeconds: false,
-                                timeSeparator: ':',
-                                secondsInterval: 1,
-                                minutesInterval: 1,
-                                beforeShow: null,
-                                afterShow: null,
-                                show: null,
-                                clearable: false,
-                                closeOnClickOutside: true,
-                                onClickOutside: function() {},
-                            });
-                            $("#end" + idx).wickedpicker({
-                                now: getTime.get("to"),
-                                twentyFour: true,
-                                upArrow: 'wickedpicker__controls__control-up',
-                                downArrow: 'wickedpicker__controls__control-down',
-                                close: 'wickedpicker__close',
-                                hoverState: 'hover-state',
-                                title: '시간 입력',
-                                showSeconds: false,
-                                timeSeparator: ':',
-                                secondsInterval: 1,
-                                minutesInterval: 1,
-                                beforeShow: null,
-                                afterShow: null,
-                                show: null,
-                                clearable: false,
-                                closeOnClickOutside: true,
-                                onClickOutside: function() {},
-
-                            });
-                        }
+                    if (i % data.length == 0) {
+                        const time = data[0];
+                        const getTime = getNotifyTime(time);
+                        $("#start" + idx).wickedpicker({
+                            now: getTime.get("from"),
+                            twentyFour: true,
+                            upArrow: 'wickedpicker__controls__control-up',
+                            downArrow: 'wickedpicker__controls__control-down',
+                            close: 'wickedpicker__close',
+                            hoverState: 'hover-state',
+                            title: '시간 입력',
+                            showSeconds: false,
+                            timeSeparator: ':',
+                            secondsInterval: 1,
+                            minutesInterval: 1,
+                            beforeShow: null,
+                            afterShow: null,
+                            show: null,
+                            clearable: false,
+                            closeOnClickOutside: true,
+                            onClickOutside: function () {
+                            },
+                        });
+                        $("#end" + idx).wickedpicker({
+                            now: getTime.get("to"),
+                            twentyFour: true,
+                            upArrow: 'wickedpicker__controls__control-up',
+                            downArrow: 'wickedpicker__controls__control-down',
+                            close: 'wickedpicker__close',
+                            hoverState: 'hover-state',
+                            title: '시간 입력',
+                            showSeconds: false,
+                            timeSeparator: ':',
+                            secondsInterval: 1,
+                            minutesInterval: 1,
+                            beforeShow: null,
+                            afterShow: null,
+                            show: null,
+                            clearable: false,
+                            closeOnClickOutside: true,
+                            onClickOutside: function () {
+                            },
+                        });
                     }
-                } else {
-                    $("#div" + idx).empty();
-
-                    const none = "<div style='margin: auto; text-align: center; height: 151px; padding-top: 35px;' class='fw-bold fs-5'>" +
-                        "<div>등록된 센서 데이터가 없습니다.</div>" +
-                        "<div>센서 등록 후 이용 가능합니다.</div>" +
-                        "</div>";
-
-                    $('#div' + idx).append(none);
                 }
-
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
@@ -233,7 +212,7 @@
         return isChecked;
     }
 
-    //모니터링 on/off 및 측정소 명
+    //모니터링 on/off
     function findPlace(tableName) {
 
         $.ajax({
@@ -286,7 +265,7 @@
                 title: '경고',
                 text: '알림시간을 입력해주세요.'
             })
-            return false;
+            return ;
         } else {
             //저장할때 시간 검사
             if (start >= end) {
@@ -294,15 +273,6 @@
                     icon: 'warning',
                     title: '경고',
                     text: 'To 시간이 From 시간 보다 적거나 같을 수 없습니다.'
-                })
-                return;
-            }
-            //시간과 분을 정확히 입력했는지 검사
-            if (start.length != 5 || end.length != 5) {
-                swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '시간을 정확히 입력 해주세요.'
                 })
                 return;
             }
@@ -326,19 +296,12 @@
                 "offList": offList,
                 "from": start,
                 "to": end
-            },
-            success: function (data) {
-            },
-            error: function (request, status, error) {
-                console.log(error)
             }
         })
-
         Swal.fire({
             icon: 'success',
             title: '저장완료'
         })
-
     }
 
     //시작 시간이 종료시간보다 클때 endTime 변경
@@ -378,7 +341,6 @@
             }
         }
     }
-
     //임시로 설정한값 삭제후 다시 생성
     function cancel(idx) {
         $('#alarm' + idx).empty();

@@ -84,6 +84,11 @@ public class Schedule {
     }
 
     /* 알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산 */
+
+    /**
+     * [알림 - 센서 알림현황]
+     * 기준 초과 알림 목록을 읽어와 기준별 카운트하여 일별/월별로 해당 컬렉션에 저장
+     */
     @Scheduled(cron = "0 1 0 * * *") //매일 00시 01분에 처리
     public void saveNotiStatistics(){
         LocalDate nowDate = LocalDate.now();
@@ -95,7 +100,11 @@ public class Schedule {
             int arr[] = new int[3];
             for(int grade=1; grade<=3; grade++) {
                 List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(getYesterday), String.valueOf(getYesterday));
-                arr[grade-1] = (int) list.get(0).get("count");
+                if (list.size() != 0) {
+                    arr[grade - 1] = (int) list.get(0).get("count");
+                } else {
+                    arr[grade - 1] = 0;
+                }
             }
             NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(getYesterday), arr[0], arr[1], arr[2]);
             notificationDayStatisticsRepository.save(ns);
@@ -119,7 +128,11 @@ public class Schedule {
             int arr[] = new int[3];
             for(int grade=1; grade<=3; grade++) {
                 List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(fromDate), String.valueOf(toDate));
-                arr[grade-1] = (int) list.get(0).get("count");
+                if (list.size() != 0) {
+                    arr[grade - 1] = (int) list.get(0).get("count");
+                } else {
+                    arr[grade - 1] = 0;
+                }
             }
             NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
             notificationMonthStatisticsRepository.save(ns);
