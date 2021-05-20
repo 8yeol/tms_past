@@ -12,12 +12,9 @@ import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.security.Principal;
 import java.time.LocalDate;
@@ -1182,33 +1179,28 @@ public class AjaxController {
 
     /**
      * 변경한 권한관리 값들을 저장
-     *
      * @param rankManagement 변경한 값들을 담고있는 객체
-     * @param response       뷰로문자열을 전달하기위한 변수
      * @throws Exception 예외처리
+     * @return
      */
     @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
-    public void rankSettingSave(@RequestBody RankManagement rankManagement, HttpServletResponse response) throws Exception {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        PrintWriter out = response.getWriter();
-
+    public List<String> rankSettingSave(@RequestBody RankManagement rankManagement) throws Exception {
         RankManagement newRankManagement = rankManagementRepository.findByName(rankManagement.getName());
 
-        String str = "";
-        str += (rankManagement.isDashboard() == newRankManagement.isDashboard()) ? "" : (rankManagement.isDashboard()) ? "대시보드 메뉴열람 권한부여  " : "대시보드 메뉴열람 권한해제  ";
-        str += (rankManagement.isAlarm() == newRankManagement.isAlarm()) ? "" : (rankManagement.isAlarm()) ? "알림 메뉴열람 권한부여  " : "알림 메뉴열람 권한해제  ";
-        str += (rankManagement.isMonitoring() == newRankManagement.isMonitoring()) ? "" : (rankManagement.isMonitoring()) ? "모니터링 메뉴열람 권한부여  " : "모니터링 메뉴열람 권한해제  ";
-        str += (rankManagement.isStatistics() == newRankManagement.isStatistics()) ? "" : (rankManagement.isStatistics()) ? "분석및통계 메뉴열람 권한부여  " : "분석및통계 메뉴열람 권한해제  ";
-        str += (rankManagement.isSetting() == newRankManagement.isSetting()) ? "" : (rankManagement.isSetting()) ? "환경설정 메뉴열람 권한부여" : "환경설정 메뉴열람 권한해제";
-        out.print(str);
-
+        List<String> stringList = new ArrayList<>();
+        stringList.add((rankManagement.isDashboard() == newRankManagement.isDashboard()) ? "" : (rankManagement.isDashboard()) ? "대시보드 메뉴열람 권한부여  " : "대시보드 메뉴열람 권한해제  ") ;
+        stringList.add((rankManagement.isAlarm() == newRankManagement.isAlarm()) ? "" : (rankManagement.isAlarm()) ? "알림 메뉴열람 권한부여  " : "알림 메뉴열람 권한해제  ");
+        stringList.add((rankManagement.isMonitoring() == newRankManagement.isMonitoring()) ? "" : (rankManagement.isMonitoring()) ? "모니터링 메뉴열람 권한부여  " : "모니터링 메뉴열람 권한해제  ");
+        stringList.add((rankManagement.isStatistics() == newRankManagement.isStatistics()) ? "" : (rankManagement.isStatistics()) ? "분석및통계 메뉴열람 권한부여  " : "분석및통계 메뉴열람 권한해제  ");
+        stringList.add((rankManagement.isSetting() == newRankManagement.isSetting()) ? "" : (rankManagement.isSetting()) ? "환경설정 메뉴열람 권한부여" : "환경설정 메뉴열람 권한해제");
         newRankManagement.setDashboard(rankManagement.isDashboard());
         newRankManagement.setAlarm(rankManagement.isAlarm());
         newRankManagement.setMonitoring(rankManagement.isMonitoring());
         newRankManagement.setStatistics(rankManagement.isStatistics());
         newRankManagement.setSetting(rankManagement.isSetting());
         rankManagementRepository.save(newRankManagement);
+
+        return stringList;
     }           // rankSettingSave
 
     /**

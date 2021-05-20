@@ -656,10 +656,13 @@
                 "\r\n    \"setting\": " + $('#settingChk').prop("checked") + "\r\n}",
         };
         $.ajax(settings).done(function (response) {
-            var str = (rName == "root") ? "최고 관리자 - " : (rName == "admin") ? "관리자 -" : "일반유저 -";
-            var content = str;
-            content += response;
-            inputLog(user_id, content, "권한관리");
+            var content = (rName == "root") ? "최고 관리자 - " : (rName == "admin") ? "관리자 - " : "일반유저 - ";
+            var strs = response;
+            for(var i=0; i < strs.length; i++){
+                if(strs[i] != ""){
+                    inputLog(user_id, content + strs[i], "권한관리");
+                }
+            }
             success("권한관리 설정이 저장되었습니다.");
             setTimeout(function () {
                 location.reload();
