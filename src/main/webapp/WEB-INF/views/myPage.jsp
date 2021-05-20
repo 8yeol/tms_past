@@ -140,7 +140,7 @@
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
                     <p class="fs-6 fw-bold">탈퇴를 원하시면 아래 입력란에<br> 회원님의 password를 기입해주세요.</p>
-                    <input type="text" class="form-control text-warning" id="outCheck_password"/>
+                    <input type="password" class="form-control text-warning" id="outCheck_password"/>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
