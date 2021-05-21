@@ -19,6 +19,12 @@ public class AuthChecker {
         this.memberRepository = memberRepository;
     }
 
+    /**
+     * URL 권한 검사시에 사용되는 Spring Component
+     * @param authentication 인증된사용자의 정보객체
+     * @param url 권한체크할 url의 String 변수
+     * @return
+     */
     public boolean check(Authentication authentication,String url){
         Object principalObj = authentication.getPrincipal();
         //로그인 체크

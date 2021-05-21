@@ -14,7 +14,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public SecurityConfig(RankManagementRepository rank_managementRepository) {
         this.rank_managementRepository = rank_managementRepository;
     }
-
+    /**
+     * 각 페이지 접근시 해당 URL 에 대한 동적권한검사
+     * @param http 시큐리티 설정객체
+     * @throws Exception 예외처리
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -25,7 +29,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/monitoring","/sensor").access("@authChecker.check(authentication , 'monitoring')")
                 .antMatchers("/dataInquiry","/dataStatistics").access("@authChecker.check(authentication , 'statistics')")
                 .antMatchers("/alarmManagement","/stationManagement","/sensorManagement","/emissionsManagement","/setting","/log").access("@authChecker.check(authentication , 'setting')");
-
         http.formLogin().loginPage("/login").permitAll();
         http.logout().logoutSuccessUrl("/login");
         http.csrf().disable();
