@@ -147,7 +147,7 @@
                             <div class=" inputLayout">
                                 <label class="me-3 col-xs-3 w-10 label">항목명</label>
                                 <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming"
-                                       id="naming" readonly>
+                                       id="naming">
                             </div>
                         </div>
                     </div>
@@ -155,7 +155,7 @@
             </form>
             <div class="row">
                 <div class="col text-end">
-                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor('')" >센서 추가</button>
+                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor()" >센서 추가</button>
                 </div>
             </div>
         </div>
@@ -413,27 +413,71 @@
             $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
         }
 
+        // 측정소 sensor 중복 검사
+        const sensorNames = [];
         $.ajax({
-            url: '<%=cp%>/saveSensor',
+            url: '<%=cp%>/getPlaceSensor',
             type: 'POST',
             async: false,
             cache: false,
             data: form,
-            success: function () {
-                $('#editModal').modal('hide');
-                Swal.fire({
-                    icon: 'success',
-                    title: title,
-                    text: content,
-                })
-                setTimeout(function () {
-                    location.reload();
-                }, 1500);
+            success: function (data) {
+                for(let i=0; i<data.length; i++){
+                    const tableName = data[i];
+                    $.ajax({
+                        url: '<%=cp%>/getSensorManagementId',
+                        type: 'POST',
+                        dataType: 'json',
+                        async: false,
+                        cache: false,
+                        data: {'name' : tableName},
+                        success: function (data) {
+                            sensorNames.push(data.naming);
+                        },
+                        error: function (request, status, error) { // 결과 에러 콜백함수
+                            console.log(error);
+                        }
+                    });
+                }
+
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
             }
         });
+
+        for(let i = 0 ; i <= sensorNames.length; i++){
+            if(sensorNames[i]!=$('#naming').val()){
+                sensorNames.splice(i,1);
+            }
+        }
+
+        if(sensorNames.length > 0){
+            $('#naming').focus();
+            customSwal('항목명 중복','해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
+        }else{
+            $.ajax({
+                url: '<%=cp%>/saveSensor',
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: form,
+                success: function () {
+                    $('#editModal').modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        title: title,
+                        text: content,
+                    })
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1500);
+                },
+                error: function (request, status, error) { // 결과 에러 콜백함수
+                    console.log(error);
+                }
+            });
+        }
     }
 
     function isStandardEmpty(tableName){
