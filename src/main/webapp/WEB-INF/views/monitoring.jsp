@@ -135,7 +135,7 @@
                 <span class="fs-5 text-center" style="width: 80%; margin: 0 auto;">가동률</span>
             </div>
 
-            <div class="row h-75">
+            <div class="row">
                 <div class="col text-center" style="border-right: 1px solid #2295DB;padding: 15px;" >
                     <p class="fs-1 mb-0" id="statusPercent"></p>
                     <hr style="margin: 0 30px 0;">
@@ -169,7 +169,7 @@
                     <span>관리기준 초과</span>
                 </div>
             </div>
-            <div class="row h-75">
+            <div class="row">
                 <%-- 법적 기준 --%>
                 <div class="col standardImg" style="border-right: 2px solid #2295DB;">
                     <div class="row text-center">
