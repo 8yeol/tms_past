@@ -20,21 +20,20 @@ public class AuthChecker {
     }
 
     /**
-     * URL 권한 검사시에 사용되는 Spring Component
+     * URL 권한 검사
+     * member.statue = 5 : 거절, 4 : 가입대기, 3 : 일반, 2 : 관리자, 1 : 최고관리자
      * @param authentication 인증된사용자의 정보객체
-     * @param url 권한체크할 url의 String 변수
+     * @param url 권한 체크 할 url String 변수
      * @return
      */
     public boolean check(Authentication authentication,String url){
         Object principalObj = authentication.getPrincipal();
-        //로그인 체크
-        if(principalObj.equals("anonymousUser")){ return false; }
+        if(principalObj.equals("anonymousUser")) return false;
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         Member member = memberRepository.findById(userDetails.getUsername());
         RankManagement rankManagement;
 
-        // 5: 거절 - 4: 가입대기 - 3: 일반 - 2: 관리자 - 1: 최고관리자
         if(member.getState().equals("3")){
             rankManagement = rankManagementRepository.findByName("normal");
         } else if (member.getState().equals("2")){
@@ -45,7 +44,6 @@ public class AuthChecker {
             return false;
         }
 
-        //권한 체크
         if(url.equals("dashboard")){
             return rankManagement.isDashboard();
         } else if (url.equals("alarm")){

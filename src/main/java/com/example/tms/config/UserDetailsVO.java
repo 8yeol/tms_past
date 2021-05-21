@@ -22,7 +22,7 @@ public class UserDetailsVO implements UserDetails {
         this.password = password;
     }
     public void setAuthorities(List<String> authList) {
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> authorities = new ArrayList<>();
         for (int i = 0; i < authList.size(); i++) {
             authorities.add(new SimpleGrantedAuthority(authList.get(i)));
         }
@@ -33,26 +33,32 @@ public class UserDetailsVO implements UserDetails {
     public String getUsername() {
         return username;
     }
+
     @Override
     public String getPassword() {
         return password;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
         return true;

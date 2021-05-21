@@ -16,9 +16,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     PasswordEncoder passwordEncoder;
 
     /**
-     * 유저의 로그인과정중 거치게되는 인증절차
-     * @param authentication 인증정보객체
-     * @return 인증이끝난 정보객체 리턴
+     * 로그인 인증절차
+     * @param authentication 인증 정보 객체
+     * @return 인증이 완료 객체
      * @throws AuthenticationException 예외처리
      */
     @Override
@@ -42,7 +42,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         userDetails.setPassword(null);
         Authentication newAuth = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
-
         return newAuth;
     }
 

@@ -4,9 +4,6 @@ import com.example.tms.entity.*;
 import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
 import com.example.tms.repository.SensorListRepository;
-import com.example.tms.service.MemberService;
-import com.example.tms.service.RankManagementService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,11 +24,8 @@ public class MainController {
     final MongoQuary mongoQuary;
     final LogRepository logRepository;
     final EmissionsTransitionRepository emissionsTransitionRepository;
-    final RankManagementService rankManagementService;
-    final MemberService memberService;
-    final PasswordEncoder passwordEncoder;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, RankManagementService rankManagementService, MemberService memberService, PasswordEncoder passwordEncoder) {
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -42,35 +36,36 @@ public class MainController {
         this.mongoQuary = mongoQuary;
         this.logRepository = logRepository;
         this.emissionsTransitionRepository = emissionsTransitionRepository;
-        this.rankManagementService = rankManagementService;
-        this.memberService = memberService;
-        this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 현재 배출량 추이 부분 개발이 진행되지 않은 상태이기 때문에, 대시보드 화면이 의미가 없어 메인 페이지를 monitoring 페이지로 설정
+     * 이후 배출량 개발이 완료되면 /dashboard 로 변경
+     * @return
+     */
     @RequestMapping("/")
     public String main(){
         return "redirect:monitoring";
     }
 
     /**
-     *
+     * [대시보드]
      * @param model
-     * - sensorList - 연간 배출량 누적 모니터링 대상 센서중 관리자가 선택한 센서만 가져오기
-     * - placeList - sensorList의 측정소를 중복제거,정렬한 값
-     * - standard - 연간 배출 허용 기준치 가져오기
-     * - ptmsList - 연간배출량 데이터들을 Model 로넘겨주기위한 List 변수
-     * - member - 현재 로그인중인 사용자의 정보 객체
-     * @param principal
-     * @return DashBoard.JSP
+     * emissionSettingList : [환경설정 - 배출량 관리] 배출량 추이 모니터링 대상 설정 되어 있는 센서 목록
+     * emissionList : 모니터링 ON 되어있는 센서의 연간 배출량 추이 정보
+     * sensorList : [환경설정 - 배출량 관리] - 연간 배출량 누적 모니터링 대상 설정 되어있는 센서 목록
+     * placeList : 모니터링 ON 되어있는 측정소 정보 (정렬 및 중복제거)
+     * standard : [환경설정 - 배출량 관리] - 연간 배출 허용 기준 설정에 등록된 해당 센서의 허용 기준치
+     * member : 현재 로그인 중인 사용자 정보 (연간 배출량 누적 모니터링 > 등록하기 버튼(관리자만 보이게 하기 위함))
+     *
+     * @param principal 로그인 유저의 권한
+     * @return dashboard.jsp
      */
     @RequestMapping("/dashboard")
-    public String dashboard(Model model,Principal principal) {
-        // 연간 배출량 추이 모니터링
-        // [환경설정 > 배출량 관리] - 배출량 추이 모니터링 대상 설정 ON 되어있는 센서 정보
+    public String dashboard(Model model, Principal principal) {
         List<EmissionsSetting> emissionsSettings = emissionsSettingRepository.findByStatus(true);
         model.addAttribute("emissionSettingList", emissionsSettings);
 
-        // 모니터링 ON 되어있는 센서의 연간 배출량 추이 정보
         List<ArrayList<EmissionsTransition>> emissionList = new ArrayList<>();
         for(int i = 0; i < emissionsSettings.size();i++){
             int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -83,11 +78,9 @@ public class MainController {
         }
         model.addAttribute("emissionList", emissionList);
 
-        // 연간 배출량 누적 모니터링
-        // [환경설정 > 배출량 관리] - 연간 배출량 누적 모니터링 대상 설정 ON
         List<AnnualEmissions> setting = annualEmissionsRepository.findByStatusIsTrue();
         model.addAttribute("sensorList",setting);
-        // 모니터링 On 설정된 센서가 포함되어있는 측정소(측정소 중복제거)
+
         List<String> placeList = new ArrayList<>();
         for (AnnualEmissions place : setting) {
             placeList.add(place.getPlace());
@@ -97,7 +90,7 @@ public class MainController {
         // [환경설정 > 배출량 관리] - 배출 허용 기준 설정에 설정된 기준값 > 모니터링 설정된 배출량 기준값만 받아오도록 변경
         List<EmissionsStandardSetting> standard = emissionsStandardSettingRepository.findAll();
         model.addAttribute("standard",standard);
-        // 연간 배출량 누적 모니터링 > 등록하기 버튼(관리자만 보이게 하기 위함)
+
         Member member = memberRepository.findById(principal.getName());
         model.addAttribute("member", member);
 
@@ -105,13 +98,15 @@ public class MainController {
     }
 
     /**
-     * 로그인페이지로 이동
+     * [로그인]
      * @return login.jsp
      */
     @RequestMapping("/login")
     public String login() {
+
         return "login";
     }
+
     /**
      * 접근하는 URL에 권한이없을시 오는 페이지
      * @return accessDenied.jsp
