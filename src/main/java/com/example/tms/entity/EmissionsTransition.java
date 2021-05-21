@@ -4,6 +4,7 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 @Data
 @Document(collection = "emissions_transition")
 public class EmissionsTransition {
@@ -18,5 +19,4 @@ public class EmissionsTransition {
     private int thirdQuarter;
     private int fourthQuarter;
     private int totalEmissions;
-
 }

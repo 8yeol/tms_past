@@ -22,7 +22,6 @@ public class EmissionsSetting {
         this.sensor= sensor;
         this.sensorNaming =sensorNaming;
         this.status = b;
-
     }
 }
 

@@ -30,6 +30,5 @@ public class EmissionsStandardSetting {
         this.tableName= tableName;
         this.formula= formula;
         this.date = date;
-
     }
 }

@@ -7,11 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
 public interface ReferenceValueSettingRepository extends MongoRepository<ReferenceValueSetting, ObjectId> {
     ReferenceValueSetting findByName(String name);
     List<ReferenceValueSetting> findByMonitoringIsTrue();
-
-    void deleteByName(String name);//삭제
+    void deleteByName(String name);
 }

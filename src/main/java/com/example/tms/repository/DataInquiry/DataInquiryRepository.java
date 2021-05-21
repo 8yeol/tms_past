@@ -22,6 +22,14 @@ public class DataInquiryRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
+    /**
+     * [분석 및 통계 - 측정자료 조회] 페이지의 차트
+     * @param date_start 검색 시작 일자
+     * @param date_end 검색 종료 일자
+     * @param item 테이블명
+     * @param off off 데이터 표시 여부
+     * @return 해당 기간 내의 센서 정보 리스트 ( 아래의 searchInformation 과 따로 구현한 이유는 off 데이터 null 처리 및 차트 데이터 형식에 맞게 가공하기 위함(리턴 형식 x,y) )
+     */
     public List<HashMap> searchChart(String date_start, String date_end, String item, boolean off) {
 
         ProjectionOperation dateProjection = Aggregation.project()
@@ -60,32 +68,14 @@ public class DataInquiryRepository {
         return result;
     }
 
-/*
-    public void mongoSwitch(String tableName){
-        List<ConditionalOperators.Switch.CaseOperator> cases = new ArrayList<>();
-        ConditionalOperators.Switch.CaseOperator cond1 = ConditionalOperators.Switch.CaseOperator
-                .when(BooleanOperators.And.and(
-                        ComparisonOperators.valueOf("status").equalToValue(false))).then(null);
-
-        cases.add(cond1);
-
-        ProjectionOperation projectionOperation  = Aggregation.project()
-                .and(ConditionalOperators.switchCases(cases)).as("value")
-                .and("value").as("y")
-                .and("up_time").as("x")
-                .and("status").as("status");
-
-
-        Aggregation agg = Aggregation.newAggregation(
-                projectionOperation
-        );
-
-        AggregationResults<ChartData> results = mongoTemplate.aggregate(agg, tableName, ChartData.class);
-
-        List<ChartData> result = results.getMappedResults();
-    }
-*/
-
+    /**
+     * [분석 및 통계 - 측정자료 조회] 페이지의 상세보기(표)
+     * @param date_start 검색 시작 날짜
+     * @param date_end 검색 종료 날짜
+     * @param item 테이블명
+     * @param off off 데이터 표시할건지 여부
+     * @return 해당 기간내의 센서 정보 리스트
+     */
     public List<Sensor> searchInformatin(String date_start, String date_end, String item, boolean off) {
         ProjectionOperation dateProjection = Aggregation.project()
                 .and("up_time").as("up_time")
@@ -95,7 +85,6 @@ public class DataInquiryRepository {
         MatchOperation where;
 
         if (off == true) {
-            // 모든 데이터 표시
             where = Aggregation.match(
                     new Criteria().andOperator(
                             Criteria.where("up_time")
@@ -104,7 +93,6 @@ public class DataInquiryRepository {
                     )
             );
         } else {
-            // status true ( off 아닌 데이터 ) 표시
             where = Aggregation.match(
                     new Criteria().andOperator(
                             Criteria.where("status")

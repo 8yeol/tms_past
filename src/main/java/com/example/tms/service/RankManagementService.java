@@ -3,14 +3,16 @@ package com.example.tms.service;
 
 import com.example.tms.entity.RankManagement;
 import com.example.tms.repository.RankManagementRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RankManagementService {
 
-    @Autowired
-    RankManagementRepository rankManagementRepository;
+    final RankManagementRepository rankManagementRepository;
+
+    public RankManagementService(RankManagementRepository rankManagementRepository) {
+        this.rankManagementRepository = rankManagementRepository;
+    }
 
     public void defaultRankSetting () {
         RankManagement denie = new RankManagement();

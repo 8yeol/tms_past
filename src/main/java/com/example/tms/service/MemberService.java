@@ -4,7 +4,6 @@ import com.example.tms.entity.Log;
 import com.example.tms.entity.Member;
 import com.example.tms.repository.LogRepository;
 import com.example.tms.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,14 +16,15 @@ import java.util.Date;
 @Service
 public class MemberService implements UserDetailsService {
 
-    @Autowired
-    MemberRepository memberRepository;
+    final MemberRepository memberRepository;
+    final LogRepository logRepository;
+    final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    LogRepository logRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    public MemberService(MemberRepository memberRepository, LogRepository logRepository, PasswordEncoder passwordEncoder) {
+        this.memberRepository = memberRepository;
+        this.logRepository = logRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

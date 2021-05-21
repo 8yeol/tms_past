@@ -14,14 +14,14 @@ import java.util.Date;
 @Document(collection = "sensor")
 public class SensorList {
     public ObjectId _id;
-    public String classification; //분류
-    public String naming; //한글명
-    public String managementId; //관리아이디
-    public String tableName; //테이블명
+    public String classification;
+    public String naming;
+    public String managementId;
+    public String tableName;
     @JsonFormat(timezone = "Asia/Seoul")
-    public Date upTime; //업데이트 시간
-    public String place; //측정소명
-    public boolean status; //통신상태
+    public Date upTime;
+    public String place;
+    public boolean status;
 
     public SensorList(String classification, String naming, String managementId, String tableName, Date date, String place, boolean b) {
         this.classification = classification;
@@ -31,20 +31,5 @@ public class SensorList {
         this.upTime = date;
         this.place = place;
         this.status = b;
-
-    }
-
-    @Override
-    public String toString() {
-        return "SensorList{" +
-                "_id=" + _id +
-                ", classification='" + classification + '\'' +
-                ", naming='" + naming + '\'' +
-                ", managementId='" + managementId + '\'' +
-                ", tableName='" + tableName + '\'' +
-                ", upTime=" + upTime +
-                ", place='" + place + '\'' +
-                ", status=" + status +
-                '}';
     }
 }

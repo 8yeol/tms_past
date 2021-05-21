@@ -1,6 +1,5 @@
 package com.example.tms.repository;
 
-
 import com.example.tms.entity.RankManagement;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

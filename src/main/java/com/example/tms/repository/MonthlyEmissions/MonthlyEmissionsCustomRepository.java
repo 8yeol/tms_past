@@ -16,6 +16,13 @@ public class MonthlyEmissionsCustomRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
+    /**
+     * [분석 및 통계 - 통계자료 조회] 스케줄러(매월 1일 전월 기준으로) 돌려서 등록된 모든 센서 데이터의 통계값을 나타내기 위함
+     * @param item 테이블명
+     * @param from 시작일자
+     * @param to 종료일자
+     * @return 해당 월의 배출량 통계값 (현재 sum 값으로 사용중. 배출량 계산시 수정)
+     */
     public Double addStatisticsData(String item, String from, String to) {
 
         ProjectionOperation dateProjection = Aggregation.project()

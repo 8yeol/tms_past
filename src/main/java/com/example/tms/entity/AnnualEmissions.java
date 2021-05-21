@@ -6,8 +6,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @Document(collection = "annual_emissions")
@@ -26,6 +24,5 @@ public class AnnualEmissions {
         this.sensorNaming =sensorNaming;
         this.yearlyValue= yearlyValue;
         this.status = b;
-
     }
 }

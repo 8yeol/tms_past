@@ -23,7 +23,6 @@ public class SensorCustomRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-
     /**
      * @param sensor (sensor sensor)
      * @param hour (60 - 1hour, 1440 - 24hour, ...)

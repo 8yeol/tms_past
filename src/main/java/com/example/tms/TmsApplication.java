@@ -22,6 +22,7 @@ public class TmsApplication extends SpringBootServletInitializer {
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
     public static void main(String[] args) {
         SpringApplication.run(TmsApplication.class, args);
     }
