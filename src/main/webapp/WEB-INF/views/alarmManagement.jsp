@@ -126,14 +126,15 @@
                     const checked = findNotification(tableName);
 
                     const innerHtml =
-                        "<label style='font-size: 18px;' class='form-check-label' id='" + tableName + "'for='" + tableName + "'>" + category + "</label>" +
+                        "<label style='font-size: 18px; ' class='form-check-label' id='" + tableName + "'for='" + tableName + "'>" + category + "</label>" +
                         "<label class='switch'>" +
                         "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + checked + ">" +
                         "<div class='slider round'></div>" +
                         "</label>"
 
                     const elem = document.createElement('div');
-                    elem.setAttribute('class', 'label-form')
+                    elem.setAttribute('class', 'label-form');
+                    elem.setAttribute('style', 'margin-top:5px')
                     elem.innerHTML = innerHtml;
                     parentElem.append(elem);
 
@@ -328,6 +329,7 @@
         placeMake($("#place" + idx).text(), idx);
         $(".example").timepicker();
     }
+
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
