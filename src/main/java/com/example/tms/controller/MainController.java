@@ -130,7 +130,7 @@ public class MainController {
         }
         TreeSet<String> placeSet = new TreeSet<>(placeList);
         model.addAttribute("placeList", placeSet);
-        // [환경설정 > 배출량 관리] - 배출 허용 기준 설정에 설정된 기준값 > 모니터링 설정된 배출량 기준값만 받아오도록 변경
+
         List<EmissionsStandardSetting> standard = new ArrayList<>();
         for (int i = 0; i<setting.size(); i++){
             standard.add(emissionsStandardSettingRepository.findByTableNameIsIn(setting.get(i).getSensor()));
