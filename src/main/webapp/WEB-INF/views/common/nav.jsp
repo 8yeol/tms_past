@@ -17,16 +17,6 @@
 %>
 
 <style>
-    @font-face {
-        font-family: "Noto Sans KR";
-        src: url("static/font/NotoSansKR-Regular.otf");
-    }
-
-    body {
-        background-color: #EDF2F8;
-        font-family: 'Noto Sans KR', sans-serif;
-    }
-
     #topMenu {
         height: 35px;
     }
