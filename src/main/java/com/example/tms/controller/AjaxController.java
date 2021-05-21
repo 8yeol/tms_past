@@ -425,7 +425,7 @@ public class AjaxController {
             inputLogSetting(sensor.get(i)+" 통계자료 조회 데이터 삭제" ,"삭제",principal);
             monthlyEmissionsRepository.deleteBySensor(sensor.get(i));
             //분기별 배출량 정보 삭제
-            inputLogSetting(sensor.get(i)+" 분기별 배춫량 정보 삭제" ,"삭제",principal);
+            inputLogSetting(sensor.get(i)+" 분기별 배출량 정보 삭제" ,"삭제",principal);
             emissionsTransitionRepository.deleteByTableName(sensor.get(i));
         }
         //측정소 삭제
