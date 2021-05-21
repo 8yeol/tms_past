@@ -221,10 +221,10 @@
             <div class="col text-center border">
                 <div class="row p-3">
                     <div class="col">
-                        <span class="small fw-bold"><i class="fas fa-sort-up fa-fw" style="color: red"></i>직전 데이터보다 높아진 경우</span>
+                        <span class="small fw-bold"><i class="fas fa-sort-up" style="color: red"></i>직전 데이터보다 높아진 경우</span>
                     </div>
                     <div class="col">
-                        <span class="small fw-bold"><i class="fas fa-sort-down fa-fw" style="color: blue"></i>직전 데이터보다 낮아진 경우</span>
+                        <span class="small fw-bold"><i class="fas fa-sort-down" style="color: blue"></i>직전 데이터보다 낮아진 경우</span>
                     </div>
                     <div class="col">
                         <span class="small fw-bold"> <b> - </b> 직전 데이터와 같은 경우</span>
