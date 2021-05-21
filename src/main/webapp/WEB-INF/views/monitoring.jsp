@@ -131,7 +131,7 @@
     <div class="row m-3 mt-3">
 
         <div class="col bg-white fw-bold" style="margin-right: 5px;border-top-left-radius: 20px; border-top-right-radius: 20px;">
-            <div class="row titleDiv" style="border-top-left-radius: 20px; border-top-right-radius: 20px; height: 38px;">
+            <div class="row titleDiv" style="border-top-left-radius: 20px; border-top-right-radius: 20px; height: 49px;">
                 <span class="fs-5 text-center" style="width: 80%; margin: 0 auto; line-height: 49px;">가동률</span>
             </div>
 
