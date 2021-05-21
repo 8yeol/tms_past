@@ -119,7 +119,6 @@ public class AjaxController {
      */
     @RequestMapping(value = "/MonitoringUpdate")
     public void MonitoringUpdate(@RequestParam("place") String name, @RequestParam("check") Boolean check, Principal principal) {
-        Member member = memberRepository.findById(principal.getName());
         Place place = placeRepository.findByName(name);
         List<String> sensorlist = placeRepository.findByName(name).getSensor();
         ObjectId id = place.get_id();
@@ -129,11 +128,7 @@ public class AjaxController {
             for(int j = 0; j<sensorlist.size(); j++){
                 if(notification_settingsRepository.findByName(sensorlist.get(j)) != null){
                     notification_settingsRepository.deleteByName(sensorlist.get(j));
-                    Log log = new Log();
-                    log.setId(member.getId());
-                    log.setContent(sensorlist.get(j)+" 알림설정 값 삭제");
-                    log.setType("알림설정");
-                    inputLog(log);
+                    inputLogSetting( sensorlist.get(j)+" 알림설정 값 삭제","알림설정",principal);
                 }
 
             }
@@ -170,19 +165,10 @@ public class AjaxController {
             for(int j = 0; j<sensorlist.size(); j++){
                 if(notification_settingsRepository.findByName(sensorlist.get(j)) != null){
                     notification_settingsRepository.deleteByName(sensorlist.get(j));
-                    Log log = new Log();
-                    log.setId(member.getId());
-                    log.setContent(sensorlist.get(j)+" 알림설정 값 삭제");
-                    log.setType("알림설정");
-                    inputLog(log);
+                    inputLogSetting(sensorlist.get(j)+" 알림설정 값 삭제","알림설정",principal);
                 }
-
             }
-            Log log = new Log();
-            log.setId(member.getId());
-            log.setContent(name+" 모니터링 OFF");
-            log.setType("모니터링ON/OFF");
-            inputLog(log);
+            inputLogSetting(name+" 모니터링 OFF","모니터링ON/OFF",principal);
         }
 
         place.setUp_time(new Date());
@@ -295,7 +281,6 @@ public class AjaxController {
                 emissionsTransitionRepository.save(et.get(i));
             }
 
-
         }
     }
 
@@ -401,34 +386,33 @@ public class AjaxController {
         Place placeInfo = placeRepository.findByName(place);
         List<String> sensor = placeInfo.getSensor();
         for (int i = 0; i < sensor.size(); i++) {
-            //상세설정 값 삭제
             reference_value_settingRepository.deleteByName(sensor.get(i));
             inputLogSetting(sensor.get(i)+" 상세설정 값 삭제" ,"삭제",principal);
-            //알림설정값 삭제
+
             notification_settingsRepository.deleteByName(sensor.get(i));
             inputLogSetting(sensor.get(i)+" 알림설정 값 삭제" ,"삭제",principal);
-            //배출량 관리 - 모니터링 대상 삭제
+
             emissionsSettingRepository.deleteBySensor(sensor.get(i));
             inputLogSetting(sensor.get(i)+" 배출량 모니터링 대상 삭제" ,"삭제",principal);
-            //배출량 관리 - 연간 모니터링 대상 삭제
+
             annualEmissionsRepository.deleteBySensor(sensor.get(i));
             inputLogSetting(sensor.get(i)+" 배출량 연간 모니터링 대상 삭제" ,"삭제",principal);
-            //배출 관리 기준 삭제
+
             emissionsStandardSettingRepository.deleteByTableName(sensor.get(i));
             inputLogSetting(sensor.get(i)+" 배출 관리 기준 삭제" ,"삭제",principal);
-            //센서 관리 - 센서 삭제
+
             sensorListRepository.deleteByTableName(sensor.get(i));
             inputLogSetting(sensor.get(i)+" 센서 삭제" ,"삭제",principal);
-            // 분석 및 통계 - 통계자료 조회 데이터 삭제
-            inputLogSetting(sensor.get(i)+" 통계자료 조회 데이터 삭제" ,"삭제",principal);
+
             monthlyEmissionsRepository.deleteBySensor(sensor.get(i));
-            //분기별 배출량 정보 삭제
-            inputLogSetting(sensor.get(i)+" 분기별 배출량 정보 삭제" ,"삭제",principal);
+            inputLogSetting(sensor.get(i)+" 통계자료 조회 데이터 삭제" ,"삭제",principal);
+
             emissionsTransitionRepository.deleteByTableName(sensor.get(i));
+            inputLogSetting(sensor.get(i)+" 분기별 배출량 정보 삭제" ,"삭제",principal);
         }
         //측정소 삭제
-        inputLogSetting("'"+place+"' 삭제" ,"측정소관리",principal);
         placeRepository.deleteByName(place);
+        inputLogSetting("'"+place+"' 삭제" ,"측정소관리",principal);
     }
 
     /**
@@ -582,8 +566,8 @@ public class AjaxController {
 
         }
         float legal = 999.0f;
-        float management = 999.0f;
         float company = 999.0f;
+        float management = 999.0f;
         Boolean monitoring = false;
 
         //reference document 생성
@@ -782,7 +766,7 @@ public class AjaxController {
      * @param hiddenTableName 테이블 명
      * @param percent         허용 기준 농도
      * @param formula         산출식
-     * @return
+     * @return EmissionsStandardSetting.FindALL
      */
     @RequestMapping(value = "/saveEmissionsStandard")
     public List saveEmissionsStandard(@RequestParam(value = "standard") int standard, @RequestParam(value = "hiddenTableName", required = false) String hiddenTableName,
@@ -808,14 +792,8 @@ public class AjaxController {
      * @param principal id
      */
     public void inputLogSetting(String content,String type,Principal principal){
-        Member member = memberRepository.findById(principal.getName());
-        Log log = new Log();
-        log.setId(member.getId());
-        log.setContent(content);
-        log.setType(type);
-        inputLog(log);
+        inputLog( new Log(principal.getName(),content,type) );
     }
-
 
     /**
      * 분석 및 통계 - 측정자료 조회
@@ -934,7 +912,7 @@ public class AjaxController {
                 placeRepository.save(placeremove);
             }
 
-            //센서관련 법적기준,사내기준,관리기준값 사용자 동의하에 삭제
+            //센서관련 법적기준,사내기준,관리기준값 사용자 동의하에 초기화
             if (isValueDelete.equals("delete")) {
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
                 float legal = 999.0f;
@@ -945,7 +923,7 @@ public class AjaxController {
                 reference.setManagementStandard(management);
                 reference.setMonitoring(false);
                 reference_value_settingRepository.save(reference);
-                inputLogSetting(oldPlace + " - " + sensor.getNaming() + " 센서 법적 기준, 사내 기준 삭제", "삭제", principal);
+                inputLogSetting(oldPlace + " - " + sensor.getNaming() + " 센서 법적 기준, 사내 기준 초기화", "수정", principal);
             }
 
             //측정소 센서 추가 및 시간 업데이트
@@ -1051,11 +1029,7 @@ public class AjaxController {
      */
     @RequestMapping(value = "/isStandardEmpty")
     public boolean isStandardEmpty(String tableName) {
-        if (emissionsStandardSettingRepository.findByTableNameIsIn(tableName) == null) {
-            return true;
-        } else {
-            return false;
-        }
+        return emissionsStandardSettingRepository.findByTableNameIsIn(tableName) == null ?  true : false ;
     }
 
     /**
@@ -1070,7 +1044,7 @@ public class AjaxController {
                              @RequestParam(value = "tableName") String tableName,Principal principal) {
         EmissionsStandardSetting ess = new EmissionsStandardSetting(place, naming, 0, 0, tableName, "",new Date());
         emissionsStandardSettingRepository.save(ess);
-        inputLogSetting(ess.getPlace() + " - " + ess.getNaming() + "센서 연간 배출 허용 기준 설정 추가", "추가", principal);
+        inputLogSetting(place + " - " + naming + "센서 연간 배출 허용 기준 설정 추가", "추가", principal);
     }
 
     /**
@@ -1082,28 +1056,19 @@ public class AjaxController {
     @RequestMapping("emissionsState")
     public void emissionsState(String sensor, boolean isCollection,Principal principal) {
 
-        //배출량 설정
-        if (isCollection) {
+        if (isCollection) {   //배출량 설정
             EmissionsSetting target = emissionsSettingRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
             emissionsSettingRepository.save(target);
-            if(target.isStatus()){
-                inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 배출량 추이 모니터링 대상 ON", "수정", principal);
-            }else{
-                inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 배출량 추이 모니터링 대상 OFF", "수정", principal);
-            }
+            String onOff = (target.isStatus()?"ON":"OFF");
+            inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 배출량 추이 모니터링 대상 "+onOff, "수정", principal);
 
-            //연간 배출량 설정
-        } else {
+        } else {     //연간 배출량 설정
             AnnualEmissions target = annualEmissionsRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
             annualEmissionsRepository.save(target);
-            if(target.isStatus()){
-                inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 연간 배출량 누적 모니터링 대상 ON", "수정", principal);
-            }else{
-                inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 연간 배출량 누적 모니터링 대상 OFF", "수정", principal);
-            }
-
+            String onOff = (target.isStatus()?"ON":"OFF");
+            inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 연간 배출량 누적 모니터링 대상"+onOff, "수정", principal);
         }
     }
 
