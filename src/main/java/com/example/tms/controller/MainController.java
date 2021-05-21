@@ -39,6 +39,49 @@ public class MainController {
     }
 
     /**
+     * [회원가입]
+     * @return memberJoin.jsp
+     */
+    @RequestMapping(value = "/memberJoin", method = RequestMethod.GET)
+    public String memberJoinGet() {
+
+        return "memberJoin";
+    }
+
+    /**
+     * [로그인]
+     * @return login.jsp
+     */
+    @RequestMapping("/login")
+    public String login() {
+
+        return "login";
+    }
+
+    /**
+     * 접근하는 URL 에 접근 권한 없는 경우
+     * @return accessDenied.jsp
+     */
+    @RequestMapping("/accessDenied")
+    public String accessDenied() {
+
+        return "accessDenied";
+    }
+
+    /**
+     * [마이페이지]
+     * @param principal - 로그인 유저 정보 객체
+     * @param model - 현재로그인한 유저 정보객체 뷰페이지로 전달
+     * @return myPage.jsp
+     */
+    @RequestMapping("/myPage")
+    public String myPage(Principal principal,Model model){
+        Member member = memberRepository.findById(principal.getName());
+        model.addAttribute("member", member);
+        return "myPage";
+    }
+
+    /**
      * 현재 배출량 추이 부분 개발이 진행되지 않은 상태이기 때문에, 대시보드 화면이 의미가 없어 메인 페이지를 monitoring 페이지로 설정
      * 이후 배출량 개발이 완료되면 /dashboard 로 변경
      * @return
@@ -98,89 +141,78 @@ public class MainController {
     }
 
     /**
-     * [로그인]
-     * @return login.jsp
+     * [알림]
+     * @return alarm.jsp
      */
-    @RequestMapping("/login")
-    public String login() {
+    @RequestMapping("/alarm")
+    public String alarm() {
 
-        return "login";
+        return "alarm";
     }
 
     /**
-     * 접근하는 URL에 권한이없을시 오는 페이지
-     * @return accessDenied.jsp
-     */
-    @RequestMapping("/accessDenied")
-    public String accessDenied() {
-        return "accessDenied";
-    }
-    /**
-     * 마이페이지로 이동
-     * @param principal - 로그인 유저 정보 객체
-     * @param model - 현재로그인한 유저 정보객체 뷰페이지로 전달
-     * @return myPage.jsp
-     */
-    @RequestMapping("/myPage")
-    public String myPage(Principal principal,Model model){
-        Member member = memberRepository.findById(principal.getName());
-        model.addAttribute("member", member);
-        return "myPage";
-    }
-    /**
-     * 모니터링 페이지로 이동
+     * [모니터링 - 실시간 모니터링]
      */
     @RequestMapping("/monitoring")
     public void monitoring() {
     }
+
+
     /**
-     * 센서페이지로 이동
-     * @param model 측정소 전체데이터 뷰페이지로 전달
+     * [모니터링 - 상세화면]
+      @param model 전체 측정소 정보 뷰페이지로 전달
      */
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
     public void sensorInfo(Model model) {
         model.addAttribute("place", placeRepository.findAll());
     }
-    @RequestMapping("/alarm")
-    public String alarm() {
-        return "alarm";
-    }
+
     /**
-     * 로그 페이지로 이동
-     * 원하는 id 있을시 id에대한 로그정보만 출력
-     * @param model 로그 리스트를 들고갑니다.
-     * @return log.JSP
+     * [분석 및 통계 - 측정자료 조회]
+     * @param model 등록된 센서가 있는 측정소 정보
+     * @return dataInquiry.jsp
      */
-    @RequestMapping("/log")
-    public String log(Model model,@RequestParam(value = "id", required = false) String id) {
+    @RequestMapping("/dataInquiry")
+    public String dataInquiry(Model model) {
 
-        if(id==null) {
-            List logList = logRepository.findAll();
-            model.addAttribute("logList", logList);
-            Member member = new Member();
-            member.setId("All");
-            model.addAttribute("member",member);
+        model.addAttribute("place", mongoQuary.findPlaceSensorNotEmpty());
 
-        }else{
-            List logList = logRepository.findById(id);
-            model.addAttribute("logList", logList);
-            Member member = memberRepository.findById(id);
-            model.addAttribute("member",member);
-        }
-        return "log";
+        return "dataInquiry";
     }
+
     /**
-     * 센서, 측정소 데이터들고 환경설정 - 센서관리 이동
+     * [분석 및 통계 - 통계자료 조회]
+     * @param model 등록된 센서가 있는 측정소 정보
+     * @return dataStatistics.jsp
+     */
+    @RequestMapping("/dataStatistics")
+    public String statistics(Model model) {
+
+        model.addAttribute("place", mongoQuary.findPlaceSensorNotEmpty());
+
+        return "dataStatistics";
+    }
+
+    /**
+     * [환경설정 - 측정소 관리]
+     * @return stationManagement.JSP
+     */
+    @RequestMapping("/stationManagement")
+    public String stationManagement() {
+
+        return "stationManagement";
+    }
+
+    /**
+     * [환경설정 - 센서 관리]
      * @param model
-     * - collections - 생성하지않은 센서리스트
-     * - place - 모든 측정소
-     * @return sensorManagement.JSP
+     * collections : lghausys_xxx_xxx 형식으로 등록된 Collections 정보 리스트 (현재 등록된 센서 정보와 비교하여 중복제거 해서 리턴)
+     * place : 등록된 모든 측정소 정보
+     * @return sensorManagement.jsp
      */
     @RequestMapping("/sensorManagement")
     public String sensorManagement(Model model) {
-
         List<String> result = mongoQuary.getCollection();
-
         for(SensorList sensorList : sensorListRepository.findAll()){
             for(String tableName : mongoQuary.getCollection()){
                 if(tableName.equals(sensorList.getTableName())){
@@ -195,91 +227,40 @@ public class MainController {
 
         return "sensorManagement";
     }
-    @RequestMapping("/alarmSetting")
-    public String alarmSetting() {
-        return "alarmSetting";
-    }
-    /**
-     * 환경설정 - 설정 페이지로 이동
-     * @param model - 회원목록, 로그인한회원, 관리할 등급데이터 들을 뷰페이지로 전달
-     * @param principal - 로그인 유저 정보 객체
-     * @return setting.jsp
-     */
-    @RequestMapping("/setting")
-    public String setting(Model model,Principal principal) {
-        List<Member> members = memberRepository.findAll();
-        List<RankManagement> rank_managements = rankManagementRepository.findAll();
-        Member member = memberRepository.findById(principal.getName());
-        model.addAttribute("member", member);
-        model.addAttribute("members", members);
-        model.addAttribute("rank_managements", rank_managements);
-        return "setting";
-    }
-    @RequestMapping("/dataStatistics")
-    public String statistics(Model model) {
-
-        model.addAttribute("place", mongoQuary.findPlaceSensorNotEmpty());
-
-        return "dataStatistics";
-    }
-    /**
-     * 회원가입페이지로 이동
-     * @return memberJoin.jsp
-     */
-    @RequestMapping(value = "/memberJoin", method = RequestMethod.GET)
-    public String memberJoinGet() {
-        return "memberJoin";
-    }
 
     /**
-     * 분석 및 통계 - 측정 자료 조회
-     * @param model 측정소와 센서
-     * @return dataInquiry.JSP
-     */
-    @RequestMapping("/dataInquiry")
-    public String dataInquiry(Model model) {
-
-        model.addAttribute("place", mongoQuary.findPlaceSensorNotEmpty());
-
-        return "dataInquiry";
-    }
-    /**
-     * 알림 설정페이지 (ppt-8페이지)
-     * @param model - 측정소명
-     * @return alarmManagement.JSP
+     * [환경설정 - 알림 설정]
+     * @param model
+     * place : 등록된 모든 측정소명
+     * @return alarmManagement.jsp
      */
     @RequestMapping(value = "/alarmManagement")
     public String alarmManagement(Model model) {
         List<Place> places = placeRepository.findAll();
-        List<String> placelist = new ArrayList<>();
+        List<String> placeList = new ArrayList<>();
 
         for (Place place : places) {
-            placelist.add(place.getName());
+            placeList.add(place.getName());
         }
 
-        model.addAttribute("place", placelist);
+        model.addAttribute("place", placeList);
 
         return "alarmManagement";
     }
+
     /**
-     * 측정소 관리 페이지
-     * @return stationManagement.JSP
-     */
-    @RequestMapping("/stationManagement")
-    public String stationManagement() {
-        return "stationManagement";
-    }
-    /**
-     *  데이터 검색후  배출량 관리 페이지에 접근
+     *  [환경설정 - 배출량 관리]
      * @param model
-     * 연간배출 허용기준 - standard
-     * 배출량 추이 모니터링 대상 - emissions
-     * 연간 배출량 누적 모니터링 대상 - yearlyEmissions
-     *
-     * @return emissionsManagement.JSP
+     * standard : 연간 배출 허용 기준 설정 list
+     * emissions : 배출량 추이 모니터링 대상 설정 list
+     * yearlyEmissions : 연간 배출량 누적 모니터링 대상 설정 list
+     * @return emissionsManagement.jsp
      * */
     @RequestMapping("emissionsManagement")
     public String emissionsManagement(Model model) {
+
+        List<EmissionsStandardSetting> standard =  emissionsStandardSettingRepository.findAll();
+        model.addAttribute("standard",standard);
 
         List<EmissionsSetting> emissions = emissionsSettingRepository.findAll();
         for (int i = 0 ; i<emissions.size(); i++){
@@ -290,7 +271,6 @@ public class MainController {
         }
         model.addAttribute("emissions", emissions);
 
-
         List<AnnualEmissions> yearlyEmissions = annualEmissionsRepository.findAll();
         for (int i = 0 ; i< yearlyEmissions.size(); i++) {
             if (yearlyEmissions.get(i).getPlace().equals("") || yearlyEmissions.get(i).getPlace() == null) {   //측정소 없으면 제외
@@ -300,12 +280,44 @@ public class MainController {
         }
         model.addAttribute("yearlyEmissions", yearlyEmissions);
 
-        List<EmissionsStandardSetting> standard =  emissionsStandardSettingRepository.findAll();
-        model.addAttribute("standard",standard);
-
         return "emissionsManagement";
     }
 
+    /**
+     * [환경설정 - 설정]
+     * @param model
+     * members : 전체 회원 정보
+     * member : 현재 로그인 되어있는 회원
+     * rank_managements : 권한 정보
+     * @param principal 로그인 유저 정보 객체
+     * @return setting.jsp
+     */
+    @RequestMapping("/setting")
+    public String setting(Model model, Principal principal) {
+        List<Member> members = memberRepository.findAll();
+        List<RankManagement> rank_managements = rankManagementRepository.findAll();
+        Member member = memberRepository.findById(principal.getName());
+        model.addAttribute("member", member);
+        model.addAttribute("members", members);
+        model.addAttribute("rank_managements", rank_managements);
+        return "setting";
+    }
 
+    /**
+     * [환경설정 - 설정] > 회원관리 (회원 정보 클릭 시)
+     * @param model
+     * logList : 해당 유저의 전체 log
+     * member : 해당 유저의 이름 및 권한 불러오기
+     * @param id 로그 조회할 Id
+     * @return log.jsp
+     */
+    @RequestMapping("/log")
+    public String log(Model model, @RequestParam(value = "id", required = false) String id) {
+
+        model.addAttribute("logList",logRepository.findById(id));
+        model.addAttribute("member",memberRepository.findById(id));
+
+        return "log";
+    }
 
 }
