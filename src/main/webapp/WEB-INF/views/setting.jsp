@@ -109,11 +109,11 @@
 <script src="static/js/jquery.dataTables.min.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
-<div class="container">
+<div class="container" id="container">
     <div class="row1 mt-4 mb-4">
         <span style=" font-size: 27px;font-weight: bold">환경설정 > 설정</span>
     </div>
-    <div class="row bg-light rounded py-3 px-5">
+    <div class="row bg-light rounded py-3">
 
         <%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
         <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">회원관리</span>
@@ -686,6 +686,25 @@
         Swal.fire('확인', str, 'success');
     }
 
+
+    var mql = window.matchMedia("screen and (max-width: 1024px)");
+
+    mql.addListener(function(e) {
+        if(e.matches) {
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    });
+
+    var filter = "win16|win32|win64|mac";
+    if(navigator.platform){
+        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    }
 
 </script>
 

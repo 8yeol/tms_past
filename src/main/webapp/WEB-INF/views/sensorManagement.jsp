@@ -98,9 +98,12 @@
     .dataTables_wrapper {
         min-height: 340px;
     }
+    .inputLayout{
+        width: 33%;
+        display: inline;
+    }
 </style>
-
-<div class="container">
+<div class="container" id="container">
     <div class="row">
         <div class="row m-3 mt-3 ms-1">
             <span class="fw-bold" style="font-size: 27px;">환경설정 > 센서 관리</span>
@@ -116,10 +119,10 @@
                         </c:forEach>
                     </select>
                     <label class="me-3 col-xs-3 w-10 label">측정소</label>
-                    <select name="place" id="place" class="btn btn-outline-dark">
-                        <option>선택</option>
+                    <select name="place" id="place" class="btn btn-outline-dark" style="padding-right: 15px;">
+                        <option  >선택</option>
                         <c:forEach var="place" items="${place}" varStatus="status">
-                            <option value="${place.name}">${place.name}</option>
+                            <option value="${place.name}"  style="padding-right: 1rem;">${place.name}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -130,18 +133,18 @@
                                 <span class="text-primary" style="font-size: 0.8rem;"> * 테이블명 선택시 자동 입력됩니다.</span>
                             </div>
                         </div>
-                        <div class="row p-5">
-                            <div class="col">
+                        <div class="row p-5" style="border-left: 20px solid white;">
+                            <div class=" inputLayout">
                                 <label class="me-3 col-xs-3 label">관리 ID</label>
                                 <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="managementId"
                                        id="m_id" readonly>
                             </div>
-                            <div class="col">
+                            <div class="inputLayout">
                                 <label class="me-3 col-xs-3 w-10 label">분류</label>
                                 <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="classification"
                                        id="m_class" readonly>
                             </div>
-                            <div class="col">
+                            <div class=" inputLayout">
                                 <label class="me-3 col-xs-3 w-10 label">항목명</label>
                                 <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming"
                                        id="naming" readonly>
@@ -157,16 +160,16 @@
             </div>
         </div>
         <div class="col-xs-12 bg-light rounded border border-dark-1">
-            <table class="table text-center" id="sensorTable">
+            <table class="table text-center" id="sensorTable" style="word-break:break-all">
                 <thead>
                 <tr>
                     <th scope="col" width="10%">분류</th>
                     <th scope="col" width="10%">한글명</th>
                     <th scope="col" width="10%">관리 ID</th>
-                    <th scope="col" width="20%">테이블명</th>
-                    <th scope="col" width="20%">업데이트</th>
+                    <th scope="col" width="18%">테이블명</th>
+                    <th scope="col" width="17%">업데이트</th>
                     <th scope="col" width="10%">측정소</th>
-                    <th scope="col" width="10%">통신상태</th>
+                    <th scope="col" width="15%">통신상태</th>
                     <th scope="col" width="10%">관리</th>
                 </tr>
                 </thead>
@@ -500,6 +503,26 @@
             timer: 1500
         })
     }
+
+    var mql = window.matchMedia("screen and (max-width: 1024px)");
+
+    mql.addListener(function(e) {
+        if(e.matches) {
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    });
+
+    var filter = "win16|win32|win64|mac";
+    if(navigator.platform){
+        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    }
+
 </script>
 
 

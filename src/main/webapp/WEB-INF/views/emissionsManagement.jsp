@@ -22,11 +22,38 @@
 <script src="static/js/jquery-ui.js"></script>
 
 <style>
+
+    @media screen and (max-width: 1024px) {
+        .multiSelectComboBox{
+            flex-direction: column;
+        }
+        .multiSelectParent{
+            margin: auto;
+            margin-bottom: 20px;
+        }
+        .emissionsh4{
+            text-align: center;
+            margin-top: 10px;
+        }
+        .emissionsSpan{
+            margin-bottom: 1rem;
+        }
+        .row2{
+            margin-bottom: 20px;
+        }
+    }
+    .emissionsSpan{
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-size: 0.85rem;
+    }
+
     .multiSelectComboBox {
-        margin-top: 60px;
-        width: 100%;
+        width: 95%;
+        margin:50px auto;
         display: flex;
         justify-content: center;
+        background-color: white;
     }
 
     .multiSelectParent {
@@ -35,6 +62,9 @@
         padding-top: 15px;
         background-color: white;
         position: relative;
+        display: block;
+        min-width: 670px;
+        max-width: 670px;
     }
 
     .multiSelectParent div {
@@ -186,10 +216,16 @@
     .dataTables_wrapper {
         min-height: 350px;
     }
+    .moveBtn{
+        display: block;
+    }
+    .multiSelectBtn{
+        padding-top: 8rem;
+    }
 
 </style>
 
-<div class="container">
+<div class="container" id="container">
     <div class="row">
         <div class="row1">
             <span  style=" font-size: 27px;font-weight: bold">환경설정 > 배출량 관리</span>
@@ -203,19 +239,17 @@
         <div class="col-xs-12 bg-light">
         <h4 class="mt-2 fs-5 fw-bold"style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
             <table class="table table-striped">
-
                 <thead>
                 <tr>
-                    <th>측정소명</th>
-                    <th>센서명</th>
-                    <th>연간 배출 허용 기준</th>
-                    <th>배출 허용 기준 농도</th>
-                    <th>산출식(참고용)</th>
-                    <th>최종 수정 날짜</th>
-                    <th>관리</th>
+                    <th width="12%">측정소명</th>
+                    <th  width="11%">센서명</th>
+                    <th width="19%">연간 배출 허용 기준</th>
+                    <th width="10%">기준 농도</th>
+                    <th width="17%">산출식(참고용)</th>
+                    <th width="20%">최종 수정 날짜</th>
+                    <th width="8%">관리</th>
                 </tr>
                 </thead>
-
                 <tbody id="tbody">
                 <c:forEach items="${standard}" var="standard" varStatus="i">
 
@@ -263,13 +297,11 @@
             </c:if>
         </div>
     </div>
-</div>
-</div>
 
 <!--멀티셀렉터 콤보박스 -->
 <div class="multiSelectComboBox" >
     <div class="multiSelectParent">
-        <h4 class="fs-5 fw-bold">배출량 추이 모니터링 대상 설정</h4><br>
+        <h4 class="fs-5 fw-bold emissionsh4">배출량 추이 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
             <select multiple class="form-control" id="lstBox1">
@@ -283,11 +315,10 @@
         </div>
 
         <div class="multiSelectBtn">
-            <br/><br/><br/><br/><br/>
-            <input type='button' id='btnRight' value='>' class="btn btn-default"
-                   onclick="moveEvent('#lstBox1', '#lstBox2')"/><br/>
-            <input type='button' id='btnLeft' value='<' class="btn btn-default"
-                   onclick="moveEvent('#lstBox2', '#lstBox1')"/><br/>
+            <input type='button' id='btnRight' value='>' class="btn btn-default moveBtn"
+                   onclick="moveEvent('#lstBox1', '#lstBox2')"/>
+            <input type='button' id='btnLeft' value='<' class="btn btn-default moveBtn"
+                   onclick="moveEvent('#lstBox2', '#lstBox1')"/>
         </div>
 
         <div class="multiSelect">
@@ -305,10 +336,11 @@
 
         <!-- MultiSelecter Modal-->
         <div class="MultiSelecterModal" id="emissionsModal"></div>
+        <div class="emissionsSpan">* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 측정소 통합 모니터링] 화면에 표시됩니다</div>
     </div>
 
     <div class="multiSelectParent">
-        <h4 class="fs-5 fw-bold">연간 배출량 누적 모니터링 대상 설정</h4><br>
+        <h4 class="fs-5 fw-bold emissionsh4">연간 배출량 누적 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
             <select multiple class="form-control" id="lstBox3">
@@ -323,11 +355,10 @@
         </div>
 
         <div class="multiSelectBtn">
-            <br/><br/><br/><br/><br/>
-            <input type='button' id='btnRight2' value='>' class="btn btn-default"
-                   onclick="moveEvent('#lstBox3', '#lstBox4')"/><br/>
-            <input type='button' id='btnLeft2' value='<' class="btn btn-default"
-                   onclick="moveEvent('#lstBox4', '#lstBox3')"/><br/>
+            <input type='button' id='btnRight2' value='>' class="btn btn-default moveBtn"
+                   onclick="moveEvent('#lstBox3', '#lstBox4')"/>
+            <input type='button' id='btnLeft2' value='<' class="btn btn-default moveBtn"
+                   onclick="moveEvent('#lstBox4', '#lstBox3')"/>
         </div>
 
         <div class="multiSelect">
@@ -345,14 +376,12 @@
         <div class="clearfix"></div>
         <!-- MultiSelecter Modal-->
         <div class="MultiSelecterModal" id="yearlyEmissionsModal"></div>
-
+        <div class="emissionsSpan">* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 연간 배출량 누적모니터링] 화면에 표시됩니다</div>
     </div>
 </div>
-<div style="text-align: center;font-size: 0.95rem;margin-bottom: 30px;margin-top: 20px;">
-    <span>* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 측정소 통합 모니터링] 화면에 표시됩니다</span>
-    <span style="margin-left: 60px;">* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 연간 배출량 누적모니터링] 화면에 표시됩니다</span>
 </div>
 
+</div>
 <!-- addModal -->
 <div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -719,6 +748,28 @@
             },
         },
     });
+
+
+    var mql = window.matchMedia("screen and (max-width: 1024px)");
+
+    mql.addListener(function(e) {
+        if(e.matches) {
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    });
+
+    var filter = "win16|win32|win64|mac";
+    if(navigator.platform){
+        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    }
+
+
 </script>
 
 
