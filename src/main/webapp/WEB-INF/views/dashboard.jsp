@@ -108,7 +108,7 @@
 
 </style>
 
-<div class="container">
+<div class="container"  id="container">
     <div class="row m-3 mt-3 ms-1">
         <span class="fs-4 fw-bold">대시보드</span>
     </div>
