@@ -267,7 +267,7 @@ public class AjaxController {
                 SensorList sensor = sensorlist.get(i);
                 sensor.setPlace(name);
                 sensor.setUpTime(date);
-                inputLogSetting(sensorlist.get(i).naming+" 센서 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+sensorlist.get(i).naming+" 센서 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 sensorListRepository.save(sensor);
             }
 
@@ -275,25 +275,25 @@ public class AjaxController {
             for (int i = 0; i < ess.size(); i++) {
                 ess.get(i).setPlace(name);
                 ess.get(i).setDate(new Date());
-                inputLogSetting(ess.get(i).getNaming()+" 배출 관리 기준 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+ess.get(i).getNaming()+" 배출 관리 기준 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 emissionsStandardSettingRepository.save(ess.get(i));
             }
             List<AnnualEmissions> ae = annualEmissionsRepository.findByPlace(hiddenCode);
             for (int i = 0; i < ae.size(); i++) {
                 ae.get(i).setPlace(name);
-                inputLogSetting(ae.get(i).getSensorNaming()+" 배출량 연간 모니터링 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+ae.get(i).getSensorNaming()+" 배출량 연간 모니터링 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 annualEmissionsRepository.save(ae.get(i));
             }
             List<EmissionsSetting> es = emissionsSettingRepository.findByPlace(hiddenCode);
             for (int i = 0; i < es.size(); i++) {
                 es.get(i).setPlace(name);
-                inputLogSetting(es.get(i).getSensorNaming()+" 배출량 모니터링 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+es.get(i).getSensorNaming()+" 배출량 모니터링 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 emissionsSettingRepository.save(es.get(i));
             }
             List<EmissionsTransition> et = emissionsTransitionRepository.findByPlaceName(hiddenCode);
             for (int i = 0; i < et.size(); i++) {
                 et.get(i).setPlaceName(name);
-                inputLogSetting(et.get(i).getSensorName()+" 분기별 배출량 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+et.get(i).getSensorName()+" 분기별 배출량 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 emissionsTransitionRepository.save(et.get(i));
             }
 
