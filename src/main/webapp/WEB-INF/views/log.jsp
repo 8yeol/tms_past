@@ -114,12 +114,7 @@
         <button class="btn backBtn"onclick="history.back(-1)" style="margin-left: 40px; position: absolute; right: 0;">뒤로 가기</button></h3>
 
     <div class="row bg-light rounded py-3 px-5">
-        <c:if test="${member.id == 'All'}">
-             <h4 class="d-flex justify-content-start"><b>모든</b>&nbsp;활동기록</h4>
-        </c:if>
-        <c:if test="${member.id != 'All'}">
-             <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
-        </c:if>
+        <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
         <div class="col-xs-12">
             <table class="table table-striped " id="member-Table">
                 <thead>

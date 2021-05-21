@@ -11,4 +11,5 @@ public interface EmissionsSettingRepository extends MongoRepository<EmissionsSet
     void deleteBySensor(String sensor);
     List<EmissionsSetting> findByStatus(boolean bool);
     List findByPlace(String place);
+    List findByPlaceIsNotIn(String key);
 }

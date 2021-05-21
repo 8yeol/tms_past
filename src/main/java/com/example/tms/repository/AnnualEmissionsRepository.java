@@ -12,4 +12,5 @@ public interface AnnualEmissionsRepository extends MongoRepository<AnnualEmissio
     List<AnnualEmissions> findByStatusIsTrue();
     void deleteBySensor(String sensor);
     List findByPlace(String place);
+    List findByPlaceIsNotIn(String key);
 }
