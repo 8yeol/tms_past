@@ -265,7 +265,7 @@ public class AjaxController {
                 SensorList sensor = sensorlist.get(i);
                 sensor.setPlace(name);
                 sensor.setUpTime(date);
-                inputLogSetting(sensorlist.get(i).naming+" 센서 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+sensorlist.get(i).naming+" 센서 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 sensorListRepository.save(sensor);
             }
 
@@ -273,25 +273,25 @@ public class AjaxController {
             for (int i = 0; i < ess.size(); i++) {
                 ess.get(i).setPlace(name);
                 ess.get(i).setDate(new Date());
-                inputLogSetting(ess.get(i).getNaming()+" 배출 관리 기준 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+ess.get(i).getNaming()+" 배출 관리 기준 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 emissionsStandardSettingRepository.save(ess.get(i));
             }
             List<AnnualEmissions> ae = annualEmissionsRepository.findByPlace(hiddenCode);
             for (int i = 0; i < ae.size(); i++) {
                 ae.get(i).setPlace(name);
-                inputLogSetting(ae.get(i).getSensorNaming()+" 배출량 연간 모니터링 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+ae.get(i).getSensorNaming()+" 배출량 연간 모니터링 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 annualEmissionsRepository.save(ae.get(i));
             }
             List<EmissionsSetting> es = emissionsSettingRepository.findByPlace(hiddenCode);
             for (int i = 0; i < es.size(); i++) {
                 es.get(i).setPlace(name);
-                inputLogSetting(es.get(i).getSensorNaming()+" 배출량 모니터링 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+es.get(i).getSensorNaming()+" 배출량 모니터링 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 emissionsSettingRepository.save(es.get(i));
             }
             List<EmissionsTransition> et = emissionsTransitionRepository.findByPlaceName(hiddenCode);
             for (int i = 0; i < et.size(); i++) {
                 et.get(i).setPlaceName(name);
-                inputLogSetting(et.get(i).getSensorName()+" 분기별 배출량 측정소명 '"+name+"' 수정","설정값 변경",principal);
+                inputLogSetting(hiddenCode+" - "+et.get(i).getSensorName()+" 분기별 배출량 측정소명 '"+name+"' 수정","설정값 변경",principal);
                 emissionsTransitionRepository.save(et.get(i));
             }
 
@@ -423,7 +423,7 @@ public class AjaxController {
             inputLogSetting(sensor.get(i)+" 통계자료 조회 데이터 삭제" ,"삭제",principal);
             monthlyEmissionsRepository.deleteBySensor(sensor.get(i));
             //분기별 배출량 정보 삭제
-            inputLogSetting(sensor.get(i)+" 분기별 배춫량 정보 삭제" ,"삭제",principal);
+            inputLogSetting(sensor.get(i)+" 분기별 배출량 정보 삭제" ,"삭제",principal);
             emissionsTransitionRepository.deleteByTableName(sensor.get(i));
         }
         //측정소 삭제
@@ -657,11 +657,11 @@ public class AjaxController {
     }
 
     /**
-     * 알림 현황 저장 (일 - 1월1부터 ~ 어제 날짜 / 월 - 1월1부터 이번달)
+     * 일별 / 월별  알림 현황 (기준초과 카운팅) 저장
      * notification_day_statistics(일) , notification_month_statistics(월)
      */
     @RequestMapping(value = "saveNS")
-    public ArrayList saveNotiStatistics() {
+    public ArrayList saveNS() {
         ArrayList al = new ArrayList();
         LocalDate nowDate = LocalDate.now(); //현재시간
         int getYear = nowDate.getYear();
@@ -670,7 +670,9 @@ public class AjaxController {
         LocalDate getYesterday = nowDate.minusDays(1);
         LocalDate getLastMonth = nowDate.minusMonths(1);
 
-        /* 일 데이터 및 월 데이터 입력: 1월1일 ~ 어제 날짜 */
+        /**
+         * 일별 알림 현황 저장 ( 1월1일 ~ 전날(yesterday))
+         */
         for (int m = 1; m <= getMonth; m++) {
             LocalDate date = LocalDate.of(getYear, m, 1);
             int lastDay = date.lengthOfMonth();
@@ -681,7 +683,7 @@ public class AjaxController {
                 LocalDate date2 = LocalDate.of(getYear, m, d);
                 notificationDayStatisticsRepository.deleteByDay(String.valueOf(date2)); //데이터가 존재할 경우 삭제
                 try {
-                    int arr[] = new int[3];
+                    int[] arr = new int[3];
                     for (int grade = 1; grade <= 3; grade++) {
                         List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(date2), String.valueOf(date2));
                         if (list.size() != 0) {
@@ -699,14 +701,16 @@ public class AjaxController {
                 }
             }
         }
-        /* 월데이터 입력 : 1월 ~ 이번 달 */
+        /**
+         * 월별 알림 현황 저장 (1월 ~ 이번달)
+         */
         for (int m = 1; m <= getMonth; m++) {
             LocalDate from_date = LocalDate.of(getYear, m, 1);
             LocalDate to_date = LocalDate.of(getYear, m, from_date.lengthOfMonth());
             String date = String.valueOf(from_date).substring(0, 7);
             notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
             try {
-                int arr[] = new int[3];
+                int[] arr = new int[3];
                 for (int grade = 1; grade <= 3; grade++) {
                     List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(from_date), String.valueOf(to_date));
                     if (list.size() != 0) {
