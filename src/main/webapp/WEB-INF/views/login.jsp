@@ -6,7 +6,6 @@
     String cp = request.getContextPath();
 %>
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
-<link rel="stylesheet" href="static/css/common.css">
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="shortcut icon" href="#">
 <script src="static/js/common/common.js"></script>

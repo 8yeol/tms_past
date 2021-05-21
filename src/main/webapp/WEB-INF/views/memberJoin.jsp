@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <link rel="stylesheet" href="static/css/bootstrap.min.css">
-<link rel="stylesheet" href="static/css/common.css">
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="shortcut icon" href="#">
