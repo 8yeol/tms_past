@@ -384,7 +384,7 @@
                     if(monitoring === 'true'){
                         /* 센서의 최근 데이터 */
                         var recentData = getSensorRecent(item);
-                        if(recentData.value == 0 || recentData.value == null){ //null 일때
+                        if(recentData.value == null){ //null 일때
                             return null;
                         }else{
                             status = recentData.status; //센서의 상태
