@@ -1,12 +1,9 @@
 /* The switch - the box around the slider */
 .switch {
     position: relative;
-    /*top: -29px;*/
-    /*left: 50px;*/
     display: inline-block;
     width: 60px;
     height: 34px;
-    /*float: right;*/
     margin-right: 20px;
 }
 
@@ -89,7 +86,6 @@ input:checked + .slider:before {
 .timePicker{
     width: 200px;
     margin-right: 35px;
-    margin-left: 20px;
     border-radius: 30px;
     padding-left: 30px;
     outline: none;
@@ -131,10 +127,6 @@ input:checked + .slider:before {
     padding:0px 20px;
     margin-left: 45px;
     display: inline-block;
-}
-
-.timePicker {
-    margin-top: 28px;
 }
 
 .saveBtn {

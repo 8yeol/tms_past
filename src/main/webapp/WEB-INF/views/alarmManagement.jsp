@@ -56,7 +56,8 @@
 
                     <div style="" id="div${status.index}">
                         <div style="position: relative; padding-bottom: 5px;">
-                            <div class="dp" id="alarm${status.index}" style="width: 65%; margin: 0 auto 10px;"></div>
+                            <div class="dp" id="alarm${status.index}" style="width: 65%; margin: 0 auto 10px;">
+                            </div>
 
                         </div>
                         <hr>
@@ -104,10 +105,11 @@
     function placeMake(name, idx) {
         const place = name;
         const parentElem = $('#items' + idx);
-        let innerHTMLTimePicker = "";
-        innerHTMLTimePicker += '<div><span class="textSpanParent">알림 시간</span></div>';
-        innerHTMLTimePicker += '<div><span class="textSpan">From </span>  <input style="background-color: white;"class="form-control example timePicker" name="start" type="text" id="start'+idx+'" readonly/></div>';
-        innerHTMLTimePicker += '<div><span class="textSpan">To </span>  <input style="background-color: white;"class="form-control example timePicker" name="end" type="text"id="end'+idx+'"readonly/></div>';
+        let innerHTMLTimePicker = "<div><span class=\"textSpanParent\">알림 시간</span></div>";
+        innerHTMLTimePicker += "<div style='display: inline-flex; margin-top: 10px;'>";
+        innerHTMLTimePicker += '<div><span class="textSpan" style="margin-right: 20px;">From </span>  <input style="background-color: white;"class="form-control example timePicker" name="start" type="text" id="start'+idx+'" readonly/></div>';
+        innerHTMLTimePicker += '<div><span class="textSpan" style="margin-right: 20px;">To </span>  <input style="background-color: white;"class="form-control example timePicker" name="end" type="text"id="end'+idx+'"readonly/></div>';
+        innerHTMLTimePicker += "</div>";
 
         $('#alarm' + idx).append(innerHTMLTimePicker);
         $(".example").timepicker();
