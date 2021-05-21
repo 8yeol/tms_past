@@ -145,7 +145,6 @@
         top: 43px;
         height: 50px; /* [변경] 높이를 32px로 설정 */
         width: 750px;
-        background: #75ACFF;
         border-radius: 5px;
         z-index: 500;
     }
@@ -157,7 +156,6 @@
     }
     /* 드롭다운 버튼 style*/
     .dropbtn {
-        background-color: #0d6efd;
         color: white;
         padding: 16px;
         font-size: 16px;
@@ -174,7 +172,7 @@
         position: absolute;
         background-color: #f1f1f1;
         min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.5);
         z-index: 1;
     }
 
@@ -185,15 +183,111 @@
         display: block;
     }
 
-    .dropdown-content a:hover {background-color: #ddd;}
+    .dropdown-content a:hover {
+        background-color: #ddd;
+    }
 
     .dropdown:hover .dropdown-content {display: block;}
 
-    .dropdown:hover .dropbtn {background-color: #0f6fd0;}
+
+    @media (min-width: 990px) {
+        #mobile{
+            display: none;
+        }
+    }
+
+    @media (max-width: 990px) {
+        #desktop{
+            display: none;
+        }
+    }
+
+    .sidebar {
+        height: 100%;
+        width: 0;
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #0051c4;
+        overflow-x: hidden;
+        padding-top: 60px;
+        transition: 0.5s;
+    }
+    .sidebar a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #ffffff;
+        display: block;
+        transition: 0.3s;
+    }
+    .sidebar button {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #ffffff;
+        display: block;
+        transition: 0.3s;
+        border: none;
+        background: none;
+    }
+
+    .sidebar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+
+    .openbtn {
+        font-size: 20px;
+        cursor: pointer;
+        background-color: #094db3;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+    }
+
+    #main {
+        transition: margin-left .5s;
+    }
+
+    @media screen and (max-height: 450px) {
+        .sidebar {padding-top: 15px;}
+        .sidebar a {font-size: 18px;}
+    }
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-content {
+        margin-left: 30px;
+        display: none;
+        position: absolute;
+        background-color: #235dc4;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+    .dropdown-content a {
+        color: #ffffff;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+    .dropdown-content a:hover {
+        background-color: #f1f1f1
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
 
 </style>
 
-<header class="p-4 bg-primary text-white">
+<header class="p-4 bg-primary text-white" id="desktop">
     <div class="container">
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-around">
@@ -245,11 +339,76 @@
 
         </div>
     </div>
+</header>
 
+<header class="p-4 bg-primary text-white" id="mobile">
 
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a class="fw-bold mt-5" href="<%=cp%>/dashboard">대시보드</a>
+        <a class="fw-bold mt-1" href="<%=cp%>/alarm">알림</a>
+        <div class="dropdown">
+            <button class="dropbtn fw-bold mt-1">모니터링</button>
+            <div class="dropdown-content">
+                <a href="<%=cp%>/monitoring" class="fs-6 fw-bold">실시간 모니터링</a>
+                <a href="<%=cp%>/sensor" class="fs-6 fw-bold">상세화면</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn fw-bold mt-1">분석 및 통계</button>
+            <div class="dropdown-content">
+                <a href="<%=cp%>/dataInquiry" class="fs-6 fw-bold">측정자료 조회</a>
+                <a href="<%=cp%>/dataStatistics" class="fs-6 fw-bold">통계자료 조회</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn fw-bold mt-1">설정</button>
+            <div class="dropdown-content">
+                <a href="<%=cp%>/stationManagement" class="fs-6 fw-bold">측정소 관리</a>
+                <a href="<%=cp%>/sensorManagement" class="fs-6 fw-bold">센서 관리</a>
+                <a href="<%=cp%>/alarmManagement" class="fs-6 fw-bold">알림 설정</a>
+                <a href="<%=cp%>/emissionsManagement" class="fs-6 fw-bold">배출량 관리</a>
+                <a href="<%=cp%>/setting" class="fs-6 fw-bold">설정</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="d-flex justify-content-between">
+
+            <div id="main">
+                <button class="openbtn rounded" onclick="openNav()">&#9776;</button>
+            </div>
+
+            <div class="d-flex justify-content-between ms-5">
+                <a href="<%=cp%>/monitoring" class="mb-2 mb-lg-0 text-white text-decoration-none fs-2 pe-5 fw-bold">
+                    대기 TMS 관제 시스템
+                </a>
+            </div>
+
+            <div class="text-end">
+                <div class="dropdown">
+                    <button class="dropbtn rounded" id="dropBtn"><i class="fas fa-caret-down"></i></button>
+                    <div class="dropdown-content text-start">
+                        <a href="<%=cp%>/myPage">마이페이지</a>
+                        <a href="<%=cp%>/logout">로그아웃</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </header>
 
 <script>
+    function openNav() {
+        document.getElementById("mySidebar").style.width = "250px";
+    }
+    function closeNav() {
+        document.getElementById("mySidebar").style.width = "0px";
+    }
+
+
     $( document ).ready(function() {
         var settings = {"url": "<%=cp%>/getUsername", "method": "POST",};
         $.ajax(settings).done(function (name) {
