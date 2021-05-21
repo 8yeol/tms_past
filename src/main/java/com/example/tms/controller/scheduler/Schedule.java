@@ -87,21 +87,23 @@ public class Schedule {
         }
     }
 
-    /* 알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산 */
 
     /**
      * [알림 - 센서 알림현황]
      * 기준 초과 알림 목록을 읽어와 기준별 카운트하여 일별/월별로 해당 컬렉션에 저장
+     * (알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산)
      */
     @Scheduled(cron = "0 1 0 * * *") //매일 00시 01분에 처리
-    public void saveNotiStatistics(){
+    public void saveNotificationStatistics(){
         LocalDate nowDate = LocalDate.now();
 
-        /* 일 데이터 입력 : 어제 */
+        /**
+         * 전날(yesterday) 알림 현황 저장
+         */
         try {
             LocalDate getYesterday = nowDate.minusDays(1); //전날 데이터 입력
             notificationDayStatisticsRepository.deleteByDay(String.valueOf(getYesterday)); //데이터가 존재할 경우 삭제
-            int arr[] = new int[3];
+            int[] arr = new int[3];
             for(int grade=1; grade<=3; grade++) {
                 List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(getYesterday), String.valueOf(getYesterday));
                 if (list.size() != 0) {
@@ -116,7 +118,9 @@ public class Schedule {
 
         }
 
-        /* 월 데이터 입력 : 이번 달 */
+        /**
+         * 이번달 알림 현황 저장 (매달 1일인 경우 지난달 계산)
+         */
         try {
             int getDay = nowDate.getDayOfMonth();
             if(getDay == 1){ //매달 1일인 경우 지난달 계산
@@ -129,7 +133,7 @@ public class Schedule {
             notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
             LocalDate fromDate = LocalDate.of(getYear, getMonth, 1); //
             LocalDate toDate = LocalDate.of(getYear, getMonth, lastday);
-            int arr[] = new int[3];
+            int[] arr = new int[3];
             for(int grade=1; grade<=3; grade++) {
                 List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(fromDate), String.valueOf(toDate));
                 if (list.size() != 0) {

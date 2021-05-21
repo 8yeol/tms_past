@@ -659,11 +659,11 @@ public class AjaxController {
     }
 
     /**
-     * 알림 현황 저장 (일 - 1월1부터 ~ 어제 날짜 / 월 - 1월1부터 이번달)
+     * 일별 / 월별  알림 현황 (기준초과 카운팅) 저장
      * notification_day_statistics(일) , notification_month_statistics(월)
      */
     @RequestMapping(value = "saveNS")
-    public ArrayList saveNotiStatistics() {
+    public ArrayList saveNS() {
         ArrayList al = new ArrayList();
         LocalDate nowDate = LocalDate.now(); //현재시간
         int getYear = nowDate.getYear();
@@ -672,7 +672,9 @@ public class AjaxController {
         LocalDate getYesterday = nowDate.minusDays(1);
         LocalDate getLastMonth = nowDate.minusMonths(1);
 
-        /* 일 데이터 및 월 데이터 입력: 1월1일 ~ 어제 날짜 */
+        /**
+         * 일별 알림 현황 저장 ( 1월1일 ~ 전날(yesterday))
+         */
         for (int m = 1; m <= getMonth; m++) {
             LocalDate date = LocalDate.of(getYear, m, 1);
             int lastDay = date.lengthOfMonth();
@@ -683,7 +685,7 @@ public class AjaxController {
                 LocalDate date2 = LocalDate.of(getYear, m, d);
                 notificationDayStatisticsRepository.deleteByDay(String.valueOf(date2)); //데이터가 존재할 경우 삭제
                 try {
-                    int arr[] = new int[3];
+                    int[] arr = new int[3];
                     for (int grade = 1; grade <= 3; grade++) {
                         List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(date2), String.valueOf(date2));
                         if (list.size() != 0) {
@@ -701,14 +703,16 @@ public class AjaxController {
                 }
             }
         }
-        /* 월데이터 입력 : 1월 ~ 이번 달 */
+        /**
+         * 월별 알림 현황 저장 (1월 ~ 이번달)
+         */
         for (int m = 1; m <= getMonth; m++) {
             LocalDate from_date = LocalDate.of(getYear, m, 1);
             LocalDate to_date = LocalDate.of(getYear, m, from_date.lengthOfMonth());
             String date = String.valueOf(from_date).substring(0, 7);
             notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
             try {
-                int arr[] = new int[3];
+                int[] arr = new int[3];
                 for (int grade = 1; grade <= 3; grade++) {
                     List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(from_date), String.valueOf(to_date));
                     if (list.size() != 0) {
