@@ -57,9 +57,9 @@
         background-color: rgba(99, 130, 255, 0.7);
         position: absolute;
         padding: 10px;
-        top: 50%;
+        top: 60%;
         left: 50%;
-        transform: translate(-50%, -40%);
+        transform: translate(-50%, -50%);
         text-align: center;
         color: white;
         font-weight: bold;
