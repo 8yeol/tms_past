@@ -14,6 +14,9 @@ public class RankManagementService {
         this.rankManagementRepository = rankManagementRepository;
     }
 
+    /**
+     * 데이터베이스에 저장될 기본권한값
+     */
     public void defaultRankSetting () {
         RankManagement denie = new RankManagement();
         denie.setName("denie");

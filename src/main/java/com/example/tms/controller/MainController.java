@@ -104,11 +104,14 @@ public class MainController {
         return "dashboard";
     }
 
+    /**
+     * 로그인페이지로 이동
+     * @return login.jsp
+     */
     @RequestMapping("/login")
     public String login() {
         return "login";
-    }       //login
-
+    }
     /**
      * 접근하는 URL에 권한이없을시 오는 페이지
      * @return accessDenied.jsp
@@ -116,11 +119,11 @@ public class MainController {
     @RequestMapping("/accessDenied")
     public String accessDenied() {
         return "accessDenied";
-    }       //accessDenied
+    }
     /**
      * 마이페이지로 이동
      * @param principal - 로그인 유저 정보 객체
-     * @param model - principal을 기준으로 member객체를 add함
+     * @param model - 현재로그인한 유저 정보객체 뷰페이지로 전달
      * @return myPage.jsp
      */
     @RequestMapping("/myPage")
@@ -128,10 +131,17 @@ public class MainController {
         Member member = memberRepository.findById(principal.getName());
         model.addAttribute("member", member);
         return "myPage";
-    }       //myPage
+    }
+    /**
+     * 모니터링 페이지로 이동
+     */
     @RequestMapping("/monitoring")
     public void monitoring() {
     }
+    /**
+     * 센서페이지로 이동
+     * @param model 측정소 전체데이터 뷰페이지로 전달
+     */
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
     public void sensorInfo(Model model) {
         model.addAttribute("place", placeRepository.findAll());
@@ -196,7 +206,7 @@ public class MainController {
     }
     /**
      * 환경설정 - 설정 페이지로 이동
-     * @param model - 회원목록, 로그인한회원, 관리할 등급데이터 들을 add
+     * @param model - 회원목록, 로그인한회원, 관리할 등급데이터 들을 뷰페이지로 전달
      * @param principal - 로그인 유저 정보 객체
      * @return setting.jsp
      */

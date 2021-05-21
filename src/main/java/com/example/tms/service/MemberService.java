@@ -26,6 +26,12 @@ public class MemberService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Spring Security를 통해 로그인하는 과정
+     * @param username 입력한 유저의 ID
+     * @return user타입의 객체를 반환
+     * @throws UsernameNotFoundException 예외처리
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findById(username);
@@ -39,12 +45,22 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 
+    /**
+     * 유저의 계정정보를 데이터베이스에 저장
+     * @param member 계정정보객체
+     * @param state 권한값변수
+     * @return 저장의결과값을 리턴
+     */
     public Member memberSave(Member member, String state) {
         member.encodePassword(passwordEncoder);
         member.setState(state);
         return memberRepository.save(member);
     }
 
+    /**
+     * 유저의 계정정보를 업데이트
+     * @param member 입력받은 변경값 유저정보객체
+     */
     public void updateMember(Member member) {
         Member updateMember = memberRepository.findById(member.getId());
         updateMember.setName(member.getName());
@@ -59,6 +75,10 @@ public class MemberService implements UserDetailsService {
         memberRepository.save(updateMember);
     }
 
+    /**
+     * 유저의 업데이트시에 데이터베이스에 해당 log를 저장
+     * @param member log의대상이 되는 유저정보객체
+     */
     public void updateLog(Member member){
         Date date = new Date();
         Log pwdLog = new Log();
@@ -77,6 +97,10 @@ public class MemberService implements UserDetailsService {
         logRepository.save(infoLog);
     }
 
+    /**
+     * 유저의 탈퇴, 제명 처리시 실행
+     * @param id 탈퇴, 제명할 유저의 아이디
+     */
     public void deleteById(String id) {
         memberRepository.deleteById(id);
     }

@@ -1180,17 +1180,16 @@ public class AjaxController {
      * @param response 뷰로 문자열을 전달하기위한 변수
      * @throws Exception 예외처리
      */
-
     @RequestMapping(value = "/loginCheck", method = RequestMethod.POST)
     public void loginCheck(Member member, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
-        if (!memberRepository.existsById(member.getId())) { // ID가 존재하지않으면
+        if (!memberRepository.existsById(member.getId())) {
             out.print("id");
-        } else if (!passwordEncoder.matches(member.getPassword(), memberRepository.findById(member.getId()).getPassword())) { // password가 틀리면
+        } else if (!passwordEncoder.matches(member.getPassword(), memberRepository.findById(member.getId()).getPassword())) {
             out.print("password");
-        } else if (memberRepository.findById(member.getId()).getState().equals("5")) { // 가입거절
+        } else if (memberRepository.findById(member.getId()).getState().equals("5")) {
             out.print("denie");
-        } else if (memberRepository.findById(member.getId()).getState().equals("4")) { // 가입대기
+        } else if (memberRepository.findById(member.getId()).getState().equals("4")) {
             out.print("waiting");
         } else {
             Member newMember = memberRepository.findById(member.getId());
@@ -1198,7 +1197,7 @@ public class AjaxController {
             newMember.setLastLogin(time);
             memberRepository.save(newMember);
         }
-    }           // loginCheck
+    }
 
     /**
      * 회원가입신청 한 유저의 승낙 여부를 결정
@@ -1215,15 +1214,14 @@ public class AjaxController {
             newMember.setState("5");
             msg = "가입 거절 되었습니다.";
         } else {
-            newMember.setState("3"); // 5: 거절 - 4: 가입대기 - 3: 일반 - 2: 관리자 - 1: 최고관리자
+            newMember.setState("3");
             Date time = new Date();
-            newMember.setJoined(time); // 가입승인일 설정
+            newMember.setJoined(time);
             msg = "가입 승인 되었습니다.";
         }
         memberRepository.save(newMember);
         return msg;
-    }           // memberSignUp
-
+    }
     /**
      * 입력받은 값으로 유저의 등급을 결정
      *
@@ -1237,7 +1235,7 @@ public class AjaxController {
         newMember.setState(value);
         memberRepository.save(newMember);
         return "등급 부여 하였습니다.";
-    }           // gaveRank
+    }
 
     /**
      * 입력받은 값으로 유저의 비밀번호를 초기화
@@ -1253,7 +1251,7 @@ public class AjaxController {
         newMember.setPassword(encodedPwd);
         memberRepository.save(newMember);
         return "임시비밀번호 : " + uuid;
-    }           // resetPassword
+    }
 
     /**
      * 입력받은 값으로 유저를 추방
@@ -1265,7 +1263,7 @@ public class AjaxController {
         memberRepository.deleteById(id);
         logRepository.deleteById(id);
         return "제명처리 되었습니다.";
-    }           // kickMember
+    }
 
     /**
      * 변경한 권한관리 값들을 저장
@@ -1276,7 +1274,6 @@ public class AjaxController {
     @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
     public List<String> rankSettingSave(@RequestBody RankManagement rankManagement) throws Exception {
         RankManagement newRankManagement = rankManagementRepository.findByName(rankManagement.getName());
-
         List<String> stringList = new ArrayList<>();
         stringList.add((rankManagement.isDashboard() == newRankManagement.isDashboard()) ? "" : (rankManagement.isDashboard()) ? "대시보드 메뉴열람 권한부여  " : "대시보드 메뉴열람 권한해제  ") ;
         stringList.add((rankManagement.isAlarm() == newRankManagement.isAlarm()) ? "" : (rankManagement.isAlarm()) ? "알림 메뉴열람 권한부여  " : "알림 메뉴열람 권한해제  ");
@@ -1289,9 +1286,8 @@ public class AjaxController {
         newRankManagement.setStatistics(rankManagement.isStatistics());
         newRankManagement.setSetting(rankManagement.isSetting());
         rankManagementRepository.save(newRankManagement);
-
         return stringList;
-    }           // rankSettingSave
+    }
 
     /**
      * 로그정보를 날짜추가후 DB에 저장
@@ -1302,7 +1298,7 @@ public class AjaxController {
     public void inputLog(@RequestBody Log log) {
         log.setDate(new Date());
         logRepository.save(log);
-    }           // inputLog
+    }
 
     /**
      * 현재 로그인한 유저의 이름을 문자로 리턴함
@@ -1314,7 +1310,7 @@ public class AjaxController {
     public String getUsername(Principal principal) {
         Member member = memberRepository.findById(principal.getName());
         return member.getName();
-    }           // getUsername
+    }
 
     /**
      * 입력받은 값을 바탕으로 DB에 저장되어있는 권한값을 리턴함
@@ -1337,7 +1333,7 @@ public class AjaxController {
             str = "denie";
         }
         return rankManagementRepository.findByName(str);
-    }           // getRank
+    }
 
 
 }
