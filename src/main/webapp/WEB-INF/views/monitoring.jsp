@@ -213,32 +213,32 @@
      * 측정소 별로 센서 정보 테이블 생성 및 대시보드 생성
      */
     function getData() {
-        setTimeout(function interval_getData() { //실시간 처리위한 setTimeout
-            const placeName = getPlace(); // 전체 측정소 이름 구함 (조건: 파워 On, 모니터링 True)
-            if(placeName.length == 0){
-                Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 측정소의 데이터가 없습니다.'})
-                INTERVAL = setTimeout(interval_getData, 10000)
-            }else{
-                draw_place_table_frame(placeName); // 측정소별 센서의 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
-                const placeData = new Array();
+        setTimeout(function interval_getData() { // 실시간 처리위한 setTimeout
+            const placeName = getPlace(); // 전체 측정소 이름 구함 (모니터링 True)
+            draw_place_table_frame(placeName); // 측정소별 센서의 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
+            const placeData = new Array();
+            if(placeName.length == 0){ // 측정소가 없을 때
+                Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
+                INTERVAL = setTimeout(interval_getData, 10000);
+            }else{ //측정소가 있을 때
                 var sensorDataNullCheck = true;
                 for (let i = 0; i < placeName.length; i++) {
                     clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
                     const data = getPlaceData(placeName[i]); //측정소 별 센서 데이터 (최근데이터, 이전데이터, 정보)
-                        draw_place_table(data, i); // 로딩되면 테이블 생성
-                        placeData.push(data); //측정소 별 센서 데이터 통합
+                        draw_place_table(data, i); // 측정소별 테이블 생성
+                        placeData.push(data); //측정소별 센서 데이터 통합
                         if(placeData[i].length != 0){
                             sensorDataNullCheck = false;
                         }
                         INTERVAL = setTimeout(interval_getData, 10000);
                 }
-                setTimeout(function () {
-                    draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
-                }, 0);
                 if(sensorDataNullCheck){
                     Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 센서의 데이터가 없습니다.'});
                 }
             }
+            setTimeout(function () {
+                draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
+            }, 0);
         }, 0);
     }
 
@@ -282,7 +282,7 @@
             async: false,
             success: function (data) {
                     $.each(data, function (index, item) { //item (센서명)
-                        monitoring = item.monitoring;
+                        monitoring = item.monitoring; //모니터링 ON
                         if(monitoring){
                             placeName.push(item.name);
                         }
@@ -291,13 +291,6 @@
             error: function (request, status, error) {
             }
         });
-        if(placeName.length ==0){
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '등록된 측정소가 없거나 모니터링이 OFF 입니다.'
-            })
-        }
         return placeName;
     }
 

@@ -886,8 +886,9 @@ public class AjaxController {
             sensor = sensorListRepository.findByTableName(hiddenCode, "");
             String oldPlace = sensor.getPlace();
             sensor.setPlace(place);
+            sensor.setUpTime(new Date());
 
-            if(oldPlace.equals("")) oldPlace = "측정소 없음";
+            if(oldPlace.equals("")) oldPlace = "'측정소 없음'";
 
             inputLogSetting(oldPlace + " - " + sensor.getNaming() + " 센서 삭제 ", "삭제", principal);
 
@@ -975,10 +976,9 @@ public class AjaxController {
         inputLogSetting(ess.getPlace() + " - " + ess.getNaming() + " 연간 허용 배출 기준 삭제", "삭제", principal);
 
         //상세설정 값 삭제
-        if (reference_value_settingRepository.findByName(tableName) != null) {
             reference_value_settingRepository.deleteByName(tableName);
             inputLogSetting(ess.getPlace() + " - " + ess.getNaming() + " 법적 관리기준, 사내 관리기준 삭제", "삭제", principal);
-        }
+
         //분기별 배출량 정보 삭제
         if (emissionsTransitionRepository.findByTableName(tableName) != null) {
             emissionsTransitionRepository.deleteByTableName(tableName);
@@ -1010,7 +1010,6 @@ public class AjaxController {
         // 분석 및 통계 - 통계자료 조회 데이터 삭제
         monthlyEmissionsRepository.deleteBySensor(tableName);
         inputLogSetting(ess.getPlace() + " - "+ess.getNaming()+" 분석 및 통계 데이터 삭제", "삭제", principal);
-
 
         //센서 삭제
         SensorList sensor = sensorListRepository.findByTableName(tableName, "");
