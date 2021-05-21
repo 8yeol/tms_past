@@ -359,21 +359,21 @@
         <a class="fw-bold mt-5" href="<%=cp%>/dashboard">대시보드</a>
         <a class="fw-bold mt-1" href="<%=cp%>/alarm">알림</a>
         <div class="dropdown">
-            <button class="dropbtn fw-bold mt-1">모니터링</button>
+            <button class="dropbtn fw-bold mt-1 d-block">모니터링</button>
             <div class="dropdown-content ms-4">
                 <a href="<%=cp%>/monitoring" class="fs-6 fw-bold">실시간 모니터링</a>
                 <a href="<%=cp%>/sensor" class="fs-6 fw-bold">상세화면</a>
             </div>
         </div>
         <div class="dropdown">
-            <button class="dropbtn fw-bold mt-1">분석 및 통계</button>
+            <button class="dropbtn fw-bold mt-1 d-block">분석 및 통계</button>
             <div class="dropdown-content ms-4">
                 <a href="<%=cp%>/dataInquiry" class="fs-6 fw-bold">측정자료 조회</a>
                 <a href="<%=cp%>/dataStatistics" class="fs-6 fw-bold">통계자료 조회</a>
             </div>
         </div>
         <div class="dropdown">
-            <button class="dropbtn fw-bold mt-1">설정</button>
+            <button class="dropbtn fw-bold mt-1 d-block">설정</button>
             <div class="dropdown-content ms-4">
                 <a href="<%=cp%>/stationManagement" class="fs-6 fw-bold">측정소 관리</a>
                 <a href="<%=cp%>/sensorManagement" class="fs-6 fw-bold">센서 관리</a>
