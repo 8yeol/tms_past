@@ -17,6 +17,10 @@
 %>
 
 <style>
+    body {
+        background-color: #EDF2F8;
+    }
+
     #topMenu {
         height: 35px;
     }
