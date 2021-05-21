@@ -1,4 +1,4 @@
-package com.example.tms.repository;
+package com.example.tms.repository.NotificationStatistics;
 
 import com.example.tms.entity.NotificationMonthStatistics;
 import com.example.tms.entity.NotificationDayStatistics;
@@ -38,7 +38,7 @@ public class NotificationStatisticsCustomRepository {
 
             AggregationResults<NotificationDayStatistics> results = mongoTemplate.aggregate(aggregation, "notification_day_statistics", NotificationDayStatistics.class);
             List<NotificationDayStatistics> result = results.getMappedResults();
-            return result; //-> Json -> sensor 타입으로 변경 필요
+            return result;
         }catch (Exception e){
             log.info("getSensorRecent error" + e.getMessage());
         }
@@ -63,7 +63,7 @@ public class NotificationStatisticsCustomRepository {
 
             AggregationResults<NotificationMonthStatistics> results = mongoTemplate.aggregate(aggregation, "notification_month_statistics", NotificationMonthStatistics.class);
             List<NotificationMonthStatistics> result = results.getMappedResults();
-            return result; //-> Json -> sensor 타입으로 변경 필요
+            return result;
         }catch (Exception e){
             log.info("getSensorRecent error" + e.getMessage());
         }

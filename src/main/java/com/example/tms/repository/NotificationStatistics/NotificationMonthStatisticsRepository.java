@@ -1,4 +1,4 @@
-package com.example.tms.repository;
+package com.example.tms.repository.NotificationStatistics;
 
 import com.example.tms.entity.NotificationMonthStatistics;
 import org.bson.types.ObjectId;

@@ -3,6 +3,7 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
+import com.example.tms.repository.SensorListRepository;
 import com.example.tms.service.MemberService;
 import com.example.tms.service.RankManagementService;
 import org.springframework.security.crypto.password.PasswordEncoder;

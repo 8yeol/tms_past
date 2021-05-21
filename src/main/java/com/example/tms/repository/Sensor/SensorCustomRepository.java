@@ -1,4 +1,4 @@
-package com.example.tms.repository;
+package com.example.tms.repository.Sensor;
 
 import com.example.tms.entity.*;
 

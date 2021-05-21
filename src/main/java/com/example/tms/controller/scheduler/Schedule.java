@@ -1,9 +1,12 @@
 package com.example.tms.controller.scheduler;
 
 import com.example.tms.entity.*;
-import com.example.tms.repository.*;
 import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsCustomRepository;
 import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsRepository;
+import com.example.tms.repository.NotificationStatistics.NotificationDayStatisticsRepository;
+import com.example.tms.repository.NotificationList.NotificationListCustomRepository;
+import com.example.tms.repository.NotificationStatistics.NotificationMonthStatisticsRepository;
+import com.example.tms.repository.SensorListRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
