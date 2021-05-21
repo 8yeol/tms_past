@@ -21,178 +21,182 @@
         background-color: #EDF2F8;
     }
 
-    #topMenu {
-        height: 35px;
-    }
-
-    #topMenu ul { /* 메인 메뉴 안의 ul을 설정함: 상위메뉴의 ul+하위 메뉴의 ul */
-        list-style-type: none;
-        margin: 0px;
-        padding: 0px;
-    }
-
-    #topMenu ul li { /* 메인 메뉴 안에 ul 태그 안에 있는 li 태그의 스타일 적용(상위/하위메뉴 모두) */
-        color: white;
-        float: left;
-        line-height: 35px;
-        vertical-align: middle;
-        text-align: center;
-        position: relative;
-    }
-
-    #topMenu ul li a {
-        font-size: 1.4rem;
-        margin-top: 10px;
-    }
-    #topMenu ul li ul li a{
-        font-size: 1.1rem;
-    }
-
-    .menuLink, .submenuLink { /* 상위 메뉴와 하위 메뉴의 a 태그에 공통으로 설정할 스타일 */
-        text-decoration: none;
-        display: block;
-        width: 150px;
-        font-size: 12px;
-        font-weight: normal;
-    }
-
-    .menuLink { /* 상위 메뉴의 글씨색을 흰색으로 설정 */
-        color: white;
-    }
-
-    .topMenuLi:hover .menuLink { /* 상위 메뉴의 li에 마우스오버 되었을 때 스타일 설정 */
-        color: #F7C259;
-        font-weight: bold;
-    }
-
-    .shortLink { /* 좀 더 긴 메뉴 스타일 설정 */
-        width: 100px;
-    }
-
-    .submenuLink { /* 하위 메뉴의 a 태그 스타일 설정 */
-        color: #ffffff;
-        margin-right: -1px; /* [변경] 위 칸의 하단 테두리와 아래칸의 상단 테두리가 겹쳐지도록 설덩 */
-    }
-
-    .submenu { /* 하위 메뉴 스타일 설정 */
-        text-align: center;
-        position: absolute;
-        left: -100%;
-        top: 43px;
-        height: 0px;
-        overflow: hidden;
-        transition: height .3s;
-        -webkit-transition: height .3s;
-        -moz-transition: height .3s;
-        -o-transition: height .3s;
-        width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
-    }
-    .shortSubmenu{
-        position: absolute;
-        left:-50%;
-        top: 43px;
-        height: 0px;
-        overflow: hidden;
-        transition: height .3s;
-        -webkit-transition: height .3s;
-        -moz-transition: height .3s;
-        -o-transition: height .3s;
-        width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
-        /*border: 1px solid red;*/
-    }
-
-    .longSubmenu{
-        position: absolute;
-        left: -200%;
-        top: 43px;
-        height: 0px;
-        overflow: hidden;
-        transition: height .3s;
-        -webkit-transition: height .3s;
-        -moz-transition: height .3s;
-        -o-transition: height .3s;
-        width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
-        /*border: 1px solid red;*/
-    }
-
-    .submenu li .customSubmenu li{
-        display: inline-block; /* [변경] 가로로 펼쳐지도록 설정 */
-    }
-
-    .topMenuLi:hover .stan_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
-        height: 50px; /* [변경] 높이를 32px로 설정 */
-        line-height: 50px;
-        width: 450px;
-        background: #75ACFF;
-        border-radius: 5px;
-        z-index: 500;
-    }
-
-    .topMenuLi:hover .short_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
-        position: absolute;
-        left: -50%;
-        top: 43px;
-        height: 50px; /* [변경] 높이를 32px로 설정 */
-        width: 300px;
-        background: #75ACFF;
-        border-radius: 5px;
-        z-index: 500;
-    }
-
-    .topMenuLi:hover .long_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
-        position: absolute;
-        left: -200%;
-        top: 43px;
-        height: 50px; /* [변경] 높이를 32px로 설정 */
-        width: 750px;
-        border-radius: 5px;
-        z-index: 500;
-    }
-
-
-    .submenuLink:hover, li.active>a { /* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
-        color: #F7C259;
-        font-weight: bold;
-    }
-    /* 드롭다운 버튼 style*/
-    .dropbtn {
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-    }
-
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f1f1f1;
-        min-width: 160px;
-        box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.5);
-        z-index: 1;
-    }
-
-    .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-    }
-
-    .dropdown-content a:hover {
-        background-color: #ddd;
-    }
-
-    .dropdown:hover .dropdown-content {display: block;}
-
 
     @media (min-width: 990px) {
         #mobile{
             display: none;
+        }
+
+        #topMenu {
+            height: 35px;
+        }
+
+        #topMenu ul { /* 메인 메뉴 안의 ul을 설정함: 상위메뉴의 ul+하위 메뉴의 ul */
+            list-style-type: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #topMenu ul li { /* 메인 메뉴 안에 ul 태그 안에 있는 li 태그의 스타일 적용(상위/하위메뉴 모두) */
+            color: white;
+            float: left;
+            line-height: 35px;
+            vertical-align: middle;
+            text-align: center;
+            position: relative;
+        }
+
+        #topMenu ul li a {
+            font-size: 1.4rem;
+            margin-top: 10px;
+        }
+        #topMenu ul li ul li a{
+            font-size: 1.1rem;
+        }
+
+        .menuLink, .submenuLink { /* 상위 메뉴와 하위 메뉴의 a 태그에 공통으로 설정할 스타일 */
+            text-decoration: none;
+            display: block;
+            width: 150px;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        .menuLink { /* 상위 메뉴의 글씨색을 흰색으로 설정 */
+            color: white;
+        }
+
+        .topMenuLi:hover .menuLink { /* 상위 메뉴의 li에 마우스오버 되었을 때 스타일 설정 */
+            color: #F7C259;
+            font-weight: bold;
+        }
+
+        .shortLink { /* 좀 더 긴 메뉴 스타일 설정 */
+            width: 100px;
+        }
+
+        .submenuLink { /* 하위 메뉴의 a 태그 스타일 설정 */
+            color: #ffffff;
+            margin-right: -1px; /* [변경] 위 칸의 하단 테두리와 아래칸의 상단 테두리가 겹쳐지도록 설덩 */
+        }
+
+        .submenu { /* 하위 메뉴 스타일 설정 */
+            text-align: center;
+            position: absolute;
+            left: -100%;
+            top: 43px;
+            height: 0px;
+            overflow: hidden;
+            transition: height .3s;
+            -webkit-transition: height .3s;
+            -moz-transition: height .3s;
+            -o-transition: height .3s;
+            width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+        }
+        .shortSubmenu{
+            position: absolute;
+            left:-50%;
+            top: 43px;
+            height: 0px;
+            overflow: hidden;
+            transition: height .3s;
+            -webkit-transition: height .3s;
+            -moz-transition: height .3s;
+            -o-transition: height .3s;
+            width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+            /*border: 1px solid red;*/
+        }
+
+        .longSubmenu{
+            position: absolute;
+            left: -200%;
+            top: 43px;
+            height: 0px;
+            overflow: hidden;
+            transition: height .3s;
+            -webkit-transition: height .3s;
+            -moz-transition: height .3s;
+            -o-transition: height .3s;
+            width: 100%; /* [변경] 가로 드랍다운 메뉴의 넓이 */
+            /*border: 1px solid red;*/
+        }
+
+        .submenu li .customSubmenu li{
+            display: inline-block; /* [변경] 가로로 펼쳐지도록 설정 */
+        }
+
+        .topMenuLi:hover .stan_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+            height: 50px; /* [변경] 높이를 32px로 설정 */
+            line-height: 50px;
+            width: 450px;
+            background: #75ACFF;
+            border-radius: 5px;
+            z-index: 500;
+        }
+
+        .topMenuLi:hover .short_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+            position: absolute;
+            left: -50%;
+            top: 43px;
+            height: 50px; /* [변경] 높이를 32px로 설정 */
+            width: 300px;
+            background: #75ACFF;
+            border-radius: 5px;
+            z-index: 500;
+        }
+
+        .topMenuLi:hover .long_sub { /* 상위 메뉴에 마우스 모버한 경우 그 안의 하위 메뉴 스타일 설정 */
+            position: absolute;
+            left: -200%;
+            top: 43px;
+            height: 50px; /* [변경] 높이를 32px로 설정 */
+            background: #75ACFF;
+            width: 750px;
+            border-radius: 5px;
+            z-index: 500;
+        }
+
+
+        .submenuLink:hover, li.active>a { /* 하위 메뉴의 a 태그의 마우스 오버 스타일 설정 */
+            color: #F7C259;
+            font-weight: bold;
+        }
+        /* 드롭다운 버튼 style*/
+        .dropbtn {
+            color: white;
+            background: none;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.5);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
         }
     }
 
@@ -200,89 +204,98 @@
         #desktop{
             display: none;
         }
+
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #0051c4;
+            overflow-x: hidden;
+            padding-top: 60px;
+            transition: 0.5s;
+        }
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #ffffff;
+            display: block;
+            transition: 0.3s;
+        }
+        .sidebar button {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #ffffff;
+            display: block;
+            transition: 0.3s;
+            border: none;
+            background: none;
+        }
+
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #094db3;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+        }
+
+        #main {
+            transition: margin-left .5s;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidebar {padding-top: 15px;}
+            .sidebar a {font-size: 18px;}
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #235dc4;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: #ffffff;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropbtn {
+            color: white;
+            background: none;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
     }
 
-    .sidebar {
-        height: 100%;
-        width: 0;
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        background-color: #0051c4;
-        overflow-x: hidden;
-        padding-top: 60px;
-        transition: 0.5s;
-    }
-    .sidebar a {
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 25px;
-        color: #ffffff;
-        display: block;
-        transition: 0.3s;
-    }
-    .sidebar button {
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 25px;
-        color: #ffffff;
-        display: block;
-        transition: 0.3s;
-        border: none;
-        background: none;
-    }
 
-    .sidebar .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-    }
-
-    .openbtn {
-        font-size: 20px;
-        cursor: pointer;
-        background-color: #094db3;
-        color: white;
-        padding: 10px 15px;
-        border: none;
-    }
-
-    #main {
-        transition: margin-left .5s;
-    }
-
-    @media screen and (max-height: 450px) {
-        .sidebar {padding-top: 15px;}
-        .sidebar a {font-size: 18px;}
-    }
-    .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-    .dropdown-content {
-        margin-left: 30px;
-        display: none;
-        position: absolute;
-        background-color: #235dc4;
-        min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
-    .dropdown-content a {
-        color: #ffffff;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-    }
-    .dropdown-content a:hover {
-        background-color: #f1f1f1
-    }
-    .dropdown:hover .dropdown-content {
-        display: block;
-    }
 
 
 </style>
@@ -297,21 +310,21 @@
 
                 <nav id="topMenu">
                     <ul id="menu">
-                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/dashboard" id="dashboard">대시보드</a></li>
-                        <li class="topMenuLi"><a class="menuLink shortLink" href="<%=cp%>/alarm" id="alarm">알림</a></li>
-                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/monitoring" id="monitoring">모니터링</a>
+                        <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/dashboard" id="dashboard">대시보드</a></li>
+                        <li class="topMenuLi"><a class="menuLink shortLink fw-bold" href="<%=cp%>/alarm" id="alarm">알림</a></li>
+                        <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/monitoring" id="monitoring">모니터링</a>
                             <ul class="submenu short_sub">
-                                <li><a href="<%=cp%>/monitoring" class="submenuLink">실시간 모니터링</a></li>
+                                <li><a href="<%=cp%>/monitoring" class="submenuLink ">실시간 모니터링</a></li>
                                 <li><a href="<%=cp%>/sensor" class="submenuLink">상세화면</a></li>
                             </ul>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/dataInquiry" id="statistics">분석 및 통계</a>
+                        <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/dataInquiry" id="statistics">분석 및 통계</a>
                             <ul class="submenu short_sub">
                                 <li><a href="<%=cp%>/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
                                 <li><a href="<%=cp%>/dataStatistics" class="submenuLink ">통계자료 조회</a></li>
                             </ul>
                         </li>
-                        <li class="topMenuLi"><a class="menuLink" href="<%=cp%>/stationManagement" id="setting">환경설정</a>
+                        <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/stationManagement" id="setting">환경설정</a>
                             <ul class="submenu long_sub">
                                 <li><a href="<%=cp%>/stationManagement" class="submenuLink ">측정소 관리</a></li>
                                 <li><a href="<%=cp%>/sensorManagement" class="submenuLink ">센서 관리</a></li>
@@ -326,7 +339,6 @@
             </div>
 
             <div class="text-end">
-
                 <div class="dropdown">
                     <button class="dropbtn rounded" id="dropBtn"><i class="fas fa-caret-down"></i></button>
                     <div class="dropdown-content text-start">
@@ -334,7 +346,6 @@
                         <a href="<%=cp%>/logout">로그아웃</a>
                     </div>
                 </div>
-
             </div>
 
         </div>
@@ -349,21 +360,21 @@
         <a class="fw-bold mt-1" href="<%=cp%>/alarm">알림</a>
         <div class="dropdown">
             <button class="dropbtn fw-bold mt-1">모니터링</button>
-            <div class="dropdown-content">
+            <div class="dropdown-content ms-4">
                 <a href="<%=cp%>/monitoring" class="fs-6 fw-bold">실시간 모니터링</a>
                 <a href="<%=cp%>/sensor" class="fs-6 fw-bold">상세화면</a>
             </div>
         </div>
         <div class="dropdown">
             <button class="dropbtn fw-bold mt-1">분석 및 통계</button>
-            <div class="dropdown-content">
+            <div class="dropdown-content ms-4">
                 <a href="<%=cp%>/dataInquiry" class="fs-6 fw-bold">측정자료 조회</a>
                 <a href="<%=cp%>/dataStatistics" class="fs-6 fw-bold">통계자료 조회</a>
             </div>
         </div>
         <div class="dropdown">
             <button class="dropbtn fw-bold mt-1">설정</button>
-            <div class="dropdown-content">
+            <div class="dropdown-content ms-4">
                 <a href="<%=cp%>/stationManagement" class="fs-6 fw-bold">측정소 관리</a>
                 <a href="<%=cp%>/sensorManagement" class="fs-6 fw-bold">센서 관리</a>
                 <a href="<%=cp%>/alarmManagement" class="fs-6 fw-bold">알림 설정</a>
@@ -388,7 +399,7 @@
 
             <div class="text-end">
                 <div class="dropdown">
-                    <button class="dropbtn rounded" id="dropBtn"><i class="fas fa-caret-down"></i></button>
+                    <button class="dropbtn rounded" id="m_dropBtn"><i class="fas fa-caret-down"></i></button>
                     <div class="dropdown-content text-start">
                         <a href="<%=cp%>/myPage">마이페이지</a>
                         <a href="<%=cp%>/logout">로그아웃</a>
@@ -413,6 +424,7 @@
         var settings = {"url": "<%=cp%>/getUsername", "method": "POST",};
         $.ajax(settings).done(function (name) {
             $('#dropBtn').prepend(name+" 님");
+            $('#m_dropBtn').prepend(name+" 님");
             getRank();
         });
     });
