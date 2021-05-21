@@ -138,7 +138,7 @@
         /*font-weight: bold;*/
     }
 
-    @media all and (max-width: 1200px) {
+    @media all and (max-width: 1000px) {
         #place_name span{
             font-size: 0.8rem;
         }

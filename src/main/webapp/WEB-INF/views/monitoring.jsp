@@ -80,7 +80,7 @@
         padding-top: 0.75rem;
         padding-left: 0.25rem;
     }
-    @media all and (max-width: 1200px) {
+    @media all and (max-width: 1000px) {
         .standardDiv span{
             font-size: 0.75rem;
         }
