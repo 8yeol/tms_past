@@ -224,9 +224,7 @@ public class MainController {
             }
         }
         model.addAttribute("collections", result);
-
-        List<Place> places = placeRepository.findAll();
-        model.addAttribute("place", places);
+        model.addAttribute("place", placeRepository.findAll());
 
         return "sensorManagement";
     }
@@ -261,27 +259,10 @@ public class MainController {
      * */
     @RequestMapping("emissionsManagement")
     public String emissionsManagement(Model model) {
-
-        List<EmissionsStandardSetting> standard =  emissionsStandardSettingRepository.findAll();
-        model.addAttribute("standard",standard);
-
-        List<EmissionsSetting> emissions = emissionsSettingRepository.findAll();
-        for (int i = 0 ; i<emissions.size(); i++){
-            if(emissions.get(i).getPlace().equals("") || emissions.get(i).getPlace() == null){        //측정소 없으면 제외
-                emissions.remove(i);
-                i--;
-            }
-        }
-        model.addAttribute("emissions", emissions);
-
-        List<AnnualEmissions> yearlyEmissions = annualEmissionsRepository.findAll();
-        for (int i = 0 ; i< yearlyEmissions.size(); i++) {
-            if (yearlyEmissions.get(i).getPlace().equals("") || yearlyEmissions.get(i).getPlace() == null) {   //측정소 없으면 제외
-                yearlyEmissions.remove(i);
-                i--;
-            }
-        }
-        model.addAttribute("yearlyEmissions", yearlyEmissions);
+        //측정소 없으면 제외
+        model.addAttribute("emissions", emissionsSettingRepository.findByPlaceIsNotIn(""));
+        model.addAttribute("yearlyEmissions", annualEmissionsRepository.findByPlaceIsNotIn(""));
+        model.addAttribute("standard",emissionsStandardSettingRepository.findAll());
 
         return "emissionsManagement";
     }
@@ -315,7 +296,7 @@ public class MainController {
      * @return log.jsp
      */
     @RequestMapping("/log")
-    public String log(Model model, @RequestParam(value = "id", required = false) String id) {
+    public String log(Model model, @RequestParam(value = "id") String id) {
 
         model.addAttribute("logList",logRepository.findById(id));
         model.addAttribute("member",memberRepository.findById(id));

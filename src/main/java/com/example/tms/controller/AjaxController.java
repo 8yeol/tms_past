@@ -331,7 +331,7 @@ public class AjaxController {
             NotificationSettings no = notification_settingsRepository.findByName(sensor.get(i));
             if (no != null) {
                 no.setStatus(false);
-                inputLogSetting(sensor.get(i)+" 알림설정 false 변경" ,"설정값 변경",principal);
+                inputLogSetting(sensor.get(i)+" 알림설정 OFF 변경" ,"설정값 변경",principal);
                 notification_settingsRepository.save(no);
             }
 
@@ -340,7 +340,7 @@ public class AjaxController {
             if (em != null) {
                 em.setStatus(false);
                 em.setPlace("");
-                inputLogSetting(sensor.get(i)+" 배출량 모니터링 false 변경, 측정소 ''변경" ,"설정값 변경",principal);
+                inputLogSetting(sensor.get(i)+" 배출량 모니터링 OFF 변경, 측정소 ' '변경" ,"설정값 변경",principal);
                 emissionsSettingRepository.save(em);
             }
 
@@ -349,7 +349,7 @@ public class AjaxController {
             if (aem != null) {
                 aem.setStatus(false);
                 aem.setPlace("");
-                inputLogSetting(sensor.get(i)+" 배출량 연간 모니터링 false 변경, 측정소 ''변경" ,"설정값 변경",principal);
+                inputLogSetting(sensor.get(i)+" 배출량 연간 모니터링 OFF 변경, 측정소 ' '변경" ,"설정값 변경",principal);
                 annualEmissionsRepository.save(aem);
             }
 
@@ -357,7 +357,7 @@ public class AjaxController {
             SensorList sl = sensorListRepository.findByTableName(sensor.get(i), "");
             if (sl != null) {
                 sl.setPlace("");
-                inputLogSetting(sensor.get(i)+" 센서 측정소 ''변경" ,"설정값 변경",principal);
+                inputLogSetting(sensor.get(i)+" 센서 측정소 ' '변경" ,"설정값 변경",principal);
                 sensorListRepository.save(sl);
             }
 
@@ -365,7 +365,7 @@ public class AjaxController {
             ReferenceValueSetting rv = reference_value_settingRepository.findByName(sensor.get(i));
             if (rv != null) {
                 rv.setMonitoring(false);
-                inputLogSetting(sensor.get(i)+" 모니터링 false 변경","설정값 변경",principal);
+                inputLogSetting(sensor.get(i)+" 모니터링 OFF 변경","설정값 변경",principal);
                 reference_value_settingRepository.save(rv);
             }
 
@@ -374,7 +374,7 @@ public class AjaxController {
             if (ess != null) {
                 ess.setPlace("");
                 ess.setDate(new Date());
-                inputLogSetting(sensor.get(i)+" 배출 관리 기준 측정소 ''변경" ,"설정값 변경",principal);
+                inputLogSetting(sensor.get(i)+" 배출 관리 기준 측정소 ' '변경" ,"설정값 변경",principal);
                 emissionsStandardSettingRepository.save(ess);
             }
 
@@ -382,7 +382,7 @@ public class AjaxController {
             EmissionsTransition et = emissionsTransitionRepository.findByTableName(sensor.get(i));
             if (et != null) {
                 et.setPlaceName("");
-                inputLogSetting(sensor.get(i)+" 분기별 배출량 측정소 ''변경" ,"설정값 변경",principal);
+                inputLogSetting(sensor.get(i)+" 분기별 배출량 측정소 ' '변경" ,"설정값 변경",principal);
                 emissionsTransitionRepository.save(et);
             }
 
