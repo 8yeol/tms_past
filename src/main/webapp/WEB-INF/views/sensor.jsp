@@ -148,7 +148,7 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
 
-<div class="container" style="padding-left: 0;">
+<div class="container"  id="container" style="padding-left: 0;">
     <div class="row">
         <div class="row bg-white sizing">
             <div class="col-md-2 rounded-0 pt-5 px-0 navPlace">

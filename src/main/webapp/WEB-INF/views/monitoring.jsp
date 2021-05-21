@@ -119,7 +119,7 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 
-<div class="container">
+<div class="container"  id="container">
     <div class="row m-3 mt-3">
         <div class="col">
             <span class="fs-4 flashToggle fw-bold">모니터링 > 실시간 모니터링</span>

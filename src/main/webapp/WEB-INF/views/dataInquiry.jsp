@@ -195,7 +195,7 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
 
-<div class="container">
+<div class="container" >
     <div class="ms-3 mt-3 add-bg row">
         <div class="col-3 picker">
             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
