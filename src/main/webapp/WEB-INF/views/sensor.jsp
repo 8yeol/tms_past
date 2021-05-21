@@ -245,7 +245,7 @@
             clearTimeout(interval3);
             if(placeName.length ==0){
                 Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
-                interval3 = setTimeout(draw_frame, 5000);
+                interval3 = setTimeout(draw_frame, 60000);
             }else{
                 draw_place_frame(placeName);
                 /* URL로 파라미터 확인 (모니터링페이지에서 넘어온 경우 파라미터 있음)*/

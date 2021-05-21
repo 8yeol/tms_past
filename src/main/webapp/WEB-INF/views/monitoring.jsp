@@ -258,7 +258,7 @@
             const placeData = new Array();
             if(placeName.length == 0){ // 측정소가 없을 때
                 Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
-                INTERVAL = setTimeout(interval_getData, 5000);
+                INTERVAL = setTimeout(interval_getData, 60000);
             }else{ //측정소가 있을 때
                 var sensorDataNullCheck = true;
                 for (let i = 0; i < placeName.length; i++) {
