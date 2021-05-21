@@ -148,6 +148,15 @@
         min-height: 450px;
     }
 
+    .down{
+        margin-top: 1.61rem;
+    }
+
+    #items{
+        border: 1px solid #dee2e6;
+        border-color: #dee2e6;
+    }
+
     /* 미디어쿼리 */
     @media all and (max-width: 1399px) and (min-width: 1200px) {
         .sizing {width:937px;}
@@ -171,9 +180,14 @@
         .f-sizing {font-size: 0.9rem!important;}
         .add-bg{width:720px; height: 120px;}
         #date_start, #date_end {width:120px;}
-        .down {top:-1220px; width: 740px; height: 110px; padding-bottom: 20px;}
+        .down {top:-1140px; width: 708px; margin-top: 0; margin-left: 12px; border: 1px solid; border-color: #dee2e6}
+        #items{ border: 0px}
+        .down div{
+            float: left;
+            margin-left: 0.5rem;
+        }
         .m-top{padding-top: 100px;}
-        .h-fix {height: 68px;}
+        .h-fix {height: 20px;}
     }
 </style>
 
@@ -285,9 +299,9 @@
 
         </div>
         <div class="col-lg-2 down">
-            <div class="mt-4 p-2 bg-white text-center">측정 항목 선택</div>
+            <div class="p-2 bg-white text-center">측정 항목 선택</div>
 
-            <div class="border p-2 bg-white h-fix" id="items">
+            <div class="p-2 bg-white h-fix" id="items">
                 <%-- script --%>
             </div>
         </div>
