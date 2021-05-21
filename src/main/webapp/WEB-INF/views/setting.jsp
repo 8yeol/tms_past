@@ -122,15 +122,15 @@
 
                 <thead>
                 <tr class="text-center">
-                    <th>ID</th>
-                    <th>이름</th>
-                    <th>등급</th>
-                    <th>이메일</th>
-                    <th>연락처</th>
-                    <th>가입신청일</th>
-                    <th>가입승인일</th>
-                    <th>최종 로그인</th>
-                    <th>관리</th>
+                    <th style="width:7%">ID</th>
+                    <th style="width:6%">이름</th>
+                    <th style="width:8%">등급</th>
+                    <th style="width:10%">이메일</th>
+                    <th style="width:10%">연락처</th>
+                    <th style="width:17%">가입신청일</th>
+                    <th style="width:17%">가입승인일</th>
+                    <th style="width:17%">최종 로그인</th>
+                    <th style="width:9%">관리</th>
                 </tr>
                 </thead>
 

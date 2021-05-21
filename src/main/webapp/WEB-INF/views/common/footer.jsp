@@ -8,3 +8,26 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 </body>
 </html>
+
+<script>
+
+    var mql = window.matchMedia("screen and (max-width: 1024px)");
+
+    mql.addListener(function(e) {
+        if(e.matches) {
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    });
+
+    var filter = "win16|win32|win64|mac";
+    if(navigator.platform){
+        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    }
+
+</script>

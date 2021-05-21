@@ -241,12 +241,12 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th width="12%">측정소명</th>
+                    <th width="11%">측정소명</th>
                     <th  width="11%">센서명</th>
-                    <th width="19%">연간 배출 허용 기준</th>
-                    <th width="10%">기준 농도</th>
-                    <th width="17%">산출식(참고용)</th>
-                    <th width="20%">최종 수정 날짜</th>
+                    <th width="21%">연간 배출 허용 기준</th>
+                    <th width="11%">기준 농도</th>
+                    <th width="16%">산출식(참고용)</th>
+                    <th width="22%">최종 수정 날짜</th>
                     <th width="8%">관리</th>
                 </tr>
                 </thead>
@@ -749,25 +749,6 @@
         },
     });
 
-
-    var mql = window.matchMedia("screen and (max-width: 1024px)");
-
-    mql.addListener(function(e) {
-        if(e.matches) {
-            $('#container').attr('class','container-fluid');
-        } else {
-            $('#container').attr('class','container');
-        }
-    });
-
-    var filter = "win16|win32|win64|mac";
-    if(navigator.platform){
-        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
-            $('#container').attr('class','container-fluid');
-        } else {
-            $('#container').attr('class','container');
-        }
-    }
 
 
 </script>

@@ -91,7 +91,7 @@
         color: #fff;
     }
 </style>
-<div class="container">
+<div class="container" id="container">
     <c:choose>
         <c:when test="${member.state eq '5'}">
             <c:set var="state" value="가입 거절"></c:set>
@@ -165,6 +165,25 @@
             },
         },
     });
+
+    var mql = window.matchMedia("screen and (max-width: 1024px)");
+
+    mql.addListener(function(e) {
+        if(e.matches) {
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    });
+
+    var filter = "win16|win32|win64|mac";
+    if(navigator.platform){
+        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    }
 </script>
 
 
