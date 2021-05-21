@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
@@ -23,10 +22,10 @@ public class SensorCustomRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    /**
-     * @param sensor (sensor sensor)
-     * @param hour (60 - 1hour, 1440 - 24hour, ...)
-     * @return List<Sensor> </sensor>_id, value, status, up_time
+    /**해당 센서의 현재-hour ~ 현재까지 데이터 리턴
+     * @param sensor 센서명
+     * @param hour 시간
+     * @return List<Sensor>
      */
     public List<Sensor> getSenor(String sensor, String hour){
         /* from A to B : A 부터 B까지 */
@@ -62,34 +61,11 @@ public class SensorCustomRepository {
         return null;
     }
 
-    /* String type -> LocalDateTime format  */
-    private LocalDateTime format_time(String datetime, boolean end){
-        try {
-            LocalDateTime newDateTime = null;
-            // length : 2021-04-22T01:33:00 - 19, 2021-04-22 01:33:00 - 19, 2021-04-22 - 10, 01:33:00 - 8, 2021-04 - 7, 01:33 - 5
-            if(datetime.length() == 19){
-                datetime = datetime.replace(" ", "T");
-                newDateTime = LocalDateTime.parse(datetime);
-            }else if(datetime.length() == 10 && !end){
-                newDateTime = LocalDateTime.parse(datetime+"T00:00:00");
-            }else if(datetime.length() == 10 && end){
-                newDateTime = LocalDateTime.parse(datetime+"T23:59:59");
-            }else if(datetime.length() == 8 || datetime.length() == 5){
-                newDateTime = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))+"T"+datetime);
-            }else if(datetime.length() == 7){
-                newDateTime = LocalDateTime.parse(datetime+"-01T00:00:00");
-            }else{
-                newDateTime = LocalDateTime.now();
-            }
-            return newDateTime; /* Year-Month-Day + T + Hours:Minutes:Seconds */
-        }catch (Exception e){
-            log.info(e.getMessage());
-
-        }
-        return null;
-    }
-
-    /* 최근 데이터 조회 */
+    /**
+     * 최근 센서 데이터 리턴
+     * @param sensor 센서명
+     * @return Sensor
+     */
     public Sensor getSensorRecent(String sensor){
         try{
             ProjectionOperation projectionOperation = Aggregation.project()
@@ -112,7 +88,11 @@ public class SensorCustomRepository {
         return null;
     }
 
-    /* 최근데이터 2개 조회 후 2번째 데이터 리턴 */
+    /**
+     * 최근데이터의 직전값 리턴
+     * @param sensor 센서명
+     * @return Sensor
+     */
     public Sensor getSensorBeforeData(String sensor){
         try{
             ProjectionOperation projectionOperation = Aggregation.project()

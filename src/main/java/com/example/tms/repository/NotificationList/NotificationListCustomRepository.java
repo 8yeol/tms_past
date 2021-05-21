@@ -21,11 +21,11 @@ public class NotificationListCustomRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-    /** 기준별 초과 알림 카운팅
+    /** 기준별 초과 카운팅
      * @param grade  기준 초과 등급 1~3
      * @param from_date
      * @param to_date
-     * @return grade, from, to의 조건에 맞는 알림 카운트
+     * @return int 기준별, 날짜별 카운팅된 숫자
      */
     public List<HashMap> getCount(int grade, String from_date, String to_date){
         LocalDateTime fromDate = LocalDateTime.parse(from_date + "T00:00:00");

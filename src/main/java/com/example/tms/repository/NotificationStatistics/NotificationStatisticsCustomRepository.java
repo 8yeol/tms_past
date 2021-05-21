@@ -20,8 +20,10 @@ public class NotificationStatisticsCustomRepository {
         this.mongoTemplate = mongoTemplate;
     }
 
-
-    /* 최근 일주일 조회 (일 데이터 )*/
+    /**
+     * 최근 일주일 알림 현황(기준 초과 카운팅) 리턴
+     * @return ["yyyy-mm-dd, 법적기준초과, 사내기준초과, 관리기준초과", ...]
+     */
     public List<NotificationDayStatistics> getNotificationWeekStatistics(){
         try{
             ProjectionOperation projectionOperation = Aggregation.project()
@@ -45,7 +47,10 @@ public class NotificationStatisticsCustomRepository {
         return null;
     }
 
-    /* 최근 1년 조회 (월 데이터 )*/
+    /**
+     * 최근 1년 알림 현황(기준 초과 카운팅) 리턴
+     * @return ["yyyy-mm, 법적기준초과, 사내기준초과, 관리기준초과", ...]
+     */
     public List<NotificationMonthStatistics> getNotificationMonthStatistics(){
 
         try{
