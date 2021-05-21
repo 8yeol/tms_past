@@ -1049,7 +1049,7 @@
         } else if (standard == "manage") {
             modal.html("'" + place + "-" + name + "'의 관리기준 값이 '" + value + "'(으)로 설정되었습니다.");
         } else {
-            if (value == true) {
+            if (value == "ON") {
                 if (name == "") {
                     modal.html("'" + place + "' 모니터링 'ON'(으)로 설정되었습니다.");
                 } else {
