@@ -137,6 +137,12 @@
         /*font-size: 80% !important;*/
         /*font-weight: bold;*/
     }
+
+    @media all and (max-width: 1000px) {
+        #place_name span{
+            font-size: 0.8rem;
+        }
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
@@ -216,7 +222,7 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    var interval1, interval2;
+    var interval1, interval2, interval3;
     var chart;
 
     /**
@@ -236,9 +242,10 @@
 
         setTimeout( function draw_frame() {
             var placeName = getPlace();
+            clearTimeout(interval3);
             if(placeName.length ==0){
                 Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
-                setTimeout(draw_frame, 10000);
+                interval3 = setTimeout(draw_frame, 5000);
             }else{
                 draw_place_frame(placeName);
                 /* URL로 파라미터 확인 (모니터링페이지에서 넘어온 경우 파라미터 있음)*/
@@ -321,7 +328,7 @@
                         }
                     }
                     draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
-                    interval1 = setTimeout(interval_getData, 50000);
+                    interval1 = setTimeout(interval_getData, 5000);
                 }, 0); //setTimeout
                 if (!sensor_naming) {  //파라미터 없을 경우
                     var sensor_data = place_data[0]; // 기본값
@@ -380,6 +387,12 @@
                         }
                         var placeName = getPlace();
                         if($('#place_name > li').length != placeName.length){
+                            $('#place_name').empty();
+                            $('#place-tbody-table').empty();
+                            draw_sensor_table(null);
+                            updateChart(null, sensor_data);
+                            $("#radio_text").text("-") ;
+                            $("#standard_text").text("");
                             draw_frame();
                         }
                         interval2 = setTimeout(interval_getData2, 5000);

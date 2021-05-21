@@ -32,10 +32,11 @@
     }
 
     .emoji {
-        width: 60px;
-        height: 60px;
+        width: 80px;
+        height: 80px;
         position: relative;
-        top: 25px;
+        top: 2rem;
+        margin-left: 0.75rem;
     }
 
     .add-bg-color {
@@ -71,6 +72,46 @@
     tr {
         border-bottom: solid #dee2e6;
     }
+    .mb-0{
+        padding-top: 2rem;
+        font-size: 1.8rem;
+    }
+    .fs-6{
+        padding-top: 0.75rem;
+        padding-left: 0.25rem;
+    }
+    @media all and (max-width: 1000px) {
+        .standardDiv span{
+            font-size: 0.75rem;
+        }
+
+        .emoji {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            top: 0.75rem;
+            margin-left: 0.25rem;
+        }
+        .mb-0{
+            padding-top: 1rem;
+            font-size: 1rem;
+        }
+        .fs-6{
+            padding-top: 0.45rem;
+            padding-left: 0.25rem;
+        }
+
+        .row table tr{
+            margin: auto;
+            font-size: 0.8rem;
+        }
+        .svg-inline--fa{
+            font-size: 0.6rem;
+        }
+        .text-end {
+            font-size: 0.25rem;
+        }
+    }
 </style>
 
 
@@ -94,7 +135,7 @@
                 <span class="fs-5 text-center" style="width: 80%; margin: 0 auto;">가동률</span>
             </div>
 
-            <div class="row">
+            <div class="row h-75">
                 <div class="col text-center" style="border-right: 1px solid #2295DB;padding: 15px;" >
                     <p class="fs-1 mb-0" id="statusPercent"></p>
                     <hr style="margin: 0 30px 0;">
@@ -103,16 +144,15 @@
 
                 <div class="col" style="padding: 0;">
                     <div style="border-bottom: 1px solid #2295DB;">
-                      <p class="fs-6" style="margin: 8px;">정상 : <a style="text-align: right" id="statusOn"></a></p>
+                      <p class="fs-6">정상 : <a style="text-align: right" id="statusOn"></a></p>
                     </div>
                     <div style="border-bottom: 1px solid #2295DB;">
-                    <p class="fs-6" style="margin: 8px;">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
+                    <p class="fs-6">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
                     </div>
                         <div>
-                    <p class="fs-6" style="margin: 8px;">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
+                    <p class="fs-6">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
                         </div>
                 </div>
-
             </div>
         </div>
 
@@ -120,25 +160,24 @@
         <div class="col bg-white" style="margin-left: 5px;border-top-left-radius: 20px;border-top-right-radius: 20px;">
             <div class="row standardParent">
                 <div class="col fs-6 fw-bold standardDiv" style="border-right: 2px solid white;">
-                    법적기준 초과
+                    <span>법적기준 초과</span>
                 </div>
                 <div class="col fs-6 fw-bold standardDiv"style="border-right:2px solid white;">
-                    사내기준 초과
+                    <span>사내기준 초과</span>
                 </div>
                 <div class="col  fs-6 fw-bold standardDiv">
-                    관리기준 초과
+                    <span>관리기준 초과</span>
                 </div>
             </div>
             <div class="row h-75">
-
                 <%-- 법적 기준 --%>
-                <div class="col standardImg" style="border-right: 2px solid #2295DB;padding-right: 16px; padding-top: 10px;">
+                <div class="col standardImg" style="border-right: 2px solid #2295DB;">
                     <div class="row text-center">
                         <div class="col">
                             <img src="static/images/sad.png" class="emoji">
                         </div>
                         <div class="col" style="margin-top: 5px;">
-                            <p class="mb-0" id="legal_standard_text_A" style="font-size: 2rem;"></p>
+                            <p class="mb-0" id="legal_standard_text_A"></p>
                             <hr class="m-0">
                             <p id="legal_standard_text_B"></p>
                         </div>
@@ -146,13 +185,13 @@
                 </div>
 
                 <%-- 사내 기준 --%>
-                <div class="col standardImg" style="border-right: 2px solid #2295DB; padding-top: 10px;">
+                <div class="col standardImg" style="border-right: 2px solid #2295DB;">
                     <div class="row text-center">
                         <div class="col">
                             <img src="static/images/thinking.png" class="emoji">
                         </div>
                         <div class="col" style="margin-top: 5px;">
-                            <p class="mb-0" id="company_standard_text_A" style="font-size: 2rem;"></p>
+                            <p class="mb-0" id="company_standard_text_A"></p>
                             <hr class="m-0">
                             <p id="company_standard_text_B"></p>
                         </div>
@@ -160,13 +199,13 @@
                 </div>
 
                 <%-- 관리 기준 --%>
-                <div class="col standardImg" style="padding-left: 15px; padding-top: 10px;">
+                <div class="col standardImg">
                     <div class="row text-center" >
                         <div class="col">
                             <img src="static/images/sceptic.png" class="emoji">
                         </div>
                         <div class="col" style="margin-top: 5px;">
-                            <p class="mb-0" id="management_standard_text_A" style="font-size: 2rem;"></p>
+                            <p class="mb-0" id="management_standard_text_A"></p>
                             <hr class="m-0">
                             <p id="management_standard_text_B"></p>
                         </div>
@@ -219,7 +258,7 @@
             const placeData = new Array();
             if(placeName.length == 0){ // 측정소가 없을 때
                 Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
-                INTERVAL = setTimeout(interval_getData, 10000);
+                INTERVAL = setTimeout(interval_getData, 5000);
             }else{ //측정소가 있을 때
                 var sensorDataNullCheck = true;
                 for (let i = 0; i < placeName.length; i++) {
@@ -230,7 +269,7 @@
                         if(placeData[i].length != 0){
                             sensorDataNullCheck = false;
                         }
-                        INTERVAL = setTimeout(interval_getData, 10000);
+                        INTERVAL = setTimeout(interval_getData, 5000);
                 }
                 if(sensorDataNullCheck){
                     Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 센서의 데이터가 없습니다.'});
@@ -345,7 +384,7 @@
                     if(monitoring === 'true'){
                         /* 센서의 최근 데이터 */
                         var recentData = getSensorRecent(item);
-                        if(recentData.value == 0 || recentData.value == null){ //null 일때
+                        if(recentData.value == null){ //null 일때
                             return null;
                         }else{
                             status = recentData.status; //센서의 상태
