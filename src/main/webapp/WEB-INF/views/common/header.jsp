@@ -9,7 +9,6 @@
 <html>
 <head>
     <title>TMS</title>
-    <%-- favicon.ico 404 에러처리 --%>
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/common.css">

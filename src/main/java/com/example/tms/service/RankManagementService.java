@@ -15,7 +15,7 @@ public class RankManagementService {
     }
 
     /**
-     * 데이터베이스에 저장될 기본권한값
+     * 권한 관리를 위한 초기값 설정(DB)
      */
     public void defaultRankSetting () {
         RankManagement denie = new RankManagement();
@@ -26,7 +26,6 @@ public class RankManagementService {
         denie.setStatistics(false);
         denie.setSetting(false);
         rankManagementRepository.save(denie);
-
 
         RankManagement user = new RankManagement();
         user.setName("normal");

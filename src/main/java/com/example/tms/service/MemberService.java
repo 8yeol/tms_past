@@ -27,9 +27,9 @@ public class MemberService implements UserDetailsService {
     }
 
     /**
-     * Spring Security를 통해 로그인하는 과정
+     * Spring Security 를 통한 로그인
      * @param username 입력한 유저의 ID
-     * @return user타입의 객체를 반환
+     * @return user 타입의 객체를 반환
      * @throws UsernameNotFoundException 예외처리
      */
     @Override
@@ -47,9 +47,9 @@ public class MemberService implements UserDetailsService {
 
     /**
      * 유저의 계정정보를 데이터베이스에 저장
-     * @param member 계정정보객체
-     * @param state 권한값변수
-     * @return 저장의결과값을 리턴
+     * @param member 멤버객체
+     * @param state 권한 값 변수
+     * @return 저장 결과 리턴
      */
     public Member memberSave(Member member, String state) {
         member.encodePassword(passwordEncoder);
@@ -58,8 +58,8 @@ public class MemberService implements UserDetailsService {
     }
 
     /**
-     * 유저의 계정정보를 업데이트
-     * @param member 입력받은 변경값 유저정보객체
+     * [마이페이지] - 회원정보수정
+     * @param member 입력받은 변경된 멤버객체
      */
     public void updateMember(Member member) {
         Member updateMember = memberRepository.findById(member.getId());
@@ -76,8 +76,8 @@ public class MemberService implements UserDetailsService {
     }
 
     /**
-     * 유저의 업데이트시에 데이터베이스에 해당 log를 저장
-     * @param member log의대상이 되는 유저정보객체
+     * 회원정보수정 log 저장
+     * @param member log 대상이 되는 멤버객체
      */
     public void updateLog(Member member){
         Date date = new Date();
@@ -98,7 +98,7 @@ public class MemberService implements UserDetailsService {
     }
 
     /**
-     * 유저의 탈퇴, 제명 처리시 실행
+     * 유저 탈퇴, 제명 처리
      * @param id 탈퇴, 제명할 유저의 아이디
      */
     public void deleteById(String id) {

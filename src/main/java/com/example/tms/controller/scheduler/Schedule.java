@@ -34,10 +34,11 @@ public class Schedule {
     }
 
     /**
+     * 매 월 1일 00시 실행 (매월 1일 전월 데이터 통계)
      * [분석 및 통계 > 통계자료 조회]
-     * 해당 시점에 등록된 센서목록 읽어와서 해당 컬렉션의 통계자료 DB 저장
+     * 해당 시점에 등록된 센서목록 전체 읽어와서 해당 컬렉션의 통계자료 DB 저장
      */
-    @Scheduled(cron = "0 0 0 1 * *") // 매 월 1일 00시 실행
+    @Scheduled(cron = "0 0 0 1 * *")
     public void monthlyEmissionsScheduling(){
         LocalDate today = LocalDate.now();
         LocalDate lastMonth = today.minus(1, ChronoUnit.MONTHS);

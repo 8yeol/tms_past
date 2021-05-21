@@ -45,9 +45,7 @@ public class MongoQuary {
                 .and("name").as("name")
                 .and("sensor").as("sensor");
 
-        MatchOperation where;
-
-        where = Aggregation.match(
+        MatchOperation where = Aggregation.match(
                 new Criteria().andOperator(
                         Criteria.where("sensor")
                                 .not().size(0)
