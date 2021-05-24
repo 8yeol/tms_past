@@ -175,7 +175,7 @@
     }
 
     @media all and (max-width: 989px) {
-        .sizing {width: 707px;top:120px;}
+        .sizing {width: 720px;top:120px;}
         .picker {width: 100%;}
         .add-margin {margin-left: 15px;}
         .search {left:0px;top:10px;}
@@ -192,6 +192,7 @@
         .m-top{padding-top: 100px;}
         .h-fix {height: 20px;}
         #searchDiv{height: 190px;}
+        .container>div:nth-child(4)>div:nth-child(1)>div:nth-child(1) {width: 720px;}
     }
 </style>
 
@@ -250,7 +251,7 @@
 
     <hr class="mt-2 mb-2">
 
-    <div class="row" style="margin-left: 1px;">
+    <div class="row" style="margin-left: 1px; width: 720px;">
         <div class="col">
             <div class="row bg-white sizing">
                 <div class="row add-margin-top">
