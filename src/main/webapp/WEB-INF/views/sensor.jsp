@@ -30,7 +30,7 @@
 
     /* 데이터테이블 */
     table.dataTable {
-        width:100% !important;
+        width-100% !important;
     }
 
     .toolbar {
@@ -777,7 +777,8 @@
                             background: '#00E396'
                         },
                         text: '관리기준',
-                        offsetX: '-100%'
+                        position: 'left',
+                        offsetX: 0
                     }
                 },
                 {
@@ -790,7 +791,8 @@
                             background: '#FEB019'
                         },
                         text: '사내기준',
-                        offsetX: '-100%'
+                        position: 'left',
+                        offsetX: 0
                     }
                 },
                 {
@@ -803,7 +805,8 @@
                             background: '#FF4560'
                         },
                         text: '법적기준',
-                        offsetX: '-100%'
+                        position: 'left',
+                        offsetX: 0
                     }
                 }]
             },
