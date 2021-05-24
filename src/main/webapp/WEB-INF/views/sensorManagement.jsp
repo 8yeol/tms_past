@@ -367,7 +367,7 @@
             data: {tableName: tableName},
             success: function () {
                 customSwal('삭제 완료','삭제 되었습니다..');
-                inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place+' - '+sensor+'센서 삭제','설정');
+                inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place+' - '+sensor+' 센서 삭제','설정');
                 setTimeout(function () {
                     location.reload();
                 }, 2000);

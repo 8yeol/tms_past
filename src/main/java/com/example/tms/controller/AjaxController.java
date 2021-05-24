@@ -1100,7 +1100,7 @@ public class AjaxController {
                              @RequestParam(value = "tableName") String tableName,Principal principal) {
         EmissionsStandardSetting ess = new EmissionsStandardSetting(place, naming, 0, 0, tableName, "",new Date());
         emissionsStandardSettingRepository.save(ess);
-        inputLogSetting(place + " - " + naming + "센서 연간 배출 허용 기준 설정 추가", "설정", principal);
+        inputLogSetting("'"+place + " - " + naming + "' 센서 연간 배출 허용 기준 설정 추가", "설정", principal);
     }
 
     /**
