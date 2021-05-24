@@ -437,12 +437,12 @@
         let title = "";
         let content = "";
 
-        if ($('#tableName'+idx).val() == '선택') {
+        if ($('#tableName').val() == '선택') {
             customSwal('경고','테이블명을 선택 해주세요.');
             return;
         }
 
-        if ($('#place' + idx).val() == '선택') {
+        if ($('#place').val() == '선택') {
             customSwal('경고','측정소를 선택 해주세요.');
             return;
         }
