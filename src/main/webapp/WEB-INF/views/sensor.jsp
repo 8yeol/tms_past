@@ -777,35 +777,35 @@
                             background: '#00E396'
                         },
                         text: '관리기준',
-                        offsetX: 0
+                        offsetX: '-100%'
                     }
                 },
-                    {
-                        y: companyStandard,
+                {
+                    y: companyStandard,
+                    borderColor: '#FEB019',
+                    label: {
                         borderColor: '#FEB019',
-                        label: {
-                            borderColor: '#FEB019',
-                            style: {
-                                color: '#fff',
-                                background: '#FEB019'
-                            },
-                            text: '사내기준',
-                            offsetX: 0
-                        }
-                    },
-                    {
-                        y: legalStandard,
+                        style: {
+                            color: '#fff',
+                            background: '#FEB019'
+                        },
+                        text: '사내기준',
+                        offsetX: '-100%'
+                    }
+                },
+                {
+                    y: legalStandard,
+                    borderColor: '#FF4560',
+                    label: {
                         borderColor: '#FF4560',
-                        label: {
-                            borderColor: '#FF4560',
-                            style: {
-                                color: '#fff',
-                                background: '#FF4560'
-                            },
-                            text: '법적기준',
-                            offsetX: 0
-                        }
-                    }]
+                        style: {
+                            color: '#fff',
+                            background: '#FF4560'
+                        },
+                        text: '법적기준',
+                        offsetX: '-100%'
+                    }
+                }]
             },
             yaxis: {
                 tickAmount: 2,
