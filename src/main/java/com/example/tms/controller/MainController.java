@@ -295,12 +295,10 @@ public class MainController {
      * @param id 로그 조회할 Id
      * @return log.jsp
      */
-    @RequestMapping("/log")
-    public String log(Model model, @RequestParam(value = "id") String id) {
-
+    @RequestMapping("log")
+    public String log(Model model, @RequestParam(value = "id",required = false) String id) {
         model.addAttribute("logList",logRepository.findById(id));
         model.addAttribute("member",memberRepository.findById(id));
-
         return "log";
     }
 
