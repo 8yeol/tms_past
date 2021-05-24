@@ -1173,14 +1173,14 @@ public class AjaxController {
      * @return 안내메시지를 리턴
      */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public String memberSignUp(String id, String iNumber) {
+    public String memberSignUp(String id, String iNumber,String state) {
         String msg = "";
         Member newMember = memberRepository.findById(id);
         if (iNumber.equals("0")) {
             newMember.setState("5");
             msg = "가입 거절 되었습니다.";
         } else {
-            newMember.setState("3");
+            newMember.setState(state);
             Date time = new Date();
             newMember.setJoined(time);
             msg = "가입 승인 되었습니다.";
