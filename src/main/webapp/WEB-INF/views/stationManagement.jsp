@@ -610,7 +610,6 @@
                 "admin": admin,
                 "hiddenCode": $("input[name=hiddenCode]").val()
             },success: function (data) {
-                console.log(data);
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -794,8 +793,6 @@
         if (value == "") {
             value = "999";
         }
-        console.log(value);
-
         if (value == 0) {
             Swal.fire({
                 icon: 'warning',
@@ -805,7 +802,6 @@
             placeChange(document.getElementById('nickname').value);
             return false;
         }
-        console.log(value)
         if (value.indexOf('.') != -1) {
             var value_dot = value.substring(value.indexOf('.') + 1);
             if (value_dot.length > 2) {
