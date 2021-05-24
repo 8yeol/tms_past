@@ -108,28 +108,28 @@
                 <h5 class="modal-title fw-bold">측정소 추가</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <form id="placeinfo" method="post" style="width:80%; margin: 0 auto;">
+                <form id="placeinfo" method="post" style="width:80%; margin: 10px auto;">
                     <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text"
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na1"
                                                                                                maxlength="15"
-                                                                                               style="position: relative; left: 15%;">
+                                                                                               style="position: relative; left: 15%; border: 1px solid black;">
 
                     </div>
                     <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
                                                                           id="lo1"
-                                                                          style="position: relative; left: 23.5%;">
+                                                                          style="position: relative; left: 25.3%; border: 1px solid black;">
                     </div>
                     <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
                                                                              id="ad1"
-                                                                             style="position: relative; left: 14.5%;">
+                                                                             style="position: relative; left: 15%; border: 1px solid black;">
                     </div>
                     <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
                                                                            id="te1"
-                                                                           style="position: relative; left: 19.5%;"> >
+                                                                           style="position: relative; left: 21%; border: 1px solid black;"> >
                     </div>
                 </form>
             </div>
@@ -148,27 +148,27 @@
                 <h5 class="modal-title">측정소 수정</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <form id="placeupdate" method="post" style="width:100%; ">
+                <form id="placeupdate" method="post" style="width:80%; margin: 10px auto;">
                     <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text"
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na2"
                                                                                                maxlength='15'
-                                                                                               style="position: relative; left: 15%;">
+                                                                                               style="position: relative; left: 15%; border: 1px solid black;">
 
                     </div>
                     <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
                                                                           id="lo2"
-                                                                          style="position: relative; left: 22%;"></div>
+                                                                          style="position: relative; left: 25.3%; border: 1px solid black;" ></div>
                     <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
                                                                              id="ad2"
-                                                                             style="position: relative; left: 15%;">
+                                                                             style="position: relative; left: 15%; border: 1px solid black;">
                     </div>
                     <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
                                                                            id="te2"
-                                                                           style="position: relative; left: 19%;"></div>
+                                                                           style="position: relative; left: 21%; border: 1px solid black;"></div>
                     <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
                 </form>
             </div>
