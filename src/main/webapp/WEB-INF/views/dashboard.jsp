@@ -183,7 +183,7 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <div class="card border-2 border-primary" style="height: 90%;">
+                            <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(mg/L)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
@@ -207,7 +207,7 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <div class="card border-2 border-primary" style="height: 90%;">
+                            <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(%)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
@@ -231,7 +231,7 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <div class="card border-2 border-primary" style="height: 90%;">
+                            <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
