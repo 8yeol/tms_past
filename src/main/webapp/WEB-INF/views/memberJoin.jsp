@@ -27,6 +27,10 @@
     @media all and (min-width:1981px) {
         .join-bg {position: relative; top:12%;}
     }
+
+    @media all and (max-width:990px) {
+        .join-bg {position: relative; top: 15%;}
+    }
 </style>
 
 <div class="container h-100">
