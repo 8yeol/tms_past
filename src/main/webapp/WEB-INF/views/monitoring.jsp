@@ -25,6 +25,10 @@
         text-align: center;
     }
 
+    #sensorStatus p{
+        padding-left: 2px; margin-top: 10px;
+    }
+
     .border-right {
         border-right-style: solid;
         border-right-color: #a9a9a9;
@@ -175,7 +179,7 @@
                 <div class="col fs-6 fw-bold standardDiv" style="border-right: 2px solid white;">
                     <span>법적기준 초과</span>
                 </div>
-                <div class="col fs-6 fw-bold standardDiv" style="border-right:2px solid white;">
+                <div class="col fs-6 fw-bold standardDiv"style="border-right:2px solid white;">
                     <span>사내기준 초과</span>
                 </div>
                 <div class="col  fs-6 fw-bold standardDiv">
@@ -352,9 +356,9 @@
     function draw_place_table_frame(placeName) {
         $('#place_table').empty();
         var col_md_size;
-        if (placeName.length != 0) {
-            for (let i = 0; i < placeName.length; i++) {
-                if (placeName.length == 1) { //1개
+        if(placeName.length != 0){
+            for(let i=0; i<placeName.length; i++){
+                if(placeName.length==1){ //1개
                     col_md_size = 12;
                 } else {
                     col_md_size = 6;
@@ -673,7 +677,7 @@
                 }
             }
         }
-        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail + sensorMonitoringOff)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
+        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail+sensorMonitoringOff)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
         var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //법적기준 %
         var companyPercent = ((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //사내기준 %
         var managementPercent = ((managementSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); ////관리기준 %
@@ -693,7 +697,7 @@
         }
 
         $("#statusPercent").text(runPercent + "%"); //가동률
-        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail + sensorMonitoringOff)); // 통신정상/전체
+        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail+sensorMonitoringOff)); // 통신정상/전체
         $("#statusOn").text(sensorStatusSuccess); //정상
         $("#statusOff").text(sensorStatusFail); //통신불량
         $("#monitoringOff").text(sensorMonitoringOff); //모니터링OFF 개수
@@ -704,7 +708,7 @@
         $("#management_standard_text_A").text(managementPercent + "%"); //관리기준 Over
         $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess + sensorStatusFail)); //관리기준 Over 개수/전체
     }
-
+    
     $('.flashToggle').on('click', function () {
         if ($(this).attr('data-click-state') == 1) {
             $(this).attr('data-click-state', 0)
