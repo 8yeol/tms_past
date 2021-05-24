@@ -385,7 +385,7 @@
                 <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
                     <div class="card-header">정상</div>
                     <div class="card-body" id="normal" style="min-height: 180px;">
-                        <span class="fs-5"> 가동중인 센서가 없습니다.</span>
+                        <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -393,7 +393,7 @@
                 <div class="card text-white bg-success mb-3" style="min-height: 100%;">
                     <div class="card-header">관리기준 초과</div>
                     <div class="card-body" id="caution">
-                        <span class="fs-5"> 가동중인 센서가 없습니다.</span>
+                        <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -401,7 +401,7 @@
                 <div class="card text-dark bg-warning mb-3" style="min-height: 100%;">
                     <div class="card-header">사내기준 초과</div>
                     <div class="card-body" id="warning">
-                        <span class="fs-5"> 가동중인 센서가 없습니다.</span>
+                        <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -409,7 +409,7 @@
                 <div class="card text-white bg-danger mb-3" style="min-height: 100%;">
                     <div class="card-header">법적기준 초과</div>
                     <div class="card-body" id="danger">
-                        <span class="fs-5"> 가동중인 센서가 없습니다.</span>
+                        <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -473,10 +473,14 @@
         */
         setInterval(function () {
             addExcessData();
-        }, 1000)
+        }, 10000)
     }
 
     function addExcessData() {
+        $("#normal").empty();
+        $("#caution").empty();
+        $("#warning").empty();
+        $("#danger").empty();
         $.ajax({
             url: '<%=cp%>/getMonitoringSensorOn',
             type: 'POST',
@@ -499,10 +503,6 @@
                             const value = (data.value).toFixed(2);
                             let place; //측정소 명
                             if (minutes <= 5) {
-                                $("#normal").empty();
-                                $("#caution").empty();
-                                $("#warning").empty();
-                                $("#danger").empty();
                                 $.ajax({
                                     url: '<%=cp%>/getSensorInfo',
                                     dataType: 'json',
@@ -523,13 +523,13 @@
                                         });
 
                                         if (value > data.legalStandard) {
-                                            $("#danger").append("<span class='fs-5'>" + place + " - " + data.naming + " [" + value + "] </span>");
+                                            $("#danger").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         } else if (value > data.companyStandard) {
-                                            $("#warning").append("<span class='fs-5'>" + place + " - " + data.naming + " [" + value + "] </span>");
+                                            $("#warning").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         } else if (value > data.managementStandard) {
-                                            $("#caution").append("<span class='fs-5'>" + place + " - " + data.naming + " [" + value + "] </span>");
+                                            $("#caution").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         } else {
-                                            $("#normal").append("<span class='fs-5'>" + place + " - " + data.naming + " [" + value + "] </span>");
+                                            $("#normal").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
                                         }
                                     },
                                     error: function (request, status, error) {
