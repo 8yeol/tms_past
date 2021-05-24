@@ -70,8 +70,8 @@
     }
 
     .emoji {
-        width: 80px;
-        height: 80px;
+        width: 60px;
+        height: 60px;
         position: relative;
         top: 2rem;
         margin-left: 0.75rem;
@@ -81,6 +81,13 @@
         padding-top: 1.9rem;
         font-size: 1.8rem;
     }
+    @media all and (max-width: 1399px) and (min-width: 1001px) {
+        .m-size {height: 200px;}
+        .emoji {width: 60px; height: 60px; top:1rem;}
+        #legal_standard_text_A, #company_standard_text_A, #management_standard_text_A {font-size: 1.5rem;}
+        #legal_standard_text_B, #company_standard_text_B, #management_standard_text_B {font-size: 1rem;}
+        .remove-m {margin: 0 !important;}
+    }
 
     @media all and (max-width: 1000px) {
         .standardDiv span{
@@ -88,8 +95,8 @@
         }
 
         .emoji {
-            width: 40px;
-            height: 40px;
+            width: 65px !important;
+            height: 65px !important;
             position: relative;
             top: 0.75rem;
             margin-left: 0.25rem;
@@ -113,6 +120,9 @@
         .text-end {
             font-size: 0.25rem;
         }
+        #legal_standard_text_A, #company_standard_text_A, #management_standard_text_A {font-size: 1.5rem;}
+        #legal_standard_text_B, #company_standard_text_B, #management_standard_text_B {font-size: 1rem;}
+        .remove-m {margin: 0 !important;}
     }
 </style>
 
@@ -159,7 +169,7 @@
         </div>
 
 
-        <div class="col bg-white" style="margin-left: 5px;border-top-left-radius: 20px;border-top-right-radius: 20px;">
+        <div class="col bg-white m-size" style="margin-left: 5px;border-top-left-radius: 20px;border-top-right-radius: 20px;">
             <div class="row standardParent" style="height: 38px">
                 <div class="col fw-bold standardDiv" style="border-right: 2px solid white;">
                     <span>법적기준 초과</span>
@@ -174,11 +184,11 @@
             <div class="row">
                 <%-- 법적 기준 --%>
                 <div class="col standardImg" style="border-right: 2px solid #2295DB;">
-                    <div class="row text-center">
+                    <div class="row text-center" style="height: 155px;">
                         <div class="col">
                             <img src="static/images/sad.png" class="emoji">
                         </div>
-                        <div class="col" style="margin-top: 3px;">
+                        <div class="col remove-m" style="margin-top: 3px;">
                             <p class="mb-0" id="legal_standard_text_A"></p>
                             <hr class="m-0">
                             <p id="legal_standard_text_B"></p>
@@ -188,11 +198,11 @@
 
                 <%-- 사내 기준 --%>
                 <div class="col standardImg" style="border-right: 2px solid #2295DB;">
-                    <div class="row text-center">
+                    <div class="row text-center" style="height: 155px;">
                         <div class="col">
                             <img src="static/images/thinking.png" class="emoji">
                         </div>
-                        <div class="col" style="margin-top: 5px;">
+                        <div class="col remove-m" style="margin-top: 5px;">
                             <p class="mb-0" id="company_standard_text_A"></p>
                             <hr class="m-0">
                             <p id="company_standard_text_B"></p>
@@ -202,11 +212,11 @@
 
                 <%-- 관리 기준 --%>
                 <div class="col standardImg">
-                    <div class="row text-center" >
+                    <div class="row text-center" style="height: 155px;">
                         <div class="col">
                             <img src="static/images/sceptic.png" class="emoji">
                         </div>
-                        <div class="col" style="margin-top: 5px;">
+                        <div class="col remove-m" style="margin-top: 5px;">
                             <p class="mb-0" id="management_standard_text_A"></p>
                             <hr class="m-0">
                             <p id="management_standard_text_B"></p>
