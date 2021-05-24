@@ -399,10 +399,10 @@
 
             <div class="text-end">
                 <div class="dropdown">
-                    <button class="dropbtn rounded" id="m_dropBtn"><i class="fas fa-caret-down"></i></button>
+                    <button class="dropbtn rounded fs-5 fw-bold" id="m_dropBtn"><i class="fas fa-caret-down"></i></button>
                     <div class="dropdown-content text-start">
-                        <a href="<%=cp%>/myPage">마이페이지</a>
-                        <a href="<%=cp%>/logout">로그아웃</a>
+                        <a href="<%=cp%>/myPage" class="fs-6 fw-bold">마이페이지</a>
+                        <a href="<%=cp%>/logout" class="fs-6 fw-bold">로그아웃</a>
                     </div>
                 </div>
             </div>

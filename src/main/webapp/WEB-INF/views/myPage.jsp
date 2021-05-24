@@ -149,11 +149,11 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title text-danger">회원 탈퇴</h5>
+                <h5 class="modal-title text-danger">비밀번호 확인</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <p class="fs-6 fw-bold">탈퇴를 원하시면 아래 입력란에<br> 회원님의 password를 기입해주세요.</p>
+                    <p class="fs-6 fw-bold">탈퇴를 원하시면 <br>사용하시는 비밀번호를 입력해주세요.</p>
                     <input type="password" class="form-control text-warning" id="outCheck_password"/>
                 </div>
             </div>
@@ -170,30 +170,41 @@
 
 <script>
     let TOGGLE = false;
+    var name;
+    var email;
+    var tel;
+    var department;
+    var grade;
+
+    $(document).ready(function(){
+        textFieldManagement(TOGGLE);
+    });
+
     function readonlyToggle() {
         $("#name").attr("readonly", TOGGLE);
         $("#email").attr("readonly", TOGGLE);
         $("#tel").attr("readonly", TOGGLE);
         $("#department").attr("readonly", TOGGLE);
         $("#grade").attr("readonly", TOGGLE);
-        if(TOGGLE){
+        if (TOGGLE) {
             TOGGLE = false;
         } else {
             TOGGLE = true;
         }
     }
 
-    function setLayout(){
-        if($("#update_btn").html() == "회원정보 수정"){
+    function setLayout() {
+        if ($("#update_btn").html() == "회원정보 수정") {
             $("#update_btn").html("취소");
-             $("#pw_button").css('display','block');
+            $("#pw_button").css('display', 'block');
         } else {
+            textFieldManagement(TOGGLE);
             $("#update_btn").html("회원정보 수정");
-             $("#pw_button").css('display','none');
+            $("#pw_button").css('display', 'none');
         }
 
         const passwordBox = document.getElementById('passwordBox');
-        if(passwordBox.style.display!="none"){
+        if (passwordBox.style.display != "none") {
             changePassword();
         }
 
@@ -201,19 +212,19 @@
         readonlyToggle();
     }
 
-    function changePassword(){
+    function changePassword() {
         $("#passwordBox").toggle();
         $("#passwordBox2").toggle();
-        $("#pw_button").css('display','none');
+        $("#pw_button").css('display', 'none');
 
     }
 
     function submit() {
         const passwordBox = document.getElementById('passwordBox');
-        if(passwordBox.style.display!="none"){
+        if (passwordBox.style.display != "none") {
             passwordCheck()
             blankCheck('block');
-            if($("#nowPasswordText").text()!="인증완료"){
+            if ($("#nowPasswordText").text() != "인증완료") {
                 $("#now_password").focus();
                 swal('error', '현재 비밀번호 오류', '현재 비밀번호를 확인해주세요.')
                 return false;
@@ -236,14 +247,15 @@
                     "grade": $("#grade").val(),
                     "tel": $("#tel").val()
                 },
-                success : function(data) {
+                success: function (data) {
                     if (data == "success") {
                         swal('success', '수정완료', '성공적으로 수정되었습니다.');
+                        location.reload();
                     } else {
                         swal('warning', '수정실패');
                     }
                 },
-                error : function(request, status, error) {
+                error: function (request, status, error) {
                     swal('warning', '수정실패');
                     console.log('member update error');
                     console.log(error);
@@ -252,14 +264,14 @@
         }
     }
 
-    function blankCheck(passwordBox){
-        if(passwordBox=='block'){
+    function blankCheck(passwordBox) {
+        if (passwordBox == 'block') {
             if ($("#password").val() == "" && $("#passwordCheck").val() == "") {
                 swal('warning', '수정 실패', '변경할 비밀번호를 입력해주세요.')
                 return false;
             }
         }
-        if ( $("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != ""){
+        if ($("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "") {
             return true;
         } else {
             swal('warning', '수정 실패', '빈칸 없이 입력해주세요.')
@@ -267,58 +279,79 @@
         }
     }
 
-    function nowPasswordCheck(){
+    function nowPasswordCheck() {
         $.ajax({
             url: '<%=cp%>/nowPasswordCheck',
             type: 'POST',
             dataType: 'text',
             async: false,
             cache: false,
-            data: { "id" : $("#id").val(),
-                "password" : $("#now_password").val(),
+            data: {
+                "id": $("#id").val(),
+                "password": $("#now_password").val(),
             },
-            success : function(data) {
+            success: function (data) {
                 if (data == "success") {
                     $("#nowPasswordText").text("인증완료")
                 } else if (data == "failed") {
                     $("#nowPasswordText").text("비밀번호가 틀립니다. 다시 확인해주세요.")
                 }
             },
-            error : function(request, status, error) {
+            error: function (request, status, error) {
                 console.log('member update error');
                 console.log(error);
             }
         })
     }
 
-    function memberOut(){
-            $.ajax({
-                url: '<%=cp%>/memberOut',
-                type: 'POST',
-                dataType: 'text',
-                async: false,
-                cache: false,
-                data: { "id" : $("#id").val(),
-                        "password" : $("#outCheck_password").val(),
-                },
-                success : function(data) {
-                    if(data == "success"){
-                        swal('success', '회원탈퇴 완료', '탈퇴처리가 완료되었습니다.');
-                        setTimeout(function (){
-                            location.href = '<%=cp%>/logout';
-                        },2000);
-                    } else {
-                        swal('warning', '회원탈퇴 실패', '비밀번호가 틀립니다.');
-                    }
-                },
-                error : function(request, status, error) {
-                    console.log('member out error');
-                    console.log(error);
+    function memberOut() {
+        $.ajax({
+            url: '<%=cp%>/memberOut',
+            type: 'POST',
+            dataType: 'text',
+            async: false,
+            cache: false,
+            data: {
+                "id": $("#id").val(),
+                "password": $("#outCheck_password").val(),
+            },
+            success: function (data) {
+                if (data == "success") {
+                    swal('success', '회원탈퇴 완료', '탈퇴처리가 완료되었습니다.');
+                    setTimeout(function () {
+                        location.href = '<%=cp%>/logout';
+                    }, 2000);
+                } else {
+                    swal('warning', '회원탈퇴 실패', '비밀번호가 틀립니다.');
                 }
-            })
+            },
+            error: function (request, status, error) {
+                console.log('member out error');
+                console.log(error);
+            }
+        })
     }
 
-    function swal(icon, title, text){
+    function textFieldManagement(toggle){
+        if(!toggle){
+            name = $("#name").val();
+            email = $("#email").val();
+            tel = $("#tel").val();
+            department = $("#department").val();
+            grade = $("#grade").val();
+        } else {
+            $("#name").val(name);
+            $("#email").val(email);
+            $("#tel").val(tel);
+            $("#department").val(department);
+            $("#grade").val(grade);
+            $("#now_password").val("");
+            $("#password").val("");
+            $("#passwordCheck").val("");
+        }
+    }
+
+    function swal(icon, title, text) {
         Swal.fire({
             icon: icon,
             title: title,
