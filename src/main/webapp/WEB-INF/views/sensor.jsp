@@ -679,7 +679,8 @@
                     enabled: true,
                     easing: 'linear',
                     dynamicAnimation: {
-                        speed: 1000
+                        enabled: true,
+                        speed: 500
                     }
                 },
                 toolbar: {
@@ -776,7 +777,7 @@
                             background: '#00E396'
                         },
                         text: '관리기준',
-                        offsetX: -970
+                        offsetX: 0
                     }
                 },
                     {
@@ -789,7 +790,7 @@
                                 background: '#FEB019'
                             },
                             text: '사내기준',
-                            offsetX: -970
+                            offsetX: 0
                         }
                     },
                     {
@@ -802,7 +803,7 @@
                                 background: '#FF4560'
                             },
                             text: '법적기준',
-                            offsetX: -970
+                            offsetX: 0
                         }
                     }]
             },

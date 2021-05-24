@@ -387,7 +387,7 @@
                         }
                     }
 
-                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 검색("+from+" ~ "+to+")","검색");
+                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 조회("+from+" ~ "+to+")","조회");
                 }else{
                     Swal.fire({
                         icon: 'warning',
