@@ -67,7 +67,7 @@ button.addBtn {
     border: 1px solid #000;
     border-radius: 20px;
     margin-top: 5px;
-    width: 60px;
+    width: 70px;
 }
 button.removeBtn {
     border: 2px solid #dc3545;
@@ -75,13 +75,13 @@ button.removeBtn {
     background-color: #dc3545;
     border-radius: 20px;
     margin-top: 5px;
-    width: 60px;
+    width: 70px;
 }
 button.updateBtn{
     border: 2px solid #000;
     border-radius: 20px;
     margin-top: 5px;
-    width: 60px;
+    width: 70px;
 }
 
 #placeDiv li {
