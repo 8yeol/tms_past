@@ -111,7 +111,8 @@
     </c:choose>
 
     <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold" style="position: relative;">활동 기록
-        <button class="btn backBtn"onclick="history.back(-1)" style="margin-left: 40px; position: absolute; right: 0;">뒤로 가기</button></h3>
+        <button class="btn backBtn" onclick="history.back(-1)" style="margin-left: 40px; position: absolute; right: 0;">뒤로 가기</button></h3>
+        <button class="btn backBtn" onclick="inputLog('sensorTest123','123123','123123123123123123')" style="margin-left: 40px; position: absolute; right: 0;">뒤로 가기</button></h3>
 
     <div class="row bg-light rounded py-3 px-5">
         <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
