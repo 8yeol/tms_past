@@ -122,15 +122,15 @@
 
                 <thead>
                 <tr class="text-center">
-                    <th >ID</th>
-                    <th >이름</th>
-                    <th width="150px">등급</th>
-                    <th >이메일</th>
-                    <th >연락처</th>
-                    <th >가입<a class="sign"></a> 신청일</th>
-                    <th >가입<a class="sign"></a> 승인일</th>
-                    <th >최종 <a class="sign"></a>로그인</th>
-                    <th >관리</th>
+                    <th style="padding:10px 0px 10px 0px;">ID</th>
+                    <th style="padding:10px 0px 10px 0px;" width="80px">이름</th>
+                    <th style="padding:10px 0px 10px 0px;" width="90px">등급</th>
+                    <th style="padding:10px 0px 10px 0px;">이메일</th>
+                    <th style="padding:10px 0px 10px 0px;">연락처</th>
+                    <th style="padding:10px 0px 10px 0px;">가입<a class="sign"></a> 신청일</th>
+                    <th style="padding:10px 0px 10px 0px;">가입<a class="sign"></a> 승인일</th>
+                    <th style="padding:10px 0px 10px 0px;">최종 <a class="sign"></a>로그인</th>
+                    <th style="padding:10px 0px 10px 0px;">관리</th>
                 </tr>
                 </thead>
 
@@ -489,7 +489,10 @@
 
 <script>
 
-    $("#member-Table").DataTable({
+     $("#member-Table").DataTable({
+    //     scrollX:true,
+    //     scrollXInner:"130%",
+         autoWidth: false,
         language: {
             emptyTable: "데이터가 없어요.",
             lengthMenu: "페이지당 _MENU_ 개씩 보기",
