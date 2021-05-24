@@ -129,8 +129,7 @@
                     <tr class="text-center" style="font-size: 0.9rem;height: 40px;">
                         <td>${log.type}</td>
                         <td>${log.content}</td>
-                        <td><fmt:formatDate value="${log.date}" pattern="yyyy년 MM월 dd일"/> &nbsp;<!--<b style="font-size: 1.3rem;">/</b> -->
-                            <fmt:formatDate value="${log.date}" pattern="HH시 mm분 ss초"/></td>
+                        <td><fmt:formatDate value="${log.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                     </tr>
                 </c:forEach>
                 <tbody>

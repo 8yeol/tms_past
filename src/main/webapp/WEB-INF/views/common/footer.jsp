@@ -11,13 +11,15 @@
 
 <script>
 
-    var mql = window.matchMedia("screen and (max-width: 1024px)");
 
+    var mql = window.matchMedia("screen and (max-width: 1024px)");
     mql.addListener(function(e) {
         if(e.matches) {
             $('#container').attr('class','container-fluid');
+            $('.sign').html('<br>');
         } else {
             $('#container').attr('class','container');
+            $('.sign').html('');
         }
     });
 
@@ -25,8 +27,10 @@
     if(navigator.platform){
         if(0 > filter.indexOf(navigator.platform.toLowerCase())){
             $('#container').attr('class','container-fluid');
+            $('.sign').html('<br>');
         } else {
             $('#container').attr('class','container');
+            $('.sign').html('');
         }
     }
 

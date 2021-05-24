@@ -222,6 +222,7 @@
     .multiSelectBtn{
         padding-top: 8rem;
     }
+    th{padding: 0;}
 
 </style>
 
@@ -241,13 +242,13 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th width="11%">측정소명</th>
-                    <th  width="11%">센서명</th>
-                    <th width="21%">연간 배출 허용 기준</th>
-                    <th width="11%">기준 농도</th>
-                    <th width="16%">산출식(참고용)</th>
-                    <th width="22%">최종 수정 날짜</th>
-                    <th width="8%">관리</th>
+                    <th>측정소명</th>
+                    <th>센서명</th>
+                    <th>연간 배출 <a class="sign"></a>허용 기준</th>
+                    <th>기준 농도</th>
+                    <th>산출식(참고용)</th>
+                    <th>최종 수정 날짜</th>
+                    <th>관리</th>
                 </tr>
                 </thead>
                 <tbody id="tbody">
@@ -276,8 +277,7 @@
                         </c:choose>
 
                         <td>${standard.formula}</td>
-                        <td><fmt:formatDate value="${standard.date}" pattern="yyyy년 MM월 dd일"/> &nbsp;<!--<b style="font-size: 1.3rem;">/</b> -->
-                            <fmt:formatDate value="${standard.date}" pattern="HH시 mm분 ss초"/></td>
+                        <td><fmt:formatDate value="${standard.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                         <td>
                             <i onclick="clickModal(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
                                data-bs-target="#addModal" id="${standard.tableName}"></i>
@@ -727,6 +727,16 @@
     }
 
     $(".table").DataTable({
+        "columns" : [
+            { "width" : "7%" },
+            { "width" : "7%" },
+            { "width" : "11%" },
+            { "width" : "7%" },
+            { "width" : "9%" },
+            { "width" : "9%" },
+            { "width" : "3%" }
+        ],
+        autoWidth: false,
         order: [[5, 'desc']],
         ordering: true,
         info: false,

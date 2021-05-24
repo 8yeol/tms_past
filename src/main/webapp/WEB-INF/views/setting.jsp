@@ -122,15 +122,15 @@
 
                 <thead>
                 <tr class="text-center">
-                    <th style="width:7%">ID</th>
-                    <th style="width:6%">이름</th>
-                    <th style="width:8%">등급</th>
-                    <th style="width:10%">이메일</th>
-                    <th style="width:10%">연락처</th>
-                    <th style="width:17%">가입신청일</th>
-                    <th style="width:17%">가입승인일</th>
-                    <th style="width:17%">최종 로그인</th>
-                    <th style="width:9%">관리</th>
+                    <th >ID</th>
+                    <th >이름</th>
+                    <th width="150px">등급</th>
+                    <th >이메일</th>
+                    <th >연락처</th>
+                    <th >가입<a class="sign"></a> 신청일</th>
+                    <th >가입<a class="sign"></a> 승인일</th>
+                    <th >최종 <a class="sign"></a>로그인</th>
+                    <th >관리</th>
                 </tr>
                 </thead>
 
@@ -686,25 +686,6 @@
         Swal.fire('확인', str, 'success');
     }
 
-
-    var mql = window.matchMedia("screen and (max-width: 1024px)");
-
-    mql.addListener(function(e) {
-        if(e.matches) {
-            $('#container').attr('class','container-fluid');
-        } else {
-            $('#container').attr('class','container');
-        }
-    });
-
-    var filter = "win16|win32|win64|mac";
-    if(navigator.platform){
-        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
-            $('#container').attr('class','container-fluid');
-        } else {
-            $('#container').attr('class','container');
-        }
-    }
 
 </script>
 
