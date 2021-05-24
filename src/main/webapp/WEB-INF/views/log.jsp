@@ -119,9 +119,9 @@
             <table class="table table-striped " id="member-Table">
                 <thead>
                 <tr class="text-center">
-                    <th width="30%">분류</th>
-                    <th width="35%">내용</th>
-                    <th>해당 날짜</th>
+                    <th width="15%">분류</th>
+                    <th>내용</th>
+                    <th width="20%">해당 날짜</th>
                 </tr>
                 </thead>
                 </tbody>

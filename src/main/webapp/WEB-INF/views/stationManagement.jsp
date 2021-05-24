@@ -38,9 +38,17 @@
         line-height: 55px;
         padding: 10px;
     }
+    @media all and (max-width: 1400px) {
+        #btnDiv{float: right;}
+    }
 
+    @media all and (max-width: 1024px) {
+        #station1{margin-top: 20px;}
+        #station2{margin-top: 20px;}
+        #btnDiv{float: right;}
+    }
 </style>
-<div class="container">
+<div class="container" id="container">
     <div class="col " style="font-weight: bolder;margin: 30px 0px; font-size: 27px">
         환경설정 > 측정소 관리
     </div>
@@ -48,14 +56,16 @@
     <div class="row bg-light rounded"><span style=";font-size: 22px; font-weight: bolder;padding: 20px 20px 30px 25px;">측정소 등록 및 측정소별 항목 등록</span>
     </div>
     <div class="row bg-light" style="height: 70%; padding: 0px 25px 25px 25px;">
-        <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
+        <div class="col-6 border-end"  id="station1" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div style="padding-bottom: 15px; padding-top: 3px;">
-                <span class="fw-bold" style="margin-right: 30%; font-size: 1.25rem;">측정소 관리</span>
-                <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
-                <button data-bs-toggle="modal" data-bs-target="#updatePlace" class="updateBtn"
-                        onclick="updatePlaceSetting()">수정
-                </button>
-                <button onclick="removePlace()" class="removeBtn">삭제</button>
+                <span class="fw-bold" style="margin-right: 20%; font-size: 1.25rem;">측정소 관리</span>
+                <span id="btnDiv">
+                    <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
+                    <button data-bs-toggle="modal" data-bs-target="#updatePlace" class="updateBtn"
+                            onclick="updatePlaceSetting()">수정
+                    </button>
+                    <button onclick="removePlace()" class="removeBtn">삭제</button>
+                </span>
             </div>
             <table class="text-center" style="width: 100%;">
                 <tr class="fw-bold"
@@ -75,7 +85,7 @@
 
             </table>
         </div>
-        <div class="col-3" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
+        <div class="col-6" id="station2" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
 
             <div>
                 <div id="p_monitoring" class="fw-bold" style="display: flex; margin-top: 5px; padding-bottom: 35px;">
@@ -108,28 +118,28 @@
                 <h5 class="modal-title fw-bold">측정소 추가</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <form id="placeinfo" method="post" style="width:80%; margin: 10px auto;">
-                    <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text"
+                <form id="placeinfo" method="post" style="width:70%; margin: 10px auto;">
+                    <div style="margin-bottom:7px; margin-top: 18px; display: flex; justify-content: space-between;"><span>측정소 명</span><input type="text"
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na1"
                                                                                                maxlength="15"
-                                                                                               style="position: relative; left: 15%; border: 1px solid black;">
+                                                                                               style="border: 1px solid black;">
 
                     </div>
-                    <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
+                    <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
                                                                           id="lo1"
-                                                                          style="position: relative; left: 25.3%; border: 1px solid black;">
+                                                                          style="border: 1px solid black;">
                     </div>
-                    <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
+                    <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
                                                                              id="ad1"
-                                                                             style="position: relative; left: 15%; border: 1px solid black;">
+                                                                             style="border: 1px solid black;">
                     </div>
-                    <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
+                    <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>연락처</span><input type="text" class="modal-input" name="tel"
                                                                            id="te1"
-                                                                           style="position: relative; left: 21%; border: 1px solid black;"> >
+                                                                           style="border: 1px solid black;">
                     </div>
                 </form>
             </div>
@@ -148,27 +158,29 @@
                 <h5 class="modal-title">측정소 수정</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <form id="placeupdate" method="post" style="width:80%; margin: 10px auto;">
-                    <div style="margin-bottom:7px; margin-top: 18px;"><span>측정소 명</span><input type="text"
+                <form id="placeupdate" method="post" style="width:70%; margin: 10px auto;">
+                    <div style="margin-bottom:7px; margin-top: 18px; display: flex; justify-content: space-between;"><span>측정소 명</span><input type="text"
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na2"
                                                                                                maxlength='15'
-                                                                                               style="position: relative; left: 15%; border: 1px solid black;">
+                                                                                               style="border: 1px solid black;">
 
                     </div>
-                    <div style="margin-bottom:7px;"><span>위치</span><input type="text" class="modal-input"
+                    <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
                                                                           id="lo2"
-                                                                          style="position: relative; left: 25.3%; border: 1px solid black;" ></div>
-                    <div style="margin-bottom:7px;"><span>담당자 명</span><input type="text" class="modal-input"
+                                                                          style="border: 1px solid black;">
+                    </div>
+                    <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
                                                                              id="ad2"
-                                                                             style="position: relative; left: 15%; border: 1px solid black;">
+                                                                             style="border: 1px solid black;">
                     </div>
-                    <div style="margin-bottom:7px;"><span>연락처</span><input type="text" class="modal-input" name="tel"
+                    <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>연락처</span><input type="text" class="modal-input" name="tel"
                                                                            id="te2"
-                                                                           style="position: relative; left: 21%; border: 1px solid black;"></div>
+                                                                           style="border: 1px solid black;">
+                    </div>
                     <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
                 </form>
             </div>
@@ -588,9 +600,9 @@
                 content = '측정소가 추가 되었습니다.';
                 title = '측정소 추가';
 
-                if($("#nickname").val()==undefined){
+                if ($("#nickname").val() == undefined) {
                     send = "p0";
-                }else{
+                } else {
                     send = document.getElementById('nickname').value;
                 }
 
@@ -609,8 +621,7 @@
                 "tel": tel,
                 "admin": admin,
                 "hiddenCode": $("input[name=hiddenCode]").val()
-            },success: function (data) {
-                console.log(data);
+            }, success: function (data) {
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -735,12 +746,12 @@
             }
 
         })
-        if(check == true){
+        if (check == true) {
             check = "ON";
-        }else{
+        } else {
             check = "OFF";
         }
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+name+" 모니터링 "+check+"","모니터링ON/OFF");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + name + " 모니터링 " + check + "", "설정");
         MultiSelecterModal(name, "", "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -765,12 +776,13 @@
                 "place": pname
             }
         })
-        if(check == true){
+        if (check == true) {
             check = "ON";
-        }else{
+        } else {
             check = "OFF";
         }
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+" - "+tablename+" 모니터링 "+check+"","모니터링ON/OFF");
+
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + " - " + tablename + " 모니터링 " + check + "", "설정");
         MultiSelecterModal(pname, naming, "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -791,67 +803,61 @@
         var value = name.value; //법적기준 값
         var pname = $("#pname").text();
         if (value == "") {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
-
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
-        }
-        if (value == 0) {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: "법적기준은 '0'을 입력할 수 없습니다."
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
-        }
-        if (value.indexOf('.') != -1) {
-            var value_dot = value.substring(value.indexOf('.') + 1);
-            if (value_dot.length > 2) {
+            value = "999";
+        } else {
+            if (value == 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
-                    text: '소수점 2자리까지만 입력 가능합니다.'
+                    text: "법적기준은 '0'을 입력할 수 없습니다."
+                })
+                placeChange(document.getElementById('nickname').value);
+                return false;
+            }
+            if (value.indexOf('.') != -1) {
+                var value_dot = value.substring(value.indexOf('.') + 1);
+                if (value_dot.length > 2) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '소수점 2자리까지만 입력 가능합니다.'
+
+                    })
+                    placeChange(document.getElementById('nickname').value);
+                    return false;
+                }
+            }
+
+            if (isNaN(value) == true) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '입력 데이터를 체크해주세요.'
 
                 })
                 placeChange(document.getElementById('nickname').value);
                 return false;
             }
+            if (parseFloat(value) <= parseFloat(company)) { //법적기준 값이 사내기준 값보다 작을때
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '법적기준 값은 사내기준 값보다 작거나 같을 수 없습니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
+            if (parseFloat(value) <= parseFloat(manage)) { //법적기준 값이 관리기준 값보다 작을때
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '법적기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
         }
 
-        if (isNaN(value) == true) {
-
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
-
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
-        }
-        if (parseFloat(value) <= parseFloat(company)) { //법적기준 값이 사내기준 값보다 작을때
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '법적기준 값은 사내기준 값보다 작거나 같을 수 없습니다.'
-            })
-            placeChange(document.getElementById('nickname').value);
-            return;
-        }
-        if (parseFloat(value) <= parseFloat(manage)) { //법적기준 값이 관리기준 값보다 작을때
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '법적기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
-            })
-            placeChange(document.getElementById('nickname').value);
-            return;
-        }
 
         $.ajax({
             url: '<%=cp%>/legalUpdate',
@@ -864,7 +870,12 @@
                 "place": pname
             }
         })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 법적 기준 값 변경 '"+value+"'","기준값 변경");
+        if (value == 999) {
+            value = "초기화";
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 법적 기준 값 초기화", "설졍");
+        } else {
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 법적 기준 값 변경 '" + value + "'", "설졍");
+        }
         MultiSelecterModal(pname, naming, "legal", value);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -883,66 +894,62 @@
         var value = name.value;
         var pname = $("#pname").text();
         if (value == "") {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
+            value = "999";
+        } else {
 
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
-        }
-        if (value == 0) {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: "사내기준은 '0'을 입력할 수 없습니다."
-
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
-        }
-        if (value.indexOf('.') != -1) {
-            var value_dot = value.substring(value.indexOf('.') + 1);
-            if (value_dot.length > 2) {
+            if (value == 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
-                    text: '소수점 2자리까지만 입력 가능합니다.'
+                    text: "사내기준은 '0'을 입력할 수 없습니다."
+
                 })
                 placeChange(document.getElementById('nickname').value);
                 return false;
             }
-        }
-        if (isNaN(value) == true) {
+            if (value.indexOf('.') != -1) {
+                var value_dot = value.substring(value.indexOf('.') + 1);
+                if (value_dot.length > 2) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '소수점 2자리까지만 입력 가능합니다.'
+                    })
+                    placeChange(document.getElementById('nickname').value);
+                    return false;
+                }
+            }
+            if (isNaN(value) == true) {
 
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '입력 데이터를 체크해주세요.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return false;
+            }
+
+            if (parseFloat(value) <= parseFloat(manage)) {  //
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '사내기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
+            if (parseFloat(legal) <= parseFloat(value)) {  //
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '사내기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
         }
 
-        if (parseFloat(value) <= parseFloat(manage)) {  //
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '사내기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
-            })
-            placeChange(document.getElementById('nickname').value);
-            return;
-        }
-        if (parseFloat(legal) <= parseFloat(value)) {  //
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '사내기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
-            })
-            placeChange(document.getElementById('nickname').value);
-            return;
-        }
         $.ajax({
             url: '<%=cp%>/companyUpdate',
             type: 'POST',
@@ -954,7 +961,12 @@
                 "place": pname
             }
         })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 사내 기준 값 변경 '"+value+"'","기준값 변경");
+        if (value == 999) {
+            value = "초기화";
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 사내 기준 값 초기화", "설졍");
+        } else {
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 사내 기준 값 변경 '" + value + "'", "설졍");
+        }
         MultiSelecterModal(pname, naming, "company", value);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -973,55 +985,52 @@
         var value = name.value; //관리기준
         var pname = $("#pname").text();
         if (value == "") {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
-        }
-        if (isNaN(value) == true) {
+            value = "999";
+        } else {
 
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
+            if (isNaN(value) == true) {
 
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
-        }
-        if (value.indexOf('.') != -1) {
-            var value_dot = value.substring(value.indexOf('.') + 1);
-            if (value_dot.length > 2) {
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
-                    text: '소수점 2자리까지만 입력 가능합니다.'
+                    text: '입력 데이터를 체크해주세요.'
+
                 })
                 placeChange(document.getElementById('nickname').value);
                 return false;
             }
+            if (value.indexOf('.') != -1) {
+                var value_dot = value.substring(value.indexOf('.') + 1);
+                if (value_dot.length > 2) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '경고',
+                        text: '소수점 2자리까지만 입력 가능합니다.'
+                    })
+                    placeChange(document.getElementById('nickname').value);
+                    return false;
+                }
+            }
+            if (parseFloat(company) <= parseFloat(value)) {  //
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '관리기준 값은 사내기준 값보다 크거나 같을 수 없습니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
+            if (parseFloat(legal) <= parseFloat(value)) {  //
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '관리기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
         }
-        if (parseFloat(company) <= parseFloat(value)) {  //
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '관리기준 값은 사내기준 값보다 크거나 같을 수 없습니다.'
-            })
-            placeChange(document.getElementById('nickname').value);
-            return;
-        }
-        if (parseFloat(legal) <= parseFloat(value)) {  //
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '관리기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
-            })
-            placeChange(document.getElementById('nickname').value);
-            return;
-        }
+
         $.ajax({
             url: '<%=cp%>/managementUpdate',
             type: 'POST',
@@ -1032,8 +1041,13 @@
                 "value": value,
                 "place": pname
             }
-        })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 관리 기준 값 변경 '"+value+"'","기준값 변경");
+        });
+        if (value == 999) {
+            value = "초기화";
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 관리 기준 값 초기화", "설졍");
+        } else {
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 관리 기준 값 변경 '" + value + "'", "설졍");
+        }
         MultiSelecterModal(pname, naming, "manage", value);
         placeDiv();
         placeChange(document.getElementById('nickname').value);

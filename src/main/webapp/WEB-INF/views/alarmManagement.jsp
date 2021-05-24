@@ -272,13 +272,13 @@
         })
         if(onList.length==0){
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
-                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+" 알림 off : "+ offList2 + ")","알림 설정");
+                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+" 알림 OFF : "+ offList2 + ")","설정");
         }else if(offList2.length==0){
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
-                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", 알림 on : "+ onList2+")","알림 설정");
+                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", 알림 ON : "+ onList2+")","설정");
         }else{
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
-                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", on : "+ onList2+", off : "+ offList2 + ")","알림 설정");
+                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", ON : "+ onList2+", OFF : "+ offList2 + ")","설정");
         }
         Swal.fire({
             icon: 'success',

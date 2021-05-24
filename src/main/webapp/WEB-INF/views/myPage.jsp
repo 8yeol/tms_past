@@ -250,7 +250,9 @@
                 success: function (data) {
                     if (data == "success") {
                         swal('success', '수정완료', '성공적으로 수정되었습니다.');
-                        location.reload();
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
                     } else {
                         swal('warning', '수정실패');
                     }

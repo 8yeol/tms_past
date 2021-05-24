@@ -30,7 +30,7 @@
 
     /* 데이터테이블 */
     table.dataTable {
-        width:100% !important;
+        width-100% !important;
     }
 
     .toolbar {
@@ -309,6 +309,9 @@
         }
     });
 
+    /**
+     * 센서명으로 측정소명 리턴
+     */
     function getPlaceName(sensorName){
         var result;
         $.ajax({
@@ -679,7 +682,8 @@
                     enabled: true,
                     easing: 'linear',
                     dynamicAnimation: {
-                        speed: 1000
+                        enabled: true,
+                        speed: 500
                     }
                 },
                 toolbar: {
@@ -776,35 +780,38 @@
                             background: '#00E396'
                         },
                         text: '관리기준',
-                        offsetX: -970
+                        position: 'left',
+                        offsetX: 0
                     }
                 },
-                    {
-                        y: companyStandard,
+                {
+                    y: companyStandard,
+                    borderColor: '#FEB019',
+                    label: {
                         borderColor: '#FEB019',
-                        label: {
-                            borderColor: '#FEB019',
-                            style: {
-                                color: '#fff',
-                                background: '#FEB019'
-                            },
-                            text: '사내기준',
-                            offsetX: -970
-                        }
-                    },
-                    {
-                        y: legalStandard,
+                        style: {
+                            color: '#fff',
+                            background: '#FEB019'
+                        },
+                        text: '사내기준',
+                        position: 'left',
+                        offsetX: 0
+                    }
+                },
+                {
+                    y: legalStandard,
+                    borderColor: '#FF4560',
+                    label: {
                         borderColor: '#FF4560',
-                        label: {
-                            borderColor: '#FF4560',
-                            style: {
-                                color: '#fff',
-                                background: '#FF4560'
-                            },
-                            text: '법적기준',
-                            offsetX: -970
-                        }
-                    }]
+                        style: {
+                            color: '#fff',
+                            background: '#FF4560'
+                        },
+                        text: '법적기준',
+                        position: 'left',
+                        offsetX: 0
+                    }
+                }]
             },
             yaxis: {
                 tickAmount: 2,

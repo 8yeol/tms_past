@@ -21,11 +21,16 @@
         background-color: #EDF2F8;
         font-family: 'Noto Sans KR', sans-serif;
     }
-    .join>div input {
+
+    .join > div input {
         height: 40px;
     }
-    @media all and (min-width:1981px) {
-        .join-bg {position: relative; top:12%;}
+
+    @media all and (min-width: 1981px) {
+        .join-bg {
+            position: relative;
+            top: 12%;
+        }
     }
 
     @media all and (max-width:990px) {
@@ -41,7 +46,10 @@
             <div class="mb-3" style="width: 48%; margin: 0 auto;">
                 <label for="id" class="col-form-label">아이디</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control" id="id">
+                    <input type="text" class="form-control" id="id" onkeyup="idCheckMsg()">
+                </div>
+                <div class="col mt-1" style="height: 10px">
+                    <span style="font-size: 15%; color: red" id="idText"></span>
                 </div>
             </div>
             <div class="mb-3" style="width: 48%; margin: 0 auto;">
@@ -122,9 +130,9 @@
 
 <script>
     function join_submit() {
-        if (blankCheck() && passwordCheck() && emailCheck()) {
+        if (blankCheck() && idCheck() &&passwordCheck() && emailCheck()) {
 
-            if($("#password").val() !== $("#passwordCheck").val()){
+            if ($("#password").val() !== $("#passwordCheck").val()) {
                 $("#password").focus();
                 swal('warning', '비밀번호를 확인 하세요.');
                 return;
@@ -136,15 +144,16 @@
                 dataType: 'text',
                 async: false,
                 cache: false,
-                data: { "id" : $("#id").val(),
-                    "password" : $("#password").val(),
-                    "name" : $("#name").val(),
-                    "email" : $("#email").val(),
-                    "department" : $("#department").val(),
-                    "grade" : $("#grade").val(),
-                    "tel" : $("#tel").val()
+                data: {
+                    "id": $("#id").val(),
+                    "password": $("#password").val(),
+                    "name": $("#name").val(),
+                    "email": $("#email").val(),
+                    "department": $("#department").val(),
+                    "grade": $("#grade").val(),
+                    "tel": $("#tel").val()
                 },
-                success : function(data) {
+                success: function (data) {
                     if (data == "success") {
                         swal('success', '회원가입 성공')
                         setTimeout(function () {
@@ -164,7 +173,7 @@
                         swal('warning', '회원가입 실패')
                     }
                 },
-                error : function(request, status, error) {
+                error: function (request, status, error) {
                     swal('warning', '회원가입 실패')
                     console.log('member join error');
                     console.log(error);
@@ -174,9 +183,9 @@
     }
 
     // 빈값 체크
-    function blankCheck(){
+    function blankCheck() {
         if ($("#id").val() != "" && $("#password").val() != "" && $("#passwordCheck").val() != "" && $("#name").val() != "" &&
-            $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != ""){
+            $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "") {
             return true;
         } else {
             swal('warning', '가입신청실패', '빈칸 없이 입력해주세요.')
@@ -184,7 +193,35 @@
         }
     }
 
-    function swal(icon, title, text){
+    function idCheckMsg(){
+        var enCheck = RegExp(/^[0-9a-z]+$/);
+        if (!enCheck.test($('#id').val())) {
+            $('#id').val($('#id').val().replace(/[^0-9a-z]+$/gi, ''));
+            $("#idText").html("숫자와 영문만 사용할수있습니다.");
+        } else if($('#id').val().length < 5 || $('#id').val().length > 15){
+            $("#idText").html("5자리 이상 15자리 미만 아이디를 설정해주세요.");
+        } else {
+            $("#idText").html("");
+        }
+    }
+
+    function idCheck(){
+        var enCheck = RegExp(/^[0-9a-z]+$/);
+        if (!enCheck.test($('#id').val())) {
+            $("#id").focus();
+            swal('warning', '가입신청실패', '숫자와 영문만 사용할수있습니다.');
+            return false;
+        } else if($('#id').val().length < 5 || $('#id').val().length > 15){
+            $("#id").focus();
+            swal('warning', '가입신청실패', '5자리 이상 15자리 미만 아이디를 설정해주세요.');
+            return false;
+        } else {
+           return true;
+        }
+    }
+
+
+    function swal(icon, title, text) {
         Swal.fire({
             icon: icon,
             title: title,

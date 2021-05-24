@@ -99,6 +99,11 @@
         width: 33%;
         display: inline;
     }
+    .inputText{width: 223px;
+        padding-left: 20px;
+        border: 2px solid black;
+    }
+
 </style>
 <div class="container" id="container">
     <div class="row">
@@ -161,7 +166,7 @@
                 <thead>
                 <tr>
                     <th scope="col" width="10%">분류</th>
-                    <th scope="col" width="10%">한글명</th>
+                    <th scope="col" width="10%">항복명</th>
                     <th scope="col" width="10%">관리 ID</th>
                     <th scope="col" width="18%">테이블명</th>
                     <th scope="col" width="17%">업데이트</th>
@@ -187,12 +192,46 @@
             </div>
             <div class="modal-body d-flex justify-content-evenly">
                 <form id="editForm" method="post" autocomplete="off">
+
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">분류</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" readonly name="classification2" class="inputText" >
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" name="naming2" class="inputText" id="naming2">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">관리 ID</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" readonly name="managementId2" class="inputText">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <span class="fs-5 fw-bold add-margin f-sizing">테이블 명</span>
+                        </div>
+                        <div class="col">
+                            <input type="text" readonly  name="tableName2" class="inputText">
+                        </div>
+                    </div>
+
                     <div class="row mt-3">
                         <div class="col">
                             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
                         </div>
                         <div class="col">
-                            <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;">
+                            <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;border: 2px solid black">
                                 <c:forEach var="place" items="${place}" varStatus="status">
                                     <option value="${place.name}">${place.name}</option>
                                 </c:forEach>
@@ -285,9 +324,16 @@
 
     function editSetting(obj) {
         var sensor = $(obj).parent().parent().children();
+        $("input[name=classification2]").val(sensor.eq(0).html()); //-> NOX
+        $("input[name=naming2]").val(sensor.eq(1).html());         //-> 질소산화물
+        $("input[name=managementId2]").val(sensor.eq(2).html());  // -> NOX_01
+        $("input[name=tableName2]").val(sensor.eq(3).html());  // -> tmsWP0001_NOX_01
         $("input[name=hiddenCode]").val(sensor.eq(3).html());  // -> tmsWP0001_NOX_01
+
         $("#modal_title").html("관리 ID : <font class='text-primary'><b>"+sensor.eq(2).html()+"</b></font>");
         $("#place2").val(sensor.eq(5).html());
+
+
     }
 
     function deleteModal(obj) {
@@ -319,7 +365,7 @@
             data: {tableName: tableName},
             success: function () {
                 customSwal('삭제 완료','삭제 되었습니다..');
-                inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place+' - '+sensor+'센서 삭제','센서 삭제');
+                inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place+' - '+sensor+'센서 삭제','설정');
                 setTimeout(function () {
                     location.reload();
                 }, 2000);
@@ -352,25 +398,30 @@
     }
 
     function isValueDelete(){
+        if($("input[name='naming2']").val() == ''){
+            customSwal('경고','항목명을 선택 해주세요.');
+            return;
+        }
         if($("#place2").val() == null){
             customSwal('경고','측정소를 선택 해주세요.');
             return;
         }
+
         Swal.fire({
             icon: 'warning',
             title: '경고',
-            text: '센서의 속성값을 초기화 하시겠습니까?',
+            text: '센서의 설정값을 초기화 하시겠습니까?',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor:'#198754',
-            confirmButtonText: '속성값 초기화',
-            cancelButtonText: '속성값 유지'
+            confirmButtonText: '설정값 초기화',
+            cancelButtonText: '설정값 유지'
         }).then((result) => {
             if (result.isConfirmed) {
                 $('input[name=isValueDelete]').val('delete');
-                saveSensor(2);
+                    saveSensor(2);
             }else if ( result.dismiss === Swal.DismissReason.cancel){
-                saveSensor(2);
+                    saveSensor(2);
             }
         });
     }
@@ -398,8 +449,16 @@
                 customSwal('경고','측정소를 선택 해주세요.');
                 return;
             }
+            if($("input[name='naming2']").val() == ''){
+                $('input[name=isValueDelete]').val('');
+                customSwal('경고','항목명을 선택 해주세요.');
+                return;
+            }
+
+
             content = '센서 측정소가 수정 되었습니다.';
             title = '센서 수정';
+
         } else {
             form = $('#saveForm').serialize();
             if(isStandardEmpty($('#tableName').val())){
@@ -412,6 +471,7 @@
 
         // 측정소 sensor 중복 검사
         const sensorNames = [];
+        const sensorNames2 = [];
         $.ajax({
             url: '<%=cp%>/getPlaceSensor',
             type: 'POST',
@@ -429,9 +489,11 @@
                         cache: false,
                         data: {'name' : tableName},
                         success: function (data) {
-                            if($('#naming').val()==data.naming){
+                            if($('#naming').val()==data.naming)
                                 sensorNames.push(data.naming);
-                            }
+
+                            if($('#naming2').val()==data.naming)
+                                sensorNames2.push(data.naming);
                         },
                         error: function (request, status, error) { // 결과 에러 콜백함수
                             console.log(error);
@@ -445,9 +507,12 @@
             }
         });
 
-        if(sensorNames.length > 0){
+        if(sensorNames.length > 0) {
             $('#naming').focus();
-            customSwal('항목명 중복','해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
+            customSwal('항목명 중복', '해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
+        }else if(sensorNames2.length > 0){
+            $('#naming2').focus();
+            customSwal('항목명 중복', '해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
         }else{
             $.ajax({
                 url: '<%=cp%>/saveSensor',

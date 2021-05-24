@@ -197,9 +197,7 @@
                             </c:when>
                             <c:when test="${(mList.state eq '1' || mList.state eq '2' || mList.state eq '3') and (member.id != mList.id)}">
                                 <td onclick="event.cancelBubble=true">
-                                    <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
-                                       data-bs-target="#managementModal"
-                                       onclick="Info_Set('${mList.id}','${mList.state}')"></i>
+                                    <i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#managementModal" onclick="Info_Set('${mList.id}','${mList.state}','${mList.name}')"></i>
                                 </td>
                             </c:when>
                             <c:otherwise>
@@ -221,7 +219,7 @@
         <div class="d-flex mt-1 p-0">
 
             <div class="col-md-3">
-                <div class="bg-lightGray p-4 me-4 fw-bold h-100">
+                <div class="bg-lightGray p-4 me-4 fw-bold" style="height: 314px;">
                     <div class="d-flex justify-content-start">
                         <input type="radio" class="form-check-input me-2" name="grandRadio" id="root_radio" value="root" onclick="rankRadioChanged(value)" checked>
                         <label for="root_radio" class="w-75">최고 관리자</label>
@@ -302,9 +300,7 @@
                 </select>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" value="1"
-                        onclick="sing_Up(value)">승인
-                </button>
+                <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" value="1" onclick="sing_Up(value)">승인</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
@@ -331,83 +327,26 @@
     </div>
 </div>
 
-<!-- editModal -->
-<div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">센서 수정</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-evenly">
-                <div>
-                    <h4>코드</h4>
-                    <h4>항목명</h4>
-                    <h4>연간배출 허용기준</h4>
-                    <h4>배출허용 기준농도</h4>
-                    <h4>산출식</h4>
-                </div>
-                <div>
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block mb-2">
-                    <input type="text" class="text-secondary d-block ">
-                </div>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5">수정</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- deleteModal -->
-<div class="modal" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">항목 삭제</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-                <h3>@@@ 정말 삭제하시겠습니까?</h3>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-danger me-5">삭제</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <!-- managementModal -->
 <div class="modal" id="managementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">회원 관리</h5>
+                <h5 class="modal-title info_Text"> 회원 관리</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
                     <c:set var="member" value="${member}"/>
                     <c:if test="${member.state == '1'}">
-                        <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
-                                data-bs-target="#userGrantManagementModal">회원 권한 관리
-                        </button>
+                        <button class="btn btn-outline-dark fw-bold fs-4 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userGrantManagementModal" data-bs-dismiss="modal">권한 관리</button>
                     </c:if>
-                    <button class="btn btn-primary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
-                            data-bs-target="#userPwdmodal">회원 비밀번호 초기화
-                    </button>
-                    <button class="btn btn-danger fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal"
-                            data-bs-target="#userExpulsionmodal">회원 제명
-                    </button>
+                    <button class="btn btn-outline-dark fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userPwdmodal" data-bs-dismiss="modal">임시 비밀번호 발급</button>
+                    <button class="btn btn-outline-danger fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userExpulsionmodal" data-bs-dismiss="modal">제명</button>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="reload()">취소</button>
             </div>
         </div>
     </div>
@@ -419,17 +358,17 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">비밀번호 초기화</h5>
+                <h5 class="modal-title">임시 비밀번호 발급</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <p class="fs-3 fw-bold">비밀번호를 초기화 하시겠습니까?</p>
+                    <p class="fs-4 fw-bold info_text">의 비밀번호를 변경하시겠습니까?</p>
+                    <small class="text-danger">* 발급된 임시 비밀번호로 로그인 가능하며, 해당 회원에게 임시 비밀번호를 알려주신 후, 마이페이지에서 비밀번호 변경을 요청해주세요.</small>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">초기화
-                </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">확인</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">취소</button>
             </div>
         </div>
     </div>
@@ -444,13 +383,14 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <p class="fs-3 fw-bold">회원을 제명 하시겠습니까?</p>
+                    <p class="fs-3 fw-bold info_text">을 제명 하시겠습니까?</p>
+                    <small class="text-danger">* 회원과 관련된 모든 데이터가 삭제됩니다.</small>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal" onclick="kickMember()">제명
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">취소</button>
             </div>
         </div>
     </div>
@@ -461,23 +401,17 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">회원 권한 관리</h5>
+                <h5 class="modal-title info_text">권한 관리</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="3"
-                            onclick="gave_Rank(value)">일반회원 등급부여
-                    </button>
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="2"
-                            onclick="gave_Rank(value)">관리자 등급부여
-                    </button>
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="1"
-                            onclick="gave_Rank(value)">최고관리자 등급부여
-                    </button>
+                    <button class="btn btn-outline-primary fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="3" onclick="gave_Rank(value)">일반회원 등급부여</button>
+                    <button class="btn btn-outline-warning fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="2" onclick="gave_Rank(value)">관리자 등급부여</button>
+                    <button class="btn btn-outline-danger fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="1" onclick="gave_Rank(value)">최고관리자 등급부여</button>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">취소</button>
             </div>
         </div>
     </div>
@@ -489,10 +423,10 @@
 
 <script>
 
-     $("#member-Table").DataTable({
-    //     scrollX:true,
-    //     scrollXInner:"130%",
-         autoWidth: false,
+    $("#member-Table").DataTable({
+        //     scrollX:true,
+        //     scrollXInner:"130%",
+        autoWidth: false,
         language: {
             emptyTable: "데이터가 없어요.",
             lengthMenu: "페이지당 _MENU_ 개씩 보기",
@@ -515,6 +449,7 @@
     });
 
     var ID = ""; //데이터테이블 해당항목의 ID정보
+    var name = "";
     var state = ""; //해당항목의 등급 정보
     var rName = "root"; // 권한관리영역 checkBox 변수
     var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
@@ -524,22 +459,30 @@
         rankRadioChanged("root"); //기본값
     }); //ready
 
-    function Info_Set(str_id, str_state) {
+    function Info_Set(str_id, str_state, str_name) {
         ID = str_id;
         state = str_state;
+        name = str_name;
+
+        $(".info_Text").prepend(name + " 님");
     }// row 의 승인 및 거절 버튼 클릭시 전역변수 ID에 해당row 의 ID가 저장됨
+
+    function reload(){
+        location.reload();
+    }
 
     function sing_Up(iNumber) {
         var content = ID;
-        var rankLog = ($("#rank").val() == "1") ? " (등급 : 최고관리자)" : ($("#rank").val() == "2") ? " (등급 : 관리자)" : " (등급 : 일반)";
-        (iNumber == "1") ? content += " 계정 가입 승인 " + rankLog : content += " 계정 가입 거절 ";
+        var rankLog = ($("#rank").val() == "1") ? " [최고관리자] " : ($("#rank").val() == "2") ? " [관리자] " : " [일반] ";
+        content += rankLog;
+        (iNumber == "1") ? content += " 계정 가입 승인 " : content += " 계정 가입 거절 ";
         var settings = {
             "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + iNumber + "&state=" + $("#rank").val(),
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
-            (iNumber == "1") ? inputLog(ID, "가입 승인" + rankLog, "회원관리") : inputLog(ID, "가입 거절", "회원관리"); //대상자 로그
-            inputLog(user_id, content, "회원관리"); // 관리자로그
+            (iNumber == "1") ? inputLog(ID, rankLog + "가입 승인", "회원") : inputLog(ID, "가입 거절", "회원"); //대상자 로그
+            inputLog(user_id, content, "회원"); // 관리자로그
             success(response);
             setTimeout(function () {
                 location.reload();
@@ -548,19 +491,28 @@
     }           // sing_Up
 
     function gave_Rank(value) {
-        var str = (value == 1) ? "최고관리자 등급 " : (value == 2) ? "관리자 등급 " : "일반 등급 ";
-        var settings = {
-            "url": "<%=cp%>/gaveRank?id=" + ID + "&value=" + value,
-            "method": "POST"
-        };
-        $.ajax(settings).done(function (response) {
-            inputLog(ID, str + "변경", "권한관리");
-            inputLog(user_id, ID + " 계정 " + str + "변경 처리", "권한관리");
-            success(response);
+        if(value == state){
+            warning("이미 동일한 등급입니다.");
             setTimeout(function () {
                 location.reload();
             }, 2000);
-        });
+        } else {
+            var changeRank = (value == 1) ? "최고관리자 " : (value == 2) ? "관리자 " : "일반 ";
+            var pastRank = (state == 1) ? "최고관리자 " : (state == 2) ? "관리자 " : "일반 ";
+            var content = pastRank + "> " + changeRank + "등급변경";
+            var settings = {
+                "url": "<%=cp%>/gaveRank?id=" + ID + "&value=" + value,
+                "method": "POST"
+            };
+            $.ajax(settings).done(function (response) {
+                inputLog(ID, content, "회원");
+                inputLog(user_id, ID + " 계정 " + content + " 처리", "회원");
+                success(response);
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            });
+        }
     }           // gave_Rank
 
     function resetPassword() {
@@ -573,12 +525,12 @@
                 "method": "POST"
             };
             $.ajax(settings).done(function (response) {
-                inputLog(ID, "비밀번호 초기화", "회원관리");
-                inputLog(user_id, ID + " 계정 비밀번호 초기화 처리", "회원관리");
+                inputLog(ID, "비밀번호 초기화", "회원");
+                inputLog(user_id, ID + " 계정 비밀번호 초기화 처리", "회원");
                 Swal.fire({
                     icon: 'success',
-                    title: '비밀번호 초기화가 완료되었습니다.',
-                    text: "임시비밀번호 : " + response
+                    title: '임시 비밀번호가 발급되었습니다.',
+                    text: response
                 })
             });
         }
@@ -594,7 +546,7 @@
                 "method": "POST"
             };
             $.ajax(settings).done(function (response) {
-                inputLog(user_id, ID + " 계정 제명처리", "회원관리");
+                inputLog(user_id, ID + " 계정 제명처리", "회원");
                 success(response);
                 setTimeout(function () {
                     location.reload();
@@ -661,7 +613,7 @@
             var strs = response;
             for (var i = 0; i < strs.length; i++) {
                 if (strs[i] != "") {
-                    inputLog(user_id, content + strs[i], "권한관리");
+                    inputLog(user_id, content + strs[i], "회원");
                 }
             }
             success("권한관리 설정이 저장되었습니다.");
