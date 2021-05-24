@@ -765,7 +765,7 @@
         var tablename = name.value; //
         var check = $("#" + id).is(":checked");
         var pname = $("#pname").text();
-
+        var sname = findSensorCategory(tablename);
         $.ajax({
             url: '<%=cp%>/referenceMonitoringUpdate',
             type: 'POST',
@@ -782,7 +782,7 @@
             check = "OFF";
         }
 
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + tablename + "' 모니터링 " + check + "", "설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + sname + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(pname, naming, "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
