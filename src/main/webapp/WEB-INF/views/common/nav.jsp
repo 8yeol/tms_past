@@ -207,11 +207,11 @@
 
         .sidebar {
             height: 100%;
-            width: 0;
+            width: 250px;
             position: absolute;
             z-index: 1;
             top: 0;
-            left: 0;
+            left: -250px;
             background-color: #0051c4;
             overflow-x: hidden;
             padding-top: 60px;
@@ -314,8 +314,8 @@
                         <li class="topMenuLi"><a class="menuLink shortLink fw-bold" href="<%=cp%>/alarm" id="alarm">알림</a></li>
                         <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/monitoring" id="monitoring">모니터링</a>
                             <ul class="submenu short_sub">
-                                <li><a href="<%=cp%>/monitoring" class="submenuLink ">실시간 모니터링</a></li>
-                                <li><a href="<%=cp%>/sensor" class="submenuLink">상세화면</a></li>
+                                <li><a href="<%=cp%>/monitoring" class="submenuLink" style="margin-left: 20px;">실시간 모니터링</a></li>
+                                <li><a href="<%=cp%>/sensor" class="submenuLink" style="width: 130px;">상세화면</a></li>
                             </ul>
                         </li>
                         <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/dataInquiry" id="statistics">분석 및 통계</a>
@@ -413,10 +413,10 @@
 
 <script>
     function openNav() {
-        document.getElementById("mySidebar").style.width = "250px";
+        document.getElementById("mySidebar").style.left = "0px";
     }
     function closeNav() {
-        document.getElementById("mySidebar").style.width = "0px";
+        document.getElementById("mySidebar").style.left = "-250px";
     }
 
 

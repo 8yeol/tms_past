@@ -214,7 +214,7 @@
     }
 
     .dataTables_wrapper {
-        min-height: 350px;
+        min-height: 470px;
     }
     .moveBtn{
         display: block;

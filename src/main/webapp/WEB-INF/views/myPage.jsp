@@ -4,12 +4,22 @@
     pageContext.setAttribute("cn", "\n");
     String cp = request.getContextPath();
 %>
+
+<jsp:include page="/WEB-INF/views/common/header.jsp"/>
+
+<link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<link rel="shortcut icon" href="#">
+<script src="static/js/jquery-ui.js"></script>
+<script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/common/common.js"></script>
+<script src="static/js/common/member.js"></script>
 <style>
     #passwordBox {
-        background-color: #0d6efd;
+        background-color: #97bef8;
         color: #fff;
         border-radius: 15px;
-        border: 2px solid #0d6efd;
+        border: 2px solid #97bef8;
         box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
         position: relative;
         left: 35px;
@@ -24,17 +34,21 @@
         left: 35px;
         margin-bottom: 10px;
     }
+
+    @media all and (max-width: 989px) {
+        #passwordBox2 {left:15px !important;}
+        #nowPassword {margin: 10px auto 10px !important;}
+        #nowPassword>label {width: 50% !important;}
+        #nowPassword>div:nth-child(3) {left: 5% !important;}
+
+        #passwordBox {left: 15px !important;}
+        #passwordBox label{width: 50% !important;}
+        #passwordBox>div {margin: 10px auto 10px !important;}
+        #passwordBox>div>div:nth-child(3) {left: 5% !important;}
+
+        .btnDiv {width: 500px; position: relative; left: -90px;}
+    }
 </style>
-
-<jsp:include page="/WEB-INF/views/common/header.jsp"/>
-
-<link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
-<link rel="stylesheet" href="static/css/sweetalert2.min.css">
-<link rel="shortcut icon" href="#">
-<script src="static/js/jquery-ui.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
-<script src="static/js/common/common.js"></script>
-<script src="static/js/common/member.js"></script>
 
 <div class="container bg-light rounded p-5 mt-5 mypage-bg">
     <div class="row">
@@ -84,11 +98,11 @@
 
             <div class="edit" style="display:none;" id="passwordBox2">
                 <div class="mb-3" id="nowPassword" style="margin-top: 1rem; width: 80%;">
-                    <label for="password" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">현재 비밀번호</label>
+                    <label for="password" class="col-sm-2 col-form-label" style="width: 22%; display: inline-block; margin: 0 20px 0 25px;">현재 비밀번호</label>
                     <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="password" class="form-control" id="now_password" onkeyup="nowPasswordCheck()">
                     </div>
-                    <div class="col" style="text-align: right;padding-right: 20px;">
+                    <div style="text-align: left; font-size: 0.8rem; position: relative; left: 36%;">
                         <span class="text-danger" id="nowPasswordText">* 사용중인 비밀번호를 입력해주세요.</span>
                     </div>
                 </div>
@@ -96,27 +110,27 @@
 
             <div class="edit" style="display:none;" id="passwordBox">
                 <div class="mb-3" style="margin-top: 1rem; width: 80%;">
-                    <label for="password" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 변경</label>
+                    <label for="password" class="col-sm-2 col-form-label" style="width: 22%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 변경</label>
                    <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="password" class="form-control" id="password" onkeyup="passwordCheckMsg()">
                     </div>
-                    <div class="col" style="text-align: right;padding-right: 20px;">
+                    <div style="text-align: left; font-size: 0.8rem; position: relative; left: 36%;">
                         <span class="text-danger" id="passwordText">* 6자리 이상 20자리 미만의 비밀번호를 설정해주세요.</span>
                     </div>
                 </div>
 
                 <div class="mb-3" style="width: 80%;">
-                    <label for="passwordCheck" class="col-sm-2 col-form-label" style="width: 20%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 확인</label>
+                    <label for="passwordCheck" class="col-sm-2 col-form-label" style="width: 22%; display: inline-block; margin: 0 20px 0 25px;">비밀번호 확인</label>
                     <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="password" class="form-control" id="passwordCheck" onkeyup="passwordCheckMsg()" >
                     </div>
-                    <div class="col" style="text-align: right;padding-right: 20px;">
+                    <div style="text-align: left; font-size: 0.8rem; position: relative; left: 36%;">
                         <span class="text-danger" id="passwordCheckText">* 비밀번호가 일치하지 않습니다.</span>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row btnDiv">
                     <button class="btn btn-outline-primary m-3"  style="display:none;" id="pw_button" onclick="changePassword()">비밀번호 변경</button>
                 <div class="col text-center" style="padding-left: 20px;">
                     <button class="btn btn-outline-primary m-3" id="update_btn" onclick="setLayout()" >회원정보 수정</button>
