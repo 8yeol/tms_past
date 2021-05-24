@@ -309,6 +309,9 @@
         }
     });
 
+    /**
+     * 센서명으로 측정소명 리턴
+     */
     function getPlaceName(sensorName){
         var result;
         $.ajax({
