@@ -740,7 +740,7 @@
         }else{
             check = "OFF";
         }
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+name+" 모니터링 "+check+"","모니터링ON/OFF");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+name+" 모니터링 "+check+"","설정");
         MultiSelecterModal(name, "", "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -770,7 +770,8 @@
         }else{
             check = "OFF";
         }
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+" - "+tablename+" 모니터링 "+check+"","모니터링ON/OFF");
+
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+" - "+tablename+" 모니터링 "+check+"","설정");
         MultiSelecterModal(pname, naming, "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -791,15 +792,10 @@
         var value = name.value; //법적기준 값
         var pname = $("#pname").text();
         if (value == "") {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
-
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
+            value = "999";
         }
+        console.log(value);
+
         if (value == 0) {
             Swal.fire({
                 icon: 'warning',
@@ -809,6 +805,7 @@
             placeChange(document.getElementById('nickname').value);
             return false;
         }
+        console.log(value)
         if (value.indexOf('.') != -1) {
             var value_dot = value.substring(value.indexOf('.') + 1);
             if (value_dot.length > 2) {
@@ -824,7 +821,6 @@
         }
 
         if (isNaN(value) == true) {
-
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -864,7 +860,12 @@
                 "place": pname
             }
         })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 법적 기준 값 변경 '"+value+"'","기준값 변경");
+        if(value == 999){
+            value = "초기화";
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 법적 기준 값 초기화","설졍");
+        }else{
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 법적 기준 값 변경 '"+value+"'","설졍");
+        }
         MultiSelecterModal(pname, naming, "legal", value);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -883,14 +884,7 @@
         var value = name.value;
         var pname = $("#pname").text();
         if (value == "") {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
-
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
+            value = "999";
         }
         if (value == 0) {
             Swal.fire({
@@ -954,7 +948,12 @@
                 "place": pname
             }
         })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 사내 기준 값 변경 '"+value+"'","기준값 변경");
+        if(value == 999){
+            value = "초기화";
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 사내 기준 값 초기화","설졍");
+        }else{
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 사내 기준 값 변경 '"+value+"'","설졍");
+        }
         MultiSelecterModal(pname, naming, "company", value);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -973,13 +972,7 @@
         var value = name.value; //관리기준
         var pname = $("#pname").text();
         if (value == "") {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
-            })
-            placeChange(document.getElementById('nickname').value);
-            return false;
+            value = "999";
         }
         if (isNaN(value) == true) {
 
@@ -1032,8 +1025,13 @@
                 "value": value,
                 "place": pname
             }
-        })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 관리 기준 값 변경 '"+value+"'","기준값 변경");
+        });
+        if(value == 999){
+            value = "초기화";
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 관리 기준 값 초기화","설졍");
+        }else{
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', ""+pname+"-"+naming+" 관리 기준 값 변경 '"+value+"'","설졍");
+        }
         MultiSelecterModal(pname, naming, "manage", value);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
