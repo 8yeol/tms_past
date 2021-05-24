@@ -1072,7 +1072,7 @@ public class AjaxController {
             target.setStatus(!target.isStatus());
             annualEmissionsRepository.save(target);
             String onOff = (target.isStatus()?"ON":"OFF");
-            inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 연간 배출량 누적 모니터링 대상"+onOff, "수정", principal);
+            inputLogSetting(target.getPlace() + " - " + target.getSensorNaming() + "센서 연간 배출량 누적 모니터링 대상 "+onOff, "수정", principal);
         }
     }
 

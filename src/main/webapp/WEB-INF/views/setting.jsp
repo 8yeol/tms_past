@@ -333,20 +333,20 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title info_Text">회원 관리</h5>
+                <h5 class="modal-title info_Text"> 회원 관리</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
                     <c:set var="member" value="${member}"/>
                     <c:if test="${member.state == '1'}">
-                        <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal" data-bs-target="#userGrantManagementModal" data-bs-dismiss="modal">회원 권한 관리</button>
+                        <button class="btn btn-outline-dark fw-bold fs-4 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userGrantManagementModal" data-bs-dismiss="modal">권한 관리</button>
                     </c:if>
-                    <button class="btn btn-primary fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal" data-bs-target="#userPwdmodal" data-bs-dismiss="modal">회원 비밀번호 초기화</button>
-                    <button class="btn btn-danger fw-bold fs-4 px-5 mt-3" data-bs-toggle="modal" data-bs-target="#userExpulsionmodal" data-bs-dismiss="modal">회원 제명</button>
+                    <button class="btn btn-outline-dark fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userPwdmodal" data-bs-dismiss="modal">임시 비밀번호 발급</button>
+                    <button class="btn btn-outline-danger fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userExpulsionmodal" data-bs-dismiss="modal">제명</button>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">확인</button>
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="reload()">취소</button>
             </div>
         </div>
     </div>
@@ -358,15 +358,16 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title">비밀번호 초기화</h5>
+                <h5 class="modal-title">임시 비밀번호 발급</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <p class="fs-4 fw-bold info_text"> 비밀번호를 초기화 하시겠습니까?</p>
+                    <p class="fs-4 fw-bold info_text">의 비밀번호를 변경하시겠습니까?</p>
+                    <small class="text-danger">* 발급된 임시 비밀번호로 로그인 가능하며, 해당 회원에게 임시 비밀번호를 알려주신 후, 마이페이지에서 비밀번호 변경을 요청해주세요.</small>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">초기화</button>
+                <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">확인</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">취소</button>
             </div>
         </div>
@@ -383,6 +384,7 @@
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
                     <p class="fs-3 fw-bold info_text">을 제명 하시겠습니까?</p>
+                    <small class="text-danger">* 회원과 관련된 모든 데이터가 삭제됩니다.</small>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -399,13 +401,13 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title info_text">회원 권한 관리</h5>
+                <h5 class="modal-title info_text">권한 관리</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="3" onclick="gave_Rank(value)">일반회원 등급부여</button>
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="2" onclick="gave_Rank(value)">관리자 등급부여</button>
-                    <button class="btn btn-secondary fw-bold fs-4 px-5 mt-3" data-bs-dismiss="modal" value="1" onclick="gave_Rank(value)">최고관리자 등급부여</button>
+                    <button class="btn btn-outline-primary fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="3" onclick="gave_Rank(value)">일반회원 등급부여</button>
+                    <button class="btn btn-outline-warning fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="2" onclick="gave_Rank(value)">관리자 등급부여</button>
+                    <button class="btn btn-outline-danger fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="1" onclick="gave_Rank(value)">최고관리자 등급부여</button>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -462,7 +464,7 @@
         state = str_state;
         name = str_name;
 
-        $(".info_Text").prepend(name + "님 ");
+        $(".info_Text").prepend(name + " 님");
     }// row 의 승인 및 거절 버튼 클릭시 전역변수 ID에 해당row 의 ID가 저장됨
 
     function reload(){
@@ -518,8 +520,8 @@
                 inputLog(user_id, ID + " 계정 비밀번호 초기화 처리", "회원관리");
                 Swal.fire({
                     icon: 'success',
-                    title: '비밀번호 초기화가 완료되었습니다.',
-                    text: "임시비밀번호 : " + response
+                    title: '임시 비밀번호가 발급되었습니다.',
+                    text: response
                 })
             });
         }
