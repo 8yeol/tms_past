@@ -98,6 +98,8 @@
         .m-fs {font-size: 0.7rem !important;}
         .card-title {font-size:0.7rem !important;}
         .m-fs>div:nth-child(2)>p:nth-child(2) {font-size: 1.2rem;}
+
+        h5 {font-size: 0.75rem;}
     }
 
 </style>
