@@ -67,7 +67,7 @@
                     </th>
                     <th style="width: 34%">측정소 명</th>
                     <th style="width: 40%;">업데이트</th>
-                    <th style="width: 24%;">모니터링 사용</th>
+                    <th style="width: 25%;">모니터링 사용</th>
                 </tr>
                 <tr id="placeDiv" style="padding: 0px;">
 

@@ -21,9 +21,6 @@
 <script src="static/js/jquery.dataTables.min.js"></script>
 
 <style>
-    .mg1 {
-        margin-right: 50px;
-    }
 
     .dd {
         text-align-last: center;
@@ -136,7 +133,7 @@
                         <div class="row p-5" style="border-left: 20px solid white;">
                             <div class=" inputLayout">
                                 <label class="me-3 col-xs-3 label">관리 ID</label>
-                                <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="managementId"
+                                <input type="text" class="text-secondary rounded-3  dd col-xs-3" name="managementId"
                                        id="m_id" readonly>
                             </div>
                             <div class="inputLayout">
@@ -146,7 +143,7 @@
                             </div>
                             <div class=" inputLayout">
                                 <label class="me-3 col-xs-3 w-10 label">항목명</label>
-                                <input type="text" class="text-secondary rounded-3  dd mg1 col-xs-3" name="naming"
+                                <input type="text" class="text-secondary rounded-3  dd col-xs-3" name="naming"
                                        id="naming">
                             </div>
                         </div>
