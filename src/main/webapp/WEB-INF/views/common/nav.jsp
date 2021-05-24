@@ -171,7 +171,6 @@
 
         .dropdown {
             position: relative;
-            display: inline-block;
         }
 
         .dropdown-content {
@@ -262,7 +261,6 @@
         }
         .dropdown {
             position: relative;
-            display: inline-block;
         }
         .dropdown-content {
             display: none;
