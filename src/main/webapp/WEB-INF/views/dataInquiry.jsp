@@ -613,7 +613,7 @@
                 if(flag==0){
                     inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place + '-'+ category + ' 측정자료 조회','조회');
                 } else{
-                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place + '-'+ category + ' 측정자료 검색('+date_start+' ~ '+date_end+')','검색');
+                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place + '-'+ category + ' 측정자료 조회('+date_start+' ~ '+date_end+')','조회');
                 }
             },
             error : function(request, status, error) {
