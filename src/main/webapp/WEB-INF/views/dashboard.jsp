@@ -73,9 +73,6 @@
         left: 25%;
     }
 
-    .h-px {
-        height: auto;
-    }
 
     .standard {
         text-align: right;
@@ -113,7 +110,7 @@
         <span class="fs-4 fw-bold">대시보드</span>
     </div>
 
-    <div class="row m-3 mt-3 bg-white ms-1 h-px" style="width: 98%;">
+    <div class="row m-3 mt-3 bg-white ms-1" style="width: 98%; height: 370px; overflow: auto;">
         <div class="row p-3 h-25 margin-l">
             <div class="col fs-5 fw-bold">연간 배출량 추이 모니터링</div>
             <div class="col text-end">
@@ -278,7 +275,7 @@
         </c:choose>
     </div>
 
-    <div class="row mt-4 bg-light margin-l pb-4" style="width: 98%; margin: 0.2rem;">
+    <div class="row mt-4 bg-light margin-l pb-4" style="width: 98%; margin: 0.2rem; height: 390px; overflow: auto;">
         <div class="row p-3 h-25 margin-l">
             <div class="col fs-5 fw-bold">
                 연간 배출량 누적 모니터링
@@ -373,7 +370,7 @@
         </div>
     </div>
 
-<div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: auto;">
+<div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: 340px; overflow: auto;">
         <div class="row p-3 pb-0 margin-l">
             <div class="col fs-5 fw-bold">
                 관리등급 초과 모니터링
