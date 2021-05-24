@@ -122,15 +122,15 @@
 
                 <thead>
                 <tr class="text-center">
-                    <th >ID</th>
-                    <th >이름</th>
-                    <th width="150px">등급</th>
-                    <th >이메일</th>
-                    <th >연락처</th>
-                    <th >가입<a class="sign"></a> 신청일</th>
-                    <th >가입<a class="sign"></a> 승인일</th>
-                    <th >최종 <a class="sign"></a>로그인</th>
-                    <th >관리</th>
+                    <th style="padding:10px 0px 10px 0px;">ID</th>
+                    <th style="padding:10px 0px 10px 0px;" width="80px">이름</th>
+                    <th style="padding:10px 0px 10px 0px;" width="90px">등급</th>
+                    <th style="padding:10px 0px 10px 0px;">이메일</th>
+                    <th style="padding:10px 0px 10px 0px;">연락처</th>
+                    <th style="padding:10px 0px 10px 0px;">가입<a class="sign"></a> 신청일</th>
+                    <th style="padding:10px 0px 10px 0px;">가입<a class="sign"></a> 승인일</th>
+                    <th style="padding:10px 0px 10px 0px;">최종 <a class="sign"></a>로그인</th>
+                    <th style="padding:10px 0px 10px 0px;">관리</th>
                 </tr>
                 </thead>
 
@@ -161,12 +161,12 @@
                         </c:choose>
                         <td>${mList.email}</td>
                         <td>${mList.tel}</td>
-                        <td><fmt:formatDate value="${mList._id.date}" pattern="yyyy년 MM월 dd일 HH시"/></td>
+                        <td><fmt:formatDate value="${mList._id.date}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
 
 
                         <c:choose>
                             <c:when test="${mList.joined != null}">
-                                <td><fmt:formatDate value="${mList.joined}" pattern="yyyy년 MM월 dd일 HH시"/></td>
+                                <td><fmt:formatDate value="${mList.joined}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
                             </c:when>
                             <c:otherwise>
                                 <td></td>
@@ -175,7 +175,7 @@
 
                         <c:choose>
                             <c:when test="${mList.lastLogin != null}">
-                                <td><fmt:formatDate value="${mList.lastLogin}" pattern="yyyy년 MM월 dd일 HH시"/></td>
+                                <td><fmt:formatDate value="${mList.lastLogin}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
                             </c:when>
                             <c:otherwise>
                                 <td></td>
@@ -292,6 +292,14 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <h3 id="okModal_Body">가입승인 하시겠습니까?</h3>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <h5 class="me-1">회원관리등급 : </h5>
+                <select name="rank" id="rank" class="btn btn-light" onchange="">
+                    <option value="3">일반</option>
+                    <option value="2">관리자</option>
+                    <option value="1">최고관리자</option>
+                </select>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" value="1"
@@ -481,7 +489,10 @@
 
 <script>
 
-    $("#member-Table").DataTable({
+     $("#member-Table").DataTable({
+    //     scrollX:true,
+    //     scrollXInner:"130%",
+         autoWidth: false,
         language: {
             emptyTable: "데이터가 없어요.",
             lengthMenu: "페이지당 _MENU_ 개씩 보기",
@@ -686,6 +697,25 @@
         Swal.fire('확인', str, 'success');
     }
 
+
+    var mql = window.matchMedia("screen and (max-width: 1024px)");
+
+    mql.addListener(function(e) {
+        if(e.matches) {
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    });
+
+    var filter = "win16|win32|win64|mac";
+    if(navigator.platform){
+        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+            $('#container').attr('class','container-fluid');
+        } else {
+            $('#container').attr('class','container');
+        }
+    }
 
 </script>
 
