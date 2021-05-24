@@ -219,7 +219,7 @@
         <div class="d-flex mt-1 p-0">
 
             <div class="col-md-3">
-                <div class="bg-lightGray p-4 me-4 fw-bold h-100">
+                <div class="bg-lightGray p-4 me-4 fw-bold" style="height: 314px;">
                     <div class="d-flex justify-content-start">
                         <input type="radio" class="form-check-input me-2" name="grandRadio" id="root_radio" value="root" onclick="rankRadioChanged(value)" checked>
                         <label for="root_radio" class="w-75">최고 관리자</label>
