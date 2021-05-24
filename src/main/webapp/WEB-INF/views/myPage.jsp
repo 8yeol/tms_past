@@ -350,6 +350,9 @@
             $("#now_password").val("");
             $("#password").val("");
             $("#passwordCheck").val("");
+            $("#nowPasswordText").html("");
+            $("#passwordText").html("");
+            $("#passwordCheckText").html("");
         }
     }
 
