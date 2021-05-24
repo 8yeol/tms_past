@@ -165,9 +165,11 @@ public class AjaxController {
         if (a == sensorlist.size()) { //센서 모니터링이 전부 OFF일때
             place.setMonitoring(false);
             for(int j = 0; j<sensorlist.size(); j++){
+                SensorList sen = sensorListRepository.findByTableName(sensorlist.get(j),"");
+                String senname = sen.getNaming();
                 if(notification_settingsRepository.findByName(sensorlist.get(j)) != null){
                     notification_settingsRepository.deleteByName(sensorlist.get(j));
-                    inputLogSetting("'"+sensorlist.get(j)+"'"+" 알림설정 값 삭제","설정",principal);
+                    inputLogSetting("'"+senname+"'"+" 알림설정 값 삭제","설정",principal);
                 }
             }
             inputLogSetting(name+" 모니터링 OFF","설정",principal);
