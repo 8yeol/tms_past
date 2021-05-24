@@ -403,21 +403,15 @@
             <div class="modal-header justify-content-center">
                 <h5 class="modal-title info_text">권한 관리</h5>
             </div>
-<%--            <div class="modal-body d-flex justify-content-center">
-                <div class="text-center">
-                    <button class="btn btn-outline-primary fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="3" onclick="gave_Rank(value)">일반회원 등급부여</button>
-                    <button class="btn btn-outline-warning fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="2" onclick="gave_Rank(value)">관리자 등급부여</button>
-                    <button class="btn btn-outline-danger fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="1" onclick="gave_Rank(value)">최고관리자 등급부여</button>
-                </div>
-            </div>--%>
             <div class="modal-body d-flex justify-content-center">
-                <select class="text-center form-select" onchange="gave_Rank(value)">
+                <select class="text-center form-select" id="gaveRank_Select">
                     <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="3" id="normal_select_item">일반회원 등급부여</option>
                     <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="2" id="admin_select_item">관리자 등급부여</option>
                     <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="1" id="root_select_item">최고관리자 등급부여</option>
                 </select>
             </div>
             <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="gave_Rank()">확인</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">취소</button>
             </div>
         </div>
@@ -498,8 +492,9 @@
         })
     }           // sing_Up
 
-    function gave_Rank(value) {
-        if(value == state){
+    function gave_Rank() {
+        var value = $("#gaveRank_Select").val();
+       if(value == state){
             warning("이미 동일한 등급입니다.");
             setTimeout(function () {
                 location.reload();

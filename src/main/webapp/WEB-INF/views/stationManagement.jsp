@@ -751,7 +751,7 @@
         } else {
             check = "OFF";
         }
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + name + " 모니터링 " + check + "", "설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(name, "", "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -765,7 +765,7 @@
         var tablename = name.value; //
         var check = $("#" + id).is(":checked");
         var pname = $("#pname").text();
-
+        var sname = findSensorCategory(tablename);
         $.ajax({
             url: '<%=cp%>/referenceMonitoringUpdate',
             type: 'POST',
@@ -782,7 +782,7 @@
             check = "OFF";
         }
 
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + " - " + tablename + " 모니터링 " + check + "", "설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + sname + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(pname, naming, "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -872,9 +872,9 @@
         })
         if (value == 999) {
             value = "초기화";
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 법적 기준 값 초기화", "설정");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 초기화", "설정");
         } else {
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 법적 기준 값 변경 '" + value + "'", "설정");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "legal", value);
         placeDiv();
@@ -963,9 +963,9 @@
         })
         if (value == 999) {
             value = "초기화";
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 사내 기준 값 초기화", "설정");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 사내 기준 값 초기화", "설정");
         } else {
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 사내 기준 값 변경 '" + value + "'", "설정");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 사내 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "company", value);
         placeDiv();
@@ -1044,9 +1044,9 @@
         });
         if (value == 999) {
             value = "초기화";
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 관리 기준 값 초기화", "설정");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 관리 기준 값 초기화", "설정");
         } else {
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 관리 기준 값 변경 '" + value + "'", "설정");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 관리 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "manage", value);
         placeDiv();
