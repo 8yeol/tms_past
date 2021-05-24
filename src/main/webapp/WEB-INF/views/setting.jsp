@@ -295,7 +295,7 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <h5 class="me-1">회원관리등급 : </h5>
-                <select name="rank" id="rank" class="btn btn-light" onchange="">
+                <select name="rank" id="rank" class="btn btn-light" onchange="rankSelectOnChange()">
                     <option value="3">일반</option>
                     <option value="2">관리자</option>
                     <option value="1">최고관리자</option>
@@ -510,8 +510,8 @@
         },
         pageLength: 10,
         info: false,
-        lengthChange : false,
-        order :[5, 'desc']
+        lengthChange: false,
+        order: [5, 'desc']
     });
 
     var ID = ""; //데이터테이블 해당항목의 ID정보
@@ -531,21 +531,14 @@
 
     function sing_Up(iNumber) {
         var content = ID;
-        if (iNumber == "1") {
-            content += " 계정 가입 승인 ";
-        } else {
-            content += " 계정 가입 거절 ";
-        }
+        var rankLog = ($("#rank").val() == "1") ? " (등급 : 최고관리자)" : ($("#rank").val() == "2") ? " (등급 : 관리자)" : " (등급 : 일반)";
+        (iNumber == "1") ? content += " 계정 가입 승인 " + rankLog : content += " 계정 가입 거절 ";
         var settings = {
-            "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + iNumber,
+            "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + iNumber + "&state=" + $("#rank").val(),
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
-            if (iNumber == "1") {
-                inputLog(ID, "가입 승인", "회원관리"); // 대상자로그
-            } else {
-                inputLog(ID, "가입 거절", "회원관리");
-            }
+            (iNumber == "1") ? inputLog(ID, "가입 승인" + rankLog, "회원관리") : inputLog(ID, "가입 거절", "회원관리"); //대상자 로그
             inputLog(user_id, content, "회원관리"); // 관리자로그
             success(response);
             setTimeout(function () {
@@ -585,7 +578,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: '비밀번호 초기화가 완료되었습니다.',
-                    text: "임시비밀번호 : "+ response
+                    text: "임시비밀번호 : " + response
                 })
             });
         }
@@ -620,7 +613,7 @@
             $("#monitoringChk").prop("checked", ("${rank_managements.monitoring}" == "true") ? true : false);
             $("#statisticsChk").prop("checked", ("${rank_managements.statistics}" == "true") ? true : false);
             $("#settingChk").prop("checked", ("${rank_managements.setting}" == "true") ? true : false);
-            if(rName == "root"){
+            if (rName == "root") {
                 $("#settingChk").prop("disabled", true);
             } else {
                 $("#settingChk").prop("disabled", false);
@@ -666,8 +659,8 @@
         $.ajax(settings).done(function (response) {
             var content = (rName == "root") ? "최고 관리자 - " : (rName == "admin") ? "관리자 - " : "일반유저 - ";
             var strs = response;
-            for(var i=0; i < strs.length; i++){
-                if(strs[i] != ""){
+            for (var i = 0; i < strs.length; i++) {
+                if (strs[i] != "") {
                     inputLog(user_id, content + strs[i], "권한관리");
                 }
             }
@@ -700,20 +693,20 @@
 
     var mql = window.matchMedia("screen and (max-width: 1024px)");
 
-    mql.addListener(function(e) {
-        if(e.matches) {
-            $('#container').attr('class','container-fluid');
+    mql.addListener(function (e) {
+        if (e.matches) {
+            $('#container').attr('class', 'container-fluid');
         } else {
-            $('#container').attr('class','container');
+            $('#container').attr('class', 'container');
         }
     });
 
     var filter = "win16|win32|win64|mac";
-    if(navigator.platform){
-        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
-            $('#container').attr('class','container-fluid');
+    if (navigator.platform) {
+        if (0 > filter.indexOf(navigator.platform.toLowerCase())) {
+            $('#container').attr('class', 'container-fluid');
         } else {
-            $('#container').attr('class','container');
+            $('#container').attr('class', 'container');
         }
     }
 
