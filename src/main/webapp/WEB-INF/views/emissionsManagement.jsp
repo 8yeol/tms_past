@@ -40,6 +40,7 @@
         }
         .row2{
             margin-bottom: 20px;
+            margin-left: -150px;
         }
     }
     .emissionsSpan{

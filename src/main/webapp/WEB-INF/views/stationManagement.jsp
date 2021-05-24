@@ -38,9 +38,17 @@
         line-height: 55px;
         padding: 10px;
     }
+    @media all and (max-width: 1400px) {
+        #btnDiv{float: right;}
+    }
 
+    @media all and (max-width: 1024px) {
+        #station1{margin-top: 20px;}
+        #station2{margin-top: 20px;}
+        #btnDiv{float: right;}
+    }
 </style>
-<div class="container">
+<div class="container" id="container">
     <div class="col " style="font-weight: bolder;margin: 30px 0px; font-size: 27px">
         환경설정 > 측정소 관리
     </div>
@@ -48,14 +56,16 @@
     <div class="row bg-light rounded"><span style=";font-size: 22px; font-weight: bolder;padding: 20px 20px 30px 25px;">측정소 등록 및 측정소별 항목 등록</span>
     </div>
     <div class="row bg-light" style="height: 70%; padding: 0px 25px 25px 25px;">
-        <div class="col-3 border-end" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
+        <div class="col-6 border-end"  id="station1" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div style="padding-bottom: 15px; padding-top: 3px;">
                 <span class="fw-bold" style="margin-right: 20%; font-size: 1.25rem;">측정소 관리</span>
-                <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
-                <button data-bs-toggle="modal" data-bs-target="#updatePlace" class="updateBtn"
-                        onclick="updatePlaceSetting()">수정
-                </button>
-                <button onclick="removePlace()" class="removeBtn">삭제</button>
+                <span id="btnDiv">
+                    <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
+                    <button data-bs-toggle="modal" data-bs-target="#updatePlace" class="updateBtn"
+                            onclick="updatePlaceSetting()">수정
+                    </button>
+                    <button onclick="removePlace()" class="removeBtn">삭제</button>
+                </span>
             </div>
             <table class="text-center" style="width: 100%;">
                 <tr class="fw-bold"
@@ -75,7 +85,7 @@
 
             </table>
         </div>
-        <div class="col-3" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
+        <div class="col-6" id="station2" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
 
             <div>
                 <div id="p_monitoring" class="fw-bold" style="display: flex; margin-top: 5px; padding-bottom: 35px;">

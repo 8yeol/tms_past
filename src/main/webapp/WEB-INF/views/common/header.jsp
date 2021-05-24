@@ -16,6 +16,8 @@
     <script src="static/js/jquery-3.6.0.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>
 </head>
+<style>
+</style>
 <body>
 
 <jsp:include page="/WEB-INF/views/common/nav.jsp" />

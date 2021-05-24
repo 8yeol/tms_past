@@ -54,10 +54,7 @@
     .add-margin {
         margin-left: 28px;
     }
-    .down {
-        position: relative;
-        top:-663px;
-    }
+
     .add-bg-color {
         background-color: #97bef8;
         color: #fff;
@@ -150,18 +147,22 @@
 
     .down{
         margin-top: 1.61rem;
+        position: relative;
+        top:-663px;
     }
 
     #items{
         border: 1px solid #dee2e6;
         border-color: #dee2e6;
     }
+    #searchDiv{height: 130px;}
 
     /* 미디어쿼리 */
     @media all and (max-width: 1399px) and (min-width: 1200px) {
         .sizing {width:937px;}
         body {font-size: 0.8rem;}
         .search {left:260px;}
+        #searchDiv{height: 170px;}
     }
     @media all and (max-width: 1199px) and (min-width: 990px) {
         .sizing {width:787px;}
@@ -169,6 +170,8 @@
         .add-margin {margin-left: 5px;}
         .search {left:160px;}
         .f-sizing {font-size: 0.9rem!important;}
+        #searchDiv{height: 180px;}
+
     }
 
     @media all and (max-width: 989px) {
@@ -181,13 +184,14 @@
         .add-bg{width:720px; height: 120px;}
         #date_start, #date_end {width:120px;}
         .down {top:-1140px; width: 708px; margin-top: 0; margin-left: 12px; border: 1px solid; border-color: #dee2e6}
-        #items{ border: 0px}
         .down div{
             float: left;
             margin-left: 0.5rem;
         }
+        #items{ border: 0px}
         .m-top{padding-top: 100px;}
         .h-fix {height: 20px;}
+        #searchDiv{height: 190px;}
     }
 </style>
 
@@ -195,8 +199,8 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
 
-<div class="container" >
-    <div class="ms-3 mt-3 add-bg row">
+<div class="container">
+    <div class="ms-3 mt-3 add-bg row" id="searchDiv">
         <div class="col-3 picker">
             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
             <div class="btn-group w-50 ms-3">
@@ -237,7 +241,7 @@
 
             <button type="button" class="btn btn-primary ms-3" onClick="search(1)">검색</button>
         </div>
-        <div class="row m-0 p-0">
+        <div class="row m-2 p-2">
             <div class="col text-end">
                 <span class="text-primary" style="font-size: 0.8rem; margin-right: 20px;">* 검색기간이 7일 미만일 경우 5분 평균데이터, 7일 이상인 경우 30분 평균데이터로 표시됩니다.</span>
             </div>
@@ -274,7 +278,7 @@
 
     </div>
 
-    <div class="row">
+    <div class="row" >
         <div class="col">
             <div class="row bg-white m-top" style="margin-left: 1px;">
                 <div class="row ms-2">
@@ -282,11 +286,11 @@
                         <table id="information" class="table table-striped table-bordered table-hover text-center" >
                             <thead class="add-bg-color">
                             <tr>
-                                <th width="10%">순번</th>
-                                <th width="20%">측정 값</th>
-                                <th width="20%">관리등급</th>
-                                <th width="20%">모니터링 여부</th>
-                                <th width="30%">업데이트 시간</th>
+                                <th width="10%" style="padding:10px 2px 10px 2px;">순번</th>
+                                <th width="20%" style="padding:10px 2px 10px 2px;">측정 값</th>
+                                <th width="20%" style="padding:10px 2px 10px 2px;">관리등급</th>
+                                <th width="20%" style="padding:10px 2px 10px 2px;">모니터링 여부</th>
+                                <th width="30%" style="padding:10px 2px 10px 2px;">업데이트 시간</th>
                             </tr>
                             </thead>
                             <tbody id="informationBody">

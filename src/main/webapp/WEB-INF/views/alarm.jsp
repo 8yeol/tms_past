@@ -117,7 +117,7 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 
-<div class="container">
+<div class="container" id="container">
 
     <div class="row m-3 mt-3 ms-1">
         <span class="fs-4 fw-bold">알림</span>
@@ -128,7 +128,7 @@
             <div class="col-auto fs-5 fw-bold">
                 알림 목록 <button class="btn" onclick="search('refresh')"> <i class="fas fa-sync-alt"></i> </button>
             </div>
-            <div class="col text-center">
+            <div class="col" style="text-align: right;margin-right: 20px;">
                 <div class="search">
                     <span class="fs-5 fw-bold p-3 f-sizing">검색기간</span>
                     <div class="form-check form-check-inline">
@@ -151,7 +151,7 @@
                             사용자 정의
                         </label>
                     </div>
-
+                    <a class="sign"></a><a class="sign"></a>
                     <input type="text" id="date_start" class="text-center p-1" disabled>
                     <label class="ms-3 me-3">-</label>
                     <input type="text" id="date_end" class="text-center p-1" disabled>
