@@ -401,13 +401,13 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title info_text">권한 관리</h5>
+                <h5 class="modal-title info_text"> 권한 변경</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <select class="text-center form-select" id="gaveRank_Select">
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="3" id="normal_select_item">일반회원 등급부여</option>
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="2" id="admin_select_item">관리자 등급부여</option>
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="1" id="root_select_item">최고관리자 등급부여</option>
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="3" id="normal_select_item">일반회원</option>
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="2" id="admin_select_item">관리자</option>
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="1" id="root_select_item">최고관리자</option>
                 </select>
             </div>
             <div class="modal-footer d-flex justify-content-center">
