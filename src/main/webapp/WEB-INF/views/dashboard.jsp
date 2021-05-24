@@ -86,21 +86,18 @@
     }
 
     @media all and (max-width: 1399px) and (min-width: 1200px) {
-        .center-position {
-            left: 20%;
-        }
+        .center-position {left: 20%;}
     }
 
     @media all and (max-width: 1199px) and (min-width: 990px) {
-        .center-position {
-            left: 15%;
-        }
+        .center-position {left: 15%;}
     }
 
     @media all and (max-width: 989px) {
-        .center-position {
-            left: 3%;
-        }
+        .center-position {left: 3%;}
+        .m-fs {font-size: 0.7rem !important;}
+        .card-title {font-size:0.7rem !important;}
+        .m-fs>div:nth-child(2)>p:nth-child(2) {font-size: 1.2rem;}
     }
 
 </style>
@@ -163,8 +160,8 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <div class="card border-2 border-primary" style="height: 90%;">
-                                <div class="card-body">
+                            <div class="card border-2 border-primary" style="height: 218px;">
+                                <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(%)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
@@ -187,7 +184,7 @@
                         </div>
                         <div class="col-3">
                             <div class="card border-2 border-primary" style="height: 90%;">
-                                <div class="card-body">
+                                <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(mg/L)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
@@ -211,7 +208,7 @@
                         </div>
                         <div class="col-3">
                             <div class="card border-2 border-primary" style="height: 90%;">
-                                <div class="card-body">
+                                <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(%)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
@@ -235,7 +232,7 @@
                         </div>
                         <div class="col-3">
                             <div class="card border-2 border-primary" style="height: 90%;">
-                                <div class="card-body">
+                                <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
@@ -305,7 +302,7 @@
                                 <c:set var="percent" value="${(emissions.yearlyValue*100)/(emissionsStandard)}"/>
                                 <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
                                 <div class="col">
-                                    <div class="progress h-100">
+                                    <div class="progress" style="height: 24px;">
                                         <c:choose>
                                         <c:when test="${percent le 50}">
                                             <div class="progress-bar progress-blue" role="progressbar" style="width:${percent}%;"
