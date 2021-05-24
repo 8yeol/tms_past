@@ -339,7 +339,7 @@
                 <div class="text-center">
                     <c:set var="member" value="${member}"/>
                     <c:if test="${member.state == '1'}">
-                        <button class="btn btn-outline-dark fw-bold fs-4 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userGrantManagementModal" data-bs-dismiss="modal">권한 관리</button>
+                        <button class="btn btn-outline-dark fw-bold fs-4 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userGrantManagementModal" data-bs-dismiss="modal" onclick="setSelectOption()">권한 관리</button>
                     </c:if>
                     <button class="btn btn-outline-dark fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userPwdmodal" data-bs-dismiss="modal">임시 비밀번호 발급</button>
                     <button class="btn btn-outline-danger fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userExpulsionmodal" data-bs-dismiss="modal">제명</button>
@@ -362,7 +362,7 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <p class="fs-4 fw-bold info_text">의 비밀번호를 변경하시겠습니까?</p>
+                    <p class="fs-5 fw-bold info_text">의 비밀번호를 변경하시겠습니까?</p>
                     <small class="text-danger">* 발급된 임시 비밀번호로 로그인 가능하며, 해당 회원에게 임시 비밀번호를 알려주신 후, 마이페이지에서 비밀번호 변경을 요청해주세요.</small>
                 </div>
             </div>
@@ -403,12 +403,19 @@
             <div class="modal-header justify-content-center">
                 <h5 class="modal-title info_text">권한 관리</h5>
             </div>
-            <div class="modal-body d-flex justify-content-center">
+<%--            <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
                     <button class="btn btn-outline-primary fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="3" onclick="gave_Rank(value)">일반회원 등급부여</button>
                     <button class="btn btn-outline-warning fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="2" onclick="gave_Rank(value)">관리자 등급부여</button>
                     <button class="btn btn-outline-danger fw-bold fs-4 px-5 m-2 w-75" data-bs-dismiss="modal" value="1" onclick="gave_Rank(value)">최고관리자 등급부여</button>
                 </div>
+            </div>--%>
+            <div class="modal-body d-flex justify-content-center">
+                <select class="text-center form-select" onchange="gave_Rank(value)">
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="3" id="normal_select_item">일반회원 등급부여</option>
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="2" id="admin_select_item">관리자 등급부여</option>
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="1" id="root_select_item">최고관리자 등급부여</option>
+                </select>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">취소</button>
@@ -457,6 +464,7 @@
 
     $(document).ready(function () {
         rankRadioChanged("root"); //기본값
+        $('.Modal').modal({keyboard: false,backdrop: 'static'}); // esc , 백스페이스 클릭방지
     }); //ready
 
     function Info_Set(str_id, str_state, str_name) {
@@ -624,6 +632,9 @@
         });
     }       //rankSettingSave
 
+    function setSelectOption(){
+        (state == "1") ?  $('#root_select_item').prop("selected", true) : (state == "2") ?  $('#admin_select_item').prop("selected", true): $('#normal_select_item').prop("selected", true);
+    }
 
     $(function () {
         $('.modal-dialog').draggable({handle: ".modal-header"});
