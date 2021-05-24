@@ -193,6 +193,11 @@
         .h-fix {height: 20px;}
         #searchDiv{height: 190px;}
         #container>div:nth-child(4)>div:nth-child(1)>div:nth-child(1) {width: 720px;}
+        #searchDiv {margin: 10px auto 0px !important;}
+        hr {width: 720px; margin-left: 100px;}
+        #container>div:nth-child(3) {margin-left: 100px!important;}
+        #container>div:nth-child(4) {margin:0 0 0 100px!important;}
+        #container>div:nth-child(4)>div:nth-child(1) {padding: 0!important;}
     }
 </style>
 
