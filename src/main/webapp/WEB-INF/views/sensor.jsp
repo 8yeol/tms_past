@@ -251,12 +251,12 @@
                 /* URL로 파라미터 확인 (모니터링페이지에서 넘어온 경우 파라미터 있음)*/
                 const url = new URL(window.location.href);
                 const urlParams = url.searchParams;
-                if(urlParams.has(('place')) && urlParams.has('sensor')){ //파라미터가 있을 때
-                    const place_name = urlParams.get('place'); //측정소명
-                    const sensor_naming = urlParams.get('sensor'); //센서명(한글)
-                    $("#"+place_name).addClass('active'); // 해당 측정소 선택됨 표시
-                    $('#title').text(place_name); // 해당 측정소명 텍스트 출력
-                    getPlaceAllSensorData(place_name, sensor_naming); //측정소의 항목 전체 데이터
+                if(urlParams.has('sensor')){ //파라미터가 있을 때
+                    const sensorName = urlParams.get('sensor'); //센서명(한글)
+                    placeName = getPlaceName(sensorName);
+                    $("#"+placeName).addClass('active'); // 해당 측정소 선택됨 표시
+                    $('#title').text(placeName); // 해당 측정소명 텍스트 출력
+                    getPlaceAllSensorData(placeName, sensorName); //측정소의 항목 전체 데이터
                 }else{ //파라미터가 없을 경우
                     const place_name = $('#place_name > li').attr('id'); //기본값
                     if(place_name != undefined){
@@ -309,6 +309,20 @@
         }
     });
 
+    function getPlaceName(sensorName){
+        var result;
+        $.ajax({
+            url: '<%=cp%>/getPlaceName',
+            dataType: 'text',
+            data:  {"tableName": sensorName},
+            async: false,
+            success: function (data) { //전체 측정소명
+                result = data;
+            }
+        });
+        return result;
+    }
+
     /**
      * 측정소의 항목 전체 데이터 조회 (최근데이터, 직전데이터, 기준값 등)
      */
@@ -334,7 +348,7 @@
                     var sensor_data = place_data[0]; // 기본값
                 } else {   // 파라미터 있을 경우
                     for (var i = 0; i < place_data.length; i++) {
-                        if (sensor_naming == place_data[i].naming) { // 측정소의 센서명과 파라미터로 넘어온 센서명 비교 작업
+                        if (sensor_naming == place_data[i].name) { // 측정소의 센서명과 파라미터로 넘어온 센서명 비교 작업
                             var sensor_data = place_data[i];
                         }
                     }
