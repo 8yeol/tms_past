@@ -872,9 +872,9 @@
         })
         if (value == 999) {
             value = "초기화";
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 법적 기준 값 초기화", "설졍");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 법적 기준 값 초기화", "설정");
         } else {
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 법적 기준 값 변경 '" + value + "'", "설졍");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 법적 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "legal", value);
         placeDiv();
@@ -963,9 +963,9 @@
         })
         if (value == 999) {
             value = "초기화";
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 사내 기준 값 초기화", "설졍");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 사내 기준 값 초기화", "설정");
         } else {
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 사내 기준 값 변경 '" + value + "'", "설졍");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 사내 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "company", value);
         placeDiv();
@@ -1044,9 +1044,9 @@
         });
         if (value == 999) {
             value = "초기화";
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 관리 기준 값 초기화", "설졍");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 관리 기준 값 초기화", "설정");
         } else {
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 관리 기준 값 변경 '" + value + "'", "설졍");
+            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "" + pname + "-" + naming + " 관리 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "manage", value);
         placeDiv();

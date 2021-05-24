@@ -293,7 +293,7 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <h5 class="me-1">회원관리등급 : </h5>
-                <select name="rank" id="rank" class="btn btn-light" onchange="rankSelectOnChange()">
+                <select name="rank" id="rank" class="btn btn-light">
                     <option value="3">일반</option>
                     <option value="2">관리자</option>
                     <option value="1">최고관리자</option>

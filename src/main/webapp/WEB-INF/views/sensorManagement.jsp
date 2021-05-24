@@ -291,8 +291,10 @@
                     cell5.innerHTML = moment(data[i].upTime).format('YYYY-MM-DD HH:mm:ss');
                     cell6.innerHTML = data[i].place;
                     cell7.innerHTML = status;
-                    cell8.innerHTML = '<i type="button" class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editSetting(this)"></i>' +
-                        '<i type="button" class="fas fa-times" onclick="deleteModal(this)"></i>';
+                    cell8.innerHTML = '<i  class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editSetting(this)"></i>' +
+                        '<i  class="fas fa-times" onclick="deleteModal(this)"></i>';
+
+
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
@@ -365,7 +367,7 @@
             data: {tableName: tableName},
             success: function () {
                 customSwal('삭제 완료','삭제 되었습니다..');
-                inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place+' - '+sensor+'센서 삭제','설정');
+                inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place+' - '+sensor+' 센서 삭제','설정');
                 setTimeout(function () {
                     location.reload();
                 }, 2000);
