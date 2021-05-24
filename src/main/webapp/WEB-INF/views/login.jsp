@@ -83,7 +83,7 @@
                         swal('로그인 오류','가입신청이 거절된 회원입니다.');
                     }else{
                         login_from.submit();
-                        inputLog($("#id").val(), "로그인", "로그인");
+                        inputLog($("#id").val(), "로그인", "회원");
                     }
                 },
                 error : function(request, status, error) {

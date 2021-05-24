@@ -481,8 +481,8 @@
             "method": "POST"
         };
         $.ajax(settings).done(function (response) {
-            (iNumber == "1") ? inputLog(ID, rankLog + "가입 승인", "회원관리") : inputLog(ID, "가입 거절", "회원관리"); //대상자 로그
-            inputLog(user_id, content, "회원관리"); // 관리자로그
+            (iNumber == "1") ? inputLog(ID, rankLog + "가입 승인", "회원") : inputLog(ID, "가입 거절", "회원"); //대상자 로그
+            inputLog(user_id, content, "회원"); // 관리자로그
             success(response);
             setTimeout(function () {
                 location.reload();
@@ -491,19 +491,28 @@
     }           // sing_Up
 
     function gave_Rank(value) {
-        var str = (value == 1) ? "최고관리자 등급 " : (value == 2) ? "관리자 등급 " : "일반 등급 ";
-        var settings = {
-            "url": "<%=cp%>/gaveRank?id=" + ID + "&value=" + value,
-            "method": "POST"
-        };
-        $.ajax(settings).done(function (response) {
-            inputLog(ID, str + "변경", "권한관리");
-            inputLog(user_id, ID + " 계정 " + str + "변경 처리", "권한관리");
-            success(response);
+        if(value == state){
+            warning("이미 동일한 등급입니다.");
             setTimeout(function () {
                 location.reload();
             }, 2000);
-        });
+        } else {
+            var changeRank = (value == 1) ? "최고관리자 " : (value == 2) ? "관리자 " : "일반 ";
+            var pastRank = (state == 1) ? "최고관리자 " : (state == 2) ? "관리자 " : "일반 ";
+            var content = pastRank + "> " + changeRank + "등급변경";
+            var settings = {
+                "url": "<%=cp%>/gaveRank?id=" + ID + "&value=" + value,
+                "method": "POST"
+            };
+            $.ajax(settings).done(function (response) {
+                inputLog(ID, content, "회원");
+                inputLog(user_id, ID + " 계정 " + content + " 처리", "회원");
+                success(response);
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            });
+        }
     }           // gave_Rank
 
     function resetPassword() {
@@ -516,8 +525,8 @@
                 "method": "POST"
             };
             $.ajax(settings).done(function (response) {
-                inputLog(ID, "비밀번호 초기화", "회원관리");
-                inputLog(user_id, ID + " 계정 비밀번호 초기화 처리", "회원관리");
+                inputLog(ID, "비밀번호 초기화", "회원");
+                inputLog(user_id, ID + " 계정 비밀번호 초기화 처리", "회원");
                 Swal.fire({
                     icon: 'success',
                     title: '임시 비밀번호가 발급되었습니다.',
@@ -537,7 +546,7 @@
                 "method": "POST"
             };
             $.ajax(settings).done(function (response) {
-                inputLog(user_id, ID + " 계정 제명처리", "회원관리");
+                inputLog(user_id, ID + " 계정 제명처리", "회원");
                 success(response);
                 setTimeout(function () {
                     location.reload();
@@ -604,7 +613,7 @@
             var strs = response;
             for (var i = 0; i < strs.length; i++) {
                 if (strs[i] != "") {
-                    inputLog(user_id, content + strs[i], "권한관리");
+                    inputLog(user_id, content + strs[i], "회원");
                 }
             }
             success("권한관리 설정이 저장되었습니다.");
