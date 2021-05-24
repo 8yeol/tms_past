@@ -161,12 +161,12 @@
                         </c:choose>
                         <td>${mList.email}</td>
                         <td>${mList.tel}</td>
-                        <td><fmt:formatDate value="${mList._id.date}" pattern="YYYY-MM-DD HH:mm:ss"/></td>
+                        <td><fmt:formatDate value="${mList._id.date}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
 
 
                         <c:choose>
                             <c:when test="${mList.joined != null}">
-                                <td><fmt:formatDate value="${mList.joined}" pattern="YYYY-MM-DD HH:mm:ss"/></td>
+                                <td><fmt:formatDate value="${mList.joined}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
                             </c:when>
                             <c:otherwise>
                                 <td></td>
@@ -175,7 +175,7 @@
 
                         <c:choose>
                             <c:when test="${mList.lastLogin != null}">
-                                <td><fmt:formatDate value="${mList.lastLogin}" pattern="YYYY-MM-DD HH:mm:ss"/></td>
+                                <td><fmt:formatDate value="${mList.lastLogin}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
                             </c:when>
                             <c:otherwise>
                                 <td></td>
