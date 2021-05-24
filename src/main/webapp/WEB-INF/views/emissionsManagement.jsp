@@ -225,6 +225,10 @@
     }
     th{padding: 0;}
 
+    .inputColor{
+        background-color:  #DDDDDD;
+    }
+
 </style>
 
 <div class="container" id="container">
@@ -403,7 +407,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">측정소명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="place" readonly>
+                            <input type="text" class="inputColor" name="place" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -411,7 +415,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">센서명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="naming" readonly>
+                            <input type="text" class="inputColor" name="naming" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -419,7 +423,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">연간배출 허용기준</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="standard">
+                            <input type="text" name="standard">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -427,7 +431,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">배출허용 기준농도</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="percent">
+                            <input type="text" name="percent">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -435,7 +439,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">산출식(참고용)</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="text-secondary" name="formula">
+                            <input type="text" name="formula">
                         </div>
                     </div>
                     <input type="hidden" name="hiddenTableName"> <!-- 추가 수정 판별할 데이터 -->
