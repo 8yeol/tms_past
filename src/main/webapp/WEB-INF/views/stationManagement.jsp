@@ -108,7 +108,7 @@
                 <h5 class="modal-title fw-bold">측정소 추가</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <form id="placeinfo" method="post" style="width:60%; margin: 10px auto;">
+                <form id="placeinfo" method="post" style="width:70%; margin: 10px auto;">
                     <div style="margin-bottom:7px; margin-top: 18px; display: flex; justify-content: space-between;"><span>측정소 명</span><input type="text"
                                                                                                class="modal-input"
                                                                                                name="name"
@@ -148,7 +148,7 @@
                 <h5 class="modal-title">측정소 수정</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <form id="placeupdate" method="post" style="width:60%; margin: 10px auto;">
+                <form id="placeupdate" method="post" style="width:70%; margin: 10px auto;">
                     <div style="margin-bottom:7px; margin-top: 18px; display: flex; justify-content: space-between;"><span>측정소 명</span><input type="text"
                                                                                                class="modal-input"
                                                                                                name="name"
