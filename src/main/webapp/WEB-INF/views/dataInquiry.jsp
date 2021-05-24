@@ -192,7 +192,7 @@
         .m-top{padding-top: 100px;}
         .h-fix {height: 20px;}
         #searchDiv{height: 190px;}
-        .container>div:nth-child(4)>div:nth-child(1)>div:nth-child(1) {width: 720px;}
+        #container>div:nth-child(4)>div:nth-child(1)>div:nth-child(1) {width: 720px;}
     }
 </style>
 
@@ -200,7 +200,7 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
 
-<div class="container">
+<div class="container" id="container">
     <div class="ms-3 mt-3 add-bg row" id="searchDiv">
         <div class="col-3 picker">
             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
