@@ -867,6 +867,14 @@ public class AjaxController {
             emissionsSettingRepository.save(emissions);
             inputLogSetting("'"+place + " - " + naming+"'" + " 센서 배출량 추이 모니터링 대상 추가", "설정", principal);
 
+            EmissionsStandardSetting ess = new EmissionsStandardSetting(place,naming,0,0,tableName,"",new Date());
+            emissionsStandardSettingRepository.save(ess);
+            inputLogSetting("'"+place + " - " + naming+"'" + " 센서 연간 배출 허용 기준 추가", "설정", principal);
+
+
+
+
+
             saveReference(place, tableName, naming,principal); //상세설정 항목 추가
 
             inputLogSetting( "'"+sensor.getNaming()+"'" + " 센서 추가", "설정", principal);

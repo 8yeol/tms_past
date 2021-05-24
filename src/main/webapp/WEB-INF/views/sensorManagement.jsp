@@ -161,7 +161,7 @@
             </form>
             <div class="row">
                 <div class="col text-end">
-                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor()" >센서 추가</button>
+                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor(0)" >센서 추가</button>
                 </div>
             </div>
         </div>
@@ -437,15 +437,16 @@
         let title = "";
         let content = "";
 
-        if ($('#tableName').val() == '선택') {
-            customSwal('경고','테이블명을 선택 해주세요.');
-            return;
-        }
-
-        if ($('#place').val() == '선택') {
-            customSwal('경고','측정소를 선택 해주세요.');
-            return;
-        }
+        if (idx == 0) {
+            if ($('#tableName').val() == '선택') {
+                customSwal('경고', '테이블명을 선택 해주세요.');
+                return;
+            }
+            if ($('#place').val() == '선택') {
+                customSwal('경고', '측정소를 선택 해주세요.');
+                return;
+            }
+       }
 
         if (idx == 2) {
             form = $('#editForm').serialize();
@@ -466,9 +467,6 @@
 
         } else {
             form = $('#saveForm').serialize();
-            if(isStandardEmpty($('#tableName').val())){
-                saveStandard(form);
-            }
             content = '센서가 추가 되었습니다.';
             title = '센서 추가';
             $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
@@ -494,11 +492,13 @@
                         cache: false,
                         data: {'name' : tableName},
                         success: function (data) {
-                            if($('#naming').val()==data.naming)
-                                sensorNames.push(data.naming);
 
-                            if($('#naming2').val()==data.naming)
+                            if(idx == 0 && $('#naming').val()==data.naming) {
+                                sensorNames.push(data.naming);
+                            }
+                            if(idx == 2 &&$('#naming2').val()==data.naming) {
                                 sensorNames2.push(data.naming);
+                            }
                         },
                         error: function (request, status, error) { // 결과 에러 콜백함수
                             console.log(error);
@@ -515,9 +515,13 @@
         if(sensorNames.length > 0) {
             $('#naming').focus();
             customSwal('항목명 중복', '해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
+            return;
+
         }else if(sensorNames2.length > 0){
             $('#naming2').focus();
             customSwal('항목명 중복', '해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
+            return;
+
         }else{
             $.ajax({
                 url: '<%=cp%>/saveSensor',
