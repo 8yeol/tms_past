@@ -429,7 +429,9 @@
                         cache: false,
                         data: {'name' : tableName},
                         success: function (data) {
-                            sensorNames.push(data.naming);
+                            if($('#naming').val()==data.naming){
+                                sensorNames.push(data.naming);
+                            }
                         },
                         error: function (request, status, error) { // 결과 에러 콜백함수
                             console.log(error);
@@ -442,12 +444,6 @@
                 console.log(error);
             }
         });
-
-        for(let i = 0 ; i <= sensorNames.length; i++){
-            if(sensorNames[i]!=$('#naming').val()){
-                sensorNames.splice(i,1);
-            }
-        }
 
         if(sensorNames.length > 0){
             $('#naming').focus();
