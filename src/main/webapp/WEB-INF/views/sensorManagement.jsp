@@ -103,7 +103,6 @@
     .inputText{
         width: 223px;
         padding-left: 20px;
-        border: 2px solid black;
     }
     .inputText2{
         width: 223px;
@@ -161,18 +160,15 @@
                         <div class="row p-5">
                             <div class=" inputLayout">
                                 <label class="col-xs-3 label" style="margin-right: 16px">관리 ID</label>
-                                <input type="text" class="text-secondary rounded-3 dd col-xs-3 inputColor" name="managementId"
-                                       id="m_id" readonly>
+                                <input type="text" name="managementId" id="m_id" disabled>
                             </div>
                             <div class="inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">분류</label>
-                                <input type="text" class="text-secondary rounded-3 dd col-xs-3 inputColor" name="classification"
-                                       id="m_class" readonly>
+                                <input type="text" name="classification" id="m_class" disabled>
                             </div>
                             <div class=" inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
-                                <input type="text" class="rounded-3  dd col-xs-3" name="naming"
-                                       id="naming">
+                                <input type="text" name="naming" id="naming">
                             </div>
                         </div>
                     </div>
@@ -193,8 +189,8 @@
                     <th scope="col" width="10%">관리 ID</th>
                     <th scope="col" width="18%">테이블명</th>
                     <th scope="col" width="17%">업데이트</th>
-                    <th scope="col" width="10%">측정소</th>
-                    <th scope="col" width="15%">통신상태</th>
+                    <th scope="col" width="15%">측정소</th>
+                    <th scope="col" width="10%">통신상태</th>
                     <th scope="col" width="10%">관리</th>
                 </tr>
                 </thead>
@@ -221,7 +217,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">분류</span>
                         </div>
                         <div class="col">
-                            <input type="text" readonly name="classification2" class="inputText2" disabled>
+                            <input type="text" name="classification2" class="inputText2 p-1" disabled>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -229,7 +225,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="naming2" class="inputText" id="naming2">
+                            <input type="text" name="naming2" class="inputText p-1" id="naming2">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -237,7 +233,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">관리 ID</span>
                         </div>
                         <div class="col">
-                            <input type="text" readonly name="managementId2" class="inputText2"disabled="disabled">
+                            <input type="text" name="managementId2" class="inputText2 p-1" disabled>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -245,7 +241,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">테이블 명</span>
                         </div>
                         <div class="col">
-                            <input type="text" readonly  name="tableName2" class="inputText2" disabled>
+                            <input type="text" name="tableName2" class="inputText2 p-1" disabled>
                         </div>
                     </div>
 
@@ -254,7 +250,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
                         </div>
                         <div class="col">
-                            <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;border: 2px solid black">
+                            <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;>
                                 <c:forEach var="place" items="${place}" varStatus="status">
                                     <option value="${place.name}">${place.name}</option>
                                 </c:forEach>
@@ -294,9 +290,9 @@
                 let status;
                 for (let i = 0; i < data.length; i++) {
                     if (data[i].status == false) {
-                        status = '<i class="fas fa-circle ms-4 text-danger"></i>'
+                        status = '<i class="fas fa-circle text-danger"></i>'
                     } else {
-                        status = '<i class="fas fa-circle ms-4 text-success"></i>'
+                        status = '<i class="fas fa-circle text-success"></i>'
                     }
                     const row = tbody.insertRow(tbody.rows.length);
                     const cell1 = row.insertCell(0);

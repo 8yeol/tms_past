@@ -413,7 +413,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">측정소명</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="place" disabled>
+                            <input type="text" name="place" class="p-1" disabled>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -421,7 +421,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">센서명</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="naming" disabled>
+                            <input type="text" name="naming" class="p-1" disabled>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -429,7 +429,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">연간배출 허용기준</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="standard">
+                            <input type="text" name="standard" class="p-1">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -437,7 +437,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">배출허용 기준농도</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="percent">
+                            <input type="text" name="percent" class="p-1">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -445,7 +445,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">산출식(참고용)</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="formula">
+                            <input type="text" name="formula" class="p-1">
                         </div>
                     </div>
                     <input type="hidden" name="hiddenTableName"> <!-- 추가 수정 판별할 데이터 -->

@@ -98,6 +98,10 @@
         list-style: none;
     }
 
+    #place_name {
+        word-break: break-all;
+    }
+
     #place_name>li.active {
         background-color: #fff;
         border-radius: 50px;
@@ -142,6 +146,9 @@
         #place_name span{
             font-size: 0.8rem;
         }
+    }
+    #place_table tbody tr:hover{
+        cursor: pointer;
     }
 </style>
 
@@ -658,8 +665,8 @@
         if(placeName.length != 0){
             $('#place_name').empty();
             for(var i=0; i<placeName.length; i++){
-                $('#place_name').append("<li class='place-item btn d-block fs-3 mt-3 me-3' id='"+
-                    placeName[i]+"'>"+
+                $('#place_name').append("<li class='place-item btn d-block fs-3 mt-3 me-3'"+
+                    "id='"+placeName[i]+"'>"+
                     "<span>"+placeName[i]+"</span>"+
                     "</li>"+
                     "<hr style='height: 2px;'>");
