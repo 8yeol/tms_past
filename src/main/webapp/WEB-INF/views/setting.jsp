@@ -333,7 +333,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title info_Text"> 회원 관리</h5>
+                <h5 class="modal-title managementInfo_text">회원 관리</h5>
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
@@ -346,7 +346,30 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="reload()">취소</button>
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="test()">취소</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- userGrantManagementModal -->
+<div class="modal" id="userGrantManagementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h5 class="modal-title updateRank_text"> 권한 변경</h5>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <select class="text-center form-select" id="gaveRank_Select">
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="3" id="normal_select_item">일반회원</option>
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="2" id="admin_select_item">관리자</option>
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="1" id="root_select_item">최고관리자</option>
+                </select>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="gave_Rank()">확인</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="test()">취소</button>
             </div>
         </div>
     </div>
@@ -362,17 +385,18 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <p class="fs-5 fw-bold info_text">의 비밀번호를 변경하시겠습니까?</p>
+                    <p class="fs-5 fw-bold tempPassword_text">의 비밀번호를 변경하시겠습니까?</p>
                     <small class="text-danger">* 발급된 임시 비밀번호로 로그인 가능하며, 해당 회원에게 임시 비밀번호를 알려주신 후, 마이페이지에서 비밀번호 변경을 요청해주세요.</small>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">확인</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  >취소</button>
             </div>
         </div>
     </div>
 </div>
+
 <!-- userExpulsionmodal -->
 <div class="modal" id="userExpulsionmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -383,36 +407,14 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <p class="fs-3 fw-bold info_text">을 제명 하시겠습니까?</p>
+                    <p class="fs-3 fw-bold kick_text">을 제명 하시겠습니까?</p>
                     <small class="text-danger">* 회원과 관련된 모든 데이터가 삭제됩니다.</small>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal" onclick="kickMember()">제명
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- userGrantManagementModal -->
-<div class="modal" id="userGrantManagementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title info_text"> 권한 변경</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-                <select class="text-center form-select" id="gaveRank_Select">
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="3" id="normal_select_item">일반회원</option>
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="2" id="admin_select_item">관리자</option>
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="1" id="root_select_item">최고관리자</option>
-                </select>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="gave_Rank()">확인</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reload()">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  >취소</button>
             </div>
         </div>
     </div>
@@ -465,13 +467,8 @@
         ID = str_id;
         state = str_state;
         name = str_name;
-
-        $(".info_Text").prepend(name + " 님");
+        textfield_management();
     }// row 의 승인 및 거절 버튼 클릭시 전역변수 ID에 해당row 의 ID가 저장됨
-
-    function reload(){
-        location.reload();
-    }
 
     function sing_Up(iNumber) {
         var content = ID;
@@ -631,6 +628,13 @@
         (state == "1") ?  $('#root_select_item').prop("selected", true) : (state == "2") ?  $('#admin_select_item').prop("selected", true): $('#normal_select_item').prop("selected", true);
     }
 
+    function textfield_management(){
+        $(".managementInfo_text").html(name + " 회원님 관리");
+        $(".updateRank_text").html(name + " 회원님 권한변경");
+        $(".tempPassword_text").html(name + " 회원님 의 비밀번호를 <br>변경하시겠습니까?");
+        $(".kick_text").html(name + " 회원님 을 <br>제명 하시겠습니까?");
+    }
+
     $(function () {
         $('.modal-dialog').draggable({handle: ".modal-header"});
     });         // modal drag and drop move
@@ -647,7 +651,6 @@
     function success(str) {
         Swal.fire('확인', str, 'success');
     }
-
 
     var mql = window.matchMedia("screen and (max-width: 1024px)");
 
