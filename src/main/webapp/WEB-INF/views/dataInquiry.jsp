@@ -327,7 +327,6 @@
     });
 
     function addTable(reference){
-
         $("#informationBody").empty();
         $('#information').DataTable().clear();
         $('#information').DataTable().destroy();
@@ -615,7 +614,9 @@
                         title: '경고',
                         text: '해당 기간 내의 검색 결과가 없습니다.'
                     })
-                    reset();
+                    if(chart!=null){
+                        reset();
+                    }
                     return false;
                 }else{
                     addChart(data, category, reference, flag);
@@ -819,6 +820,7 @@
                    }
                }
             })
+            chart.clearAnnotations();
         }
     }
 
