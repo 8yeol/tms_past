@@ -476,10 +476,10 @@
                         data: {'name' : tableName},
                         success: function (data) {
 
-                            if(idx == 0 && $('#naming').val()==data.naming) {
+                            if(idx == 0 && $('#naming').val().trim()  ==  data.naming.trim()) {
                                 sensorNames.push(data.naming);
                             }
-                            if(idx == 2 &&$('#naming2').val()==data.naming) {
+                            if(idx == 2 &&$('#naming2').val().trim()  ==  data.naming.trim()) {
                                 sensorNames2.push(data.naming);
                             }
                         },
