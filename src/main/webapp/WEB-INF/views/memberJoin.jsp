@@ -42,7 +42,7 @@
         }
     }
     @media all and (max-width:1024px) {
-        #div1{overflow: auto;}
+        #div1{overflow: auto;margin-top: 0;margin-bottom: 0;}
         .label{font-size: 2.2rem;}
         .joinText{font-size: 3.5rem;}
         .join > div input { height: 110px;}
