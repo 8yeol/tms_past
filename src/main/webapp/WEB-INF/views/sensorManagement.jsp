@@ -381,26 +381,6 @@
         });
     }
 
-    //배출량 관리 - 허용 기준 생성
-    function saveStandard(form){
-        $.ajax({
-            url: '<%=cp%>/saveStandard',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: form,
-            success: function () {
-                Swal.fire({
-                    icon: 'success',
-                    title:'허용 기준 생성',
-                    text: '허용 기준이 없으므로 자동으로 생성합니다.',
-                });
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error);
-            }
-        });
-    }
 
     function isValueDelete(){
         if($("input[name='naming2']").val() == ''){
@@ -437,6 +417,7 @@
         let title = "";
         let content = "";
 
+        //Null 체크
         if (idx == 0) {
             if ($('#tableName').val() == '선택') {
                 customSwal('경고', '테이블명을 선택 해주세요.');
@@ -446,10 +427,7 @@
                 customSwal('경고', '측정소를 선택 해주세요.');
                 return;
             }
-       }
-
-        if (idx == 2) {
-            form = $('#editForm').serialize();
+       }else if(idx == 2){
             if($("#place2").val() == null){
                 $('input[name=isValueDelete]').val('');
                 customSwal('경고','측정소를 선택 해주세요.');
@@ -460,16 +438,20 @@
                 customSwal('경고','항목명을 선택 해주세요.');
                 return;
             }
+        }
 
 
-            content = '센서 측정소가 수정 되었습니다.';
-            title = '센서 수정';
-
-        } else {
+        if (idx == 0) {
             form = $('#saveForm').serialize();
             content = '센서가 추가 되었습니다.';
             title = '센서 추가';
-            $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
+            $("input[name=hiddenCode]").val("");    //수정했을때 남아있는 히든코드 초기화
+            $('input[name=isValueDelete]').val(""); //수정했을때 남아있는 히든코드 초기화
+
+        } else {
+            form = $('#editForm').serialize();
+            content = '센서 측정소가 수정 되었습니다.';
+            title = '센서 수정';
         }
 
         // 측정소 sensor 중복 검사
@@ -482,6 +464,7 @@
             cache: false,
             data: form,
             success: function (data) {
+
                 for(let i=0; i<data.length; i++){
                     const tableName = data[i];
                     $.ajax({
@@ -515,12 +498,10 @@
         if(sensorNames.length > 0) {
             $('#naming').focus();
             customSwal('항목명 중복', '해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
-            return;
 
         }else if(sensorNames2.length > 0){
             $('#naming2').focus();
             customSwal('항목명 중복', '해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
-            return;
 
         }else{
             $.ajax({
@@ -530,6 +511,7 @@
                 cache: false,
                 data: form,
                 success: function () {
+
                     $('#editModal').modal('hide');
                     Swal.fire({
                         icon: 'success',
@@ -547,23 +529,6 @@
         }
     }
 
-    function isStandardEmpty(tableName){
-        let flag= false;
-        $.ajax({
-            url: '<%=cp%>/isStandardEmpty',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: {'tableName' : tableName},
-            success: function (data) {
-                if(data)flag=true;
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error);
-            }
-        });
-        return flag;
-    }
 
     function changeTableName() {
         const tableName = $("#tableName").val();
@@ -613,25 +578,6 @@
             text: text,
             timer: 1500
         })
-    }
-
-    var mql = window.matchMedia("screen and (max-width: 1024px)");
-
-    mql.addListener(function(e) {
-        if(e.matches) {
-            $('#container').attr('class','container-fluid');
-        } else {
-            $('#container').attr('class','container');
-        }
-    });
-
-    var filter = "win16|win32|win64|mac";
-    if(navigator.platform){
-        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
-            $('#container').attr('class','container-fluid');
-        } else {
-            $('#container').attr('class','container');
-        }
     }
 
 </script>

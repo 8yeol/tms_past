@@ -1097,32 +1097,6 @@ public class AjaxController {
     }
 
     /**
-     * 연간 배출 허용기준값 있는지 검사
-     *
-     * @param tableName 테이블명
-     * @return boolean
-     */
-    @RequestMapping(value = "/isStandardEmpty")
-    public boolean isStandardEmpty(String tableName) {
-        return emissionsStandardSettingRepository.findByTableNameIsIn(tableName) == null ?  true : false ;
-    }
-
-    /**
-     * 연간 배출량 허용 기준 수정
-     *
-     * @param naming    센서 네이밍
-     * @param place     측정소
-     * @param tableName 테이블명
-     */
-    @RequestMapping(value = "/saveStandard")
-    public void saveStandard(@RequestParam(value = "naming") String naming, @RequestParam(value = "place") String place,
-                             @RequestParam(value = "tableName") String tableName,Principal principal) {
-        EmissionsStandardSetting ess = new EmissionsStandardSetting(place, naming, 0, 0, tableName, "",new Date());
-        emissionsStandardSettingRepository.save(ess);
-        inputLogSetting("'"+place + " - " + naming + "' 센서 연간 배출 허용 기준 설정 추가", "설정", principal);
-    }
-
-    /**
      * 배출량 모니터링 상태값을 변경
      *
      * @param sensor       상태값 변경할 센서
