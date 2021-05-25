@@ -139,8 +139,8 @@
         <div class="col text-end align-self-end">
             <div>
                 <span>점멸효과 :</span>
-                <input type="radio" name="flashing" value="on" id="checkOn" checked><label for="checkOn"> On&nbsp</label>
-                <input type="radio" name="flashing" value="off" id="checkOff"><label for="checkOff"> Off</label>
+                <input class="ms-2" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp</label>
+                <input type="radio" name="flashing" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off</label>
             </div>
             <span class="text-primary small"> * 실시간 업데이트</span>
         </div>
