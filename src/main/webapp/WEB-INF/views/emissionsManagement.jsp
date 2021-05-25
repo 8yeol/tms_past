@@ -297,7 +297,7 @@
             <c:if test="${empty standard}">
                 <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;" id="nullStandard">
                     연간 배출 허용 기준이 없습니다. <br>
-                    <b>추가</b> 버튼으로 허용 기준을 설정 해주세요.
+                    <b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요.
                 </div>
             </c:if>
         </div>

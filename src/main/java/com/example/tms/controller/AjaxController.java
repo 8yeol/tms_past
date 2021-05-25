@@ -962,7 +962,7 @@ public class AjaxController {
                 emis.setPlace(place);
                 emis.setStatus(false);
                 emissionsSettingRepository.save(emis);
-                inputLogSetting("'"+oldPlace + " - " + oldNaming+"'" + " 센서 배출량 추이 모니터링 대상 측정소명 삭제", "설정", principal);
+                inputLogSetting("'"+oldPlace + " - " + oldNaming+"'" + " 센서 배출량 추이 모니터링 대상 측정소명 수정", "설정", principal);
 
 
                 //배출 관리 기준 수정
@@ -970,7 +970,7 @@ public class AjaxController {
                 ess.setPlace(place);
                 ess.setDate(new Date());
                 emissionsStandardSettingRepository.save(ess);
-                inputLogSetting("'"+oldPlace + " - " + oldNaming+"'" + " 센서 연간 배출 허용 기준 삭제", "설정", principal);
+                inputLogSetting("'"+oldPlace + " - " + oldNaming+"'" + " 센서 연간 배출 허용 기준 수정", "설정", principal);
 
 
                 //분기별 배출량 데이터 수정
