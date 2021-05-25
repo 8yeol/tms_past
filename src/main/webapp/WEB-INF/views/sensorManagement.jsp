@@ -162,12 +162,12 @@
                             <div class=" inputLayout">
                                 <label class="col-xs-3 label" style="margin-right: 16px">관리 ID</label>
                                 <input type="text" class="text-secondary rounded-3 dd col-xs-3 inputColor" name="managementId"
-                                       id="m_id" readonly>
+                                       id="m_id" readonly disabled>
                             </div>
                             <div class="inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">분류</label>
                                 <input type="text" class="text-secondary rounded-3 dd col-xs-3 inputColor" name="classification"
-                                       id="m_class" readonly>
+                                       id="m_class" readonly disabled>
                             </div>
                             <div class=" inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
