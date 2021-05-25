@@ -231,7 +231,6 @@
     .scroll{
         overflow-x: auto;
     }
-
 </style>
 
 <div class="container" id="container">
@@ -410,7 +409,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">측정소명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="inputColor" name="place" readonly>
+                            <input type="text" name="place" disabled>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -418,7 +417,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">센서명</span>
                         </div>
                         <div class="col">
-                            <input type="text" class="inputColor" name="naming" readonly>
+                            <input type="text" name="naming" disabled>
                         </div>
                     </div>
                     <div class="row mt-3">
