@@ -157,7 +157,7 @@
                     if (data == "success") {
                         swal('success', '회원가입 성공')
                         setTimeout(function () {
-                            inputLog($("#id").val(), "가입 신청", "회원가입");
+                            inputLog($("#id").val(), "가입 신청", "회원");
                             location.href = '<%=cp%>/login';
                         }, 1800);
                     } else if (data == "failed") {
@@ -166,7 +166,7 @@
                     } else if (data == "root") {
                         swal('success', '회원가입 성공', '최초 가입 계정으로 최고관리자 계정으로 지정됩니다.')
                         setTimeout(function () {
-                            inputLog($("#id").val(), "가입 신청", "회원가입");
+                            inputLog($("#id").val(), "가입 신청", "회원");
                             location.href = '<%=cp%>/login';
                         }, 1800);
                     } else {

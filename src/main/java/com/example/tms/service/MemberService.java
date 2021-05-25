@@ -85,7 +85,7 @@ public class MemberService implements UserDetailsService {
         Log infoLog = new Log();
         if(member.getPassword() != ""){
             pwdLog.setId(member.getId());
-            pwdLog.setType("회원수정");
+            pwdLog.setType("회원");
             pwdLog.setContent("비밀번호 수정");
             pwdLog.setDate(date);
             logRepository.save(pwdLog);
