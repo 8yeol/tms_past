@@ -137,6 +137,11 @@
             <span class="fs-4 flashToggle fw-bold">모니터링 > 실시간 모니터링</span>
         </div>
         <div class="col text-end align-self-end">
+            <div>
+                <span>점멸효과 :</span>
+                <input type="radio" name="flashing" value="on" checked><span> On&nbsp</span>
+                <input type="radio" name="flashing" value="off"><span> Off</span>
+            </div>
             <span class="text-primary small"> * 실시간 업데이트</span>
         </div>
     </div>
@@ -252,10 +257,11 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    let INTERVAL;
+    let INTERVAL; let flashCheck;
 
     $(document).ready(function () {
         getData();
+        flashCheck = "on";
     });
 
     /**
@@ -302,20 +308,27 @@
     /**
      *  점멸 효과
      */
-    function flashing(onOff) {
-        const element = $(".row ");
-        if(onOff){
+    function flashing(onOff, bg) {
+        const element = $("body");
+        if(onOff == 'on' && bg != null){
+            if(typeof flIn !== "undefined"){
+                clearTimeout(flIn);
+            }
             setTimeout(function flashInterval() {
                 setTimeout(function () {
-                    element.css({"opacity": 0});
+                    element.removeClass("bg-light");
+                    element.addClass(bg);
                 }, 0);
                 setTimeout(function () {
-                    element.css({"opacity": 1});
-                }, 100); //0.2초 숨김
+                    element.removeClass(bg);
+                    element.addClass("bg-light");
+                }, 100); //0.1초 숨김
                 flIn = setTimeout(flashInterval, 1000); //0.9초 보여줌
             }, 0)
         }else{
-            clearTimeout(flIn);
+            if(typeof flIn !== "undefined"){
+                clearTimeout(flIn);
+            }
         }
     }
 
@@ -663,6 +676,15 @@
                 }
             }
         }
+        if(legalSCount > 0 ){
+            flashing(flashCheck, "bg-danger");
+        }else if(companySCount > 0){
+            flashing(flashCheck, "bg-warning");
+        }else if(managementSCount > 0){
+            flashing(flashCheck, "bg-success");
+        }else{
+            flashing(flashCheck, null);
+        }
         var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail+sensorMonitoringOff)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
         var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //법적기준 %
         var companyPercent = ((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //사내기준 %
@@ -688,15 +710,16 @@
     }
 
     /**
-     * 실시간 모니터링 클릭 이벤트 - 점멸 효과 On / Off
+     * 점멸 효과 On / Off 이벤트
      */
-    $('.flashToggle').on('click', function () {
-        if($(this).attr('data-click-state') == 1) {
-            $(this).attr('data-click-state', 0)
-            flashing(false);
-        } else {
-            $(this).attr('data-click-state', 1) //처음 클릭
-            flashing(true);
+    document.querySelector('input[name="flashing"]:checked').value;
+    $('input:radio[name=flashing]').click(function () {
+        if($('input:radio[name=flashing]:checked').val() == 'on'){
+            flashCheck = "on";
+        }else{
+            flashCheck = "off";
+            clearTimeout(flIn);
         }
     })
+
 </script>
