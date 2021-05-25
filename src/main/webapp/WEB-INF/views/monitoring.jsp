@@ -322,8 +322,8 @@
                 setTimeout(function () {
                     element.removeClass(bg);
                     element.addClass("bg-light");
-                }, 400); //0.1초 숨김
-                flIn = setTimeout(flashInterval, 1000); //0.9초 보여줌
+                }, 400); //0.4초 숨김
+                flIn = setTimeout(flashInterval, 1000); //0.6초 보여줌
             }, 0)
         }else{
             if(typeof flIn !== "undefined"){
