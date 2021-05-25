@@ -18,33 +18,57 @@
         background-color: #EDF2F8;
         font-family: 'Noto Sans KR', sans-serif;
     }
+    #div1{
+        width: 400px; height: 410px;
+    }
+    .emoji{
+        width:300px; margin: 20px auto;
+    }
+    #id{
+        width:300px; height:50px; margin: 0 auto 5px;
+    }
+    #password{
+        width:300px; height:50px; margin: 0 auto 5px;
+    }
+    #loginBtn{
+        width:300px;
+    }
+
+    @media all and  (max-width:1024px) {
+        #div1{width: 100%;height: 100%;overflow: auto;}
+        .emoji{width: 90%;margin: 100px auto;}
+        #id{width: 80%;height: 150px; margin: 0 auto 45px;font-size: 3rem;}
+        #password{width: 80%;height: 150px;;margin: 0 auto 45px;font-size: 3rem;}
+        #loginBtn{width: 80%;height: 130px;}
+        #join{font-size: 3rem;}
+        #btnFont{font-size: 3rem;}
+        #btnDiv{margin-top: 35%;margin-bottom: 50px;}
+    }
+
+
 </style>
 
 <body>
-<div class="container">
-    <div class="row h-100">
-        <div class="col h-100 align-self-center">
-            <div class="h-100 d-flex justify-content-center text-center">
-                <div class="align-self-center bg-white" style="width: 400px; height: 410px;">
-                    <img src="static/images/logo.png" class="emoji" style="width:300px; margin: 20px auto;">
+<div class="container" id="container">
+            <div class=" w-100 d-flex justify-content-center text-center" style="height: 100%;">
+                <div class="align-self-center bg-white " id="div1">
+                    <img src="static/images/logo.png" class="emoji">
                     <form method='post' name='loginFrom' value='admin'>
                         <div class="">
-                            <input class="form-control" type='text' name='username' value='' id="id" placeholder="아이디" style="width:300px; height:50px; margin: 0 auto 5px;" onkeyup="enterkey()">
+                            <input class="form-control" type='text' name='username' value='' id="id" placeholder="아이디"  onkeyup="enterkey()">
                         </div>
                         <div class="">
-                            <input class="form-control" type='password' name='password' value='' id="password" placeholder="비밀번호" style="width:300px; height:50px; margin: 0 auto 5px;" onkeyup="enterkey()">
+                            <input class="form-control" type='password' name='password' value='' id="password" placeholder="비밀번호" onkeyup="enterkey()">
                         </div>
-                        <div>
-                            <button type="button" class="btn btn-primary mt-5 fs-4 px-5" onclick="login()" style="width:300px;">로그인</button>
+                        <div id="btnDiv">
+                            <button type="button" class="btn btn-primary mt-5 fs-4 px-5" onclick="login()" id="loginBtn" ><font id="btnFont">로그인</font></button>
                         </div>
                         <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
                     </form>
 
-                    <a class="text-decoration-none " href="<%=cp%>/memberJoin">회원가입</a>
+                    <a class="text-decoration-none " href="<%=cp%>/memberJoin" id="join">회원가입</a>
                 </div>
             </div>
-        </div>
-    </div>
 </div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

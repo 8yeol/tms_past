@@ -25,6 +25,12 @@
     .join > div input {
         height: 40px;
     }
+    .parentDiv{
+        width: 48%;
+        margin: 0 auto;
+    }
+    .joinText{font-size: 2.5rem;}
+    .checkText{font-size: 15%; color: red}
 
     @media all and (min-width: 1981px) {
         .join-bg {
@@ -32,94 +38,100 @@
             top: 12%;
         }
     }
-
-    @media all and (max-width:990px) {
-        .join-bg {position: relative; top: 15%;}
+    @media all and (max-width:1024px) {
+        #div1{overflow: auto;}
+        .label{font-size: 2rem;}
+        .joinText{font-size: 3.5rem;}
+        .join > div input { height: 110px;}
+        .parentDiv{width: 90%;margin-top: 50px;}
+        .input{font-size:3rem;width: 100%;}
+        .memberJoinBtn{width: 40%;height: 100px;font-size: 3rem; margin-bottom: 150px;}
+        #btnDiv{margin-top: 150px;}
+        .checkText{font-size: 1.5rem;}
     }
 </style>
 
-<div class="container h-100">
-    <div class="row bg-white join-bg">
-        <span class="fs-1 text-center" style="margin: 15px 0px 0px;">회원가입</span>
+<div class="container h-100" id="container">
+    <div class="row bg-white join-bg" id="div1">
+        <span class="text-center joinText" style="margin: 15px 0px 0px;">회원가입</span>
         <div class="col join" style="padding: 2rem;">
 
-            <div class="mb-3" style="width: 48%; margin: 0 auto;">
-                <label for="id" class="col-form-label">아이디</label>
-                <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control" id="id" onkeyup="idCheckMsg()">
-                </div>
+            <div class="mb-3 parentDiv">
+                <label for="id" class="col-form-label label">아이디</label>
+                    <input type="text" class="form-control input" id="id" onkeyup="idCheckMsg()">
+
                 <div class="col mt-1" style="height: 10px">
-                    <span style="font-size: 15%; color: red" id="idText"></span>
+                    <span class="checkText" id="idText"></span>
                 </div>
             </div>
-            <div class="mb-3" style="width: 48%; margin: 0 auto;">
+            <div class="mb-3 parentDiv">
                 <div class="row">
                     <div class="col">
-                        <label for="password" class="col-form-label">비밀번호</label>
+                        <label for="password" class="col-form-label label">비밀번호</label>
                     </div>
                 </div>
                 <div class="col-sm-10 d-flex" style="width:100%;">
-                    <input type="password" class="form-control" id="password" onkeyup="passwordCheckMsg()" placeholder="6자 이상 입력해 주세요">
+                    <input type="password" class="form-control input" id="password" onkeyup="passwordCheckMsg()" placeholder="6자 이상 입력해 주세요">
                 </div>
 
                 <div class="col mt-1" style="height: 10px">
-                    <span style="font-size: 15%; color: red" id="passwordText"></span>
+                    <span class="checkText" id="passwordText"></span>
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 48%; margin: 0 auto;">
+            <div class="mb-3  parentDiv" >
                 <div class="row">
                     <div class="col">
-                        <label for="passwordCheck" class="col-form-label">비밀번호 확인</label>
+                        <label for="passwordCheck" class="col-form-label label">비밀번호 확인</label>
                     </div>
                 </div>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="password" class="form-control" id="passwordCheck" onkeyup="passwordCheckMsg()">
+                    <input type="password" class="form-control input" id="passwordCheck" onkeyup="passwordCheckMsg()">
                 </div>
                 <div class="col mt-1" style="height: 8px">
-                    <span style="font-size: 15%; color: red" id="passwordCheckText"></span>
+                    <span  class="checkText"  id="passwordCheckText"></span>
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 48%; margin: 0 auto;">
-                <label for="name" class="col-form-label">이름</label>
+            <div class="mb-3  parentDiv">
+                <label for="name" class="col-form-label label">이름</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control" id="name">
+                    <input type="text" class="form-control input" id="name">
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 48%; margin: 0 auto;">
-                <label for="email" class="col-form-label">이메일</label>
+            <div class="mb-3  parentDiv">
+                <label for="email" class="col-form-label label">이메일</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control" id="email" onkeyup="autoEmail('email',this.value)">
+                    <input type="text" class="form-control input" id="email" onkeyup="autoEmail('email',this.value)">
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 48%; margin: 0 auto;">
-                <label for="tel" class="col-form-label">연락처</label>
+            <div class="mb-3  parentDiv">
+                <label for="tel" class="col-form-label label">연락처</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control" id="tel" onkeyup="inputPhoneNumber(this)">
+                    <input type="text" class="form-control input" id="tel" onkeyup="inputPhoneNumber(this)">
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 48%; margin: 0 auto;">
-                <label for="department" class="col-form-label">부서명</label>
+            <div class="mb-3  parentDiv">
+                <label for="department" class="col-form-label label">부서명</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control" id="department">
+                    <input type="text" class="form-control input" id="department">
                 </div>
             </div>
 
-            <div class="mb-3" style="width: 48%; margin: 0 auto;">
-                <label for="grade" class="col-form-label">직급</label>
+            <div class="mb-3  parentDiv">
+                <label for="grade" class="col-form-label label">직급</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control" id="grade">
+                    <input type="text" class="form-control input" id="grade">
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" id="btnDiv">
                 <div class="col text-center">
-                    <button type="submit" class="btn btn-primary px-5 py-2 w-auto h-auto mt-3" onclick="join_submit()">가입신청</button>
-                    <button class="btn btn-outline-primary px-5 py-2 w-auto h-auto mt-3 ms-5" onClick="location.href='<%=cp%>/login'">취소</button>
+                    <button type="submit" class="btn btn-primary px-5 py-2  mt-3 memberJoinBtn" onclick="join_submit()">가입신청</button>
+                    <button class="btn btn-outline-primary px-5 py-2 mt-3 ms-5 memberJoinBtn" onClick="location.href='<%=cp%>/login'">취소</button>
                 </div>
             </div>
         </div>

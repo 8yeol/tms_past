@@ -137,9 +137,6 @@
         width: 800px;
         text-align: end;
     }
-    .dataTables_wrapper {
-        min-height: 350px;
-    }
     th{text-align: center;}
     td{text-align: center;}
 
@@ -215,7 +212,7 @@
     }
 
     .dataTables_wrapper {
-        min-height: 470px;
+        min-height: 350px;
     }
     .moveBtn{
         display: block;
@@ -306,7 +303,7 @@
             </table>
             <!--  Standard == null -->
             <c:if test="${empty standard}">
-                <div class="pt-4" style="text-align: center;font-size: 1.2rem;position: relative;top: -200px;" id="nullStandard">
+                <div class="pt-4" style="text-align: center;font-size: 1.2rem;position: relative;top: -150px;" id="nullStandard">
                     연간 배출 허용 기준이 없습니다. <br>
                     <b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요.
                 </div>
