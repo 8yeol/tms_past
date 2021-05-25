@@ -228,6 +228,9 @@
     .inputColor{
         background-color:  #DDDDDD;
     }
+    .scroll{
+        overflow-x: auto;
+    }
 
 </style>
 
@@ -309,10 +312,10 @@
         <h4 class="fs-5 fw-bold emissionsh4">배출량 추이 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
-            <select multiple class="form-control" id="lstBox1">
+            <select multiple class="form-control scroll" id="lstBox1" >
                 <c:forEach items="${emissions}" var="target">
                     <c:if test="${target.status eq 'false'}">
-                        <option id="${target.sensor}">${target.place} - ${target.sensorNaming}
+                        <option id="${target.sensor}" class="lstBox1Option">${target.place} - ${target.sensorNaming}
                         </option>
                     </c:if>
                 </c:forEach>
@@ -328,10 +331,10 @@
 
         <div class="multiSelect">
             <label><b>대상 가스</b></label>
-            <select multiple class="form-control" id="lstBox2">
+            <select multiple class="form-control scroll" id="lstBox2">
                 <c:forEach items="${emissions}" var="target">
                     <c:if test="${target.status eq 'true'}">
-                        <option id="${target.sensor}">${target.place} - ${target.sensorNaming}
+                        <option id="${target.sensor}" class="lstBox2Option">${target.place} - ${target.sensorNaming}
                         </option>
                     </c:if>
                 </c:forEach>
@@ -348,10 +351,10 @@
         <h4 class="fs-5 fw-bold emissionsh4">연간 배출량 누적 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
-            <select multiple class="form-control" id="lstBox3">
+            <select multiple class="form-control scroll" id="lstBox3">
                 <c:forEach items="${yearlyEmissions}" var="target2">
                     <c:if test="${target2.status eq 'false'}">
-                        <option id="${target2.sensor}">${target2.place} -
+                        <option id="${target2.sensor}" class="lstBox3Option">${target2.place} -
                                 ${target2.sensorNaming}
                         </option>
                     </c:if>
@@ -368,10 +371,10 @@
 
         <div class="multiSelect">
             <label><b>대상 가스</b></label>
-            <select multiple class="form-control" id="lstBox4">
+            <select multiple class="form-control scroll" id="lstBox4">
                 <c:forEach items="${yearlyEmissions}" var="target2">
                     <c:if test="${target2.status eq 'true'}">
-                        <option id="${target2.sensor}"> ${target2.place} - ${target2.sensorNaming}
+                        <option id="${target2.sensor}" class="lstBox4Option"> ${target2.place} - ${target2.sensorNaming}
                         </option>
                     </c:if>
                 </c:forEach>
@@ -461,8 +464,15 @@
 </div>
 
 <script>
-    $(function () {     // modal drag and drop move
+    $(function () {
 
+        //배출량 모니터링대상 스크롤 길이만큼 옵션길이 적용
+       $('.lstBox1Option').width(document.querySelector('#lstBox1').scrollWidth -32);
+       $('.lstBox2Option').width(document.querySelector('#lstBox2').scrollWidth -32);
+       $('.lstBox3Option').width(document.querySelector('#lstBox3').scrollWidth -32);
+       $('.lstBox4Option').width(document.querySelector('#lstBox4').scrollWidth -32);
+
+        // modal drag and drop move
         if ($('#paramModalShow').val() != null) {
             paramModal($('#paramModalShow').val());
         }
