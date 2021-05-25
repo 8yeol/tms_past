@@ -108,6 +108,15 @@
        background-color:  #ddd;
     }
 
+    .label{
+        text-align: right;
+    }
+
+    @media all and  (max-width:989px) {
+        .label {text-align: center; margin: 0 !important;}
+
+    }
+
 </style>
 <div class="container" id="container">
     <div class="row">
@@ -117,14 +126,14 @@
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
             <form id="saveForm">
                 <div class="pt-3 pe-5 ms-1">
-                    <label class="me-3 col-xs-3 w-10 label">테이블명</label>
-                    <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName()">
+                    <label class="me-3 col-xs-3 w-10" style="text-align: right; font-size: 1.3rem;">테이블명</label>
+                    <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName()" style="margin-right: 20px;">
                         <option>선택</option>
                         <c:forEach var="collection" items="${collections}" varStatus="status">
                             <option value="${collection}">${collection}</option>
                         </c:forEach>
                     </select>
-                    <label class="me-3 col-xs-3 w-10 label">측정소</label>
+                    <label class="me-3 col-xs-3 w-10" style="text-align: right; font-size: 1.3rem;">측정소</label>
                     <select name="place" id="place" class="btn btn-outline-dark" style="padding-right: 15px;">
                         <option  >선택</option>
                         <c:forEach var="place" items="${place}" varStatus="status">
@@ -141,17 +150,17 @@
                         </div>
                         <div class="row p-5" style="border-left: 20px solid white;">
                             <div class=" inputLayout">
-                                <label class="col-xs-3 label">관리 ID</label>
+                                <label class="col-xs-3 label" style="margin-right: 16px">관리 ID</label>
                                 <input type="text" class="text-secondary rounded-3  dd col-xs-3" name="managementId"
                                        id="m_id" readonly>
                             </div>
                             <div class="inputLayout">
-                                <label class="col-xs-3 w-10 label">분류</label>
+                                <label class="col-xs-3 w-10 label" style="margin-right: 16px">분류</label>
                                 <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="classification"
                                        id="m_class" readonly>
                             </div>
                             <div class=" inputLayout">
-                                <label class="col-xs-3 w-10 label">항목명</label>
+                                <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
                                 <input type="text" class="text-secondary rounded-3  dd col-xs-3" name="naming"
                                        id="naming">
                             </div>
@@ -161,7 +170,7 @@
             </form>
             <div class="row">
                 <div class="col text-end">
-                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor(0)" >센서 추가</button>
+                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor()" >센서 추가</button>
                 </div>
             </div>
         </div>
@@ -297,8 +306,6 @@
                     cell7.innerHTML = status;
                     cell8.innerHTML = '<i  class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editSetting(this)"></i>' +
                         '<i  class="fas fa-times" onclick="deleteModal(this)"></i>';
-
-
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
@@ -338,8 +345,6 @@
 
         $("#modal_title").html("관리 ID : <font class='text-primary'><b>"+sensor.eq(2).html()+"</b></font>");
         $("#place2").val(sensor.eq(5).html());
-
-
     }
 
     function deleteModal(obj) {
@@ -417,7 +422,6 @@
         let title = "";
         let content = "";
 
-        //Null 체크
         if (idx == 0) {
             if ($('#tableName').val() == '선택') {
                 customSwal('경고', '테이블명을 선택 해주세요.');
@@ -427,7 +431,7 @@
                 customSwal('경고', '측정소를 선택 해주세요.');
                 return;
             }
-       }else if(idx == 2){
+        }else if(idx == 2){
             if($("#place2").val() == null){
                 $('input[name=isValueDelete]').val('');
                 customSwal('경고','측정소를 선택 해주세요.');
@@ -439,7 +443,6 @@
                 return;
             }
         }
-
 
         if (idx == 0) {
             $("#naming").val( strReplace($("#naming").val()));
@@ -466,7 +469,6 @@
             cache: false,
             data: form,
             success: function (data) {
-
                 for(let i=0; i<data.length; i++){
                     const tableName = data[i];
                     $.ajax({
@@ -477,7 +479,6 @@
                         cache: false,
                         data: {'name' : tableName},
                         success: function (data) {
-
                             if(idx == 0 && $('#naming').val()  ==  strReplace(data.naming)) {
                                 sensorNames.push(data.naming);
                             }
@@ -513,7 +514,6 @@
                 cache: false,
                 data: form,
                 success: function () {
-
                     $('#editModal').modal('hide');
                     Swal.fire({
                         icon: 'success',
@@ -587,9 +587,3 @@
         return str.replace(/(\s*)/g, "");
     }
 </script>
-
-
-
-
-
-
