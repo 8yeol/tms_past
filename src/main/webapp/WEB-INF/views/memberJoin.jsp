@@ -130,7 +130,7 @@
 
 <script>
     function join_submit() {
-        if (blankCheck() && idCheck() &&passwordCheck() && emailCheck()) {
+       if (blankCheck() && idCheck() &&passwordCheck() && emailCheck()) {
 
             if ($("#password").val() !== $("#passwordCheck").val()) {
                 $("#password").focus();
