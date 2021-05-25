@@ -103,7 +103,6 @@
     .inputText{
         width: 223px;
         padding-left: 20px;
-        border: 2px solid black;
     }
     .inputText2{
         width: 223px;
@@ -254,7 +253,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
                         </div>
                         <div class="col">
-                            <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;border: 2px solid black">
+                            <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;>
                                 <c:forEach var="place" items="${place}" varStatus="status">
                                     <option value="${place.name}">${place.name}</option>
                                 </c:forEach>
