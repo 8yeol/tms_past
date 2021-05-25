@@ -884,7 +884,6 @@ public class AjaxController {
 
             if(oldPlace.equals("")) oldPlace = "'측정소 없음'";
 
-
             //센서관련 법적기준,사내기준,관리기준값 사용자 동의하에 초기화
             if (isValueDelete.equals("delete")) {
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
