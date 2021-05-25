@@ -173,7 +173,7 @@
                         </tr>
                         <thead>
                         <tbody id="place-tbody-table">
-                            <%--script--%>
+                        <%--script--%>
                         </tbody>
                     </table>
                 </div>
@@ -181,20 +181,20 @@
                 <%-- 차트 --%>
                 <div class="row" style="margin-left: 1px; padding-bottom: 15px;">
                     <div class="col">
-                            <div class="d-flex justify-content-between">
-                                <div class="d-flex radio">
-                                    <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px;"></span>
-                                    <div class="align-self-end">
-                                        <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
-                                        <label for='hour'>&nbsp;최근 1시간</label> &emsp;
-                                        <input class="form-check-input" type="radio" name="chartRadio" id="day">
-                                        <label for="day">&nbsp;최근 24시간</label>
-                                    </div>
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex radio">
+                                <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px;"></span>
+                                <div class="align-self-end">
+                                    <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
+                                    <label for='hour'>&nbsp;최근 1시간</label> &emsp;
+                                    <input class="form-check-input" type="radio" name="chartRadio" id="day">
+                                    <label for="day">&nbsp;최근 24시간</label>
                                 </div>
-                                <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간(실시간 업데이트)</span>
                             </div>
-                          <div id="chart" style=" margin-right: 10px;"></div>
+                            <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간(실시간 업데이트)</span>
                         </div>
+                        <div id="chart" style=" margin-right: 10px;"></div>
+                    </div>
                 </div>
                 <%-- 차트의 데이터 테이블 --%>
                 <div class="row ms-2 bg-white" style="padding-top: 15px;">
@@ -386,34 +386,34 @@
             var dt = draw_sensor_table(sensor_data_list, sensor_data); // 센서 테이블 생성 (측정시간, 측정값, 관리등급)
             if(sensor_data_list.length != 0){
                 $("#radio_text").text(sensor_data.naming); // 선택된 센서명 텍스트 출력
-                    setTimeout(function interval_getData2() { //$초 마다 업데이트
-                        // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
-                        var sensor_data_list_recent = getSensorRecent(sensor_name);
-                        if(sensor_data_list_recent.length != 0) { // null = []
-                            if (sensor_data_list[sensor_data_list.length - 1].x != sensor_data_list_recent.up_time) {
-                                sensor_data_list.push({
-                                    x: sensor_data_list_recent.up_time,
-                                    y: sensor_data_list_recent.value
-                                });
-                                sensor_table_update(dt, sensor_data_list_recent, sensor_data); //테이블 업데이트
-                            }
-                            updateChart(sensor_data_list, sensor_data); //차트 업데이트
-                            if (sensor_data_list.length > sensorDataLength * 2) { //차트 초기화
-                                sensor_data_list = getSensor(sensor_name, sensor_time_length);
-                            }
+                setTimeout(function interval_getData2() { //$초 마다 업데이트
+                    // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
+                    var sensor_data_list_recent = getSensorRecent(sensor_name);
+                    if(sensor_data_list_recent.length != 0) { // null = []
+                        if (sensor_data_list[sensor_data_list.length - 1].x != sensor_data_list_recent.up_time) {
+                            sensor_data_list.push({
+                                x: sensor_data_list_recent.up_time,
+                                y: sensor_data_list_recent.value
+                            });
+                            sensor_table_update(dt, sensor_data_list_recent, sensor_data); //테이블 업데이트
                         }
-                        var placeName = getPlace();
-                        if($('#place_name > li').length != placeName.length){
-                            $('#place_name').empty();
-                            $('#place-tbody-table').empty();
-                            draw_sensor_table(null);
-                            updateChart(null, sensor_data);
-                            $("#radio_text").text("-") ;
-                            $("#standard_text").text("");
-                            draw_frame();
+                        updateChart(sensor_data_list, sensor_data); //차트 업데이트
+                        if (sensor_data_list.length > sensorDataLength * 2) { //차트 초기화
+                            sensor_data_list = getSensor(sensor_name, sensor_time_length);
                         }
-                        interval2 = setTimeout(interval_getData2, 5000);
-                    }, 0);
+                    }
+                    var placeName = getPlace();
+                    if($('#place_name > li').length != placeName.length){
+                        $('#place_name').empty();
+                        $('#place-tbody-table').empty();
+                        draw_sensor_table(null);
+                        updateChart(null, sensor_data);
+                        $("#radio_text").text("-") ;
+                        $("#standard_text").text("");
+                        draw_frame();
+                    }
+                    interval2 = setTimeout(interval_getData2, 5000);
+                }, 0);
             }else{ // sensor_data_list (최근데이터) 가 없을 때
                 if(sensor_data){
                     Swal.fire({
@@ -465,28 +465,28 @@
      *  측정소명으로 센서데이터 (최근데이터, 직전데이터, 기준값 등) 리턴
      */
     function getPlaceData(place){
-            let result = new Array();
-            $.ajax({
-                url:'<%=cp%>/getPlaceSensor',
-                dataType: 'json',
-                data:  {"place": place},
-                async: false,
-                success: function (data) {
-                    $.each(data, function (index, item) { //센서명(item) 으로 최근데이터, 직전데이터, 기준값 등
-                        if(getSensorData(item)){
-                            result.push(getSensorData(item));
-                        }
-                    })
-                },
-                error: function (e) {
-                }
-            });
-            if(result.length != 0){
-                return result;
-            }else {
-                Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 센서의 데이터가 없습니다.'});
-                return [];
+        let result = new Array();
+        $.ajax({
+            url:'<%=cp%>/getPlaceSensor',
+            dataType: 'json',
+            data:  {"place": place},
+            async: false,
+            success: function (data) {
+                $.each(data, function (index, item) { //센서명(item) 으로 최근데이터, 직전데이터, 기준값 등
+                    if(getSensorData(item)){
+                        result.push(getSensorData(item));
+                    }
+                })
+            },
+            error: function (e) {
             }
+        });
+        if(result.length != 0){
+            return result;
+        }else {
+            Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 센서의 데이터가 없습니다.'});
+            return [];
+        }
     }
 
     /**
@@ -784,34 +784,34 @@
                         offsetX: 0
                     }
                 },
-                {
-                    y: companyStandard,
-                    borderColor: '#FEB019',
-                    label: {
+                    {
+                        y: companyStandard,
                         borderColor: '#FEB019',
-                        style: {
-                            color: '#fff',
-                            background: '#FEB019'
-                        },
-                        text: '사내기준',
-                        position: 'left',
-                        offsetX: 0
-                    }
-                },
-                {
-                    y: legalStandard,
-                    borderColor: '#FF4560',
-                    label: {
+                        label: {
+                            borderColor: '#FEB019',
+                            style: {
+                                color: '#fff',
+                                background: '#FEB019'
+                            },
+                            text: '사내기준',
+                            position: 'left',
+                            offsetX: 0
+                        }
+                    },
+                    {
+                        y: legalStandard,
                         borderColor: '#FF4560',
-                        style: {
-                            color: '#fff',
-                            background: '#FF4560'
-                        },
-                        text: '법적기준',
-                        position: 'left',
-                        offsetX: 0
-                    }
-                }]
+                        label: {
+                            borderColor: '#FF4560',
+                            style: {
+                                color: '#fff',
+                                background: '#FF4560'
+                            },
+                            text: '법적기준',
+                            position: 'left',
+                            offsetX: 0
+                        }
+                    }]
             },
             yaxis: {
                 tickAmount: 2,
@@ -839,8 +839,8 @@
             $('#place-tbody-table').empty();
             if(data == null){
                 const innerHtml = '<tr><td colspan="6">'
-                +'<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
-                +'</div></td></tr>';
+                    +'<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
+                    +'</div></td></tr>';
                 $('#place-tbody-table').append(innerHtml);
             }else{
                 const tbody = document.getElementById('place-tbody-table');
@@ -998,7 +998,7 @@
         $("div.toolbar").html('<b>상세보기</b>');
         return dt;
     }
-    
+
     function sensor_table_update(table, sensor_data_list_recent, sensorData) {
         var dt = $('#sensor-table').DataTable();
         var pageNum = dt.page.info().page;
