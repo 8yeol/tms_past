@@ -442,6 +442,7 @@
 
 
         if (idx == 0) {
+            $("#naming").val( strReplace($("#naming").val()));
             form = $('#saveForm').serialize();
             content = '센서가 추가 되었습니다.';
             title = '센서 추가';
@@ -449,6 +450,7 @@
             $('input[name=isValueDelete]').val(""); //수정했을때 남아있는 히든코드 초기화
 
         } else {
+            $("#naming2").val( strReplace($("#naming2").val()));
             form = $('#editForm').serialize();
             content = '센서 측정소가 수정 되었습니다.';
             title = '센서 수정';
@@ -476,10 +478,10 @@
                         data: {'name' : tableName},
                         success: function (data) {
 
-                            if(idx == 0 && $('#naming').val().trim()  ==  data.naming.trim()) {
+                            if(idx == 0 && $('#naming').val()  ==  strReplace(data.naming)) {
                                 sensorNames.push(data.naming);
                             }
-                            if(idx == 2 &&$('#naming2').val().trim()  ==  data.naming.trim()) {
+                            if(idx == 2 && $('#naming2').val()  ==   strReplace(data.naming)) {
                                 sensorNames2.push(data.naming);
                             }
                         },
@@ -580,6 +582,10 @@
         })
     }
 
+    //모든 공백 제거
+    function strReplace(str){
+        return str.replace(/(\s*)/g, "");
+    }
 </script>
 
 
