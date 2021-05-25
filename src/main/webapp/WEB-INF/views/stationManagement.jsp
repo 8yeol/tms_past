@@ -123,7 +123,7 @@
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na1"
-                                                                                               maxlength="13"
+                                                                                               maxlength="10"
                                                                                                style="border: 1px solid black;">
 
                     </div>
@@ -163,7 +163,7 @@
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na2"
-                                                                                               maxlength='13'
+                                                                                               maxlength='10'
                                                                                                style="border: 1px solid black;">
 
                     </div>
@@ -263,7 +263,7 @@
                     }
                     const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
                         "<td style='padding-left:6px;'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
-                        "<td style='width: 34%;' id='place" + i + "'>" + name + "</td>" +
+                        "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
                         "<td style='width: 40%;'>" + time + "</td>" +
                         "<td style='width: 24%; padding:5px;'><label class='switch'>" +
                         "<input id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
