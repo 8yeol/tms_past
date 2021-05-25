@@ -124,6 +124,10 @@
         #legal_standard_text_B, #company_standard_text_B, #management_standard_text_B {font-size: 1rem;}
         .remove-m {margin: 0 !important;}
     }
+
+    .bg-lightBlue{
+        background-color: #EDF2F8;
+    }
 </style>
 
 
@@ -316,12 +320,12 @@
             }
             setTimeout(function flashInterval() {
                 setTimeout(function () {
-                    element.removeClass("bg-light");
+                    element.removeClass("bg-lightBlue");
                     element.addClass(bg);
                 }, 0);
                 setTimeout(function () {
                     element.removeClass(bg);
-                    element.addClass("bg-light");
+                    element.addClass("bg-lightBlue");
                 }, 400); //0.4초 숨김
                 flIn = setTimeout(flashInterval, 1000); //0.6초 보여줌
             }, 0)
