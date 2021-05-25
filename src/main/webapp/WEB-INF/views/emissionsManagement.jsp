@@ -523,8 +523,25 @@
     //param 인자로 모달 생성
     function paramModal(tableName) {
 
-        let obj = $('#' + tableName);
-        editSetting(obj);
+        //테이블명으로 연간 배출 기준값 가져오기
+        $.ajax({
+            url: '<%=cp%>/getStandardValue',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {tableName:tableName},
+            success: function (data) {
+                $("input[name='hiddenTableName']").val(tableName);
+                $("input[name='place']").val(data.place);
+                $("input[name='naming']").val(data.naming);
+                $("input[name='standard']").val((data.emissionsStandard == 0)?'':data.emissionsStandard);
+                $("input[name='percent']").val((data.densityStandard == 0)?'':data.densityStandard);
+                $("input[name='formula']").val(data.formula);
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        });
 
         $('#addModal').modal('show');
     }

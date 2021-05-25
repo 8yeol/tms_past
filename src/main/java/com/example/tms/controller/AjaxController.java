@@ -1316,6 +1316,12 @@ public class AjaxController {
         return member.getName();
     }
 
+
+    @RequestMapping(value = "/getStandardValue", method = RequestMethod.POST)
+    public EmissionsStandardSetting getStandardValue(String tableName) {
+        return emissionsStandardSettingRepository.findByTableNameIsIn(tableName);
+    }
+
     /**
      * 입력받은 값을 바탕으로 DB에 저장되어있는 권한값을 리턴함
      *
