@@ -854,7 +854,6 @@ public class AjaxController {
         SensorList sensor;
         //hidden 값이 있는지로 추가와 수정을 판별
         //추가
-        System.out.println(hiddenCode);
         if (hiddenCode == null) {
 
             sensor = new SensorList(classification, naming, managementId, tableName, new Date(), place, true);
