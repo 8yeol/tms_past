@@ -68,6 +68,7 @@
     .sizing {
         width: 1087px;
         height: 638px;
+        position: relative;
     }
 
     .h-fix {
@@ -175,7 +176,7 @@
     }
 
     @media all and (max-width: 989px) {
-        .sizing {width: 720px;top:120px;}
+        .sizing {width: 720px;top:45px;}
         .picker {width: 100%;}
         .add-margin {margin-left: 15px;}
         .search {left:0px;top:10px;}
@@ -183,7 +184,7 @@
         .f-sizing {font-size: 0.9rem!important;}
         .add-bg{width:720px; height: 120px;}
         #date_start, #date_end {width:120px;}
-        .down {top:-1140px; width: 708px; margin-top: 0; margin-left: 12px; border: 1px solid; border-color: #dee2e6}
+        .down {top:-1190px; width: 720px; margin-top: 0; border: 1px solid; border-color: #dee2e6; background-color: #fff; height: 41px; overflow: auto;}
         .down div{
             float: left;
             margin-left: 0.5rem;
