@@ -98,6 +98,7 @@
     .inputLayout{
         width: 33%;
         display: inline;
+        text-align: center;
     }
     .inputText{
         width: 223px;
@@ -111,10 +112,17 @@
     .label{
         text-align: right;
     }
+    .s-style {
+        font-size: 0.8rem;
+        display: inline-block;
+        width: auto;
+        position: absolute;
+        right: 0;
+    }
 
     @media all and  (max-width:989px) {
         .label {text-align: center; margin: 0 !important;}
-
+        .m-margin {margin: 15px 0 15px 35px !important;}
     }
 
 </style>
@@ -124,8 +132,8 @@
             <span class="fw-bold" style="font-size: 27px;">환경설정 > 센서 관리</span>
         </div>
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
-            <form id="saveForm">
-                <div class="pt-3 pe-5 ms-1">
+            <form id="saveForm" style="margin: 0;">
+                <div class="pt-3 pe-5 m-margin" style="margin: 15px 0 15px 50px;">
                     <label class="me-3 col-xs-3 w-10" style="text-align: right; font-size: 1.3rem;">테이블명</label>
                     <select name="tableName" id="tableName" class="btn btn-outline-dark" onchange="changeTableName()" style="margin-right: 20px;">
                         <option>선택</option>
@@ -142,26 +150,22 @@
                     </select>
                 </div>
                 <div class="row pe-5 ms-1">
-                    <div class="row bg-white m-3">
-                        <div class="row">
-                            <div class="col text-end">
-                                <span class="text-primary" style="font-size: 0.8rem;"> * 테이블명 선택시 자동 입력됩니다.</span>
-                            </div>
-                        </div>
-                        <div class="row p-5" style="border-left: 20px solid white;">
+                    <div class="row m-3" style="border-top: 1px solid #0d6efd; border-bottom: 1px solid #0d6efd; position: relative;">
+                        <span class="text-primary s-style"> * 테이블명 선택시 자동 입력됩니다.</span>
+                        <div class="row p-5">
                             <div class=" inputLayout">
                                 <label class="col-xs-3 label" style="margin-right: 16px">관리 ID</label>
-                                <input type="text" class="text-secondary rounded-3  dd col-xs-3" name="managementId"
+                                <input type="text" class="text-secondary rounded-3 dd col-xs-3 inputColor" name="managementId"
                                        id="m_id" readonly>
                             </div>
                             <div class="inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">분류</label>
-                                <input type="text" class="text-secondary rounded-3 dd col-xs-3" name="classification"
+                                <input type="text" class="text-secondary rounded-3 dd col-xs-3 inputColor" name="classification"
                                        id="m_class" readonly>
                             </div>
                             <div class=" inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
-                                <input type="text" class="text-secondary rounded-3  dd col-xs-3" name="naming"
+                                <input type="text" class="text-secondary rounded-3  dd col-xs-3 inputColor" name="naming"
                                        id="naming">
                             </div>
                         </div>

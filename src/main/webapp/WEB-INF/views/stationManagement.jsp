@@ -123,7 +123,7 @@
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na1"
-                                                                                               maxlength="15"
+                                                                                               maxlength="13"
                                                                                                style="border: 1px solid black;">
 
                     </div>
@@ -163,7 +163,7 @@
                                                                                                class="modal-input"
                                                                                                name="name"
                                                                                                id="na2"
-                                                                                               maxlength='15'
+                                                                                               maxlength='13'
                                                                                                style="border: 1px solid black;">
 
                     </div>
