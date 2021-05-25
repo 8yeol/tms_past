@@ -124,12 +124,15 @@
         position: absolute;
         right: 0;
     }
-
+    .inputDisabled{
+        background-color: rgba(239, 239, 239, 0.3);
+        border:1px solid rgba(118, 118, 118, 0.3);
+        pointer-events: none;
+    }
     @media all and  (max-width:989px) {
         .label {text-align: center; margin: 0 !important;}
         .m-margin {margin: 15px 0 15px 35px !important;}
     }
-
 </style>
 <div class="container" id="container">
     <div class="row">
@@ -160,11 +163,11 @@
                         <div class="row p-5">
                             <div class=" inputLayout">
                                 <label class="col-xs-3 label" style="margin-right: 16px">관리 ID</label>
-                                <input type="text" name="managementId" id="m_id" disabled>
+                                <input type="text" name="managementId" id="m_id" class="inputDisabled" readonly>
                             </div>
                             <div class="inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">분류</label>
-                                <input type="text" name="classification" id="m_class" disabled>
+                                <input type="text" name="classification" id="m_class" class="inputDisabled" readonly>
                             </div>
                             <div class=" inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
@@ -217,7 +220,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">분류</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="classification2" class="inputText2 p-1" disabled>
+                            <input type="text" name="classification2" class="inputText2 p-1 inputDisabled" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -233,7 +236,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">관리 ID</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="managementId2" class="inputText2 p-1" disabled>
+                            <input type="text" name="managementId2" class="inputText2 p-1 inputDisabled" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -241,7 +244,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">테이블 명</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="tableName2" class="inputText2 p-1" disabled>
+                            <input type="text" name="tableName2" class="inputText2 p-1 inputDisabled" readonly>
                         </div>
                     </div>
 
@@ -250,9 +253,9 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">측정소</span>
                         </div>
                         <div class="col">
-                            <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;>
+                            <select name="place" id="place2" class="btn btn-outline-dark" style="width: 223px;">
                                 <c:forEach var="place" items="${place}" varStatus="status">
-                                    <option value="${place.name}">${place.name}</option>
+                                    <option value="${place.name}"> ${place.name}</option>
                                 </c:forEach>
                             </select>
                         </div>

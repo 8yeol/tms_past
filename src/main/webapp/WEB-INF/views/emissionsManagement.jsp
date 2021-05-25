@@ -234,6 +234,11 @@
     .scroll option{
         padding-right: 35px;
     }
+    .inputDisabled{
+        background-color: rgba(239, 239, 239, 0.3);
+        border:1px solid rgba(118, 118, 118, 0.3);
+        pointer-events: none;
+    }
 
 </style>
 
@@ -413,7 +418,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">측정소명</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="place" class="p-1" disabled>
+                            <input type="text" name="place" class="p-1 inputDisabled" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -421,7 +426,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">센서명</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="naming" class="p-1" disabled>
+                            <input type="text" name="naming" class="p-1 inputDisabled" readonly>
                         </div>
                     </div>
                     <div class="row mt-3">
