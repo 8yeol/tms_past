@@ -596,21 +596,23 @@
                     }
                 }else{ // 모니터링 OFF 일 때
                     noData();
+                    return false;
                 }
             }
         }else{
             noData();
         }
 
-        function noData() {
-            const newRow = tbody.insertRow(tbody.rows);
-            const newCeil0 = newRow.insertCell();
-            newCeil0.innerHTML = '<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
-                +'</div>';
-            newCeil0.colSpan = 5;
-            $("#update-" + index).text("-");
-            return false;
-        }
+    }
+
+    function noData() {
+        const newRow = tbody.insertRow(tbody.rows);
+        const newCeil0 = newRow.insertCell();
+        newCeil0.innerHTML = '<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
+            +'</div>';
+        newCeil0.colSpan = 5;
+        $("#update-" + index).text("-");
+        return false;
     }
 
     /**

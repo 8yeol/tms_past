@@ -98,6 +98,7 @@
     .inputLayout{
         width: 33%;
         display: inline;
+        text-align: center;
     }
     .inputText{
         width: 223px;
