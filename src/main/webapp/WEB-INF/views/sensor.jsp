@@ -147,6 +147,9 @@
             font-size: 0.8rem;
         }
     }
+    #place_table tbody tr:hover{
+        cursor: pointer;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
