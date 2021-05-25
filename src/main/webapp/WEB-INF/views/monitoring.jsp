@@ -168,7 +168,6 @@
             </div>
         </div>
 
-
         <div class="col bg-white m-size" style="margin-left: 5px;border-top-left-radius: 20px;border-top-right-radius: 20px;">
             <div class="row standardParent" style="height: 38px">
                 <div class="col fw-bold standardDiv" style="border-right: 2px solid white;">
@@ -260,13 +259,12 @@
     });
 
     /**
-     * 페이지 로딩시 측정소 테이블 틀을 생성하고
-     * 측정소 별로 센서 정보 테이블 생성 및 대시보드 생성
+     * 페이지 로딩시 측정소 별로 테이블 틀 생성, 측정소 별, 센서별 데이터를 받아 대시보드, 테이블 데이터 입력
      */
     function getData() {
-        setTimeout(function interval_getData() { // 실시간 처리위한 setTimeout
-            const placeName = getPlace(); // 전체 측정소 이름 구함 (모니터링 True)
-            draw_place_table_frame(placeName); // 측정소별 센서의 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
+        setTimeout(function interval_getData() { // 반복 처리를 위한 setTimeout
+            const placeName = getPlace(); // 전체 측정소명 리턴 받아 변수에 저장
+            draw_place_table_frame(placeName); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
             const placeData = new Array();
             if(placeName.length == 0){ // 측정소가 없을 때
                 Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
@@ -276,12 +274,12 @@
                 for (let i = 0; i < placeName.length; i++) {
                     clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
                     const data = getPlaceData(placeName[i]); //측정소 별 센서 데이터 (최근데이터, 이전데이터, 정보)
-                        draw_place_table(data, i); // 측정소별 테이블 생성
-                        placeData.push(data); //측정소별 센서 데이터 통합
-                        if(placeData[i].length != 0){
-                            sensorDataNullCheck = false;
-                        }
-                        INTERVAL = setTimeout(interval_getData, 5000);
+                    draw_place_table(data, i); // 측정소별 테이블 생성
+                    placeData.push(data); //측정소별 센서 데이터 통합
+                    if(placeData[i].length != 0){
+                        sensorDataNullCheck = false;
+                    }
+                    INTERVAL = setTimeout(interval_getData, 5000);
                 }
                 if(sensorDataNullCheck){
                     Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 센서의 데이터가 없습니다.'});
@@ -331,12 +329,12 @@
             dataType: 'json',
             async: false,
             success: function (data) {
-                    $.each(data, function (index, item) { //item (센서명)
-                        monitoring = item.monitoring; //모니터링 ON
-                        if(monitoring){
-                            placeName.push(item.name);
-                        }
-                    })
+                $.each(data, function (index, item) { //item (센서명)
+                    monitoring = item.monitoring; //모니터링 ON
+                    if(monitoring){
+                        placeName.push(item.name);
+                    }
+                })
             },
             error: function (request, status, error) {
             }
@@ -362,17 +360,17 @@
                     "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'><span class='fs-5'>"+placeName[i]+"</span></div>" +
                     "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
                     "<table class='table table-bordered table-hover text-center mt-1'>" +
-                        "<thead>" +
-                            "<tr class='add-bg-color'>" +
-                                "<th width=28%'>항목</th>" +
-                                "<th width=17%'>법적기준</th>" +
-                                "<th width=17%'>사내기준</th>" +
-                                "<th width=17%'>관리기준</th>" +
-                                "<th width=21%'>실시간</th>" +
-                            "</tr>" +
-                        "</thead>"+
-                            "<tbody id='sensor-table-"+i+"'>"+
-                        "</tbody>" +
+                    "<thead>" +
+                    "<tr class='add-bg-color'>" +
+                    "<th width=28%'>항목</th>" +
+                    "<th width=17%'>법적기준</th>" +
+                    "<th width=17%'>사내기준</th>" +
+                    "<th width=17%'>관리기준</th>" +
+                    "<th width=21%'>실시간</th>" +
+                    "</tr>" +
+                    "</thead>"+
+                    "<tbody id='sensor-table-"+i+"'>"+
+                    "</tbody>" +
                     "</table>" +
                     "</div>");
             }
@@ -441,8 +439,8 @@
                             beforeValue: beforeValue, monitoring: monitoring, standard : standard, status: status
                         });
                     }else{ //모니터링 False 인 경우
-                    getData.push([]);
-                }
+                        getData.push([]);
+                    }
                 });
             },
             error: function () {
@@ -634,34 +632,34 @@
     function draw_sensor_info(data) {
         var sensorMonitoringOn=0, sensorMonitoringOff=0, sensorStatusSuccess=0, sensorStatusFail=0, legalSCount =0, companySCount =0, managementSCount=0;
         for(var i=0; i<data.length; i++){ //측정소별
-                for(var z=0; z<data[i].length; z++){ //측정소의 센서별 조회
-                    sensorData = data[i][z];
-                    if(sensorData.length != 0){
-                        monitoring = sensorData.monitoring;
-                        status = sensorData.status;
-                        value = sensorData.value;
-                        legalStandard = sensorData.legalStandard;
-                        companyStandard = sensorData.companyStandard;
-                        managementStandard = sensorData.managementStandard;
-                        if(monitoring){
-                            sensorMonitoringOn +=1;
-                        }
-                        if(status){
-                            sensorStatusSuccess +=1;
-                            if(value > legalStandard){
-                                legalSCount +=1;
-                            }else if(value > companyStandard){
-                                companySCount +=1;
-                            }else if(value > managementStandard){
-                                managementSCount +=1;
-                            }
-                        }else{
-                            sensorStatusFail += 1;
+            for(var z=0; z<data[i].length; z++){ //측정소의 센서별 조회
+                sensorData = data[i][z];
+                if(sensorData.length != 0){
+                    monitoring = sensorData.monitoring;
+                    status = sensorData.status;
+                    value = sensorData.value;
+                    legalStandard = sensorData.legalStandard;
+                    companyStandard = sensorData.companyStandard;
+                    managementStandard = sensorData.managementStandard;
+                    if(monitoring){
+                        sensorMonitoringOn +=1;
+                    }
+                    if(status){
+                        sensorStatusSuccess +=1;
+                        if(value > legalStandard){
+                            legalSCount +=1;
+                        }else if(value > companyStandard){
+                            companySCount +=1;
+                        }else if(value > managementStandard){
+                            managementSCount +=1;
                         }
                     }else{
-                        sensorMonitoringOff +=1;
+                        sensorStatusFail += 1;
                     }
+                }else{
+                    sensorMonitoringOff +=1;
                 }
+            }
         }
         var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail+sensorMonitoringOff)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
         var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //법적기준 %
@@ -687,6 +685,9 @@
         $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess + sensorStatusFail)); //관리기준 Over 개수/전체
     }
 
+    /**
+     * 실시간 모니터링 클릭 이벤트 - 점멸 효과 On / Off
+     */
     $('.flashToggle').on('click', function () {
         if($(this).attr('data-click-state') == 1) {
             $(this).attr('data-click-state', 0)
