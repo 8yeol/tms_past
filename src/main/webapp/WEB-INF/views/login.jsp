@@ -40,7 +40,7 @@
         #id{width: 80%;height: 150px; margin: 0 auto 45px;font-size: 3rem;}
         #password{width: 80%;height: 150px;;margin: 0 auto 45px;font-size: 3rem;}
         #loginBtn{width: 80%;height: 130px;}
-        #join{font-size: 3rem;}
+        #join{font-size: 3rem;margin-bottom: 100px;}
         #btnFont{font-size: 3rem;}
         #btnDiv{margin-top: 35%;margin-bottom: 50px;}
 

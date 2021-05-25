@@ -40,14 +40,15 @@
     }
     @media all and (max-width:1024px) {
         #div1{overflow: auto;}
-        .label{font-size: 2rem;}
+        .label{font-size: 2.2rem;}
         .joinText{font-size: 3.5rem;}
         .join > div input { height: 110px;}
         .parentDiv{width: 90%;margin-top: 50px;}
         .input{font-size:3rem;width: 100%;}
         .memberJoinBtn{width: 40%;height: 100px;font-size: 3rem; margin-bottom: 150px;}
         #btnDiv{margin-top: 150px;}
-        .checkText{font-size: 1.5rem;}
+        .checkText{font-size: 1.7rem;}
+        .ui-menu-item-wrapper{font-size: 3.3rem;height: 90px;}
 
         .swal2-popup{width: 48rem;}
         #swal2-content{font-size: 2rem;}
