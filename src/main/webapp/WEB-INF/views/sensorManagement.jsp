@@ -290,9 +290,9 @@
                 let status;
                 for (let i = 0; i < data.length; i++) {
                     if (data[i].status == false) {
-                        status = '<i class="fas fa-circle ms-4 text-danger"></i>'
+                        status = '<i class="fas fa-circle text-danger"></i>'
                     } else {
-                        status = '<i class="fas fa-circle ms-4 text-success"></i>'
+                        status = '<i class="fas fa-circle text-success"></i>'
                     }
                     const row = tbody.insertRow(tbody.rows.length);
                     const cell1 = row.insertCell(0);
