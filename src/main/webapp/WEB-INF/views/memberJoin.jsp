@@ -31,7 +31,10 @@
     }
     .joinText{font-size: 2.5rem;}
     .checkText{font-size: 15%; color: red}
-
+    .join-bg {
+        margin-top: 10%;
+        margin-bottom: 10%;
+    }
     @media all and (min-width: 1981px) {
         .join-bg {
             position: relative;
