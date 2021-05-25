@@ -110,7 +110,9 @@
         padding-left: 20px;
     }
     .inputColor{
-       background-color:  #ddd;
+        background-color:  rgba(239, 239, 239, 0.3);
+        border: 2px solid rgba(118,118,118,0.3);
+        color: #545454;
     }
 
     .label{
@@ -169,7 +171,7 @@
                             </div>
                             <div class=" inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
-                                <input type="text" class="text-secondary rounded-3  dd col-xs-3 inputColor" name="naming"
+                                <input type="text" class="rounded-3  dd col-xs-3" name="naming"
                                        id="naming">
                             </div>
                         </div>
