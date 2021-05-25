@@ -105,6 +105,10 @@
         padding-left: 20px;
         border: 2px solid black;
     }
+    .inputText2{
+        width: 223px;
+        padding-left: 20px;
+    }
     .inputColor{
        background-color:  #ddd;
     }
@@ -215,7 +219,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">분류</span>
                         </div>
                         <div class="col">
-                            <input type="text" readonly name="classification2" class="inputText inputColor" >
+                            <input type="text" readonly name="classification2" class="inputText2" disabled>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -231,7 +235,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">관리 ID</span>
                         </div>
                         <div class="col">
-                            <input type="text" readonly name="managementId2" class="inputText inputColor">
+                            <input type="text" readonly name="managementId2" class="inputText2"disabled="disabled">
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -239,7 +243,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">테이블 명</span>
                         </div>
                         <div class="col">
-                            <input type="text" readonly  name="tableName2" class="inputText inputColor">
+                            <input type="text" readonly  name="tableName2" class="inputText2" disabled>
                         </div>
                     </div>
 

@@ -231,6 +231,10 @@
     .scroll{
         overflow-x: auto;
     }
+    .scroll option{
+        padding-right: 35px;
+    }
+
 </style>
 
 <div class="container" id="container">
