@@ -139,8 +139,8 @@
         <div class="col text-end align-self-end">
             <div>
                 <span>점멸효과 :</span>
-                <input type="radio" name="flashing" value="on" checked><span> On&nbsp</span>
-                <input type="radio" name="flashing" value="off"><span> Off</span>
+                <input type="radio" name="flashing" value="on" id="checkOn" checked><label for="checkOn"> On&nbsp</label>
+                <input type="radio" name="flashing" value="off" id="checkOff"><label for="checkOff"> Off</label>
             </div>
             <span class="text-primary small"> * 실시간 업데이트</span>
         </div>
@@ -322,7 +322,7 @@
                 setTimeout(function () {
                     element.removeClass(bg);
                     element.addClass("bg-light");
-                }, 100); //0.1초 숨김
+                }, 400); //0.1초 숨김
                 flIn = setTimeout(flashInterval, 1000); //0.9초 보여줌
             }, 0)
         }else{
