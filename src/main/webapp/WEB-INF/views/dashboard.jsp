@@ -382,7 +382,6 @@
                 <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
                     <div class="card-header">정상</div>
                     <div class="card-body" id="normal" style="min-height: 180px;">
-                        <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -390,7 +389,6 @@
                 <div class="card text-white bg-success mb-3" style="min-height: 100%;">
                     <div class="card-header">관리기준 초과</div>
                     <div class="card-body" id="caution">
-                        <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -398,7 +396,6 @@
                 <div class="card text-dark bg-warning mb-3" style="min-height: 100%;">
                     <div class="card-header">사내기준 초과</div>
                     <div class="card-body" id="warning">
-                        <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -406,7 +403,6 @@
                 <div class="card text-white bg-danger mb-3" style="min-height: 100%;">
                     <div class="card-header">법적기준 초과</div>
                     <div class="card-body" id="danger">
-                        <h5> 가동중인 센서가 없습니다.</h5>
                     </div>
                 </div>
             </div>
@@ -484,59 +480,66 @@
             cache: false,
             data: {},
             success: function (data) {
-                for (let i = 0; i < data.length; i++) {
-                    let tableName = data[i].name;
-                    $.ajax({
-                        url: '<%=cp%>/getSensorRecent',
-                        dataType: 'json',
-                        data: {"sensor": tableName},
-                        async: false,
-                        success: function (data) {
-                            const now = moment();
-                            const up_time = moment(new Date(data.up_time), 'YYYY-MM-DD HH:mm:ss');
-                            const minutes = moment.duration(now.diff(up_time)).asMinutes();
-                            const value = (data.value).toFixed(2);
-                            let place; //측정소 명
-                            if (minutes <= 5) {
-                                $.ajax({
-                                    url: '<%=cp%>/getSensorInfo',
-                                    dataType: 'json',
-                                    data: {"sensor": tableName},
-                                    async: false,
-                                    success: function (data) {
-                                        $.ajax({
-                                            url: 'getPlaceName',
-                                            dataType: 'text',
-                                            data: {"tableName": tableName},
-                                            async: false,
-                                            success: function (data) {
-                                                place = data;
-                                            },
-                                            error: function (request, status, error) {
-                                                console.log(error)
-                                            }
-                                        });
+                if(data.length==0){
+                    $("#normal").append("<h5>가동중인 센서가 없습니다.</h5>");
+                    $("#caution").append("<h5>가동중인 센서가 없습니다.</h5>");
+                    $("#warning").append("<h5>가동중인 센서가 없습니다.</h5>");
+                    $("#danger").append("<h5>가동중인 센서가 없습니다.</h5>");
+                } else{
+                    for (let i = 0; i < data.length; i++) {
+                        let tableName = data[i].name;
+                        $.ajax({
+                            url: '<%=cp%>/getSensorRecent',
+                            dataType: 'json',
+                            data: {"sensor": tableName},
+                            async: false,
+                            success: function (data) {
+                                const now = moment();
+                                const up_time = moment(new Date(data.up_time), 'YYYY-MM-DD HH:mm:ss');
+                                const minutes = moment.duration(now.diff(up_time)).asMinutes();
+                                const value = (data.value).toFixed(2);
+                                let place; //측정소 명
+                                if (minutes <= 5) {
+                                    $.ajax({
+                                        url: '<%=cp%>/getSensorInfo',
+                                        dataType: 'json',
+                                        data: {"sensor": tableName},
+                                        async: false,
+                                        success: function (data) {
+                                            $.ajax({
+                                                url: 'getPlaceName',
+                                                dataType: 'text',
+                                                data: {"tableName": tableName},
+                                                async: false,
+                                                success: function (data) {
+                                                    place = data;
+                                                },
+                                                error: function (request, status, error) {
+                                                    console.log(error)
+                                                }
+                                            });
 
-                                        if (value > data.legalStandard) {
-                                            $("#danger").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
-                                        } else if (value > data.companyStandard) {
-                                            $("#warning").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
-                                        } else if (value > data.managementStandard) {
-                                            $("#caution").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
-                                        } else {
-                                            $("#normal").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                            if (value > data.legalStandard) {
+                                                $("#danger").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                            } else if (value > data.companyStandard) {
+                                                $("#warning").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                            } else if (value > data.managementStandard) {
+                                                $("#caution").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                            } else {
+                                                $("#normal").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
+                                            }
+                                        },
+                                        error: function (request, status, error) {
+                                            console.log(error)
                                         }
-                                    },
-                                    error: function (request, status, error) {
-                                        console.log(error)
-                                    }
-                                });
+                                    });
+                                }
+                            },
+                            error: function (request, status, error) {
+                                console.log(error)
                             }
-                        },
-                        error: function (request, status, error) {
-                            console.log(error)
-                        }
-                    });
+                        });
+                    }
                 }
             },
             error: function (request, status, error) {

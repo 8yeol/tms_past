@@ -222,14 +222,13 @@
     function submit() {
         const passwordBox = document.getElementById('passwordBox');
         if (passwordBox.style.display != "none") {
-            passwordCheck()
             if ($("#nowPasswordText").text() != "인증완료") {
                 $("#now_password").focus();
                 swal('error', '현재 비밀번호 오류', '현재 비밀번호를 확인해주세요.')
                 return false;
             }
             if(blankCheck('block') == false){
-                swal('warning', '수정 실패', '빈칸 없이 입력해주세요.')
+                swal('warning', '수정 실패', '변경 할 비밀번호를 정확히 입력해주세요.')
                 return false;
             }
         }
@@ -271,7 +270,9 @@
 
     function blankCheck(passwordBox) {
         if (passwordBox == 'block') {
-            if ($("#password").val() == "" && $("#passwordCheck").val() == "") {
+            if ($("#password").val() != "" && $("#passwordCheck").val() != "" && passwordCheck()) {
+                return true;
+            }else{
                 return false;
             }
         }
