@@ -48,6 +48,11 @@
         .memberJoinBtn{width: 40%;height: 100px;font-size: 3rem; margin-bottom: 150px;}
         #btnDiv{margin-top: 150px;}
         .checkText{font-size: 1.5rem;}
+
+        .swal2-popup{width: 48rem;}
+        #swal2-content{font-size: 2rem;}
+        #swal2-title{font-size: 3rem;}
+        .swal2-actions button{width: 230px;font-size: 2rem!important;height:80px; }
     }
 </style>
 

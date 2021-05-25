@@ -43,6 +43,11 @@
         #join{font-size: 3rem;}
         #btnFont{font-size: 3rem;}
         #btnDiv{margin-top: 35%;margin-bottom: 50px;}
+
+        .swal2-popup{width: 48rem;}
+        #swal2-content{font-size: 2rem;}
+        #swal2-title{font-size: 3rem;}
+        .swal2-actions button{width: 230px;font-size: 2rem!important;height:80px; }
     }
 
 
