@@ -192,8 +192,8 @@
                     <th scope="col" width="10%">관리 ID</th>
                     <th scope="col" width="18%">테이블명</th>
                     <th scope="col" width="17%">업데이트</th>
-                    <th scope="col" width="10%">측정소</th>
-                    <th scope="col" width="15%">통신상태</th>
+                    <th scope="col" width="15%">측정소</th>
+                    <th scope="col" width="10%">통신상태</th>
                     <th scope="col" width="10%">관리</th>
                 </tr>
                 </thead>
