@@ -91,7 +91,7 @@ public class MemberService implements UserDetailsService {
             logRepository.save(pwdLog);
         }
         infoLog.setId(member.getId());
-        infoLog.setType("회원수정");
+        infoLog.setType("회원");
         infoLog.setContent("정보수정");
         infoLog.setDate(date);
         logRepository.save(infoLog);
