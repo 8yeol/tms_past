@@ -854,7 +854,7 @@ public class AjaxController {
         SensorList sensor;
         //hidden 값이 있는지로 추가와 수정을 판별
         //추가
-        if (hiddenCode == "" || hiddenCode == null) {
+        if (hiddenCode.equals("") || hiddenCode == null) {
 
             sensor = new SensorList(classification, naming, managementId, tableName, new Date(), place, true);
 
@@ -871,12 +871,7 @@ public class AjaxController {
             emissionsStandardSettingRepository.save(ess);
             inputLogSetting("'"+place + " - " + naming+"'" + " 센서 연간 배출 허용 기준 추가", "설정", principal);
 
-
-
-
-
             saveReference(place, tableName, naming,principal); //상세설정 항목 추가
-
             inputLogSetting( "'"+sensor.getNaming()+"'" + " 센서 추가", "설정", principal);
 
         } else { //수정
@@ -888,7 +883,6 @@ public class AjaxController {
             sensor.setUpTime(new Date());
 
             if(oldPlace.equals("")) oldPlace = "'측정소 없음'";
-
 
 
             //센서관련 법적기준,사내기준,관리기준값 사용자 동의하에 초기화
@@ -964,7 +958,6 @@ public class AjaxController {
                 emissionsSettingRepository.save(emis);
                 inputLogSetting("'"+oldPlace + " - " + oldNaming+"'" + " 센서 배출량 추이 모니터링 대상 측정소명 수정", "설정", principal);
 
-
                 //배출 관리 기준 수정
                 EmissionsStandardSetting ess = emissionsStandardSettingRepository.findByTableNameIsIn(hiddenCode);
                 ess.setPlace(place);
@@ -1007,11 +1000,8 @@ public class AjaxController {
                 inputLogSetting("'"+oldNaming+"'"+" 센서의 측정소명 "+"'"+oldPlace+"'" + " > " + "'"+place+"'" + " 수정 ", "설정", principal);
             }
 
-
-
         }
         sensorListRepository.save(sensor);
-
     }
 
     /**
