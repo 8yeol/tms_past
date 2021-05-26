@@ -279,12 +279,19 @@
     /**
      * 측정소명 클릭 이벤트(해당 측정소 조회)
      */
+    var debounce2 = null;
     $("#place_name").on('click', 'li', function () {
         const place_name = $(this).attr('id'); //선택된 측정소명
         $('#title').text(place_name); // 해당 측정소명 텍스트 출력
         $("#place_name li").removeClass('active'); // 해당 측정소 외 선택됨 제거
         $(this).addClass('active'); // 해당 측정소 선택됨 표시
-        getPlaceAllSensorData(place_name); //측정소의 항목 전체 데이터
+
+        clearTimeout(debounce2);
+        debounce2 = setTimeout(() => {
+            getPlaceAllSensorData(place_name); //측정소의 항목 전체 데이터
+        }, 300)
+
+
     });
 
     /**
@@ -294,10 +301,11 @@
     $("#place-tbody-table").on('click', 'tr', function(){
         const name = $(this).find('input').val(); //선택된 센서명
         sensor_data = getSensorData(name); //해당 센서 데이터
+
         clearTimeout(debounce);
         debounce = setTimeout(() => {
             getData2(sensor_data);
-        }, 200)
+        }, 300)
     });
 
     /**
