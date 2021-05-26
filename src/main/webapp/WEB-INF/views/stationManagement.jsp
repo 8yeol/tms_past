@@ -533,7 +533,8 @@
         const tel = $("#te" + idx).val();
         const admin = $("#ad" + idx).val();
         const hiddenCode = $("input[name=hiddenCode]").val();
-        var pattern = /[~!@#$%^&*()_+|<>?:{}]/;
+        const pattern = /[`~!@#$%^&*()_+=|<>?:;`,{}\-\]\[/\'\"\\\']/;
+
         let title = "";
         let content = "";
         var send = "";
@@ -580,14 +581,15 @@
                 })
                 return false;
 
-            } else if (pattern.test(name) == true) {
+            } else if (pattern.test(name) == true) {  //특수문자
+                console.log(name);
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
                     text: '특수문자를 입력할 수 없습니다.'
-
                 })
                 return false;
+
             } else {
                 if (findPlace(name) != 0) { //측정소 명 중복 확인
                     Swal.fire({

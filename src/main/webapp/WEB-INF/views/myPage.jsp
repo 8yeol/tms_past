@@ -34,26 +34,26 @@
         left: 35px;
         margin-bottom: 10px;
     }
+    #mainDIv{text-align: center;}
 
     @media all and (max-width: 989px) {
-        #passwordBox2 {left:15px !important;}
+        #passwordBox2 {left:5px !important;}
         #nowPassword {margin: 10px auto 10px !important;}
-        #nowPassword>label {width: 50% !important;}
-        #nowPassword>div:nth-child(3) {left: 5% !important;}
 
-        #passwordBox {left: 15px !important;}
-        #passwordBox label{width: 50% !important;}
+        #passwordBox {left: 5px !important;}
         #passwordBox>div {margin: 10px auto 10px !important;}
-        #passwordBox>div>div:nth-child(3) {left: 5% !important;}
 
-        .btnDiv {width: 500px; position: relative; left: -90px;}
+        .btnDiv {width: 500px; position: relative; left: 70px;}
+        #mainDIv{width: 75% !important;}
+        input[type=text]{width: 300px;}
+        .mypage-bg{margin-top: 100px !important;}
     }
 </style>
 
-<div class="container bg-light rounded p-5 mt-5 mypage-bg">
-    <div class="row">
+<div class="container" id="container" >
+    <div class="row bg-light rounded p-5 mt-5 mypage-bg">
         <span class="fs-1 text-center" style="display: inline-block; width: 100%;">MY PAGE</span>
-        <div class="text-center" style="width: 50%; margin: 2rem auto 1rem;">
+        <div style="width: 50%; margin: 2rem auto 1rem;" id="mainDIv">
             <div class="mb-3">
                 <label for="id" class="col-sm-2 col-form-label" style="display: inline-block;">아이디</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
@@ -102,8 +102,8 @@
                     <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="password" class="form-control" id="now_password" onkeyup="nowPasswordCheck()">
                     </div>
-                    <div style="text-align: left; font-size: 0.8rem; position: relative; left: 36%;">
-                        <span class="text-danger" id="nowPasswordText">* 사용중인 비밀번호를 입력해주세요.</span>
+                    <div style="text-align: left; font-size: 0.8rem; position: relative; left: 36%;" class="psText">
+                        <span class="text-danger psText" id="nowPasswordText">* 사용중인 비밀번호를 입력해주세요.</span>
                     </div>
                 </div>
             </div>
@@ -114,8 +114,8 @@
                    <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="password" class="form-control" id="password" onkeyup="passwordCheckMsg()">
                     </div>
-                    <div style="text-align: left; font-size: 0.8rem; position: relative; left: 36%;">
-                        <span class="text-danger" id="passwordText">* 6자리 이상 20자리 미만의 비밀번호를 설정해주세요.</span>
+                    <div style="text-align: left; font-size: 0.8rem; position: relative; left: 36%;" class="psText">
+                        <span class="text-danger psText" id="passwordText">* 6자리 이상 20자리 미만의 비밀번호를 설정해주세요.</span>
                     </div>
                 </div>
 
@@ -124,7 +124,7 @@
                     <div class="col-sm-10" style="width: 60%; display: inline-block;">
                         <input type="password" class="form-control" id="passwordCheck" onkeyup="passwordCheckMsg()" >
                     </div>
-                    <div style="text-align: left; font-size: 0.8rem; position: relative; left: 36%;">
+                    <div style="text-align: left; font-size: 0.8rem; position: relative; left: 36%;" class="psText">
                         <span class="text-danger" id="passwordCheckText">* 비밀번호가 일치하지 않습니다.</span>
                     </div>
                 </div>
@@ -132,7 +132,7 @@
 
             <div class="row btnDiv">
                     <button class="btn btn-outline-primary m-3"  style="display:none;" id="pw_button" onclick="changePassword()">비밀번호 변경</button>
-                <div class="col text-center" style="padding-left: 20px;">
+                <div class="col text-center" style="padding-left: 10%;">
                     <button class="btn btn-outline-primary m-3" id="update_btn" onclick="setLayout()" >회원정보 수정</button>
                     <button class="btn btn-primary m-3" style="display:none;" id="up_btn" onclick="submit()" >정보수정</button>
                      <button class="btn btn-outline-danger m-3" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>

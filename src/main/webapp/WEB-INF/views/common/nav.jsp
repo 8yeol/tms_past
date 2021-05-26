@@ -199,6 +199,11 @@
     }
 
     @media (max-width: 990px) {
+        .swal2-popup{width: 48rem;}
+        #swal2-content{font-size: 2rem;}
+        #swal2-title{font-size: 3rem;}
+        .swal2-actions button{width: 230px;font-size: 2rem!important;height:80px; }
+
         #desktop{
             display: none;
         }
@@ -411,13 +416,15 @@
 <script>
     function openNav() {
         document.getElementById("mySidebar").style.left = "0px";
+        $('#mySidebar').height( document.documentElement.clientHeight );
     }
     function closeNav() {
         document.getElementById("mySidebar").style.left = "-250px";
     }
 
-
     $( document ).ready(function() {
+
+
         var settings = {"url": "<%=cp%>/getUsername", "method": "POST",};
         $.ajax(settings).done(function (name) {
             $('#dropBtn').prepend(name+" 님");
