@@ -290,10 +290,14 @@
     /**
      * 센서명 클릭 이벤트 (해당 센서 조회)
      */
+    var debounce = null;
     $("#place-tbody-table").on('click', 'tr', function(){
         const name = $(this).find('input').val(); //선택된 센서명
         sensor_data = getSensorData(name); //해당 센서 데이터
-        getData2(sensor_data);
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+            getData2(sensor_data);
+        }, 200)
     });
 
     /**
