@@ -897,6 +897,21 @@ public class AjaxController {
                 reference.setMonitoring(false);
                 reference_value_settingRepository.save(reference);
                 inputLogSetting("'"+oldPlace + " - " + sensor.getNaming()+"'" + " 관리 기준 초기화", "설정", principal);
+
+                //place 모니터링 체크
+                Place placeCheck = placeRepository.findByName(oldPlace);
+
+                List sensorList = placeCheck.getSensor();
+                ReferenceValueSetting monitoringCheck;
+                boolean flag = false;
+
+                for (int i =0; i<sensorList.size(); i++){
+                   monitoringCheck = reference_value_settingRepository.findByName((String) sensorList.get(i));
+                   if(monitoringCheck.getMonitoring() == true)flag = true;
+                }
+
+                placeCheck.setMonitoring(flag);
+                placeRepository.save(placeCheck);
             }
 
             //항목명 변경
