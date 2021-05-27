@@ -397,7 +397,7 @@
 
 
     function isValueDelete(){
-        if($("input[name='naming2']").val() == ''){
+        if(strReplace($("input[name='naming2']").val()) == ''){
             customSwal('경고','항목명을 선택 해주세요.');
             return;
         }
@@ -420,6 +420,7 @@
                 $('input[name=isValueDelete]').val('delete');
                     saveSensor(2);
             }else if ( result.dismiss === Swal.DismissReason.cancel){
+                $('input[name=isValueDelete]').val('');
                     saveSensor(2);
             }
         });
