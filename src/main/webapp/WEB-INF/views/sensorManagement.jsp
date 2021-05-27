@@ -441,6 +441,10 @@
                 customSwal('경고', '측정소를 선택 해주세요.');
                 return;
             }
+            if (strReplace($("#naming").val()) == '') {
+                customSwal('경고', '항목명을 확인 해주세요.');
+                return;
+            }
         }else if(idx == 2){
             if($("#place2").val() == null){
                 $('input[name=isValueDelete]').val('');
@@ -449,7 +453,7 @@
             }
             if($("input[name='naming2']").val() == ''){
                 $('input[name=isValueDelete]').val('');
-                customSwal('경고','항목명을 선택 해주세요.');
+                customSwal('경고','항목명을 확인 해주세요.');
                 return;
             }
         }
