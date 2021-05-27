@@ -722,7 +722,8 @@
             flashCheck = "on";
         }else{
             flashCheck = "off";
-            clearTimeout(flIn);
+            if(typeof flIn !== "undefined")
+                clearTimeout(flIn);
         }
     })
 
