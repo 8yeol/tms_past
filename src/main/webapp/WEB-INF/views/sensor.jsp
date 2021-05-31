@@ -492,8 +492,10 @@
             async: false,
             success: function (data) {
                 $.each(data, function (index, item) { //센서명(item) 으로 최근데이터, 직전데이터, 기준값 등
-                    if(getSensorData(item)){
-                        result.push(getSensorData(item));
+
+                    let getSensorDataValue = getSensorData(item);
+                    if(getSensorDataValue != null){
+                        result.push(getSensorDataValue);
                     }
                 })
             },
@@ -644,7 +646,6 @@
     function getSensor(sensor_name, hour) {
         let result = new Array();
         if(sensor_name==undefined){
-            console.log('get sensor null 처리');
             return null;
         }else{
             $.ajax({

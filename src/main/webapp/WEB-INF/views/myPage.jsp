@@ -283,7 +283,15 @@
         }
     }
 
+    var debounce2 = null;
     function nowPasswordCheck() {
+        clearTimeout(debounce2);
+        debounce2 = setTimeout(() => {
+            delayNowPasswordCheck(); //측정소의 항목 전체 데이터
+        }, 300)
+    }
+
+    function delayNowPasswordCheck(){
         $.ajax({
             url: '<%=cp%>/nowPasswordCheck',
             type: 'POST',

@@ -125,12 +125,13 @@
                 for (let i = 0; i < data.length; i++) {
                     const tableName = data[i];
                     const category = findSensorCategory(tableName);
-                    const checked = findNotification(tableName);
+                    let notifycation = findNotification(tableName);
+                    let status = notifycation.status ? 'checked' : '';
 
                     const innerHtml =
                         "<label style='font-size: 18px; ' class='form-check-label' id='" + tableName + "'for='" + tableName + "'>" + category + "</label>" +
                         "<label class='switch'>" +
-                        "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + checked + ">" +
+                        "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + status + ">" +
                         "<div class='slider round'></div>" +
                         "</label>"
 
@@ -140,13 +141,12 @@
                     elem.innerHTML = innerHtml;
                     parentElem.append(elem);
 
-
+                    let fromTime = notifycation.start == null ? '00:00' : notifycation.start ;
+                    let endTime = notifycation.end == null ? '23:59' : notifycation.end ;
 
                     if (i % data.length == 0) {
-                        const time = data[0];
-                        const getTime = getNotifyTime(time);
-                        $("#start" + idx).val(getTime.get("from"));
-                        $("#end" + idx).val(getTime.get("to"));
+                        $("#start" + idx).val(fromTime);
+                        $("#end" + idx).val(endTime);
                     }
                 }
             },
@@ -158,7 +158,7 @@
 
     //Notification_settings status 값 불러오기
     function findNotification(tableName) {
-        let isChecked = "";
+        let notifycation = "";
         $.ajax({
             url: '<%=cp%>/getNotifyInfo',
             type: 'POST',
@@ -167,16 +167,13 @@
             cache: false,
             data: {"name": tableName},
             success: function (data) {
-                const status = data.status;
-                if (status == true) {
-                    isChecked = "checked";
-                }
+                notifycation = data;
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error)
             }
         })
-        return isChecked;
+        return notifycation;
     }
 
     //모니터링 on/off
@@ -197,29 +194,6 @@
             }
         })
         return monitoring;
-    }
-
-    // 설정된 알람시간 불러오기
-    function getNotifyTime(time) {
-        let map = new Map();
-        $.ajax({
-            url: '<%=cp%>/getNotifyInfo',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"name": time},
-            success: function (data) {
-                map.set("from", data.start);
-                map.set("to", data.end);
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                map.set("from", "00:00");
-                map.set("to", "23:59");
-                console.log(error);
-            }
-        })
-        return map;
     }
 
     //알림설정 값 저장

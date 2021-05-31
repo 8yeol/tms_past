@@ -209,7 +209,6 @@
     $(document).ready(function () {
         placeDiv();
         placeChange("p0");
-
     });
 
     //측정소 체크박스 전체 선택, 해제
@@ -253,19 +252,13 @@
                     const test = data[i];
                     const name = test.name;
                     const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
-                    const monitoring = test.monitoring;
-                    if (findSensor(name) != 1) {
-                        if (monitoring == true) {
-                            onoff = "checked";
-                        } else {
-                            onoff = "";
-                        }
-                    }
+                    onoff = data[i].monitoring ? "checked" : "";
+
                     const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
                         "<td style='padding-left:6px;'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
                         "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
                         "<td style='width: 40%;'>" + time + "</td>" +
-                        "<td style='width: 24%; padding:5px;'><label class='switch'>" +
+                        "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
                         "<input id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
                         "<span class='slider round'></span>" +
                         "</label></td>" +
@@ -582,7 +575,6 @@
                 return false;
 
             } else if (pattern.test(name) == true) {  //특수문자
-                console.log(name);
                 Swal.fire({
                     icon: 'warning',
                     title: '경고',
@@ -717,8 +709,9 @@
         const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
         var check = $("#" + id).is(":checked"); //true/false
         var name = $("#p" + num).attr("value"); //측정소 명
+        var sensorCheck = findSensor(name);
 
-        if (findSensor(name) == 2) { //등록된 센서가 없을때
+        if (sensorCheck == 2) { //등록된 센서가 없을때
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -727,7 +720,8 @@
             placeDiv();
             placeChange(document.getElementById('nickname').value);
             return;
-        } else if (findSensor(name) == 1) {
+
+        } else if (sensorCheck == 1) {
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -737,6 +731,7 @@
             placeChange(document.getElementById('nickname').value);
             return;
         }
+
         $.ajax({
             url: '<%=cp%>/MonitoringUpdate',
             type: 'POST',
@@ -746,7 +741,6 @@
                 "place": name, //측정소 명
                 "check": check //true/false
             }
-
         })
         if (check == true) {
             check = "ON";

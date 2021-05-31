@@ -898,24 +898,6 @@ public class AjaxController {
                 reference_value_settingRepository.save(reference);
                 inputLogSetting("'"+oldPlace + " - " + sensor.getNaming()+"'" + " 관리 기준 초기화", "설정", principal);
 
-
-                if(!oldPlace.equals("측정소 없음")) {
-                    //place 모니터링 체크
-                    Place placeCheck = placeRepository.findByName(oldPlace);
-
-                    List sensorList = placeCheck.getSensor();
-                    ReferenceValueSetting monitoringCheck;
-                    boolean flag = false;
-
-                    for (int i = 0; i < sensorList.size(); i++) {
-                        monitoringCheck = reference_value_settingRepository.findByName((String) sensorList.get(i));
-                        if (monitoringCheck.getMonitoring() == true) flag = true;
-                    }
-                    placeCheck.setMonitoring(flag);
-                    placeRepository.save(placeCheck);
-                }
-
-
             }
 
             //항목명 변경
@@ -1017,6 +999,25 @@ public class AjaxController {
                 inputLogSetting("'"+place + " - " + oldNaming+"'" + " 센서 등록", "설정", principal);
                 inputLogSetting("'"+oldNaming+"'"+" 센서의 측정소명 "+"'"+oldPlace+"'" + " > " + "'"+place+"'" + " 수정 ", "설정", principal);
             }
+
+            //수정된 이전 측정소 모니터링 체크후 False or True
+            if(!oldPlace.equals("측정소 없음")) {
+                //place 모니터링 체크
+                Place placeCheck = placeRepository.findByName(oldPlace);
+
+                List sensorList = placeCheck.getSensor();
+                boolean flag = false;
+
+                for (int i = 0; i < sensorList.size(); i++) {
+                    if (reference_value_settingRepository.findByName((String) sensorList.get(i)).getMonitoring() == true){
+                        flag = true;
+                        break;
+                    }
+                }
+                placeCheck.setMonitoring(flag);
+                placeRepository.save(placeCheck);
+            }
+
 
         }
         sensorListRepository.save(sensor);

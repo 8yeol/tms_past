@@ -493,19 +493,16 @@
                         cache: false,
                         data: {'name' : tableName},
                         success: function (data) {
-                            if(idx == 0 && $('#naming').val()  ==  strReplace(data.naming)) {
+                            if(idx == 0 && $('#naming').val()  ==  strReplace(data.naming))
                                 sensorNames.push(data.naming);
-                            }
-                            if(idx == 2 && $('#naming2').val()  ==   strReplace(data.naming)) {
+                            if(idx == 2 && $('#naming2').val()  ==   strReplace(data.naming))
                                 sensorNames2.push(data.naming);
-                            }
                         },
                         error: function (request, status, error) { // 결과 에러 콜백함수
                             console.log(error);
                         }
                     });
                 }
-
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
