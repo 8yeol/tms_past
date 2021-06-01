@@ -255,7 +255,7 @@
                     onoff = data[i].monitoring ? "checked" : "";
 
                     const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
-                        "<td style='padding-left:6px;'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
+                        "<td style='padding-left:6px;' onclick='event.cancelBubble=true'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
                         "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
                         "<td style='width: 40%;'>" + time + "</td>" +
                         "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
@@ -378,8 +378,6 @@
                 title: '경고',
                 text: '측정소를 체크해 주세요.'
             })
-            placeDiv();
-            placeChange(document.getElementById('nickname').value);
             return false;
         }
         if ($("input:checkbox[name=place]:checked").length != 1) {
@@ -685,7 +683,7 @@
                         async: false,
                         cache: false,
                         data: {"placeList": placeList, "flag": flag},
-                        success: function (data) {
+                        success: function () {
                             swal.fire({
                                 title: '삭제 완료',
                                 icon: 'success',
@@ -742,15 +740,9 @@
                 "check": check //true/false
             }
         })
-        if (check == true) {
-            check = "ON";
-        } else {
-            check = "OFF";
-        }
+        check = check == true?"ON":"OFF";
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(name, "", "monitor", check);
-        placeDiv();
-        placeChange(document.getElementById('nickname').value);
     }
 
     //측정항목 모니터링 onchange
@@ -761,7 +753,6 @@
         var tablename = name.value; //
         var check = $("#" + id).is(":checked");
         var pname = $("#pname").text();
-        var sname = findSensorCategory(tablename);
         $.ajax({
             url: '<%=cp%>/referenceMonitoringUpdate',
             type: 'POST',
@@ -778,7 +769,7 @@
             check = "OFF";
         }
 
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + sname + "' 모니터링 " + check + "", "설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(pname, naming, "monitor", check);
         placeDiv();
         placeChange(document.getElementById('nickname').value);
@@ -796,7 +787,7 @@
         var company = $("#" + companyname).val(); //사내기준 값
         var managename = "management" + num;
         var manage = $("#" + managename).val(); //관리기준 값
-        var value = name.value; //법적기준 값
+        var value = strReplace(name.value); //법적기준 값
         var pname = $("#pname").text();
         if (value == "") {
             value = "999";
@@ -873,8 +864,7 @@
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "legal", value);
-        placeDiv();
-        placeChange(document.getElementById('nickname').value);
+        name.value=value;
     }
 
     //company onchange
@@ -887,7 +877,7 @@
         var legal = $("#" + legalname).val(); //법적기준 값
         var managename = "management" + num;
         var manage = $("#" + managename).val(); //관리기준 값
-        var value = name.value;
+        var value = strReplace(name.value);
         var pname = $("#pname").text();
         if (value == "") {
             value = "999";
@@ -964,8 +954,7 @@
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 사내 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "company", value);
-        placeDiv();
-        placeChange(document.getElementById('nickname').value);
+        name.value = value;
     }
 
     //management onchange
@@ -978,12 +967,11 @@
         var legal = $("#" + legalname).val(); //법적기준 값
         var companyname = "company" + num;
         var company = $("#" + companyname).val(); //사내기준 값
-        var value = name.value; //관리기준
+        var value = strReplace(name.value); //관리기준
         var pname = $("#pname").text();
         if (value == "") {
             value = "999";
         } else {
-
             if (isNaN(value) == true) {
 
                 Swal.fire({
@@ -1045,8 +1033,7 @@
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 관리 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "manage", value);
-        placeDiv();
-        placeChange(document.getElementById('nickname').value);
+        name.value = value;
     }
 
     //데이터 변경시 팝업창
@@ -1078,9 +1065,7 @@
 
     //Modal FadeIn FadeOut
     function fade(Modal) {
-        Modal.finish();
-        Modal.fadeIn(300);
-        Modal.delay(2000).fadeOut(300);
+        Modal.finish().fadeIn(300).delay(2000).fadeOut(300);
     }
 
 

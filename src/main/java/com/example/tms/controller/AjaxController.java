@@ -148,7 +148,6 @@ public class AjaxController {
     @RequestMapping(value = "/referenceMonitoringUpdate")
     public void referenceMonitoringUpdate(@RequestParam("place") String name, @RequestParam("sensor") String tablename, Principal principal) {
         //측정항목 업데이트
-        Member member = memberRepository.findById(principal.getName());
         ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
         reference.setMonitoring(!reference.getMonitoring());
         reference_value_settingRepository.save(reference);

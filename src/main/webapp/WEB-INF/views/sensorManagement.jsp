@@ -593,8 +593,5 @@
         })
     }
 
-    //모든 공백 제거
-    function strReplace(str){
-        return str.replace(/(\s*)/g, "");
-    }
+
 </script>
