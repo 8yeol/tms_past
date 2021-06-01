@@ -277,6 +277,11 @@
 
     //측정소 변경
     function placeChange(name) {
+     if(document.getElementById(name)==null){
+         $("#items").empty(); //div items 비우기
+         $("#p_monitoring").empty(); //div p_monitoring 비우기
+         return;
+     }
         const place = $("#" + name).attr("value"); // 측정소1 입력
         $('#placeDiv tr').css('color', 'black'); //텍스트 색상 제거
         var x = document.getElementById(name);
