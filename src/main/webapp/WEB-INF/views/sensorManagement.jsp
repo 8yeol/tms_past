@@ -413,8 +413,8 @@
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor:'#198754',
-            confirmButtonText: '설정값 초기화',
-            cancelButtonText: '설정값 유지'
+            confirmButtonText: '설정값 <a class="sign"></a> 초기화',
+            cancelButtonText: '설정값 <a class="sign"></a> 유지'
         }).then((result) => {
             if (result.isConfirmed) {
                 $('input[name=isValueDelete]').val('delete');

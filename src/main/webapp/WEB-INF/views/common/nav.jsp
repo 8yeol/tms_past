@@ -199,10 +199,10 @@
     }
 
     @media (max-width: 990px) {
-        .swal2-popup{width: 48rem;}
+        .swal2-popup{width: 50rem !important;}
         #swal2-content{font-size: 2rem;}
         #swal2-title{font-size: 3rem;}
-        .swal2-actions button{width: 230px;font-size: 2rem!important;height:80px; }
+        .swal2-actions button{width: 300px;font-size: 2rem!important; }
 
         #desktop{
             display: none;

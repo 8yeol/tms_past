@@ -666,8 +666,8 @@
                     showCancelButton: true,
                     confirmButtonColor: 'red',
                     cancelButtonColor: 'gray',
-                    confirmButtonText: '포함된 센서 삭제',
-                    cancelButtonText: '측정소만 삭제'
+                    confirmButtonText: '포함된 센서<a class="sign"></a> 삭제',
+                    cancelButtonText: '측정소만<a class="sign"></a> 삭제'
                 }).then((result) => {
                     let flag;
 
