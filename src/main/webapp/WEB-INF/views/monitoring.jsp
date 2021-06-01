@@ -8,12 +8,7 @@
     pageContext.setAttribute("cn", "\n");
     String cp = request.getContextPath();
 %>
-
-<link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
-<script src="static/js/vue.min.js"></script>
-<script src="static/js/apexcharts.min.js"></script>
-<script src="static/js/vue-apexcharts.js"></script>
-<script src="static/js/jquery.dataTables.min.js"></script>
+>
 <script src="static/js/moment.min.js"></script>
 
 <style>
@@ -29,27 +24,20 @@
         padding-left: 2px; margin-top: 10px;
     }
 
-    .border-right {
-        border-right-style: solid;
-        border-right-color: #a9a9a9;
-        border-right-width: 1px;
-    }
-
     .add-bg-color {
         background-color: #97bef8;
         color: #fff;
     }
 
-    .m-l {
-        margin-left: 50px;
-    }
 
     tbody tr:hover{
         cursor: pointer;
     }
+
     .place_border{
         box-shadow: 0 0 2px 0 #2295DB inset;
     }
+
     .standardParent {
         border: 5px solid #2295DB;
         border-top-left-radius: 20px;
@@ -57,9 +45,11 @@
         background-color: #2295DB;
         color: white;
     }
+
     .standardDiv{
         text-align: center;
     }
+
     .titleDiv{
         background-color: #2295DB;
         color: white;
@@ -105,17 +95,10 @@
             padding-top: 1rem;
             font-size: 1rem;
         }
-        .fs-6{
-            padding-top: 0.45rem;
-            padding-left: 0.25rem;
-        }
 
         .row table tr{
             margin: auto;
             font-size: 0.8rem;
-        }
-        .svg-inline--fa{
-            font-size: 0.6rem;
         }
         .text-end {
             font-size: 0.25rem;

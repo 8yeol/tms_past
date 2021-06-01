@@ -23,7 +23,6 @@
 <script src="static/js/common/common.js"></script>
 <script src="static/js/timepicker.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
-<script src="static/js/common/common.js"></script>
 
 <style>
     .border-bottom-custom {
