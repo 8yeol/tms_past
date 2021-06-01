@@ -546,43 +546,8 @@ public class AjaxController {
                 jsonArray.add(subObj);
             }
         }
-        System.out.println(jsonArray);
         return jsonArray;
     }
-
-//    @RequestMapping(value="/getPlaceSensor2")
-//    public Object getPlaceSensor2(String place) {
-//        List<String> placeName = placeRepository.findByName(place).getSensor();
-//        JSONArray jsonArray = new JSONArray();
-//        for(int i=0; i<placeName.size(); i++){
-//            JSONObject subObj = new JSONObject();
-//            boolean monitoring = reference_value_settingRepository.findByName(placeName.get(i)).getMonitoring();
-//            if(monitoring){ //monitoring true
-//                try{
-//                    Sensor recentData = sensorCustomRepository.getSensorRecent(placeName.get(i));
-//                    subObj.put("value", recentData.getValue());
-//                    subObj.put("up_time", recentData.getUp_time());
-//                    subObj.put("status", recentData.isStatus());
-//                }catch (Exception e){
-//                    return null;
-//                }
-//                try {
-//                    Sensor beforeData = sensorCustomRepository.getSensorBeforeData(placeName.get(i));
-//                    subObj.put("beforeValue", beforeData.getValue());
-//                }catch (Exception e){
-//                    subObj.put("beforeValue", 0);
-//                }
-//                ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(placeName.get(i));
-//                subObj.put("naming", sensorInfo.getNaming());
-//                subObj.put("legalStandard", sensorInfo.getLegalStandard());
-//                subObj.put("companyStandard", sensorInfo.getCompanyStandard());
-//                subObj.put("managementStandard", sensorInfo.getManagementStandard());
-//                subObj.put("name", placeName.get(i));
-//                jsonArray.add(subObj);
-//            }
-//        }
-//        return jsonArray;
-//    }
 
     /**
      * 센서의 최근 전 값 조회 (limit:2) -> 조회한 결과 중 2번째 데이터 리턴

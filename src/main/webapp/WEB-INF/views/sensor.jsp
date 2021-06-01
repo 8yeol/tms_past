@@ -163,7 +163,7 @@
             </div>
             <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
                 <div class="d-flex justify-content-end">
-                    <span class="fs-7 mb-2" >업데이트 : <a id="update"></a></span>
+                    <span class="fs-7 mb-2" id="update">업데이트 : </span>
                 </div>
                 <span class="fs-4 fw-bold d-flex justify-content-center titleSpan" id="title"></span>
                 <div id="place_table" style="margin:0 10px 0;">
@@ -180,6 +180,9 @@
                         </tr>
                         <thead>
                         <tbody id="place-tbody-table">
+                            <tr>
+                                <td colspan="6">Data Loading</td>
+                            </tr>
                         <%--script--%>
                         </tbody>
                     </table>
@@ -206,20 +209,22 @@
                 <%-- 차트의 데이터 테이블 --%>
                 <div class="row ms-2 bg-white" style="padding-top: 15px;">
                     <div class="col">
-                        <div class="d-flex fw-bold pos-a align-self-end">
-                            <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 :</div>
-                            <div id="standard_text" style="color: #000;"></div>
+                        <div class="d-flex fw-bold pos-a align-self-end" id="sensor-standard">
+<%--                            <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 :</div>--%>
+<%--                            <div id="standard_text" style="color: #000;">Data Loading</div>--%>
                         </div>
                         <%-- 차트의 데이터 테이블 --%>
+                        <div class="col-md-12" style="position: relative">
                         <table id="sensor-table" class="table table-striped table-bordered table-hover text-center no-footer dataTable">
-                            <thead>
+                            <%--<thead>
                             <tr>
                                 <th width="35%">측정시간</th>
                                 <th width="30%">측정 값</th>
                                 <th width="35%">관리 등급</th>
                             </tr>
-                            </thead>
+                            </thead>--%>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -362,15 +367,6 @@
                             $('#update').text(moment(recentData[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                         }
                     }
-                    // for (var i = 0; i < place_data.length; i++) {
-                        // 측정소의 센서별로 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
-                        // var recentData = getSensorRecent(place_data[i].name)
-                        // if(place_data[i].up_time != recentData.up_time){
-                        //     place_data[i].value = recentData.value;
-                        //     place_data[i].up_time = recentData.up_time;
-                        //     $('#update').text(moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss'));
-                        // }
-                    // }
                     draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
                     interval1 = setTimeout(interval_getData, 5000);
                 }, 0); //setTimeout
@@ -584,26 +580,6 @@
         return result;
     }
 
-    /**
-     * 센서의 직전 데이터 리턴
-     */
-    function getSensorBeforeData(sensor) {
-        let result = new Array();
-        $.ajax({
-            url: '<%=cp%>/getSensorBeforeData',
-            dataType: 'json',
-            data: {"sensor": sensor},
-            async: false,
-            success: function (data) { // from ~ to 또는 to-minute ~ nowData 또는 from ~ from+minute 데이터 조회
-                result.push({up_time: data.up_time, value: data.value});
-            },
-            error: function (e) {
-                // 조회 결과 없을 때 return [];
-            }
-        }); //ajax
-        return result;
-    }
-
 
     /**
      * 센서의 최근 데이터 리턴
@@ -648,27 +624,6 @@
         return result;
     }
 
-    /**
-     *  센서의 기준값, 모니터링, 한글명 리턴
-     */
-    function getSensorInfo(sensor) {
-        let result;
-        $.ajax({
-            url:'<%=cp%>/getSensorInfo',
-            dataType: 'json',
-            data: {"sensor": sensor},
-            async: false,
-            success: function (data) {
-                result = data;
-            },
-            error: function (e) {
-                /* 결과가 존재하지 않을 경우 센서명만 전달 */
-                result = {"name": sensor, "naming": sensor,
-                    "legalStandard": 999, "companyStandard": 999, "managementStandard": 999, "power": "off"}
-            }
-        });
-        return result;
-    }
 
     /**
      * 센서의 최근 1시간 / 24시간 데이터 리턴
@@ -959,6 +914,8 @@
      * 센서 테이블 생성 (하단 테이블)
      */
     function draw_sensor_table(sensor_data_list, sensor_data) {
+        $('#sensor-table').append('<thead><td>측정 시간</td><td>측정 값</td><td>관리 등급</td></thead>');
+        $('#sensor-standard').append('<div style="color: #000;  margin-right:5px">법적/사내/관리 기준 :</div><div id="standard_text" style="color: #000;"></div>');
         $("#sensor-table").DataTable().clear();
         $("#sensor-table").DataTable().destroy();
         if(sensor_data_list == null){

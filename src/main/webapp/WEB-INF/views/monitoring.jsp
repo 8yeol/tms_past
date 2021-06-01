@@ -237,7 +237,26 @@
             </div>
         </div>
         <div class="row table" id="place_table" style="margin: 0 auto">
-
+            <div class="'col-md-12 mb-3 mt-2 place_border">
+                <div class="m-2">
+                    <table class='table table-bordered table-hover text-center mt-1'>
+                        <thead>
+                            <tr class="add-bg-color">
+                                <th width=28%'>항목</th>
+                                <th width=17%'>법적기준</th>
+                                <th width=17%'>사내기준</th>
+                                <th width=17%'>관리기준</th>
+                                <th width=21%'>실시간</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5">Loding Data</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -371,6 +390,9 @@
                     "</tr>" +
                     "</thead>"+
                     "<tbody id='sensor-table-"+i+"'>"+
+                        "<tr>" +
+                        "<td colspan='4'></td>" +
+                        "</tr>" +
                     "</tbody>" +
                     "</table>" +
                     "</div>");
@@ -412,71 +434,6 @@
             },
             error: function (e) {
                 result = false;
-            }
-        });
-        return result;
-    }
-
-    /**
-     * 센서의 최근 데이터 리턴
-     */
-    function getSensorRecent(sensor) {
-        let result;
-        $.ajax({
-            url: '<%=cp%>/getSensorRecent',
-            dataType: 'json',
-            data: {"sensor": sensor},
-            async: false,
-            success: function (data) {
-                result = data;
-            },
-            error: function (e) {
-                result = {value: null, status: false, up_time: null};
-            }
-        });
-        return result;
-    }
-
-    /**
-     * 센서의 직전 데이터 리턴
-     */
-    function getSensorBeforeData(sensor) {
-        let result;
-        $.ajax({
-            url: '<%=cp%>/getSensorBeforeData',
-            dataType: 'json',
-            data: {"sensor": sensor},
-            async: false,
-            success: function (data) { // from ~ to 또는 to-minute ~ now 또는 from ~ from+minute 데이터 조회
-                result = ({up_time: moment(data.up_time).format('YYYY-MM-DD HH:mm:ss'), value: data.value});
-            },
-            error: function (e) {
-                return [];
-            }
-        }); //ajax
-        return result;
-    }
-
-    /**
-     * 센서의 기준값, 모니터링, 한글명 리턴
-     */
-    function getSensorInfo(sensor) {
-        let result;
-        $.ajax({
-            url: '<%=cp%>/getSensorInfo',
-            dataType: 'json',
-            data: {"sensor": sensor},
-            async: false,
-            success: function (data) {
-                result = data;
-            },
-            error: function (e) {
-                // console.log("getSensorInfo Error");
-                /* 결과가 존재하지 않을 경우 센서명만 전달 */
-                result = {
-                    "name": sensor, "naming": sensor,
-                    "legalStandard": 999, "companyStandard": 999, "managementStandard": 999, "power": "off"
-                }
             }
         });
         return result;
