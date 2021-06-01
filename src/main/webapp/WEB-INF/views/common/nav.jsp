@@ -16,8 +16,15 @@
 %>
 
 <style>
+    @font-face {
+        font-family: notoSansKR;
+
+        src: url("static/fonts/NotoSansKR-Regular.otf");
+    }
+
     body {
         background-color: #EDF2F8;
+        font-family : notoSansKR;
     }
 
 

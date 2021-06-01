@@ -22,12 +22,6 @@
 
 <style>
 
-    .dd {
-        text-align-last: center;
-        width: 150px;
-        height: 30px;
-    }
-
     .label {
         width: 100px;
         font-size: 1.3rem;
@@ -54,15 +48,15 @@
         cursor: pointer;
         *cursor: hand;
         color: #333 !important;
-        border: 0px solid transparent;
-        border-radius: 50px;
+        border: 0px solid transparent !important;
+        border-radius: 50px !important;
     }
 
     .dataTables_wrapper .dataTables_paginate .paginate_button.current,
     .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
         color: #fff !important;
-        border: 0px;
-        background: #97bef8;
+        border: 0px !important;
+        background: #97bef8 !important;
     }
 
     .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
@@ -77,8 +71,8 @@
 
     .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
         color: white !important;
-        border: 0px;
-        background: #254069;
+        border: 0px !important;
+        background: #254069 !important;
     }
 
     .dataTables_wrapper .dataTables_paginate .paginate_button:active {
@@ -107,11 +101,6 @@
     .inputText2{
         width: 223px;
         padding-left: 20px;
-    }
-    .inputColor{
-        background-color:  rgba(239, 239, 239, 0.3);
-        border: 2px solid rgba(118,118,118,0.3);
-        color: #545454;
     }
 
     .label{

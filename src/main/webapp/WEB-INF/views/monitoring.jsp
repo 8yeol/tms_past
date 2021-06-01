@@ -8,7 +8,6 @@
     pageContext.setAttribute("cn", "\n");
     String cp = request.getContextPath();
 %>
->
 <script src="static/js/moment.min.js"></script>
 
 <style>
@@ -29,15 +28,12 @@
         color: #fff;
     }
 
-
     tbody tr:hover{
         cursor: pointer;
     }
-
     .place_border{
         box-shadow: 0 0 2px 0 #2295DB inset;
     }
-
     .standardParent {
         border: 5px solid #2295DB;
         border-top-left-radius: 20px;
@@ -45,11 +41,9 @@
         background-color: #2295DB;
         color: white;
     }
-
     .standardDiv{
         text-align: center;
     }
-
     .titleDiv{
         background-color: #2295DB;
         color: white;
@@ -95,10 +89,17 @@
             padding-top: 1rem;
             font-size: 1rem;
         }
+        .fs-6{
+            padding-top: 0.45rem;
+            padding-left: 0.25rem;
+        }
 
         .row table tr{
             margin: auto;
             font-size: 0.8rem;
+        }
+        .svg-inline--fa{
+            font-size: 0.6rem;
         }
         .text-end {
             font-size: 0.25rem;

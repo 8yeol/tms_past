@@ -30,7 +30,7 @@
 
     /* 데이터테이블 */
     table.dataTable {
-        width-100% !important;
+        width:100% !important;
     }
 
     .toolbar {
