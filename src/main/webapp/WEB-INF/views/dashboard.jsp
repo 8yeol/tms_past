@@ -472,81 +472,35 @@
         $("#caution").empty();
         $("#warning").empty();
         $("#danger").empty();
+
         $.ajax({
-            url: '<%=cp%>/getMonitoringSensorOn',
-            type: 'POST',
+            url: '<%=cp%>/getExcessSensor',
             dataType: 'json',
             async: false,
-            cache: false,
-            data: {},
             success: function (data) {
-                if(data.length==0){
-                    $("#normal").append("<h5>가동중인 센서가 없습니다.</h5>");
-                    $("#caution").append("<h5>가동중인 센서가 없습니다.</h5>");
-                    $("#warning").append("<h5>가동중인 센서가 없습니다.</h5>");
-                    $("#danger").append("<h5>가동중인 센서가 없습니다.</h5>");
-                } else{
-                    for (let i = 0; i < data.length; i++) {
-                        let tableName = data[i].name;
-                        $.ajax({
-                            url: '<%=cp%>/getSensorRecent',
-                            dataType: 'json',
-                            data: {"sensor": tableName},
-                            async: false,
-                            success: function (data) {
-                                const now = moment();
-                                const up_time = moment(new Date(data.up_time), 'YYYY-MM-DD HH:mm:ss');
-                                const minutes = moment.duration(now.diff(up_time)).asMinutes();
-                                const value = (data.value).toFixed(2);
-                                let place; //측정소 명
-                                if (minutes <= 5) {
-                                    $.ajax({
-                                        url: '<%=cp%>/getSensorInfo',
-                                        dataType: 'json',
-                                        data: {"sensor": tableName},
-                                        async: false,
-                                        success: function (data) {
-                                            $.ajax({
-                                                url: 'getPlaceName',
-                                                dataType: 'text',
-                                                data: {"tableName": tableName},
-                                                async: false,
-                                                success: function (data) {
-                                                    place = data;
-                                                },
-                                                error: function (request, status, error) {
-                                                    console.log(error)
-                                                }
-                                            });
+                const arr = data.excess;
 
-                                            if (value > data.legalStandard) {
-                                                $("#danger").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
-                                            } else if (value > data.companyStandard) {
-                                                $("#warning").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
-                                            } else if (value > data.managementStandard) {
-                                                $("#caution").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
-                                            } else {
-                                                $("#normal").append("<h5>" + place + " - " + data.naming + " [" + value + "] </h5>");
-                                            }
-                                        },
-                                        error: function (request, status, error) {
-                                            console.log(error)
-                                        }
-                                    });
-                                }
-                            },
-                            error: function (request, status, error) {
-                                console.log(error)
-                            }
-                        });
+                for(let i=0; i<arr.length; i++){
+                    const excess = arr[i].classification;
+                    const place = arr[i].place;
+                    const naming = arr[i].naming;
+                    const value = arr[i].value;
+
+                    if(excess == "danger" ){
+                        $("#danger").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                    }else if(excess == "warning"){
+                        $("#warning").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                    }else if(excess == "caution"){
+                        $("#caution").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                    }else if(excess == "normal"){
+                        $("#normal").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
                     }
                 }
             },
             error: function (request, status, error) {
                 console.log(error)
             }
-        })
-        $("#excess_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
+        });
     }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

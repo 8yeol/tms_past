@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SensorListRepository extends MongoRepository<SensorList, ObjectId> {
     List<SensorList> findByPlace(String place);
-    String findByTableName(String tableName);
+    SensorList findByTableName(String tableName);
     SensorList findByTableName(String tableName,String Null);
     void deleteByTableName(String tableName);
 }

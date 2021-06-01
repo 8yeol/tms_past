@@ -234,14 +234,48 @@ public class AjaxController {
         return mongoQuary.getNotificationList(from, to);
     }
 
-    /**
-     * 등록된 전체 센서 리스트중, 모니터링 On 설정된 센서 리스트 불러오기
-     *
-     * @return 모니터링 on 설정된 센서 리스트
-     */
-    @RequestMapping(value = "/getMonitoringSensorOn", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getMonitoringSensorOn() {
-        return reference_value_settingRepository.findByMonitoringIsTrue();
+    @RequestMapping(value = "/getExcessSensor", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getExcessSensor() {
+        List<ReferenceValueSetting> monitoringOn = reference_value_settingRepository.findByMonitoringIsTrue();
+
+        JSONObject excess = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        for(ReferenceValueSetting referenceValueSetting : monitoringOn){
+
+            Sensor sensor = sensorCustomRepository.getSensorRecent(referenceValueSetting.getName());
+
+            Date now = new Date();
+
+            long diff = sensor.getUp_time().getTime() - now.getTime();
+            long sec = diff / 60000;
+
+            if(sec <= 5){
+                float value = sensor.getValue();
+
+                SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());;
+
+                JSONObject jsonObject = new JSONObject();
+
+                if( value > referenceValueSetting.getLegalStandard() ){
+                    jsonObject.put("classification", "danger");
+                }else if( value > referenceValueSetting.getCompanyStandard() ){
+                    jsonObject.put("classification", "warning");
+                }else if( value > referenceValueSetting.getManagementStandard() ){
+                    jsonObject.put("classification", "caution");
+                }else{
+                    jsonObject.put("classification", "normal");
+                }
+
+                jsonObject.put("place", sensorInfo.getPlace());
+                jsonObject.put("naming", sensorInfo.getNaming());
+                jsonObject.put("value", String.format("%.2f", value));
+                jsonArray.add(jsonObject);
+
+                excess.put("excess", jsonArray);
+            }
+        }
+
+        return excess;
     }
 
     /**
@@ -479,7 +513,7 @@ public class AjaxController {
      * @return 센서
      */
     @RequestMapping(value = "/getSensorManagementId")
-    public String getSensorManagementId(@RequestParam("name") String tablename) {
+    public SensorList getSensorManagementId(@RequestParam("name") String tablename) {
         return sensorListRepository.findByTableName(tablename);
     }
 
