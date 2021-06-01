@@ -381,17 +381,21 @@
      * 센서의 모니터링 True인 최근, 직전, 기준 데이터 등을 리턴
      */
     function getPlaceData(place) {
-        const getData = new Array();
+        // const getData = new Array();
+        var getData = null;
         $.ajax({  //측정소의 센서명을 구함
-            url: '<%=cp%>/getPlaceSensor',
+            <%--url: '<%=cp%>/getPlaceSensor',--%>
+            url: '<%=cp%>/getPlaceSensor2',
             dataType: 'json',
             data: {"place": place},
             async: false,
             success: function (data) {
-                $.each(data, function (index, item) { //item (센서명) : 센서의 최근데이터, 이전 데이터, 정보들을 구함
+                getData = data;
+                console.log(data);
+                /*$.each(data, function (index, item) { //item (센서명) : 센서의 최근데이터, 이전 데이터, 정보들을 구함
                     var monitoring = getMonitoring(item); //모니터링 On
                     if(monitoring === 'true'){
-                        /* 센서의 최근 데이터 */
+                        /!* 센서의 최근 데이터 *!/
                         var recentData = getSensorRecent(item);
                         if(recentData.value == null){ //null 일때
                             return null;
@@ -405,7 +409,7 @@
                                 sensorUptime = moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss');
                             }
                         }
-                        /* 센서의 이전 데이터 */
+                        /!* 센서의 이전 데이터 *!/
                         var beforeData = getSensorBeforeData(item); //sensor 이전 데이터
                         if(beforeData == undefined){
                             beforeValue = null;
@@ -413,7 +417,7 @@
                             beforeValue = beforeData.value.toFixed(2);
                         }
 
-                        /* 센서의 정보 데이터 */
+                        /!* 센서의 정보 데이터 *!/
                         var sensorInfo = getSensorInfo(item);
                         naming = sensorInfo.naming;
                         monitoring = sensorInfo.monitoring; //모니터링 정보
@@ -441,7 +445,7 @@
                     }else{ //모니터링 False 인 경우
                         getData.push([]);
                     }
-                });
+                });*/
             },
             error: function () {
             }

@@ -15,6 +15,8 @@ import com.example.tms.service.MemberService;
 import com.example.tms.service.RankManagementService;
 import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -111,6 +113,29 @@ public class AjaxController {
         return placeRepository.findByName(place).getSensor();
     }
 
+
+    @RequestMapping(value="/getPlaceSensor2")
+    public Object getPlaceSensor2(String place) {
+        JSONObject obj = new JSONObject();
+        List<String> placeName = placeRepository.findByName(place).getSensor();
+        JSONArray jsonArray = new JSONArray();
+        for(int i=0; i<placeName.size(); i++){
+            JSONObject subObj = new JSONObject();
+            Sensor recentData = sensorCustomRepository.getSensorRecent(placeName.get(i));
+            Sensor beforeData = sensorCustomRepository.getSensorBeforeData(placeName.get(i));
+            ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(placeName.get(i));
+            subObj.put("value", recentData.getValue());
+            subObj.put("up_time", recentData.getUp_time());
+            subObj.put("name", placeName.get(i));
+            subObj.put("naming", sensorInfo.getNaming());
+            subObj.put("beforeData", beforeData.getValue());
+            subObj.put("legalStandard", sensorInfo.getLegalStandard());
+            subObj.put("companyStandard", sensorInfo.getCompanyStandard());
+            subObj.put("managementStandard", sensorInfo.getManagementStandard());
+            jsonArray.add(subObj);
+        }
+        return jsonArray;
+    }
     /**
      * 측정소 모니터링 업데이트
      *
