@@ -382,71 +382,14 @@
      * 센서의 모니터링 True인 최근, 직전, 기준 데이터 등을 리턴
      */
     function getPlaceData(place) {
-        // const getData = new Array();
         var getData = null;
         $.ajax({  //측정소의 센서명을 구함
-            <%--url: '<%=cp%>/getPlaceSensor',--%>
             url: '<%=cp%>/getPlaceSensor2',
             dataType: 'json',
             data: {"place": place},
             async: false,
             success: function (data) {
                 getData = data;
-                console.log(data);
-                /*$.each(data, function (index, item) { //item (센서명) : 센서의 최근데이터, 이전 데이터, 정보들을 구함
-                    var monitoring = getMonitoring(item); //모니터링 On
-                    if(monitoring === 'true'){
-                        /!* 센서의 최근 데이터 *!/
-                        var recentData = getSensorRecent(item);
-                        if(recentData.value == null){ //null 일때
-                            return null;
-                        }else{
-                            status = recentData.status; //센서의 상태
-                            if(status){ //양호
-                                sensorValue = recentData.value.toFixed(2);
-                                sensorUptime = moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss');
-                            }else{ //불량
-                                recentData.value = "-"; // "-" 출력(datatable)
-                                sensorUptime = moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss');
-                            }
-                        }
-                        /!* 센서의 이전 데이터 *!/
-                        var beforeData = getSensorBeforeData(item); //sensor 이전 데이터
-                        if(beforeData == undefined){
-                            beforeValue = null;
-                        }else{ // 최근데이터 존재하지 않을 경우 "-" 처리
-                            beforeValue = beforeData.value.toFixed(2);
-                        }
-
-                        /!* 센서의 정보 데이터 *!/
-                        var sensorInfo = getSensorInfo(item);
-                        naming = sensorInfo.naming;
-                        monitoring = sensorInfo.monitoring; //모니터링 정보
-                        legalStandard = sensorInfo.legalStandard;
-                        companyStandard = sensorInfo.companyStandard;
-                        managementStandard = sensorInfo.managementStandard;
-
-                        if(recentData.value > legalStandard){
-                            standard = "법적기준 초과";
-                        }else if(recentData.value > companyStandard){
-                            standard = "사내기준 초과";
-                        }else if(recentData.value > managementStandard){
-                            standard = "관리기준 초과";
-                        }else if(recentData.value <= managementStandard){
-                            standard = "정상";
-                        }else{
-                            standard = "-";
-                        }
-                        getData.push({
-                            naming: naming, name:item,
-                            value:sensorValue, up_time: sensorUptime,
-                            legalStandard: legalStandard, companyStandard: companyStandard, managementStandard: managementStandard,
-                            beforeValue: beforeValue, monitoring: monitoring, standard : standard, status: status
-                        });
-                    }else{ //모니터링 False 인 경우
-                        getData.push([]);
-                    }
-                });*/
             },
             error: function () {
             }

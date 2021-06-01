@@ -354,15 +354,23 @@
             clearTimeout(interval1);
             if(place_data.length != 0){
                 setTimeout(function interval_getData() { // $초 마다 업데이트
-                    for (var i = 0; i < place_data.length; i++) {
-                        // 측정소의 센서별로 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
-                        var recentData = getSensorRecent(place_data[i].name)
-                        if(place_data[i].up_time != recentData.up_time){
-                            place_data[i].value = recentData.value;
-                            place_data[i].up_time = recentData.up_time;
-                            $('#update').text(moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss'));
+                    var recentData = getSensorRecent2(place_name);
+                    for(var i=0; i<recentData.length; i++){
+                        if(place_data[i].up_time != recentData[i].up_time){
+                            place_data[i].value = recentData[i].value;
+                            place_data[i].up_time = recentData[i].up_time;
+                            $('#update').text(moment(recentData[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                         }
                     }
+                    // for (var i = 0; i < place_data.length; i++) {
+                        // 측정소의 센서별로 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
+                        // var recentData = getSensorRecent(place_data[i].name)
+                        // if(place_data[i].up_time != recentData.up_time){
+                        //     place_data[i].value = recentData.value;
+                        //     place_data[i].up_time = recentData.up_time;
+                        //     $('#update').text(moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss'));
+                        // }
+                    // }
                     draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
                     interval1 = setTimeout(interval_getData, 5000);
                 }, 0); //setTimeout
@@ -393,7 +401,6 @@
         if(sensor_data.length!=0){
             let sensor_name = sensor_data.name;
             let sensor_time_length;
-
             if(document.getElementsByName("chartRadio")[0].checked){ //최근 1시간
                 sensor_time_length = 1;
             }else{ //최근 24시간
@@ -484,20 +491,23 @@
      *  측정소명으로 센서데이터 (최근데이터, 직전데이터, 기준값 등) 리턴
      */
     function getPlaceData(place){
-        let result = new Array();
+        // let result = new Array();
+        var result = null;
         $.ajax({
-            url:'<%=cp%>/getPlaceSensor',
+            <%--url:'<%=cp%>/getPlaceSensor',--%>
+            url:'<%=cp%>/getPlaceSensor2',
             dataType: 'json',
             data:  {"place": place},
             async: false,
             success: function (data) {
-                $.each(data, function (index, item) { //센서명(item) 으로 최근데이터, 직전데이터, 기준값 등
+                result = data;
+               /* $.each(data, function (index, item) { //센서명(item) 으로 최근데이터, 직전데이터, 기준값 등
 
                     let getSensorDataValue = getSensorData(item);
                     if(getSensorDataValue != null){
                         result.push(getSensorDataValue);
                     }
-                })
+                })*/
             },
             error: function (e) {
             }
@@ -610,6 +620,26 @@
                 async: false,
                 success: function (data) {
                     result = {value: data.value, status: data.status, up_time:data.up_time};
+                },
+                error: function (e) {
+                }
+            });
+        }
+        return result;
+    }
+
+    function getSensorRecent2(place){
+        var result = null;
+        if(place==undefined){
+            result = null;
+        } else{
+            $.ajax({
+                url:'<%=cp%>/getSensorRecent2',
+                dataType: 'JSON',
+                data:  {"place": place},
+                async: false,
+                success: function (data) {
+                    result = data;
                 },
                 error: function (e) {
                 }
