@@ -181,7 +181,7 @@
                         <thead>
                         <tbody id="place-tbody-table">
                             <tr>
-                                <td colspan="6">Data Loading</td>
+                                <td colspan="6"> </td>
                             </tr>
                         <%--script--%>
                         </tbody>
@@ -295,7 +295,6 @@
         debounce2 = setTimeout(() => {
             getPlaceAllSensorData(place_name); //측정소의 항목 전체 데이터
         }, 300)
-
 
     });
 
@@ -497,13 +496,6 @@
             async: false,
             success: function (data) {
                 result = data;
-               /* $.each(data, function (index, item) { //센서명(item) 으로 최근데이터, 직전데이터, 기준값 등
-
-                    let getSensorDataValue = getSensorData(item);
-                    if(getSensorDataValue != null){
-                        result.push(getSensorDataValue);
-                    }
-                })*/
             },
             error: function (e) {
             }
