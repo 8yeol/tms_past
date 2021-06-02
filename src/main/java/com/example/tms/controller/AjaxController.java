@@ -113,6 +113,11 @@ public class AjaxController {
         return placeRepository.findByName(place).getSensor();
     }
 
+    /**
+     * 해당 측정소명의 모니터링 True 인 센서를 받아와 해당 센서의 최근, 이전, 정보들을 읽어오기 위한 메소드
+     * @param place 측정소 이름
+     * @return 센서의 최근, 이전, 정보
+     */
 
     @RequestMapping(value="/getPlaceSensor2")
     public Object getPlaceSensor2(String place) {
@@ -527,6 +532,11 @@ public class AjaxController {
         return sensorCustomRepository.getSensorRecent(sensor);
     }
 
+    /**
+     * 측정소의 모든 센서 최근 값 조회
+     * @param place 측정소명
+     * @return 모든 센서의 최근 값
+     */
     @RequestMapping(value = "/getSensorRecent2")
     public Object getSensorRecent2(@RequestParam("place") String place) {
         List<String> placeName = placeRepository.findByName(place).getSensor();

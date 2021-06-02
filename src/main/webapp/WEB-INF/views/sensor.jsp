@@ -163,7 +163,7 @@
             </div>
             <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
                 <div class="d-flex justify-content-end">
-                    <span class="fs-7 mb-2" id="update">업데이트 : </span>
+                    <span class="fs-7 mb-2" id="update"></span>
                 </div>
                 <span class="fs-4 fw-bold d-flex justify-content-center titleSpan" id="title"></span>
                 <div id="place_table" style="margin:0 10px 0;">
@@ -364,7 +364,6 @@
                         if(place_data[i].up_time != recentData[i].up_time){
                             place_data[i].value = recentData[i].value;
                             place_data[i].up_time = recentData[i].up_time;
-                            $('#update').text(moment(recentData[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                         }
                     }
                     draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
@@ -411,6 +410,7 @@
                 setTimeout(function interval_getData2() { //$초 마다 업데이트
                     // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
                     var sensor_data_list_recent = getSensorRecent(sensor_name);
+                    $('#update').text("업데이트 : "+moment(sensor_data_list_recent.up_time).format('YYYY-MM-DD HH:mm:ss'));
                     if(sensor_data_list_recent.length != 0) { // null = []
                         if (sensor_data_list[sensor_data_list.length - 1].x != sensor_data_list_recent.up_time) {
                             sensor_data_list.push({
@@ -914,6 +914,8 @@
      * 센서 테이블 생성 (하단 테이블)
      */
     function draw_sensor_table(sensor_data_list, sensor_data) {
+        $('#sensor-table').empty();
+        $('#sensor-standard').empty();
         $('#sensor-table').append('<thead><td>측정 시간</td><td>측정 값</td><td>관리 등급</td></thead>');
         $('#sensor-standard').append('<div style="color: #000;  margin-right:5px">법적/사내/관리 기준 :</div><div id="standard_text" style="color: #000;"></div>');
         $("#sensor-table").DataTable().clear();
