@@ -242,12 +242,14 @@
     //측정소 목록 불러오기
     function placeDiv() {
         $("#placeDiv").empty();
+        const data = placeDiv1();
         var onoff = "";
-        $.ajax({
-            url: '<%=cp%>/getPlaceList',
-            async: false,
-            cache: false,
-            success: function (data) {
+
+        <%--$.ajax({--%>
+        <%--    url: '<%=cp%>/getPlaceList',--%>
+        <%--    async: false,--%>
+        <%--    cache: false,--%>
+        <%--    success: function (data) {--%>
                 for (let i = 0; i < data.length; i++) {
                     const test = data[i];
                     const name = test.name;
@@ -268,11 +270,30 @@
                     onoff = "";
                 }
 
+        <%--    },--%>
+        <%--    error: function (request, status, error) { // 결과 에러 콜백함수--%>
+        <%--        console.log(error)--%>
+        <%--    }--%>
+        <%--})--%>
+    }
+    function placeDiv1() {
+        var getData = null;
+        $.ajax({
+            url: '<%=cp%>/getPlaceList2',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            success: function (data) {
+                getData = data;
             },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
+            error : function () {
+
             }
-        })
+        });
+        return getData;
+    }
+    function placeChange1(name){
+
     }
 
     //측정소 변경

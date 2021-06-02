@@ -91,6 +91,24 @@ public class AjaxController {
         return placeRepository.findAll();
     }
 
+    @RequestMapping(value = "/getPlaceList2")
+    public Object getPlaceList2() {
+        List<Place> placeName = placeRepository.findAll();
+        JSONArray array = new JSONArray();
+        for(int i = 0; i <placeName.size(); i++){
+            JSONObject obj = new JSONObject();
+            Place place = placeRepository.findByName(placeName.get(i).getName());
+            obj.put("name", place.getName());
+            obj.put("location", place.getLocation());
+            obj.put("admin", place.getAdmin());
+            obj.put("tel", place.getTel());
+            obj.put("monitoring", place.getMonitoring());
+            obj.put("up_time", place.getUp_time());
+            array.add(obj);
+        }
+        return array;
+    }
+
     /**
      * 측정소에 맵핑된 센서 테이블 정보를 읽어오기 위한 메소드
      *
