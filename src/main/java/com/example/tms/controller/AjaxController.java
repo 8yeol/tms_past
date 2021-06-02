@@ -18,6 +18,7 @@ import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -132,6 +133,47 @@ public class AjaxController {
     }
 
     /**
+     * 해당 측정소 명에 등록된 센서 리스트 목록
+     *
+     * @param placeName 측정소명
+     * @return 측정소의 모든 알람설정값 + 센서 네이밍
+     */
+    @RequestMapping(value = "/getNotificationValue")
+    public List getNotificationValue(String placeName) {
+        List notificationList = new ArrayList();
+
+        Place place = placeRepository.findByName(placeName);
+
+        for (int i =0 ; i<place.getSensor().size(); i++){
+            if(notification_settingsRepository.findByName(place.getSensor().get(i)+"") ==null){
+                notificationList.add(sensorListRepository.findByTableName(place.getSensor().get(i)+""));
+                return notificationList;
+            }
+            NotificationSettings notification = notification_settingsRepository.findByName(place.getSensor().get(i)+"");
+            notification.setName(notification.getName()+","+sensorListRepository.findByTableName(place.getSensor().get(i)+"").getNaming());
+            notificationList.add(notification);
+        }
+        return notificationList;
+    }
+
+    /**
+     * 해당 측정소명의 모니터링 True 인 센서를 받아와 해당 센서의 최근, 이전, 정보들을 읽어오기 위한 메소드
+     * @param place 측정소 이름
+     * @return 센서의 최근, 이전, 정보
+     */
+
+    @RequestMapping(value="/getPlaceSensorValue")
+    public Object getPlaceSensorValue(String place) {
+        List<String> placeName = placeRepository.findByName(place).getSensor();
+        List valueList = new ArrayList();
+
+        for(int i=0; i<placeName.size(); i++)
+                valueList.add(reference_value_settingRepository.findByName(placeName.get(i)));
+
+        return valueList;
+    }
+
+    /**
      * 해당 측정소명의 모니터링 True 인 센서를 받아와 해당 센서의 최근, 이전, 정보들을 읽어오기 위한 메소드
      * @param place 측정소 이름
      * @return 센서의 최근, 이전, 정보
@@ -177,7 +219,7 @@ public class AjaxController {
      * @param check 모니터링 true/false
      */
     @RequestMapping(value = "/MonitoringUpdate")
-    public void MonitoringUpdate(@RequestParam("place") String name, @RequestParam("check") Boolean check, Principal principal) {
+    public Date MonitoringUpdate(@RequestParam("place") String name, @RequestParam("check") Boolean check, Principal principal) {
         Place place = placeRepository.findByName(name);
         List<String> sensorlist = placeRepository.findByName(name).getSensor();
         ObjectId id = place.get_id();
@@ -195,6 +237,7 @@ public class AjaxController {
             }
         }
         placeRepository.save(savePlace);
+        return savePlace.getUp_time();
     }
 
     /**
@@ -538,6 +581,18 @@ public class AjaxController {
     @RequestMapping(value = "/getSensorManagementId")
     public SensorList getSensorManagementId(@RequestParam("name") String tablename) {
         return sensorListRepository.findByTableName(tablename);
+    }
+
+    /**
+     * 테이블 명으로 센서 가져오기
+     *
+     * @param place 측정소명
+     * @return 센서의 네이밍 리스트
+     */
+    @RequestMapping(value = "/findSensorList")
+    public List findSensorCategoryList(@RequestParam("place") String place) {
+        List<SensorList> list = sensorListRepository.findByPlace(place);
+        return list;
     }
 
     /**

@@ -261,7 +261,7 @@
                         "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
                         "<td style='width: 40%;'>" + time + "</td>" +
                         "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
-                        "<input id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
+                        "<input class='placeCheckbox' id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
                         "<span class='slider round'></span>" +
                         "</label></td>" +
                         "</tr>";
@@ -323,37 +323,35 @@
         $('#items').append(none); //센서 없을때
 
         $.ajax({
-            url: '<%=cp%>/getPlaceSensor',
+            url: '<%=cp%>/getPlaceSensorValue',
             type: 'POST',
             dataType: 'json',
             async: false,
             cache: false,
             data: {"place": place},
             success: function (data) {
+
                 if (data.length != 0) {
+                    const value = findReference(data); //naming, name, legal, company, management //map이 비어있을때
                     $("#items").empty(); //센서 있을때 div 비움
                     for (let i = 0; i < data.length; i++) {
-                        const tableName = data[i]; //측정소에 저장된 센서명---> 이걸 reference컬렉션에서 가져와야함.
-                        const value = findReference(tableName); //naming, name, legal, company, management //map이 비어있을때
                         if (value.size != 0) {
                             const innerHtml =
                                 "<td style='width: 2%;'></td>" +
-                                "<td style='width:18%;'><span id='naming" + i + "' >" + value.get("naming") + "</span></td>" +
-                                "<td style='width:25%;'><span id='name" + i + "'>" + value.get("name") + "</span></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='legal' type='text' id='legal" + i + "' value='" + value.get("legal") + "' onchange='legalupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='company' type='text' id='company" + i + "' value='" + value.get("company") + "' onchange='companyupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='management' type='text' id='management" + i + "' value='" + value.get("management") + "' onchange='managementupdate(this)'></td>" +
+                                "<td style='width:18%;'><span id='naming" + i + "' >" + data[i].naming + "</span></td>" +
+                                "<td style='width:25%;'><span id='name" + i + "'>" + data[i].name + "</span></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch'>" +
-                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + value.get("name") + "' " + value.get("monitoring") + " onchange='monitoringupdate(this)'>" +
+                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" +data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +
                                 "</label></td>";
-
                             const elem = document.createElement('tr');
                             elem.setAttribute('style', 'border-bottom: silver solid 2px;');
                             elem.setAttribute('id', 'tr' + i);
                             elem.innerHTML = innerHtml;
                             document.getElementById('items').append(elem);
-
 
                         } else {
                             if (i == 0) {
@@ -444,102 +442,47 @@
 
     //센서 유무 파악(모니터링 버튼 기능 제어)
     function findSensor(name) {
-        var have = 0;
-        var a = 0;
-        var b = 0;
+        let str = "Off"
         $.ajax({
-            url: '<%=cp%>/getPlaceSensor',
+            url: '<%=cp%>/getPlaceSensorValue',
             type: 'POST',
             dataType: 'json',
             async: false,
             cache: false,
             data: {"place": name},
             success: function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    if (findSensorOn(data[i]) == 0) {
-                        a++;
-                    } else {
-                        b++;
-                    }
-                }
-                if (a != 0) {//모니터링 OFF가 있을때  a는 0이 아닐때
-                    if (a == data.length) { //모니터링 전부 OFF일때
-                        have = 1; //
-                    }
-                } else if (b == 0) {//모니터링 OFF가 없고 a=0이고 b=0일때 ->센서가 없을때
-                    have = 2;
-                } else { //모니터링 on이 하나라도 있을때
-                    have = 0;
+                if(data.length==0)str = "none";
+                for(i=0; i<data.length;i++){
+                   if(data[i].monitoring == true) str = "On";
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error)
             }
         })
-        return have;
+        return str;
     }
 
-    //센서 모니터링 true/false 구분분
-    function findSensorOn(name) {
-        var onnum = "";
-        $.ajax({
-            url: '<%=cp%>/getSensorInfo',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"sensor": name},
-            success: function (data) {
-                if (data.monitoring == true) {
-                    onnum = 1;
-                } else {
-                    onnum = 0;
-                }
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-                onnum = 0;
-            }
-        })
-        return onnum;
-    }
+    //센서값 가공
+    function findReference(data) {
+        for(i = 0 ; i<data.length; i++) {
 
-    //센서 기준값 불러오기
-    function findReference(tableName) {
-        let map = new Map();
-        $.ajax({
-            url: '<%=cp%>/getSensorInfo',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"sensor": tableName},
-            success: function (data) {
-                var monitoring = "";
-                if (data.legalStandard == 999) {
-                    data.legalStandard = "";
-                }
-                if (data.companyStandard == 999) {
-                    data.companyStandard = "";
-                }
-                if (data.managementStandard == 999) {
-                    data.managementStandard = "";
-                }
-                if (data.monitoring == true) {
-                    monitoring = "checked";
-                }
-                map.set("naming", data.naming);
-                map.set("name", data.name);
-                map.set("legal", data.legalStandard);
-                map.set("company", data.companyStandard);
-                map.set("management", data.managementStandard);
-                map.set("monitoring", monitoring);
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error);
+            if (data[i].legalStandard == 999) {
+                data[i].legalStandard = "";
             }
-        })
-        return map;
+            if (data[i].companyStandard == 999) {
+                data[i].companyStandard = "";
+            }
+            if (data[i].managementStandard == 999) {
+                data[i].managementStandard = "";
+            }
+            if (data[i].monitoring == true) {
+                data[i].monitoring = "checked";
+            }else{
+                data[i].monitoring = "";
+            }
+        }
+        return data;
     }
 
     //측정소 추가
@@ -733,26 +676,26 @@
         const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
         var check = $("#" + id).is(":checked"); //true/false
         var name = $("#p" + num).attr("value"); //측정소 명
+        var timeTd = $("#" + id).parent().parent().prev();
         var sensorCheck = findSensor(name);
 
-        if (sensorCheck == 2) { //등록된 센서가 없을때
+
+        if (sensorCheck == 'none') { //등록된 센서가 없을때
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
                 text: '등록된 센서가 없어 모니터링 기능을 사용할 수 없습니다.'
             })
-            placeDiv();
-            placeChange(document.getElementById('nickname').value);
+            $("#" + id).prop("checked", false);
             return;
 
-        } else if (sensorCheck == 1) {
+        } else if (sensorCheck == "Off") {
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
                 text: '측정항목 모니터링이 전부 OFF 상태입니다.'
             })
-            placeDiv();
-            placeChange(document.getElementById('nickname').value);
+            $("#" + id).prop("checked", false);
             return;
         }
 
@@ -764,10 +707,16 @@
             data: {
                 "place": name, //측정소 명
                 "check": check //true/false
+            },
+            success: function (data) {
+                timeTd.html(moment(data).format('YYYY-MM-DD HH:mm:ss'));
+            },
+            error : function (err) {
+                console.log(err);
             }
         })
-        check = check == true?"ON":"OFF";
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + check + "", "설정");
+
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + sensorCheck + "", "설정");
         MultiSelecterModal(name, "", "monitor", check);
     }
 
@@ -795,10 +744,14 @@
             check = "OFF";
         }
 
+        let checkFlag = false;
+        if($("input[name=sensormonitor]").is(":checked") == true)  checkFlag = true;
+
+        if(checkFlag==false){
+         $('tr[value='+pname+']').find('.placeCheckbox').prop("checked", false);
+        }
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(pname, naming, "monitor", check);
-        placeDiv();
-        placeChange(document.getElementById('nickname').value);
     }
 
     //legal onchange

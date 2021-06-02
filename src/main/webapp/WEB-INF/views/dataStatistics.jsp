@@ -138,7 +138,7 @@
         $("#items").empty();
 
         $.ajax({
-            url: '<%=cp%>/getPlaceSensor',
+            url: '<%=cp%>/findSensorList',
             type: 'POST',
             dataType: 'json',
             async: false,
@@ -146,9 +146,7 @@
             data: {"place":place},
             success : function(data) {
                 for(let i=0;i<data.length;i++){
-                    const tableName = data[i];
-                    const category = findSensorCategory(tableName);
-                    const html = "<option value='"+tableName+"'>"+category+"</option>"
+                    const html = "<option value='"+data[i].tableName+"'>"+data[i].naming+"</option>"
                     $("#items").append(html);
                 }
             },

@@ -49,7 +49,7 @@
                 <div class="row bg-light border-bottom-custom">
 
                     <span class="fs-5 placeName" style="margin-bottom: 20px; display: inline-block; width: auto"
-                          id="place${status.index}">${place}</span>
+                          id="place${status.index}">${place.name}</span>
                     <button type="button" class="cancelBtn" onClick="cancel(${status.index})"><img
                             src="static/images/reload.png" width="22" height="22"></button>
 
@@ -82,17 +82,11 @@
 
     $(document).ready(function () {
         const placeLength = ${place.size()};
-
         //저장소 DIV 반복 생성
         for (let i = 0; i < placeLength; i++) {
-            const monitoring = findPlace($("#place" + i).text());
-            if (monitoring == true) {
                 $("#noneDiv").empty();
                 document.getElementById("noneDiv").style = "";
                 placeMake($("#place" + i).text(), i);
-            } else {
-                $("#placeDiv" + i).empty();
-            }
         }
         for (let i = 0; i < placeLength; i++) {
             $(".example").timepicker();
@@ -104,6 +98,10 @@
     function placeMake(name, idx) {
         const place = name;
         const parentElem = $('#items' + idx);
+        let status ;
+        let tableName ;
+        let naming ;
+
         let innerHTMLTimePicker = "<div><span class=\"textSpanParent\">알림 시간</span></div>";
         innerHTMLTimePicker += "<div style='display: inline-flex; margin-top: 10px;'>";
         innerHTMLTimePicker += '<div><span class="textSpan" style="margin-right: 20px;">From </span>  <input style="background-color: white;"class="form-control example timePicker" name="start" type="text" id="start'+idx+'" readonly/></div>';
@@ -112,42 +110,48 @@
 
         $('#alarm' + idx).append(innerHTMLTimePicker);
         $(".example").timepicker();
-
         $.ajax({
-            url: '<%=cp%>/getPlaceSensor',
+            url: '<%=cp%>/getNotificationValue',
             type: 'POST',
             dataType: 'json',
             async: false,
             cache: false,
-            data: {"place": place},
+            data: {"placeName": place},
             success: function (data) {
-                for (let i = 0; i < data.length; i++) {
-                    const tableName = data[i];
-                    const category = findSensorCategory(tableName);
-                    let notifycation = findNotification(tableName);
-                    let status = notifycation.status ? 'checked' : '';
+                    for (let i = 0; i < data.length; i++) {
 
-                    const innerHtml =
-                        "<label style='font-size: 18px; ' class='form-check-label' id='" + tableName + "'for='" + tableName + "'>" + category + "</label>" +
-                        "<label class='switch'>" +
-                        "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + status + ">" +
-                        "<div class='slider round'></div>" +
-                        "</label>"
+                        if(data[0].start != null) { //알림설정값 있다면
+                            status = data[i].status ? 'checked' : '';
+                            tableName = data[i].name.split(",")[0]
+                            naming = data[i].name.split(",")[1]
+                            fromTime = data[0].start;
+                            endTime = data[0].end;
+                        }else{
+                            status = '';
+                            tableName = data[i].tableName;
+                            naming = data[i].naming;
+                            fromTime = '00:00';
+                            endTime = '23:59';
+                        }
 
-                    const elem = document.createElement('div');
-                    elem.setAttribute('class', 'label-form');
-                    elem.setAttribute('style', 'margin-top:5px')
-                    elem.innerHTML = innerHtml;
-                    parentElem.append(elem);
+                        const innerHtml =
+                            "<label style='font-size: 18px; ' class='form-check-label' id='" + tableName + "'for='" + tableName + "'>" + naming + "</label>" +
+                            "<label class='switch'>" +
+                            "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + status + ">" +
+                            "<div class='slider round'></div>" +
+                            "</label>"
 
-                    let fromTime = notifycation.start == null ? '00:00' : notifycation.start ;
-                    let endTime = notifycation.end == null ? '23:59' : notifycation.end ;
-
-                    if (i % data.length == 0) {
-                        $("#start" + idx).val(fromTime);
-                        $("#end" + idx).val(endTime);
+                        const elem = document.createElement('div');
+                        elem.setAttribute('class', 'label-form');
+                        elem.setAttribute('style', 'margin-top:5px')
+                        elem.innerHTML = innerHtml;
+                        parentElem.append(elem);
                     }
-                }
+
+                    $("#start" + idx).val(fromTime);
+                    $("#end" + idx).val(endTime);
+
+
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
@@ -173,26 +177,6 @@
             }
         })
         return notifycation;
-    }
-
-    //모니터링 on/off
-    function findPlace(tableName) {
-
-        $.ajax({
-            url: '<%=cp%>/getPlace',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"place": tableName},
-            success: function (data) {
-                monitoring = data.monitoring;
-            },
-            error: function (request, status, error) { // 결과 에러 콜백함수
-                console.log(error)
-            }
-        })
-        return monitoring;
     }
 
     //알림설정 값 저장

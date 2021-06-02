@@ -237,14 +237,7 @@ public class MainController {
      */
     @RequestMapping(value = "/alarmManagement")
     public String alarmManagement(Model model) {
-        List<Place> places = placeRepository.findAll();
-        List<String> placeList = new ArrayList<>();
-
-        for (Place place : places) {
-            placeList.add(place.getName());
-        }
-
-        model.addAttribute("place", placeList);
+        model.addAttribute("place", placeRepository.findByMonitoringIsTrue());
 
         return "alarmManagement";
     }

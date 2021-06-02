@@ -525,7 +525,7 @@
         $("#items").empty();
 
         $.ajax({
-            url: '<%=cp%>/getPlaceSensor',
+            url: '<%=cp%>/findSensorList',
             type: 'POST',
             dataType: 'json',
             async: false,
@@ -533,12 +533,10 @@
             data: {"place":place},
             success : function(data) {
                 for(let i=0;i<data.length;i++){
-                    const tableName = data[i];
-                    const category = findSensorCategory(tableName);
 
                     const innerHtml = "<div class='form-check mb-2'>" +
-                        "<input class='form-check-input' type='radio' name='item' id='"+tableName+"' value='"+tableName+"' onclick='changeItem()'>" +
-                        "<label class='form-check-label' for='"+tableName+"'>"+category+"</label>" +
+                        "<input class='form-check-input' type='radio' name='item' id='"+data[i].tableName+"' value='"+data[i].tableName+"' onclick='changeItem()'>" +
+                        "<label class='form-check-label' for='"+data[i].tableName+"'>"+data[i].naming+"</label>" +
                         "</div>"
 
                     const elem = document.createElement('div');
@@ -554,6 +552,7 @@
             }
         })
     }
+
 
     function changeItem(){
         search(1);
@@ -582,11 +581,6 @@
             reset();
             return false;
         }
-
-        const place = $("#place").val();
-        const category = findSensorCategory(item);
-        $('#title').text(place + " - " + category);
-
         if(date_start==""||date_end==""){
             Swal.fire({
                 icon: 'warning',
@@ -595,6 +589,11 @@
             })
             return false;
         }
+
+        const place = $("#place").val();
+        const category = findSensorCategory(item);
+        $('#title').text(place + " - " + category);
+
 
         const reference = getReferenceValue(item);
         $.ajax({
@@ -609,6 +608,7 @@
                 "off":off
             },
             success : function(data) {
+                console.log(data[0]);
                 if(data.length==0){
                     Swal.fire({
                         icon: 'warning',
