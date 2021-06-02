@@ -616,6 +616,49 @@
         return result;
     }
 
+    /**
+     * 센서의 직전 데이터 리턴
+     */
+    function getSensorBeforeData(sensor) {
+        let result = new Array();
+        $.ajax({
+            url: '<%=cp%>/getSensorBeforeData',
+            dataType: 'json',
+            data: {"sensor": sensor},
+            async: false,
+            success: function (data) { // from ~ to 또는 to-minute ~ nowData 또는 from ~ from+minute 데이터 조회
+                result.push({up_time: data.up_time, value: data.value});
+            },
+            error: function (e) {
+                // 조회 결과 없을 때 return [];
+            }
+        }); //ajax
+        return result;
+    }
+
+    /**
+     *  센서의 기준값, 모니터링, 한글명 리턴
+     */
+    function getSensorInfo(sensor) {
+        let result;
+        $.ajax({
+            url:'<%=cp%>/getSensorInfo',
+            dataType: 'json',
+            data: {"sensor": sensor},
+            async: false,
+            success: function (data) {
+                result = data;
+            },
+            error: function (e) {
+                /* 결과가 존재하지 않을 경우 센서명만 전달 */
+                result = {"name": sensor, "naming": sensor,
+                    "legalStandard": 999, "companyStandard": 999, "managementStandard": 999, "power": "off"}
+            }
+        });
+        return result;
+    }
+
+
 
     /**
      * 센서의 최근 1시간 / 24시간 데이터 리턴
