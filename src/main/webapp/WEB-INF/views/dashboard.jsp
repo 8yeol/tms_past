@@ -94,14 +94,13 @@
     }
 
     @media all and (max-width: 989px) {
-        .center-position {left: 3%;}
+        .center-position {left: 18%;}
         .m-fs {font-size: 0.7rem !important;}
         .card-title {font-size:0.7rem !important;}
         .m-fs>div:nth-child(2)>p:nth-child(2) {font-size: 1.2rem;}
 
         h5 {font-size: 0.75rem;}
     }
-
 </style>
 
 <div class="container"  id="container">
@@ -110,11 +109,15 @@
     </div>
 
     <div class="row m-3 mt-3 bg-white ms-1" style="width: 98%; height: 370px; overflow: auto;">
-        <div class="row p-3 h-25 margin-l">
+        <div class="row p-3 margin-l">
             <div class="col fs-5 fw-bold">연간 배출량 추이 모니터링</div>
             <div class="col text-end">
-                <span class="small">마지막 업데이트 : <span class="fw-bold" id="integrated_update">업데이트 시간</span></span><br>
-                <span class="text-primary" style="font-size: 0.8rem"> * 매월 마지막 날 업데이트 됩니다.</span>
+                <c:choose>
+                    <c:when test="${not empty emissionSettingList}">
+                        <span class="small">마지막 업데이트 : <span class="fw-bold" id="integrated_update">업데이트 시간</span></span><br>
+                        <span class="text-primary" style="font-size: 0.8rem"> * 매월 마지막 날 업데이트 됩니다.</span>
+                    </c:when>
+                </c:choose>
             </div>
         </div>
 
@@ -139,7 +142,6 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-
                         <c:forEach var="emissionList" items="${emissionList}">
                             <c:set var="present" value="${emissionList.get(0)}"></c:set>
                             <c:set var="past" value="${emissionList.get(1)}"></c:set>
@@ -273,16 +275,20 @@
     </div>
 
     <div class="row mt-4 bg-light margin-l pb-4" style="width: 98%; margin: 0.2rem; height: 390px; overflow: auto;">
-        <div class="row p-3 h-25 margin-l">
+        <div class="row p-3 margin-l">
             <div class="col fs-5 fw-bold">
                 연간 배출량 누적 모니터링
             </div>
             <div class="col text-end">
-                <span class="small">마지막 업데이트 : <span class="fw-bold" id="accumulate_update">업데이트 시간</span></span><br>
-                <span class="text-primary" style="font-size: 0.8rem"> * 매일 자정 업데이트 됩니다.</span>
+                <c:choose>
+                    <c:when test="${not empty placeList}">
+                        <span class="small">마지막 업데이트 : <span class="fw-bold" id="accumulate_update">업데이트 시간</span></span><br>
+                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 자정 업데이트 됩니다.</span>
+                    </c:when>
+                </c:choose>
             </div>
         </div>
-        <div class="row pb-1 px-3 margin-l mt-3">
+        <div class="row pb-1 px-3 margin-l">
             <c:forEach items="${placeList}" var="placelist" varStatus="i">
                 <c:if test="${placeList.size() <= 3}">
                     <div class="col pt-1" id="div${i.index}">
@@ -353,8 +359,7 @@
             </c:if>
         </div>
 
-
-        <div class="row pt-3 text-center margin-l center-position m-3" style="width: auto;">
+        <div class="row text-center center-position" style="width: auto;">
             <div class="progress-info">
                 <div id="blue" class="align-self-center"></div> &emsp;0 ~ 50%
             </div>
@@ -501,8 +506,8 @@
                 console.log(error)
             }
         });
-        $("#excess_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
 
+        $("#excess_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
     }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

@@ -362,11 +362,12 @@
 
     function deleteModal(obj) {
         const tableName = $(obj).parent().parent().children().eq(3).html(); //-> tmsWP0001_NOX_01
+        const id = $(obj).parent().parent().children().eq(2).html();
 
         Swal.fire({
             icon: 'error',
-            title: '삭제',
-            text: '정말 삭제 하시겠습니까?',
+            title: '센서 삭제',
+            text: '\''+ id + '\' 센서를 삭제 하시겠습니까?',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             confirmButtonText: '삭제',
@@ -386,7 +387,7 @@
             cache: false,
             data: {tableName: tableName},
             success: function () {
-                customSwal('삭제 완료','삭제 되었습니다..');
+                customSwal('삭제 완료','삭제 되었습니다.');
                 setTimeout(function () {
                     location.reload();
                 }, 2000);

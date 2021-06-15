@@ -150,6 +150,7 @@
     #place_table tbody tr:hover{
         cursor: pointer;
     }
+
 </style>
 
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
@@ -167,7 +168,7 @@
                 </div>
                 <span class="fs-4 fw-bold d-flex justify-content-center titleSpan" id="title"></span>
                 <div id="place_table" style="margin:0 10px 0;">
-                    <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: .875em; margin-right: 10px;"> * 항목 클릭시 해당 항목의 상세 데이터로 하단의 차트/표 변경</span></div>
+                    <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: 0.8rem"> * 측정항목 클릭시 해당 항목의 상세 데이터로 하단의 차트/표가 변경됩니다.</span></div>
                     <table class="table table-bordered table-hover text-center">
                         <thead>
                         <tr>
@@ -191,19 +192,19 @@
                 <%-- 차트 --%>
                 <div class="row" style="margin-left: 1px; padding-bottom: 15px;">
                     <div class="col">
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex radio">
-                                <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px;"></span>
-                                <div class="align-self-end">
+                        <div class="justify-content-between" style="position: relative;">
+                            <div class="d-flex radio" style="width: 100%;">
+                                <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px; display: inline-block; width: 50%;"></span>
+                                <div class="align-self-end" style="width: 50%; text-align: right; margin-right: 15px;">
                                     <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
                                     <label for='hour'>&nbsp;최근 1시간</label> &emsp;
                                     <input class="form-check-input" type="radio" name="chartRadio" id="day">
                                     <label for="day">&nbsp;최근 24시간</label>
                                 </div>
                             </div>
-                            <span class="text-primary" style="font-size: .875em; margin-right: 10px;" id="textUpdate"> * 최근 1시간(실시간 업데이트)</span>
+                            <span class="text-primary me-2 align-self-end" style="font-size: 0.8rem; position: absolute; right: 15px;"> * 최근 1시간은 실시간, 최근 24시간은 5분평균 데이터로 실시간 업데이트됩니다.</span>
                         </div>
-                        <div id="chart" style=" margin-right: 10px;"></div>
+                        <div id="chart" style=" margin-right: 10px; margin-top: 20px;"></div>
                     </div>
                 </div>
                 <%-- 차트의 데이터 테이블 --%>
@@ -318,10 +319,10 @@
     $("input[name=chartRadio]").on('click' , function (){
         if(document.getElementsByName("chartRadio")[0].checked){ //최근 1시간 선택 시
             sensor_time_length = 1;
-            $('#textUpdate').text("* 최근 1시간(실시간 업데이트)");
+            //$('#textUpdate').text("* 최근 1시간(실시간 업데이트)");
         }else{ //최근 24시간 선택 시
             sensor_time_length = 24;
-            $('#textUpdate').text("* 최근 24시간(실시간 업데이트) - 5분 평균데이터");
+            //$('#textUpdate').text("* 최근 24시간(실시간 업데이트) - 5분 평균데이터");
             sensor_naming = $('#radio_text').text();
         }
         var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");

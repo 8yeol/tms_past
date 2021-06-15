@@ -135,7 +135,7 @@ public class DataInquiryRepository {
 
             long diff = (e_day.getTime()- s_day.getTime()) / (24*60*60*1000);
 
-            if(diff > 7){
+            if(diff >= 7){
                 item = "RM30_" + item;
             }else{
                 item = "RM05_" + item;
