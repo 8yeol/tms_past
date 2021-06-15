@@ -175,7 +175,7 @@
             </form>
             <div class="row">
                 <div class="col text-end">
-                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensor(0)" >센서 추가</button>
+                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensorCheck(0)" >센서 추가</button>
                 </div>
             </div>
         </div>
@@ -261,7 +261,7 @@
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" onclick="isValueDelete()">수정</button>
+                <button type="button" class="btn btn-success me-5" onclick="updateSensor()">수정</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
@@ -392,38 +392,35 @@
     }
 
 
-    function isValueDelete(){
-        if(strReplace($("input[name='naming2']").val()) == ''){
-            customSwal('경고','항목명을 선택 해주세요.');
-            return;
-        }
-        if($("#place2").val() == null){
-            customSwal('경고','측정소를 선택 해주세요.');
-            return;
-        }
+    function updateSensor(){
 
-        Swal.fire({
-            icon: 'warning',
-            title: '경고',
-            text: '센서의 설정값을 초기화 하시겠습니까?',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor:'#198754',
-            confirmButtonText: '설정값 <a class="sign"></a> 초기화',
-            cancelButtonText: '설정값 <a class="sign"></a> 유지'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $('input[name=isValueDelete]').val('delete');
-                    saveSensor(2);
-            }else if ( result.dismiss === Swal.DismissReason.cancel){
-                $('input[name=isValueDelete]').val('');
-                    saveSensor(2);
-            }
-        });
+        if(saveSensorCheck(2)) {
+            let form = $('#editForm').serialize();
+            let content = '센서 측정소가 수정 되었습니다.';
+            let title = '센서 수정';
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '센서의 설정값을 초기화 하시겠습니까?',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#198754',
+                confirmButtonText: '설정값 <a class="sign"></a> 초기화',
+                cancelButtonText: '설정값 <a class="sign"></a> 유지'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('input[name=isValueDelete]').val('delete');
+                    saveSensor(form,title,content);
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    $('input[name=isValueDelete]').val('');
+                    saveSensor(form,title,content);
+                }
+            });
+        }
     }
 
     //데이터 저장 후 페이지 새로고침
-    function saveSensor(idx) {
+    function saveSensorCheck(idx) {
         let form = "";
         let title = "";
         let content = "";
@@ -442,14 +439,12 @@
                 return;
             }
         }else if(idx == 2){
-            if($("#place2").val() == null){
-                $('input[name=isValueDelete]').val('');
-                customSwal('경고','측정소를 선택 해주세요.');
+            if(strReplace($("input[name='naming2']").val()) == ''){
+                customSwal('경고','항목명을 선택 해주세요.');
                 return;
             }
-            if($("input[name='naming2']").val() == ''){
-                $('input[name=isValueDelete]').val('');
-                customSwal('경고','항목명을 확인 해주세요.');
+            if($("#place2").val() == null){
+                customSwal('경고','측정소를 선택 해주세요.');
                 return;
             }
         }
@@ -465,8 +460,6 @@
         } else {
             $("#naming2").val( strReplace($("#naming2").val()));
             form = $('#editForm').serialize();
-            content = '센서 측정소가 수정 되었습니다.';
-            title = '센서 수정';
         }
 
         // 측정소 sensor 중복 검사
@@ -508,36 +501,43 @@
         if(sensorNames.length > 0) {
             $('#naming').focus();
             customSwal('항목명 중복', '해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
+            return false;
 
         }else if(sensorNames2.length > 0){
             $('#naming2').focus();
             customSwal('항목명 중복', '해당 측정소에 이미 등록된 항목명입니다. 항목명 수정 후 다시 등록해주세요.');
+            return false;
 
-        }else{
-            $.ajax({
-                url: '<%=cp%>/saveSensor',
-                type: 'POST',
-                async: false,
-                cache: false,
-                data: form,
-                success: function () {
-                    $('#editModal').modal('hide');
-                    Swal.fire({
-                        icon: 'success',
-                        title: title,
-                        text: content,
-                    })
-                    setTimeout(function () {
-                        location.reload();
-                    }, 1500);
-                },
-                error: function (request, status, error) { // 결과 에러 콜백함수
-                    console.log(error);
-                }
-            });
+        }else if(idx==0){
+            saveSensor(form,title,content);
+        }else if(idx==2){
+            return true;
         }
     }
 
+    function saveSensor(form,title,content){
+        $.ajax({
+            url: '<%=cp%>/saveSensor',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: form,
+            success: function () {
+                $('#editModal').modal('hide');
+                Swal.fire({
+                    icon: 'success',
+                    title: title,
+                    text: content,
+                })
+                setTimeout(function () {
+                    location.reload();
+                }, 1500);
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        });
+    }
 
     function changeTableName() {
         const tableName = $("#tableName").val();
