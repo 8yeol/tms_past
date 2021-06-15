@@ -354,8 +354,6 @@
 
     function deleteModal(obj) {
         const tableName = $(obj).parent().parent().children().eq(3).html(); //-> tmsWP0001_NOX_01
-        const place = $(obj).parent().parent().children().eq(5).html();
-        const sensor = $(obj).parent().parent().children().eq(1).html();
 
         Swal.fire({
             icon: 'error',
@@ -367,12 +365,12 @@
             cancelButtonText: '취소'
         }).then((result) => {
             if (result.isConfirmed) {
-                deleteSensor(tableName,place,sensor);
+                deleteSensor(tableName);
             }
         });
     }
 
-    function deleteSensor(tableName, place, sensor) {
+    function deleteSensor(tableName) {
         $.ajax({
             url: '<%=cp%>/deleteSensor',
             type: 'POST',
