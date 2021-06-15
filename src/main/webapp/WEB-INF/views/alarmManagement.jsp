@@ -120,7 +120,6 @@
             data: {"placeName": place},
             success: function (data) {
                     for (let i = 0; i < data.length; i++) {
-                        console.log(data[i]);
 
                         if(data[i].start != null) { //알림설정값 있다면
                             status = data[i].status ? 'checked' : '';

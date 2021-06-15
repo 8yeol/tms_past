@@ -501,6 +501,8 @@
                 console.log(error)
             }
         });
+        $("#excess_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
+
     }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
