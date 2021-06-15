@@ -23,6 +23,15 @@
 <script src="static/js/moment.min.js"></script>
 
 <style>
+    .swal2-close{
+        width: 30px;
+        height: 32px;
+        font-weight: bold;
+        border: 3px solid #db3535;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
     .MultiSelecterModal {
         width: auto;
         border-radius: 10px;
@@ -633,17 +642,21 @@
                     text: '해당 측정소의 센서도 삭제 하시겠습니까?',
                     icon: 'warning',
                     showCancelButton: true,
+                    showCloseButton: true,
                     confirmButtonColor: 'red',
                     cancelButtonColor: 'gray',
                     confirmButtonText: '포함된 센서<a class="sign"></a> 삭제',
                     cancelButtonText: '측정소만<a class="sign"></a> 삭제'
                 }).then((result) => {
+
                     let flag;
 
                     if (result.isConfirmed) {
                         flag = true;
-                    } else {
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
                         flag = false;
+                    }else{
+                        return false;
                     }
 
                     $.ajax({

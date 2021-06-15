@@ -21,7 +21,15 @@
 <script src="static/js/jquery.dataTables.min.js"></script>
 
 <style>
-
+    .swal2-close{
+        width: 30px;
+        height: 32px;
+        font-weight: bold;
+        border: 3px solid #db3535;
+        border-radius: 5px;
+        margin-top: 10px;
+        margin-right: 10px;
+    }
     .label {
         width: 100px;
         font-size: 1.3rem;
@@ -401,6 +409,7 @@
                 title: '경고',
                 text: '센서의 설정값을 초기화 하시겠습니까?',
                 showCancelButton: true,
+                showCloseButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#198754',
                 confirmButtonText: '설정값 <a class="sign"></a> 초기화',
@@ -415,6 +424,7 @@
                 }
             });
         }
+
     }
 
     //데이터 저장 후 페이지 새로고침
@@ -464,31 +474,16 @@
         const sensorNames = [];
         const sensorNames2 = [];
         $.ajax({
-            url: '<%=cp%>/getPlaceSensor',
+            url: '<%=cp%>/isNamingEquals',
             type: 'POST',
             async: false,
             cache: false,
             data: form,
             success: function (data) {
-                for(let i=0; i<data.length; i++){
-                    const tableName = data[i];
-                    $.ajax({
-                        url: '<%=cp%>/getSensorManagementId',
-                        type: 'POST',
-                        dataType: 'json',
-                        async: false,
-                        cache: false,
-                        data: {'name' : tableName},
-                        success: function (data) {
-                            if(idx == 0 && $('#naming').val()  ==  strReplace(data.naming))
-                                sensorNames.push(data.naming);
-                            if(idx == 2 && $('#naming2').val()  ==   strReplace(data.naming))
-                                sensorNames2.push(data.naming);
-                        },
-                        error: function (request, status, error) { // 결과 에러 콜백함수
-                            console.log(error);
-                        }
-                    });
+                if(data == 'addFalse'){
+                    sensorNames.push(data.naming);
+                }else if(data == 'editFalse'){
+                    sensorNames2.push(data.naming);
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수

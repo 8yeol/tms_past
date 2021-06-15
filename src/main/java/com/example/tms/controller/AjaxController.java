@@ -133,6 +133,33 @@ public class AjaxController {
     }
 
     /**
+     * 측정소명과 센서명으로 중복체크
+     *
+     * @param place 측정소명
+     * @param naming 중복 체크할 센서명  --추가
+     * @param naming2 중복 체크할 센서명  -- 수정
+     * @return 해당 측정소에 등록된 센서 값
+     */
+    @RequestMapping(value = "/isNamingEquals")
+    public String isNamingEquals(String place,@RequestParam(value = "naming", required = false)String naming,@RequestParam(value = "naming2", required = false)String naming2) {
+        Place placeObject = placeRepository.findByName(place);
+
+        if(null == naming2){  //추가
+            for (int i =0; i< placeObject.getSensor().size(); i++) {
+                if (sensorListRepository.findByTableName(placeObject.getSensor().get(i)+"").getNaming().equals(naming))
+                    return "addFalse";
+            }
+        }
+        if(null == naming){  //수정
+            for (int i =0; i< placeObject.getSensor().size(); i++) {
+                if (sensorListRepository.findByTableName(placeObject.getSensor().get(i)+"").getNaming().equals(naming2))
+                    return "editFalse";
+            }
+        }
+        return "true";  //중복없음
+    }
+
+    /**
      * 측정소 명으로 센서찾기 -> 센서 테이블명으로 알림설정값 리턴
      *
      * @param placeName 측정소명
