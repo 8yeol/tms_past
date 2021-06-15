@@ -137,6 +137,9 @@ public class MainController {
         }
         model.addAttribute("standard",standard);
 
+        if(principal == null){
+            return "redirect:logout";
+        }
         Member member = memberRepository.findById(principal.getName());
         model.addAttribute("member", member);
 
