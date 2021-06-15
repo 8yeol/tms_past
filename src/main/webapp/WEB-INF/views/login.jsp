@@ -60,7 +60,7 @@
                     <img src="static/images/logo.png" class="emoji">
                     <form method='post' name='loginFrom' value='admin'>
                         <div class="">
-                            <input class="form-control" type='text' name='username' value='' id="id" placeholder="아이디"  onkeyup="enterkey()">
+                            <input class="form-control" type='text' name='username' value='' id="id" placeholder="아이디"  onkeyup="enterkey()" autocomplete="off">
                         </div>
                         <div class="">
                             <input class="form-control" type='password' name='password' value='' id="password" placeholder="비밀번호" onkeyup="enterkey()">

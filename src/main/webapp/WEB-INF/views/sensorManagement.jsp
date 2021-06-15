@@ -121,6 +121,13 @@
     @media all and  (max-width:989px) {
         .label {text-align: center; margin: 0 !important;}
         .m-margin {margin: 15px 0 15px 35px !important;}
+        .mediaText{width: 80%;}
+    }
+    @media all and  (max-width:789px) {
+        .mediaText{width: 70%;}
+    }
+    @media all and  (max-width:589px) {
+        .mediaText{width: 50%;}
     }
 </style>
 <div class="container" id="container">
@@ -152,15 +159,15 @@
                         <div class="row p-5">
                             <div class=" inputLayout">
                                 <label class="col-xs-3 label" style="margin-right: 16px">관리 ID</label>
-                                <input type="text" name="managementId" id="m_id" class="inputDisabled" readonly>
+                                <input type="text" class="mediaText" name="managementId" id="m_id" class="inputDisabled" readonly>
                             </div>
                             <div class="inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">분류</label>
-                                <input type="text" name="classification" id="m_class" class="inputDisabled" readonly>
+                                <input type="text" class="mediaText" name="classification" id="m_class" class="inputDisabled" readonly>
                             </div>
                             <div class=" inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
-                                <input type="text" name="naming" id="naming"  autocomplete="off">
+                                <input type="text" class="mediaText" name="naming" id="naming"  autocomplete="off">
                             </div>
                         </div>
                     </div>

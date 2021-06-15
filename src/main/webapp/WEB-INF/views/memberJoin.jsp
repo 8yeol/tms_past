@@ -67,7 +67,7 @@
 
             <div class="mb-3 parentDiv">
                 <label for="id" class="col-form-label label">아이디</label>
-                    <input type="text" class="form-control input" id="id" onkeyup="idCheckMsg()">
+                    <input type="text" class="form-control input" id="id" onkeyup="idCheckMsg()"  autocomplete="off">
 
                 <div class="col mt-1" style="height: 10px">
                     <span class="checkText" id="idText"></span>
@@ -105,7 +105,7 @@
             <div class="mb-3  parentDiv">
                 <label for="name" class="col-form-label label">이름</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control input" id="name">
+                    <input type="text" class="form-control input" id="name"  autocomplete="off">
                 </div>
             </div>
 
@@ -126,14 +126,14 @@
             <div class="mb-3  parentDiv">
                 <label for="department" class="col-form-label label">부서명</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control input" id="department">
+                    <input type="text" class="form-control input" id="department" autocomplete="off">
                 </div>
             </div>
 
             <div class="mb-3  parentDiv">
                 <label for="grade" class="col-form-label label">직급</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <input type="text" class="form-control input" id="grade">
+                    <input type="text" class="form-control input" id="grade"  autocomplete="off">
                 </div>
             </div>
 

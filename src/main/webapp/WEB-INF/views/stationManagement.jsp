@@ -43,8 +43,8 @@
     }
 
     @media all and (max-width: 1024px) {
-        #station1{margin-top: 20px;}
-        #station2{margin-top: 20px;}
+        #station1{margin-top: 20px !important;padding-bottom: 30px !important;}
+        #station2{margin-top: 30px !important;padding-bottom: 30px !important;}
         #btnDiv{float: right;}
     }
 </style>
