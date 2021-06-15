@@ -124,22 +124,22 @@
                                                                                                name="name"
                                                                                                id="na1"
                                                                                                maxlength="10"
-                                                                                               style="border: 1px solid black;">
+                                                                                               style="border: 1px solid black;" autocomplete="off">
 
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
                                                                           id="lo1"
-                                                                          style="border: 1px solid black;">
+                                                                          style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
                                                                              id="ad1"
-                                                                             style="border: 1px solid black;">
+                                                                             style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>연락처</span><input type="text" class="modal-input" name="tel"
                                                                            id="te1"
-                                                                           style="border: 1px solid black;">
+                                                                           style="border: 1px solid black;" autocomplete="off">
                     </div>
                 </form>
             </div>
@@ -164,22 +164,22 @@
                                                                                                name="name"
                                                                                                id="na2"
                                                                                                maxlength='10'
-                                                                                               style="border: 1px solid black;">
+                                                                                               style="border: 1px solid black;" autocomplete="off">
 
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>위치</span><input type="text" class="modal-input"
                                                                           name="location"
                                                                           id="lo2"
-                                                                          style="border: 1px solid black;">
+                                                                          style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>담당자 명</span><input type="text" class="modal-input"
                                                                              name="admin"
                                                                              id="ad2"
-                                                                             style="border: 1px solid black;">
+                                                                             style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;"><span>연락처</span><input type="text" class="modal-input" name="tel"
                                                                            id="te2"
-                                                                           style="border: 1px solid black;">
+                                                                           style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <input type="hidden" name="hiddenCode"> <!--수정 판별할 데이터 -->
                 </form>
@@ -340,9 +340,9 @@
                                 "<td style='width: 2%;'></td>" +
                                 "<td style='width:18%;'><span id='naming" + i + "' >" + data[i].naming + "</span></td>" +
                                 "<td style='width:25%;'><span id='name" + i + "'>" + data[i].name + "</span></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input'  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input'  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input'  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch'>" +
                                 "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" +data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +

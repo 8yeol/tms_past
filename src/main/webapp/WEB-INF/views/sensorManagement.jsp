@@ -160,7 +160,7 @@
                             </div>
                             <div class=" inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
-                                <input type="text" name="naming" id="naming">
+                                <input type="text" name="naming" id="naming"  autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -217,7 +217,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="naming2" class="inputText p-1" id="naming2">
+                            <input type="text" name="naming2" class="inputText p-1" id="naming2"  autocomplete="off">
                         </div>
                     </div>
                     <div class="row mt-3">

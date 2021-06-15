@@ -57,21 +57,21 @@
             <div class="mb-3">
                 <label for="id" class="col-sm-2 col-form-label" style="display: inline-block;">아이디</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="text" class="form-control" value="${member.id}" id="id" readonly>
+                    <input type="text" class="form-control" value="${member.id}" id="id" readonly  autocomplete="off">
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="name" class="col-sm-2 col-form-label" style="display: inline-block;">이름</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="text" class="form-control" value="${member.name}" id="name" readonly>
+                    <input type="text" class="form-control" value="${member.name}" id="name" readonly  autocomplete="off">
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="email" class="col-sm-2 col-form-label" style="display: inline-block;">이메일</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="text" class="form-control" value="${member.email}" id="email" onkeyup="autoEmail('email',this.value)" readonly>
+                    <input type="text" class="form-control" value="${member.email}" id="email" onkeyup="autoEmail('email',this.value)" readonly >
                 </div>
             </div>
 
@@ -85,14 +85,14 @@
             <div class="mb-3">
                 <label for="department" class="col-sm-2 col-form-label" style="display: inline-block;">부서명</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="text" class="form-control" value="${member.department}" id="department" readonly>
+                    <input type="text" class="form-control" value="${member.department}" id="department" readonly  autocomplete="off">
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="grade" class="col-sm-2 col-form-label" style="display: inline-block;">직급</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="text" class="form-control" value="${member.grade}" id="grade" readonly>
+                    <input type="text" class="form-control" value="${member.grade}" id="grade" readonly autocomplete="off">
                 </div>
             </div>
 

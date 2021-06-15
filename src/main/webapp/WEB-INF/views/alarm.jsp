@@ -152,9 +152,9 @@
                         </label>
                     </div>
                     <a class="sign"></a><a class="sign"></a>
-                    <input type="text" id="date_start" class="text-center p-1" disabled>
+                    <input type="text" id="date_start" class="text-center p-1" disabled  autocomplete="off">
                     <label class="ms-3 me-3">-</label>
-                    <input type="text" id="date_end" class="text-center p-1" disabled>
+                    <input type="text" id="date_end" class="text-center p-1" disabled  autocomplete="off">
 
                     <button type="button" class="btn btn-primary ms-3" onClick="search()">검색</button>
                 </div>
