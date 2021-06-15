@@ -125,12 +125,12 @@
             <span class="fs-4 flashToggle fw-bold">모니터링 > 실시간 모니터링</span>
         </div>
         <div class="col text-end align-self-end">
-            <div>
+            <div style="font-size: 1rem">
                 <span>점멸효과 :</span>
                 <input class="ms-2" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp</label>
                 <input type="radio" name="flashing" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off</label>
             </div>
-            <span class="text-primary small"> * 실시간 업데이트</span>
+            <span class="text-primary small" style="font-size: 0.8rem"> * 실시간으로 업데이트됩니다.</span>
         </div>
     </div>
     <div class="row m-3 mt-3">
@@ -378,7 +378,7 @@
                 $('#place_table').append(
                     "<div class='col-md-"+col_md_size+" mb-3 mt-2 place_border'>" +
                     "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'><span class='fs-5'>"+placeName[i]+"</span></div>" +
-                    "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
+                    "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+">"+"</span></div>" +
                     "<table class='table table-bordered table-hover text-center mt-1'>" +
                     "<thead>" +
                     "<tr class='add-bg-color'>" +
@@ -525,11 +525,11 @@
      */
     function draw_compareData(beforeData , nowData){
         if(beforeData > nowData){
-            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData;
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData.toFixed(2);
         } else if( nowData > beforeData) {
-            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData;
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData.toFixed(2);
         } else{
-            return nowData;
+            return nowData.toFixed(2);
         }
     }
 

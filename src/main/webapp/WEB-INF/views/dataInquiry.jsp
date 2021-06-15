@@ -594,7 +594,6 @@
         const category = findSensorCategory(item);
         $('#title').text(place + " - " + category);
 
-
         const reference = getReferenceValue(item);
         $.ajax({
             url: '<%=cp%>/searchChart',
@@ -608,7 +607,6 @@
                 "off":off
             },
             success : function(data) {
-                console.log(data[0]);
                 if(data.length==0){
                     Swal.fire({
                         icon: 'warning',
