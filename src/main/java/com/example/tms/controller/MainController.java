@@ -232,7 +232,7 @@ public class MainController {
     /**
      * [환경설정 - 알림 설정]
      * @param model
-     * place : 등록된 모든 측정소명
+     * place : 등록된 모든 측정소중 모니터링 True
      * @return alarmManagement.jsp
      */
     @RequestMapping(value = "/alarmManagement")

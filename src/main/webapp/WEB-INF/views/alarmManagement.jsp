@@ -101,6 +101,7 @@
         let status ;
         let tableName ;
         let naming ;
+        let check =-1;
 
         let innerHTMLTimePicker = "<div><span class=\"textSpanParent\">알림 시간</span></div>";
         innerHTMLTimePicker += "<div style='display: inline-flex; margin-top: 10px;'>";
@@ -119,19 +120,17 @@
             data: {"placeName": place},
             success: function (data) {
                     for (let i = 0; i < data.length; i++) {
+                        console.log(data[i]);
 
-                        if(data[0].start != null) { //알림설정값 있다면
+                        if(data[i].start != null) { //알림설정값 있다면
                             status = data[i].status ? 'checked' : '';
-                            tableName = data[i].name.split(",")[0]
-                            naming = data[i].name.split(",")[1]
-                            fromTime = data[0].start;
-                            endTime = data[0].end;
+                            tableName = data[i].name.split(",")[0]  //->lghausys_NOX_01
+                            naming = data[i].name.split(",")[1]     //->질소산화물
+                            check = i;
                         }else{
                             status = '';
                             tableName = data[i].tableName;
                             naming = data[i].naming;
-                            fromTime = '00:00';
-                            endTime = '23:59';
                         }
 
                         const innerHtml =
@@ -146,8 +145,16 @@
                         elem.setAttribute('style', 'margin-top:5px')
                         elem.innerHTML = innerHtml;
                         parentElem.append(elem);
-                    }
 
+                    }  //--for
+
+                    if(check!=-1){
+                        fromTime = data[check].start;
+                        endTime = data[check].end;
+                    }else{
+                        fromTime = '00:00';
+                        endTime = '23:59';
+                    }
                     $("#start" + idx).val(fromTime);
                     $("#end" + idx).val(endTime);
 

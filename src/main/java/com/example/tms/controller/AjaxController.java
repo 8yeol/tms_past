@@ -133,7 +133,7 @@ public class AjaxController {
     }
 
     /**
-     * 해당 측정소 명에 등록된 센서 리스트 목록
+     * 측정소 명으로 센서찾기 -> 센서 테이블명으로 알림설정값 리턴
      *
      * @param placeName 측정소명
      * @return 측정소의 모든 알람설정값 + 센서 네이밍
@@ -147,28 +147,29 @@ public class AjaxController {
         for (int i =0 ; i<place.getSensor().size(); i++){
             if(notification_settingsRepository.findByName(place.getSensor().get(i)+"") ==null){
                 notificationList.add(sensorListRepository.findByTableName(place.getSensor().get(i)+""));
-                return notificationList;
+                //return notificationList;
+            }else {
+                NotificationSettings notification = notification_settingsRepository.findByName(place.getSensor().get(i) + "");
+                notification.setName(notification.getName() + "," + sensorListRepository.findByTableName(place.getSensor().get(i) + "").getNaming());
+                notificationList.add(notification);
             }
-            NotificationSettings notification = notification_settingsRepository.findByName(place.getSensor().get(i)+"");
-            notification.setName(notification.getName()+","+sensorListRepository.findByTableName(place.getSensor().get(i)+"").getNaming());
-            notificationList.add(notification);
         }
         return notificationList;
     }
 
     /**
-     * 해당 측정소명의 모니터링 True 인 센서를 받아와 해당 센서의 최근, 이전, 정보들을 읽어오기 위한 메소드
+     * 측정소 명의 센서명으로 모든 상세 기준값 리턴
      * @param place 측정소 이름
-     * @return 센서의 최근, 이전, 정보
+     * @return 센서의 법적기준,사내기준,관리기준,모니터링 값
      */
 
     @RequestMapping(value="/getPlaceSensorValue")
     public Object getPlaceSensorValue(String place) {
-        List<String> placeName = placeRepository.findByName(place).getSensor();
+        List<String> sensorName = placeRepository.findByName(place).getSensor();
         List valueList = new ArrayList();
 
-        for(int i=0; i<placeName.size(); i++)
-                valueList.add(reference_value_settingRepository.findByName(placeName.get(i)));
+        for(int i=0; i<sensorName.size(); i++)
+                valueList.add(reference_value_settingRepository.findByName(sensorName.get(i)));
 
         return valueList;
     }
@@ -1510,7 +1511,11 @@ public class AjaxController {
         return member.getName();
     }
 
-
+    /**
+     * 테이블명으로 배출기준값 리턴
+     * @param tableName 테이블명
+     * @return 배출허용 기준치
+     */
     @RequestMapping(value = "/getStandardValue", method = RequestMethod.POST)
     public EmissionsStandardSetting getStandardValue(String tableName) {
         return emissionsStandardSettingRepository.findByTableNameIsIn(tableName);
