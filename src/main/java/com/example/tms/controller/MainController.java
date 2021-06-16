@@ -3,12 +3,16 @@ package com.example.tms.controller;
 import com.example.tms.entity.*;
 import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
+import com.example.tms.repository.Sensor.SensorCustomRepository;
 import com.example.tms.repository.SensorListRepository;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -24,8 +28,10 @@ public class MainController {
     final MongoQuary mongoQuary;
     final LogRepository logRepository;
     final EmissionsTransitionRepository emissionsTransitionRepository;
+    final ReferenceValueSettingRepository reference_value_settingRepository;
+    final SensorCustomRepository sensorCustomRepository;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository) {
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, ReferenceValueSettingRepository reference_value_settingRepository, SensorCustomRepository sensorCustomRepository) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -36,6 +42,8 @@ public class MainController {
         this.mongoQuary = mongoQuary;
         this.logRepository = logRepository;
         this.emissionsTransitionRepository = emissionsTransitionRepository;
+        this.reference_value_settingRepository = reference_value_settingRepository;
+        this.sensorCustomRepository = sensorCustomRepository;
     }
 
     /**
@@ -160,7 +168,51 @@ public class MainController {
      * [모니터링 - 실시간 모니터링]
      */
     @RequestMapping("/monitoring")
-    public void monitoring() {
+    public void monitoring(Model model) {
+        try{
+            JSONArray jsonArray = new JSONArray();
+            List<String> placeNames = new ArrayList<>();
+            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //측정소 모니터링 True인 측정소리스트
+            for(int z=0; z<placeList.size(); z++){
+                placeNames.add(placeList.get(z).getName()); //측정소명만 추출
+                List<String> sensorNames = placeRepository.findByName(placeNames.get(z)).getSensor(); //측정소의 센서들
+                JSONArray jsonArray2 = new JSONArray();
+                for(int i=0; i<sensorNames.size(); i++){
+                    JSONObject subObj = new JSONObject();
+                    boolean monitoring = reference_value_settingRepository.findByName(sensorNames.get(i)).getMonitoring();
+                    if(monitoring){ //monitoring
+                        try{
+                            subObj.put("place", placeNames.get(z));
+                            Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i));
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            subObj.put("value", recentData.getValue());
+                            subObj.put("up_time", simpleDateFormat.format(recentData.getUp_time()));
+                            subObj.put("status", recentData.isStatus());
+                        }catch (Exception e){
+                            System.out.println("error");
+                        }
+                        try {
+                            Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorNames.get(i));
+                            subObj.put("beforeValue", beforeData.getValue());
+                        }catch (Exception e){
+                            subObj.put("beforeValue", 0);
+                        }
+                        ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorNames.get(i));
+                        subObj.put("naming", sensorInfo.getNaming());
+                        subObj.put("legalStandard", sensorInfo.getLegalStandard());
+                        subObj.put("companyStandard", sensorInfo.getCompanyStandard());
+                        subObj.put("managementStandard", sensorInfo.getManagementStandard());
+                        subObj.put("name", sensorNames.get(i));
+                        jsonArray2.add(subObj);
+                    }
+                }
+                jsonArray.add(jsonArray2);
+            }
+            model.addAttribute("place", placeNames); //측정소 목록창
+            model.addAttribute("sensor", jsonArray); //측정소의 센서 테이블
+        }catch (Exception e){
+            System.out.println("error");
+        }
     }
 
 
@@ -169,8 +221,69 @@ public class MainController {
       @param model 전체 측정소 정보 뷰페이지로 전달
      */
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
-    public void sensorInfo(Model model) {
-        model.addAttribute("place", placeRepository.findAll());
+    public void sensorInfo(@RequestParam(required = false, defaultValue = "", value = "sensor") String sensor, Model model) {
+        try{
+            JSONArray jsonArray = new JSONArray();
+            JSONArray jsonArray2 = new JSONArray();
+            List<String> placeNames = new ArrayList<>();
+            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //측정소 모니터링 True인 측정소리스트
+            String placeName = "";
+            for(int z=0; z<placeList.size(); z++){
+                placeNames.add(placeList.get(z).getName()); //측정소명만 추출
+                if(sensor.equals("")){
+                    placeName = placeList.get(0).getName(); //파라미터가 없을 경우 0번째
+                }else{
+                    placeName = placeRepository.findBySensorIsIn(sensor).getName(); //파라미터 있을 경우 해당 센서의 측정소명
+                }
+            }
+            List<String> sensorNames = placeRepository.findByName(placeName).getSensor(); //측정소의 센서들
+            List<String> monitoringIsTrue = new ArrayList<>();
+            for(int i=0; i<sensorNames.size(); i++){
+                JSONObject subObj = new JSONObject();
+                boolean monitoring = reference_value_settingRepository.findByName(sensorNames.get(i)).getMonitoring();
+                if(monitoring){ //monitoring
+                    if(sensor.equals("")){
+                        monitoringIsTrue.add(sensorNames.get(i));
+                    }
+                    try{
+                        Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i));
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        subObj.put("value", recentData.getValue());
+                        subObj.put("up_time", simpleDateFormat.format(recentData.getUp_time()));
+                        subObj.put("status", recentData.isStatus());
+                    }catch (Exception e){
+                        System.out.println("error");
+                    }
+                    try {
+                        Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorNames.get(i));
+                        subObj.put("beforeValue", beforeData.getValue());
+                    }catch (Exception e){
+                        subObj.put("beforeValue", 0);
+                    }
+                    ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorNames.get(i));
+                    subObj.put("naming", sensorInfo.getNaming());
+                    subObj.put("legalStandard", sensorInfo.getLegalStandard());
+                    subObj.put("companyStandard", sensorInfo.getCompanyStandard());
+                    subObj.put("managementStandard", sensorInfo.getManagementStandard());
+                    subObj.put("name", sensorNames.get(i));
+                    jsonArray.add(subObj);
+                }
+            }
+            List<Sensor> sensorData = sensorCustomRepository.getSenor(monitoringIsTrue.get(0), "1");
+            for(int i=0; i<sensorData.size(); i++){
+                JSONObject subObj2 = new JSONObject();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                subObj2.put("value", sensorData.get(i).getValue());
+                subObj2.put("up_time",  simpleDateFormat.format(sensorData.get(i).getUp_time()));
+                jsonArray2.add(subObj2);
+            }
+            model.addAttribute("place", placeNames); //측정소 목록창
+            model.addAttribute("sensor", jsonArray); //측정소의 센서 테이블
+            model.addAttribute("sensorData", jsonArray2); //센서의 1시간 데이터
+        }catch (Exception e){
+
+        }
+
     }
 
     /**

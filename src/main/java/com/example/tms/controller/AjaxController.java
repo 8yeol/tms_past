@@ -206,9 +206,8 @@ public class AjaxController {
      * @param place 측정소 이름
      * @return 센서의 최근, 이전, 정보
      */
-
-    @RequestMapping(value="/getPlaceSensor2")
-    public Object getPlaceSensor2(String place) {
+    @RequestMapping(value="/getPlaceData")
+    public Object getPlaceData(String place) {
         List<String> placeName = placeRepository.findByName(place).getSensor();
         JSONArray jsonArray = new JSONArray();
         for(int i=0; i<placeName.size(); i++){
@@ -239,6 +238,40 @@ public class AjaxController {
             }
         }
         return jsonArray;
+    }
+
+    /**
+     * 해당 센서의 모터링이 True 인 센서 데이터(최근,이전,기준값 등) Json형태로 리턴하는 메소드
+     * @param sensor 센서명
+     * @return 센서의 최근, 이전, 정보
+     */
+    @RequestMapping(value = "/getSensorData")
+    public Object getSensorData(String sensor){
+        boolean monitoring =  reference_value_settingRepository.findByName(sensor).getMonitoring();
+        JSONObject subObj = new JSONObject();
+        if(monitoring){
+            try{
+                Sensor recentData = sensorCustomRepository.getSensorRecent(sensor);
+                subObj.put("value", recentData.getValue());
+                subObj.put("up_time", recentData.getUp_time());
+                subObj.put("status", recentData.isStatus());
+            }catch (Exception e){
+                return null;
+            }
+            try {
+                Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensor);
+                subObj.put("beforeValue", beforeData.getValue());
+            }catch (Exception e){
+                subObj.put("beforeValue", 0);
+            }
+            ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensor);
+            subObj.put("naming", sensorInfo.getNaming());
+            subObj.put("legalStandard", sensorInfo.getLegalStandard());
+            subObj.put("companyStandard", sensorInfo.getCompanyStandard());
+            subObj.put("managementStandard", sensorInfo.getManagementStandard());
+            subObj.put("name", sensor);
+        }
+        return subObj;
     }
     /**
      * 측정소 모니터링 업데이트

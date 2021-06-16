@@ -160,7 +160,14 @@
     <div class="row">
         <div class="row bg-white sizing">
             <div class="col-md-2 rounded-0 pt-5 px-0 navPlace">
-                <ul id="place_name"></ul>
+                <ul id="place_name">
+                    <c:forEach var="placeNames" items="${place}">
+                        <li class='place-item btn d-block fs-3 mt-3 me-3' id='<c:out value="${placeNames}"/>'>
+                            <span><c:out value='${placeNames}'/></span>
+                        </li>
+                        <hr style="height: 2px">
+                    </c:forEach>
+                </ul>
             </div>
             <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
                 <div class="d-flex justify-content-end">
@@ -181,9 +188,66 @@
                         </tr>
                         <thead>
                         <tbody id="place-tbody-table">
+                        <c:forEach items="${sensor}" var="sensorList">
                             <tr>
-                                <td colspan="6"> </td>
+                                <td><c:out value="${sensorList.naming}"/><input type="hidden" value="<c:out value="${sensorList.name}"/>"> </td>
+                                <td><div class="bg-danger text-light">
+                                    <c:choose>
+                                        <c:when test="${sensorList.legalStandard eq 999}">
+                                            -
+                                        </c:when>
+                                        <c:when test="${sensorList.legalStandard ne 999}">
+                                            <c:out value="${sensorList.legalStandard}"/>
+                                        </c:when>
+                                    </c:choose>
+                                </div></td>
+                                <td><div class="bg-warning text-light">
+                                    <c:choose>
+                                        <c:when test="${sensorList.companyStandard eq 999}">
+                                            -
+                                        </c:when>
+                                        <c:when test="${sensorList.companyStandard ne 999}">
+                                            <c:out value="${sensorList.companyStandard}"/>
+                                        </c:when>
+                                    </c:choose>
+                                </div></td>
+                                <td><div class="bg-success text-light">
+                                    <c:choose>
+                                        <c:when test="${sensorList.managementStandard eq 999}">
+                                            -
+                                        </c:when>
+                                        <c:when test="${sensorList.managementStandard ne 999}">
+                                            <c:out value="${sensorList.managementStandard}"/>
+                                        </c:when>
+                                    </c:choose>
+                                </div></td>
+                                <td>
+                                    <c:if test="${sensorList.beforeValue > sensorList.value}">
+                                        <i class="fas fa-sort-down fa-fw" style="color: blue"></i>
+                                    </c:if>
+                                    <c:if test="${sensorList.beforeValue < sensorList.value}">
+                                        <i class="fas fa-sort-up fa-fw" style="color: red"></i>
+                                    </c:if>
+                                    <c:out value="${sensorList.value}"/>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${sensorList.value > sensorList.legalStandard}">
+                                            <div class="bg-danger text-light">법적기준 초과</div>
+                                        </c:when>
+                                        <c:when test="${sensorList.value > sensorList.companyStandard}">
+                                            <div class="bg-warning text-light">사내기준 초과</div>
+                                        </c:when>
+                                        <c:when test="${sensorList.value > sensorList.managementStandard}">
+                                            <div class="bg-success text-light">관리기준 초과</div>
+                                        </c:when>
+                                        <c:when test="${sensorList.value <= sensorList.managementStandard}">
+                                            정상
+                                        </c:when>
+                                    </c:choose>
+                                </td>
                             </tr>
+                        </c:forEach>
                         <%--script--%>
                         </tbody>
                     </table>
@@ -232,6 +296,7 @@
         </div>
     </div>
 </div>
+${sensorData}
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
@@ -245,13 +310,13 @@
      */
     $(document).ready(function() {
         draw_frame();
-    }); //ready
-
-    function draw_frame(){
         if(chart == undefined){
             chart = new ApexCharts(document.querySelector("#chart"), setChartOption()); //차트 틀 생성
             chart.render();
         }
+    }); //ready
+
+    function draw_frame(){
 
         setTimeout( function draw_frame() {
             var placeName = getPlace();
@@ -306,7 +371,6 @@
     $("#place-tbody-table").on('click', 'tr', function(){
         const name = $(this).find('input').val(); //선택된 센서명
         sensor_data = getSensorData(name); //해당 센서 데이터
-
         clearTimeout(debounce);
         debounce = setTimeout(() => {
             getData2(sensor_data);
@@ -359,7 +423,7 @@
             clearTimeout(interval1);
             if(place_data.length != 0){
                 setTimeout(function interval_getData() { // $초 마다 업데이트
-                    var recentData = getSensorRecent2(place_name);
+                    var recentData = getPlaceInfo(place_name);
                     for(var i=0; i<recentData.length; i++){
                         if(place_data[i].up_time != recentData[i].up_time){
                             place_data[i].value = recentData[i].value;
@@ -491,7 +555,7 @@
         var result = null;
         $.ajax({
             <%--url:'<%=cp%>/getPlaceSensor',--%>
-            url:'<%=cp%>/getPlaceSensor2',
+            url:'<%=cp%>/getPlaceData',
             dataType: 'json',
             data:  {"place": place},
             async: false,
@@ -512,44 +576,19 @@
     /**
      * 센서의 모니터링 True인 최근, 직전, 기준 데이터 등을 리턴
      */
-    function getSensorData(sensor){
-        let result;
-        let sensorValue, sensorUptime, beforeValue;
-        const monitor = getMonitoring(sensor);
-        if(monitor === 'true'){
-            const recentData = getSensorRecent(sensor); //최근데이터
-            if(recentData == undefined){
-                return null;
-            }else{
-                if(recentData.value == 0 || recentData.value == null){
-                    recentData.value = "-";
-                }else{
-                    sensorValue = recentData.value;
-                    sensorUptime = moment(recentData.up_time).format('YYYY-MM-DD HH:mm:ss');
-                }
-                const beforeData = getSensorBeforeData(sensor);  // 직전 데이터(up/down 표시하기 위함)
-                if(beforeData.length == 0){
-                    beforeValue = "-";
-                }else{
-                    beforeValue = beforeData[0].value;
-                }
-                const sensorInfo = getSensorInfo(sensor); //기준데이터, 센서한글명, 센서 모니터링
-                const naming = sensorInfo.naming;
-                const monitoring = sensorInfo.monitoring;
-                const legalStandard = sensorInfo.legalStandard;
-                const companyStandard = sensorInfo.companyStandard;
-                const managementStandard = sensorInfo.managementStandard;
-
-                result =({
-                    naming: naming, name:sensor,
-                    value:sensorValue, up_time: sensorUptime,
-                    legalStandard: legalStandard, companyStandard: companyStandard, managementStandard: managementStandard,
-                    beforeValue: beforeValue, monitoring: monitoring
-                });
+    function getSensorData(sensor) {
+        let result = null;
+        $.ajax({
+            url:'<%=cp%>/getSensorData',
+            dataType: 'JSON',
+            data:  {"sensor": sensor},
+            async: false,
+            success: function (data) {
+                result = data;
+            },
+            error: function (e) {
             }
-        }else{ //모니터링 False 인 경우
-            return null;
-        }
+        })
         return result;
     }
 
@@ -597,13 +636,13 @@
         return result;
     }
 
-    function getSensorRecent2(place){
+    function getPlaceInfo(place){
         var result = null;
         if(place==undefined){
             result = null;
         } else{
             $.ajax({
-                url:'<%=cp%>/getSensorRecent2',
+                url:'<%=cp%>/getPlaceInfo',
                 dataType: 'JSON',
                 data:  {"place": place},
                 async: false,
