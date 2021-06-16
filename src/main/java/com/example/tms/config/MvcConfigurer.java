@@ -6,7 +6,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 public class MvcConfigurer extends WebMvcConfigurerAdapter{
-    /*
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/public/**")
@@ -16,5 +15,4 @@ public class MvcConfigurer extends WebMvcConfigurerAdapter{
                 .addResourceLocations("classpath:/static/")
                 .setCachePeriod(3600*24);
     }
-    */
 }

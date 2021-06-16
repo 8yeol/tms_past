@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        //http.headers().cacheControl().disable();
+        http.headers().cacheControl().disable();
 
         http.authorizeRequests().antMatchers("/memberJoin").anonymous()
                 .antMatchers("/myPage").authenticated()
@@ -52,12 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             }
         });
     }
-/*
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/static/public/**");
     }
-*/
 
 }
 
