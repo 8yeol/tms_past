@@ -336,11 +336,24 @@
                 const url = new URL(window.location.href);
                 const urlParams = url.searchParams;
                 if(urlParams.has('sensor')){ //파라미터가 있을 때
-                    const sensorName = urlParams.get('sensor'); //센서명(한글)
+                    const sensorName = urlParams.get('sensor'); //센서명
                     placeName = getPlaceName(sensorName);
-                    $("#"+placeName).addClass('active'); // 해당 측정소 선택됨 표시
-                    $('#title').text(placeName); // 해당 측정소명 텍스트 출력
-                    getPlaceAllSensorData(placeName, sensorName); //측정소의 항목 전체 데이터
+                    var existPlace = false;
+                    $('#place_name li').each(function (index, elemnet) {
+                        if(placeName == $(this).text()){
+                            existPlace = true;
+                        }
+                    })
+                    if(existPlace){
+                        $("#"+placeName).addClass('active'); // 해당 측정소 선택됨 표시
+                        $('#title').text(placeName); // 해당 측정소명 텍스트 출력
+                        getPlaceAllSensorData(placeName, sensorName); //측정소의 항목 전체 데이터
+                    }else{
+                        const place_name = $('#place_name > li').attr('id'); //기본값
+                        $("#place_name li").eq(0).addClass('active');
+                        $('#title').text(place_name);
+                        getPlaceAllSensorData(place_name); //측정소의 항목 전체 데이터
+                    }
                 }else{ //파라미터가 없을 경우
                     const place_name = $('#place_name > li').attr('id'); //기본값
                     if(place_name != undefined){
@@ -362,7 +375,6 @@
         $('#title').text(place_name); // 해당 측정소명 텍스트 출력
         $("#place_name li").removeClass('active'); // 해당 측정소 외 선택됨 제거
         $(this).addClass('active'); // 해당 측정소 선택됨 표시
-
         clearTimeout(debounce2);
         debounce2 = setTimeout(() => {
             getPlaceAllSensorData(place_name); //측정소의 항목 전체 데이터
