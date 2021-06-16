@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
@@ -318,15 +319,20 @@
                                                 <c:if test="${sensorList2.beforeValue < sensorList2.value}">
                                                     <i class="fas fa-sort-up fa-fw" style="color: red"></i>
                                                 </c:if>
-                                                <c:out value="${sensorList2.value}"/>
+                                                <c:if test="${sensorList2.value eq 0}">
+                                                    0
+                                                </c:if>
+                                                <c:if test="${sensorList2.value != 0}">
+                                                    <fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
+                                                </c:if>
                                             </td>
                                     </c:when>
                                     <c:otherwise>
+                                        <c:set var="doneLoop" value="true"/>
                                         <c:if test="${not doneLoop}">
                                             <td colspan="5">
                                                 <div onclick="window.event.cancelBubble=true">모니터링 설정된 센서의 데이터가 없습니다.</div>
                                             </td>
-                                            <c:set var="doneLoop" value="true"/>
                                         </c:if>
                                     </c:otherwise>
                                 </c:choose>
@@ -371,7 +377,7 @@
         draw_sensor_info(placeData2);
         setTimeout(function () {
             getData();
-        }, 5000);
+        }, 1000);
         flashCheck = "on";
     });
 

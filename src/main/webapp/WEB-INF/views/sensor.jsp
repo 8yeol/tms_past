@@ -1,5 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
@@ -161,8 +162,8 @@
         <div class="row bg-white sizing">
             <div class="col-md-2 rounded-0 pt-5 px-0 navPlace">
                 <ul id="place_name">
-                    <c:forEach var="placeNames" items="${place}">
-                        <li class='place-item btn d-block fs-3 mt-3 me-3' id='<c:out value="${placeNames}"/>'>
+                    <c:forEach var="placeNames" items="${placeList}">
+                        <li class='place-item btn d-block fs-3 mt-3 me-3<c:if test="${placeNames eq activePlace}"> active</c:if>' id='<c:out value="${placeNames}"/>'>
                             <span><c:out value='${placeNames}'/></span>
                         </li>
                         <hr style="height: 2px">
@@ -171,9 +172,9 @@
             </div>
             <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
                 <div class="d-flex justify-content-end">
-                    <span class="fs-7 mb-2" id="update"></span>
+                    <span class="fs-7 mb-2" id="update">업데이트 : ${activeSensor.up_time}</span>
                 </div>
-                <span class="fs-4 fw-bold d-flex justify-content-center titleSpan" id="title"></span>
+                <span class="fs-4 fw-bold d-flex justify-content-center titleSpan" id="title">${activePlace}</span>
                 <div id="place_table" style="margin:0 10px 0;">
                     <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: 0.8rem"> * 측정항목 클릭시 해당 항목의 상세 데이터로 하단의 차트/표가 변경됩니다.</span></div>
                     <table class="table table-bordered table-hover text-center">
@@ -228,7 +229,12 @@
                                     <c:if test="${sensorList.beforeValue < sensorList.value}">
                                         <i class="fas fa-sort-up fa-fw" style="color: red"></i>
                                     </c:if>
-                                    <c:out value="${sensorList.value}"/>
+                                    <c:if test="${sensorList.value eq 0}">
+                                        0
+                                    </c:if>
+                                    <c:if test="${sensorList.value != 0}">
+                                        <fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
+                                    </c:if>
                                 </td>
                                 <td>
                                     <c:choose>
@@ -258,7 +264,7 @@
                     <div class="col">
                         <div class="justify-content-between" style="position: relative;">
                             <div class="d-flex radio" style="width: 100%;">
-                                <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px; display: inline-block; width: 50%;"></span>
+                                <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px; display: inline-block; width: 50%;">${activeSensor.naming}</span>
                                 <div style="width: 50%; text-align: right; margin-right: 15px;">
                                     <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
                                     <label for='hour'>&nbsp;최근 1시간</label> &emsp;
@@ -296,7 +302,6 @@
         </div>
     </div>
 </div>
-${sensorData}
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
@@ -309,15 +314,16 @@ ${sensorData}
      * 선택된 센서의 최근 1시간, 24시간 데이터로 차트 및 테이블 생성
      */
     $(document).ready(function() {
-        draw_frame();
-        if(chart == undefined){
-            chart = new ApexCharts(document.querySelector("#chart"), setChartOption()); //차트 틀 생성
-            chart.render();
-        }
+        chart = new ApexCharts(document.querySelector("#chart"), setChartOption()); //차트 틀 생성
+        chart.render();
+        var sensor_data_list = ${sensorData};
+        var sensor_data = ${activeSensor};
+        draw_sensor_table(sensor_data_list, sensor_data);
+        updateChart(sensor_data_list, sensor_data);
+        getData2(sensor_data);
     }); //ready
 
     function draw_frame(){
-
         setTimeout( function draw_frame() {
             var placeName = getPlace();
             clearTimeout(interval3);
@@ -451,6 +457,8 @@ ${sensorData}
             console.log(e);
         }
     }
+
+
 
     /**
      *  센서 데이터 (최근 1시간, 24시간)로 차트 및 테이블 생성
@@ -642,7 +650,7 @@ ${sensorData}
             result = null;
         } else{
             $.ajax({
-                url:'<%=cp%>/getPlaceInfo',
+                url:'<%=cp%>/getPlaceData',
                 dataType: 'JSON',
                 data:  {"place": place},
                 async: false,
@@ -989,6 +997,7 @@ ${sensorData}
      * 센서 테이블 생성 (하단 테이블)
      */
     function draw_sensor_table(sensor_data_list, sensor_data) {
+        var standard = "";
         $('#sensor-table').empty();
         $('#sensor-standard').empty();
         $('#sensor-table').append('<thead><td>측정 시간</td><td>측정 값</td><td>관리 등급</td></thead>');
@@ -1000,7 +1009,6 @@ ${sensorData}
         }else{
             var arr = new Array();
             for(var i=0; i<sensor_data_list.length; i++){
-
                 if(sensor_data_list[i].y > sensor_data.legalStandard){
                     standard =  '<div class="bg-danger text-light">'+"법적기준 초과"+'</div>';
                 }else if(sensor_data_list[i].y > sensor_data.companyStandard){
@@ -1013,7 +1021,6 @@ ${sensorData}
                 arr.push({x:moment(sensor_data_list[i].x).format('YYYY-MM-DD HH:mm:ss'), y:(sensor_data_list[i].y).toFixed(2), z: standard});
             }
         }
-
         if(sensor_data != null){
             if(sensor_data.legalStandard == 999){
                 legalStandard = '-';
@@ -1030,10 +1037,6 @@ ${sensorData}
             }else{
                 managementStandard = sensor_data.managementStandard;
             }
-
-
-
-
             $("#standard_text").text(legalStandard+"/"+companyStandard+"/"+managementStandard+" mg/Sm³ 이하");
         }
 

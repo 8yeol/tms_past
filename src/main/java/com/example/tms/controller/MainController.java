@@ -237,14 +237,10 @@ public class MainController {
                 }
             }
             List<String> sensorNames = placeRepository.findByName(placeName).getSensor(); //측정소의 센서들
-            List<String> monitoringIsTrue = new ArrayList<>();
             for(int i=0; i<sensorNames.size(); i++){
                 JSONObject subObj = new JSONObject();
                 boolean monitoring = reference_value_settingRepository.findByName(sensorNames.get(i)).getMonitoring();
                 if(monitoring){ //monitoring
-                    if(sensor.equals("")){
-                        monitoringIsTrue.add(sensorNames.get(i));
-                    }
                     try{
                         Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i));
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -267,21 +263,32 @@ public class MainController {
                     subObj.put("managementStandard", sensorInfo.getManagementStandard());
                     subObj.put("name", sensorNames.get(i));
                     jsonArray.add(subObj);
+                    if(sensorNames.get(i).equals(sensor)){
+                        model.addAttribute("activeSensor", subObj); //선택된 센서 데이터
+                    }else if(sensor.equals("") && i == 0){
+                        model.addAttribute("activeSensor", subObj);
+                    }
                 }
             }
-            List<Sensor> sensorData = sensorCustomRepository.getSenor(monitoringIsTrue.get(0), "1");
+            List<Sensor> sensorData = new ArrayList<>();
+            if(sensor.equals("")){
+                sensorData = sensorCustomRepository.getSenor(sensorNames.get(0),"1");
+            }else{
+                sensorData = sensorCustomRepository.getSenor(sensor, "1");
+            }
             for(int i=0; i<sensorData.size(); i++){
                 JSONObject subObj2 = new JSONObject();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                subObj2.put("value", sensorData.get(i).getValue());
-                subObj2.put("up_time",  simpleDateFormat.format(sensorData.get(i).getUp_time()));
+                subObj2.put("y", sensorData.get(i).getValue());
+                subObj2.put("x",  simpleDateFormat.format(sensorData.get(i).getUp_time()));
                 jsonArray2.add(subObj2);
             }
-            model.addAttribute("place", placeNames); //측정소 목록창
+            model.addAttribute("activePlace", placeName); // 선택된 측정소
+            model.addAttribute("placeList", placeNames); //측정소 목록창
             model.addAttribute("sensor", jsonArray); //측정소의 센서 테이블
             model.addAttribute("sensorData", jsonArray2); //센서의 1시간 데이터
         }catch (Exception e){
-
+            System.out.println("error");
         }
 
     }
