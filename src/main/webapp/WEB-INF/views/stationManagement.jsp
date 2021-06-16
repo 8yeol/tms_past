@@ -23,14 +23,15 @@
 <script src="static/js/moment.min.js"></script>
 
 <style>
-    .swal2-close{
+    .swal2-close {
         width: 30px;
         height: 30px;
         font-weight: bold !important;
         margin-top: 10px;
         margin-right: 10px;
-        color:black;
+        color: black;
     }
+
     .MultiSelecterModal {
         width: auto;
         border-radius: 10px;
@@ -46,14 +47,27 @@
         line-height: 55px;
         padding: 10px;
     }
+
     @media all and (max-width: 1400px) {
-        #btnDiv{float: right;}
+        #btnDiv {
+            float: right;
+        }
     }
 
     @media all and (max-width: 1024px) {
-        #station1{margin-top: 20px !important;padding-bottom: 30px !important;}
-        #station2{margin-top: 30px !important;padding-bottom: 30px !important;}
-        #btnDiv{float: right;}
+        #station1 {
+            margin-top: 20px !important;
+            padding-bottom: 30px !important;
+        }
+
+        #station2 {
+            margin-top: 30px !important;
+            padding-bottom: 30px !important;
+        }
+
+        #btnDiv {
+            float: right;
+        }
     }
 </style>
 <div class="container" id="container">
@@ -64,14 +78,14 @@
     <div class="row bg-light rounded"><span style=";font-size: 22px; font-weight: bolder;padding: 20px 20px 30px 25px;">측정소 등록 및 측정소별 항목 등록</span>
     </div>
     <div class="row bg-light" style="min-height:70%; margin-bottom: 50px; padding: 0px 25px 25px 25px;">
-        <div class="col-6 border-end"  id="station1" style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
+        <div class="col-6 border-end" id="station1"
+             style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
             <div style="padding-bottom: 15px; padding-top: 3px;">
                 <span class="fw-bold" style="margin-right: 20%; font-size: 1.25rem;">측정소 관리</span>
                 <span id="btnDiv">
-                    <button data-bs-toggle="modal" data-bs-target="#addPlace" class="addBtn">추가</button>
-                    <button data-bs-toggle="modal" data-bs-target="#updatePlace" class="updateBtn"
-                            onclick="updatePlaceSetting()">수정
-                    </button>
+                    <button data-bs-toggle="modal" data-bs-target="#addPlace" id="addpl" class="addBtn">추가</button>
+                    <button data-bs-toggle="modal" data-bs-target="#addPlace" class="updateBtn" id="uppl"
+                            onclick="updatePlaceSetting()">수정</button>
                     <button onclick="removePlace()" class="removeBtn">삭제</button>
                 </span>
             </div>
@@ -90,7 +104,8 @@
         </div>
         <div class="col-6" id="station2" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
             <div>
-                <div id="p_monitoring" class="fw-bold" style="display: flex; margin-top: 5px; padding-bottom: 35px;"></div>
+                <div id="p_monitoring" class="fw-bold"
+                     style="display: flex; margin-top: 5px; padding-bottom: 35px;"></div>
             </div>
             <table style="text-align: center; width: 100%">
                 <tr id="c" style="border-bottom: silver solid 2px; width: 100%; display: flex; padding-bottom: 5px;">
@@ -115,70 +130,41 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h5 class="modal-title fw-bold">측정소 추가</h5>
+                <h5 class="modal-title fw-bold" id="addup">측정소 추가</h5>
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
                 <form id="placeinfo" method="post" style="width:70%; margin: 10px auto;">
                     <div style="margin-bottom:7px; margin-top: 18px; display: flex; justify-content: space-between;">
                         <span>측정소 명</span>
-                        <input type="text" class="modal-input" name="name" id="na1" maxlength="10" style="border: 1px solid black;" autocomplete="off">
+                        <input type="text" class="modal-input" name="name" id="na1" maxlength="10"
+                               style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;">
                         <span>위치</span>
-                        <input type="text" class="modal-input" name="location" id="lo1" style="border: 1px solid black;" autocomplete="off">
+                        <input type="text" class="modal-input" name="location" id="lo1" style="border: 1px solid black;"
+                               autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;">
                         <span>담당자 명</span>
-                        <input type="text" class="modal-input" name="admin" id="ad1" style="border: 1px solid black;" autocomplete="off">
+                        <input type="text" class="modal-input" name="admin" id="ad1" style="border: 1px solid black;"
+                               autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;">
                         <span>연락처</span>
-                        <input type="text" class="modal-input" name="tel" id="te1" style="border: 1px solid black;" autocomplete="off">
+                        <input type="text" class="modal-input" name="tel" id="te1" style="border: 1px solid black;"
+                               autocomplete="off">
                     </div>
+                    <input type="hidden" name="hiddenCode" id="hi1">
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button id="saveBtn" type="button" class="btn btn-primary" onclick="insertPlace(1)">추가</button>
+                <button id="saveBtn" type="button" class="btn btn-primary" onclick="insertPlace()">추가</button>
                 <button id="cancelBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
 </div>
-<!-- updatePlace -->
-<div class="modal" id="updatePlace" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">측정소 수정</h5>
-            </div>
-            <div class="modal-body d-flex" style="flex-wrap: wrap;">
-                <form id="placeupdate" method="post" style="width:70%; margin: 10px auto;">
-                    <div style="margin-bottom:7px; margin-top: 18px; display: flex; justify-content: space-between;">
-                        <span>측정소 명</span>
-                        <input type="text" class="modal-input" name="name" id="na2" maxlength='10' style="border: 1px solid black;" autocomplete="off">
-                    </div>
-                    <div style="margin-bottom:7px; display: flex; justify-content: space-between;">
-                        <span>위치</span>
-                        <input type="text" class="modal-input" name="location" id="lo2" style="border: 1px solid black;" autocomplete="off">
-                    </div>
-                    <div style="margin-bottom:7px; display: flex; justify-content: space-between;">
-                        <span>담당자 명</span>
-                        <input type="text" class="modal-input" name="admin" id="ad2" style="border: 1px solid black;" autocomplete="off">
-                    </div>
-                    <div style="margin-bottom:7px; display: flex; justify-content: space-between;">
-                        <span>연락처</span>
-                        <input type="text" class="modal-input" name="tel" id="te2" style="border: 1px solid black;" autocomplete="off">
-                    </div>
-                    <input type="hidden" name="hiddenCode">
-                </form>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button id="updateBtn" type="button" class="btn btn-primary" onclick="insertPlace(2)">수정</button>
-                <button id="cancelBtn1" type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <%--값 수정시 알림창--%>
 <div class="MultiSelecterModal" id="alert"></div>
 
@@ -195,6 +181,15 @@
     $(document).ready(function () {
         placeDiv();
         placeChange("p0");
+    });
+    $('#addpl').click(function () {
+        document.getElementById('na1').value = '';
+        document.getElementById('lo1').value = '';
+        document.getElementById('te1').value = '';
+        document.getElementById('ad1').value = '';
+        document.getElementById('hi1').value = '';
+        $('#addup').text('측정소 추가');
+        $('#saveBtn').text('추가');
     });
 
     //측정소 체크박스 전체 선택, 해제
@@ -230,38 +225,28 @@
         $("#placeDiv").empty();
         const data = placeDiv1();
         var onoff = "";
+        for (let i = 0; i < data.length; i++) {
+            const test = data[i];
+            const name = test.name;
+            const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
+            onoff = data[i].monitoring ? "checked" : "";
 
-        <%--$.ajax({--%>
-        <%--    url: '<%=cp%>/getPlaceList',--%>
-        <%--    async: false,--%>
-        <%--    cache: false,--%>
-        <%--    success: function (data) {--%>
-                for (let i = 0; i < data.length; i++) {
-                    const test = data[i];
-                    const name = test.name;
-                    const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
-                    onoff = data[i].monitoring ? "checked" : "";
+            const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
+                "<td style='padding-left:6px;' onclick='event.cancelBubble=true'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
+                "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
+                "<td style='width: 40%;'>" + time + "</td>" +
+                "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
+                "<input class='placeCheckbox' id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
+                "<span class='slider round'></span>" +
+                "</label></td>" +
+                "</tr>";
 
-                    const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
-                        "<td style='padding-left:6px;' onclick='event.cancelBubble=true'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
-                        "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
-                        "<td style='width: 40%;'>" + time + "</td>" +
-                        "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
-                        "<input class='placeCheckbox' id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
-                        "<span class='slider round'></span>" +
-                        "</label></td>" +
-                        "</tr>";
+            $('#placeDiv').append(innerHTML);
+            onoff = "";
+        }
 
-                    $('#placeDiv').append(innerHTML);
-                    onoff = "";
-                }
-
-        <%--    },--%>
-        <%--    error: function (request, status, error) { // 결과 에러 콜백함수--%>
-        <%--        console.log(error)--%>
-        <%--    }--%>
-        <%--})--%>
     }
+
     function placeDiv1() {
         var getData = null;
         $.ajax({
@@ -272,23 +257,20 @@
             success: function (data) {
                 getData = data;
             },
-            error : function () {
+            error: function () {
 
             }
         });
         return getData;
     }
-    function placeChange1(name){
-
-    }
 
     //측정소 변경
     function placeChange(name) {
-     if(document.getElementById(name)==null){
-         $("#items").empty(); //div items 비우기
-         $("#p_monitoring").empty(); //div p_monitoring 비우기
-         return;
-     }
+        if (document.getElementById(name) == null) {
+            $("#items").empty(); //div items 비우기
+            $("#p_monitoring").empty(); //div p_monitoring 비우기
+            return;
+        }
         const place = $("#" + name).attr("value"); // 측정소1 입력
         $('#placeDiv tr').css('color', 'black'); //텍스트 색상 제거
         var x = document.getElementById(name);
@@ -330,7 +312,7 @@
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input'  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input'  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch'>" +
-                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" +data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdate(this)'>" +
+                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +
                                 "</label></td>";
                             const elem = document.createElement('tr');
@@ -382,12 +364,12 @@
     //측정소 정보
     function updatePlaceSetting() {
         if ($("input:checkbox[name=place]:checked").length == 0) {
-            document.getElementById("cancelBtn1").click();
+            document.getElementById("cancelBtn").click();
             customSwal('측정소를 선택해 주세요.');
             return false;
         }
         if ($("input:checkbox[name=place]:checked").length != 1) {
-            document.getElementById("cancelBtn1").click();
+            document.getElementById("cancelBtn").click();
             customSwal('측정소를 한개만 체크해 주세요.');
             const placeall = document.querySelector('input[name="placeall"]');
             placeall.checked = false;
@@ -395,6 +377,8 @@
             placeChange(document.getElementById('nickname').value);
             return false;
         }
+        $('#addup').text('측정소 수정');
+        $('#saveBtn').text('수정');
         const place = $("input:checkbox[name=place]:checked").attr('value');
         $.ajax({
             url: '<%=cp%>/getPlace',
@@ -404,10 +388,10 @@
             cache: false,
             data: {"place": place},
             success: function (data) {
-                $('input[id=na2]').attr('value', data.name);
-                $('input[id=lo2]').attr('value', data.location);
-                $('input[id=ad2]').attr('value', data.admin);
-                $('input[id=te2]').attr('value', data.tel);
+                $('input[id=na1]').attr('value', data.name);
+                $('input[id=lo1]').attr('value', data.location);
+                $('input[id=ad1]').attr('value', data.admin);
+                $('input[id=te1]').attr('value', data.tel);
                 $('input[name=hiddenCode]').attr('value', data.name);
 
             },
@@ -428,9 +412,9 @@
             cache: false,
             data: {"place": name},
             success: function (data) {
-                if(data.length==0)str = "none";
-                for(i=0; i<data.length;i++){
-                   if(data[i].monitoring == true) str = "On";
+                if (data.length == 0) str = "none";
+                for (i = 0; i < data.length; i++) {
+                    if (data[i].monitoring == true) str = "On";
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
@@ -442,7 +426,7 @@
 
     //센서값 가공
     function findReference(data) {
-        for(i = 0 ; i<data.length; i++) {
+        for (i = 0; i < data.length; i++) {
 
             if (data[i].legalStandard == 999) {
                 data[i].legalStandard = "";
@@ -455,7 +439,7 @@
             }
             if (data[i].monitoring == true) {
                 data[i].monitoring = "checked";
-            }else{
+            } else {
                 data[i].monitoring = "";
             }
         }
@@ -463,12 +447,18 @@
     }
 
     //측정소 추가
-    function insertPlace(idx) {
-        const na = $("#na" + idx).val();
-        const name = na.replace(/(\s*)/g, "");
-        const location = $("#lo" + idx).val();
-        const tel = $("#te" + idx).val();
-        const admin = $("#ad" + idx).val();
+    function insertPlace() {
+        var idx = '';
+        if ($('#addup').text() == '측정소 추가') {
+            idx = 1;
+        } else {
+            idx = 2;
+        }
+        const na = $("#na1").val();
+        const name = na.replace(/(\s*)/g, ""); //공백제거
+        const location = $("#lo1").val();
+        const tel = $("#te1").val();
+        const admin = $("#ad1").val();
         const hiddenCode = $("input[name=hiddenCode]").val();
         const pattern = /[`~!@#$%^&*()_+=|<>?:;`,{}\-\]\[/\'\"\\\']/;
 
@@ -485,12 +475,11 @@
             return false;
         }
         if (findPlace(name) != 0) {  //측정소명 중복확인
-            if (hiddenCode != name) { //기존 측정소 명과 바꾼 측정도 명이 다를때
+            if (hiddenCode != name) { //기존 측정소 명과 바꾼 측정소 명이 다를때
                 customSwal('이미 등록된 측정소 입니다.');
                 return false;
             }
         }
-
         if (idx == 2) {
             content = '측정소가 수정 되었습니다.';
             title = '측정소 수정';
@@ -498,14 +487,14 @@
             const num = pnum.replace(/[^0-9]/g, ''); //place0 -> 0
             send = 'p' + num;
         } else {
-                content = '측정소가 추가 되었습니다.';
-                title = '측정소 추가';
-                if ($("#nickname").val() == undefined) {
-                    send = "p0";
-                } else {
-                    send = document.getElementById('nickname').value;
-                }
-                $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
+            content = '측정소가 추가 되었습니다.';
+            title = '측정소 추가';
+            if ($("#nickname").val() == undefined) {
+                send = "p0";
+            } else {
+                send = document.getElementById('nickname').value;
+            }
+            $("input[name=hiddenCode]").val("");   //수정했을때 남아있는 히든코드 초기화
         }
 
         $.ajax({
@@ -518,7 +507,7 @@
                 "location": location,
                 "tel": tel,
                 "admin": admin,
-                "hiddenCode": $("input[name=hiddenCode]").val()
+                "hiddenCode": hiddenCode
             }, success: function (data) {
             },
             error: function (request, status, error) {
@@ -532,7 +521,6 @@
             timer: 1500
         })
         document.getElementById("cancelBtn").click();
-        document.getElementById("cancelBtn1").click();
         placeDiv();
         placeChange(send);
     }
@@ -567,8 +555,8 @@
                     showCloseButton: true,
                     confirmButtonColor: 'red',
                     cancelButtonColor: 'gray',
-                    confirmButtonText: '포함된 센서<a class="sign"></a> 삭제',
-                    cancelButtonText: '측정소만<a class="sign"></a> 삭제'
+                    confirmButtonText: '포함된 센서 삭제',
+                    cancelButtonText: '측정소만 삭제'
                 }).then((result) => {
 
                     let flag;
@@ -577,7 +565,7 @@
                         flag = true;
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
                         flag = false;
-                    }else{
+                    } else {
                         return false;
                     }
 
@@ -638,7 +626,7 @@
             success: function (data) {
                 timeTd.html(moment(data).format('YYYY-MM-DD HH:mm:ss'));
             },
-            error : function (err) {
+            error: function (err) {
                 console.log(err);
             }
         })
@@ -672,10 +660,10 @@
         }
 
         let checkFlag = false;
-        if($("input[name=sensormonitor]").is(":checked") == true)  checkFlag = true;
+        if ($("input[name=sensormonitor]").is(":checked") == true) checkFlag = true;
 
-        if(checkFlag==false){
-         $('tr[value='+pname+']').find('.placeCheckbox').prop("checked", false);
+        if (checkFlag == false) {
+            $('tr[value=' + pname + ']').find('.placeCheckbox').prop("checked", false);
         }
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(pname, naming, "monitor", check);
@@ -770,7 +758,7 @@
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
         }
         MultiSelecterModal(pname, naming, "legal", value);
-        name.value=value;
+        name.value = value;
     }
 
     //company onchange
@@ -974,11 +962,11 @@
         Modal.finish().fadeIn(300).delay(2000).fadeOut(300);
     }
 
-    function customSwal(text){
+    function customSwal(text) {
         Swal.fire({
             icon: 'warning',
             title: '경고',
-            text : text,
+            text: text,
             timer: 1500
         });
     }
