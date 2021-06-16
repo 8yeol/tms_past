@@ -246,7 +246,6 @@
         }
 
     }
-
     function placeDiv1() {
         var getData = null;
         $.ajax({
