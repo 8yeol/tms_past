@@ -195,14 +195,14 @@
                         <div class="justify-content-between" style="position: relative;">
                             <div class="d-flex radio" style="width: 100%;">
                                 <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px; display: inline-block; width: 50%;"></span>
-                                <div class="align-self-end" style="width: 50%; text-align: right; margin-right: 15px;">
+                                <div style="width: 50%; text-align: right; margin-right: 15px;">
                                     <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
                                     <label for='hour'>&nbsp;최근 1시간</label> &emsp;
                                     <input class="form-check-input" type="radio" name="chartRadio" id="day">
                                     <label for="day">&nbsp;최근 24시간</label>
                                 </div>
                             </div>
-                            <span class="text-primary me-2 align-self-end" style="font-size: 0.8rem; position: absolute; right: 15px;"> * 최근 1시간은 실시간, 최근 24시간은 5분평균 데이터로 실시간 업데이트됩니다.</span>
+                            <span class="text-primary" style="font-size: 0.8rem; position: absolute; right: 15px;"> * 최근 1시간은 실시간, 최근 24시간은 5분평균 데이터로 실시간 업데이트됩니다.</span>
                         </div>
                         <div id="chart" style=" margin-right: 10px; margin-top: 20px;"></div>
                     </div>

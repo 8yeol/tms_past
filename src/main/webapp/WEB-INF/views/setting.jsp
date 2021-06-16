@@ -615,10 +615,10 @@
     }
 
     function textfield_management(){
-        $(".managementInfo_text").html(name + " 회원님 관리");
-        $(".updateRank_text").html(name + " 회원님 권한변경");
-        $(".tempPassword_text").html(name + " 회원님 의 비밀번호를 <br>변경하시겠습니까?");
-        $(".kick_text").html(name + " 회원님 을 <br>제명 하시겠습니까?");
+        $(".managementInfo_text").html(name + " 회원 관리");
+        $(".updateRank_text").html(name + " 회원 권한변경");
+        $(".tempPassword_text").html(name + " 회원의 비밀번호를 <br>변경하시겠습니까?");
+        $(".kick_text").html(name + " 회원을 <br>제명 하시겠습니까?");
     }
 
     $(function () {
