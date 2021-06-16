@@ -303,10 +303,6 @@
             border: none;
         }
     }
-
-
-
-
 </style>
 
 <header class="p-4 bg-primary text-white" id="desktop">
@@ -344,7 +340,6 @@
                         </li>
                     </ul>
                 </nav>
-
             </div>
 
             <div class="text-end">
@@ -362,7 +357,6 @@
 </header>
 
 <header class="p-4 bg-primary text-white" id="mobile">
-
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a class="fw-bold mt-5" href="<%=cp%>/dashboard">대시보드</a>
@@ -395,17 +389,14 @@
 
     <div class="container">
         <div class="d-flex justify-content-between">
-
             <div id="main">
                 <button class="openbtn rounded" onclick="openNav()">&#9776;</button>
             </div>
-
             <div class="d-flex justify-content-between ms-5">
                 <a href="<%=cp%>/monitoring" class="mb-2 mb-lg-0 text-white text-decoration-none fs-2 pe-5 fw-bold">
                     대기 TMS 관제 시스템
                 </a>
             </div>
-
             <div class="text-end">
                 <div class="dropdown">
                     <button class="dropbtn rounded fs-5 fw-bold" id="m_dropBtn"><i class="fas fa-caret-down"></i></button>
@@ -415,7 +406,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </header>
@@ -430,8 +420,6 @@
     }
 
     $( document ).ready(function() {
-
-
         var settings = {"url": "<%=cp%>/getUsername", "method": "POST",};
         $.ajax(settings).done(function (name) {
             $('#dropBtn').prepend(name+" 님");
@@ -441,7 +429,6 @@
     });
 
     function getRank() {
-
         var settings = {"url": "<%=cp%>/getRank", "method": "POST",};
         $.ajax(settings).done(function (rank) {
             if(!rank.dashboard)

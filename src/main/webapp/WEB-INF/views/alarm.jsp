@@ -215,10 +215,7 @@
 
 
 <script>
-
-
     $( document ).ready(function() {
-
         $("#date_start").val(getDays());
         $("#date_end").val(getDays());
 

@@ -10,7 +10,6 @@
 </html>
 
 <script>
-
     // 1024px 을 기준으로 속성값 적용
     var mql = window.matchMedia("screen and (max-width: 1024px)");
     mql.addListener(function(e) {
@@ -48,5 +47,4 @@
             $('#station2').css('width','61%');
         }
     }
-
 </script>

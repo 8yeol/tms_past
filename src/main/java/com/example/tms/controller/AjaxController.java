@@ -18,7 +18,6 @@ import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -1611,6 +1610,4 @@ public class AjaxController {
         }
         return rankManagementRepository.findByName(str);
     }
-
-
 }
