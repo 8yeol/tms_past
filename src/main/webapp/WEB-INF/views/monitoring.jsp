@@ -220,7 +220,6 @@
             </div>
         </div>
     </div>
-
     <div class="row m-3 mt-3 bg-light">
         <div style="margin-top: 12px;">
             <div class="col text-center border">
@@ -239,7 +238,7 @@
         </div>
         <div class="row table" id="place_table" style="margin: 0 auto">
         <c:if test="${!empty place}">
-            <c:forEach items="${place}" var="placeName" varStatus="status">
+            <c:forEach items="${place}" var="placeName" varStatus="pStatus">
             <c:choose>
                 <c:when test="${fn:length(place) eq 1}">
                 <div class="col-md-12 mb-3 mt-2 place_border">
@@ -251,6 +250,7 @@
                     <div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>
                         <span class='fs-5'><c:out value="${placeName}"/></span>
                     </div>
+
                 <c:forEach items="${sensor}" var="sensorList" varStatus="status">
                     <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
                         <c:if test="${sensorList2.place eq placeName}">
@@ -262,6 +262,7 @@
                     <div class="2 text-end">업데이트 :
                         <span class="small" id='update-${status.index}'><c:out value="${uptime}"/></span>
                     </div>
+                    <c:set value="sensor-table-${pStatus.index}" var="tbody"/>
                     <table class='table table-bordered table-hover text-center mt-1'>
                         <thead>
                             <tr class="add-bg-color">
@@ -272,53 +273,64 @@
                                 <th width=21%'>실시간</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="${tbody}">
                         <c:forEach items="${sensor}" var="sensorList" varStatus="status">
+                            <c:set var="doneLoop" value="false"/>
                             <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
-                                <c:if test="${sensorList2.place eq placeName}">
                                 <tr>
-                                    <td>${sensorList2.naming}<input type="hidden" value="${sensorList2.name}"> </td>
-                                    <td><div class="bg-danger text-light">
-                                        <c:choose>
-                                            <c:when test="${sensorList2.legalStandard eq 999}">
-                                                -
-                                            </c:when>
-                                            <c:when test="${sensorList2.legalStandard ne 999}">
-                                                <c:out value="${sensorList2.legalStandard}"/>
-                                            </c:when>
-                                        </c:choose>
-                                    </div></td>
-                                    <td><div class="bg-warning text-light">
-                                        <c:choose>
-                                            <c:when test="${sensorList2.companyStandard eq 999}">
-                                                -
-                                            </c:when>
-                                            <c:when test="${sensorList2.companyStandard ne 999}">
-                                                <c:out value="${sensorList2.companyStandard}"/>
-                                            </c:when>
-                                        </c:choose>
-                                    </div></td>
-                                    <td><div class="bg-success text-light">
-                                        <c:choose>
-                                            <c:when test="${sensorList2.managementStandard eq 999}">
-                                                -
-                                            </c:when>
-                                            <c:when test="${sensorList2.managementStandard ne 999}">
-                                                <c:out value="${sensorList2.managementStandard}"/>
-                                            </c:when>
-                                        </c:choose>
-                                    </div></td>
-                                    <td>
-                                        <c:if test="${sensorList2.beforeValue > sensorList2.value}">
-                                            <i class="fas fa-sort-down fa-fw" style="color: blue"></i>
+                                <c:choose>
+                                    <c:when test="${sensorList2.place eq placeName}">
+                                            <td>${sensorList2.naming}<input type="hidden" value="${sensorList2.name}"> </td>
+                                            <td><div class="bg-danger text-light">
+                                                <c:choose>
+                                                    <c:when test="${sensorList2.legalStandard eq 999}">
+                                                        -
+                                                    </c:when>
+                                                    <c:when test="${sensorList2.legalStandard ne 999}">
+                                                        <c:out value="${sensorList2.legalStandard}"/>
+                                                    </c:when>
+                                                </c:choose>
+                                            </div></td>
+                                            <td><div class="bg-warning text-light">
+                                                <c:choose>
+                                                    <c:when test="${sensorList2.companyStandard eq 999}">
+                                                        -
+                                                    </c:when>
+                                                    <c:when test="${sensorList2.companyStandard ne 999}">
+                                                        <c:out value="${sensorList2.companyStandard}"/>
+                                                    </c:when>
+                                                </c:choose>
+                                            </div></td>
+                                            <td><div class="bg-success text-light">
+                                                <c:choose>
+                                                    <c:when test="${sensorList2.managementStandard eq 999}">
+                                                        -
+                                                    </c:when>
+                                                    <c:when test="${sensorList2.managementStandard ne 999}">
+                                                        <c:out value="${sensorList2.managementStandard}"/>
+                                                    </c:when>
+                                                </c:choose>
+                                            </div></td>
+                                            <td>
+                                                <c:if test="${sensorList2.beforeValue > sensorList2.value}">
+                                                    <i class="fas fa-sort-down fa-fw" style="color: blue"></i>
+                                                </c:if>
+                                                <c:if test="${sensorList2.beforeValue < sensorList2.value}">
+                                                    <i class="fas fa-sort-up fa-fw" style="color: red"></i>
+                                                </c:if>
+                                                <c:out value="${sensorList2.value}"/>
+                                            </td>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:if test="${not doneLoop}">
+                                            <td colspan="5">
+                                                <div onclick="window.event.cancelBubble=true">모니터링 설정된 센서의 데이터가 없습니다.</div>
+                                            </td>
+                                            <c:set var="doneLoop" value="true"/>
                                         </c:if>
-                                        <c:if test="${sensorList2.beforeValue < sensorList2.value}">
-                                            <i class="fas fa-sort-up fa-fw" style="color: red"></i>
-                                        </c:if>
-                                        <c:out value="${sensorList2.value}"/>
-                                    </td>
+                                    </c:otherwise>
+                                </c:choose>
                                 </tr>
-                                </c:if>
                             </c:forEach>
                         </c:forEach>
                         </tbody>
@@ -589,28 +601,23 @@
                         } else{
                             newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
                         }
-
                         $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                     }
-                }else{ // 모니터링 OFF 일 때
-                    noData();
-                    return false;
                 }
             }
         }else{
-            noData();
+            noData(tbody, index);
         }
 
     }
 
-    function noData() {
+    function noData(tbody, index) {
         const newRow = tbody.insertRow(tbody.rows);
         const newCeil0 = newRow.insertCell();
-        newCeil0.innerHTML = '<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
+        newCeil0.innerHTML = '<div onclick='+'window.event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
             +'</div>';
         newCeil0.colSpan = 5;
         $("#update-" + index).text("-");
-        return false;
     }
 
     /**
