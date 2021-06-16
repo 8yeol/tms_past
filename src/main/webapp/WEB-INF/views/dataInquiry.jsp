@@ -393,6 +393,7 @@
             }],
             lengthChange : false,
             pageLength: 8,
+            order :[4, 'desc'],
             info: false,
             language: {
                 emptyTable: "데이터가 없어요.",

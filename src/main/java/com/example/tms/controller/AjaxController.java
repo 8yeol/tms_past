@@ -1493,7 +1493,7 @@ public class AjaxController {
         Member newMember = memberRepository.findById(id);
         newMember.setState(value);
         memberRepository.save(newMember);
-        return "등급 부여 하였습니다.";
+        return newMember.getName()+" 회원의 권한이 변경되었습니다.";
     }
 
     /**

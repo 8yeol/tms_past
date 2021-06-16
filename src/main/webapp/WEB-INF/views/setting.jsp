@@ -110,7 +110,7 @@
                 <tr class="text-center">
                     <th style="padding:10px 0px 10px 0px;">ID</th>
                     <th style="padding:10px 0px 10px 0px;" width="80px">이름</th>
-                    <th style="padding:10px 0px 10px 0px;" width="90px">등급</th>
+                    <th style="padding:10px 0px 10px 0px;" width="90px">권한</th>
                     <th style="padding:10px 0px 10px 0px;">이메일</th>
                     <th style="padding:10px 0px 10px 0px;">연락처</th>
                     <th style="padding:10px 0px 10px 0px;">가입<a class="sign"></a> 신청일</th>
@@ -278,7 +278,7 @@
                 <h3 id="okModal_Body">가입승인 하시겠습니까?</h3>
             </div>
             <div class="modal-body d-flex justify-content-center">
-                <h5 class="me-1">회원관리등급 : </h5>
+                <h5 class="me-1">회원권한 : </h5>
                 <select name="rank" id="rank" class="btn btn-light">
                     <option value="3">일반</option>
                     <option value="2">관리자</option>
@@ -478,14 +478,11 @@
     function gave_Rank() {
         var value = $("#gaveRank_Select").val();
        if(value == state){
-            warning("이미 동일한 등급입니다.");
-            setTimeout(function () {
-                location.reload();
-            }, 2000);
+            warning("기존 회원 권한과 동일합니다. 확인 후 다시 이용해주세요.");
         } else {
             var changeRank = (value == 1) ? "최고관리자 " : (value == 2) ? "관리자 " : "일반 ";
             var pastRank = (state == 1) ? "최고관리자 " : (state == 2) ? "관리자 " : "일반 ";
-            var content = pastRank + "> " + changeRank + "등급변경";
+            var content = pastRank + "> " + changeRank + "권한변경";
             var settings = {
                 "url": "<%=cp%>/gaveRank?id=" + ID + "&value=" + value,
                 "method": "POST"

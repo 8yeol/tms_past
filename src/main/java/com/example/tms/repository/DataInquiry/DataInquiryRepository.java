@@ -104,12 +104,9 @@ public class DataInquiryRepository {
             );
         }
 
-        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "up_time");
-
         Aggregation agg = Aggregation.newAggregation(
                 dateProjection,
-                where,
-                sort
+                where
         );
 
         String tableName = getDiffDay(date_start, date_end, item);
