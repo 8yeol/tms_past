@@ -302,6 +302,12 @@
             }
         }
 
+        if(previousYearData.length != 0 && thisYearData.length == 0){
+            for(let i=0; i<12; i++){
+                thisYearData.push(null);
+            }
+        }
+
         const previousYearSum = addMonthlyData(previousYear, previousYearData);
         const thisYearSum = addMonthlyData(thisYear, thisYearData);
 
@@ -317,7 +323,7 @@
             if(increase>0){
                 innerHtml += '<td style="color:red" class="fw-bold">' + '+ ' + numberWithCommas(increase) + ' %</td>'
             }else if(increase<0){
-                innerHtml += '<td style="color:blue" class="fw-bold">' + ' ' + numberWithCommas(increase) + ' %</td>'
+                innerHtml += '<td style="color:blue" class="fw-bold">' + '- ' + Math.abs(numberWithCommas(increase)) + ' %</td>'
             }else{
                 innerHtml += '<td>' + increase + '</td>'
             }
@@ -327,7 +333,7 @@
         if(increase>0){
             innerHtml += '<td style="color:red" class="fw-bold">' + '+ ' + numberWithCommas(increase) + ' %</td>'
         }else if(increase<0){
-            innerHtml += '<td style="color:blue" class="fw-bold">' + ' ' + numberWithCommas(increase) + ' %</td>'
+            innerHtml += '<td style="color:blue" class="fw-bold">' + '- ' +Math.abs(numberWithCommas(increase)) + ' %</td>'
         }else{
             innerHtml += '<td>' + increase + '</td>'
         }
