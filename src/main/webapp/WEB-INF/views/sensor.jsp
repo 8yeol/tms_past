@@ -320,7 +320,7 @@
         var sensor_data = ${activeSensor};
         draw_sensor_table(sensor_data_list, sensor_data);
         updateChart(sensor_data_list, sensor_data);
-        getData2(sensor_data);
+        draw_frame();
     }); //ready
 
     function draw_frame(){
