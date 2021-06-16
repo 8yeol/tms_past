@@ -413,7 +413,6 @@
      */
     $("#place_table").on('click', 'tbody tr', function () {
         const sensorName = $(this).find('td input')[0].value;
-        console.log(sensorName);
         location.replace("<%=cp%>/sensor?sensor=" + sensorName);
     });
 
