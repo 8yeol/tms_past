@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -87,7 +88,6 @@ public class Schedule {
         }
     }
 
-
     /**
      * [알림 - 센서 알림현황]
      * 기준 초과 알림 목록을 읽어와 기준별 카운트하여 일별/월별로 해당 컬렉션에 저장
@@ -96,57 +96,60 @@ public class Schedule {
     @Scheduled(cron = "0 1 0 * * *") //매일 00시 01분에 처리
     public void saveNotificationStatistics(){
         LocalDate nowDate = LocalDate.now();
+        // 어제 날짜 불러오기
+        LocalDate yesterday = nowDate.minusDays(1);
+        // 어제 날짜로 저장되어있는 데이터 불러오기
+        NotificationDayStatistics yesterdayData = notificationDayStatisticsRepository.findByDay(String.valueOf(yesterday));
+        // 어제 날짜 데이터가 없는 경우 new 객체 생성 후 데이터 set
+        if(yesterdayData == null){
+            yesterdayData = new NotificationDayStatistics();
+        }
+        yesterdayData.setDay(String.valueOf(yesterday));
 
-        /**
-         * 전날(yesterday) 알림 현황 저장
-         */
-        try {
-            LocalDate getYesterday = nowDate.minusDays(1); //전날 데이터 입력
-            notificationDayStatisticsRepository.deleteByDay(String.valueOf(getYesterday)); //데이터가 존재할 경우 삭제
-            int[] arr = new int[3];
-            for(int grade=1; grade<=3; grade++) {
-                List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(getYesterday), String.valueOf(getYesterday));
-                if (list.size() != 0) {
-                    arr[grade - 1] = (int) list.get(0).get("count");
-                } else {
-                    arr[grade - 1] = 0;
-                }
-            }
-            NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(getYesterday), arr[0], arr[1], arr[2]);
-            notificationDayStatisticsRepository.save(ns);
-        } catch (Exception e) {
+        int[] dayValue = getReferenceValueCount(String.valueOf(yesterday), String.valueOf(yesterday));
+        yesterdayData.setLegalCount(dayValue[0]);
+        yesterdayData.setCompanyCount(dayValue[1]);
+        yesterdayData.setManagementCount(dayValue[2]);
+        notificationDayStatisticsRepository.save(yesterdayData);
 
+        // 오늘 날짜 체크 (1일인 경우 전일데이터로 계산)
+        int getDay = nowDate.getDayOfMonth();
+        if (getDay == 1)
+            nowDate = nowDate.minusDays(1);
+
+        // nowDate 해당월의 시작일
+        LocalDate from = nowDate.withDayOfMonth(1);
+        // nowDate 해당월의 종료일
+        LocalDate to = nowDate.withDayOfMonth(nowDate.lengthOfMonth());
+
+        // nowDate 날짜 포맷변경 DB 저장용(YYYY-MM)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM");
+        String year_month = formatter.format(nowDate);
+
+        NotificationMonthStatistics monthData = notificationMonthStatisticsRepository.findByMonth(year_month);
+        if(monthData == null){
+            monthData = new NotificationMonthStatistics();
         }
 
-        /**
-         * 이번달 알림 현황 저장 (매달 1일인 경우 지난달 계산)
-         */
-        try {
-            int getDay = nowDate.getDayOfMonth();
-            if(getDay == 1){ //매달 1일인 경우 지난달 계산
-                nowDate = nowDate.minusDays(1);
-            }
-            int lastday = nowDate.lengthOfMonth();
-            int getYear = nowDate.getYear();
-            int getMonth = nowDate.getMonthValue();
-            String date = String.valueOf(nowDate).substring(0,7); //'yyyy-mm'
-            notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
-            LocalDate fromDate = LocalDate.of(getYear, getMonth, 1); //
-            LocalDate toDate = LocalDate.of(getYear, getMonth, lastday);
-            int[] arr = new int[3];
-            for(int grade=1; grade<=3; grade++) {
-                List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(fromDate), String.valueOf(toDate));
-                if (list.size() != 0) {
-                    arr[grade - 1] = (int) list.get(0).get("count");
-                } else {
-                    arr[grade - 1] = 0;
-                }
-            }
-            NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
-            notificationMonthStatisticsRepository.save(ns);
-        } catch (Exception e) {
+        monthData.setMonth(year_month);
 
-        }
+        int[] monthValue = getReferenceValueCount(String.valueOf(from), String.valueOf(to));
+        monthData.setLegalCount(monthValue[0]);
+        monthData.setCompanyCount(monthValue[1]);
+        monthData.setManagementCount(monthValue[2]);
+        notificationMonthStatisticsRepository.save(monthData);
     }
 
+    public int[] getReferenceValueCount(String from, String to){
+        int[] arr = new int[3];
+        for(int grade=1; grade<=3; grade++) {
+            List<HashMap> list = notificationListCustomRepository.getCount(grade, from, to);
+            if (list.size() != 0) {
+                arr[grade - 1] = (int) list.get(0).get("count");
+            } else {
+                arr[grade - 1] = 0;
+            }
+        }
+        return arr;
+    }
 }

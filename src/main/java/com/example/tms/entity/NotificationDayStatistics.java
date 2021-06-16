@@ -1,6 +1,5 @@
 package com.example.tms.entity;
 
-import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -15,11 +14,4 @@ public class NotificationDayStatistics {
     private int legalCount;
     private int companyCount;
     private int managementCount;
-    @Builder
-    public NotificationDayStatistics(String day, int legalCount, int companyCount, int managementCount) {
-        this.day = day;
-        this.legalCount = legalCount;
-        this.companyCount = companyCount;
-        this.managementCount = managementCount;
-    }
 }

@@ -890,6 +890,7 @@ public class AjaxController {
      * 일별 / 월별  알림 현황 (기준초과 카운팅) 저장
      * notification_day_statistics(일) , notification_month_statistics(월)
      */
+    /*
     @RequestMapping(value = "saveNS")
     public ArrayList saveNS() {
         ArrayList al = new ArrayList();
@@ -900,9 +901,9 @@ public class AjaxController {
         LocalDate getYesterday = nowDate.minusDays(1);
         LocalDate getLastMonth = nowDate.minusMonths(1);
 
-        /**
+        *//**
          * 일별 알림 현황 저장 ( 1월1일 ~ 전날(yesterday))
-         */
+         *//*
         for (int m = 1; m <= getMonth; m++) {
             LocalDate date = LocalDate.of(getYear, m, 1);
             int lastDay = date.lengthOfMonth();
@@ -931,9 +932,9 @@ public class AjaxController {
                 }
             }
         }
-        /**
+        *//**
          * 월별 알림 현황 저장 (1월 ~ 이번달)
-         */
+         *//*
         for (int m = 1; m <= getMonth; m++) {
             LocalDate from_date = LocalDate.of(getYear, m, 1);
             LocalDate to_date = LocalDate.of(getYear, m, from_date.lengthOfMonth());
@@ -959,7 +960,7 @@ public class AjaxController {
         }
         return al;
     }
-
+    */
     /**
      * 당일 알림 현황 조회 메소드
      *
