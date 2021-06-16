@@ -159,6 +159,7 @@
 
     function itemChange(){
         const item = $("#items").val();
+        const itemName = $("#items option:checked").text();
         const thisYear = new Date().getFullYear();
         const previousYear = thisYear-1;
 
@@ -172,9 +173,6 @@
 
         let thisYearData = [],previousYearData = [];
 
-        for(let i=1; i>=0; i--){
-            let year = thisYear;
-            year = year-i;
             $.ajax({
                 url: '<%=cp%>/getStatisticsData',
                 type: 'POST',
@@ -182,43 +180,45 @@
                 async: false,
                 cache: false,
                 data: {"sensor":item,
-                    "year":year},
+                    "thisYear":thisYear},
                 success : function(data) {
-                    if(i==0){
-                        thisYearData.push(data.jan);
-                        thisYearData.push(data.feb);
-                        thisYearData.push(data.mar);
-                        thisYearData.push(data.apr);
-                        thisYearData.push(data.may);
-                        thisYearData.push(data.jun);
-                        thisYearData.push(data.jul);
-                        thisYearData.push(data.aug);
-                        thisYearData.push(data.sep);
-                        thisYearData.push(data.oct);
-                        thisYearData.push(data.nov);
-                        thisYearData.push(data.dec);
-                    } else {
-                        previousYearData.push(data.jan);
-                        previousYearData.push(data.feb);
-                        previousYearData.push(data.mar);
-                        previousYearData.push(data.apr);
-                        previousYearData.push(data.may);
-                        previousYearData.push(data.jun);
-                        previousYearData.push(data.jul);
-                        previousYearData.push(data.aug);
-                        previousYearData.push(data.sep);
-                        previousYearData.push(data.oct);
-                        previousYearData.push(data.nov);
-                        previousYearData.push(data.dec);
-                    }
-                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', $("#place").val() + '-'+ findSensorCategory(item) + ' 통계자료 조회','조회');
-                    $("#update").text(moment(data.updateTime).format('YYYY-MM-DD'));
+                        if(data[0] != null) {
+                            thisYearData.push(data[0].jan);
+                            thisYearData.push(data[0].feb);
+                            thisYearData.push(data[0].mar);
+                            thisYearData.push(data[0].apr);
+                            thisYearData.push(data[0].may);
+                            thisYearData.push(data[0].jun);
+                            thisYearData.push(data[0].jul);
+                            thisYearData.push(data[0].aug);
+                            thisYearData.push(data[0].sep);
+                            thisYearData.push(data[0].oct);
+                            thisYearData.push(data[0].nov);
+                            thisYearData.push(data[0].dec);
+                            $("#update").text(moment(data[0].updateTime).format('YYYY-MM-DD'));
+                        }
+                        if(data[1] != null) {
+                            previousYearData.push(data[1].jan);
+                            previousYearData.push(data[1].feb);
+                            previousYearData.push(data[1].mar);
+                            previousYearData.push(data[1].apr);
+                            previousYearData.push(data[1].may);
+                            previousYearData.push(data[1].jun);
+                            previousYearData.push(data[1].jul);
+                            previousYearData.push(data[1].aug);
+                            previousYearData.push(data[1].sep);
+                            previousYearData.push(data[1].oct);
+                            previousYearData.push(data[1].nov);
+                            previousYearData.push(data[1].dec);
+                        }
+
+                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', $("#place").val() + '-'+ itemName + ' 통계자료 조회','조회');
                 },
                 error : function(request, status, error) {
                     console.log(error);
                 }
-            })
-        }
+            });
+
         addChart(previousYear, thisYear, previousYearData, thisYearData);
         addTable(previousYear, thisYear, previousYearData, thisYearData);
     }
@@ -317,7 +317,7 @@
             if(increase>0){
                 innerHtml += '<td style="color:red" class="fw-bold">' + '+ ' + numberWithCommas(increase) + ' %</td>'
             }else if(increase<0){
-                innerHtml += '<td style="color:blue" class="fw-bold">' + '- ' + numberWithCommas(increase) + ' %</td>'
+                innerHtml += '<td style="color:blue" class="fw-bold">' + ' ' + numberWithCommas(increase) + ' %</td>'
             }else{
                 innerHtml += '<td>' + increase + '</td>'
             }
@@ -327,7 +327,7 @@
         if(increase>0){
             innerHtml += '<td style="color:red" class="fw-bold">' + '+ ' + numberWithCommas(increase) + ' %</td>'
         }else if(increase<0){
-            innerHtml += '<td style="color:blue" class="fw-bold">' + '- ' + numberWithCommas(increase) + ' %</td>'
+            innerHtml += '<td style="color:blue" class="fw-bold">' + ' ' + numberWithCommas(increase) + ' %</td>'
         }else{
             innerHtml += '<td>' + increase + '</td>'
         }
@@ -355,7 +355,7 @@
 
     //증감률 계산
     function addIncrease(previousYear, thisYear){
-        let increase = Math.ceil(((thisYear - previousYear)/previousYear))*100;
+        let increase = ((thisYear - previousYear)/previousYear)*100;
         if(isNaN(increase)){
             return '-';
         }

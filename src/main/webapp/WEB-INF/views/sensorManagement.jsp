@@ -23,12 +23,11 @@
 <style>
     .swal2-close{
         width: 30px;
-        height: 32px;
-        font-weight: bold;
-        border: 3px solid #db3535;
-        border-radius: 5px;
+        height: 30px;
+        font-weight: bold !important;
         margin-top: 10px;
         margin-right: 10px;
+        color:black;
     }
     .label {
         width: 100px;
@@ -280,6 +279,12 @@
 <script>
     $(function () {
         getSensor();
+
+        //swal ESC로 닫기
+        $(document).keydown(function(e){
+            if(e.keyCode == 27 && $('.swal2-close')!=null )
+                $('.swal2-close').trigger("click");
+        });
     });
 
 
@@ -373,9 +378,8 @@
             confirmButtonText: '삭제',
             cancelButtonText: '취소'
         }).then((result) => {
-            if (result.isConfirmed) {
+            if (result.isConfirmed)
                 deleteSensor(tableName);
-            }
         });
     }
 

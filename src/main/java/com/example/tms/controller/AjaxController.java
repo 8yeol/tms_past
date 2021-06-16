@@ -1320,13 +1320,20 @@ public class AjaxController {
      * 센서와 년도를 넣고 월별 데이터를 추출
      *
      * @param sensor 센서명
-     * @param year   년도
-     * @return 월별 데이터
+     * @param thisYear   현재년도
+     * @return 올해,작년 월별 데이터
      */
     @RequestMapping(value = "/getStatisticsData", method = RequestMethod.POST)
-    public MonthlyEmissions getStatisticsData(String sensor, int year) {
+    public List getStatisticsData(String sensor, int thisYear) {
 
-        return monthlyEmissionsRepository.findBySensorAndYear(sensor, year);
+        MonthlyEmissions thisMe = monthlyEmissionsRepository.findBySensorAndYear(sensor, thisYear);
+        MonthlyEmissions prevMe = monthlyEmissionsRepository.findBySensorAndYear(sensor, thisYear-1);
+        List monthlyList = new ArrayList();
+
+        monthlyList.add(thisMe);
+        monthlyList.add(prevMe);
+
+        return monthlyList;
     }
 
     /**

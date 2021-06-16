@@ -25,12 +25,11 @@
 <style>
     .swal2-close{
         width: 30px;
-        height: 32px;
-        font-weight: bold;
-        border: 3px solid #db3535;
-        border-radius: 5px;
+        height: 30px;
+        font-weight: bold !important;
         margin-top: 10px;
         margin-right: 10px;
+        color:black;
     }
     .MultiSelecterModal {
         width: auto;
