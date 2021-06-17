@@ -246,6 +246,7 @@
         }
 
     }
+
     function placeDiv1() {
         var getData = null;
         $.ajax({
@@ -600,8 +601,6 @@
         var name = $("#p" + num).attr("value"); //측정소 명
         var timeTd = $("#" + id).parent().parent().prev();
         var sensorCheck = findSensor(name);
-
-
         if (sensorCheck == 'none') { //등록된 센서가 없을때
             customSwal('등록된 센서가 없어 모니터링 기능을 사용할 수 없습니다.');
             $("#" + id).prop("checked", false);
@@ -612,7 +611,6 @@
             $("#" + id).prop("checked", false);
             return;
         }
-
         $.ajax({
             url: '<%=cp%>/MonitoringUpdate',
             type: 'POST',
@@ -629,7 +627,6 @@
                 console.log(err);
             }
         })
-
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + sensorCheck + "", "설정");
         MultiSelecterModal(name, "", "monitor", check);
     }
@@ -657,7 +654,6 @@
         } else {
             check = "OFF";
         }
-
         let checkFlag = false;
         if ($("input[name=sensormonitor]").is(":checked") == true) checkFlag = true;
 
@@ -667,6 +663,7 @@
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(pname, naming, "monitor", check);
     }
+
     function ifsum(value) {
         if (value.indexOf('.') != -1) {
             var value_dot = value.substring(value.indexOf('.') + 1);
@@ -689,6 +686,7 @@
         }
         return true;
     }
+
     //legal onchange
     function legalupdate(name) {
         var id = name.id;
@@ -713,7 +711,7 @@
                 placeChange(document.getElementById('nickname').value);
                 return false;
             }
-            if(ifsum(value) == false){
+            if (ifsum(value) == false) {
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
@@ -748,10 +746,10 @@
             }
         })
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
-        MultiSelecterModal(pname, naming, "legal", value);
-        if(value == "999"){
+        if (value == "999") {
             name.value = "";
-        }else{
+        } else {
+            MultiSelecterModal(pname, naming, "legal", value);
             name.value = value;
         }
     }
@@ -781,7 +779,7 @@
                 placeChange(document.getElementById('nickname').value);
                 return false;
             }
-            if(ifsum(value) == false){
+            if (ifsum(value) == false) {
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
@@ -804,7 +802,6 @@
                 return;
             }
         }
-
         $.ajax({
             url: '<%=cp%>/companyUpdate',
             type: 'POST',
@@ -817,14 +814,13 @@
             }
         })
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
-        MultiSelecterModal(pname, naming, "legal", value);
-        if(value == "999"){
+        if (value == "999") {
             name.value = "";
-        }else{
+        } else {
+            MultiSelecterModal(pname, naming, "company", value);
             name.value = value;
         }
     }
-
     //management onchange
     function managementupdate(name) {
         var id = name.id;
@@ -840,7 +836,7 @@
         if (value == "" || value == "999") {
             value = "999";
         } else {
-            if(ifsum(value) == false){
+            if (ifsum(value) == false) {
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
@@ -863,7 +859,6 @@
                 return;
             }
         }
-
         $.ajax({
             url: '<%=cp%>/managementUpdate',
             type: 'POST',
@@ -876,10 +871,10 @@
             }
         });
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
-        MultiSelecterModal(pname, naming, "legal", value);
-        if(value == "999"){
+        if (value == "999") {
             name.value = "";
-        }else{
+        } else {
+            MultiSelecterModal(pname, naming, "manage", value);
             name.value = value;
         }
     }
