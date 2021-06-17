@@ -206,33 +206,26 @@ public class AjaxController {
      * @return 센서의 최근, 이전, 정보
      */
     @RequestMapping(value="/getPlaceData")
-    public Object getPlaceData(String place) {
+    public JSONArray getPlaceData(String place) {
         List<String> placeName = placeRepository.findByName(place).getSensor();
         JSONArray jsonArray = new JSONArray();
         for(int i=0; i<placeName.size(); i++){
             JSONObject subObj = new JSONObject();
-            boolean monitoring = reference_value_settingRepository.findByName(placeName.get(i)).getMonitoring();
+            String sensorName = placeName.get(i);
+            boolean monitoring = reference_value_settingRepository.findByName(sensorName).getMonitoring();
             if(monitoring){ //monitoring true
-                try{
-                    Sensor recentData = sensorCustomRepository.getSensorRecent(placeName.get(i));
-                    subObj.put("value", recentData.getValue());
-                    subObj.put("up_time", recentData.getUp_time());
-                    subObj.put("status", recentData.isStatus());
-                }catch (Exception e){
-                    return null;
-                }
-                try {
-                    Sensor beforeData = sensorCustomRepository.getSensorBeforeData(placeName.get(i));
-                    subObj.put("beforeValue", beforeData.getValue());
-                }catch (Exception e){
-                    subObj.put("beforeValue", 0);
-                }
-                ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(placeName.get(i));
+                Sensor recentData = sensorCustomRepository.getSensorRecent(sensorName);
+                subObj.put("value", recentData.getValue());
+                subObj.put("up_time", recentData.getUp_time());
+                subObj.put("status", recentData.isStatus());
+                Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorName);
+                subObj.put("beforeValue", beforeData.getValue());
+                ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorName);
                 subObj.put("naming", sensorInfo.getNaming());
                 subObj.put("legalStandard", sensorInfo.getLegalStandard());
                 subObj.put("companyStandard", sensorInfo.getCompanyStandard());
                 subObj.put("managementStandard", sensorInfo.getManagementStandard());
-                subObj.put("name", placeName.get(i));
+                subObj.put("name", sensorName);
                 jsonArray.add(subObj);
             }
         }
