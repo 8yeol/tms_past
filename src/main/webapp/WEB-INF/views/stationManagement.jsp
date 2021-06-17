@@ -454,7 +454,7 @@
             idx = 2;
         }
         const na = $("#na1").val();
-        const name = na.replace(/(\s*)/g, ""); //공백제거
+        const name = na.replace(/(\s*)/g, ""); //
         const location = $("#lo1").val();
         const tel = $("#te1").val();
         const admin = $("#ad1").val();
@@ -667,11 +667,30 @@
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(pname, naming, "monitor", check);
     }
-
+    function ifsum(value) {
+        if (value.indexOf('.') != -1) {
+            var value_dot = value.substring(value.indexOf('.') + 1);
+            if (value_dot.length > 2) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: '소수점 2자리까지만 입력 가능합니다.'
+                })
+                return false;
+            }
+        }
+        if (isNaN(value) == true) {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '입력 데이터를 체크해주세요.'
+            })
+            return false;
+        }
+        return true;
+    }
     //legal onchange
     function legalupdate(name) {
-
-        var a = document.getElementById(name.id).value;
         var id = name.id;
         const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
         const naming = $("#naming" + num).text(); //관리ID
@@ -680,9 +699,9 @@
         var company = $("#" + companyname).val(); //사내기준 값
         var managename = "management" + num;
         var manage = $("#" + managename).val(); //관리기준 값
-        var value = strReplace(name.value); //법적기준 값
+        var value = strReplace(name.value); //수정값
         var pname = $("#pname").text();
-        if (value == "") {
+        if (value == "" || value == "999") {
             value = "999";
         } else {
             if (value == 0) {
@@ -694,29 +713,9 @@
                 placeChange(document.getElementById('nickname').value);
                 return false;
             }
-            if (value.indexOf('.') != -1) {
-                var value_dot = value.substring(value.indexOf('.') + 1);
-                if (value_dot.length > 2) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '경고',
-                        text: '소수점 2자리까지만 입력 가능합니다.'
-
-                    })
-                    placeChange(document.getElementById('nickname').value);
-                    return false;
-                }
-            }
-
-            if (isNaN(value) == true) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '입력 데이터를 체크해주세요.'
-
-                })
+            if(ifsum(value) == false){
                 placeChange(document.getElementById('nickname').value);
-                return false;
+                return;
             }
             if (parseFloat(value) <= parseFloat(company)) { //법적기준 값이 사내기준 값보다 작을때
                 Swal.fire({
@@ -737,8 +736,6 @@
                 return;
             }
         }
-
-
         $.ajax({
             url: '<%=cp%>/legalUpdate',
             type: 'POST',
@@ -750,14 +747,13 @@
                 "place": pname
             }
         })
-        if (value == 999) {
-            value = "초기화";
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 초기화", "설정");
-        } else {
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
-        }
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
         MultiSelecterModal(pname, naming, "legal", value);
-        name.value = value;
+        if(value == "999"){
+            name.value = "";
+        }else{
+            name.value = value;
+        }
     }
 
     //company onchange
@@ -772,10 +768,9 @@
         var manage = $("#" + managename).val(); //관리기준 값
         var value = strReplace(name.value);
         var pname = $("#pname").text();
-        if (value == "") {
+        if (value == "" || value == "999") {
             value = "999";
         } else {
-
             if (value == 0) {
                 Swal.fire({
                     icon: 'warning',
@@ -786,29 +781,10 @@
                 placeChange(document.getElementById('nickname').value);
                 return false;
             }
-            if (value.indexOf('.') != -1) {
-                var value_dot = value.substring(value.indexOf('.') + 1);
-                if (value_dot.length > 2) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '경고',
-                        text: '소수점 2자리까지만 입력 가능합니다.'
-                    })
-                    placeChange(document.getElementById('nickname').value);
-                    return false;
-                }
-            }
-            if (isNaN(value) == true) {
-
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '입력 데이터를 체크해주세요.'
-                })
+            if(ifsum(value) == false){
                 placeChange(document.getElementById('nickname').value);
-                return false;
+                return;
             }
-
             if (parseFloat(value) <= parseFloat(manage)) {  //
                 Swal.fire({
                     icon: 'warning',
@@ -840,14 +816,13 @@
                 "place": pname
             }
         })
-        if (value == 999) {
-            value = "초기화";
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 사내 기준 값 초기화", "설정");
-        } else {
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 사내 기준 값 변경 '" + value + "'", "설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
+        MultiSelecterModal(pname, naming, "legal", value);
+        if(value == "999"){
+            name.value = "";
+        }else{
+            name.value = value;
         }
-        MultiSelecterModal(pname, naming, "company", value);
-        name.value = value;
     }
 
     //management onchange
@@ -862,31 +837,12 @@
         var company = $("#" + companyname).val(); //사내기준 값
         var value = strReplace(name.value); //관리기준
         var pname = $("#pname").text();
-        if (value == "") {
+        if (value == "" || value == "999") {
             value = "999";
         } else {
-            if (isNaN(value) == true) {
-
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '입력 데이터를 체크해주세요.'
-
-                })
+            if(ifsum(value) == false){
                 placeChange(document.getElementById('nickname').value);
-                return false;
-            }
-            if (value.indexOf('.') != -1) {
-                var value_dot = value.substring(value.indexOf('.') + 1);
-                if (value_dot.length > 2) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '경고',
-                        text: '소수점 2자리까지만 입력 가능합니다.'
-                    })
-                    placeChange(document.getElementById('nickname').value);
-                    return false;
-                }
+                return;
             }
             if (parseFloat(company) <= parseFloat(value)) {  //
                 Swal.fire({
@@ -919,14 +875,13 @@
                 "place": pname
             }
         });
-        if (value == 999) {
-            value = "초기화";
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 관리 기준 값 초기화", "설정");
-        } else {
-            inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 관리 기준 값 변경 '" + value + "'", "설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
+        MultiSelecterModal(pname, naming, "legal", value);
+        if(value == "999"){
+            name.value = "";
+        }else{
+            name.value = value;
         }
-        MultiSelecterModal(pname, naming, "manage", value);
-        name.value = value;
     }
 
     //데이터 변경시 팝업창
