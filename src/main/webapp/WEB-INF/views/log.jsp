@@ -9,6 +9,7 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+<script src="static/js/moment.min.js"></script>
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
