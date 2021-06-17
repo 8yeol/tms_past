@@ -23,48 +23,24 @@
     }
     /*.toolbar:after {content:""; display: block; clear: both;}*/
 
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
+    #paging a{
         box-sizing: border-box;
         display: inline-block;
         min-width: 1.5em;
-        padding: 0.5em 1em;
+        padding: 0.3em 0.8em;
         margin-left: 2px;
         text-align: center;
         text-decoration: none !important;
         cursor: pointer;
         *cursor: hand;
-        color: #333 !important;
         border: 0px solid transparent;
         border-radius: 50px;
     }
 
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-        color: #fff !important;
-        border: 0px;
-        background: #97bef8;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
-        cursor: default;
-        color: #666 !important;
-        border: 1px solid transparent;
-        background: transparent;
-        box-shadow: none;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    #paging a:hover {
         color: white !important;
         border: 0px;
         background: #254069;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
-        outline: none;
-        background-color: #2b2b2b;
-        box-shadow: inset 0 0 3px #111;
     }
 
     #information_filter label {
@@ -194,10 +170,11 @@
         }
 
         $("#paging").html(html);    // 페이지 목록 생성
-        $("#paging a").css("color", "black");
+        $("#paging a").css("color", "#333");
         $("#paging a#" + currentPage).css({"text-decoration":"none",
-            "color":"red",
-            "font-weight":"bold"});    // 현재 페이지 표시
+            "background-color":"#97bef8",
+            "font-weight":"bold",
+            "color":"#fff !important"});    // 현재 페이지 표시
 
         $("#paging a").click(function(){
             const $item = $(this);
