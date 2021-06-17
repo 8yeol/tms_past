@@ -174,7 +174,7 @@
                             </div>
                             <div class=" inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
-                                <input type="text" class="mediaText" name="naming" id="naming"  autocomplete="off">
+                                <input type="text" class="mediaText" name="naming" id="naming"  autocomplete="off" maxlength="20">
                             </div>
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                 <thead>
                 <tr>
                     <th scope="col" width="10%">분류</th>
-                    <th scope="col" width="10%">항복명</th>
+                    <th scope="col" width="10%">항목명</th>
                     <th scope="col" width="10%">관리 ID</th>
                     <th scope="col" width="18%">테이블명</th>
                     <th scope="col" width="17%">업데이트</th>
@@ -231,7 +231,7 @@
                             <span class="fs-5 fw-bold add-margin f-sizing">항목명</span>
                         </div>
                         <div class="col">
-                            <input type="text" name="naming2" class="inputText p-1" id="naming2"  autocomplete="off">
+                            <input type="text" name="naming2" class="inputText p-1" id="naming2"  autocomplete="off" maxlength="20">
                         </div>
                     </div>
                     <div class="row mt-3">
