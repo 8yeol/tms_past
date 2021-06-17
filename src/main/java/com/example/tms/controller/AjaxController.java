@@ -222,15 +222,29 @@ public class AjaxController {
                 subObj.put("beforeValue", beforeData.getValue());
                 ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorName);
                 subObj.put("naming", sensorInfo.getNaming());
-                subObj.put("legalStandard", sensorInfo.getLegalStandard());
-                subObj.put("companyStandard", sensorInfo.getCompanyStandard());
-                subObj.put("managementStandard", sensorInfo.getManagementStandard());
+                subObj.put("legalStandard", numberTypeChange(sensorInfo.getLegalStandard()));
+                subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
+                subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
                 subObj.put("name", sensorName);
                 jsonArray.add(subObj);
             }
         }
         return jsonArray;
     }
+
+    /**
+     * 소수점 아래 존재 .0 일 경우 정수로 바꿔주는 메소드
+     * @param number
+     * @return 정수형/실수형
+     */
+    public Object numberTypeChange(float number){
+        if(number-Math.round(number) == 0){ //소수점 아래 0일때
+            return (int)number;
+        }else{
+            return Math.round(number*100)/100.0;
+        }
+    }
+
 
     /**
      * 해당 센서의 모터링이 True 인 센서 데이터(최근,이전,기준값 등) Json형태로 리턴하는 메소드
@@ -258,9 +272,9 @@ public class AjaxController {
             }
             ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensor);
             subObj.put("naming", sensorInfo.getNaming());
-            subObj.put("legalStandard", sensorInfo.getLegalStandard());
-            subObj.put("companyStandard", sensorInfo.getCompanyStandard());
-            subObj.put("managementStandard", sensorInfo.getManagementStandard());
+            subObj.put("legalStandard", numberTypeChange(sensorInfo.getLegalStandard()));
+            subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
+            subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
             subObj.put("name", sensor);
         }
         return subObj;

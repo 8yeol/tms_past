@@ -223,17 +223,17 @@
                                     </c:choose>
                                 </div></td>
                                 <td>
-                                    <c:if test="${sensorList.beforeValue > sensorList.value}">
-                                        <i class="fas fa-sort-down fa-fw" style="color: blue"></i>
-                                    </c:if>
-                                    <c:if test="${sensorList.beforeValue < sensorList.value}">
-                                        <i class="fas fa-sort-up fa-fw" style="color: red"></i>
+                                    <c:if test="${sensorList.value != 0}">
+                                        <c:if test="${sensorList.beforeValue > sensorList.value}">
+                                            <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
+                                        </c:if>
+                                        <c:if test="${sensorList.beforeValue < sensorList.value}">
+                                            <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
+                                        </c:if>
+
                                     </c:if>
                                     <c:if test="${sensorList.value eq 0}">
-                                        0
-                                    </c:if>
-                                    <c:if test="${sensorList.value != 0}">
-                                        <fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
+                                        0.00
                                     </c:if>
                                 </td>
                                 <td>
@@ -648,7 +648,7 @@
                 data:  {"sensor": sensor},
                 async: false,
                 success: function (data) {
-                    result = {value: data.value, status: data.status, up_time:data.up_time};
+                    result = {value: (data.value).toFixed(2), status: data.status, up_time:data.up_time};
                 },
                 error: function (e) {
                 }
@@ -677,7 +677,7 @@
                 success: function (data) {
                     if(data.length != 0){
                         $.each(data, function (index, item) {
-                            result.push({x: item.up_time, y: item.value});
+                            result.push({x: item.up_time, y: (item.value).toFixed(2)});
                         })
                     }else{
                         // 조회 결과 없을 때 return [];
@@ -789,8 +789,16 @@
             for(var i in sensor_data_list){
                 arr.push(sensor_data_list[i].y);
             }
-            var max = Math.max.apply(null, arr);
-            var min = Math.min.apply(null, arr);
+            // var max = Math.max.apply(null, arr);
+            // var min = Math.min.apply(null, arr);
+            var max = arr.reduce(function (previousValue, currentValue) {
+                return parseInt(previousValue > currentValue ? previousValue:currentValue);
+            })
+            var min = arr.reduce(function (previousValue, currentValue) {
+                return parseInt(previousValue > currentValue ? currentValue:previousValue);
+            })
+            max = max+1;
+            min = min-1;
         }else{
             sensor_data_list = [];
         }
@@ -864,7 +872,7 @@
                         if (sensor_data_list == null || sensor_data_list.length == 0)
                             return 'No data'
                         else
-                            return val.toFixed(2);
+                            return val;
                     }
                 }
             },
@@ -914,7 +922,7 @@
                     newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
                     newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
                     newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
-                    newCeil4.innerHTML = draw_compareData((data[i].beforeValue).toFixed(2), (data[i].value).toFixed(2));
+                    newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
 
                     if(data[i].value > data[i].legalStandard){
                         newCeil5.innerHTML =  '<div class="bg-danger text-light">'+"법적기준 초과"+'</div>';
@@ -936,10 +944,11 @@
      * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
      */
     function draw_compareData(beforeData , nowData){
+        nowData = nowData.toFixed(2);
         if(beforeData > nowData){
-            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData;
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' +nowData;
         } else if( nowData > beforeData) {
-            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData;
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' +nowData;
         } else{
             return nowData;
         }
@@ -970,7 +979,7 @@
                 }else if(sensor_data_list[i].y <= sensor_data.managementStandard){
                     standard = "정상";
                 }
-                arr.push({x:moment(sensor_data_list[i].x).format('YYYY-MM-DD HH:mm:ss'), y:(sensor_data_list[i].y).toFixed(2), z: standard});
+                arr.push({x:moment(sensor_data_list[i].x).format('YYYY-MM-DD HH:mm:ss'), y:sensor_data_list[i].y, z: standard});
             }
         }
         if(sensor_data != null){
@@ -1042,7 +1051,7 @@
         var dt = $('#sensor-table').DataTable();
         var pageNum = dt.page.info().page;
         upDate = moment(sensor_data_list_recent.up_time).format('YYYY-MM-DD HH:mm:ss');
-        value = (sensor_data_list_recent.value).toFixed(2);
+        value = sensor_data_list_recent.value;
         if(sensorData.legalStandard == 999){
             legalStandard = '-';
         }else{

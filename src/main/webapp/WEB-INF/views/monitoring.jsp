@@ -253,7 +253,6 @@
                     <div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>
                         <span class='fs-5'><c:out value="${placeName}"/></span>
                     </div>
-
                     <c:forEach items="${sensor}" var="sensorList" varStatus="status">
                         <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
                             <c:if test="${sensorList2.place eq placeName}">
@@ -262,9 +261,7 @@
                             </c:if>
                         </c:forEach>
                     </c:forEach>
-                    <div class='text-end' style='font-size: 0.8rem'>업데이트 :
-                        <span class="small" id='update-${status.index}'>
-                            <c:if test="${fn:length(sensorData) > 0 }"><c:out value="${uptime}"/></c:if>
+                    <div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id='update-${status.index}'><c:if test="${fn:length(sensorData) > 0 }"><c:out value="${uptime}"/></c:if>
                             <c:if test="${fn:length(sensorData) == 0 }">-</c:if>
                         </span>
                     </div>
@@ -317,17 +314,16 @@
                                                 </c:choose>
                                             </div></td>
                                             <td>
-                                                <c:if test="${sensorList2.beforeValue > sensorList2.value}">
-                                                    <i class="fas fa-sort-down fa-fw" style="color: blue"></i>
-                                                </c:if>
-                                                <c:if test="${sensorList2.beforeValue < sensorList2.value}">
-                                                    <i class="fas fa-sort-up fa-fw" style="color: red"></i>
+                                                <c:if test="${sensorList2.value != 0}">
+                                                    <c:if test="${sensorList2.beforeValue > sensorList2.value}">
+                                                        <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
+                                                    </c:if>
+                                                    <c:if test="${sensorList2.beforeValue < sensorList2.value}">
+                                                        <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
+                                                    </c:if>
                                                 </c:if>
                                                 <c:if test="${sensorList2.value eq 0}">
-                                                    0
-                                                </c:if>
-                                                <c:if test="${sensorList2.value != 0}">
-                                                    <fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
+                                                    0.00
                                                 </c:if>
                                             </td>
                                         </c:if>
@@ -487,7 +483,8 @@
                 }
                 $('#place_table').append(
                     "<div class='col-md-"+col_md_size+" mb-3 mt-2 place_border'>" +
-                    "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'><span class='fs-5'>"+placeName[i]+"</span></div>" +
+                    "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>" +
+                    "<span class='fs-5'>"+placeName[i]+"</span></div>" +
                     "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+">"+"</span></div>" +
                     "<table class='table table-bordered table-hover text-center mt-1'>" +
                     "<thead>" +
@@ -629,12 +626,13 @@
      * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
      */
     function draw_compareData(beforeData , nowData){
+        nowData = nowData.toFixed(2);
         if(beforeData > nowData){
-            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData.toFixed(2);
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' +nowData;
         } else if( nowData > beforeData) {
-            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData.toFixed(2);
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' +nowData;
         } else{
-            return nowData.toFixed(2);
+            return nowData;
         }
     }
 

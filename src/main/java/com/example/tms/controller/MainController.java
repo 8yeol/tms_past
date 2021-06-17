@@ -200,9 +200,9 @@ public class MainController {
                         }
                         ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorNames.get(i));
                         subObj.put("naming", sensorInfo.getNaming());
-                        subObj.put("legalStandard", sensorInfo.getLegalStandard());
-                        subObj.put("companyStandard", sensorInfo.getCompanyStandard());
-                        subObj.put("managementStandard", sensorInfo.getManagementStandard());
+                        subObj.put("legalStandard", numberTypeChange(sensorInfo.getLegalStandard()));
+                        subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
+                        subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
                         subObj.put("name", sensorNames.get(i));
                         jsonArray2.add(subObj);
                     }
@@ -216,6 +216,18 @@ public class MainController {
         }
     }
 
+    /**
+     * 소수점 아래 존재 .0 일 경우 정수로 바꿔주는 메소드
+     * @param number
+     * @return 정수형/실수형
+     */
+    public Object numberTypeChange(float number){
+        if(number-Math.round(number) == 0){ //소수점 아래 0일때
+            return (int)number;
+        }else{
+            return Math.round(number*100)/100.0;
+        }
+    }
 
     /**
      * [모니터링 - 상세화면]
@@ -245,7 +257,7 @@ public class MainController {
                     try{
                         Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i));
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        subObj.put("value", recentData.getValue());
+                        subObj.put("value", numberTypeChange(recentData.getValue()));
                         subObj.put("up_time", simpleDateFormat.format(recentData.getUp_time()));
                         subObj.put("status", recentData.isStatus());
                     }catch (Exception e){
@@ -253,15 +265,15 @@ public class MainController {
                     }
                     try {
                         Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorNames.get(i));
-                        subObj.put("beforeValue", beforeData.getValue());
+                        subObj.put("beforeValue", numberTypeChange(beforeData.getValue()));
                     }catch (Exception e){
                         subObj.put("beforeValue", 0);
                     }
                     ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorNames.get(i));
                     subObj.put("naming", sensorInfo.getNaming());
-                    subObj.put("legalStandard", sensorInfo.getLegalStandard());
-                    subObj.put("companyStandard", sensorInfo.getCompanyStandard());
-                    subObj.put("managementStandard", sensorInfo.getManagementStandard());
+                    subObj.put("legalStandard", numberTypeChange(sensorInfo.getLegalStandard()));
+                    subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
+                    subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
                     subObj.put("name", sensorNames.get(i));
                     jsonArray.add(subObj);
                     if(sensorNames.get(i).equals(sensor)){
@@ -280,7 +292,7 @@ public class MainController {
             for(int i=0; i<sensorData.size(); i++){
                 JSONObject subObj2 = new JSONObject();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                subObj2.put("y", sensorData.get(i).getValue());
+                subObj2.put("y", numberTypeChange(sensorData.get(i).getValue()));
                 subObj2.put("x",  simpleDateFormat.format(sensorData.get(i).getUp_time()));
                 jsonArray2.add(subObj2);
             }
