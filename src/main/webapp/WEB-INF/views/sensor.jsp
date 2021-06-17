@@ -936,12 +936,18 @@
      * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
      */
     function draw_compareData(beforeData , nowData){
+        var newData;
+        if(nowData == 0){
+            newData = nowData;
+        }else{
+            newData = nowData.toFixed(2);
+        }
         if(beforeData > nowData){
-            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData;
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + newData;
         } else if( nowData > beforeData) {
-            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData;
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + newData;
         } else{
-            return nowData;
+            return newData;
         }
     }
 
@@ -961,6 +967,12 @@
         }else{
             var arr = new Array();
             for(var i=0; i<sensor_data_list.length; i++){
+                var newData;
+                if(sensor_data_list[i].y == 0){
+                    newData = sensor_data_list[i].y;
+                }else{
+                    newData = (sensor_data_list[i].y).toFixed(2);
+                }
                 if(sensor_data_list[i].y > sensor_data.legalStandard){
                     standard =  '<div class="bg-danger text-light">'+"법적기준 초과"+'</div>';
                 }else if(sensor_data_list[i].y > sensor_data.companyStandard){
@@ -970,7 +982,9 @@
                 }else if(sensor_data_list[i].y <= sensor_data.managementStandard){
                     standard = "정상";
                 }
-                arr.push({x:moment(sensor_data_list[i].x).format('YYYY-MM-DD HH:mm:ss'), y:(sensor_data_list[i].y).toFixed(2), z: standard});
+
+
+                arr.push({x:moment(sensor_data_list[i].x).format('YYYY-MM-DD HH:mm:ss'), y:newData, z: standard});
             }
         }
         if(sensor_data != null){
