@@ -71,6 +71,7 @@ public class SensorCustomRepository {
         try{
             Query query = new Query();
             query.with(Sort.by(Sort.Direction.DESC,"_id"));
+            query.limit(1);
             return mongoTemplate.findOne(query , Sensor.class, sensor);
         }catch (Exception e){
             log.info("getSensorRecent error" + e.getMessage());
@@ -85,10 +86,11 @@ public class SensorCustomRepository {
      */
     public Sensor getSensorBeforeData(String sensor){
         try{
-            long count = mongoTemplate.estimatedCount(sensor);
             Query query = new Query();
-            query.skip(count - 2);
-            return mongoTemplate.findOne(query, Sensor.class, sensor);
+            query.with(Sort.by(Sort.Direction.DESC,"_id"));
+            query.limit(2);
+            List<Sensor> list = mongoTemplate.find(query, Sensor.class, sensor);
+            return list.get(1);
         }catch (Exception e){
             log.info("getSensorRecent error" + e.getMessage());
         }
