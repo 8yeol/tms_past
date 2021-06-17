@@ -70,7 +70,7 @@ public class SensorCustomRepository {
     public Sensor getSensorRecent(String sensor){
         try{
             Query query = new Query();
-            query.with(Sort.by(Sort.Direction.DESC,"up_time"));
+            query.with(Sort.by(Sort.Direction.DESC,"_id"));
             return mongoTemplate.findOne(query , Sensor.class, sensor);
         }catch (Exception e){
             log.info("getSensorRecent error" + e.getMessage());
