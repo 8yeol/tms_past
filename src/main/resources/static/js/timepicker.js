@@ -24,6 +24,7 @@
     }
   }
 
+
   // check if $elem is focused
   function _isFocused($elem){
     if ($elem.is(":focus")){ return true; }

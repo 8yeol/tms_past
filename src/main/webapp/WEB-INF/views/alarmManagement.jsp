@@ -31,6 +31,8 @@
     }
 </style>
 
+
+
 <div class="container" id="container">
     <div class="row m-3 mt-3 ms-1">
         <span class=" fw-bold" style="font-size: 27px;">환경설정 > 알림설정</span>
