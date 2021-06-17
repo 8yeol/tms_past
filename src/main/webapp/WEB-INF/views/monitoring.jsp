@@ -629,18 +629,12 @@
      * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
      */
     function draw_compareData(beforeData , nowData){
-        var newData;
-        if(nowData == 0){
-            newData = nowData;
-        }else{
-            newData = nowData.toFixed(2);
-        }
         if(beforeData > nowData){
-            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + newData;
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData.toFixed(2);
         } else if( nowData > beforeData) {
-            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + newData;
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData.toFixed(2);
         } else{
-            return newData;
+            return nowData.toFixed(2);
         }
     }
 
