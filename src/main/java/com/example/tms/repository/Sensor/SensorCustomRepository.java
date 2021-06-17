@@ -69,13 +69,9 @@ public class SensorCustomRepository {
      */
     public Sensor getSensorRecent(String sensor){
         try{
-            long beforeTime = System.currentTimeMillis();
             Query query = new Query();
             query.with(Sort.by(Sort.Direction.DESC,"up_time"));
             System.out.println(mongoTemplate.findOne(query , Sensor.class, sensor));
-            long afterTime = System.currentTimeMillis();
-            long secDiffTime = (afterTime-beforeTime);
-            System.out.println(secDiffTime);
             return mongoTemplate.findOne(query , Sensor.class, sensor);
 //            ProjectionOperation projectionOperation = Aggregation.project()
 //                    .andInclude("value")
