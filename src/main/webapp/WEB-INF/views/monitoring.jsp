@@ -377,7 +377,7 @@
         draw_sensor_info(placeData2);
         setTimeout(function () {
             getData();
-        }, 5000);
+        }, 1000);
         flashCheck = "on";
     });
 
