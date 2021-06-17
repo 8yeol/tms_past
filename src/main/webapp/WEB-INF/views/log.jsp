@@ -130,7 +130,6 @@
                         <td>test</td>
                         <td>2020-01-48 12:22:52</td>
                     </tr>
-                </c:forEach>
                 <tbody>
             </table>
 
