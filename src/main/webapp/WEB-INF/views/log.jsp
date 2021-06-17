@@ -27,12 +27,13 @@
         box-sizing: border-box;
         display: inline-block;
         min-width: 1.5em;
-        padding: 0.3em 0.8em;
+        padding: 0.5em 1em;
         margin-left: 2px;
         text-align: center;
         text-decoration: none !important;
         cursor: pointer;
         *cursor: hand;
+        color: #333 !important;
         border: 0px solid transparent;
         border-radius: 50px;
     }
@@ -100,15 +101,16 @@
                     <th width="20%">해당 날짜</th>
                 </tr>
                 </thead>
-                </tbody>
+                <tbody id="logTbody">
+                <c:forEach items="${logList}" var="log" varStatus="i">
                     <tr class="text-center" style="font-size: 0.9rem;height: 40px;">
-                        <td>test</td>
-                        <td>test</td>
-                        <td>2020-01-48 12:22:52</td>
+                        <td>${log.type}</td>
+                        <td>${log.content}</td>
+                        <td><fmt:formatDate value="${log.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                     </tr>
-                <tbody>
+                </c:forEach>
+                </tbody>
             </table>
-
 
             <div id="paging" class="text-end"> </div>
 
@@ -140,8 +142,6 @@
     }
 
     function paging(totalData, dataPerPage, pageCount, currentPage){
-        console.log("currentPage : " + currentPage);
-
         const totalPage = Math.ceil(totalData/dataPerPage);    // 총 페이지 수
         const pageGroup = Math.ceil(currentPage/pageCount);    // 페이지 그룹
         let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
@@ -185,6 +185,38 @@
             if($id == "next")    selectedPage = next;
             if($id == "prev")    selectedPage = prev;
             if($id == "end")    selectedPage = totalPage;
+
+            const id = '${member.id}';
+
+            $.ajax({
+                url: '<%=cp%>/logPagination',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                cache: false,
+                data: { "id" : id,
+                    "pageNo" : selectedPage },
+                success: function (data) {
+                    if(data.length != 0){
+                        $("#logTbody").empty();
+                        const tbody = document.getElementById('logTbody');
+
+                        for(let i=0; i<data.length; i++){
+                            const row = tbody.insertRow( tbody.rows.length );
+                            const cell1 = row.insertCell(0);
+                            const cell2 = row.insertCell(1);
+                            const cell3 = row.insertCell(2);
+                            cell1.innerHTML = data[i].type;
+                            cell2.innerHTML = data[i].content;
+                            cell3.innerHTML = moment(data[i].date).format('YYYY-MM-DD HH:mm:ss');
+                        }
+
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log(error)
+                }
+            });
 
             paging(totalData, dataPerPage, pageCount, selectedPage);
         });

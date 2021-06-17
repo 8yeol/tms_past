@@ -1,5 +1,6 @@
 package com.example.tms.mongo;
 
+import com.example.tms.entity.Log;
 import com.example.tms.entity.NotificationList;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -99,4 +100,33 @@ public class MongoQuary {
 
         return result;
     }
+
+    public Object pagination(int pageNo, String id) {
+
+        MatchOperation where = Aggregation.match(
+                new Criteria().andOperator(
+                        Criteria.where("id").is(id)
+                )
+        );
+
+        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "_id");
+
+        SkipOperation skip = Aggregation.skip((pageNo-1)*20);
+
+        LimitOperation limit = Aggregation.limit(20);
+
+        Aggregation agg = Aggregation.newAggregation(
+                where,
+                sort,
+                skip,
+                limit
+        );
+
+        AggregationResults<Log> results = mongoTemplate.aggregate(agg, "log", Log.class);
+
+        List<Log> result = results.getMappedResults();
+
+        return result;
+    }
+
 }

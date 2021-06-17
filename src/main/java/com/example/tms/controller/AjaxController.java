@@ -1599,4 +1599,9 @@ public class AjaxController {
         }
         return rankManagementRepository.findByName(str);
     }
+
+    @RequestMapping(value = "/logPagination", method = RequestMethod.POST)
+    public Object logPagination(int pageNo, String id) {
+        return mongoQuary.pagination(pageNo, id);
+    }
 }

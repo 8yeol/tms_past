@@ -417,8 +417,7 @@ public class MainController {
 
         //페이징 처리 하기위한 전체 count
         model.addAttribute("count",logRepository.countById(id));
-
-        model.addAttribute("logList",logRepository.findById(id));
+        model.addAttribute("logList",mongoQuary.pagination(1, id));
         model.addAttribute("member",memberRepository.findById(id));
         return "log";
     }
