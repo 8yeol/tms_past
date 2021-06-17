@@ -2,7 +2,6 @@ package com.example.tms.repository.Sensor;
 
 import com.example.tms.entity.*;
 
-import com.mongodb.internal.operation.OrderBy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -11,7 +10,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.security.sasl.SaslServer;
 import java.time.LocalDateTime;
 import java.util.List;
 
