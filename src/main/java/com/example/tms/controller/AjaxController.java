@@ -356,10 +356,13 @@ public class AjaxController {
     @RequestMapping(value = "/getExcessSensor", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getExcessSensor() {
         List<ReferenceValueSetting> monitoringOn = reference_value_settingRepository.findByMonitoringIsTrue();
+
         JSONObject excess = new JSONObject();
         JSONArray jsonArray = new JSONArray();
+
         for(ReferenceValueSetting referenceValueSetting : monitoringOn){
             Sensor sensor = sensorCustomRepository.getSensorRecent(referenceValueSetting.getName());
+
             Date now = new Date();
             long diff = sensor.getUp_time().getTime() - now.getTime();
             long sec = diff / 60000;
