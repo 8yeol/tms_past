@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
@@ -125,12 +127,12 @@
             <span class="fs-4 flashToggle fw-bold">모니터링 > 실시간 모니터링</span>
         </div>
         <div class="col text-end align-self-end">
-            <div>
+            <div style="font-size: 1rem">
                 <span>점멸효과 :</span>
                 <input class="ms-2" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp</label>
                 <input type="radio" name="flashing" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off</label>
             </div>
-            <span class="text-primary small"> * 실시간 업데이트</span>
+            <span class="text-primary small" style="font-size: 0.8rem"> * 실시간으로 업데이트됩니다.</span>
         </div>
     </div>
     <div class="row m-3 mt-3">
@@ -219,7 +221,6 @@
             </div>
         </div>
     </div>
-
     <div class="row m-3 mt-3 bg-light">
         <div style="margin-top: 12px;">
             <div class="col text-center border">
@@ -237,8 +238,32 @@
             </div>
         </div>
         <div class="row table" id="place_table" style="margin: 0 auto">
-            <div class="'col-md-12 mb-3 mt-2 place_border">
-                <div class="m-2">
+            <c:if test="${!empty place}">
+            <c:forEach items="${place}" var="placeName" varStatus="pStatus">
+            <c:choose>
+            <c:when test="${fn:length(place) eq 1}">
+            <div class="col-md-12 mb-3 mt-2 place_border">
+                </c:when>
+                <c:otherwise>
+                <div class="col-md-6 mb-3 mt-2 place_border">
+                    </c:otherwise>
+                    </c:choose>
+                    <div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>
+                        <span class='fs-5'><c:out value="${placeName}"/></span>
+                    </div>
+
+                    <c:forEach items="${sensor}" var="sensorList" varStatus="status">
+                        <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
+                            <c:if test="${sensorList2.place eq placeName}">
+                                <c:set var="place2" value="${sensorList2.place}"/>
+                                <c:set var="uptime" value="${sensorList2.up_time}"/>
+                            </c:if>
+                        </c:forEach>
+                    </c:forEach>
+                    <div class="2 text-end">업데이트 :
+                        <span class="small" id='update-${status.index}'><c:out value="${uptime}"/></span>
+                    </div>
+                    <c:set value="sensor-table-${pStatus.index}" var="tbody"/>
                     <table class='table table-bordered table-hover text-center mt-1'>
                         <thead>
                         <tr class="add-bg-color">
@@ -249,17 +274,98 @@
                             <th width=21%'>실시간</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td colspan="5">Loding Data</td>
-                        </tr>
+                        <tbody id="${tbody}">
+                        <c:forEach items="${sensor}" var="sensorList" varStatus="status">
+                            <c:set var="doneLoop" value="false"/>
+                            <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
+                                <tr>
+                                    <c:choose>
+                                        <c:when test="${sensorList2.place eq placeName}">
+                                            <td>${sensorList2.naming}<input type="hidden" value="${sensorList2.name}"> </td>
+                                            <td><div class="bg-danger text-light">
+                                                <c:choose>
+                                                    <c:when test="${sensorList2.legalStandard eq 999}">
+                                                        -
+                                                    </c:when>
+                                                    <c:when test="${sensorList2.legalStandard ne 999}">
+                                                        <c:out value="${sensorList2.legalStandard}"/>
+                                                    </c:when>
+                                                </c:choose>
+                                            </div></td>
+                                            <td><div class="bg-warning text-light">
+                                                <c:choose>
+                                                    <c:when test="${sensorList2.companyStandard eq 999}">
+                                                        -
+                                                    </c:when>
+                                                    <c:when test="${sensorList2.companyStandard ne 999}">
+                                                        <c:out value="${sensorList2.companyStandard}"/>
+                                                    </c:when>
+                                                </c:choose>
+                                            </div></td>
+                                            <td><div class="bg-success text-light">
+                                                <c:choose>
+                                                    <c:when test="${sensorList2.managementStandard eq 999}">
+                                                        -
+                                                    </c:when>
+                                                    <c:when test="${sensorList2.managementStandard ne 999}">
+                                                        <c:out value="${sensorList2.managementStandard}"/>
+                                                    </c:when>
+                                                </c:choose>
+                                            </div></td>
+                                            <td>
+                                                <c:if test="${sensorList2.beforeValue > sensorList2.value}">
+                                                    <i class="fas fa-sort-down fa-fw" style="color: blue"></i>
+                                                </c:if>
+                                                <c:if test="${sensorList2.beforeValue < sensorList2.value}">
+                                                    <i class="fas fa-sort-up fa-fw" style="color: red"></i>
+                                                </c:if>
+                                                <c:if test="${sensorList2.value eq 0}">
+                                                    0
+                                                </c:if>
+                                                <c:if test="${sensorList2.value != 0}">
+                                                    <fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
+                                                </c:if>
+                                            </td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="doneLoop" value="true"/>
+                                            <c:if test="${not doneLoop}">
+                                                <td colspan="5">
+                                                    <div onclick="window.event.cancelBubble=true">모니터링 설정된 센서의 데이터가 없습니다.</div>
+                                                </td>
+                                            </c:if>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </tr>
+                            </c:forEach>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+                </c:forEach>
+                </c:if>
+                <c:if test="${empty place}">
+                    <div class="'col-md-12 mb-3 mt-2 place_border">
+                        <table class='table table-bordered table-hover text-center mt-1'>
+                            <thead>
+                            <tr class="add-bg-color">
+                                <th width=28%'>항목</th>
+                                <th width=17%'>법적기준</th>
+                                <th width=17%'>사내기준</th>
+                                <th width=17%'>관리기준</th>
+                                <th width=21%'>실시간</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <td colspan=5">No data</td>
+                            </tbody>
+                        </table>
+                    </div>
+                </c:if>
+            </div> <%-- //col-size --%>
+        </div> <%-- //row table--%>
+    </div> <%-- //row --%>
+</div> <%-- //container --%>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
@@ -267,7 +373,11 @@
     let INTERVAL; let flashCheck;
 
     $(document).ready(function () {
-        getData();
+        var placeData2 = ${sensor};
+        draw_sensor_info(placeData2);
+        setTimeout(function () {
+            getData();
+        }, 1000);
         flashCheck = "on";
     });
 
@@ -378,7 +488,7 @@
                 $('#place_table').append(
                     "<div class='col-md-"+col_md_size+" mb-3 mt-2 place_border'>" +
                     "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'><span class='fs-5'>"+placeName[i]+"</span></div>" +
-                    "<div class='2 text-end'>업데이트 :<span class='small' id=update-"+i+">"+"</span></div>" +
+                    "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+">"+"</span></div>" +
                     "<table class='table table-bordered table-hover text-center mt-1'>" +
                     "<thead>" +
                     "<tr class='add-bg-color'>" +
@@ -496,28 +606,23 @@
                         } else{
                             newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
                         }
-
                         $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                     }
-                }else{ // 모니터링 OFF 일 때
-                    noData();
-                    return false;
                 }
             }
         }else{
-            noData();
+            noData(tbody, index);
         }
 
     }
 
-    function noData() {
+    function noData(tbody, index) {
         const newRow = tbody.insertRow(tbody.rows);
         const newCeil0 = newRow.insertCell();
-        newCeil0.innerHTML = '<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
+        newCeil0.innerHTML = '<div onclick='+'window.event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
             +'</div>';
         newCeil0.colSpan = 5;
         $("#update-" + index).text("-");
-        return false;
     }
 
     /**
@@ -525,11 +630,11 @@
      */
     function draw_compareData(beforeData , nowData){
         if(beforeData > nowData){
-            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData;
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData.toFixed(2);
         } else if( nowData > beforeData) {
-            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData;
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData.toFixed(2);
         } else{
-            return nowData;
+            return nowData.toFixed(2);
         }
     }
 
