@@ -116,7 +116,6 @@
     <div class="row bg-light rounded py-3 px-5">
         <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
         <div class="col-xs-12">
-
             <table class="table table-striped " id="member-Table">
                 <thead>
                 <tr class="text-center">
@@ -131,6 +130,7 @@
                         <td>test</td>
                         <td>2020-01-48 12:22:52</td>
                     </tr>
+                </c:forEach>
                 <tbody>
             </table>
 
