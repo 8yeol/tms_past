@@ -68,10 +68,8 @@ public class SensorCustomRepository {
      * @return Sensor
      */
     public Sensor getSensorRecent(String sensor){
-        long count = mongoTemplate.estimatedCount(sensor);
-
         Query query = new Query();
-        query.skip(count-1);
+        query.with(Sort.by(Sort.Direction.DESC,"_id"));
 
         return mongoTemplate.findOne(query , Sensor.class, sensor);
     }
