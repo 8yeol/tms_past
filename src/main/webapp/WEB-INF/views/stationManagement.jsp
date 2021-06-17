@@ -460,7 +460,7 @@
         const tel = $("#te1").val();
         const admin = $("#ad1").val();
         const hiddenCode = $("input[name=hiddenCode]").val();
-        const pattern = /[`~!@#$%^&*()_+=|<>?:;`,{}\-\]\[/\'\"\\\']/;
+        const pattern = /[`~.!@#$%^&*()_+=|<>?:;`,{}\-\]\[/\'\"\\\']/;
 
         let title = "";
         let content = "";
@@ -656,7 +656,6 @@
         }
         let checkFlag = false;
         if ($("input[name=sensormonitor]").is(":checked") == true) checkFlag = true;
-
         if (checkFlag == false) {
             $('tr[value=' + pname + ']').find('.placeCheckbox').prop("checked", false);
         }
