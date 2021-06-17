@@ -102,9 +102,9 @@
                     <th width="20%">해당 날짜</th>
                 </tr>
                 </thead>
-                <tbody id="logTbody">
+                <tbody id="logTbody" class="text-center">
                 <c:forEach items="${logList}" var="log" varStatus="i">
-                    <tr class="text-center" style="font-size: 0.9rem;height: 40px;">
+                    <tr class="text-center">
                         <td>${log.type}</td>
                         <td>${log.content}</td>
                         <td><fmt:formatDate value="${log.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
