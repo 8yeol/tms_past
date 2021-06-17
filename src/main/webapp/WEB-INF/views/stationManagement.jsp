@@ -246,7 +246,6 @@
         }
 
     }
-
     function placeDiv1() {
         var getData = null;
         $.ajax({
@@ -627,7 +626,12 @@
                 console.log(err);
             }
         })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + sensorCheck + "", "설정");
+        if (check == true) {
+            check = "ON";
+        } else {
+            check = "OFF";
+        }
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + check + "", "설정");
         MultiSelecterModal(name, "", "monitor", check);
     }
 
@@ -639,6 +643,7 @@
         var tablename = name.value; //
         var check = $("#" + id).is(":checked");
         var pname = $("#pname").text();
+        32
         $.ajax({
             url: '<%=cp%>/referenceMonitoringUpdate',
             type: 'POST',
@@ -909,7 +914,6 @@
     function fade(Modal) {
         Modal.finish().fadeIn(300).delay(2000).fadeOut(300);
     }
-
     function customSwal(text) {
         Swal.fire({
             icon: 'warning',
