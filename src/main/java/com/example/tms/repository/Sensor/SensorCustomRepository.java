@@ -87,7 +87,7 @@ public class SensorCustomRepository {
         try{
             long count = mongoTemplate.estimatedCount(sensor);
             Query query = new Query();
-            query.skip(count - 1);
+            query.skip(count - 2);
             return mongoTemplate.findOne(query, Sensor.class, sensor);
         }catch (Exception e){
             log.info("getSensorRecent error" + e.getMessage());
