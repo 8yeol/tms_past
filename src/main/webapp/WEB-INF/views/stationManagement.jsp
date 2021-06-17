@@ -643,7 +643,7 @@
         var tablename = name.value; //
         var check = $("#" + id).is(":checked");
         var pname = $("#pname").text();
-        32
+
         $.ajax({
             url: '<%=cp%>/referenceMonitoringUpdate',
             type: 'POST',
