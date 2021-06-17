@@ -2,13 +2,16 @@ package com.example.tms.repository.Sensor;
 
 import com.example.tms.entity.*;
 
+import com.mongodb.internal.operation.OrderBy;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.security.sasl.SaslServer;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -67,25 +70,12 @@ public class SensorCustomRepository {
      * @return Sensor
      */
     public Sensor getSensorRecent(String sensor){
-        try{
-            ProjectionOperation projectionOperation = Aggregation.project()
-                    .andInclude("value")
-                    .andInclude("status")
-                    .andInclude("up_time");
-            /* sort */
-            SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
-            /* limit */
-            LimitOperation limitOperation = Aggregation.limit(1);
-            /* fetch */
-            Aggregation aggregation = Aggregation.newAggregation(projectionOperation, sortOperation, limitOperation);
+        long count = mongoTemplate.estimatedCount(sensor);
 
-            AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
-            List<Sensor> result = results.getMappedResults();
-            return result.get(0); //-> Json -> sensor 타입으로 변경 필요
-        }catch (Exception e){
-            log.info("getSensorRecent error" + e.getMessage());
-        }
-        return null;
+        Query query = new Query();
+        query.skip(count-1);
+
+        return mongoTemplate.findOne(query , Sensor.class, sensor);
     }
 
     /**
