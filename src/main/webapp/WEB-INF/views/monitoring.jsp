@@ -238,8 +238,10 @@
             </div>
         </div>
         <div class="row table" id="place_table" style="margin: 0 auto">
+
             <c:if test="${!empty place}">
             <c:forEach items="${place}" var="placeName" varStatus="pStatus">
+            <c:set value="${sensor[pStatus.index]}" var="sensorData"/>
             <c:choose>
             <c:when test="${fn:length(place) eq 1}">
             <div class="col-md-12 mb-3 mt-2 place_border">
@@ -260,8 +262,11 @@
                             </c:if>
                         </c:forEach>
                     </c:forEach>
-                    <div class="2 text-end">업데이트 :
-                        <span class="small" id='update-${status.index}'><c:out value="${uptime}"/></span>
+                    <div class='text-end' style='font-size: 0.8rem'>업데이트 :
+                        <span class="small" id='update-${status.index}'>
+                            <c:if test="${fn:length(sensorData) > 0 }"><c:out value="${uptime}"/></c:if>
+                            <c:if test="${fn:length(sensorData) == 0 }">-</c:if>
+                        </span>
                     </div>
                     <c:set value="sensor-table-${pStatus.index}" var="tbody"/>
                     <table class='table table-bordered table-hover text-center mt-1'>
@@ -275,12 +280,11 @@
                         </tr>
                         </thead>
                         <tbody id="${tbody}">
+
                         <c:forEach items="${sensor}" var="sensorList" varStatus="status">
-                            <c:set var="doneLoop" value="false"/>
                             <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
                                 <tr>
-                                    <c:choose>
-                                        <c:when test="${sensorList2.place eq placeName}">
+                                        <c:if test="${sensorList2.place eq placeName}">
                                             <td>${sensorList2.naming}<input type="hidden" value="${sensorList2.name}"> </td>
                                             <td><div class="bg-danger text-light">
                                                 <c:choose>
@@ -326,19 +330,15 @@
                                                     <fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
                                                 </c:if>
                                             </td>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:set var="doneLoop" value="true"/>
-                                            <c:if test="${not doneLoop}">
-                                                <td colspan="5">
-                                                    <div onclick="window.event.cancelBubble=true">모니터링 설정된 센서의 데이터가 없습니다.</div>
-                                                </td>
-                                            </c:if>
-                                        </c:otherwise>
-                                    </c:choose>
+                                        </c:if>
                                 </tr>
                             </c:forEach>
                         </c:forEach>
+                        <c:if test="${fn:length(sensorData) == 0}">
+                            <td colspan="5">
+                                <div onclick="window.event.cancelBubble=true">모니터링 설정된 센서의 데이터가 없습니다.</div>
+                            </td>
+                        </c:if>
                         </tbody>
                     </table>
                 </div>
@@ -377,7 +377,7 @@
         draw_sensor_info(placeData2);
         setTimeout(function () {
             getData();
-        }, 1000);
+        }, 5000);
         flashCheck = "on";
     });
 
