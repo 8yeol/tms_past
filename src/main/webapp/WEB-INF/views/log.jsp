@@ -14,15 +14,9 @@
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
 <style>
-    .dataTables_wrapper {
-        min-height: 1000px;
-    }
-
-    /* 데이터테이블 */
     .toolbar>b {
         font-size: 1.25rem;
     }
-    /*.toolbar:after {content:""; display: block; clear: both;}*/
 
     #paging a{
         box-sizing: border-box;
@@ -49,18 +43,6 @@
         margin-bottom: 5px;
     }
 
-    .buttons-excel {
-        background-color: #000;
-        color: #fff;
-        border: 0px;
-        border-radius: 5px;
-        position: relative;
-        margin-top: 2px;
-    }
-    .dt-buttons {
-        margin: 0 10px;
-        display: inline-block;
-    }
     label {
         margin-bottom: 10px;
     }
@@ -93,7 +75,7 @@
 
     <div class="row bg-light rounded py-3 px-5">
         <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
-        <div class="col-xs-12">
+        <div class="col-xs-12 mt-3">
             <table class="table table-striped " id="member-Table">
                 <thead>
                 <tr class="text-center">

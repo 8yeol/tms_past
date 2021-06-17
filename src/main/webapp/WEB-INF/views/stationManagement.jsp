@@ -90,8 +90,7 @@
                 </span>
             </div>
             <table class="text-center" style="width: 100%;">
-                <tr class="fw-bold"
-                    style="border-bottom: silver solid 2px; display: flex; width:100%; position: relative; padding-bottom: 5px;">
+                <tr class="fw-bold" style="border-bottom: silver solid 2px; display: flex; width:100%; padding-bottom: 5px;">
                     <th style="margin-left: 5px; margin-right: 5px;">
                         <input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)">
                     </th>
@@ -99,7 +98,7 @@
                     <th style="width: 40%;">업데이트</th>
                     <th style="width: 25%;">모니터링 사용</th>
                 </tr>
-                <tr id="placeDiv" style="padding: 0px;"></tr>
+                <tr id="placeDiv" style="width:100%;"></tr>
             </table>
         </div>
         <div class="col-6" id="station2" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
@@ -107,7 +106,7 @@
                 <div id="p_monitoring" class="fw-bold"
                      style="display: flex; margin-top: 5px; padding-bottom: 35px;"></div>
             </div>
-            <table style="text-align: center; width: 100%">
+            <table style="text-align: center;">
                 <tr id="c" style="border-bottom: silver solid 2px; width: 100%; display: flex; padding-bottom: 5px;">
                     <th style="width: 2%;"></th>
                     <th style="width:18%;">측정항목</th>
@@ -117,7 +116,7 @@
                     <th style="width:14%;">관리기준</th>
                     <th style="width:13%;">모니터링</th>
                 </tr>
-                <tr id="items" style="width: 100%;">
+                <tr id="items" style="width: 100%; ">
 
                 </tr>
             </table>
