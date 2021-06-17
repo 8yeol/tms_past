@@ -111,11 +111,12 @@
     </c:choose>
 
     <h3 class="d-flex justify-content-start mt-5 mb-3 fw-bold" style="position: relative;">활동 기록
-        <button class="btn backBtn" onclick="history.back(-1)" style="margin-left: 40px; position: absolute; right: 0;">뒤로 가기</button></h3>
+        <button class="btn backBtn" onclick="location.href='<%=cp%>/setting'" style="margin-left: 40px; position: absolute; right: 0;">뒤로 가기</button></h3>
 
     <div class="row bg-light rounded py-3 px-5">
         <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
         <div class="col-xs-12">
+
             <table class="table table-striped " id="member-Table">
                 <thead>
                 <tr class="text-center">
@@ -125,15 +126,17 @@
                 </tr>
                 </thead>
                 </tbody>
-                <c:forEach items="${logList}" var="log" varStatus="i">
                     <tr class="text-center" style="font-size: 0.9rem;height: 40px;">
-                        <td>${log.type}</td>
-                        <td>${log.content}</td>
-                        <td><fmt:formatDate value="${log.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>2020-01-48 12:22:52</td>
                     </tr>
-                </c:forEach>
                 <tbody>
             </table>
+
+
+            <div id="paging" class="text-end"> </div>
+
         </div>
     </div>
 </div>
@@ -142,29 +145,6 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    $("#member-Table").DataTable({
-        order: [[2, 'desc']],
-        ordering: true,
-        info: false,
-        lengthChange : false,
-        pageLength: 20,
-        language : {
-            "emptyTable": "데이터가 없어요.",
-            "lengthMenu": "페이지당 _MENU_ 개씩 보기",
-            "info": "현재 _START_ - _END_ / _TOTAL_건",
-            "infoEmpty": "데이터 없음",
-            "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
-            "search": "전체검색 : ",
-            "zeroRecords": "일치하는 데이터가 없어요.",
-            "loadingRecords": "로딩중...",
-            "processing": "잠시만 기다려 주세요...",
-            "paginate": {
-                "next": "다음",
-                "previous": "이전"
-            },
-        },
-    });
-
     var mql = window.matchMedia("screen and (max-width: 1024px)");
 
     mql.addListener(function(e) {
@@ -183,6 +163,61 @@
             $('#container').attr('class','container');
         }
     }
+
+    function paging(totalData, dataPerPage, pageCount, currentPage){
+        console.log("currentPage : " + currentPage);
+
+        const totalPage = Math.ceil(totalData/dataPerPage);    // 총 페이지 수
+        const pageGroup = Math.ceil(currentPage/pageCount);    // 페이지 그룹
+        let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
+        if(last > totalPage)
+            last = totalPage;
+        const first = last - (pageCount-1);    // 화면에 보여질 첫번째 페이지 번호
+        const next = last+1;
+        const prev = first-1;
+
+        let html = "";
+
+        if(prev > 0) {
+            html += "<a href=# id='start'>시작</a> ";
+            html += "<a href=# id='prev'>이전</a> ";
+        }
+
+        for(let i=first; i <= last; i++){
+            if(i > 0){
+                html += "<a href='#' id=" + i + ">" + i + "</a> ";
+            }
+        }
+
+        if(last < totalPage) {
+            html += "<a href=# id='next'>다음</a> ";
+            html += "<a href=# id='end'>끝</a>";
+        }
+
+        $("#paging").html(html);    // 페이지 목록 생성
+        $("#paging a").css("color", "black");
+        $("#paging a#" + currentPage).css({"text-decoration":"none",
+            "color":"red",
+            "font-weight":"bold"});    // 현재 페이지 표시
+
+        $("#paging a").click(function(){
+            const $item = $(this);
+            const $id = $item.attr("id");
+            let selectedPage = $item.text();
+
+            if($id == "start")    selectedPage = 1;
+            if($id == "next")    selectedPage = next;
+            if($id == "prev")    selectedPage = prev;
+            if($id == "end")    selectedPage = totalPage;
+
+            paging(totalData, dataPerPage, pageCount, selectedPage);
+        });
+
+    }
+
+    $("document").ready(function(){
+        paging(${count}, 20, 10, 1);
+    });
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
