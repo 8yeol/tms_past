@@ -604,6 +604,8 @@
   function _outputTime(settings, $picker, $input){
     var hour = parseInt($picker.find(".hour-select").val(), 10);
     var min = parseInt($picker.find(".min-select").val(), 10);
+    if(isNaN(hour))hour=0;
+    if(isNaN(min))min=0;
     if (!isNaN(hour) && !isNaN(min)){
       var formatted = settings.timeFormat
         .replace("%g", (hour==0 || hour==12) ? 12 : hour%12)
@@ -862,8 +864,8 @@
 
   // remove a timepicker $input has
   function _removeTimepicker($input){
-    var $picker = $input.next(".my-timepicker-div");
-    $picker.remove();
+     var $picker = $input.next(".my-timepicker-div");
+     $picker.remove();
   }
 
   var methods = {
