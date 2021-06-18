@@ -76,16 +76,24 @@
         <button class="btn backBtn" onclick="location.href='<%=cp%>/setting'" style="margin-left: 40px; position: absolute; right: 0;">뒤로 가기</button></h3>
 
     <div class="row bg-light rounded py-3 px-5">
-        <h4 class=" justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록
-            <button class="btn btn-outline-success float-end ms-2" onclick="reset();">초기화</button>
-            <button class="btn btn-primary float-end ms-2" onclick="search();">검색</button>
-            <input type="text" class="float-end" style="width: 150px;" id="searchKey">
-            <select class="float-end">
+        <div class="col">
+            <h4 class=" justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
+        </div>
+
+        <div class="col text-end">
+            <span class="fs-6 fw-bold">검색분류</span>
+            <select>
                 <option>선택</option>
                 <option>분류</option>
                 <option>내용</option>
                 <option>날짜</option>
-            </select></h4>
+            </select>
+
+            <input type="text" style="width: 150px;" id="searchKey">
+            <button class="btn btn-primary ms-2" onclick="search();">검색</button>
+            <button class="btn btn-outline-success ms-2" onclick="reset();">초기화</button>
+        </div>
+
         <div class="col-xs-12 mt-3">
             <table class="table table-striped" id="member-Table">
                 <thead>
