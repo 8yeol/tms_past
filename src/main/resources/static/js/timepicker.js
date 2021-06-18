@@ -504,14 +504,6 @@
     // change select-options of minutes when hours has changed
     else if (which === "minute"){
       var $hour_select = $picker.find(".hour-select");
-
-
-
-
-
-
-
-
       var min_select = $picker.find(".min-select").get(0);
       var hour_index = $hour_select.prop("selectedIndex");
       var hour = parseInt($hour_select.val(), 10);
@@ -773,13 +765,19 @@
     });
   }
 
-  // show and set up the timepicker
+  // show and set up the timepicker5
   function _showTimepicker($picker, $input){
     var settings = $input.data("timepicker-settings");
     // create select-options and select each of them which matches
     // the current value of $input before the timepicker is showed
+
     var timestamp = _formattedTimeToInt($input.val(), settings.timeFormat,
                                             settings.ampmText);
+    if(timestamp==null){
+      let myVal = $input.val();
+      timestamp = parseInt(myVal.substring(0,2), 10) * 60;
+      timestamp += parseInt(myVal.substring(3,5), 10) ;
+    }
     var hour_select = $picker.find(".hour-select").get(0);
     var min_select = $picker.find(".min-select").get(0);
     var hour, min;
@@ -800,6 +798,7 @@
       _createSelectOptions("hour", settings, $picker);
       // select an option of 'hour'
       var selected = _selectOption(hour_select, hour);
+
       // if succeeded in selecting, change min-select's options
       if (selected){
         _changeSelectOptions("minute", settings, $picker);
@@ -865,8 +864,8 @@
 
   // remove a timepicker $input has
   function _removeTimepicker($input){
-     var $picker = $input.next(".my-timepicker-div");
-     $picker.remove();
+    var $picker = $input.next(".my-timepicker-div");
+    $picker.remove();
   }
 
   var methods = {
