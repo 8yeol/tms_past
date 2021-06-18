@@ -151,6 +151,9 @@
     #place_table tbody tr:hover{
         cursor: pointer;
     }
+    .rowSelected{
+        background-color: #dcdcde;
+    }
 
 </style>
 
@@ -192,7 +195,14 @@
                         <thead>
                         <tbody id="place-tbody-table">
                         <c:forEach items="${sensor}" var="sensorList">
+                            <c:choose>
+                                <c:when test="${activeSensor.naming eq sensorList.naming}">
+                            <tr class="rowSelected">
+                                </c:when>
+                                <c:otherwise>
                             <tr>
+                                </c:otherwise>
+                            </c:choose>
                                 <td><c:out value="${sensorList.naming}"/><input type="hidden" value="<c:out value="${sensorList.name}"/>"> </td>
                                 <td><div class="bg-danger text-light">
                                     <c:choose>
@@ -377,6 +387,10 @@
     var debounce = null;
     $("#place-tbody-table").on('click', 'tr', function(){
         const name = $(this).find('input').val(); //선택된 센서명
+        var trParent = $(this).parent();
+        var parentChild = trParent.children();
+        parentChild.removeAttr('class');
+        $(this).addClass('rowSelected');
         sensor_data = getSensorData(name); //해당 센서 데이터
         clearTimeout(debounce);
         debounce = setTimeout(() => {
@@ -859,6 +873,7 @@
                 const tbody = document.getElementById('place-tbody-table');
                 for(let i=0; i<data.length; i++){
                     const newRow = tbody.insertRow(tbody.rows.length);
+
                     const newCeil0 = newRow.insertCell(0);
                     const newCeil1 = newRow.insertCell(1);
                     const newCeil2 = newRow.insertCell(2);
@@ -881,9 +896,12 @@
                     }else{
                         managementStandard = data[i].managementStandard;
                     }
-
-
-                    newCeil0.innerHTML = data[i].naming+'<input type="hidden" value="'+ data[i].name+'">';
+                    var selectSensorName = $('#radio_text').text();
+                    var sensorName = data[i].naming;
+                    if(selectSensorName == sensorName){
+                        newRow.setAttribute('class', 'rowSelected');
+                    }
+                    newCeil0.innerHTML = sensorName+'<input type="hidden" value="'+ data[i].name+'">';
                     newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
                     newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
                     newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
