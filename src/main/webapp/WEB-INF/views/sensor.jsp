@@ -160,6 +160,7 @@
 <div class="container"  id="container" style="padding-left: 0;">
     <div class="row">
         <div class="row bg-white sizing">
+            <%-- 측정소 리스트 --%>
             <div class="col-md-2 rounded-0 pt-5 px-0 navPlace">
                 <ul id="place_name">
                     <c:forEach var="placeNames" items="${placeList}">
@@ -170,6 +171,7 @@
                     </c:forEach>
                 </ul>
             </div>
+            <%-- 상단 테이블 --%>
             <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
                 <div class="d-flex justify-content-end">
                     <span class="fs-7 mb-2" id="update">업데이트 : ${activeSensor.up_time}</span>
@@ -254,7 +256,6 @@
                                 </td>
                             </tr>
                         </c:forEach>
-                        <%--script--%>
                         </tbody>
                     </table>
                 </div>
@@ -277,24 +278,12 @@
                         <div id="chart" style=" margin-right: 10px; margin-top: 20px;"></div>
                     </div>
                 </div>
-                <%-- 차트의 데이터 테이블 --%>
+                <%-- 하단 테이블 --%>
                 <div class="row ms-2 bg-white" style="padding-top: 15px;">
                     <div class="col">
-                        <div class="d-flex fw-bold pos-a align-self-end" id="sensor-standard">
-<%--                            <div style="color: #000;  margin-right:5px" >법적/사내/관리 기준 :</div>--%>
-<%--                            <div id="standard_text" style="color: #000;">Data Loading</div>--%>
-                        </div>
-                        <%-- 차트의 데이터 테이블 --%>
+                        <div class="d-flex fw-bold pos-a align-self-end" id="sensor-standard"></div>
                         <div class="col-md-12" style="position: relative">
-                        <table id="sensor-table" class="table table-striped table-bordered table-hover text-center no-footer dataTable">
-                            <%--<thead>
-                            <tr>
-                                <th width="35%">측정시간</th>
-                                <th width="30%">측정 값</th>
-                                <th width="35%">관리 등급</th>
-                            </tr>
-                            </thead>--%>
-                        </table>
+                            <table id="sensor-table" class="table table-striped table-bordered table-hover text-center no-footer dataTable"></table>
                         </div>
                     </div>
                 </div>
@@ -470,8 +459,6 @@
         }
     }
 
-
-
     /**
      *  센서 데이터 (최근 1시간, 24시간)로 차트 및 테이블 생성
      */
@@ -611,28 +598,6 @@
         })
         return result;
     }
-
-    /**
-     * 센서의 모니터링 상태값 리턴 (true , false)
-     */
-    function getMonitoring(sensor){
-        let result;
-        $.ajax({
-            url:'<%=cp%>/getMonitoring',
-            dataType: 'text',
-            data:  {"name": sensor},
-            async: false,
-            success: function (data) {
-                result = data;
-            },
-            error: function () {
-                result = false;
-            }
-        });
-        return result;
-    }
-
-
 
     /**
      * 센서의 최근 데이터 리턴
