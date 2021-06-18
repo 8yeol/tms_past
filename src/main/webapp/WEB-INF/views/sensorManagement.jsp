@@ -190,8 +190,8 @@
             <table class="table text-center" id="sensorTable" style="word-break:break-all">
                 <thead>
                 <tr>
-                    <th scope="col" width="10%">분류</th>
-                    <th scope="col" width="10%">항목명</th>
+                    <th scope="col" width="9%">분류</th>
+                    <th scope="col" width="11%">항목명</th>
                     <th scope="col" width="10%">관리 ID</th>
                     <th scope="col" width="18%">테이블명</th>
                     <th scope="col" width="17%">업데이트</th>
