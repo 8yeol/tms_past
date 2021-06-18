@@ -79,7 +79,13 @@
         <h4 class=" justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록
             <button class="btn btn-outline-success float-end ms-2" onclick="reset();">초기화</button>
             <button class="btn btn-primary float-end ms-2" onclick="search();">검색</button>
-            <input type="text" class="float-end" style="width: 150px;" id="searchKey"></h4>
+            <input type="text" class="float-end" style="width: 150px;" id="searchKey">
+            <select class="float-end">
+                <option>선택</option>
+                <option>분류</option>
+                <option>내용</option>
+                <option>날짜</option>
+            </select></h4>
         <div class="col-xs-12 mt-3">
             <table class="table table-striped" id="member-Table">
                 <thead>
