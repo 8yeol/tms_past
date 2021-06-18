@@ -85,15 +85,19 @@
             </div>
 
             <table class="text-center w-100">
-                <tr class="fw-bold" style="border-bottom: silver solid 2px; display: flex; padding-bottom: 5px;">
-                    <th style="margin-left: 5px; margin-right: 5px;">
-                        <input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)">
-                    </th>
-                    <th style="width: 33%">측정소 명</th>
-                    <th style="width: 40%;">업데이트</th>
-                    <th style="width: 25%;">모니터링 사용</th>
-                </tr>
-                <tr id="placeDiv"></tr>
+                <thead>
+                    <tr class="fw-bold m-3">
+                        <th>
+                            <input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)">
+                        </th>
+                        <th style="width: 33%">측정소 명</th>
+                        <th style="width: 40%;">업데이트</th>
+                        <th style="width: 25%;">모니터링 사용</th>
+                    </tr>
+                </thead>
+                <tbody id="placeDiv">
+
+                </tbody>
             </table>
         </div>
 
@@ -102,18 +106,20 @@
                 <div id="p_monitoring" class="fw-bold mt-2 mb-3" style="display: flex;"></div>
             </div>
             <table class="text-center w-100">
-                <tr id="c" style="border-bottom: silver solid 2px; display: flex; padding-bottom: 5px;">
-                    <th style="width: 2%;"></th>
-                    <th style="width:18%;">측정항목</th>
-                    <th style="width:25%;">관리ID</th>
-                    <th style="width:14%;">법적기준</th>
-                    <th style="width:14%;">사내기준</th>
-                    <th style="width:14%;">관리기준</th>
-                    <th style="width:13%;">모니터링</th>
-                </tr>
-                <tr id="items">
+                <thead>
+                    <tr id="c">
+                        <th width="2%"></th>
+                        <th width="18%">측정항목</th>
+                        <th width="25%">관리ID</th>
+                        <th width="14%">법적기준</th>
+                        <th width="14%">사내기준</th>
+                        <th width="14%">관리기준</th>
+                        <th width="20%">모니터링</th>
+                    </tr>
+                </thead>
+                <tbody id="items">
 
-                </tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -273,9 +279,7 @@
             "<input type='hidden' id='nickname' value='" + name + "'>";
         $('#p_monitoring').append(innerHTMLPlace); //측정소 명  div
 
-        const none = "<div class='fw-bold' style='padding-top : 20px;'>" +
-            "<div style='padding-bottom:5px;'>등록된 센서 데이터가 없습니다.</div>" +
-            "<div>센서 등록 후 이용 가능합니다.</div></div>";
+        const none = "<tr><td colspan='7' class='p-3'> 등록된 센서 데이터가 없습니다. <br> 센서 등록 후 이용 가능합니다. </td></tr>";
 
         $('#items').append(none); //센서 없을때
 

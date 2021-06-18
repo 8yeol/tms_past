@@ -166,15 +166,15 @@
                         <div class="row p-5">
                             <div class=" inputLayout">
                                 <label class="col-xs-3 label" style="margin-right: 16px">관리 ID</label>
-                                <input type="text" class="mediaText" name="managementId" id="m_id" class="inputDisabled" readonly>
+                                <input type="text" class="mediaText p-1" name="managementId" id="m_id" class="inputDisabled" readonly>
                             </div>
                             <div class="inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">분류</label>
-                                <input type="text" class="mediaText" name="classification" id="m_class" class="inputDisabled" readonly>
+                                <input type="text" class="mediaText p-1" name="classification" id="m_class" class="inputDisabled" readonly>
                             </div>
                             <div class=" inputLayout">
                                 <label class="col-xs-3 w-10 label" style="margin-right: 16px">항목명</label>
-                                <input type="text" class="mediaText" name="naming" id="naming"  autocomplete="off" maxlength="20">
+                                <input type="text" class="mediaText p-1" name="naming" id="naming"  autocomplete="off" maxlength="20">
                             </div>
                         </div>
                     </div>
