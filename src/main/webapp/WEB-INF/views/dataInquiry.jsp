@@ -179,7 +179,8 @@
         .sizing {width: 720px;top:45px;}
         .picker {width: 100%;}
         .add-margin {margin-left: 15px;}
-        .search {left:0px;top:10px;}
+        .search {left:0px;top:15px;}
+        .search>button {margin-left: 10px !important;}
         body {font-size: 0.8rem;}
         .f-sizing {font-size: 0.9rem!important;}
         .add-bg{width:720px; height: 120px;}
