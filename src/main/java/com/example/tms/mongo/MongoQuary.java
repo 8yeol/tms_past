@@ -101,13 +101,24 @@ public class MongoQuary {
         return result;
     }
 
-    public Object pagination(int pageNo, String id) {
+    public Object pagination(int pageNo, String id, String searchKey) {
+        MatchOperation where;
 
-        MatchOperation where = Aggregation.match(
-                new Criteria().andOperator(
-                        Criteria.where("id").is(id)
-                )
-        );
+        if(searchKey == null){
+            where = Aggregation.match(
+                    new Criteria().andOperator(
+                            Criteria.where("id").is(id)
+                    )
+            );
+        }else{
+            where = Aggregation.match(
+                    new Criteria().andOperator(
+                            Criteria.where("id").is(id),
+                            Criteria.where("content").regex(searchKey)
+                    )
+            );
+        }
+
 
         SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "_id");
 

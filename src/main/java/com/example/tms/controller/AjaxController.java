@@ -1615,7 +1615,14 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/logPagination", method = RequestMethod.POST)
-    public Object logPagination(int pageNo, String id) {
-        return mongoQuary.pagination(pageNo, id);
+    public Object logPagination(int pageNo, String id, String searchKey) {
+        if(searchKey.equals("")) searchKey = null;
+        return mongoQuary.pagination(pageNo, id, searchKey);
+    }
+
+
+    @RequestMapping(value = "/getLogCountByContent", method = RequestMethod.POST)
+    public long getLogCountByContent(String id,String searchKey) {
+        return logRepository.countByIdAndContentLike(id,searchKey);
     }
 }

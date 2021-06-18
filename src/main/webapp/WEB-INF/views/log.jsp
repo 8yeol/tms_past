@@ -8,11 +8,9 @@
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
-<link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-ui.js"></script>
-<script src="static/js/jquery.dataTables.min.js"></script>
 <style>
     .toolbar>b {
         font-size: 1.25rem;
@@ -74,9 +72,10 @@
         <button class="btn backBtn" onclick="location.href='<%=cp%>/setting'" style="margin-left: 40px; position: absolute; right: 0;">뒤로 가기</button></h3>
 
     <div class="row bg-light rounded py-3 px-5">
-        <h4 class="d-flex justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
+        <h4 class=" justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록
+            <button class="backBtn btn float-end ms-2" onclick="search();">검색</button><input type="text" class="float-end" style="width: 150px;" id="searchKey"></h4>
         <div class="col-xs-12 mt-3">
-            <table class="table table-striped " id="member-Table">
+            <table class="table table-striped" id="member-Table">
                 <thead>
                 <tr class="text-center">
                     <th width="15%">분류</th>
@@ -105,26 +104,8 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    var mql = window.matchMedia("screen and (max-width: 1024px)");
 
-    mql.addListener(function(e) {
-        if(e.matches) {
-            $('#container').attr('class','container-fluid');
-        } else {
-            $('#container').attr('class','container');
-        }
-    });
-
-    var filter = "win16|win32|win64|mac";
-    if(navigator.platform){
-        if(0 > filter.indexOf(navigator.platform.toLowerCase())){
-            $('#container').attr('class','container-fluid');
-        } else {
-            $('#container').attr('class','container');
-        }
-    }
-
-    function paging(totalData, dataPerPage, pageCount, currentPage){
+    function paging(totalData, dataPerPage, pageCount, currentPage, searchKey){
         const totalPage = Math.ceil(totalData/dataPerPage);    // 총 페이지 수
         const pageGroup = Math.ceil(currentPage/pageCount);    // 페이지 그룹
         let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
@@ -137,19 +118,20 @@
         let html = "";
 
         if(prev > 0) {
-            html += "<a href=# id='start'>시작</a> ";
-            html += "<a href=# id='prev'>이전</a> ";
+            html += "<a href=javascript:; id='start'>시작</a> ";
+            html += "<a href=javascript:; id='prev'>이전</a> ";
         }
 
         for(let i=first; i <= last; i++){
             if(i > 0){
-                html += "<a href='#' id=" + i + ">" + i + "</a> ";
+             // html += "<a href='javascript:;' id=" + i + ">" + i + "</a> ";  페이지 이동없음
+                html += "<a href='javascript:;' id=" + i + ">" + i + "</a> ";          // 페이지 상단으로 이동
             }
         }
 
         if(last < totalPage) {
-            html += "<a href=# id='next'>다음</a> ";
-            html += "<a href=# id='end'>끝</a>";
+            html += "<a href=javascript:; id='next'>다음</a> ";
+            html += "<a href=javascript:; id='end'>끝</a>";
         }
 
         $("#paging").html(html);    // 페이지 목록 생성
@@ -171,43 +153,69 @@
 
             const id = '${member.id}';
 
-            $.ajax({
-                url: '<%=cp%>/logPagination',
-                type: 'POST',
-                dataType: 'json',
-                async: false,
-                cache: false,
-                data: { "id" : id,
-                    "pageNo" : selectedPage },
-                success: function (data) {
-                    if(data.length != 0){
-                        $("#logTbody").empty();
-                        const tbody = document.getElementById('logTbody');
+            drawLogPagination(id,selectedPage,searchKey);
 
-                        for(let i=0; i<data.length; i++){
-                            const row = tbody.insertRow( tbody.rows.length );
-                            const cell1 = row.insertCell(0);
-                            const cell2 = row.insertCell(1);
-                            const cell3 = row.insertCell(2);
-                            cell1.innerHTML = data[i].type;
-                            cell2.innerHTML = data[i].content;
-                            cell3.innerHTML = moment(data[i].date).format('YYYY-MM-DD HH:mm:ss');
-                        }
-
-                    }
-                },
-                error: function (request, status, error) {
-                    console.log(error)
-                }
-            });
-
-            paging(totalData, dataPerPage, pageCount, selectedPage);
+            paging(totalData, dataPerPage, pageCount, selectedPage, searchKey);
         });
+    }
 
+    function drawLogPagination(id,selectedPage,searchKey){
+        $.ajax({
+            url: '<%=cp%>/logPagination',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: { "id" : id,
+                "pageNo" : selectedPage,
+                "searchKey" : searchKey },
+            success: function (data) {
+                if(data.length != 0){
+                    $("#logTbody").empty();
+                    const tbody = document.getElementById('logTbody');
+
+                    for(let i=0; i<data.length; i++){
+                        const row = tbody.insertRow( tbody.rows.length );
+                        const cell1 = row.insertCell(0);
+                        const cell2 = row.insertCell(1);
+                        const cell3 = row.insertCell(2);
+                        cell1.innerHTML = data[i].type;
+                        cell2.innerHTML = data[i].content;
+                        cell3.innerHTML = moment(data[i].date).format('YYYY-MM-DD HH:mm:ss');
+                    }
+
+                }
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
+
+    function search(){
+        let searchKey = $('#searchKey').val();
+        const id = '${member.id}';
+        let count;
+        $.ajax({
+            url: '<%=cp%>/getLogCountByContent',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"id" : id,"searchKey" : searchKey },
+            success: function (data) {
+                count = data;
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+        drawLogPagination(id,1,searchKey);
+        paging(count, 20, 10, 1,searchKey);
     }
 
     $("document").ready(function(){
-        paging(${count}, 20, 10, 1);
+        paging(${count}, 20, 10, 1,"");
     });
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
