@@ -81,14 +81,14 @@
 
         <div class="col text-end">
             <span class="fs-6 fw-bold" style="margin-right: 10px; vertical-align: middle;">검색분류</span>
-            <select style="vertical-align: middle;">
+            <select class="bg-white" style="vertical-align: middle; border-radius:.25rem; border: 1px solid #999; height: 100%; padding: 0px 3px;">
                 <option>선택</option>
                 <option>분류</option>
                 <option>내용</option>
                 <option>날짜</option>
             </select>
 
-            <input type="text" style="width: 150px; vertical-align: middle;" id="searchKey">
+            <input type="text" style="width: 150px; vertical-align: middle; border: 1px solid #999; height: 100%;border-radius:.25rem;" id="searchKey">
             <button class="btn btn-primary ms-2" onclick="search();">검색</button>
             <button class="btn ms-2" onclick="reset();" style="border: 1px solid #0d6efd; color: #0d6efd;">초기화</button>
         </div>

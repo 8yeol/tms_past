@@ -38,6 +38,10 @@
         line-height: 55px;
         padding: 10px;
     }
+    #placeinfo input {
+        border-radius: 5px;
+        border: 1px solid #999 !important;
+    }
 
     @media all and (max-width: 1400px) {
         #btnDiv {
@@ -85,10 +89,10 @@
             </div>
 
             <table class="text-center w-100">
-                <thead>
+                <thead style="background-color: transparent; color: #333; border-bottom: 2px solid silver;">
                     <tr class="fw-bold m-3">
                         <th>
-                            <input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)">
+                            <input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)" style="margin-left: 3px;">
                         </th>
                         <th style="width: 33%">측정소 명</th>
                         <th style="width: 40%;">업데이트</th>
@@ -106,7 +110,7 @@
                 <div id="p_monitoring" class="fw-bold mt-2 mb-3" style="display: flex;"></div>
             </div>
             <table class="text-center w-100">
-                <thead>
+                <thead style="background-color: transparent; color: #333; border-bottom: 2px solid silver;">
                     <tr id="c">
                         <th width="2%"></th>
                         <th width="18%">측정항목</th>
@@ -134,7 +138,7 @@
             </div>
             <div class="modal-body d-flex" style="flex-wrap: wrap;">
                 <form id="placeinfo" method="post" style="width:70%; margin: 10px auto;">
-                    <div style="margin-bottom:7px; margin-top: 18px; display: flex; justify-content: space-between;">
+                    <div style="margin-bottom:7px; margin-top: 10px; display: flex; justify-content: space-between;">
                         <span>측정소 명</span>
                         <input type="text" class="modal-input" name="name" id="na1" maxlength="10" style="border: 1px solid black;" autocomplete="off">
                     </div>
