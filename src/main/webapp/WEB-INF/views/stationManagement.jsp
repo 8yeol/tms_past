@@ -23,16 +23,7 @@
 <script src="static/js/moment.min.js"></script>
 
 <style>
-    .swal2-close {
-        width: 30px;
-        height: 30px;
-        font-weight: bold !important;
-        margin-top: 10px;
-        margin-right: 10px;
-        color: black;
-    }
-
-    .MultiSelecterModal {
+    .multiSelecterModal {
         width: auto;
         border-radius: 10px;
         background-color: #0d6efd;
@@ -71,26 +62,30 @@
     }
 </style>
 <div class="container" id="container">
-    <div class="col " style="font-weight: bolder;margin: 30px 0px; font-size: 27px">
+    <div class="col fw-bold fs-3 m-4 ms-0">
         환경설정 > 측정소 관리
     </div>
 
-    <div class="row bg-light rounded"><span style=";font-size: 22px; font-weight: bolder;padding: 20px 20px 30px 25px;">측정소 등록 및 측정소별 항목 등록</span>
+    <div class="row bg-light rounded">
+        <span class="p-3 ps-4 fs-4 fw-bold">측정소 등록 및 측정소별 항목 등록</span>
     </div>
-    <div class="row bg-light" style="min-height:70%; margin-bottom: 50px; padding: 0px 25px 25px 25px;">
-        <div class="col-6 border-end" id="station1"
-             style="width: 37%;background: rgba(0, 0, 0, 0.05); margin-right: 25px;">
-            <div style="padding-bottom: 15px; padding-top: 3px;">
-                <span class="fw-bold" style="margin-right: 20%; font-size: 1.25rem;">측정소 관리</span>
-                <span id="btnDiv">
-                    <button data-bs-toggle="modal" data-bs-target="#addPlace" id="addpl" class="addBtn">추가</button>
-                    <button data-bs-toggle="modal" data-bs-target="#addPlace" class="updateBtn" id="uppl"
-                            onclick="updatePlaceSetting()">수정</button>
-                    <button onclick="removePlace()" class="removeBtn">삭제</button>
-                </span>
+    <div class="row bg-light p-3 pt-0" style="min-height:70%;">
+        <div class="col-6 border-end me-4" id="station1" style="width: 37%; background: rgba(0, 0, 0, 0.05);">
+            <div class="p-2 pb-3 ps-0 pe-0">
+                <div class="row">
+                    <div class="col-4">
+                        <span class="fw-bold fs-5">측정소 관리</span>
+                    </div>
+                    <div class="col text-end">
+                        <button data-bs-toggle="modal" data-bs-target="#addPlace" id="addpl" class="addBtn">추가</button>
+                        <button data-bs-toggle="modal" data-bs-target="#addPlace" class="updateBtn" id="uppl" onclick="updatePlaceSetting()">수정</button>
+                        <button onclick="removePlace()" class="removeBtn">삭제</button>
+                    </div>
+                </div>
             </div>
-            <table class="text-center" style="width: 100%;">
-                <tr class="fw-bold" style="border-bottom: silver solid 2px; display: flex; width:100%; padding-bottom: 5px;">
+
+            <table class="text-center w-100">
+                <tr class="fw-bold" style="border-bottom: silver solid 2px; display: flex; padding-bottom: 5px;">
                     <th style="margin-left: 5px; margin-right: 5px;">
                         <input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)">
                     </th>
@@ -98,16 +93,16 @@
                     <th style="width: 40%;">업데이트</th>
                     <th style="width: 25%;">모니터링 사용</th>
                 </tr>
-                <tr id="placeDiv" style="width:100%;"></tr>
+                <tr id="placeDiv"></tr>
             </table>
         </div>
+
         <div class="col-6" id="station2" style="width: 61%; background: rgba(0, 0, 0, 0.05);">
-            <div>
-                <div id="p_monitoring" class="fw-bold"
-                     style="display: flex; margin-top: 5px; padding-bottom: 35px;"></div>
+            <div class="pb-2">
+                <div id="p_monitoring" class="fw-bold mt-2 mb-3" style="display: flex;"></div>
             </div>
-            <table style="text-align: center;">
-                <tr id="c" style="border-bottom: silver solid 2px; width: 100%; display: flex; padding-bottom: 5px;">
+            <table class="text-center w-100">
+                <tr id="c" style="border-bottom: silver solid 2px; display: flex; padding-bottom: 5px;">
                     <th style="width: 2%;"></th>
                     <th style="width:18%;">측정항목</th>
                     <th style="width:25%;">관리ID</th>
@@ -116,7 +111,7 @@
                     <th style="width:14%;">관리기준</th>
                     <th style="width:13%;">모니터링</th>
                 </tr>
-                <tr id="items" style="width: 100%; ">
+                <tr id="items">
 
                 </tr>
             </table>
@@ -135,37 +130,33 @@
                 <form id="placeinfo" method="post" style="width:70%; margin: 10px auto;">
                     <div style="margin-bottom:7px; margin-top: 18px; display: flex; justify-content: space-between;">
                         <span>측정소 명</span>
-                        <input type="text" class="modal-input" name="name" id="na1" maxlength="10"
-                               style="border: 1px solid black;" autocomplete="off">
+                        <input type="text" class="modal-input" name="name" id="na1" maxlength="10" style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;">
                         <span>위치</span>
-                        <input type="text" class="modal-input" name="location" id="lo1" style="border: 1px solid black;"
-                               autocomplete="off">
+                        <input type="text" class="modal-input" name="location" id="lo1" style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;">
                         <span>담당자 명</span>
-                        <input type="text" class="modal-input" name="admin" id="ad1" style="border: 1px solid black;"
-                               autocomplete="off">
+                        <input type="text" class="modal-input" name="admin" id="ad1" style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <div style="margin-bottom:7px; display: flex; justify-content: space-between;">
                         <span>연락처</span>
-                        <input type="text" class="modal-input" name="tel" id="te1" style="border: 1px solid black;"
-                               autocomplete="off">
+                        <input type="text" class="modal-input" name="tel" id="te1" style="border: 1px solid black;" autocomplete="off">
                     </div>
                     <input type="hidden" name="hiddenCode" id="hi1">
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button id="saveBtn" type="button" class="btn btn-primary" onclick="insertPlace()">추가</button>
-                <button id="cancelBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button id="saveBtn" class="btn btn-primary" onclick="insertPlace()">추가</button>
+                <button id="cancelBtn" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
 </div>
 
 <%--값 수정시 알림창--%>
-<div class="MultiSelecterModal" id="alert"></div>
+<div class="multiSelecterModal" id="alert"></div>
 
 <script>
     //팝업창 드래그로 이동 가능
@@ -631,7 +622,7 @@
             check = "OFF";
         }
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + check + "", "설정");
-        MultiSelecterModal(name, "", "monitor", check);
+        multiSelecterModal(name, "", "monitor", check);
     }
 
     //측정항목 모니터링 onchange
@@ -664,7 +655,7 @@
             $('tr[value=' + pname + ']').find('.placeCheckbox').prop("checked", false);
         }
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
-        MultiSelecterModal(pname, naming, "monitor", check);
+        multiSelecterModal(pname, naming, "monitor", check);
     }
 
     function ifsum(value) {
@@ -752,7 +743,7 @@
         if (value == "999") {
             name.value = "";
         } else {
-            MultiSelecterModal(pname, naming, "legal", value);
+            multiSelecterModal(pname, naming, "legal", value);
             name.value = value;
         }
     }
@@ -820,7 +811,7 @@
         if (value == "999") {
             name.value = "";
         } else {
-            MultiSelecterModal(pname, naming, "company", value);
+            multiSelecterModal(pname, naming, "company", value);
             name.value = value;
         }
     }
@@ -877,13 +868,13 @@
         if (value == "999") {
             name.value = "";
         } else {
-            MultiSelecterModal(pname, naming, "manage", value);
+            multiSelecterModal(pname, naming, "manage", value);
             name.value = value;
         }
     }
 
     //데이터 변경시 팝업창
-    function MultiSelecterModal(place, name, standard, value) {
+    function multiSelecterModal(place, name, standard, value) {
         const modal = $('#alert');
         if (standard == "legal") {
             modal.html("'" + place + "-" + name + "'의 법적기준 값이 '" + value + "'(으)로 설정되었습니다.");
