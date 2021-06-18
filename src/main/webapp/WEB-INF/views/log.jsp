@@ -60,12 +60,12 @@
         vertical-align: middle;
         border-radius: .25rem;
         border: 1px solid #999;
-        height: 100%;
+        height: 38px;
         padding: 0 3px;
     }
     .search>input {
         width: 150px;
-        height: 100%;
+        height: 38px;
         vertical-align: middle;
         border-radius: .25rem;
         border: 1px solid #999;
@@ -79,8 +79,8 @@
     }
 
     @media all and (max-width: 989px) {
-        .search>input {width: 100px;height: 50%;}
-        .search>select {height: 50%;}
+        .search>input {width: 100px;height: 38px;}
+        .search>select {height: 38px;}
         .search {text-align: left;}
         .search>button {margin-top: 5px;}
     }
