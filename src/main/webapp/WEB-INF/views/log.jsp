@@ -8,12 +8,14 @@
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
+<link rel="stylesheet" href="static/css/datepicker.min.css">
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
-
+<script src="static/js/datepicker.min.js"></script>
+<script src="static/js/datepicker.ko.js"></script>
 
 <style>
     .toolbar>b {
@@ -84,6 +86,9 @@
         .search {text-align: left;}
         .search>button {margin-top: 5px;}
     }
+    #searchKey{
+        padding-left: 10px;
+    }
 </style>
 <div class="container" id="container">
     <c:choose>
@@ -114,14 +119,14 @@
 
         <div class="col text-end search">
             <span class="fs-6 fw-bold">검색분류</span>
-            <select class="bg-white">
-                <option>선택</option>
-                <option>분류</option>
-                <option>내용</option>
-                <option>날짜</option>
+            <select class="bg-white"  id="searchType">
+                <option value="null">선택</option>
+                <option value="type">분류</option>
+                <option value="content">내용</option>
+                <option value="date">날짜</option>
             </select>
 
-            <input type="text" id="searchKey">
+            <input type="text" id="searchKey" autocomplete="off">
             <button class="btn btn-primary ms-2" onclick="search();">검색</button>
             <button class="btn ms-2" onclick="reset();" style="border: 1px solid #0d6efd; color: #0d6efd;">초기화</button>
         </div>
@@ -157,7 +162,7 @@
 
 <script>
 
-    function paging(totalData, dataPerPage, pageCount, currentPage, searchKey){
+    function paging(totalData, dataPerPage, pageCount, currentPage, searchKey, searchType){
         const totalPage = Math.ceil(totalData/dataPerPage);    // 총 페이지 수
         const pageGroup = Math.ceil(currentPage/pageCount);    // 페이지 그룹
         let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
@@ -204,13 +209,13 @@
 
             const id = '${member.id}';
 
-            drawLogPagination(id,selectedPage,searchKey);
+            drawLogPagination(id,selectedPage,searchKey,searchType);
 
-            paging(totalData, dataPerPage, pageCount, selectedPage, searchKey);
+            paging(totalData, dataPerPage, pageCount, selectedPage, searchKey, searchType);
         });
     }
 
-    function drawLogPagination(id,selectedPage,searchKey){
+    function drawLogPagination(id,selectedPage,searchKey,searchType){
         $.ajax({
             url: '<%=cp%>/logPagination',
             type: 'POST',
@@ -219,7 +224,8 @@
             cache: false,
             data: { "id" : id,
                 "pageNo" : selectedPage,
-                "searchKey" : searchKey },
+                "searchKey" : searchKey,
+                "searchType" : searchType},
             success: function (data) {
                 if(data.length != 0){
                     $("#logTbody").empty();
@@ -244,25 +250,27 @@
     }
 
     function search(){
+        let searchType = $('#searchType').val();
+        if(searchType=='null'){
+            swal('warning','경고','검색항목을 선택 해주세요.');
+            return;
+        }
+
         let searchKey = $('#searchKey').val();
         if(searchKey == ""){
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '검색어를 입력 해주세요.'
-            })
+            swal('warning','경고','검색어를 입력 해주세요.');
             return;
         }
 
         const id = '${member.id}';
         let count;
         $.ajax({
-            url: '<%=cp%>/getLogCountByContent',
+            url: '<%=cp%>/getLogCountBySearchKey',
             type: 'POST',
             dataType: 'json',
             async: false,
             cache: false,
-            data: {"id" : id,"searchKey" : searchKey },
+            data: {"id" : id,"searchKey" : searchKey,"searchType" : searchType },
             success: function (data) {
                 count = data;
             },
@@ -272,28 +280,54 @@
         });
 
         if(count==0){
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '검색결과가 없습니다.'
-            })
+            swal('warning','경고','검색결과가 없습니다.');
             return;
         }
 
-        drawLogPagination(id,1,searchKey);
-        paging(count, 20, 10, 1,searchKey);
+        drawLogPagination(id,1,searchKey,searchType);
+        paging(count, 20, 10, 1,searchKey,searchType);
     }
 
     function reset(){
         const id = '${member.id}';
+        $('#searchKey').prop("type","text");
         $('#searchKey').val("");
-        drawLogPagination(id,1,"");
-        paging(${count}, 20, 10, 1,"");
+        $('#searchType option:eq(0)').prop("selected",true);
+        drawLogPagination(id,1,"","");
+        paging(${count}, 20, 10, 1,"","");
     }
 
     $("document").ready(function(){
-        paging(${count}, 20, 10, 1,"");
+        paging(${count}, 20, 10, 1,"",""); //해당 ID 모든 로그정보
     });
+
+
+    $('#searchType').change(function (){
+
+        if(this.value == 'date'){
+            $("#datepickers-container").css("display","block");
+            $('#searchKey').val("");
+            $('#searchKey').attr("readonly",true);
+            $("#searchKey").datepicker({
+                language:'ko',
+                minDate: new Date("2021-05-12"),
+                maxDate:new Date()
+            });
+        }else{
+            $("#datepickers-container").css("display","none");
+            $('#searchKey').attr("readonly",false);
+            $('#searchKey').val("");
+        }
+    });
+
+
+    function swal(icon,title,text){
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text
+        })
+    }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 

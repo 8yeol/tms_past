@@ -1615,14 +1615,24 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/logPagination", method = RequestMethod.POST)
-    public Object logPagination(int pageNo, String id, String searchKey) {
+    public Object logPagination(int pageNo, String id, String searchKey, String searchType) {
         if(searchKey.equals("")) searchKey = null;
-        return mongoQuary.pagination(pageNo, id, searchKey);
+        return mongoQuary.pagination(pageNo, id, searchKey, searchType);
     }
 
 
-    @RequestMapping(value = "/getLogCountByContent", method = RequestMethod.POST)
-    public long getLogCountByContent(String id,String searchKey) {
-        return logRepository.countByIdAndContentLike(id,searchKey);
+    @RequestMapping(value = "/getLogCountBySearchKey", method = RequestMethod.POST)
+    public long getLogCountBySearchKey(String id,String searchKey,String searchType) {
+        if(searchType.equals("type")){
+            return logRepository.countByIdAndType(id, searchKey);
+
+        }else if(searchType.equals("content")){
+            return logRepository.countByIdAndContentLike(id, searchKey);
+
+        }else if(searchType.equals("date")){
+            return mongoQuary.getDateCount(id, searchKey);
+
+        }
+        return 0;
     }
 }

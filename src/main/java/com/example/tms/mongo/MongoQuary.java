@@ -101,8 +101,46 @@ public class MongoQuary {
         return result;
     }
 
-    public Object pagination(int pageNo, String id, String searchKey) {
-        MatchOperation where;
+    /**
+     * 해당 날짜와 ID로 로그갯수 반환
+     * @param id ID
+     * @param searchKey 날짜
+     * @return ID와 날짜로 로그갯수 반환
+     */
+    public Long getDateCount(String id, String searchKey) {
+
+        MatchOperation where = Aggregation.match(
+                new Criteria().andOperator(
+                        Criteria.where("id").is(id),
+                        Criteria.where("date")
+                                .gte(LocalDateTime.parse(searchKey + "T00:00:00"))
+                                .lte(LocalDateTime.parse(searchKey + "T23:59:59"))
+                )
+        );
+        GroupOperation groupOperation = Aggregation
+                .group("date").count().as("count");
+
+        Aggregation agg = Aggregation.newAggregation(
+                where,groupOperation
+        );
+
+        AggregationResults<Log> results = mongoTemplate.aggregate(agg, "log", Log.class);
+
+        List<Log> result = results.getMappedResults();
+
+        return Long.valueOf(result.size()+"");
+    }
+
+    /**
+     * 페이지 넘버, 아이디, 검색어, 검색분류로 로그데이터 20개 반환
+     * @param pageNo 페이지 넘버
+     * @param id 아이디
+     * @param searchKey 검색어
+     * @param searchType 검색분류
+     * @return 20개 로그데이터
+     */
+    public Object pagination(int pageNo, String id, String searchKey, String searchType) {
+        MatchOperation where = null;
 
         if(searchKey == null){
             where = Aggregation.match(
@@ -110,15 +148,29 @@ public class MongoQuary {
                             Criteria.where("id").is(id)
                     )
             );
-        }else{
+        }else if(searchType.equals("content")){
             where = Aggregation.match(
                     new Criteria().andOperator(
                             Criteria.where("id").is(id),
                             Criteria.where("content").regex(searchKey)
                     )
             );
+        }else if(searchType.equals("type")){
+            where = Aggregation.match(
+                    new Criteria().andOperator(
+                            Criteria.where("id").is(id),
+                            Criteria.where("type").is(searchKey)
+                    )
+            );
+        }else if(searchType.equals("date")){
+            where = Aggregation.match(
+                    new Criteria().andOperator(
+                            Criteria.where("id").is(id),
+                            Criteria.where("date").gte(LocalDateTime.parse(searchKey + "T00:00:00"))
+                            .lte(LocalDateTime.parse(searchKey + "T23:59:59"))
+                    )
+            );
         }
-
 
         SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "_id");
 
