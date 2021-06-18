@@ -51,6 +51,39 @@
         background-color: #0d6efd;
         color: #fff;
     }
+
+    .search>span {
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+    .search>select {
+        vertical-align: middle;
+        border-radius: .25rem;
+        border: 1px solid #999;
+        height: 100%;
+        padding: 0 3px;
+    }
+    .search>input {
+        width: 150px;
+        height: 100%;
+        vertical-align: middle;
+        border-radius: .25rem;
+        border: 1px solid #999;
+    }
+
+    @media all and  (max-width: 1199px) and (min-width: 1024px) {
+        .search>input {width: 120px;}
+    }
+    @media all and (max-width: 1023px) and (min-width: 990px) {
+        .search>input {width: 100px;}
+    }
+
+    @media all and (max-width: 989px) {
+        .search>input {width: 100px;height: 50%;}
+        .search>select {height: 50%;}
+        .search {text-align: left;}
+        .search>button {margin-top: 5px;}
+    }
 </style>
 <div class="container" id="container">
     <c:choose>
@@ -79,16 +112,16 @@
             <h4 class=" justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록</h4>
         </div>
 
-        <div class="col text-end">
-            <span class="fs-6 fw-bold" style="margin-right: 10px; vertical-align: middle;">검색분류</span>
-            <select class="bg-white" style="vertical-align: middle; border-radius:.25rem; border: 1px solid #999; height: 100%; padding: 0px 3px;">
+        <div class="col text-end search">
+            <span class="fs-6 fw-bold">검색분류</span>
+            <select class="bg-white">
                 <option>선택</option>
                 <option>분류</option>
                 <option>내용</option>
                 <option>날짜</option>
             </select>
 
-            <input type="text" style="width: 150px; vertical-align: middle; border: 1px solid #999; height: 100%;border-radius:.25rem;" id="searchKey">
+            <input type="text" id="searchKey">
             <button class="btn btn-primary ms-2" onclick="search();">검색</button>
             <button class="btn ms-2" onclick="reset();" style="border: 1px solid #0d6efd; color: #0d6efd;">초기화</button>
         </div>
