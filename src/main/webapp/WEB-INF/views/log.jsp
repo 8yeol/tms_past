@@ -77,7 +77,9 @@
 
     <div class="row bg-light rounded py-3 px-5">
         <h4 class=" justify-content-start"><b>${member.id} [${state}] </b>&nbsp;님의 활동기록
-            <button class="backBtn btn float-end ms-2" onclick="search();">검색</button><input type="text" class="float-end" style="width: 150px;" id="searchKey"></h4>
+            <button class="btn btn-outline-success float-end ms-2" onclick="reset();">초기화</button>
+            <button class="btn btn-primary float-end ms-2" onclick="search();">검색</button>
+            <input type="text" class="float-end" style="width: 150px;" id="searchKey"></h4>
         <div class="col-xs-12 mt-3">
             <table class="table table-striped" id="member-Table">
                 <thead>
@@ -128,8 +130,7 @@
 
         for(let i=first; i <= last; i++){
             if(i > 0){
-             // html += "<a href='javascript:;' id=" + i + ">" + i + "</a> ";  페이지 이동없음
-                html += "<a href='javascript:;' id=" + i + ">" + i + "</a> ";          // 페이지 상단으로 이동
+                html += "<a href='javascript:;' id=" + i + ">" + i + "</a> ";  //href=javascript:; 페이지 이동없음
             }
         }
 
@@ -198,6 +199,15 @@
 
     function search(){
         let searchKey = $('#searchKey').val();
+        if(searchKey == ""){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '검색어를 입력 해주세요.'
+            })
+            return;
+        }
+
         const id = '${member.id}';
         let count;
         $.ajax({
@@ -214,6 +224,7 @@
                 console.log(error)
             }
         });
+
         if(count==0){
             Swal.fire({
                 icon: 'warning',
@@ -222,8 +233,16 @@
             })
             return;
         }
+
         drawLogPagination(id,1,searchKey);
         paging(count, 20, 10, 1,searchKey);
+    }
+
+    function reset(){
+        const id = '${member.id}';
+        $('#searchKey').val("");
+        drawLogPagination(id,1,"");
+        paging(${count}, 20, 10, 1,"");
     }
 
     $("document").ready(function(){
