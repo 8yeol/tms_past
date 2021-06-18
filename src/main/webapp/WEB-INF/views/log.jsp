@@ -8,9 +8,13 @@
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-ui.js"></script>
+<script src="static/js/sweetalert2.min.js"></script>
+
+
 <style>
     .toolbar>b {
         font-size: 1.25rem;
@@ -210,6 +214,14 @@
                 console.log(error)
             }
         });
+        if(count==0){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '검색결과가 없습니다.'
+            })
+            return;
+        }
         drawLogPagination(id,1,searchKey);
         paging(count, 20, 10, 1,searchKey);
     }
