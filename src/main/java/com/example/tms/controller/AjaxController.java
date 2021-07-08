@@ -814,9 +814,9 @@ public class AjaxController {
             inputLogSetting("'"+placename + " - " + naming+"'" + " 센서 추가", "설정", principal);
 
         }
-        float legal = 999.0f;
-        float company = 999.0f;
-        float management = 999.0f;
+        float legal = 999999.0f;
+        float company = 999999.0f;
+        float management = 999999.0f;
         Boolean monitoring = false;
 
         //reference document 생성
@@ -1125,9 +1125,9 @@ public class AjaxController {
             //센서관련 법적기준,사내기준,관리기준값 사용자 동의하에 초기화
             if (isValueDelete.equals("delete")) {
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
-                float legal = 999.0f;
-                float management = 999.0f;
-                float company = 999.0f;
+                float legal = 999999.0f;
+                float management = 999999.0f;
+                float company = 999999.0f;
                 reference.setLegalStandard(legal);
                 reference.setNaming(naming2);
                 reference.setCompanyStandard(company);

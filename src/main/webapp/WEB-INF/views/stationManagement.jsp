@@ -425,13 +425,13 @@
     function findReference(data) {
         for (i = 0; i < data.length; i++) {
 
-            if (data[i].legalStandard == 999) {
+            if (data[i].legalStandard == 999999) {
                 data[i].legalStandard = "";
             }
-            if (data[i].companyStandard == 999) {
+            if (data[i].companyStandard == 999999) {
                 data[i].companyStandard = "";
             }
-            if (data[i].managementStandard == 999) {
+            if (data[i].managementStandard == 999999) {
                 data[i].managementStandard = "";
             }
             if (data[i].monitoring == true) {
@@ -701,8 +701,8 @@
         var manage = $("#" + managename).val(); //관리기준 값
         var value = strReplace(name.value); //수정값
         var pname = $("#pname").text();
-        if (value == "" || value == "999") {
-            value = "999";
+        if (value == "" || value == "999999") {
+            value = "999999";
         } else {
             if (value == 0) {
                 Swal.fire({
@@ -748,7 +748,7 @@
             }
         })
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
-        if (value == "999") {
+        if (value == "999999") {
             name.value = "";
         } else {
             multiSelecterModal(pname, naming, "legal", value);
@@ -768,8 +768,8 @@
         var manage = $("#" + managename).val(); //관리기준 값
         var value = strReplace(name.value);
         var pname = $("#pname").text();
-        if (value == "" || value == "999") {
-            value = "999";
+        if (value == "" || value == "999999") {
+            value = "999999";
         } else {
             if (value == 0) {
                 Swal.fire({
@@ -816,7 +816,7 @@
             }
         })
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
-        if (value == "999") {
+        if (value == "999999") {
             name.value = "";
         } else {
             multiSelecterModal(pname, naming, "company", value);
@@ -835,8 +835,8 @@
         var company = $("#" + companyname).val(); //사내기준 값
         var value = strReplace(name.value); //관리기준
         var pname = $("#pname").text();
-        if (value == "" || value == "999") {
-            value = "999";
+        if (value == "" || value == "999999") {
+            value = "999999";
         } else {
             if (ifsum(value) == false) {
                 placeChange(document.getElementById('nickname').value);
@@ -873,7 +873,7 @@
             }
         });
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
-        if (value == "999") {
+        if (value == "999999") {
             name.value = "";
         } else {
             multiSelecterModal(pname, naming, "manage", value);
