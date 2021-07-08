@@ -8,4 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface MonitoringGroupRepository extends MongoRepository<MonitoringGroup, Long> {
+    MonitoringGroup findByGroupNum(int key);
+    List<MonitoringGroup> findAllBy_idNotNullOrderByGroupNumDesc();
 }

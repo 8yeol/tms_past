@@ -85,7 +85,93 @@
     .dataTables_wrapper {
         min-height: 350px;
     }
+    #groupTable{
+        width: 100%;
+        text-align: center;
+    }
+    #groupModal{
+        min-width:850px ;
+    }
+    #groupModal > .modal-dialog{
+        max-width: 850px!important;
+    }
+    .multiSelectBtn {
+        margin: 100px 10px 0px 10px;
+    }
+    .multiSelectParent option {
+        height: 45px;
+        border-bottom: 3px solid gray;
+        padding: 10px;
+    }.multiSelectComboBox {
+         width: 95%;
+         margin:50px auto;
+         display: flex;
+         justify-content: center;
+         background-color: white;
+     }
 
+    .multiSelectParent {
+        padding: 15px 15px 0px 15px;
+        margin-bottom: 10px;
+        background-color: white;
+        position: relative;
+        display: block;
+        min-width: 780px;
+        height: 400px;
+    }
+
+    .multiSelectParent div {
+        float: left;
+    }
+
+    .MultiSelecterModal {
+        width: 350px;
+        border-radius: 10px;
+        background-color: rgba(99, 130, 255, 0.7);
+        position: absolute;
+        padding: 10px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+        font-weight: bold;
+        display: none;
+    }
+
+    .multiSelectBtn input[type=button] {
+        width: 50px;
+        height: 50px;
+        color: rgb(99, 130, 255);
+        font-weight: bold;
+        font-size: 2rem;
+        padding: 0;
+    }
+    .moveBtn{
+        display: block;
+    }
+
+    .multiSelectBtn input[type=button]:hover {
+        background-color: rgba(99, 130, 255, 0.3);
+    }
+    .multiSelect{
+        width: 45%;
+    }
+    .multiSelect>select{
+        height: 230px;
+        border: 3px solid rgb(99, 130, 255);
+    }
+    .emissionsSpan{
+        font-size: 0.9rem;
+        margin: 10px 0px 10px 0px;
+    }
+    .groupSubTitle{
+        position: relative;
+        left: -15px;
+    }
+    svg:hover{
+        cursor: pointer;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
@@ -116,6 +202,7 @@
                     <th style="padding:10px 0px 10px 0px;">부서명</th>
                     <th style="padding:10px 0px 10px 0px;">모니터링 그룹</th>
                     <th style="padding:10px 0px 10px 0px;">최종 <a class="sign"></a>로그인</th>
+                    <th></th>
                     <th style="padding:10px 0px 10px 0px;">관리</th>
                 </tr>
                 </thead>
@@ -198,15 +285,35 @@
             </table>
         </div>
 
-        <div style="background-color: grey;width: 100%; height:350px;">
+        <div>
             <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
-            <table id="groupTable">
-
-            </table>
-
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal">그룹 추가</button>
         </div>
+        <div style="width: 100%; height:350px;">
+            <table class="table table-striped" id="groupTable">
+                <thead>
+                <tr>
+                    <th>그룹명</th>
+                    <th>회원</th>
+                    <th>모니터링 <a class="sign"></a> 측정소</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
 
-
+                <tbody>
+                <c:forEach items="${group}" var="groupList" varStatus="idx">
+                    <tr>
+                        <td>${groupList.groupName}</td>
+                        <td class="groupTd">${groupList.groupMember}</td>
+                        <td class="groupPlace">${groupList.monitoringPlace}</td>
+                        <td><i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal" ></i>&ensp;
+                            <i  class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
     </div>
     <%--회원관리 DIV--%>
 
@@ -277,6 +384,91 @@
 
 <%--                                           ↓↓↓ 모달영역 ↓↓↓                                                              --%>
 
+<!-- groupModal -->
+<div class="modal" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title groupModalTitle">그룹 생성</h4>
+            </div>
+            <div class="modal-body d-flex justify-content-center">
+                <h3>그룹명</h3>
+                <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px;" maxlength="70" id="groupInput">
+            </div>
+            <div class="modal-body d-flex">
+                <div style="width: 100%">
+
+                    <div class="multiSelectParent">
+                        <h3 class="fs-5 fw-bold groupSubTitle">그룹회원 관리</h3>
+                        <div class="multiSelect">
+                            <label><b>회원명</b></label>
+                            <select multiple class="form-control scroll" id="lstBox3">
+                                <option value="test1">test1</option>
+                                <option value="test2">test2</option>
+                                <option value="test3">test3</option>
+                            </select>
+                        </div>
+
+                        <div class="multiSelectBtn">
+                            <input type='button' id='btnRight2' value='>' class="btn btn-default moveBtn"
+                                   onclick="moveEvent('#lstBox3', '#lstBox4')"/>
+                            <input type='button' id='btnLeft2' value='<' class="btn btn-default moveBtn"
+                                   onclick="moveEvent('#lstBox4', '#lstBox3')"/>
+                        </div>
+
+                        <div class="multiSelect">
+                            <label><b>그룹 회원</b></label>
+                            <select multiple class="form-control scroll" id="lstBox4">
+
+                            </select>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <!-- MultiSelecter Modal-->
+                        <div class="MultiSelecterModal" id="groupSignModal"></div>
+                        <div class="emissionsSpan">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 페이지에서 모니터링 가능합니다.</div>
+                    </div>
+
+                    <div class="multiSelectParent">
+                        <h3 class="fs-5 fw-bold groupSubTitle">모니터링 측정소</h3>
+                        <div class="multiSelect">
+                            <label><b>측정소명</b></label>
+                            <select multiple class="form-control scroll" id="lstBox1">
+                                <option value="place1">place1</option>
+                                <option value="place2">place2</option>
+                                <option value="place3">place3</option>
+                            </select>
+                        </div>
+
+                        <div class="multiSelectBtn">
+                            <input type='button' id='btnRight1' value='>' class="btn btn-default moveBtn"
+                                   onclick="moveEvent('#lstBox1', '#lstBox2')"/>
+                            <input type='button' id='btnLeft1' value='<' class="btn btn-default moveBtn"
+                                   onclick="moveEvent('#lstBox2', '#lstBox1')"/>
+                        </div>
+
+                        <div class="multiSelect">
+                            <label><b>모니터링 측정소</b></label>
+                            <select multiple class="form-control scroll" id="lstBox2">
+                            </select>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <!-- MultiSelecter Modal-->
+                        <div class="MultiSelecterModal" id="monitoringSignModal"></div>
+                        <div class="emissionsSpan">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 페이지에서 모니터링 가능합니다.</div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" id="gModalCancle">취소</button>
+                <button type="button" class="btn btn-outline-primary" onclick="insertGroup()">생성</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- okModal -->
 <div class="modal" id="okModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -323,6 +515,8 @@
         </div>
     </div>
 </div>
+
+
 
 <!-- managementModal -->
 <div class="modal" id="managementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -442,10 +636,38 @@
                 "previous": "이전"
             },
         },
-        pageLength: 10,
+        pageLength: 5,
         info: false,
         lengthChange: false,
         order: [5, 'desc']
+    });
+
+    $('#groupTable').DataTable({
+        "columns" : [
+            { "width" : "20%" },
+            { "width" : "35%" },
+            { "width" : "35%" },
+            { "width" : "10%" }
+        ],
+        autoWidth: false,
+        language: {
+            emptyTable: "데이터가 없어요.",
+            lengthMenu: "페이지당 _MENU_ 개씩 보기",
+            info: "현재 _START_ - _END_ / _TOTAL_건",
+            infoEmpty: "데이터 없음",
+            infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
+            search: "전체검색 : ",
+            zeroRecords: "일치하는 데이터가 없어요.",
+            loadingRecords: "로딩중...",
+            processing: "잠시만 기다려 주세요...",
+            paginate: {
+                "next": "다음",
+                "previous": "이전"
+            },
+        },
+        pageLength: 5,
+        info: false,
+        lengthChange: false,
     });
 
     var ID = ""; //데이터테이블 해당항목의 ID정보
@@ -455,9 +677,11 @@
     var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
     var user_id = "${member.id}"; // 페이지에 접근한 유저의 ID
 
+
     $(document).ready(function () {
         rankRadioChanged("root"); //기본값
         $('.Modal').modal({keyboard: false,backdrop: 'static'}); // esc , 백스페이스 클릭방지
+        substrArrayData();
     }); //ready
 
     function Info_Set(str_id, str_state, str_name) {
@@ -488,7 +712,7 @@
 
     function gave_Rank() {
         var value = $("#gaveRank_Select").val();
-       if(value == state){
+        if(value == state){
             warning("기존 회원 권한과 동일합니다. 확인 후 다시 이용해주세요.");
         } else {
             var changeRank = (value == 1) ? "최고관리자 " : (value == 2) ? "관리자 " : "일반 ";
@@ -646,24 +870,142 @@
         Swal.fire('확인', str, 'success');
     }
 
-    var mql = window.matchMedia("screen and (max-width: 1024px)");
 
-    mql.addListener(function (e) {
-        if (e.matches) {
-            $('#container').attr('class', 'container-fluid');
-        } else {
-            $('#container').attr('class', 'container');
+    //선택된 옵션 이벤트 적용
+    function moveEvent(from, to) {
+        $('select').moveToListAndDelete(from, to);
+    }
+
+    //MultiSelecter 변경 이벤트
+    $.fn.moveToListAndDelete = function (from, to) {
+        let opts = $(from + ' option:selected');
+        if(opts.length == 0) return;
+        MultiSelecterModal(opts, from);                       //Modal Event
+
+        $(opts).remove();
+        $(to).append($(opts).clone());
+    };
+
+
+
+    function insertGroup(){
+        let name = $('#groupInput').val().trim();
+        if(name == ''){
+            $('#groupInput').focus();
+            warning('그룹명을 입력 하세요.');
+            return;
         }
-    });
 
-    var filter = "win16|win32|win64|mac";
-    if (navigator.platform) {
-        if (0 > filter.indexOf(navigator.platform.toLowerCase())) {
-            $('#container').attr('class', 'container-fluid');
-        } else {
-            $('#container').attr('class', 'container');
+        let member = $('#lstBox4 option');
+        if(member.length == 0){
+            warning('회원을 추가 하세요.');
+            return;
+        }
+        let memList = new Array();
+        for (i=0; i<member.length; i++)
+            memList.push(member.eq(i).val());
+
+        let place = $('#lstBox2 option');
+        if(place.length == 0){
+            warning('측정소를 추가 하세요.');
+            return;
+        }
+        let placeList = new Array();
+        for (i=0; i<place.length; i++)
+            placeList.push(place.eq(i).val());
+
+        $.ajax({
+            url: '<%=cp%>/saveGroup',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: { "name" : name, "memList" : memList, "placeList" : placeList},
+            success: function (){
+                $('#gModalCancle').trigger("click");
+                success('그룹이 추가 되었습니다.');
+                setTimeout(() => {location.reload()},2500);
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
+
+    //MultiSelecter Modal
+    function MultiSelecterModal(opts, from) {
+        const plaModal = $('#monitoringSignModal');
+        const memModal = $('#groupSignModal');
+
+        if (from == '#lstBox3') {
+            createModal(memModal, opts, ' 님이 <br> 그룹에 추가 되었습니다.', ' 님 외' + (opts.length - 1) + '명이 <br> 그룹에 추가 되었습니다. ');
+        } else if (from == '#lstBox4') {
+            createModal(memModal, opts, ' 님이 <br> 그룹에서 제외 되었습니다.', ' 님 외' + (opts.length - 1) + '명이 <br> 그룹에서 제외 되었습니다. ');
+        } else if (from == '#lstBox1') {
+            createModal(plaModal, opts, ' 측정소가 <br> 그룹에 추가 되었습니다.', ' 측정소 외' + (opts.length - 1) + '개가 <br> 그룹에 추가 되었습니다. ')
+        } else if (from == '#lstBox2') {
+            createModal(plaModal, opts,  ' 측정소가 <br> 그룹에서 제외 되었습니다.', ' 측정소 외' + (opts.length - 1) + '개가 <br> 그룹에서 제외 되었습니다. ');
         }
     }
+
+    function createModal(Modal, opts, length1, lengthLong) {
+        if (opts.length == 1) {
+            Modal.html(opts.text() + length1);
+        } else if (opts.length > 1) {
+            Modal.html(opts.eq(0).text() + lengthLong);
+        }
+        Modal.finish().fadeIn(300).delay(2000).fadeOut(300);
+    }
+
+    //그룹회원, 측정소 배열 양끝에 대괄호 없애기
+    //한개씩 꺼내서 문자열 만드는것보다 더 빠르고 편해 보임.
+    function substrArrayData(){
+        let groupMember = $('.groupTd');
+        for (i=0; i<groupMember.length; i++) {
+            groupMember.eq(i).text(groupMember.eq(i).text().substr(1, groupMember.eq(i).text().length - 2));
+        }
+
+        let groupPlace = $('.groupPlace');
+        for (i=0; i<groupPlace.length; i++) {
+            groupPlace.eq(i).text(groupPlace.eq(i).text().substr(1, groupPlace.eq(i).text().length - 2));
+        }
+    }
+
+    function deleteModal(obj, indexKey) {
+        const name = $(obj).parent().parent().children().eq(0).html(); //-> tmsWP0001_NOX_01
+        const key = indexKey;
+
+        Swal.fire({
+            icon: 'error',
+            title: '그룹 삭제',
+            text: '\''+ name + '\' 그룹을 삭제 하시겠습니까?',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: '삭제',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed)
+                deleteGroup(key);
+        });
+    }
+
+    function deleteGroup(key) {
+        $.ajax({
+            url: '<%=cp%>/deleteGroup',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {key: key},
+            success: function () {
+                warning('삭제 되었습니다.');
+                setTimeout(() => {location.reload()},2500);
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
+
+
 
 </script>
 

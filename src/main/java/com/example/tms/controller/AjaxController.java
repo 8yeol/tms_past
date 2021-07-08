@@ -56,7 +56,7 @@ public class AjaxController {
     final PasswordEncoder passwordEncoder;
     final MonitoringGroupRepository monitoringGroupRepository;
 
-    public AjaxController(PlaceRepository placeRepository, EmissionsTransitionRepository emissionsTransitionRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService, PasswordEncoder passwordEncoder, MonitoringGroupRepository monitoringGroupRepository) {
+   public AjaxController(PlaceRepository placeRepository, EmissionsTransitionRepository emissionsTransitionRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService, PasswordEncoder passwordEncoder, MonitoringGroupRepository monitoringGroupRepository) {
         this.placeRepository = placeRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
@@ -1642,5 +1642,21 @@ public class AjaxController {
 
         }
         return 0;
+    }
+
+    @RequestMapping(value = "/saveGroup", method = RequestMethod.POST)
+    public void saveGroup(String name, @RequestParam(value="memList[]")List<String> memList, @RequestParam(value="placeList[]")List<String> placeList) {
+        MonitoringGroup group = new MonitoringGroup();
+        int newGroupNum = monitoringGroupRepository.findAllBy_idNotNullOrderByGroupNumDesc().get(0).getGroupNum()+1 ;
+        group.setGroupName(name);
+        group.setGroupMember(memList);
+        group.setMonitoringPlace(placeList);
+        group.setGroupNum(newGroupNum);
+        monitoringGroupRepository.save(group);
+    }
+
+    @RequestMapping(value = "/deleteGroup", method = RequestMethod.POST)
+    public void deleteGroup(int key) {
+        monitoringGroupRepository.delete( monitoringGroupRepository.findByGroupNum(key) );
     }
 }

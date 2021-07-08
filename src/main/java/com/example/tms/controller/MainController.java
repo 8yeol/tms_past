@@ -30,8 +30,9 @@ public class MainController {
     final EmissionsTransitionRepository emissionsTransitionRepository;
     final ReferenceValueSettingRepository reference_value_settingRepository;
     final SensorCustomRepository sensorCustomRepository;
+    final MonitoringGroupRepository monitoringGroupRepository;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, ReferenceValueSettingRepository reference_value_settingRepository, SensorCustomRepository sensorCustomRepository) {
+    public MainController(PlaceRepository placeRepository, MonitoringGroupRepository monitoringGroupRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, ReferenceValueSettingRepository reference_value_settingRepository, SensorCustomRepository sensorCustomRepository) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -44,6 +45,7 @@ public class MainController {
         this.emissionsTransitionRepository = emissionsTransitionRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.sensorCustomRepository = sensorCustomRepository;
+        this.monitoringGroupRepository = monitoringGroupRepository;
     }
 
     /**
@@ -426,9 +428,14 @@ public class MainController {
         List<Member> members = memberRepository.findAll();
         List<RankManagement> rank_managements = rankManagementRepository.findAll();
         Member member = memberRepository.findById(principal.getName());
+        List<MonitoringGroup> group = monitoringGroupRepository.findAll();
+        List<Place> place = placeRepository.findAll();
+
         model.addAttribute("member", member);
         model.addAttribute("members", members);
         model.addAttribute("rank_managements", rank_managements);
+        model.addAttribute("group", group);
+        model.addAttribute("place", place);
         return "setting";
     }
 

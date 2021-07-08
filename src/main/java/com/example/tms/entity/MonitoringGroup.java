@@ -18,7 +18,7 @@ public class MonitoringGroup {
     private ObjectId _id;
     private String groupName;
     private List groupMember;
-    private String monitoring;
+    private List monitoringPlace;
     private int groupNum;
 
 }
