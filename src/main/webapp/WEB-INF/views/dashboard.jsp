@@ -277,7 +277,8 @@
     <div class="row mt-4 bg-light margin-l pb-4" style="width: 98%; margin: 0.2rem; height: 390px; overflow: auto;">
         <div class="row p-3 margin-l">
             <div class="col fs-5 fw-bold">
-                연간 배출량 누적 모니터링
+                연간 배출량 누적 모니터링 <br>
+                <span style="color: red; font-size: 0.8rem; font-weight: normal;">* 참고용 데이터로 실제 배출량과 상이할 수 있습니다.</span>
             </div>
             <div class="col text-end">
                 <c:choose>
