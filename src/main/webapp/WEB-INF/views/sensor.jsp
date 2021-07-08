@@ -206,30 +206,30 @@
                                 <td><c:out value="${sensorList.naming}"/><input type="hidden" value="<c:out value="${sensorList.name}"/>"> </td>
                                 <td><div class="bg-danger text-light">
                                     <c:choose>
-                                        <c:when test="${sensorList.legalStandard eq 999}">
+                                        <c:when test="${sensorList.legalStandard eq 999999}">
                                             -
                                         </c:when>
-                                        <c:when test="${sensorList.legalStandard ne 999}">
+                                        <c:when test="${sensorList.legalStandard ne 999999}">
                                             <c:out value="${sensorList.legalStandard}"/>
                                         </c:when>
                                     </c:choose>
                                 </div></td>
                                 <td><div class="bg-warning text-light">
                                     <c:choose>
-                                        <c:when test="${sensorList.companyStandard eq 999}">
+                                        <c:when test="${sensorList.companyStandard eq 999999}">
                                             -
                                         </c:when>
-                                        <c:when test="${sensorList.companyStandard ne 999}">
+                                        <c:when test="${sensorList.companyStandard ne 999999}">
                                             <c:out value="${sensorList.companyStandard}"/>
                                         </c:when>
                                     </c:choose>
                                 </div></td>
                                 <td><div class="bg-success text-light">
                                     <c:choose>
-                                        <c:when test="${sensorList.managementStandard eq 999}">
+                                        <c:when test="${sensorList.managementStandard eq 999999}">
                                             -
                                         </c:when>
-                                        <c:when test="${sensorList.managementStandard ne 999}">
+                                        <c:when test="${sensorList.managementStandard ne 999999}">
                                             <c:out value="${sensorList.managementStandard}"/>
                                         </c:when>
                                     </c:choose>
@@ -786,9 +786,9 @@
             companyStandard = sensor_data.companyStandard;
             legalStandard = sensor_data.legalStandard;
         }else{
-            managementStandard = 999;
-            companyStandard = 999;
-            legalStandard = 999;
+            managementStandard = 999999;
+            companyStandard = 999999;
+            legalStandard = 999999;
         }
 
         chart.updateOptions({
@@ -881,17 +881,17 @@
                     const newCeil4 = newRow.insertCell(4);
                     const newCeil5 = newRow.insertCell(5);
 
-                    if(data[i].legalStandard == 999){
+                    if(data[i].legalStandard == 999999){
                         legalStandard = '-';
                     }else{
                         legalStandard = data[i].legalStandard;
                     }
-                    if(data[i].companyStandard == 999){
+                    if(data[i].companyStandard == 999999){
                         companyStandard = '-';
                     }else{
                         companyStandard = data[i].companyStandard;
                     }
-                    if(data[i].managementStandard == 999){
+                    if(data[i].managementStandard == 999999){
                         managementStandard = '-';
                     }else{
                         managementStandard = data[i].managementStandard;
@@ -966,17 +966,17 @@
             }
         }
         if(sensor_data != null){
-            if(sensor_data.legalStandard == 999){
+            if(sensor_data.legalStandard == 999999){
                 legalStandard = '-';
             }else{
                 legalStandard = sensor_data.legalStandard;
             }
-            if(sensor_data.companyStandard == 999){
+            if(sensor_data.companyStandard == 999999){
                 companyStandard = '-';
             }else{
                 companyStandard = sensor_data.companyStandard;
             }
-            if(sensor_data.managementStandard == 999){
+            if(sensor_data.managementStandard == 999999){
                 managementStandard = '-';
             }else{
                 managementStandard = sensor_data.managementStandard;
@@ -1035,17 +1035,17 @@
         var pageNum = dt.page.info().page;
         upDate = moment(sensor_data_list_recent.up_time).format('YYYY-MM-DD HH:mm:ss');
         value = sensor_data_list_recent.value;
-        if(sensorData.legalStandard == 999){
+        if(sensorData.legalStandard == 999999){
             legalStandard = '-';
         }else{
             legalStandard = sensorData.legalStandard;
         }
-        if(sensorData.companyStandard == 999){
+        if(sensorData.companyStandard == 999999){
             companyStandard = '-';
         }else{
             companyStandard = sensorData.companyStandard;
         }
-        if(sensorData.managementStandard == 999){
+        if(sensorData.managementStandard == 999999){
             managementStandard = '-';
         }else{
             managementStandard = sensorData.managementStandard;
