@@ -841,7 +841,9 @@
      *  대시보드 생성 (가동률, 통신 상태, 기준값 등)
      */
     function draw_sensor_info(data) {
-        var sensorMonitoringOn=0, sensorMonitoringOff=0, sensorStatusSuccess=0, sensorStatusFail=0, legalSCount =0, companySCount =0, managementSCount=0;
+        var sensorMonitoringOn=0, sensorMonitoringOff=0, sensorStatusSuccess=0,
+            sensorStatusFail=0, legalSCount=0, companySCount=0, managementSCount=0,
+            notexistLegalStandard=0, notexistCompanyStandard=0, notexistManagementStandard=0;
         for(var i=0; i<data.length; i++){ //측정소별
             for(var z=0; z<data[i].length; z++){ //측정소의 센서별 조회
                 sensorData = data[i][z];
@@ -857,6 +859,15 @@
                     }
                     if(status){
                         sensorStatusSuccess +=1;
+                        if(legalStandard == 999999){
+                            notexistLegalStandard += 1;
+                        }
+                        if(companyStandard == 999999){
+                            notexistCompanyStandard += 1;
+                        }
+                        if(managementStandard == 999999){
+                            notexistManagementStandard += 1;
+                        }
                         if(value > legalStandard){
                             legalSCount +=1;
                         }else if(value > companyStandard){
@@ -886,9 +897,9 @@
             alarmTone('off');
         }
         var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail+sensorMonitoringOff)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
-        var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //법적기준 %
-        var companyPercent = ((companySCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //사내기준 %
-        var managementPercent = ((managementSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); ////관리기준 %
+        var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail - notexistLegalStandard)) * 100).toFixed(0); //법적기준 %
+        var companyPercent = ((companySCount / (sensorStatusSuccess + sensorStatusFail - notexistCompanyStandard)) * 100).toFixed(0); //사내기준 %
+        var managementPercent = ((managementSCount / (sensorStatusSuccess + sensorStatusFail - notexistCompanyStandard)) * 100).toFixed(0); ////관리기준 %
 
         /* NaN 처리 */
         if(runPercent == 'NaN'){ runPercent = 0; }
@@ -902,11 +913,11 @@
         $("#statusOff").text(sensorStatusFail); //통신불량
         $("#monitoringOff").text(sensorMonitoringOff); //모니터링OFF 개수
         $("#legal_standard_text_A").text(legalPercent + "%"); //법적기준 Over
-        $("#legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess + sensorStatusFail)); //법적기준 Over 개수/전체
+        $("#legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess + sensorStatusFail - notexistLegalStandard)); //법적기준 Over 개수/전체
         $("#company_standard_text_A").text(companyPercent + "%"); //사내기준 Over
-        $("#company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess + sensorStatusFail)); //사내기준 Over 개수/전체
+        $("#company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess + sensorStatusFail - notexistCompanyStandard)); //사내기준 Over 개수/전체
         $("#management_standard_text_A").text(managementPercent + "%"); //관리기준 Over
-        $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess + sensorStatusFail)); //관리기준 Over 개수/전체
+        $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess + sensorStatusFail - notexistManagementStandard)); //관리기준 Over 개수/전체
     }
 
     /**
