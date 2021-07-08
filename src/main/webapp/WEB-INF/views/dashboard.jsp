@@ -283,7 +283,7 @@
                 <c:choose>
                     <c:when test="${not empty placeList}">
                         <span class="small">마지막 업데이트 : <span class="fw-bold" id="accumulate_update">업데이트 시간</span></span><br>
-                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 자정 업데이트 됩니다.</span>
+                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 01시에 업데이트 됩니다.</span>
                     </c:when>
                 </c:choose>
             </div>

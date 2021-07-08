@@ -1,13 +1,16 @@
 package com.example.tms.mongo;
 
+import com.example.tms.entity.ChartData;
 import com.example.tms.entity.Log;
 import com.example.tms.entity.NotificationList;
+import com.example.tms.entity.Sensor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,7 +135,7 @@ public class MongoQuary {
     }
 
     /**
-     * 페이지 넘버, 아이디, 검색어, 검색분류로 로그데이터 20개 반환
+     * 로그페이지 페이징
      * @param pageNo 페이지 넘버
      * @param id 아이디
      * @param searchKey 검색어
@@ -188,6 +191,36 @@ public class MongoQuary {
         AggregationResults<Log> results = mongoTemplate.aggregate(agg, "log", Log.class);
 
         List<Log> result = results.getMappedResults();
+
+        return result;
+    }
+
+
+    public Object getCumulativeEmissions(String table , LocalDate day) {
+
+        ProjectionOperation dateProjection = Aggregation.project()
+                .and("up_time").as("x")
+                .and("value").as("y");
+
+        MatchOperation where = Aggregation.match(
+                new Criteria().andOperator(
+                        Criteria.where("x")
+                                .gte(LocalDateTime.parse(day + "T00:00:00"))
+                                .lte(LocalDateTime.parse(day + "T23:59:59"))
+                )
+        );
+
+        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "x");
+
+        Aggregation agg = Aggregation.newAggregation(
+                dateProjection,
+                where,
+                sort
+        );
+
+        AggregationResults<ChartData> results = mongoTemplate.aggregate(agg, table, ChartData.class);
+
+        List<ChartData> result = results.getMappedResults();
 
         return result;
     }

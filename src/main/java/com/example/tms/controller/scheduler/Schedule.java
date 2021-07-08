@@ -1,12 +1,16 @@
 package com.example.tms.controller.scheduler;
 
 import com.example.tms.entity.*;
+import com.example.tms.mongo.MongoQuary;
+import com.example.tms.repository.AnnualEmissionsRepository;
 import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsCustomRepository;
 import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsRepository;
 import com.example.tms.repository.NotificationStatistics.NotificationDayStatisticsRepository;
 import com.example.tms.repository.NotificationList.NotificationListCustomRepository;
 import com.example.tms.repository.NotificationStatistics.NotificationMonthStatisticsRepository;
+import com.example.tms.repository.PlaceRepository;
 import com.example.tms.repository.SensorListRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -24,14 +28,21 @@ public class Schedule {
     final MonthlyEmissionsRepository monthlyEmissionsRepository;
     final MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository;
     final SensorListRepository sensorListRepository;
+    final PlaceRepository placeRepository;
+    final MongoQuary mongoQuary;
+    final AnnualEmissionsRepository annualEmissionsRepository;
 
-    public Schedule(NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository, SensorListRepository sensorListRepository) {
+
+    public Schedule(NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository, SensorListRepository sensorListRepository, PlaceRepository placeRepository, MongoQuary mongoQuary, AnnualEmissionsRepository annualEmissionsRepository) {
         this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
         this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
         this.notificationListCustomRepository = notificationListCustomRepository;
         this.monthlyEmissionsRepository = monthlyEmissionsRepository;
         this.monthlyEmissionsCustomRepository = monthlyEmissionsCustomRepository;
         this.sensorListRepository = sensorListRepository;
+        this.placeRepository = placeRepository;
+        this.mongoQuary = mongoQuary;
+        this.annualEmissionsRepository = annualEmissionsRepository;
     }
 
     /**
@@ -138,6 +149,58 @@ public class Schedule {
         monthData.setCompanyCount(monthValue[1]);
         monthData.setManagementCount(monthValue[2]);
         notificationMonthStatisticsRepository.save(monthData);
+    }
+
+    /**
+     * [대시보드 - 연간 배출량 누적 모니터링]
+     *
+     * (알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산)
+     */
+    @Scheduled(cron = "0 0 1 * * *") //매일 01시 00분에 처리
+    //@Scheduled(cron = "*/10 * * * * *") // 10초마다 테스트
+    public void saveCumulativeEmissions(){
+        // 질소산화물(NOX) : Map<측정소명, 테이블명> 형식
+        Map<String, String> noxList = new HashMap<>();
+        for( SensorList sensorList : sensorListRepository.findByClassification("NOX")){
+            noxList.put(sensorList.getPlace(), sensorList.getTableName());
+        }
+
+        // 유량(FL1) : Map<측정소명, 테이블명> 형식
+        Map<String, String> fl1List = new HashMap<>();
+        for( SensorList sensorList : sensorListRepository.findByClassification("FL1")){
+            fl1List.put(sensorList.getPlace(), sensorList.getTableName());
+        }
+
+        // 전체 측정소 리스트를 불러와서 30분 평균 데이터가 저장되는 DB 조회(실시간 데이터 테이블 앞에 RM30_ 붙여주면 30분 평균데이터 조회 가능)
+        String halfPast = "RM30_";
+        for( Place place : placeRepository.findAll()){
+            String placeName = place.getName();
+            // 해당 측정소에 nox 데이터와 fl1 데이터가 있는경우 아래로직 실행 (측정소에 맵핑 되어 있지않은경우 해당 질소산화물 데이터와 유량값이 어떤 측정소에 해당하는 데이터인지 알수없기때문에 구현X)
+            if(noxList.get(placeName)!=null && fl1List.get(placeName)!=null){
+                //계산하려면 질소산화물 값이랑 유량값 둘다 필요하기때문에 둘다 null 이 아닌경우 계산식 실행
+                String noxTable = halfPast + noxList.get(placeName);
+                String fl1Table = halfPast + fl1List.get(placeName);
+
+                //해당 테이블 값으로 전일 30분 평균데이터들 조회
+                LocalDate nowDate = LocalDate.now();
+                LocalDate yesterday = nowDate.minusDays(1);
+                List<ChartData> noxData = (List<ChartData>) mongoQuary.getCumulativeEmissions(noxTable, yesterday);
+                List<ChartData> fl1Data = (List<ChartData>) mongoQuary.getCumulativeEmissions(fl1Table, yesterday);
+                double emissions = 0;
+                if(noxData.size()==48 && fl1Data.size()==48){
+                    for(int i = 0 ; i < noxData.size(); i++){
+                        emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4;
+                    }
+                }else{ 
+                    // 데이터가 올바르게 전부 들어오지 않은 경우 로직 (?)
+                }
+                AnnualEmissions annualEmissions = annualEmissionsRepository.findBySensor(noxList.get(placeName));
+                // 오늘 날짜 체크해서 1월 1일인 경우 데이터 0으로 초기화
+                int yearlyValue = annualEmissions.getYearlyValue();
+                annualEmissions.setYearlyValue(yearlyValue + (int) emissions);
+                annualEmissionsRepository.save(annualEmissions);
+            }
+        }
     }
 
     public int[] getReferenceValueCount(String from, String to){
