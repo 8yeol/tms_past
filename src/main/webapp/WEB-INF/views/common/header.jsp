@@ -12,6 +12,7 @@
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="static/css/bootstrap.min.css">
     <link rel="stylesheet" href="static/css/common.css">
+    <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
 
     <script src="static/js/jquery-3.6.0.min.js"></script>
     <script src="static/js/bootstrap.min.js"></script>

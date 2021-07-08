@@ -22,7 +22,7 @@
         width: 400px; height: 410px;
     }
     .emoji{
-        width:300px; margin: 20px auto;
+        width:300px; margin: 35px auto;
     }
     #id{
         width:300px; height:50px; margin: 0 auto 5px;
@@ -57,7 +57,7 @@
 <div class="container" id="container">
             <div class=" w-100 d-flex justify-content-center text-center" style="height: 100%;">
                 <div class="align-self-center bg-white " id="div1">
-                    <img src="static/images/logo.png" class="emoji">
+                    <img src="static/images/LXlogo.png" class="emoji">
                     <form method='post' name='loginFrom' value='admin'>
                         <div class="">
                             <input class="form-control" type='text' name='username' value='' id="id" placeholder="아이디"  onkeyup="enterkey()" autocomplete="off">
