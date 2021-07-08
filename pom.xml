@@ -55,6 +55,7 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--삭제-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
