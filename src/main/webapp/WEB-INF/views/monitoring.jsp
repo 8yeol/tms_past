@@ -114,13 +114,11 @@
     .bg-lightBlue{
         background-color: #EDF2F8;
     }
-</style>
 
+</style>
 
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
-
-
 <div class="container"  id="container">
     <div class="row m-3 mt-3">
         <div class="col">
@@ -128,6 +126,8 @@
         </div>
         <div class="col text-end align-self-end">
             <div style="font-size: 1rem">
+                <audio id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>
+                <div id="alarmAudio"></div>
                 <span>알림음 :</span>
                 <input class="ms-2" type="radio" name="alarmTone" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp</label>
                 <input type="radio" name="alarmTone" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off&nbsp&nbsp&nbsp</label>
@@ -457,6 +457,7 @@
 <script>
     let INTERVAL; let flashCheck; let alarmCheck;
 
+
     $(document).ready(function () {
         let placeData2 = ${sensor}; // 모니터링 True 인 측정소 리스트의 모니터링 True인 센서 데이터(최근,이전,기준값 등)
         draw_sensor_info(placeData2); //대시보드 생성
@@ -515,20 +516,10 @@
      * 알림음
      */
     function alarmTone(onOff) {
-        const audio = new Audio('static/audio/alarm.mp3');
         if(onOff == 'on'){
-            if(typeof flIn2 !== "undefined"){
-                clearTimeout(flIn2);
-            }
-            setTimeout(function flashInterval() {
-                audio.play();
-                flIn2 = setTimeout(flashInterval, 1000);
-            }, 0)
+            document.getElementById("audio").muted = false;// 소리 켜기
         }else{
-            audio.pause();
-            if(typeof flIn2 !== "undefined"){
-                clearTimeout(flIn2);
-            }
+            document.getElementById("audio").muted = true;// 소리 끄기
         }
     }
 
@@ -883,16 +874,16 @@
         }
         if(legalSCount > 0 ){
             flashing(flashCheck, "bg-danger");
-            alarmTone(alarmCheck);
+            alarmTone('on');
         }else if(companySCount > 0){
             flashing(flashCheck, "bg-warning");
-            alarmTone(alarmCheck);
+            alarmTone('on');
         }else if(managementSCount > 0){
             flashing(flashCheck, "bg-success");
-            alarmTone(alarmCheck);
+            alarmTone('on');
         }else{
             flashing(flashCheck, null);
-            alarmTone(alarmCheck);
+            alarmTone('off');
         }
         var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail+sensorMonitoringOff)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
         var legalPercent = ((legalSCount / (sensorStatusSuccess + sensorStatusFail)) * 100).toFixed(0); //법적기준 %
@@ -945,4 +936,62 @@
         }
     });
 
+
+
+    /**
+     * 센서의 최근 데이터 리턴
+     */
+    function getSensorRecent(sensor){
+        let result;
+        if(sensor==undefined){
+            result = null;
+        } else{
+            $.ajax({
+                url:'<%=cp%>/getSensorRecent',
+                dataType: 'JSON',
+                data:  {"sensor": sensor},
+                async: false,
+                success: function (data) {
+                    result = {value: (data.value).toFixed(2), status: data.status, up_time:data.up_time};
+                },
+                error: function (e) {
+                }
+            });
+        }
+        return result;
+    }
+
+
+
+
+    /**
+     * 센서의 최근 1시간 / 24시간 데이터 리턴
+     */
+    function getSensor(sensor_name, hour) {
+        let result = new Array();
+        if(sensor_name==undefined){
+            return null;
+        }else{
+            $.ajax({
+                url:'<%=cp%>/getSensor',
+                dataType: 'JSON',
+                contentType: "application/json",
+                data: {"sensor": sensor_name, "hour": hour},
+                async: false,
+                success: function (data) {
+                    if(data.length != 0){
+                        $.each(data, function (index, item) {
+                            result.push({x: item.up_time, y: (item.value).toFixed(2)});
+                        })
+                    }else{
+                        // 조회 결과 없을 때 return [];
+                        result = [];
+                    }
+                },
+                error: function (e) {
+                }
+            });
+        }
+        return result;
+    }
 </script>
