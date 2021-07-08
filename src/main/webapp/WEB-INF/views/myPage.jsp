@@ -90,6 +90,13 @@
             </div>
 
             <div class="mb-3">
+                <label for="monitoringGroup" class="col-sm-2 col-form-label" style="display: inline-block;">모니터링 그룹</label>
+                <div class="col-sm-10" style="width: 50%; display: inline-block;">
+                    <input type="text" class="form-control" value="${member.monitoringGroup}" id="monitoringGroup" readonly  autocomplete="off">
+                </div>
+            </div>
+
+            <div class="mb-3">
                 <label for="grade" class="col-sm-2 col-form-label" style="display: inline-block;">직급</label>
                 <div class="col-sm-10" style="width: 50%; display: inline-block;">
                     <input type="text" class="form-control" value="${member.grade}" id="grade" readonly autocomplete="off">
@@ -174,6 +181,7 @@
     var email;
     var tel;
     var department;
+    var monitoringGroup;
     var grade;
 
     $(document).ready(function(){
@@ -185,6 +193,7 @@
         $("#email").attr("readonly", TOGGLE);
         $("#tel").attr("readonly", TOGGLE);
         $("#department").attr("readonly", TOGGLE);
+        $("#monitoringGroup").attr("readonly", TOGGLE);
         $("#grade").attr("readonly", TOGGLE);
         if (TOGGLE) {
             TOGGLE = false;
@@ -246,6 +255,7 @@
                     "name": $("#name").val(),
                     "email": $("#email").val(),
                     "department": $("#department").val(),
+                    "monitoringGroup": $("#monitoringGroup").val(),
                     "grade": $("#grade").val(),
                     "tel": $("#tel").val()
                 },
@@ -276,7 +286,7 @@
                 return false;
             }
         }
-        if ($("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "") {
+        if ($("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "" && $("#monitoringGroup").val() != "") {
             return true;
         } else {
             return false;
@@ -350,12 +360,14 @@
             email = $("#email").val();
             tel = $("#tel").val();
             department = $("#department").val();
+            monitoringGroup = $("#monitoringGroup").val();
             grade = $("#grade").val();
         } else {
             $("#name").val(name);
             $("#email").val(email);
             $("#tel").val(tel);
             $("#department").val(department);
+            $("#monitoringGroup").val(monitoringGroup);
             $("#grade").val(grade);
             $("#now_password").val("");
             $("#password").val("");

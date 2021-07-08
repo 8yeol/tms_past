@@ -134,6 +134,15 @@
             </div>
 
             <div class="mb-3  parentDiv">
+                <label for="monitoringGroup" class="col-form-label label">모니터링 그룹</label>
+                <div class="col-sm-10" style="width:100%;">
+                    <select name = monitoringGroup class="form-control input" id="monitoringGroup" autocomplete="off">
+                        <option value="">선택</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3  parentDiv">
                 <label for="grade" class="col-form-label label">직급</label>
                 <div class="col-sm-10" style="width:100%;">
                     <input type="text" class="form-control input" id="grade"  autocomplete="off">
@@ -153,7 +162,13 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
+    $(document).ready(function () {
+        select_group();
+
+    })
+
     function join_submit() {
+        let group =$("#monitoringGroup option:selected").val();
        if (blankCheck() && idCheck() &&passwordCheck() && emailCheck()) {
 
             if ($("#password").val() !== $("#passwordCheck").val()) {
@@ -161,7 +176,9 @@
                 swal('warning', '비밀번호를 확인 하세요.');
                 return;
             }
-
+            if($("#monitoringGroup option:selected").val()==""){
+                group = 'default';
+            }
             $.ajax({
                 url: '<%=cp%>/memberJoin',
                 type: 'POST',
@@ -174,6 +191,7 @@
                     "name": $("#name").val(),
                     "email": $("#email").val(),
                     "department": $("#department").val(),
+                    "monitoringGroup": group,
                     "grade": $("#grade").val(),
                     "tel": $("#tel").val()
                 },
@@ -242,6 +260,28 @@
         } else {
            return true;
         }
+    }
+
+    function select_group() {
+        const $target = $('select[name="monitoringGroup"]');
+        $.ajax({
+            url: '<%=cp%>/getMonitoringGroup',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            success: function (data) {
+                for(let i = 0; i<data.length; i++){
+                    const group = data[i].groupName;
+                    const innerHTML =
+                        "<option value ='"+group+"'>"+group+"</option>";
+                    $target.append(innerHTML);
+                }
+            },
+            error: function () {
+            }
+        });
+
+
     }
 
 

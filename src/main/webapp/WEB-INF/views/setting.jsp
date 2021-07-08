@@ -113,8 +113,8 @@
                     <th style="padding:10px 0px 10px 0px;" width="90px">권한</th>
                     <th style="padding:10px 0px 10px 0px;">이메일</th>
                     <th style="padding:10px 0px 10px 0px;">연락처</th>
-                    <th style="padding:10px 0px 10px 0px;">가입<a class="sign"></a> 신청일</th>
-                    <th style="padding:10px 0px 10px 0px;">가입<a class="sign"></a> 승인일</th>
+                    <th style="padding:10px 0px 10px 0px;">부서명</th>
+                    <th style="padding:10px 0px 10px 0px;">모니터링 그룹</th>
                     <th style="padding:10px 0px 10px 0px;">최종 <a class="sign"></a>로그인</th>
                     <th style="padding:10px 0px 10px 0px;">관리</th>
                 </tr>
@@ -147,7 +147,8 @@
                         </c:choose>
                         <td>${mList.email}</td>
                         <td>${mList.tel}</td>
-                        <td><fmt:formatDate value="${mList._id.date}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
+                        <td>${mList.department}</td>
+                        <td>${mList.monitoringGroup}</td>
 
 
                         <c:choose>
