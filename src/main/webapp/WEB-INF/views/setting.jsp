@@ -83,7 +83,7 @@
     }
 
     .dataTables_wrapper {
-        min-height: 550px;
+        min-height: 350px;
     }
 
 </style>
@@ -196,6 +196,16 @@
 
             </table>
         </div>
+
+        <div style="background-color: grey;width: 100%; height:350px;">
+            <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
+            <table id="groupTable">
+
+            </table>
+
+        </div>
+
+
     </div>
     <%--회원관리 DIV--%>
 
