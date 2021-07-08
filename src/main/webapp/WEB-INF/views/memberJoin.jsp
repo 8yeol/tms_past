@@ -1,21 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<link rel="stylesheet" href="static/css/bootstrap.min.css">
-<link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
-<link rel="stylesheet" href="static/css/sweetalert2.min.css">
-<link rel="shortcut icon" href="#">
-<script src="static/js/common/common.js"></script>
-<script src="static/js/jquery-3.6.0.min.js"></script>
-<script src="static/js/bootstrap.min.js"></script>
-<script src="static/js/jquery-ui.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
-<script src="static/js/common/member.js"></script>
+
+<head>
+    <title>TMS</title>
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
+    <link rel="stylesheet" href="static/css/sweetalert2.min.css">
+    <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
+    <script src="static/js/common/common.js"></script>
+    <script src="static/js/jquery-3.6.0.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/jquery-ui.js"></script>
+    <script src="static/js/sweetalert2.min.js"></script>
+    <script src="static/js/common/member.js"></script>
+</head>
 
 <%
     pageContext.setAttribute("br", "<br/>");
     pageContext.setAttribute("cn", "\n");
     String cp = request.getContextPath();
 %>
-
 <style>
     body {
         background-color: #EDF2F8;

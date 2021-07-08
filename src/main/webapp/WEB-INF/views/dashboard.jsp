@@ -485,20 +485,22 @@
             success: function (data) {
                 const arr = data.excess;
 
-                for(let i=0; i<arr.length; i++){
-                    const excess = arr[i].classification;
-                    const place = arr[i].place;
-                    const naming = arr[i].naming;
-                    const value = arr[i].value;
+                if(arr != undefined){
+                    for(let i=0; i<arr.length; i++){
+                        const excess = arr[i].classification;
+                        const place = arr[i].place;
+                        const naming = arr[i].naming;
+                        const value = arr[i].value;
 
-                    if(excess == "danger" ){
-                        $("#danger").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
-                    }else if(excess == "warning"){
-                        $("#warning").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
-                    }else if(excess == "caution"){
-                        $("#caution").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
-                    }else if(excess == "normal"){
-                        $("#normal").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                        if(excess == "danger" ){
+                            $("#danger").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                        }else if(excess == "warning"){
+                            $("#warning").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                        }else if(excess == "caution"){
+                            $("#caution").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                        }else if(excess == "normal"){
+                            $("#normal").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                        }
                     }
                 }
             },
