@@ -1410,6 +1410,12 @@ public class AjaxController {
         memberService.updateLog(member);
         return "success";
     }
+    @RequestMapping(value = "/memberGroupUpdate")
+    public String memberGroupUpdate(String id, String monitoringGroup) {
+        memberService.updateMemberGroup(id, monitoringGroup);
+        memberService.updateGroupLog(id);
+        return "success";
+    }
 
     /**
      * 회원탈퇴

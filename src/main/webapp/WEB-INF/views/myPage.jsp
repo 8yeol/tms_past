@@ -95,7 +95,6 @@
                     <select id='monitoringGroup' class="form-control" disabled>
                         <option value='${member.monitoringGroup}' selected="selected">${member.monitoringGroup}</option>
                     </select>
-
                 </div>
             </div>
 
