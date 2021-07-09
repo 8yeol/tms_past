@@ -571,11 +571,13 @@ public class AjaxController {
             }
 
             //분기별 배출량 측정소 변경
-            EmissionsTransition et = emissionsTransitionRepository.findByTableName(sensor.get(i));
+            List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(sensor.get(i));
             if (et != null) {
-                et.setPlaceName("");
+                for (int k=0; k<et.size(); k++){
+                    et.get(k).setPlaceName("");
+                    emissionsTransitionRepository.save(et.get(k));
+                }
                 inputLogSetting("'"+sensorname+"'"+" 분기별 배출량 등록 측정소 '"+place +"' 삭제" ,"설정",principal);
-                emissionsTransitionRepository.save(et);
             }
 
         }
@@ -614,10 +616,6 @@ public class AjaxController {
 
             emissionsStandardSettingRepository.deleteByTableName(sensor.get(i));
             inputLogSetting("'"+sensorname+"'"+" 배출 관리 기준 삭제" ,"설정",principal);
-
-
-            monthlyEmissionsRepository.deleteBySensor(sensor.get(i));
-            inputLogSetting("'"+sensorname+"'"+" 통계자료 조회 데이터 삭제" ,"설정",principal);
 
             emissionsTransitionRepository.deleteByTableName(sensor.get(i));
             inputLogSetting("'"+sensorname+"'"+" 분기별 배출량 정보 삭제" ,"설정",principal);
@@ -1086,11 +1084,17 @@ public class AjaxController {
      * @param naming         센서 네이밍
      * @param place          측정소
      * @param tableName      테이블 명
-     * @param hiddenCode     추가,수정을 판별하는 데이터
+     * @param hiddenCode     수정시 사용할 테이블 명
      */
     @RequestMapping(value = "/saveSensor")
-    public void saveSensor(@RequestParam(value = "managementId", required = false) String managementId, @RequestParam(value = "classification", required = false) String classification, @RequestParam(value = "naming", required = false) String naming, @RequestParam(value = "place") String place,@RequestParam(value = "naming2", required = false) String naming2,
-                           @RequestParam(value = "tableName", required = false) String tableName, @RequestParam(value = "hiddenCode", required = false) String hiddenCode, @RequestParam(value = "isValueDelete", required = false) String isValueDelete,Principal principal) {
+    public void saveSensor(@RequestParam(value = "managementId", required = false) String managementId,
+                           @RequestParam(value = "classification", required = false) String classification,
+                           @RequestParam(value = "naming", required = false) String naming,
+                           @RequestParam(value = "place") String place,
+                           @RequestParam(value = "naming2", required = false) String naming2,
+                           @RequestParam(value = "tableName", required = false) String tableName,
+                           @RequestParam(value = "hiddenCode", required = false) String hiddenCode,
+                           @RequestParam(value = "isValueDelete", required = false) String isValueDelete,Principal principal) {
 
         SensorList sensor;
         //hidden 값이 있는지로 추가와 수정을 판별
@@ -1114,6 +1118,24 @@ public class AjaxController {
 
             saveReference(place, tableName, naming,principal); //상세설정 항목 추가
             inputLogSetting( "'"+sensor.getNaming()+"'" + " 센서 추가", "설정", principal);
+
+            //올해, 작년 분기별 배출데이터 생성
+            int thisYear = Calendar.getInstance().get(Calendar.YEAR);
+            EmissionsTransition thisYearTransition = new EmissionsTransition(
+                    tableName, place, naming, thisYear, 0, 0, 0, 0, 0, new Date());
+            EmissionsTransition lastYearTransition = new EmissionsTransition(
+                    tableName, place, naming, thisYear-1, 0, 0, 0, 0, 0, new Date());
+            emissionsTransitionRepository.save(thisYearTransition);
+            emissionsTransitionRepository.save(lastYearTransition);
+
+            //월별 데이터 생성
+            if(monthlyEmissionsRepository.findBySensorAndYear(tableName, thisYear) == null) {
+                MonthlyEmissions me = new MonthlyEmissions();
+                me.setSensor(tableName);
+                me.setYear(thisYear);
+                me.setUpdateTime(new Date());
+                monthlyEmissionsRepository.save(me);
+            }
 
         } else { //수정
             sensor = sensorListRepository.findByTableName(hiddenCode, "");
@@ -1168,17 +1190,20 @@ public class AjaxController {
 
 
                 //분기별 배출량 데이터 수정
-                EmissionsTransition et = emissionsTransitionRepository.findByTableName(hiddenCode);
+                List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(hiddenCode);
                 if (et != null) {
-                    et.setSensorName(naming2);
-                    emissionsTransitionRepository.save(et);
-                    inputLogSetting("'"+et.getPlaceName() + " - " + sensor.getNaming()+"'" + " 센서 분기별 배출량 항목명 수정", "설정", principal);
+                    for (int i = 0; i<et.size(); i++) {
+                        et.get(i).setSensorName(naming2);
+                        emissionsTransitionRepository.save(et.get(i));
+                    }
+                    inputLogSetting("'"+et.get(0).getPlaceName() + " - " + sensor.getNaming()+"'" + " 센서 분기별 배출량 항목명 수정", "설정", principal);
                 }
 
                 inputLogSetting("'"+oldNaming+"' 센서의 항목명 "+"'"+oldNaming+"'" + " > " + "'"+naming2+"'" + " 수정 ", "설정", principal);
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
                 reference.setNaming(naming2);
                 reference_value_settingRepository.save(reference);
+
             }
 
             //측정소 변경
@@ -1208,10 +1233,12 @@ public class AjaxController {
 
 
                 //분기별 배출량 데이터 수정
-                EmissionsTransition et = emissionsTransitionRepository.findByTableName(hiddenCode);
+                List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(hiddenCode);
                 if (et != null) {
-                    et.setPlaceName(place);
-                    emissionsTransitionRepository.save(et);
+                    for (int i = 0; i<et.size(); i++) {
+                        et.get(i).setPlaceName(place);
+                        emissionsTransitionRepository.save(et.get(i));
+                    }
                     inputLogSetting("'"+oldPlace + " - " +oldNaming+"'" + " 센서 분기별 배출량 측정소명 수정", "설정", principal);
                 }
 
@@ -1309,9 +1336,6 @@ public class AjaxController {
         //배출량 관리 - 연간 모니터링 대상 삭제
         annualEmissionsRepository.deleteBySensor(tableName);
         inputLogSetting("'"+ess.getPlace() + " - "+ess.getNaming()+"'"+" 연간 배출량 모니터링 대상 삭제", "설정", principal);
-        // 분석 및 통계 - 통계자료 조회 데이터 삭제
-        monthlyEmissionsRepository.deleteBySensor(tableName);
-        inputLogSetting("'"+ess.getPlace() + " - "+ess.getNaming()+"'"+" 분석 및 통계 데이터 삭제", "설정", principal);
 
         //센서 삭제
         SensorList sensor = sensorListRepository.findByTableName(tableName, "");
@@ -1393,6 +1417,7 @@ public class AjaxController {
             return "root";
         } else if (!memberRepository.existsById(member.getId())) {
             memberService.memberSave(member, "4");
+            groupChange(member.getId(), member.getMonitoringGroup());
             return "success";
         } else {
             return "failed";
@@ -1408,13 +1433,28 @@ public class AjaxController {
     public String memberUpdate(Member member) {
         memberService.updateMember(member);
         memberService.updateLog(member);
+        groupChange(member.getId(), member.getMonitoringGroup());
         return "success";
     }
     @RequestMapping(value = "/memberGroupUpdate")
     public String memberGroupUpdate(String id, String monitoringGroup) {
         memberService.updateMemberGroup(id, monitoringGroup);
         memberService.updateGroupLog(id);
+        groupChange(id, monitoringGroup);
         return "success";
+    }
+
+    public void groupChange(String id, String monitoringGroup){
+        MonitoringGroup memberRemove = monitoringGroupRepository.findByGroupMemberIsIn(id);
+        if(memberRemove != null){
+            memberRemove.getGroupMember().remove(id);
+            monitoringGroupRepository.save(memberRemove);
+        }
+        MonitoringGroup group = monitoringGroupRepository.findByGroupName(monitoringGroup);
+        List<String> member = group.getGroupMember();
+        member.add(id);
+        group.setGroupMember(member);
+        monitoringGroupRepository.save(group);
     }
 
     /**
@@ -1629,6 +1669,14 @@ public class AjaxController {
         return rankManagementRepository.findByName(str);
     }
 
+    /**
+     * 페이징 쿼리로 반환되는 로그 데이터
+     * @param pageNo 몇페이지 인지
+     * @param id 로그아이디
+     * @param searchKey 검색키
+     * @param searchType 검색타입
+     * @return
+     */
     @RequestMapping(value = "/logPagination", method = RequestMethod.POST)
     public Object logPagination(int pageNo, String id, String searchKey, String searchType) {
         if(searchKey.equals("")) searchKey = null;
@@ -1636,6 +1684,13 @@ public class AjaxController {
     }
 
 
+    /**
+     * 검색어로 반환되는 로그데이터 Count
+     * @param id 로그를 구별할 id
+     * @param searchKey 로그 구별할 검색어
+     * @param searchType 로그 구별할 검색타입
+     * @return 로그 카운트
+     */
     @RequestMapping(value = "/getLogCountBySearchKey", method = RequestMethod.POST)
     public long getLogCountBySearchKey(String id,String searchKey,String searchType) {
         if(searchType.equals("type")){
@@ -1651,6 +1706,14 @@ public class AjaxController {
         return 0;
     }
 
+    /**
+     * 그룹 저장, 수정
+     * @param name 그룹명
+     * @param memList 그룹에 포함될 멤버
+     * @param placeList 그룹에 포함될 측정소
+     * @param flag 저장, 수정 식별키
+     * @param groupNum 수정시 그룹을 식별할 키
+     */
     @RequestMapping(value = "/saveGroup", method = RequestMethod.POST)
     public void saveGroup(String name, @RequestParam(value="memList[]")List<String> memList,
                           @RequestParam(value="placeList[]")List<String> placeList, String flag, @RequestParam(value = "groupNum",required = false)int groupNum) {
@@ -1686,6 +1749,10 @@ public class AjaxController {
         monitoringGroupRepository.save(group);
     }
 
+    /**
+     * 그룹 삭제 하면서 멤버의 그룹명도 default로 변경
+     * @param key 식별 키
+     */
     @RequestMapping(value = "/deleteGroup", method = RequestMethod.POST)
     public void deleteGroup(int key) {
 
@@ -1698,6 +1765,10 @@ public class AjaxController {
         monitoringGroupRepository.delete(group);
     }
 
+    /**
+     * 그룹 생성, 수정등에 필요한 멤버, 측정소 리스트
+     * @return 두개를 포함한 하나의 리스트 반환
+     */
     @RequestMapping(value = "/getMemberAndPlaceList", method = RequestMethod.POST)
     public List getMemberAndPlaceList() {
         List<Place> pList = placeRepository.findAll();
