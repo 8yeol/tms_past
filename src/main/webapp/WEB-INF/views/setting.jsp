@@ -86,6 +86,15 @@
         min-height: 350px;
     }
 
+    #member-Table select {
+        color: #000;
+        background-color: #f8f9fa;
+        border-color: #aaa;
+        border-radius: 2px;
+        padding: 3px;
+        min-width: 66px;
+    }
+
     #groupTable {
         width: 100%;
         text-align: center;
@@ -115,11 +124,6 @@
          justify-content: center;
          background-color: white;
      }
-    .multiSelect option:hover{
-        cursor: pointer;
-        background-color: #b7def8;
-    }
-
 
     .multiSelectParent {
         padding: 15px 15px 0px 15px;
@@ -194,11 +198,13 @@
     }
 
     .tab {
-        width: 200px;
+        width: 70px;
         list-style: none;
         position: absolute;
         left: -81px;
-        top: 10px;
+        top:10px;
+        margin: 0;
+        padding: 0 10px 0;
     }
 
     .tab li {
@@ -241,6 +247,27 @@
     #checkLabel:hover{
         cursor: pointer;
         color : #0d6efd;
+    }
+
+    /* 반응형 미디어쿼리 */
+    @media all and (max-width:989px) {
+        .tab {
+            left: unset;
+            right: 0px;
+            top: -60px;
+            display: flex;
+            width: 160px;
+        }
+        .tab li {
+            width: 70px;
+            height: 60px;
+        }
+        .tab li:nth-child(1) {
+            line-height: 60px;
+        }
+        .tab li:nth-child(2) {
+            padding-top: 10px;
+        }
     }
 </style>
 
