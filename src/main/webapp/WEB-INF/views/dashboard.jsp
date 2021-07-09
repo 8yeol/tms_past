@@ -115,7 +115,7 @@
                 <c:choose>
                     <c:when test="${not empty emissionSettingList}">
                         <span class="small">마지막 업데이트 : <span class="fw-bold" id="integrated_update">업데이트 시간</span></span><br>
-                        <span class="text-primary" style="font-size: 0.8rem"> * 매월 마지막 날 업데이트 됩니다.</span>
+                        <span class="text-primary" style="font-size: 0.8rem"> * 매월 1일 전월데이터 기준으로 업데이트 됩니다.</span>
                     </c:when>
                 </c:choose>
             </div>
@@ -283,8 +283,7 @@
             <div class="col text-end">
                 <c:choose>
                     <c:when test="${not empty placeList}">
-                        <span class="small">마지막 업데이트 : <span class="fw-bold" id="accumulate_update">업데이트 시간</span></span><br>
-                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 01시에 업데이트 됩니다.</span>
+                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 01시 전일데이터 기준으로 업데이트 됩니다.</span>
                     </c:when>
                 </c:choose>
             </div>
@@ -302,6 +301,7 @@
                     <c:if test="${emissions.place eq placelist}">
                         <div class="row pe-3 margin-l">
                         <div class="fw-bold" style="margin-bottom: 2px;">${emissions.sensorNaming}</div>
+                            <span class="small">업데이트 : <span class="fw-bold"><fmt:formatDate value="${emissions.updateTime}" pattern="yyyy-MM-dd"/></span></span>
                         <c:forEach items="${standard}" var="standard">
                         <c:if test="${emissions.sensor eq standard.tableName}">
                             <c:if test="${standard.emissionsStandard ne '0'}"> <!--sensor = standard -->
@@ -428,8 +428,6 @@
 
         integrated();
         excess();
-
-        $("#accumulate_update").text(moment(new Date()).format('YYYY-MM-DD'));
     });
 
     function standardModal(obj) {

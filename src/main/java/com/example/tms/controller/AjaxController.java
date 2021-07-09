@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -1099,7 +1100,7 @@ public class AjaxController {
             sensor = new SensorList(classification, naming, managementId, tableName, new Date(), place, true);
 
             //연간 배출량 누적 모니터랑 대상 && 배출량 추이 모니터링 대상   설정에도 추가합니다.
-            AnnualEmissions aEmissions = new AnnualEmissions(place, tableName, naming, 0, false);
+            AnnualEmissions aEmissions = new AnnualEmissions(place, tableName, naming, 0, false, new Date());
             annualEmissionsRepository.save(aEmissions);
             inputLogSetting("'"+place + " - " + naming +"'"+ " 센서 연간 배출량 모니터링 대상 추가", "설정", principal);
 

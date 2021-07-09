@@ -117,6 +117,7 @@ public class MainController {
      */
     @RequestMapping("/dashboard")
     public String dashboard(Model model, Principal principal) {
+        // 연간 배출량 추이 모니터링 ON
         List<EmissionsSetting> emissionsSettings = emissionsSettingRepository.findByStatus(true);
         model.addAttribute("emissionSettingList", emissionsSettings);
 

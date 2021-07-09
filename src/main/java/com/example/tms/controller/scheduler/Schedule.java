@@ -10,7 +10,6 @@ import com.example.tms.repository.NotificationList.NotificationListCustomReposit
 import com.example.tms.repository.NotificationStatistics.NotificationMonthStatisticsRepository;
 import com.example.tms.repository.PlaceRepository;
 import com.example.tms.repository.SensorListRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -156,8 +155,8 @@ public class Schedule {
      *
      * (알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산)
      */
-    @Scheduled(cron = "0 0 1 * * *") //매일 01시 00분에 처리
-    //@Scheduled(cron = "*/10 * * * * *") // 10초마다 테스트
+    //@Scheduled(cron = "0 0 1 * * *") //매일 01시 00분에 처리
+    @Scheduled(cron = "*/10 * * * * *") // 10초마다 테스트
     public void saveCumulativeEmissions(){
         // 질소산화물(NOX) : Map<측정소명, 테이블명> 형식
         Map<String, String> noxList = new HashMap<>();
@@ -178,32 +177,69 @@ public class Schedule {
             // 해당 측정소에 nox 데이터와 fl1 데이터가 있는경우 아래로직 실행 (측정소에 맵핑 되어 있지않은경우 해당 질소산화물 데이터와 유량값이 어떤 측정소에 해당하는 데이터인지 알수없기때문에 구현X)
             if(noxList.get(placeName)!=null && fl1List.get(placeName)!=null){
                 //계산하려면 질소산화물 값이랑 유량값 둘다 필요하기때문에 둘다 null 이 아닌경우 계산식 실행
-                String noxTable = halfPast + noxList.get(placeName);
-                String fl1Table = halfPast + fl1List.get(placeName);
+                String noxTable = noxList.get(placeName);
+                String fl1Table = fl1List.get(placeName);
 
-                //해당 테이블 값으로 전일 30분 평균데이터들 조회
-                LocalDate nowDate = LocalDate.now();
-                LocalDate yesterday = nowDate.minusDays(1);
-                List<ChartData> noxData = (List<ChartData>) mongoQuary.getCumulativeEmissions(noxTable, yesterday);
-                List<ChartData> fl1Data = (List<ChartData>) mongoQuary.getCumulativeEmissions(fl1Table, yesterday);
-                double emissions = 0;
-                if(noxData.size()==48 && fl1Data.size()==48){
-                    for(int i = 0 ; i < noxData.size(); i++){
-                        emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4;
-                    }
-                }else{ 
-                    // 데이터가 올바르게 전부 들어오지 않은 경우 로직 (?)
-                }
-                AnnualEmissions annualEmissions = annualEmissionsRepository.findBySensor(noxList.get(placeName));
-                // 오늘 날짜 체크해서 1월 1일인 경우 데이터 0으로 초기화
-                int yearlyValue = annualEmissions.getYearlyValue();
-                annualEmissions.setYearlyValue(yearlyValue + (int) emissions);
-                annualEmissionsRepository.save(annualEmissions);
+                // 질소산화물 전일 배출량
+                double emissions = getNOXYesterdayEmissions(halfPast + noxTable, halfPast + fl1Table);
+
+                //setAnnualEmissions(noxTable, emissions);
             }
         }
     }
 
-    public int[] getReferenceValueCount(String from, String to){
+    // nox 전일 배출량 계산
+    public double getNOXYesterdayEmissions(String nox, String fl1){
+        LocalDate nowDate = LocalDate.now();
+        LocalDate yesterday = nowDate.minusDays(1);
+        List<ChartData> noxData = (List<ChartData>) mongoQuary.getCumulativeEmissions(nox, yesterday);
+        List<ChartData> fl1Data = (List<ChartData>) mongoQuary.getCumulativeEmissions(fl1, yesterday);
+        double emissions = 0;
+
+        for(int i = 0 ; i < noxData.size(); i++){
+            emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4;
+        }
+
+        // 데이터가 올바르게 들어오는지 체크하기 위한 로직
+        /*
+        if(noxData.size()==48 && fl1Data.size()==48){
+            for(int i = 0 ; i < noxData.size(); i++){
+                emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4;
+            }
+        }else{
+
+        }
+        */
+        return emissions;
+    }
+
+    // [분석 및 통계 - 통계자료 조회] 월별 배출량 추이 (monthly_emissions)
+    public void setMonthlyEmissions(){
+
+    }
+
+    // 연간 배출량 누적 모니터링
+    public void setAnnualEmissions(String table, double emissions){
+        LocalDate nowDate = LocalDate.now();
+        AnnualEmissions annualEmissions = annualEmissionsRepository.findBySensor(table);
+        String format = nowDate.format(DateTimeFormatter.ofPattern("MMdd"));
+
+        // 오늘 날짜가 1월 1일인 경우 데이터 초기화 하고 전일 데이터는 저장(분석 및 통계 - 통계자료 조회에 활용)
+        if(format.equals("0101")){
+            annualEmissions.setYearlyValue(0);
+        }else{
+            annualEmissions.setYearlyValue(annualEmissions.getYearlyValue() + (int) emissions);
+        }
+        annualEmissions.setUpdateTime(new Date());
+        annualEmissionsRepository.save(annualEmissions);
+    }
+
+    // 연간 배출량 추이 모니터링
+    public void setEmissionsTransition(String table, double emissions){
+
+    }
+
+   public int[] getReferenceValueCount(String from, String to){
         int[] arr = new int[3];
         for(int grade=1; grade<=3; grade++) {
             List<HashMap> list = notificationListCustomRepository.getCount(grade, from, to);
