@@ -159,9 +159,9 @@
                     </c:choose>
                     <div class="row pb-3 margin-l">
                         <div class="row" style="margin-bottom: 15px;">
-                            <div class="col">
-                                <div class="fs-6 fw-bold">${present.placeName} - ${present.sensorName}</div>
-                                <span class="small">마지막 업데이트 : <span class="fw-bold"><fmt:formatDate value="${present.updateTime}" pattern="yyyy-MM-dd"/></span></span>
+                            <div style="display: flex;">
+                                <div class="fs-6 fw-bold" style="width: 50%">${present.placeName} - ${present.sensorName}</div>
+                                <span class="small" style="width: 50%; text-align: right">마지막 업데이트 : <span class="fw-bold"><fmt:formatDate value="${present.updateTime}" pattern="yyyy-MM-dd"/></span></span>
                             </div>
                         </div>
                         <div class="col-3">
