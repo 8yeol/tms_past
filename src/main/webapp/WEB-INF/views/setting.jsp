@@ -85,30 +85,37 @@
     .dataTables_wrapper {
         min-height: 350px;
     }
-    #groupTable{
+
+    #groupTable {
         width: 100%;
         text-align: center;
     }
-    #groupModal{
-        min-width:850px ;
+
+    #groupModal {
+        min-width: 850px;
     }
-    #groupModal > .modal-dialog{
-        max-width: 850px!important;
+
+    #groupModal > .modal-dialog {
+        max-width: 850px !important;
     }
+
     .multiSelectBtn {
         margin: 100px 10px 0px 10px;
     }
+
     .multiSelectParent option {
         height: 45px;
         border-bottom: 3px solid gray;
         padding: 10px;
-    }.multiSelectComboBox {
-         width: 95%;
-         margin:50px auto;
-         display: flex;
-         justify-content: center;
-         background-color: white;
-     }
+    }
+
+    .multiSelectComboBox {
+        width: 95%;
+        margin: 50px auto;
+        display: flex;
+        justify-content: center;
+        background-color: white;
+    }
 
     .multiSelectParent {
         padding: 15px 15px 0px 15px;
@@ -147,29 +154,35 @@
         font-size: 2rem;
         padding: 0;
     }
-    .moveBtn{
+
+    .moveBtn {
         display: block;
     }
 
     .multiSelectBtn input[type=button]:hover {
         background-color: rgba(99, 130, 255, 0.3);
     }
-    .multiSelect{
+
+    .multiSelect {
         width: 45%;
     }
-    .multiSelect>select{
+
+    .multiSelect > select {
         height: 230px;
         border: 3px solid rgb(99, 130, 255);
     }
-    .emissionsSpan{
+
+    .emissionsSpan {
         font-size: 0.9rem;
         margin: 10px 0px 10px 0px;
     }
-    .groupSubTitle{
+
+    .groupSubTitle {
         position: relative;
         left: -15px;
     }
-    svg:hover{
+
+    svg:hover {
         cursor: pointer;
     }
 
@@ -178,8 +191,9 @@
         list-style: none;
         position: absolute;
         left: -81px;
-        top:10px;
+        top: 10px;
     }
+
     .tab li {
         width: 70px;
         height: 80px;
@@ -188,16 +202,20 @@
         text-align: center;
         cursor: pointer;
     }
-    .tab li:nth-child(1){
+
+    .tab li:nth-child(1) {
         line-height: 80px;
     }
-    .tab li:nth-child(2){
+
+    .tab li:nth-child(2) {
         padding-top: 15px;
     }
+
     .tab li.on {
         background-color: #75ACFF;
         color: #fff;
     }
+
     .tab li:hover {
         background-color: #75ACFF;
         color: #fff;
@@ -225,128 +243,138 @@
         </ul>
         <%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
         <div id="member" style="display: block" class="tabDiv">
-        <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">회원관리</span>
-        <div class="col-xs-12">
-            <table class="table table-striped" id="member-Table">
+            <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">회원관리</span>
+            <div class="col-xs-12">
+                <table class="table table-striped" id="member-Table">
 
-                <thead>
-                <tr class="text-center">
-                    <th style="padding:10px 0px 10px 0px;">ID</th>
-                    <th style="padding:10px 0px 10px 0px;" width="80px">이름</th>
-                    <th style="padding:10px 0px 10px 0px;" width="90px">권한</th>
-                    <th style="padding:10px 0px 10px 0px;">이메일</th>
-                    <th style="padding:10px 0px 10px 0px;">연락처</th>
-                    <th style="padding:10px 0px 10px 0px;">부서명</th>
-                    <th style="padding:10px 0px 10px 0px;">모니터링 그룹</th>
-                    <th style="padding:10px 0px 10px 0px;">최종 <a class="sign"></a>로그인</th>
-                    <th style="padding:10px 0px 10px 0px;">관리</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <c:forEach items="${members}" var="mList" varStatus="cnt">
-                    <tr class="text-center userLog" onclick="userLog('${mList.id}')">
-                        <form id="${mList.id}" method="post" action="<%=cp%>/log">   <!-- tr 클릭시 log페이지 이동하는 폼-->
-                            <input type="hidden" value="${mList.id}" name="id">
-                        </form>
-                        <td>${mList.id}</td>
-                        <td>${mList.name}</td>
-                        <c:choose>
-                            <c:when test="${mList.state eq '5'}">
-                                <td class="text-danger">거절</td>
-                            </c:when>
-                            <c:when test="${mList.state eq '4'}">
-                                <td>가입대기</td>
-                            </c:when>
-                            <c:when test="${mList.state eq '3'}">
-                                <td>일반</td>
-                            </c:when>
-                            <c:when test="${mList.state eq '2'}">
-                                <td>관리자</td>
-                            </c:when>
-                            <c:when test="${mList.state eq '1'}">
-                                <td>최고 관리자</td>
-                            </c:when>
-                        </c:choose>
-                        <td>${mList.email}</td>
-                        <td>${mList.tel}</td>
-                        <td>${mList.department}</td>
-                        <td>${mList.monitoringGroup}</td>
-
-                        <c:choose>
-                            <c:when test="${mList.lastLogin != null}">
-                                <td><fmt:formatDate value="${mList.lastLogin}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
-                            </c:when>
-                            <c:otherwise>
-                                <td></td>
-                            </c:otherwise>
-                        </c:choose>
-                        <c:choose>
-                            <c:when test="${mList.state eq '4'}">
-                                <td onclick="event.cancelBubble=true">
-
-                                    <button class="btn btn-success py-0 px-2" style="font-size: 12px;"
-                                            data-bs-toggle="modal" data-bs-target="#okModal"
-                                            onclick="Info_Set('${mList.id}')">승인
-                                    </button>
-                                    <button class="btn btn-danger py-0 px-2" style="font-size: 12px;"
-                                            data-bs-toggle="modal" data-bs-target="#noModal"
-                                            onclick="Info_Set('${mList.id}')">거절
-                                    </button>
-                                </td>
-                            </c:when>
-                            <c:when test="${(mList.state eq '1' || mList.state eq '2' || mList.state eq '3') and (member.id != mList.id)}">
-                                <td onclick="event.cancelBubble=true">
-                                    <i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#managementModal" onclick="Info_Set('${mList.id}','${mList.state}','${mList.name}')"></i>
-                                </td>
-                            </c:when>
-                            <c:otherwise>
-                                <td></td>
-                            </c:otherwise>
-                        </c:choose>
+                    <thead>
+                    <tr class="text-center">
+                        <th style="padding:10px 0px 10px 0px;">ID</th>
+                        <th style="padding:10px 0px 10px 0px;">이름</th>
+                        <th style="padding:10px 0px 10px 0px;">권한</th>
+                        <th style="padding:10px 0px 10px 0px;">이메일</th>
+                        <th style="padding:10px 0px 10px 0px;">연락처</th>
+                        <th style="padding:10px 0px 10px 0px;">부서명</th>
+                        <th style="padding:10px 0px 10px 0px;">모니터링 그룹</th>
+                        <th style="padding:10px 0px 10px 0px;">최종 <a class="sign"></a>로그인</th>
+                        <th style="padding:10px 0px 10px 0px;">관리</th>
                     </tr>
-                </c:forEach>
-                </tbody>
+                    </thead>
 
-            </table>
-        </div>
-        </div>
-<%--            회원관리 div--%>
-        <div id="group" style="display: none;"  class="tabDiv">
-        <div>
-            <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
-            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal" onclick="insertSetting()">그룹 추가</button>
-        </div>
-        <div style="width: 100%; height:350px;">
-            <table class="table table-striped" id="groupTable">
-                <thead>
-                <tr>
-                    <th>그룹명</th>
-                    <th>회원</th>
-                    <th>모니터링 <a class="sign"></a> 측정소</th>
-                    <th>관리</th>
-                </tr>
-                </thead>
+                    <tbody>
+                    <c:forEach items="${members}" var="mList" varStatus="cnt">
+                        <tr class="text-center userLog" onclick="userLog('${mList.id}')">
+                            <form id="${mList.id}" method="post" action="<%=cp%>/log">   <!-- tr 클릭시 log페이지 이동하는 폼-->
+                                <input type="hidden" value="${mList.id}" name="id">
+                            </form>
+                            <td>${mList.id}</td>
+                            <td>${mList.name}</td>
+                            <c:choose>
+                                <c:when test="${mList.state eq '5'}">
+                                    <td class="text-danger">거절</td>
+                                </c:when>
+                                <c:when test="${mList.state eq '4'}">
+                                    <td>가입대기</td>
+                                </c:when>
+                                <c:when test="${mList.state eq '3'}">
+                                    <td>일반</td>
+                                </c:when>
+                                <c:when test="${mList.state eq '2'}">
+                                    <td>관리자</td>
+                                </c:when>
+                                <c:when test="${mList.state eq '1'}">
+                                    <td>최고 관리자</td>
+                                </c:when>
+                            </c:choose>
+                            <td>${mList.email}</td>
+                            <td>${mList.tel}</td>
+                            <td>${mList.department}</td>
+                            <td onclick="event.cancelBubble=true">
+                                <select id='monitoringGroup${mList.id}' onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
+                                    <option value='${mList.monitoringGroup}'
+                                            selected="selected">${mList.monitoringGroup}</option>
+                                </select></td>
 
-                <tbody>
-                <c:forEach items="${group}" var="groupList" varStatus="idx">
-                    <c:if test="${groupList.groupName != 'default'}">
-                        <tr>
-                            <td>${groupList.groupName}</td>
-                            <td class="groupTd">${groupList.groupMember}</td>
-                            <td class="groupPlace">${groupList.monitoringPlace}</td>
-                            <td><i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal"
-                                   onclick="groupEditSetting(this, ${groupList.groupNum})"></i>&ensp;
-                                <i  class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
-                            </td>
+                            <c:choose>
+                                <c:when test="${mList.lastLogin != null}">
+                                    <td><fmt:formatDate value="${mList.lastLogin}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td></td>
+                                </c:otherwise>
+                            </c:choose>
+                            <c:choose>
+                                <c:when test="${mList.state eq '4'}">
+                                    <td onclick="event.cancelBubble=true">
+
+                                        <button class="btn btn-success py-0 px-2" style="font-size: 12px;"
+                                                data-bs-toggle="modal" data-bs-target="#okModal"
+                                                onclick="Info_Set('${mList.id}')">승인
+                                        </button>
+                                        <button class="btn btn-danger py-0 px-2" style="font-size: 12px;"
+                                                data-bs-toggle="modal" data-bs-target="#noModal"
+                                                onclick="Info_Set('${mList.id}')">거절
+                                        </button>
+                                    </td>
+                                </c:when>
+                                <c:when test="${(mList.state eq '1' || mList.state eq '2' || mList.state eq '3') and (member.id != mList.id)}">
+                                    <td onclick="event.cancelBubble=true">
+                                        <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
+                                           data-bs-target="#managementModal"
+                                           onclick="Info_Set('${mList.id}','${mList.state}','${mList.name}')"></i>
+                                    </td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td></td>
+                                </c:otherwise>
+                            </c:choose>
                         </tr>
-                    </c:if>
-                </c:forEach>
-                </tbody>
-            </table>
+                    </c:forEach>
+                    </tbody>
+
+                </table>
+            </div>
         </div>
-        </div> <%-- 모니터링그룹 div --%>
-    </div> <%--상단 콘텐츠 DIV--%>
+        <%--            회원관리 div--%>
+        <div id="group" style="display: none;" class="tabDiv">
+            <div>
+                <span style="font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal"
+                        onclick="insertSetting()">그룹 추가
+                </button>
+            </div>
+            <div style="width: 100%; height:350px;">
+                <table class="table table-striped" id="groupTable">
+                    <thead>
+                    <tr>
+                        <th>그룹명</th>
+                        <th>회원</th>
+                        <th>모니터링 <a class="sign"></a> 측정소</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <c:forEach items="${group}" var="groupList" varStatus="idx">
+                        <c:if test="${groupList.groupName != 'default'}">
+                            <tr>
+                                <td>${groupList.groupName}</td>
+                                <td class="groupTd">${groupList.groupMember}</td>
+                                <td class="groupPlace">${groupList.monitoringPlace}</td>
+                                <td><i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal"
+                                       onclick="groupEditSetting(this, ${groupList.groupNum})"></i>&ensp;
+                                    <i class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
+                                </td>
+                            </tr>
+                        </c:if>
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <%-- 모니터링그룹 div --%>
+    </div>
+    <%--상단 콘텐츠 DIV--%>
 
     <div class="row bg-light" style="padding: 1rem 40px 25px; margin-left: 1px; border-top: 1px solid #a9a9a9;">
 
@@ -356,15 +384,18 @@
             <div class="col-md-3">
                 <div class="bg-lightGray p-4 me-4 fw-bold" style="height: 314px;">
                     <div class="d-flex justify-content-start">
-                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="root_radio" value="root" onclick="rankRadioChanged(value)" checked>
+                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="root_radio" value="root"
+                               onclick="rankRadioChanged(value)" checked>
                         <label for="root_radio" class="w-75">최고 관리자</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
-                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="admin_radio" value="admin" onclick="rankRadioChanged(value)">
+                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="admin_radio"
+                               value="admin" onclick="rankRadioChanged(value)">
                         <label for="admin_radio" class="w-75">관리자</label>
                     </div>
                     <div class="d-flex justify-content-start mt-4">
-                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="normal_radio" value="normal" onclick="rankRadioChanged(value)">
+                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="normal_radio"
+                               value="normal" onclick="rankRadioChanged(value)">
                         <label for="normal_radio" class="w-75">일반</label>
                     </div>
                 </div>
@@ -425,7 +456,8 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <h3>그룹명</h3>
-                <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px;" maxlength="70" id="groupInput">
+                <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px;" maxlength="70"
+                       id="groupInput">
             </div>
             <div class="modal-body d-flex">
                 <div style="width: 100%">
@@ -491,8 +523,10 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" id="gModalCancle">취소</button>
-                <button type="button" id="saveBtn" class="btn btn-outline-primary" onclick="saveGroup('insert')">생성</button>
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" id="gModalCancle">취소
+                </button>
+                <button type="button" id="saveBtn" class="btn btn-outline-primary" onclick="saveGroup('insert')">생성
+                </button>
             </div>
         </div>
     </div>
@@ -517,7 +551,9 @@
                 </select>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" value="1" onclick="sing_Up(value)">승인</button>
+                <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" value="1"
+                        onclick="sing_Up(value)">승인
+                </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
@@ -545,7 +581,6 @@
 </div>
 
 
-
 <!-- managementModal -->
 <div class="modal" id="managementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -558,10 +593,17 @@
                 <div class="text-center">
                     <c:set var="member" value="${member}"/>
                     <c:if test="${member.state == '1'}">
-                        <button class="btn btn-outline-dark fw-bold fs-4 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userGrantManagementModal" data-bs-dismiss="modal" onclick="setSelectOption()">권한 관리</button>
+                        <button class="btn btn-outline-dark fw-bold fs-4 m-2 w-75" data-bs-toggle="modal"
+                                data-bs-target="#userGrantManagementModal" data-bs-dismiss="modal"
+                                onclick="setSelectOption()">권한 관리
+                        </button>
                     </c:if>
-                    <button class="btn btn-outline-dark fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userPwdmodal" data-bs-dismiss="modal">임시 비밀번호 발급</button>
-                    <button class="btn btn-outline-danger fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal" data-bs-target="#userExpulsionmodal" data-bs-dismiss="modal">제명</button>
+                    <button class="btn btn-outline-dark fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal"
+                            data-bs-target="#userPwdmodal" data-bs-dismiss="modal">임시 비밀번호 발급
+                    </button>
+                    <button class="btn btn-outline-danger fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal"
+                            data-bs-target="#userExpulsionmodal" data-bs-dismiss="modal">제명
+                    </button>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -581,7 +623,8 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <select class="text-center form-select" id="gaveRank_Select">
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="3" id="normal_select_item">일반회원</option>
+                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="3" id="normal_select_item">일반회원
+                    </option>
                     <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="2" id="admin_select_item">관리자</option>
                     <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="1" id="root_select_item">최고관리자</option>
                 </select>
@@ -605,12 +648,15 @@
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
                     <p class="fs-5 fw-bold tempPassword_text">의 비밀번호를 변경하시겠습니까?</p>
-                    <small class="text-danger">* 발급된 임시 비밀번호로 로그인 가능하며, 해당 회원에게 임시 비밀번호를 알려주신 후, 마이페이지에서 비밀번호 변경을 요청해주세요.</small>
+                    <small class="text-danger">* 발급된 임시 비밀번호로 로그인 가능하며, 해당 회원에게 임시 비밀번호를 알려주신 후, 마이페이지에서 비밀번호 변경을
+                        요청해주세요.</small>
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">확인</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  >취소</button>
+                <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">
+                    확인
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -633,7 +679,7 @@
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal" onclick="kickMember()">제명
                 </button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  >취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -644,7 +690,6 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-
     $("#member-Table").DataTable({
         //     scrollX:true,
         //     scrollXInner:"130%",
@@ -671,11 +716,11 @@
     });
 
     $('#groupTable').DataTable({
-        "columns" : [
-            { "width" : "20%" },
-            { "width" : "35%" },
-            { "width" : "35%" },
-            { "width" : "10%" }
+        "columns": [
+            {"width": "20%"},
+            {"width": "35%"},
+            {"width": "35%"},
+            {"width": "10%"}
         ],
         autoWidth: false,
         language: {
@@ -704,13 +749,13 @@
     var rName = "root"; // 권한관리영역 checkBox 변수
     var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
     var user_id = "${member.id}"; // 페이지에 접근한 유저의 ID
-    let memberList ; // 모든 멤버리스트
-    let placeList ; // 모든 측정소 리스트
+    let memberList; // 모든 멤버리스트
+    let placeList; // 모든 측정소 리스트
 
 
     $(document).ready(function () {
         rankRadioChanged("root"); //기본값
-        $('.Modal').modal({keyboard: false,backdrop: 'static'}); // esc , 백스페이스 클릭방지
+        $('.Modal').modal({keyboard: false, backdrop: 'static'}); // esc , 백스페이스 클릭방지
         substrArrayData();
         getMemberAndPlaceList();
     }); //ready
@@ -743,7 +788,7 @@
 
     function gave_Rank() {
         var value = $("#gaveRank_Select").val();
-        if(value == state){
+        if (value == state) {
             warning("기존 회원 권한과 동일합니다. 확인 후 다시 이용해주세요.");
         } else {
             var changeRank = (value == 1) ? "최고관리자 " : (value == 2) ? "관리자 " : "일반 ";
@@ -873,11 +918,11 @@
         });
     }       //rankSettingSave
 
-    function setSelectOption(){
-        (state == "1") ?  $('#root_select_item').prop("selected", true) : (state == "2") ?  $('#admin_select_item').prop("selected", true): $('#normal_select_item').prop("selected", true);
+    function setSelectOption() {
+        (state == "1") ? $('#root_select_item').prop("selected", true) : (state == "2") ? $('#admin_select_item').prop("selected", true) : $('#normal_select_item').prop("selected", true);
     }
 
-    function textfield_management(){
+    function textfield_management() {
         $(".managementInfo_text").html(name + " 회원 관리");
         $(".updateRank_text").html(name + " 회원 권한변경");
         $(".tempPassword_text").html(name + " 회원의 비밀번호를 <br>변경하시겠습니까?");
@@ -910,50 +955,52 @@
     //MultiSelecter 변경 이벤트
     $.fn.moveToListAndDelete = function (from, to) {
         let opts = $(from + ' option:selected');
-        if(opts.length == 0) return;
+        if (opts.length == 0) return;
         MultiSelecterModal(opts, from);                       //Modal Event
 
         $(opts).remove();
         $(to).append($(opts).clone());
     };
 
-    function saveGroup(flag, groupNum){
+    function saveGroup(flag, groupNum) {
         let name = $('#groupInput').val().trim();
-        if(name == ''){
+        if (name == '') {
             $('#groupInput').focus();
             warning('그룹명을 입력 하세요.');
             return;
         }
 
         let member = $('#lstBox4 option');
-        if(member.length == 0){
+        if (member.length == 0) {
             warning('회원을 추가 하세요.');
             return;
         }
         let mList = new Array();
-        for (i=0; i<member.length; i++)
+        for (i = 0; i < member.length; i++)
             mList.push(member.eq(i).val());
 
         let place = $('#lstBox2 option');
-        if(place.length == 0){
+        if (place.length == 0) {
             warning('측정소를 추가 하세요.');
             return;
         }
         let pList = new Array();
-        for (i=0; i<place.length; i++)
+        for (i = 0; i < place.length; i++)
             pList.push(place.eq(i).val());
 
-        if(flag=="insert") groupNum = -1;
+        if (flag == "insert") groupNum = -1;
         $.ajax({
             url: '<%=cp%>/saveGroup',
             type: 'POST',
             async: false,
             cache: false,
-            data: { "name" : name, "memList" : mList, "placeList" : pList, "flag" : flag, "groupNum" : groupNum},
-            success: function (){
+            data: {"name": name, "memList": mList, "placeList": pList, "flag": flag, "groupNum": groupNum},
+            success: function () {
                 $('#gModalCancle').trigger("click");
                 success('그룹이 저장 되었습니다.');
-                setTimeout(() => {location.reload()},1500);
+                setTimeout(() => {
+                    location.reload()
+                }, 1500);
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -973,7 +1020,7 @@
         } else if (from == '#lstBox1') {
             createModal(plaModal, opts, ' 측정소가 <br> 그룹에 추가 되었습니다.', ' 측정소 외' + (opts.length - 1) + '개가 <br> 그룹에 추가 되었습니다. ')
         } else if (from == '#lstBox2') {
-            createModal(plaModal, opts,  ' 측정소가 <br> 그룹에서 제외 되었습니다.', ' 측정소 외' + (opts.length - 1) + '개가 <br> 그룹에서 제외 되었습니다. ');
+            createModal(plaModal, opts, ' 측정소가 <br> 그룹에서 제외 되었습니다.', ' 측정소 외' + (opts.length - 1) + '개가 <br> 그룹에서 제외 되었습니다. ');
         }
     }
 
@@ -988,14 +1035,14 @@
 
     //그룹회원, 측정소 배열 양끝에 대괄호 없애기
     //한개씩 꺼내서 문자열 만드는것보다 더 빠르고 편해 보임.
-    function substrArrayData(){
+    function substrArrayData() {
         let groupMember = $('.groupTd');
-        for (i=0; i<groupMember.length; i++) {
+        for (i = 0; i < groupMember.length; i++) {
             groupMember.eq(i).text(groupMember.eq(i).text().substr(1, groupMember.eq(i).text().length - 2));
         }
 
         let groupPlace = $('.groupPlace');
-        for (i=0; i<groupPlace.length; i++) {
+        for (i = 0; i < groupPlace.length; i++) {
             groupPlace.eq(i).text(groupPlace.eq(i).text().substr(1, groupPlace.eq(i).text().length - 2));
         }
     }
@@ -1007,7 +1054,7 @@
         Swal.fire({
             icon: 'error',
             title: '그룹 삭제',
-            text: '\''+ name + '\' 그룹을 삭제 하시겠습니까?',
+            text: '\'' + name + '\' 그룹을 삭제 하시겠습니까?',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             confirmButtonText: '삭제',
@@ -1027,7 +1074,9 @@
             data: {key: key},
             success: function () {
                 warning('삭제 되었습니다.');
-                setTimeout(() => {location.reload()},1500);
+                setTimeout(() => {
+                    location.reload()
+                }, 1500);
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -1035,7 +1084,7 @@
         });
     }
 
-    function groupEditSetting(obj, groupNum){
+    function groupEditSetting(obj, groupNum) {
         let groupMemList = $(obj).parent().parent().children().eq(1).text().split(',');
         let groupPlaList = $(obj).parent().parent().children().eq(2).text().split(',');
         let groupName = $(obj).parent().parent().children().eq(0).text();
@@ -1047,14 +1096,14 @@
         $('#saveBtn').attr('onclick', 'saveGroup("edit")');
 
         let innerHTML;
-        for (i=0; i<groupMemList.length; i++){
+        for (i = 0; i < groupMemList.length; i++) {
             groupMemList[i] = groupMemList[i].trim();
             innerHTML += '<option value="' + groupMemList[i] + '">' + groupMemList[i] + '</option>'
         }
         $('#lstBox4').append(innerHTML);
 
         let innerHTML2;
-        for (i=0; i<groupPlaList.length; i++){
+        for (i = 0; i < groupPlaList.length; i++) {
             groupPlaList[i] = groupPlaList[i].trim();
             innerHTML2 += '<option value="' + groupPlaList[i] + '">' + groupPlaList[i] + '</option>'
         }
@@ -1062,24 +1111,24 @@
 
 
         let memInnerHTML;
-        for (i=0; i<memberList.length; i++){
-            if(memberList[i].monitoringGroup == "default"){
+        for (i = 0; i < memberList.length; i++) {
+            if (memberList[i].monitoringGroup == "default") {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
         }
         $('#lstBox3').append(memInnerHTML);
 
         let plaInnerHTML;
-        for (i=0; i<placeList.length; i++){
-            if(groupPlaList.includes(placeList[i]) == false) {
+        for (i = 0; i < placeList.length; i++) {
+            if (groupPlaList.includes(placeList[i]) == false) {
                 plaInnerHTML += '<option value="' + placeList[i] + '">' + placeList[i] + '</option>';
             }
         }
         $('#lstBox1').append(plaInnerHTML);
-        $('#saveBtn').attr('onclick', 'saveGroup("edit", '+groupNum+')');
+        $('#saveBtn').attr('onclick', 'saveGroup("edit", ' + groupNum + ')');
     }
 
-    function insertSetting(){
+    function insertSetting() {
         $('.groupModalTitle').text('그룹 생성');
         $('#saveBtn').text('생성');
         $('#saveBtn').attr('onclick', 'saveGroup("insert")');
@@ -1087,20 +1136,20 @@
         let memInnerHTML;
         let plaInnerHTML;
 
-        for (i=0; i<memberList.length; i++){
-            if(memberList[i].monitoringGroup == "default"){
+        for (i = 0; i < memberList.length; i++) {
+            if (memberList[i].monitoringGroup == "default") {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
         }
         $('#lstBox3').append(memInnerHTML);
 
-        for (i=0; i<placeList.length; i++){
+        for (i = 0; i < placeList.length; i++) {
             plaInnerHTML += '<option value="' + placeList[i] + '">' + placeList[i] + '</option>';
         }
         $('#lstBox1').append(plaInnerHTML);
     }
 
-    function getMemberAndPlaceList(){
+    function getMemberAndPlaceList() {
         $.ajax({
             url: '<%=cp%>/getMemberAndPlaceList',
             type: 'POST',
@@ -1116,14 +1165,79 @@
         });
     }
 
-    function tabClick(obj, divId){
+    function tabClick(obj, divId) {
         $('.tab li').attr('class', '');
         $(obj).attr('class', 'on');
 
         $('.tabDiv').css('display', 'none');
-        $('#'+divId).css('display', 'block');
+        $('#' + divId).css('display', 'block');
     }
 
+    function select_group(select,name) {
+        const $target = $('#'+select.id);
+        $target.empty();
+        let innerHTML = "";
+        $.ajax({
+            url: '<%=cp%>/getMonitoringGroup',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            success: function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    const group = data[i].groupName;
+                    if (name == group){
+                        innerHTML =
+                            "<option value ='" + group + "' selected='selected'>" + group + "</option>";
+
+                }else{
+                        innerHTML =
+                            "<option value ='" + group + "'>" + group + "</option>";
+                    }
+                    $target.append(innerHTML);
+                }
+            },
+            error: function () {
+            }
+        });
+    }
+
+    function updateMember(id, select) {
+        $.ajax({
+            url: '<%=cp%>/memberGroupUpdate',
+            type: 'POST',
+            dataType: 'text',
+            async: false,
+            cache: false,
+            data: {
+                "id": id,
+                "monitoringGroup": select.value,
+            },
+            success: function (data) {
+                if (data == "success") {
+                    swal('success', '수정완료', '성공적으로 수정되었습니다.');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    swal('warning', '수정실패');
+                }
+            },
+            error: function (request, status, error) {
+                swal('warning', '수정실패');
+                console.log('member update error');
+                console.log(error);
+            }
+        })
+    }
+
+    function swal(icon, title, text) {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: text,
+            timer: 2000
+        })
+    }
 
 
 </script>

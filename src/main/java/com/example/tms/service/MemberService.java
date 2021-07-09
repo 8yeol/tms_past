@@ -76,6 +76,12 @@ public class MemberService implements UserDetailsService {
         memberRepository.save(updateMember);
     }
 
+    public void updateMemberGroup(String id, String monitoringGroup) {
+        Member updateMember = memberRepository.findById(id);
+        updateMember.setMonitoringGroup(monitoringGroup);
+        memberRepository.save(updateMember);
+    }
+
     /**
      * 회원정보수정 log 저장
      * @param member log 대상이 되는 멤버객체
@@ -92,6 +98,17 @@ public class MemberService implements UserDetailsService {
             logRepository.save(pwdLog);
         }
         infoLog.setId(member.getId());
+        infoLog.setType("회원");
+        infoLog.setContent("정보수정");
+        infoLog.setDate(date);
+        logRepository.save(infoLog);
+    }
+
+    public void updateGroupLog(String id){
+        Date date = new Date();
+        Log infoLog = new Log();
+
+        infoLog.setId(id);
         infoLog.setType("회원");
         infoLog.setContent("정보수정");
         infoLog.setDate(date);
