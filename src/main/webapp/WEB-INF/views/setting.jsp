@@ -109,6 +109,11 @@
          justify-content: center;
          background-color: white;
      }
+    .multiSelect option:hover{
+        cursor: pointer;
+        background-color: #b7def8;
+    }
+
 
     .multiSelectParent {
         padding: 15px 15px 0px 15px;
@@ -137,6 +142,9 @@
         color: white;
         font-weight: bold;
         display: none;
+    }
+    #monitoringSignModal{
+        top: 65%;
     }
 
     .multiSelectBtn input[type=button] {
@@ -202,6 +210,21 @@
         background-color: #75ACFF;
         color: #fff;
     }
+    #allPlaceCheck{
+        width: 20px;
+        height: 20px;
+    }
+    #allPlaceCheck:hover{
+        cursor: pointer;
+    }
+    #checkLabel{
+        font-size: 1.4rem;
+        margin:0px 0px 0px 10px;
+    }
+    #checkLabel:hover{
+        cursor: pointer;
+        color : #0d6efd;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
@@ -225,7 +248,7 @@
         </ul>
         <%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
         <div id="member" style="display: block" class="tabDiv">
-        <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">회원관리</span>
+        <div style="height: 50px;"><span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;height: 20px;">회원관리</span></div>
         <div class="col-xs-12">
             <table class="table table-striped" id="member-Table">
 
@@ -313,7 +336,7 @@
         </div>
 <%--            회원관리 div--%>
         <div id="group" style="display: none;"  class="tabDiv">
-        <div>
+        <div style="height: 50px;">
             <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal" onclick="insertSetting()">그룹 추가</button>
         </div>
@@ -348,7 +371,7 @@
         </div> <%-- 모니터링그룹 div --%>
     </div> <%--상단 콘텐츠 DIV--%>
 
-    <div class="row bg-light" style="padding: 1rem 40px 25px; margin-left: 1px; border-top: 1px solid #a9a9a9;">
+    <div class="row bg-light" style="padding: 1rem 40px 25px; margin-left: 1px;margin-top: 15px; ">
 
         <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">권한관리</span>
         <div class="d-flex mt-1 p-0">
@@ -461,21 +484,26 @@
 
                     <div class="multiSelectParent">
                         <h3 class="fs-5 fw-bold groupSubTitle">모니터링 측정소</h3>
-                        <div class="multiSelect">
+                        <input type="checkbox" id="allPlaceCheck" class="allPlaceCheck">
+                        <label for="allPlaceCheck" id="checkLabel"  class="allPlaceCheck"> 전체 측정소 모니터링</label>
+                        <span class="allPlaceCheckSpan allPlaceCheck" style="display: block;font-size: 0.9rem;color:#db3535;font-weight: bold;margin-bottom: 10px;">
+                            * 체크시 측정소 추가 여부와 상관없이 모든 측정소 모니터링</span>
+
+                        <div class="multiSelect allCheckEvent">
                             <label><b>측정소명</b></label>
                             <select multiple class="form-control scroll selectBox" id="lstBox1">
                                 <!-- script -->
                             </select>
                         </div>
 
-                        <div class="multiSelectBtn">
+                        <div class="multiSelectBtn allCheckEvent">
                             <input type='button' id='btnRight1' value='>' class="btn btn-default moveBtn"
                                    onclick="moveEvent('#lstBox1', '#lstBox2')"/>
                             <input type='button' id='btnLeft1' value='<' class="btn btn-default moveBtn"
                                    onclick="moveEvent('#lstBox2', '#lstBox1')"/>
                         </div>
 
-                        <div class="multiSelect">
+                        <div class="multiSelect allCheckEvent">
                             <label><b>모니터링 측정소</b></label>
                             <select multiple class="form-control scroll selectBox" id="lstBox2">
                                 <!-- script -->
@@ -713,6 +741,7 @@
         $('.Modal').modal({keyboard: false,backdrop: 'static'}); // esc , 백스페이스 클릭방지
         substrArrayData();
         getMemberAndPlaceList();
+        allPlaceCheck();
     }); //ready
 
     function Info_Set(str_id, str_state, str_name) {
@@ -934,14 +963,19 @@
         for (i=0; i<member.length; i++)
             mList.push(member.eq(i).val());
 
-        let place = $('#lstBox2 option');
-        if(place.length == 0){
-            warning('측정소를 추가 하세요.');
-            return;
+        let pList
+        if($('#allPlaceCheck').is(':checked') == true){
+            pList = placeList;
+        }else{
+            let place = $('#lstBox2 option');
+            if(place.length == 0){
+                warning('측정소를 추가 하세요.');
+                return;
+            }
+            pList = new Array();
+            for (i=0; i<place.length; i++)
+                pList.push(place.eq(i).val());
         }
-        let pList = new Array();
-        for (i=0; i<place.length; i++)
-            pList.push(place.eq(i).val());
 
         if(flag=="insert") groupNum = -1;
         $.ajax({
@@ -1041,6 +1075,7 @@
         let groupName = $(obj).parent().parent().children().eq(0).text();
 
         $('#groupInput').val(groupName);
+        $('.allPlaceCheck').css('display', 'none');
         $('.selectBox').empty();
         $('.groupModalTitle').text('그룹 수정');
         $('#saveBtn').text('수정');
@@ -1081,9 +1116,12 @@
 
     function insertSetting(){
         $('.groupModalTitle').text('그룹 생성');
+        $('#groupInput').val('');
         $('#saveBtn').text('생성');
         $('#saveBtn').attr('onclick', 'saveGroup("insert")');
         $('.selectBox').empty();
+        $('.allPlaceCheck').css('display', 'inline-block');
+        $('.allPlaceCheckSpan').css('display', 'block');
         let memInnerHTML;
         let plaInnerHTML;
 
@@ -1122,6 +1160,36 @@
 
         $('.tabDiv').css('display', 'none');
         $('#'+divId).css('display', 'block');
+    }
+
+    function allPlaceCheck(){
+        $("#allPlaceCheck").on({click: function() {
+               if($(this).is(":checked") == true){
+                   optionDisabled(true);
+
+
+               }else{
+                   optionDisabled(false);
+               }
+            }
+        });
+    }
+
+    function optionDisabled(flag){
+        if(flag == true){
+            $('.allCheckEvent label').css('color','#999');
+            $('.allCheckEvent input[type=button]').css('color','#999');
+            $('.allCheckEvent select').css('border','3px solid #999');
+            $('.allCheckEvent input[type=button]').prop('disabled', true);
+            $('.allCheckEvent select').prop('disabled', true);
+
+        }else if (flag == false){
+            $('.allCheckEvent label').css('color','black');
+            $('.allCheckEvent input[type=button]').css('color','rgb(99, 130, 255)');
+            $('.allCheckEvent select').css('border','3px solid rgb(99, 130, 255)');
+            $('.allCheckEvent input[type=button]').prop('disabled', false);
+            $('.allCheckEvent select').prop('disabled', false);
+        }
     }
 
 
