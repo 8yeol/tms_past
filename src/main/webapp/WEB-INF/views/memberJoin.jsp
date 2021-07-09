@@ -136,7 +136,7 @@
             <div class="mb-3  parentDiv">
                 <label for="monitoringGroup" class="col-form-label label">모니터링 그룹</label>
                 <div class="col-sm-10" style="width:100%;">
-                    <select name = monitoringGroup class="form-control input" id="monitoringGroup" autocomplete="off">
+                    <select class="form-control input" id="monitoringGroup">
                         <option value="">선택</option>
                     </select>
                 </div>
@@ -263,7 +263,7 @@
     }
 
     function select_group() {
-        const $target = $('select[name="monitoringGroup"]');
+        const $target = $('select[id="monitoringGroup"]');
         $.ajax({
             url: '<%=cp%>/getMonitoringGroup',
             dataType: 'json',
@@ -280,8 +280,6 @@
             error: function () {
             }
         });
-
-
     }
 
 
