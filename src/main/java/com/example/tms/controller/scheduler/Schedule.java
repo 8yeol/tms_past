@@ -100,6 +100,7 @@ public class Schedule {
      * (알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산)
      */
     @Scheduled(cron = "0 0 1 * * *") //매일 01시 00분에 처리
+    //@Scheduled(cron = "*/10 * * * * *") // 10초마다 테스트
     public void saveCumulativeEmissions(){
         // 질소산화물(NOX) : Map<측정소명, 테이블명> 형식
         Map<String, String> noxList = new HashMap<>();

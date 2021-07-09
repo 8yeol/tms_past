@@ -206,15 +206,12 @@
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
                                             <c:choose>
-                                                <c:when test="${present.totalEmissions - past.totalEmissions > 0}">
-                                                   +<fmt:formatNumber value="${present.totalEmissions - past.totalEmissions}" pattern=",000"/>
-                                                </c:when>
                                                 <c:when test="${present.totalEmissions - past.totalEmissions == 0}">
                                                    0
                                                 </c:when>
-                                                <c:when test="${present.totalEmissions - past.totalEmissions < 0}">
+                                                <c:otherwise>
                                                     <fmt:formatNumber value="${present.totalEmissions - past.totalEmissions}" pattern=",000"/>
-                                                </c:when>
+                                                </c:otherwise>
                                             </c:choose>
                                         </p>
                                     </div>
@@ -276,15 +273,12 @@
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
                                             <c:choose>
-                                                <c:when test="${presentQuater - pastQuater > 0}">
-                                                    +<fmt:formatNumber value="${presentQuater - pastQuater}" pattern=",000"/>
-                                                </c:when>
                                                 <c:when test="${presentQuater - pastQuater == 0}">
                                                     0
                                                 </c:when>
-                                                <c:when test="${presentQuater - pastQuater < 0}">
+                                                <c:otherwise>
                                                     <fmt:formatNumber value="${presentQuater - pastQuaters}" pattern=",000"/>
-                                                </c:when>
+                                                </c:otherwise>
                                             </c:choose>
                                         </p>
                                     </div>
