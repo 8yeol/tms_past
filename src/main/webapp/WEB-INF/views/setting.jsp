@@ -1027,10 +1027,6 @@
         }
 
         let member = $('#lstBox4 option');
-        if (member.length == 0) {
-            warning('회원을 추가 하세요.');
-            return;
-        }
         let mList = new Array();
         for (i = 0; i < member.length; i++)
             mList.push(member.eq(i).val());
@@ -1040,10 +1036,6 @@
             pList = placeList;
         }else{
             let place = $('#lstBox2 option');
-            if(place.length == 0){
-                warning('측정소를 추가 하세요.');
-                return;
-            }
             pList = new Array();
             for (i=0; i<place.length; i++)
                 pList.push(place.eq(i).val());
@@ -1056,12 +1048,16 @@
             async: false,
             cache: false,
             data: {"name": name, "memList": mList, "placeList": pList, "flag": flag, "groupNum": groupNum},
-            success: function () {
-                $('#gModalCancle').trigger("click");
-                success('그룹이 저장 되었습니다.');
-                setTimeout(() => {
-                    location.reload()
-                }, 1500);
+            success: function (data) {
+                if(data == 'fail'){
+                    warning("이미 존재하는 그룹명 입니다.");
+                }else {
+                    $('#gModalCancle').trigger("click");
+                    success('그룹이 저장 되었습니다.');
+                    setTimeout(() => {
+                        location.reload()
+                    }, 1500);
+                }
             },
             error: function (request, status, error) {
                 console.log(error)
