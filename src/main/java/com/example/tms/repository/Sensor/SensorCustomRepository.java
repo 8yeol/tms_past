@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -40,6 +41,30 @@ public class SensorCustomRepository {
                 B = LocalDateTime.now();
             }
 
+        try{
+            return getSensorData(sensor, A, B);
+        }catch (Exception e){
+            log.info(e.getMessage());
+        }
+        return null;
+    }
+
+    public List<Sensor> getSenor2(String sensor, String min){
+        /* from A to B : A 부터 B까지 */
+        LocalDateTime A = null;  LocalDateTime B = null;
+
+            A = LocalDateTime.now().minusMinutes(Long.parseLong(min));
+            B = LocalDateTime.now();
+            try{
+                return getSensorData(sensor, A, B);
+            }catch (Exception e){
+                log.info(e.getMessage());
+            }
+        return null;
+    }
+
+    public List<Sensor> getSensorData(String sensor, LocalDateTime A, LocalDateTime B){
+        List<Sensor> result = new ArrayList<>();
         try {
             if(A.isBefore(B)){
                 ProjectionOperation projectionOperation = Aggregation.project()
@@ -53,14 +78,14 @@ public class SensorCustomRepository {
                 Aggregation aggregation = Aggregation.newAggregation(projectionOperation, matchOperation, sortOperation);
 
                 AggregationResults<Sensor> results = mongoTemplate.aggregate(aggregation, sensor, Sensor.class);
-                List<Sensor> result = results.getMappedResults();
-                return result;
+                result = results.getMappedResults();
             }
         }catch (Exception e){
             log.info(e.getMessage());
         }
-        return null;
+        return result;
     }
+
 
     /**
      * 최근 센서 데이터 리턴

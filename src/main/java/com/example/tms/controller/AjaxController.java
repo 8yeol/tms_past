@@ -761,6 +761,29 @@ public class AjaxController {
         return sensorCustomRepository.getSenor(sensor, hour);
     }
 
+    @RequestMapping(value = "/getSensor2")
+    public JSONArray getSensor2(@RequestParam("place") String place,
+                                @RequestParam("min") String min) {
+        List<String> placeName = placeRepository.findByName(place).getSensor();
+        JSONArray jsonArray = new JSONArray();
+        for (int i = 0; i < placeName.size(); i++) {
+            JSONArray jsonArray2 = new JSONArray();
+            String sensorName = placeName.get(i);
+            boolean monitoring = reference_value_settingRepository.findByName(sensorName).getMonitoring();
+            if (monitoring) {
+                List<Sensor> sensorList = sensorCustomRepository.getSenor2(sensorName, min);
+                for(int z=0; z<sensorList.size(); z++){
+                    JSONObject subObj = new JSONObject();
+                    subObj.put("x", sensorList.get(z).getUp_time());
+                    subObj.put("y", sensorList.get(z).getValue());
+                    jsonArray2.add(subObj);
+                }
+                jsonArray.add(jsonArray2);
+            }
+        }
+        return jsonArray;
+    }
+
     /**
      * 센서 알림설정 ON/OFF 확인
      *

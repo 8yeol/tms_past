@@ -11,6 +11,8 @@
     String cp = request.getContextPath();
 %>
 <script src="static/js/moment.min.js"></script>
+<script src="static/js/apexcharts.min.js"></script>
+<script src="static/js/vue-apexcharts.js"></script>
 
 <style>
     div {
@@ -129,10 +131,10 @@
                 <audio id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>
                 <div id="alarmAudio"></div>
                 <span>알림음 :</span>
-                <input class="ms-2" type="radio" name="alarmTone" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp</label>
-                <input type="radio" name="alarmTone" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off&nbsp&nbsp&nbsp</label>
-                <span>|&nbsp&nbsp&nbsp점멸효과 :</span>
-                <input class="ms-2" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp</label>
+                <input class="ms-2" type="radio" name="alarmTone" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp;</label>
+                <input type="radio" name="alarmTone" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off&nbsp;&nbsp;&nbsp;</label>
+                <span>|&nbsp;&nbsp;&nbsp;점멸효과 :</span>
+                <input class="ms-2" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp;</label>
                 <input type="radio" name="flashing" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off</label>
             </div>
             <span class="text-primary small" style="font-size: 0.8rem"> * 실시간으로 업데이트됩니다.</span>
@@ -253,7 +255,7 @@
                 </c:otherwise>
             </c:choose>
                 <div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>
-                    <span class='fs-5'><c:out value="${placeName}"/></span>
+                    <span class='fs-5' id="placeName"><c:out value="${placeName}"/></span>
                 </div>
                 <c:forEach items="${sensor}" var="sensorList" varStatus="status">
                     <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
@@ -263,10 +265,10 @@
                     </c:forEach>
                 </c:forEach>
                 <div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id='update-${status.index}'><c:if test="${fn:length(sensorData) > 0 }"><c:out value="${uptime}"/></c:if><c:if test="${fn:length(sensorData) == 0 }">-</c:if></span></div>
-                <c:set value="sensor-table-${pStatus.index}" var="tbody"/>
+                <c:set value="${pStatus.index}" var="index1"/>
                     <c:forEach items="${sensor}" var="sensorList" varStatus="status">
                         <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
-                    <c:set value="${tbody}-${status2.index}" var="tbody2"/>
+                    <c:set value="${index1}-${status2.index}" var="index2"/>
 <%--                    <table class='table table-bordered table-hover text-center mt-1'>--%>
 <%--                        <thead>--%>
 <%--                        <tr class="add-bg-color">--%>
@@ -360,7 +362,7 @@
                         </tr>
                     </c:otherwise>
                     </c:choose>
-                    <tbody id="${tbody2}">
+                        <tbody id="sensor-table-${index2}">
                         <tr>
                             <c:if test="${sensorList2.place eq placeName}">
                                 <td>${sensorList2.naming}<input type="hidden" value="${sensorList2.name}"> </td>
@@ -415,8 +417,6 @@
                             </td>
                             </c:if>
                         </tr>
-                        </c:forEach>
-                    </c:forEach>
                     <c:if test="${fn:length(sensorData) == 0}">
                         <tr>
                             <td colspan="5">
@@ -426,6 +426,9 @@
                     </c:if>
                     </tbody>
                 </table>
+                        <div id="chart-${index2}"></div>
+                    </c:forEach>
+                </c:forEach>
                 <%-- //기준 값 유무에 따라 split --%>
             </div>
                 </c:forEach>
@@ -456,8 +459,7 @@
 
 <script>
     let INTERVAL; let flashCheck; let alarmCheck;
-
-
+    var dataList; var chart = {};
     $(document).ready(function () {
         let placeData2 = ${sensor}; // 모니터링 True 인 측정소 리스트의 모니터링 True인 센서 데이터(최근,이전,기준값 등)
         draw_sensor_info(placeData2); //대시보드 생성
@@ -473,7 +475,7 @@
      * 페이지 로딩시 측정소 별로 테이블 틀 생성, 측정소 별, 센서별 데이터를 받아 대시보드, 테이블 데이터 입력
      */
     function getData() {
-        setTimeout(function interval_getData() { // 반복 처리를 위한 setTimeout
+        setTimeout(function interval_getData(placeName2) { // 반복 처리를 위한 setTimeout
             const placeName = getPlace(); // 전체 측정소명 리턴 받아 변수에 저장
             // draw_place_table_frame(placeName); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
             // const placeData = new Array();
@@ -486,7 +488,35 @@
                 for (let i = 0; i < placeName.length; i++) {
                     clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
                     const data = getPlaceData(placeName[i]); //측정소 별 센서 데이터 (최근데이터, 이전데이터, 정보)
-                    draw_place_table_frame(placeName, data); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
+                    nSensorName = new Array();
+                    for(let z=0; z<data.length; z++){
+                        nSensorName.push(data[z].name);
+                    }
+                    if(dataList == undefined){ //처음 페이지 로딩 시, 테이블, 차트 틀 생성
+                        dataList = nSensorName;
+                        sensorDataList = getSensor2(placeName[i], 30);
+                        draw_place_table_frame(placeName, data); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
+                        draw_place_chart_frame(placeName.length, data.length);
+                    }else{ // 측정소, 센서 변경시 초기화, 테이블, 차트 틀 생성
+                        if (dataList.length != nSensorName.length){
+                            for(var z=0; z<nSensorName.length; z++){
+                                dataList = nSensorName;
+                                sensorDataList = getSensor2(placeName[i], 30);
+                                console.log(sensorDataLength);
+                                draw_place_table_frame(placeName, data); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
+                                draw_place_chart_frame(placeName.length, data.length);
+                            }
+                        }
+                    }
+                    for(let z=0; z<data.length; z++){ //최근 데이터의 시간 비교하여 업데이트
+                        if(data[z].up_time > sensorDataList[z][sensorDataList.length-1].x && sensorDataList[z][sensorDataList.length-1].x != data[z].up_time){
+                            sensorDataList[z].push({y:data[z].value, x:data[z].up_time})
+                        }
+                        updateChart(sensorDataList[z], data[z], i, z); //차트 업데이트
+                        if (sensorDataList[z].length > 800) { //차트 초기화
+                            sensorDataList = getSensor2(placeName[i], 30);
+                        }
+                    }
                     draw_place_table(data, i); // 측정소별 테이블 생성
                     placeData.push(data); //측정소별 센서 데이터 통합
                     if(placeData[i].length != 0){
@@ -573,12 +603,23 @@
         return placeName;
     }
 
+    function draw_place_chart_frame(placeLength, dataLength) {
+        if(placeName.length != 0) {
+            for (let i = 0; i < placeLength; i++) {
+                for(var z=0; z<dataLength;z++){
+                    chart['chart-'+i+'-'+z] = new ApexCharts(document.querySelector("#chart-"+i+'-'+z), setChartOption());
+                    chart['chart-'+i+'-'+z].render();
+                }
+            }
+        }
+    }
     /**
      * 측정소의 갯수에 따라 테이블 틀 생성 (홀수 : 테이블 1개, 짝수: 테이블 2개 씩 출력)
      */
     function draw_place_table_frame(placeName, data) {
         $('#place_table').empty();
         var col_md_size;
+
         if(placeName.length != 0){
             for(let i=0; i<placeName.length; i++){
                 if(placeName.length==1){ //1개
@@ -590,7 +631,7 @@
                 $('#place_table').append(
                     "<div class='col-md-"+col_md_size+" mb-3 mt-2 place_border'>" +
                     "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>" +
-                    "<span class='fs-5'>"+placeName[i]+"</span></div>" +
+                    "<span class='fs-5' id='placeName'>"+placeName[i]+"</span></div>" +
                     "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+">"+"</span></div>");
                 for(var z=0; z<data.length;z++){
                     if(data[z].companyStandard==999999 && data[z].legalStandard==999999 && data[z].managementStandard==999999){
@@ -608,6 +649,7 @@
                             "</tr>" +
                             "</tbody>" +
                             "</table>" +
+                            "<div id='chart-"+i+"-"+z+"'></div>"+
                             "</div>");
                     }else{
                         $('.place_border').append(
@@ -627,6 +669,7 @@
                             "</tr>" +
                             "</tbody>" +
                             "</table>" +
+                            "<div id='chart-"+i+"-"+z+"'></div>"+
                             "</div>");
                     }
                 }
@@ -701,8 +744,6 @@
      * 측정소 테이블 생성
      */
     function draw_place_table(data, index) {
-        // $('#sensor-table-' + index).empty();
-        // const tbody = document.getElementById('sensor-table-' + index);
         var monitoringIsCheck = true;
         for (let i = 0; i < data.length; i++) {
             /* 측정소의 센서 모니터링 체크 확인 (한개라도 있으면 false) */
@@ -766,6 +807,7 @@
                             }
                             $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                         }
+                        // "chart-"+index+'-'+i = new ApexCharts(document.querySelector("#chart-"+index+'-'+i), setChartOption());
                         /* //기준 값 유무에 따라 split */
                         // const newRow = tbody.insertRow(tbody.rows.length);
                         // const newCeil0 = newRow.insertCell(0);
@@ -976,23 +1018,23 @@
 
 
     /**
-     * 센서의 최근 1시간 / 24시간 데이터 리턴
+     * 센서의 최근 *분
      */
-    function getSensor(sensor_name, hour) {
+    function getSensor2(place, min) {
         let result = new Array();
-        if(sensor_name==undefined){
+        if(place==undefined){
             return null;
         }else{
             $.ajax({
-                url:'<%=cp%>/getSensor',
+                url:'<%=cp%>/getSensor2',
                 dataType: 'JSON',
                 contentType: "application/json",
-                data: {"sensor": sensor_name, "hour": hour},
+                data: {"place": place, "min": min},
                 async: false,
                 success: function (data) {
                     if(data.length != 0){
                         $.each(data, function (index, item) {
-                            result.push({x: item.up_time, y: (item.value).toFixed(2)});
+                            result.push(item);
                         })
                     }else{
                         // 조회 결과 없을 때 return [];
@@ -1005,4 +1047,202 @@
         }
         return result;
     }
+
+
+    /**
+     * 차트 기본 옵션
+     */
+    function setChartOption(){
+        options = {
+            series: [{
+                data: [],
+            }],
+            chart: {
+                height: '150px',
+                type: 'line',
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        enabled: true,
+                        speed: 500
+                    }
+                },
+                toolbar: {
+                    show: true,
+                    tools: {
+                        download: true,
+                        selection: false,
+                        zoom: false,
+                        zoomin: false,
+                        zoomout: false,
+                        pan: false,
+                        reset: false,
+                    },
+                }
+            },
+            colors: ['#97bef8'],
+            markers: { //점
+                size: 2,
+                strokeWidth:1,
+                shape: "square",
+                radius: 1,
+                colors: ["#629cf4"],
+                hover: {
+                    size: 5,
+                }
+            },
+            tooltip:{
+                enbaled: true,
+                x: {
+                    show: true,
+                    format: 'HH:mm:ss',
+                    // formatter: undefined,
+                },
+            },
+            stroke: {
+                show: true,
+                width: 3
+            },
+            dataLabels: {
+                enabled: false,
+                // style: { //데이터 배경
+                //     fontSize: '10px',
+                //     colors: ['#629cf4'],
+                // },
+                background: { //데이터 글자
+                    enabled: true,
+                    foreColor: 'black',
+                    // padding: 1,
+                    // borderRadius: 1,
+                    // borderWidth: 0.3,
+                    // borderColor: 'green',
+                    opacity: 0,
+                },
+            },
+            xaxis: {
+                type: 'datetime',
+                labels: {
+                    show: true,
+                    datetimeUTC: false,
+                    datetimeFormatter: {
+                        year: 'yyyy년',
+                        month: 'MM월',
+                        day: 'dd일',
+                        hour: 'HH:mm:ss',
+                    },
+                },
+            },
+            yaxis:{
+                labels: {
+                    show: true,
+                    formatter: function (val) {
+                        return 'No data'
+                    }
+                },
+            }
+        };
+        return options;
+    }
+
+    /**
+     *  차트 업데이트
+     */
+    function updateChart(sensor_data_list, sensor_data, tableIndex, sensorIndex){
+        // chart.resetSeries();
+        var arr =new Array();
+        if(sensor_data_list != null){
+            for(var i in sensor_data_list){
+                arr.push(sensor_data_list[i].y);
+            }
+            // var max = Math.max.apply(null, arr);
+            // var min = Math.min.apply(null, arr);
+            var max = arr.reduce(function (previousValue, currentValue) {
+                return parseInt(previousValue > currentValue ? previousValue:currentValue);
+            })
+            var min = arr.reduce(function (previousValue, currentValue) {
+                return parseInt(previousValue > currentValue ? currentValue:previousValue);
+            })
+            max = max+1;
+            min = min-1;
+        }else{
+            sensor_data_list = [];
+        }
+        if(sensor_data.length != 0){
+            managementStandard = sensor_data.managementStandard;
+            companyStandard = sensor_data.companyStandard;
+            legalStandard = sensor_data.legalStandard;
+        }else{
+            managementStandard = 999999;
+            companyStandard = 999999;
+            legalStandard = 999999;
+        }
+        chart['chart-'+tableIndex+'-'+sensorIndex].updateOptions({
+            series: [{
+                name: sensor_data.naming,
+                data: sensor_data_list.slice()
+            }],
+            annotations: {
+                yaxis: [{
+                    y: managementStandard,
+                    borderColor: '#00E396',
+                    label: {
+                        borderColor: '#00E396',
+                        style: {
+                            color: '#fff',
+                            background: '#00E396'
+                        },
+                        text: '관리기준',
+                        position: 'left',
+                        offsetX: 0
+                    }
+                },
+                    {
+                        y: companyStandard,
+                        borderColor: '#FEB019',
+                        label: {
+                            borderColor: '#FEB019',
+                            style: {
+                                color: '#fff',
+                                background: '#FEB019'
+                            },
+                            text: '사내기준',
+                            position: 'left',
+                            offsetX: 0
+                        }
+                    },
+                    {
+                        y: legalStandard,
+                        borderColor: '#FF4560',
+                        label: {
+                            borderColor: '#FF4560',
+                            style: {
+                                color: '#fff',
+                                background: '#FF4560'
+                            },
+                            text: '법적기준',
+                            position: 'left',
+                            offsetX: 0
+                        }
+                    }]
+            },
+            yaxis: {
+                tickAmount: 2,
+                decimalsInFloat: 2,
+                min: min,
+                max: max,
+                labels: {
+                    show: true,
+                    formatter: function (val) {
+                        if (sensor_data_list == null || sensor_data_list.length == 0)
+                            return 'No data'
+                        else
+                            return val;
+                    }
+                }
+            },
+        })
+    }
+
+
 </script>
