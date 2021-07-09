@@ -172,6 +172,35 @@
     svg:hover{
         cursor: pointer;
     }
+
+    .tab {
+        list-style: none;
+        position: absolute;
+        left: -81px;
+        top:10px;
+    }
+    .tab li {
+        width: 70px;
+        height: 80px;
+        background-color: #ccc;
+        color: #999;
+        text-align: center;
+        cursor: pointer;
+    }
+    .tab li:nth-child(1){
+        line-height: 80px;
+    }
+    .tab li:nth-child(2){
+        padding-top: 15px;
+    }
+    .tab li.on {
+        background-color: #75ACFF;
+        color: #fff;
+    }
+    .tab li:hover {
+        background-color: #75ACFF;
+        color: #fff;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
@@ -185,9 +214,16 @@
     <div class="row1 mt-4 mb-4">
         <span style=" font-size: 27px;font-weight: bold">환경설정 > 설정</span>
     </div>
-    <div class="row bg-light rounded py-3">
 
+    <div class="row bg-light rounded py-3" style="margin-left: 1px; position: relative;"> <%-- 상단 콘텐츠 div --%>
+
+        <%-- tab 클릭시 li.on 회원관리는 #member 모니터링그룹관리는 #group 디스플레이 변경--%>
+        <ul class="tab">
+            <li class="on">회원관리</li>
+            <li>모니터링그룹관리</li>
+        </ul>
         <%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
+        <div id="member">
         <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">회원관리</span>
         <div class="col-xs-12">
             <table class="table table-striped" id="member-Table">
@@ -284,7 +320,9 @@
 
             </table>
         </div>
-
+        </div>
+<%--            회원관리 div--%>
+        <div id="group" style="display: none;">
         <div>
             <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
             <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal">그룹 추가</button>
@@ -314,10 +352,10 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <%--회원관리 DIV--%>
+        </div> <%-- 모니터링그룹 div --%>
+    </div> <%--상단 콘텐츠 DIV--%>
 
-    <div class="row bg-light rounded mt-3 py-3 px-5">
+    <div class="row bg-light" style="padding: 1rem 40px 25px; margin-left: 1px; border-top: 1px solid #a9a9a9;">
 
         <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">권한관리</span>
         <div class="d-flex mt-1 p-0">
@@ -379,7 +417,7 @@
     </div>
     <%--권한관리 DIV--%>
 
-</div>
+</div> <%-- 상단 콘텐츠 div --%>
 
 
 <%--                                           ↓↓↓ 모달영역 ↓↓↓                                                              --%>
