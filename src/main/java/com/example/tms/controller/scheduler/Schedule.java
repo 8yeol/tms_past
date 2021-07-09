@@ -4,21 +4,17 @@ import com.example.tms.entity.*;
 import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.AnnualEmissionsRepository;
 import com.example.tms.repository.EmissionsTransitionRepository;
-import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsCustomRepository;
-import com.example.tms.repository.MonthlyEmissions.MonthlyEmissionsRepository;
+import com.example.tms.repository.MonthlyEmissionsRepository;
 import com.example.tms.repository.NotificationStatistics.NotificationDayStatisticsRepository;
 import com.example.tms.repository.NotificationList.NotificationListCustomRepository;
 import com.example.tms.repository.NotificationStatistics.NotificationMonthStatisticsRepository;
 import com.example.tms.repository.PlaceRepository;
 import com.example.tms.repository.SensorListRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
@@ -28,78 +24,22 @@ public class Schedule {
     final NotificationMonthStatisticsRepository notificationMonthStatisticsRepository;
     final NotificationListCustomRepository notificationListCustomRepository;
     final MonthlyEmissionsRepository monthlyEmissionsRepository;
-    final MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository;
     final SensorListRepository sensorListRepository;
     final PlaceRepository placeRepository;
     final MongoQuary mongoQuary;
     final AnnualEmissionsRepository annualEmissionsRepository;
     final EmissionsTransitionRepository emissionsTransitionRepository;
 
-    public Schedule(NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, MonthlyEmissionsCustomRepository monthlyEmissionsCustomRepository, SensorListRepository sensorListRepository, PlaceRepository placeRepository, MongoQuary mongoQuary, AnnualEmissionsRepository annualEmissionsRepository, EmissionsTransitionRepository emissionsTransitionRepository) {
+    public Schedule(NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, SensorListRepository sensorListRepository, PlaceRepository placeRepository, MongoQuary mongoQuary, AnnualEmissionsRepository annualEmissionsRepository, EmissionsTransitionRepository emissionsTransitionRepository) {
         this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
         this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
         this.notificationListCustomRepository = notificationListCustomRepository;
         this.monthlyEmissionsRepository = monthlyEmissionsRepository;
-        this.monthlyEmissionsCustomRepository = monthlyEmissionsCustomRepository;
         this.sensorListRepository = sensorListRepository;
         this.placeRepository = placeRepository;
         this.mongoQuary = mongoQuary;
         this.annualEmissionsRepository = annualEmissionsRepository;
         this.emissionsTransitionRepository = emissionsTransitionRepository;
-    }
-
-    /**
-     * 매 월 1일 00시 실행 (매월 1일 전월 데이터 통계)
-     * [분석 및 통계 > 통계자료 조회]
-     * 해당 시점에 등록된 센서목록 전체 읽어와서 해당 컬렉션의 통계자료 DB 저장
-     */
-    @Scheduled(cron = "0 0 0 1 * *")
-    public void monthlyEmissionsScheduling(){
-        LocalDate today = LocalDate.now();
-        LocalDate lastMonth = today.minus(1, ChronoUnit.MONTHS);
-        LocalDate from = lastMonth.withDayOfMonth(1);
-        LocalDate to = lastMonth.withDayOfMonth(lastMonth.lengthOfMonth());
-
-        for(SensorList sensorList : sensorListRepository.findAll()){
-            MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(sensorList.getTableName(), from.getYear());
-            Double value = monthlyEmissionsCustomRepository.addStatisticsData(sensorList.getTableName(), from.toString(), to.toString());
-
-            if(monthlyEmissions==null){
-                monthlyEmissions = new MonthlyEmissions();
-                monthlyEmissions.setYear(from.getYear());
-                monthlyEmissions.setSensor(sensorList.getTableName());
-            }
-
-            if(from.getMonthValue()==1){
-                monthlyEmissions.setJan(value);
-            } else if(from.getMonthValue()==2){
-                monthlyEmissions.setFeb(value);
-            }else if(from.getMonthValue()==3){
-                monthlyEmissions.setMar(value);
-            }else if(from.getMonthValue()==4){
-                monthlyEmissions.setApr(value);
-            }else if(from.getMonthValue()==5){
-                monthlyEmissions.setMay(value);
-            }else if(from.getMonthValue()==6){
-                monthlyEmissions.setJun(value);
-            }else if(from.getMonthValue()==7){
-                monthlyEmissions.setJul(value);
-            }else if(from.getMonthValue()==8){
-                monthlyEmissions.setAug(value);
-            }else if(from.getMonthValue()==9){
-                monthlyEmissions.setSep(value);
-            }else if(from.getMonthValue()==10){
-                monthlyEmissions.setOct(value);
-            }else if(from.getMonthValue()==11){
-                monthlyEmissions.setNov(value);
-            }else if(from.getMonthValue()==12){
-                monthlyEmissions.setDec(value);
-            }
-
-            monthlyEmissions.setUpdateTime(new Date());
-
-            monthlyEmissionsRepository.save(monthlyEmissions);
-        }
     }
 
     /**
@@ -159,8 +99,7 @@ public class Schedule {
      *
      * (알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산)
      */
-    //@Scheduled(cron = "0 0 1 * * *") //매일 01시 00분에 처리
-    @Scheduled(cron = "*/10 * * * * *") // 10초마다 테스트
+    @Scheduled(cron = "0 0 1 * * *") //매일 01시 00분에 처리
     public void saveCumulativeEmissions(){
         // 질소산화물(NOX) : Map<측정소명, 테이블명> 형식
         Map<String, String> noxList = new HashMap<>();
@@ -185,13 +124,16 @@ public class Schedule {
                 String fl1Table = fl1List.get(placeName);
 
                 // 질소산화물 전일 배출량
-                //double emissions = getNOXYesterdayEmissions(halfPast + noxTable, halfPast + fl1Table);
+                double emissions = getNOXYesterdayEmissions(halfPast + noxTable, halfPast + fl1Table);
 
-                // 연간 배출량 누적 모니터링
-                //setAnnualEmissions(noxTable, emissions);
+                // [대시보드] 연간 배출량 추이 모니터링
+                setEmissionsTransition(noxTable, emissions);
 
-                //연간 배출량 추이 모니터링
-                //setEmissionsTransition(noxTable, emissions);
+                // [대시보드] 연간 배출량 누적 모니터링
+                setAnnualEmissions(noxTable, emissions);
+
+                // [분석 및 통계 - 통계자료 조회] 월별 배출량 추이
+                setMonthlyEmissions(noxTable, emissions);
             }
         }
     }
@@ -223,8 +165,61 @@ public class Schedule {
     }
 
     // [분석 및 통계 - 통계자료 조회] 월별 배출량 추이 (monthly_emissions)
-    public void setMonthlyEmissions(){
+    public void setMonthlyEmissions(String table, double emissions){
+        LocalDate nowDate = LocalDate.now();
+        LocalDate yesterday = nowDate.minusDays(1);
+        int year = yesterday.getYear();
 
+        MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
+
+        // 당해년도 데이터가 없는경우 새로 생성
+        if(monthlyEmissions == null){
+            monthlyEmissions = new MonthlyEmissions();
+            monthlyEmissions.setSensor(table);
+            monthlyEmissions.setYear(year);
+        }
+
+        switch(yesterday.getMonthValue()) {
+            case 1:
+                monthlyEmissions.setJan((monthlyEmissions.getJan() == null ? 0 : monthlyEmissions.getJan()) + emissions);
+                break;
+            case 2:
+                monthlyEmissions.setFeb((monthlyEmissions.getFeb() == null ? 0 : monthlyEmissions.getFeb()) + emissions);
+                break;
+            case 3:
+                monthlyEmissions.setMar((monthlyEmissions.getMar() == null ? 0 : monthlyEmissions.getMar()) + emissions);
+                break;
+            case 4:
+                monthlyEmissions.setApr((monthlyEmissions.getApr() == null ? 0 : monthlyEmissions.getApr()) + emissions);
+                break;
+            case 5:
+                monthlyEmissions.setMay((monthlyEmissions.getMay() == null ? 0 : monthlyEmissions.getMay()) + emissions);
+                break;
+            case 6:
+                monthlyEmissions.setJun((monthlyEmissions.getJun() == null ? 0 : monthlyEmissions.getJun()) + emissions);
+                break;
+            case 7:
+                monthlyEmissions.setJul((monthlyEmissions.getJul() == null ? 0 : monthlyEmissions.getJul()) + emissions);
+                break;
+            case 8:
+                monthlyEmissions.setAug((monthlyEmissions.getAug() == null ? 0 : monthlyEmissions.getAug()) + emissions);
+                break;
+            case 9:
+                monthlyEmissions.setSep((monthlyEmissions.getSep() == null ? 0 : monthlyEmissions.getSep()) + emissions);
+                break;
+            case 10:
+                monthlyEmissions.setOct((monthlyEmissions.getOct() == null ? 0 : monthlyEmissions.getOct()) + emissions);
+                break;
+            case 11:
+                monthlyEmissions.setNov((monthlyEmissions.getNov() == null ? 0 : monthlyEmissions.getNov()) + emissions);
+                break;
+            case 12:
+                monthlyEmissions.setDec((monthlyEmissions.getDec() == null ? 0 : monthlyEmissions.getDec()) + emissions);
+                break;
+        }
+
+        monthlyEmissions.setUpdateTime(new Date());
+        monthlyEmissionsRepository.save(monthlyEmissions);
     }
 
     // 연간 배출량 누적 모니터링

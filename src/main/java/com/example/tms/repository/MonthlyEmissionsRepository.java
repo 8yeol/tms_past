@@ -1,4 +1,4 @@
-package com.example.tms.repository.MonthlyEmissions;
+package com.example.tms.repository;
 
 import com.example.tms.entity.MonthlyEmissions;
 import org.springframework.data.mongodb.repository.MongoRepository;
