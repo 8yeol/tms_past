@@ -91,8 +91,11 @@
 
             <div class="mb-3">
                 <label for="monitoringGroup" class="col-sm-2 col-form-label" style="display: inline-block;">모니터링 그룹</label>
-                <div class="col-sm-10" style="width: 50%; display: inline-block;">
-                    <input type="text" class="form-control" value="${member.monitoringGroup}" id="monitoringGroup" readonly  autocomplete="off">
+                <div class="col-sm-10" style="width: 50%; display: inline-block;" id="group">
+                    <select id='monitoringGroup' class="form-control" disabled>
+                        <option value='${member.monitoringGroup}' selected="selected">${member.monitoringGroup}</option>
+                    </select>
+
                 </div>
             </div>
 
@@ -193,13 +196,46 @@
         $("#email").attr("readonly", TOGGLE);
         $("#tel").attr("readonly", TOGGLE);
         $("#department").attr("readonly", TOGGLE);
-        $("#monitoringGroup").attr("readonly", TOGGLE);
         $("#grade").attr("readonly", TOGGLE);
+        select_group(TOGGLE);
         if (TOGGLE) {
             TOGGLE = false;
         } else {
             TOGGLE = true;
         }
+    }
+
+    function select_group(TOGGLE) {
+        const selectGroup = $("#monitoringGroup option:selected").val();
+        const $target = $('select[id="monitoringGroup"]');
+        let innerHTML = "";
+        if(TOGGLE){
+            $target.attr("disabled","disabled");
+        }else{
+            $target.empty();
+            $target.removeAttr("disabled");
+        }
+        $.ajax({
+            url: '<%=cp%>/getMonitoringGroup',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            success: function (data) {
+                for(let i = 0; i<data.length; i++){
+                    const group = data[i].groupName;
+                    if(selectGroup == group){
+                        innerHTML =
+                            "<option value ='"+group+"' selected='selected'>"+group+"</option>";
+                    }else{
+                        innerHTML =
+                            "<option value ='"+group+"'>"+group+"</option>";
+                    }
+                    $target.append(innerHTML);
+                }
+            },
+            error: function () {
+            }
+        });
     }
 
     function setLayout() {
@@ -255,7 +291,7 @@
                     "name": $("#name").val(),
                     "email": $("#email").val(),
                     "department": $("#department").val(),
-                    "monitoringGroup": $("#monitoringGroup").val(),
+                    "monitoringGroup": $("#monitoringGroup option:selected").val(),
                     "grade": $("#grade").val(),
                     "tel": $("#tel").val()
                 },

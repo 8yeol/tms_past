@@ -71,6 +71,7 @@ public class MemberService implements UserDetailsService {
         updateMember.setEmail(member.getEmail());
         updateMember.setTel(member.getTel());
         updateMember.setDepartment(member.getDepartment());
+        updateMember.setMonitoringGroup(member.getMonitoringGroup());
         updateMember.setGrade(member.getGrade());
         memberRepository.save(updateMember);
     }

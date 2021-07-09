@@ -273,16 +273,6 @@
                         <td>${mList.department}</td>
                         <td>${mList.monitoringGroup}</td>
 
-
-                        <c:choose>
-                            <c:when test="${mList.joined != null}">
-                                <td><fmt:formatDate value="${mList.joined}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
-                            </c:when>
-                            <c:otherwise>
-                                <td></td>
-                            </c:otherwise>
-                        </c:choose>
-
                         <c:choose>
                             <c:when test="${mList.lastLogin != null}">
                                 <td><fmt:formatDate value="${mList.lastLogin}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
