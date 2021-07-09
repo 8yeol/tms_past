@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface MonitoringGroupRepository extends MongoRepository<MonitoringGroup, Long> {
     MonitoringGroup findByGroupNum(int key);
+    MonitoringGroup findByGroupName(String groupName);
+    MonitoringGroup findByGroupMemberIsIn(String id);
     List<MonitoringGroup> findAllBy_idNotNullOrderByGroupNumDesc();
 }

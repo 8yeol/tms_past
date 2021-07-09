@@ -1414,6 +1414,7 @@ public class AjaxController {
             return "root";
         } else if (!memberRepository.existsById(member.getId())) {
             memberService.memberSave(member, "4");
+            groupChange(member.getId(), member.getMonitoringGroup());
             return "success";
         } else {
             return "failed";
@@ -1429,13 +1430,28 @@ public class AjaxController {
     public String memberUpdate(Member member) {
         memberService.updateMember(member);
         memberService.updateLog(member);
+        groupChange(member.getId(), member.getMonitoringGroup());
         return "success";
     }
     @RequestMapping(value = "/memberGroupUpdate")
     public String memberGroupUpdate(String id, String monitoringGroup) {
         memberService.updateMemberGroup(id, monitoringGroup);
         memberService.updateGroupLog(id);
+        groupChange(id, monitoringGroup);
         return "success";
+    }
+
+    public void groupChange(String id, String monitoringGroup){
+        MonitoringGroup memberRemove = monitoringGroupRepository.findByGroupMemberIsIn(id);
+        if(memberRemove != null){
+            memberRemove.getGroupMember().remove(id);
+            monitoringGroupRepository.save(memberRemove);
+        }
+        MonitoringGroup group = monitoringGroupRepository.findByGroupName(monitoringGroup);
+        List<String> member = group.getGroupMember();
+        member.add(id);
+        group.setGroupMember(member);
+        monitoringGroupRepository.save(group);
     }
 
     /**
