@@ -92,7 +92,7 @@
         border-color: #aaa;
         border-radius: 2px;
         padding: 3px;
-        min-width: 66px;
+        width: 130px;
     }
 
     #groupTable {
