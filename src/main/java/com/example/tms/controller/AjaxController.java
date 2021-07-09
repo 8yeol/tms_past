@@ -1646,20 +1646,37 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/saveGroup", method = RequestMethod.POST)
-    public void saveGroup(String name, @RequestParam(value="memList[]")List<String> memList, @RequestParam(value="placeList[]")List<String> placeList) {
+    public void saveGroup(String name, @RequestParam(value="memList[]")List<String> memList,
+                          @RequestParam(value="placeList[]")List<String> placeList, String flag, @RequestParam(value = "groupNum",required = false)int groupNum) {
+        MonitoringGroup group = null;
 
-        for (int i=0; i<memList.size(); i++){
+        //그룹 Num +1하여 생성
+        if(flag.equals("insert")) {
+            group = new MonitoringGroup();
+            int newGroupNum = monitoringGroupRepository.findAllBy_idNotNullOrderByGroupNumDesc().get(0).getGroupNum() + 1;
+            group.setGroupNum(newGroupNum);
+
+        //수정할 그룹의 멤버 모두 default로 초기화
+        }else if(flag.equals("edit")){
+            group = monitoringGroupRepository.findByGroupNum(groupNum);
+            for (int i = 0; i < group.getGroupMember().size(); i++) {
+                Member defaultMember = memberRepository.findById((String) group.getGroupMember().get(i));
+                defaultMember.setMonitoringGroup("default");
+                memberRepository.save(defaultMember);
+            }
+        }
+
+        //그룹의 멤버 모두 그룹명으로 변경
+        for (int i = 0; i < memList.size(); i++) {
             Member saveMember = memberRepository.findById(memList.get(i));
             saveMember.setMonitoringGroup(name);
             memberRepository.save(saveMember);
         }
 
-        MonitoringGroup group = new MonitoringGroup();
-        int newGroupNum = monitoringGroupRepository.findAllBy_idNotNullOrderByGroupNumDesc().get(0).getGroupNum()+1 ;
+        //그룹에 데이터 셋팅하고 저장
         group.setGroupName(name);
         group.setGroupMember(memList);
         group.setMonitoringPlace(placeList);
-        group.setGroupNum(newGroupNum);
         monitoringGroupRepository.save(group);
     }
 

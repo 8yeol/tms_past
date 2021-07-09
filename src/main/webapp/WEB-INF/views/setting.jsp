@@ -174,6 +174,7 @@
     }
 
     .tab {
+        width: 200px;
         list-style: none;
         position: absolute;
         left: -81px;
@@ -491,7 +492,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" id="gModalCancle">취소</button>
-                <button type="button" id="saveBtn" class="btn btn-outline-primary" onclick="insertGroup()">생성</button>
+                <button type="button" id="saveBtn" class="btn btn-outline-primary" onclick="saveGroup('insert')">생성</button>
             </div>
         </div>
     </div>
@@ -916,9 +917,7 @@
         $(to).append($(opts).clone());
     };
 
-
-
-    function insertGroup(){
+    function saveGroup(flag, groupNum){
         let name = $('#groupInput').val().trim();
         if(name == ''){
             $('#groupInput').focus();
@@ -944,16 +943,17 @@
         for (i=0; i<place.length; i++)
             pList.push(place.eq(i).val());
 
+        if(flag=="insert") groupNum = -1;
         $.ajax({
             url: '<%=cp%>/saveGroup',
             type: 'POST',
             async: false,
             cache: false,
-            data: { "name" : name, "memList" : mList, "placeList" : pList},
+            data: { "name" : name, "memList" : mList, "placeList" : pList, "flag" : flag, "groupNum" : groupNum},
             success: function (){
                 $('#gModalCancle').trigger("click");
-                success('그룹이 추가 되었습니다.');
-                setTimeout(() => {location.reload()},2500);
+                success('그룹이 저장 되었습니다.');
+                setTimeout(() => {location.reload()},1500);
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -1027,7 +1027,7 @@
             data: {key: key},
             success: function () {
                 warning('삭제 되었습니다.');
-                setTimeout(() => {location.reload()},2500);
+                setTimeout(() => {location.reload()},1500);
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -1038,19 +1038,24 @@
     function groupEditSetting(obj, groupNum){
         let groupMemList = $(obj).parent().parent().children().eq(1).text().split(',');
         let groupPlaList = $(obj).parent().parent().children().eq(2).text().split(',');
+        let groupName = $(obj).parent().parent().children().eq(0).text();
+
+        $('#groupInput').val(groupName);
         $('.selectBox').empty();
         $('.groupModalTitle').text('그룹 수정');
         $('#saveBtn').text('수정');
-        $('#saveBtn').attr('onclick', 'editGroup()');
+        $('#saveBtn').attr('onclick', 'saveGroup("edit")');
 
         let innerHTML;
         for (i=0; i<groupMemList.length; i++){
+            groupMemList[i] = groupMemList[i].trim();
             innerHTML += '<option value="' + groupMemList[i] + '">' + groupMemList[i] + '</option>'
         }
         $('#lstBox4').append(innerHTML);
 
         let innerHTML2;
         for (i=0; i<groupPlaList.length; i++){
+            groupPlaList[i] = groupPlaList[i].trim();
             innerHTML2 += '<option value="' + groupPlaList[i] + '">' + groupPlaList[i] + '</option>'
         }
         $('#lstBox2').append(innerHTML2);
@@ -1066,18 +1071,18 @@
 
         let plaInnerHTML;
         for (i=0; i<placeList.length; i++){
-            for (k=0; k<groupPlaList.length; k++) {
-
+            if(groupPlaList.includes(placeList[i]) == false) {
                 plaInnerHTML += '<option value="' + placeList[i] + '">' + placeList[i] + '</option>';
             }
         }
         $('#lstBox1').append(plaInnerHTML);
+        $('#saveBtn').attr('onclick', 'saveGroup("edit", '+groupNum+')');
     }
 
     function insertSetting(){
         $('.groupModalTitle').text('그룹 생성');
         $('#saveBtn').text('생성');
-        $('#saveBtn').attr('onclick', 'insertGroup()');
+        $('#saveBtn').attr('onclick', 'saveGroup("insert")');
         $('.selectBox').empty();
         let memInnerHTML;
         let plaInnerHTML;
@@ -1104,8 +1109,6 @@
             success: function (data) {
                 memberList = data[0];
                 placeList = data[1];
-                console.log(placeList);
-                console.log(memberList);
             },
             error: function (request, status, error) {
                 console.log(error)

@@ -277,10 +277,16 @@
                             <div class="d-flex radio" style="width: 100%;">
                                 <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px; display: inline-block; width: 50%;">${activeSensor.naming}</span>
                                 <div style="width: 50%; text-align: right; margin-right: 15px;">
+                                    <span>숫자표시</span>
+                                    <input class="form-check-input" type="radio" name="chartLabel" id="on">
+                                    <label for='on'>on</label>
+                                    <input class="form-check-input" type="radio" name="chartLabel" id="off" checked>
+                                    <label for="off">off&nbsp;&nbsp;&nbsp;</label>
+                                    <span>|&nbsp;&nbsp;&nbsp;최근</span>
                                     <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
-                                    <label for='hour'>&nbsp;최근 1시간</label> &emsp;
+                                    <label for='hour'>1시간</label>
                                     <input class="form-check-input" type="radio" name="chartRadio" id="day">
-                                    <label for="day">&nbsp;최근 24시간</label>
+                                    <label for="day">24시간</label>
                                 </div>
                             </div>
                             <span class="text-primary" style="font-size: 0.8rem; position: absolute; right: 15px;"> * 최근 1시간은 실시간, 최근 24시간은 5분평균 데이터로 실시간 업데이트됩니다.</span>
@@ -313,11 +319,15 @@
      * 선택된 센서의 최근 1시간, 24시간 데이터로 차트 및 테이블 생성
      */
     $(document).ready(function() {
-        chart = new ApexCharts(document.querySelector("#chart"), setChartOption()); //차트 틀 생성
+        chart = new ApexCharts(document.querySelector("#chart"), setChartOption(false)); //차트 틀 생성
         chart.render();
         var sensor_data_list = ${sensorData};
         var sensor_data = ${activeSensor};
         draw_sensor_table(sensor_data_list, sensor_data);
+        if (sensor_data_list.length == 0){
+            console.log("sensor_data is none");
+            return;
+        }
         updateChart(sensor_data_list, sensor_data);
         draw_frame();
     }); //ready
@@ -396,6 +406,26 @@
         debounce = setTimeout(() => {
             getData2(sensor_data);
         }, 300)
+    });
+    /**
+     * 최근 1시간 or 최근 24시간(5분 단위 데이터) 클릭 이벤트 (조건에 맞는 해당 센서 조회)
+     */
+    $("input[name=chartLabel]").on('click' , function (){
+        if(document.getElementsByName("chartLabel")[0].checked){ //off
+            chartLabel = true;
+        }else{ //최근 24시간 선택 시
+            chartLabel = false;
+        }
+        chart.destroy();
+        chart = new ApexCharts(document.querySelector("#chart"), setChartOption(chartLabel)); //차트 틀 생성
+        chart.render();
+        sensor_naming = $('#radio_text').text();
+        var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
+        if(temp.length != 0){
+            sensor_name = temp[0].childNodes[1].value; //측정소 테이블로부터 센서명을 구함
+            sensor_data = getSensorData(sensor_name);
+            getData2(sensor_data);
+        }
     });
 
     /**
@@ -689,7 +719,7 @@
     /**
      * 차트 기본 옵션
      */
-    function setChartOption(){
+    function setChartOption(chartLabel){
         options = {
             series: [{
                 data: [],
@@ -718,6 +748,17 @@
                     },
                 }
             },
+            colors: ['#97bef8'],
+            markers: { //점
+                size: 2,
+                strokeWidth:1,
+                shape: "square",
+                radius: 1,
+                colors: ["#629cf4"],
+                hover: {
+                    size: 5,
+                }
+            },
             tooltip:{
                 enbaled: true,
                 x: {
@@ -731,7 +772,20 @@
                 width: 3
             },
             dataLabels: {
-                enabled: false
+                enabled: chartLabel,
+                // style: { //데이터 배경
+                //     fontSize: '10px',
+                //     colors: ['#629cf4'],
+                // },
+                background: { //데이터 글자
+                    enabled: true,
+                    foreColor: 'black',
+                    // padding: 1,
+                    // borderRadius: 1,
+                    // borderWidth: 0.3,
+                    // borderColor: 'green',
+                    opacity: 0,
+                },
             },
             xaxis: {
                 type: 'datetime',
