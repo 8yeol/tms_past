@@ -300,34 +300,37 @@
                 <c:forEach items="${sensorList}" var="emissions">
                     <c:if test="${emissions.place eq placelist}">
                         <div class="row pe-3 margin-l" style="justify-content: space-between">
-                        <div class="fw-bold" style="margin-bottom: 2px; width: auto;">${emissions.sensorNaming}</div>
-                            <span class="small" style="width: auto;">업데이트 : <span class="fw-bold"><fmt:formatDate value="${emissions.updateTime}" pattern="yyyy-MM-dd"/></span></span>
+                        <div class="fw-bold" style="margin-bottom: 2px; width: 50%;">${emissions.sensorNaming}</div>
+                            <span class="small" style="width: 50%; text-align: right">업데이트 : <span class="fw-bold"><fmt:formatDate value="${emissions.updateTime}" pattern="yyyy-MM-dd"/></span></span>
                         <c:forEach items="${standard}" var="standard">
                         <c:if test="${emissions.sensor eq standard.tableName}">
                             <c:if test="${standard.emissionsStandard ne '0'}"> <!--sensor = standard -->
                                 <fmt:parseNumber var="emissionsStandard" integerOnly="true" value="${standard.emissionsStandard}"/>
                                 <c:set var="percent" value="${(emissions.yearlyValue*100)/(emissionsStandard)}"/>
                                 <fmt:parseNumber var="percent" integerOnly="true" value="${percent}"/>
-                                <div class="col">
-                                    <div class="progress" style="height: 24px;">
-                                        <c:choose>
-                                        <c:when test="${percent le 50}">
-                                            <div class="progress-bar progress-blue" role="progressbar" style="width:${percent}%;"
-                                        </c:when>
-                                        <c:when test="${percent le 80}">
-                                            <div class="progress-bar progress-yellow" role="progressbar" style="width: ${percent}%;"
-                                        </c:when>
-                                        <c:when test="${percent gt 80}">
-                                        <div class="progress-bar progress-red" role="progressbar" style="width: ${percent}%;"
-                                        </c:when>
-                                        </c:choose>
-                                             aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"><fmt:formatNumber value="${emissions.yearlyValue}" groupingUsed="true"/>
+                                <div class="rounded" style="padding: 10px; background-color: #e5e5e5; margin-top: 5px">
+                                    <div style="display: flex">
+                                        <div class="progress" style="height: 24px; width: 100%;">
+                                            <c:choose>
+                                            <c:when test="${percent le 50}">
+                                                <div class="progress-bar progress-blue" role="progressbar" style="width:${percent}%;"
+                                            </c:when>
+                                            <c:when test="${percent le 80}">
+                                                <div class="progress-bar progress-yellow" role="progressbar" style="width: ${percent}%;"
+                                            </c:when>
+                                            <c:when test="${percent gt 80}">
+                                            <div class="progress-bar progress-red" role="progressbar" style="width: ${percent}%;"
+                                            </c:when>
+                                            </c:choose>
+                                                 aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"><fmt:formatNumber value="${emissions.yearlyValue}" groupingUsed="true"/>
+                                            </div>
                                         </div>
+                                        <p style="margin-left: 10px; margin-bottom: 0;">${percent}%</p>
                                     </div>
-                                </div>
-                                ${percent}%
-                                <div class="standard">
-                                    <fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/>
+
+                                    <div class="standard">
+                                        <fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/>
+                                    </div>
                                 </div>
                             </c:if>
                             <c:if test="${standard.emissionsStandard eq '0' and (member.state == '1' || member.state == '2')}">
