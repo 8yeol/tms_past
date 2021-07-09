@@ -421,7 +421,7 @@
             </div>
         </div>
         </div> <%-- 모니터링그룹 div --%>
-    </div> <%--상단 콘텐츠 DIV--%>
+
 
     <div class="row bg-light" style="padding: 1rem 40px 25px; margin-left: 1px;margin-top: 15px; ">
 
@@ -1149,6 +1149,8 @@
 
         $('#groupInput').val(groupName);
         $('.allPlaceCheck').css('display', 'none');
+        $('#allPlaceCheck').prop("checked", false);
+        optionDisabled(false);
         $('.selectBox').empty();
         $('.groupModalTitle').text('그룹 수정');
         $('#saveBtn').text('수정');
@@ -1195,6 +1197,8 @@
         $('.selectBox').empty();
         $('.allPlaceCheck').css('display', 'inline-block');
         $('.allPlaceCheckSpan').css('display', 'block');
+        $('#allPlaceCheck').prop("checked", false);
+        optionDisabled(false);
         let memInnerHTML;
         let plaInnerHTML;
 
@@ -1239,8 +1243,6 @@
         $("#allPlaceCheck").on({click: function() {
                if($(this).is(":checked") == true){
                    optionDisabled(true);
-
-
                }else{
                    optionDisabled(false);
                }
