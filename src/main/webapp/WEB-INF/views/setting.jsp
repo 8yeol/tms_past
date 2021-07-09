@@ -142,10 +142,10 @@
     .MultiSelecterModal {
         width: 350px;
         border-radius: 10px;
-        background-color: rgba(99, 130, 255, 0.7);
+        background-color: rgba(99, 130, 255, 0.5);
         position: absolute;
         padding: 10px;
-        top: 50%;
+        top: 4%;
         left: 50%;
         transform: translate(-50%, -50%);
         text-align: center;
@@ -154,7 +154,7 @@
         display: none;
     }
     #monitoringSignModal{
-        top: 65%;
+        top: 0%;
     }
 
     .multiSelectBtn input[type=button] {
@@ -1159,20 +1159,23 @@
         $('#saveBtn').text('수정');
         $('#saveBtn').attr('onclick', 'saveGroup("edit")');
 
-        let innerHTML;
-        for (i = 0; i < groupMemList.length; i++) {
-            groupMemList[i] = groupMemList[i].trim();
-            innerHTML += '<option value="' + groupMemList[i] + '">' + groupMemList[i] + '</option>'
+        if(groupMemList[0] !="") {
+            let innerHTML;
+            for (i = 0; i < groupMemList.length; i++) {
+                groupMemList[i] = groupMemList[i].trim();
+                innerHTML += '<option value="' + groupMemList[i] + '">' + groupMemList[i] + '</option>'
+            }
+            $('#lstBox4').append(innerHTML);
         }
-        $('#lstBox4').append(innerHTML);
 
-        let innerHTML2;
-        for (i = 0; i < groupPlaList.length; i++) {
-            groupPlaList[i] = groupPlaList[i].trim();
-            innerHTML2 += '<option value="' + groupPlaList[i] + '">' + groupPlaList[i] + '</option>'
+        if(groupPlaList[0] !="") {
+            let innerHTML2;
+            for (i = 0; i < groupPlaList.length; i++) {
+                groupPlaList[i] = groupPlaList[i].trim();
+                innerHTML2 += '<option value="' + groupPlaList[i] + '">' + groupPlaList[i] + '</option>'
+            }
+            $('#lstBox2').append(innerHTML2);
         }
-        $('#lstBox2').append(innerHTML2);
-
 
         let memInnerHTML;
         for (i = 0; i < memberList.length; i++) {

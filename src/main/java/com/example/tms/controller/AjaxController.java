@@ -503,6 +503,16 @@ public class AjaxController {
             } else {
                 removePlaceChangeSensor(placeList.get(i), principal);       //측정소만 삭제
             }
+            //삭제될 측정소 그룹에서 삭제
+            List<MonitoringGroup> group = monitoringGroupRepository.findByMonitoringPlaceIsIn(placeList.get(i));
+
+            for (int k = 0; k<group.size(); k++){
+                List<String> groupPlaceList = group.get(k).getMonitoringPlace();
+                int placeIndex = groupPlaceList.indexOf(placeList.get(i));
+                groupPlaceList.remove(placeIndex);
+                group.get(k).setMonitoringPlace(groupPlaceList);
+                monitoringGroupRepository.save(group.get(k));
+            }
         }
     }
 
@@ -1467,6 +1477,12 @@ public class AjaxController {
         Member member = memberRepository.findById(id);
         if (passwordEncoder.matches(password, member.getPassword())) {
             memberService.deleteById(id);
+            MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
+            if(group != null){
+               int memberIndex = group.getGroupMember().indexOf(id);
+               group.getGroupMember().remove(memberIndex);
+               monitoringGroupRepository.save(group);
+            }
             return "success";
         } else {
             return "fail";
@@ -1583,6 +1599,12 @@ public class AjaxController {
      */
     @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
     public String kickMember(String id) {
+        MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
+        if(group != null){
+            int memberIndex = group.getGroupMember().indexOf(id);
+            group.getGroupMember().remove(memberIndex);
+            monitoringGroupRepository.save(group);
+        }
         memberRepository.deleteById(id);
         logRepository.deleteById(id);
         return "제명처리 되었습니다.";
