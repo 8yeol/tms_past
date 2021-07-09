@@ -244,9 +244,12 @@
         font-size: 1.4rem;
         margin:0px 0px 0px 10px;
     }
-    #checkLabel:hover{
+    #checkLabel:hover {
         cursor: pointer;
-        color : #0d6efd;
+        color: #0d6efd;
+    }
+    #member, #group{
+        height: 425px;
     }
 
     /* 반응형 미디어쿼리 */

@@ -571,11 +571,13 @@ public class AjaxController {
             }
 
             //분기별 배출량 측정소 변경
-            EmissionsTransition et = emissionsTransitionRepository.findByTableName(sensor.get(i));
+            List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(sensor.get(i));
             if (et != null) {
-                et.setPlaceName("");
+                for (int k=0; k<et.size(); k++){
+                    et.get(k).setPlaceName("");
+                    emissionsTransitionRepository.save(et.get(k));
+                }
                 inputLogSetting("'"+sensorname+"'"+" 분기별 배출량 등록 측정소 '"+place +"' 삭제" ,"설정",principal);
-                emissionsTransitionRepository.save(et);
             }
 
         }
@@ -1089,8 +1091,14 @@ public class AjaxController {
      * @param hiddenCode     추가,수정을 판별하는 데이터
      */
     @RequestMapping(value = "/saveSensor")
-    public void saveSensor(@RequestParam(value = "managementId", required = false) String managementId, @RequestParam(value = "classification", required = false) String classification, @RequestParam(value = "naming", required = false) String naming, @RequestParam(value = "place") String place,@RequestParam(value = "naming2", required = false) String naming2,
-                           @RequestParam(value = "tableName", required = false) String tableName, @RequestParam(value = "hiddenCode", required = false) String hiddenCode, @RequestParam(value = "isValueDelete", required = false) String isValueDelete,Principal principal) {
+    public void saveSensor(@RequestParam(value = "managementId", required = false) String managementId,
+                           @RequestParam(value = "classification", required = false) String classification,
+                           @RequestParam(value = "naming", required = false) String naming,
+                           @RequestParam(value = "place") String place,
+                           @RequestParam(value = "naming2", required = false) String naming2,
+                           @RequestParam(value = "tableName", required = false) String tableName,
+                           @RequestParam(value = "hiddenCode", required = false) String hiddenCode,
+                           @RequestParam(value = "isValueDelete", required = false) String isValueDelete,Principal principal) {
 
         SensorList sensor;
         //hidden 값이 있는지로 추가와 수정을 판별
@@ -1114,6 +1122,14 @@ public class AjaxController {
 
             saveReference(place, tableName, naming,principal); //상세설정 항목 추가
             inputLogSetting( "'"+sensor.getNaming()+"'" + " 센서 추가", "설정", principal);
+
+            int thisYear = Calendar.getInstance().get(Calendar.YEAR);
+            EmissionsTransition thisYearTransition = new EmissionsTransition(
+                    tableName, place, naming, thisYear, 0, 0, 0, 0, 0, new Date());
+            EmissionsTransition lastYearTransition = new EmissionsTransition(
+                    tableName, place, naming, thisYear-1, 0, 0, 0, 0, 0, new Date());
+            emissionsTransitionRepository.save(thisYearTransition);
+            emissionsTransitionRepository.save(lastYearTransition);
 
         } else { //수정
             sensor = sensorListRepository.findByTableName(hiddenCode, "");
@@ -1168,17 +1184,20 @@ public class AjaxController {
 
 
                 //분기별 배출량 데이터 수정
-                EmissionsTransition et = emissionsTransitionRepository.findByTableName(hiddenCode);
+                List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(hiddenCode);
                 if (et != null) {
-                    et.setSensorName(naming2);
-                    emissionsTransitionRepository.save(et);
-                    inputLogSetting("'"+et.getPlaceName() + " - " + sensor.getNaming()+"'" + " 센서 분기별 배출량 항목명 수정", "설정", principal);
+                    for (int i = 0; i<et.size(); i++) {
+                        et.get(i).setSensorName(naming2);
+                        emissionsTransitionRepository.save(et.get(i));
+                    }
+                    inputLogSetting("'"+et.get(0).getPlaceName() + " - " + sensor.getNaming()+"'" + " 센서 분기별 배출량 항목명 수정", "설정", principal);
                 }
 
                 inputLogSetting("'"+oldNaming+"' 센서의 항목명 "+"'"+oldNaming+"'" + " > " + "'"+naming2+"'" + " 수정 ", "설정", principal);
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
                 reference.setNaming(naming2);
                 reference_value_settingRepository.save(reference);
+
             }
 
             //측정소 변경
@@ -1208,10 +1227,12 @@ public class AjaxController {
 
 
                 //분기별 배출량 데이터 수정
-                EmissionsTransition et = emissionsTransitionRepository.findByTableName(hiddenCode);
+                List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(hiddenCode);
                 if (et != null) {
-                    et.setPlaceName(place);
-                    emissionsTransitionRepository.save(et);
+                    for (int i = 0; i<et.size(); i++) {
+                        et.get(i).setPlaceName(place);
+                        emissionsTransitionRepository.save(et.get(i));
+                    }
                     inputLogSetting("'"+oldPlace + " - " +oldNaming+"'" + " 센서 분기별 배출량 측정소명 수정", "설정", principal);
                 }
 
