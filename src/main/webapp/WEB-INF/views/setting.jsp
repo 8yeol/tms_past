@@ -219,11 +219,11 @@
 
         <%-- tab 클릭시 li.on 회원관리는 #member 모니터링그룹관리는 #group 디스플레이 변경--%>
         <ul class="tab">
-            <li class="on">회원관리</li>
-            <li>모니터링그룹관리</li>
+            <li class="on" onclick="tabClick(this, 'member')">회원관리</li>
+            <li class="" onclick="tabClick(this, 'group')">모니터링그룹관리</li>
         </ul>
         <%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
-        <div id="member">
+        <div id="member" style="display: block" class="tabDiv">
         <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">회원관리</span>
         <div class="col-xs-12">
             <table class="table table-striped" id="member-Table">
@@ -238,7 +238,6 @@
                     <th style="padding:10px 0px 10px 0px;">부서명</th>
                     <th style="padding:10px 0px 10px 0px;">모니터링 그룹</th>
                     <th style="padding:10px 0px 10px 0px;">최종 <a class="sign"></a>로그인</th>
-                    <th></th>
                     <th style="padding:10px 0px 10px 0px;">관리</th>
                 </tr>
                 </thead>
@@ -312,10 +311,10 @@
         </div>
         </div>
 <%--            회원관리 div--%>
-        <div id="group" style="display: none;">
+        <div id="group" style="display: none;"  class="tabDiv">
         <div>
             <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
-            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal">그룹 추가</button>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal" onclick="insertSetting()">그룹 추가</button>
         </div>
         <div style="width: 100%; height:350px;">
             <table class="table table-striped" id="groupTable">
@@ -330,14 +329,17 @@
 
                 <tbody>
                 <c:forEach items="${group}" var="groupList" varStatus="idx">
-                    <tr>
-                        <td>${groupList.groupName}</td>
-                        <td class="groupTd">${groupList.groupMember}</td>
-                        <td class="groupPlace">${groupList.monitoringPlace}</td>
-                        <td><i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal" ></i>&ensp;
-                            <i  class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
-                        </td>
-                    </tr>
+                    <c:if test="${groupList.groupName != 'default'}">
+                        <tr>
+                            <td>${groupList.groupName}</td>
+                            <td class="groupTd">${groupList.groupMember}</td>
+                            <td class="groupPlace">${groupList.monitoringPlace}</td>
+                            <td><i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal"
+                                   onclick="groupEditSetting(this, ${groupList.groupNum})"></i>&ensp;
+                                <i  class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
+                            </td>
+                        </tr>
+                    </c:if>
                 </c:forEach>
                 </tbody>
             </table>
@@ -431,10 +433,8 @@
                         <h3 class="fs-5 fw-bold groupSubTitle">그룹회원 관리</h3>
                         <div class="multiSelect">
                             <label><b>회원명</b></label>
-                            <select multiple class="form-control scroll" id="lstBox3">
-                                <option value="test1">test1</option>
-                                <option value="test2">test2</option>
-                                <option value="test3">test3</option>
+                            <select multiple class="form-control scroll selectBox" id="lstBox3">
+                                <!-- script -->
                             </select>
                         </div>
 
@@ -447,8 +447,8 @@
 
                         <div class="multiSelect">
                             <label><b>그룹 회원</b></label>
-                            <select multiple class="form-control scroll" id="lstBox4">
-
+                            <select multiple class="form-control scroll selectBox" id="lstBox4">
+                                <!-- script -->
                             </select>
                         </div>
 
@@ -462,10 +462,8 @@
                         <h3 class="fs-5 fw-bold groupSubTitle">모니터링 측정소</h3>
                         <div class="multiSelect">
                             <label><b>측정소명</b></label>
-                            <select multiple class="form-control scroll" id="lstBox1">
-                                <option value="place1">place1</option>
-                                <option value="place2">place2</option>
-                                <option value="place3">place3</option>
+                            <select multiple class="form-control scroll selectBox" id="lstBox1">
+                                <!-- script -->
                             </select>
                         </div>
 
@@ -478,7 +476,8 @@
 
                         <div class="multiSelect">
                             <label><b>모니터링 측정소</b></label>
-                            <select multiple class="form-control scroll" id="lstBox2">
+                            <select multiple class="form-control scroll selectBox" id="lstBox2">
+                                <!-- script -->
                             </select>
                         </div>
 
@@ -492,7 +491,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" id="gModalCancle">취소</button>
-                <button type="button" class="btn btn-outline-primary" onclick="insertGroup()">생성</button>
+                <button type="button" id="saveBtn" class="btn btn-outline-primary" onclick="insertGroup()">생성</button>
             </div>
         </div>
     </div>
@@ -565,7 +564,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="test()">취소</button>
+                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
@@ -704,12 +703,15 @@
     var rName = "root"; // 권한관리영역 checkBox 변수
     var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
     var user_id = "${member.id}"; // 페이지에 접근한 유저의 ID
+    let memberList ; // 모든 멤버리스트
+    let placeList ; // 모든 측정소 리스트
 
 
     $(document).ready(function () {
         rankRadioChanged("root"); //기본값
         $('.Modal').modal({keyboard: false,backdrop: 'static'}); // esc , 백스페이스 클릭방지
         substrArrayData();
+        getMemberAndPlaceList();
     }); //ready
 
     function Info_Set(str_id, str_state, str_name) {
@@ -929,25 +931,25 @@
             warning('회원을 추가 하세요.');
             return;
         }
-        let memList = new Array();
+        let mList = new Array();
         for (i=0; i<member.length; i++)
-            memList.push(member.eq(i).val());
+            mList.push(member.eq(i).val());
 
         let place = $('#lstBox2 option');
         if(place.length == 0){
             warning('측정소를 추가 하세요.');
             return;
         }
-        let placeList = new Array();
+        let pList = new Array();
         for (i=0; i<place.length; i++)
-            placeList.push(place.eq(i).val());
+            pList.push(place.eq(i).val());
 
         $.ajax({
             url: '<%=cp%>/saveGroup',
             type: 'POST',
             async: false,
             cache: false,
-            data: { "name" : name, "memList" : memList, "placeList" : placeList},
+            data: { "name" : name, "memList" : mList, "placeList" : pList},
             success: function (){
                 $('#gModalCancle').trigger("click");
                 success('그룹이 추가 되었습니다.');
@@ -1031,6 +1033,92 @@
                 console.log(error)
             }
         });
+    }
+
+    function groupEditSetting(obj, groupNum){
+        let groupMemList = $(obj).parent().parent().children().eq(1).text().split(',');
+        let groupPlaList = $(obj).parent().parent().children().eq(2).text().split(',');
+        $('.selectBox').empty();
+        $('.groupModalTitle').text('그룹 수정');
+        $('#saveBtn').text('수정');
+        $('#saveBtn').attr('onclick', 'editGroup()');
+
+        let innerHTML;
+        for (i=0; i<groupMemList.length; i++){
+            innerHTML += '<option value="' + groupMemList[i] + '">' + groupMemList[i] + '</option>'
+        }
+        $('#lstBox4').append(innerHTML);
+
+        let innerHTML2;
+        for (i=0; i<groupPlaList.length; i++){
+            innerHTML2 += '<option value="' + groupPlaList[i] + '">' + groupPlaList[i] + '</option>'
+        }
+        $('#lstBox2').append(innerHTML2);
+
+
+        let memInnerHTML;
+        for (i=0; i<memberList.length; i++){
+            if(memberList[i].monitoringGroup == "default"){
+                memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
+            }
+        }
+        $('#lstBox3').append(memInnerHTML);
+
+        let plaInnerHTML;
+        for (i=0; i<placeList.length; i++){
+            for (k=0; k<groupPlaList.length; k++) {
+
+                plaInnerHTML += '<option value="' + placeList[i] + '">' + placeList[i] + '</option>';
+            }
+        }
+        $('#lstBox1').append(plaInnerHTML);
+    }
+
+    function insertSetting(){
+        $('.groupModalTitle').text('그룹 생성');
+        $('#saveBtn').text('생성');
+        $('#saveBtn').attr('onclick', 'insertGroup()');
+        $('.selectBox').empty();
+        let memInnerHTML;
+        let plaInnerHTML;
+
+        for (i=0; i<memberList.length; i++){
+            if(memberList[i].monitoringGroup == "default"){
+                memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
+            }
+        }
+        $('#lstBox3').append(memInnerHTML);
+
+        for (i=0; i<placeList.length; i++){
+            plaInnerHTML += '<option value="' + placeList[i] + '">' + placeList[i] + '</option>';
+        }
+        $('#lstBox1').append(plaInnerHTML);
+    }
+
+    function getMemberAndPlaceList(){
+        $.ajax({
+            url: '<%=cp%>/getMemberAndPlaceList',
+            type: 'POST',
+            async: false,
+            cache: false,
+            success: function (data) {
+                memberList = data[0];
+                placeList = data[1];
+                console.log(placeList);
+                console.log(memberList);
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
+
+    function tabClick(obj, divId){
+        $('.tab li').attr('class', '');
+        $(obj).attr('class', 'on');
+
+        $('.tabDiv').css('display', 'none');
+        $('#'+divId).css('display', 'block');
     }
 
 

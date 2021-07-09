@@ -1646,6 +1646,13 @@ public class AjaxController {
 
     @RequestMapping(value = "/saveGroup", method = RequestMethod.POST)
     public void saveGroup(String name, @RequestParam(value="memList[]")List<String> memList, @RequestParam(value="placeList[]")List<String> placeList) {
+
+        for (int i=0; i<memList.size(); i++){
+            Member saveMember = memberRepository.findById(memList.get(i));
+            saveMember.setMonitoringGroup(name);
+            memberRepository.save(saveMember);
+        }
+
         MonitoringGroup group = new MonitoringGroup();
         int newGroupNum = monitoringGroupRepository.findAllBy_idNotNullOrderByGroupNumDesc().get(0).getGroupNum()+1 ;
         group.setGroupName(name);
@@ -1657,6 +1664,28 @@ public class AjaxController {
 
     @RequestMapping(value = "/deleteGroup", method = RequestMethod.POST)
     public void deleteGroup(int key) {
-        monitoringGroupRepository.delete( monitoringGroupRepository.findByGroupNum(key) );
+
+        MonitoringGroup group = monitoringGroupRepository.findByGroupNum(key);
+        for (int i=0; i<group.getGroupMember().size(); i++){
+            Member saveMember = memberRepository.findById((String) group.getGroupMember().get(i));
+            saveMember.setMonitoringGroup("default");
+            memberRepository.save(saveMember);
+        }
+        monitoringGroupRepository.delete(group);
+    }
+
+    @RequestMapping(value = "/getMemberAndPlaceList", method = RequestMethod.POST)
+    public List getMemberAndPlaceList() {
+        List<Place> pList = placeRepository.findAll();
+        List placeName = new ArrayList();
+        for (int i=0; i<pList.size(); i++){
+            placeName.add(pList.get(i).getName());
+        }
+
+        List mpList = new ArrayList();
+        mpList.add(memberRepository.findAll());
+        mpList.add(placeName);
+
+        return mpList;
     }
 }

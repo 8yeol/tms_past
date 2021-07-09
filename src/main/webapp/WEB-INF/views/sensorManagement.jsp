@@ -402,7 +402,6 @@
         });
     }
 
-
     function updateSensor(){
 
         if(saveSensorCheck(2)) {
