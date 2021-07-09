@@ -299,9 +299,9 @@
                 <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
                 <c:forEach items="${sensorList}" var="emissions">
                     <c:if test="${emissions.place eq placelist}">
-                        <div class="row pe-3 margin-l">
-                        <div class="fw-bold" style="margin-bottom: 2px;">${emissions.sensorNaming}</div>
-                            <span class="small">업데이트 : <span class="fw-bold"><fmt:formatDate value="${emissions.updateTime}" pattern="yyyy-MM-dd"/></span></span>
+                        <div class="row pe-3 margin-l" style="justify-content: space-between">
+                        <div class="fw-bold" style="margin-bottom: 2px; width: auto;">${emissions.sensorNaming}</div>
+                            <span class="small" style="width: auto;">업데이트 : <span class="fw-bold"><fmt:formatDate value="${emissions.updateTime}" pattern="yyyy-MM-dd"/></span></span>
                         <c:forEach items="${standard}" var="standard">
                         <c:if test="${emissions.sensor eq standard.tableName}">
                             <c:if test="${standard.emissionsStandard ne '0'}"> <!--sensor = standard -->
