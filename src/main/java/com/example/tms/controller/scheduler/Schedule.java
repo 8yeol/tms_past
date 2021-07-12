@@ -94,13 +94,25 @@ public class Schedule {
         notificationMonthStatisticsRepository.save(monthData);
     }
 
+    public int[] getReferenceValueCount(String from, String to){
+        int[] arr = new int[3];
+        for(int grade=1; grade<=3; grade++) {
+            List<HashMap> list = notificationListCustomRepository.getCount(grade, from, to);
+            if (list.size() != 0) {
+                arr[grade - 1] = (int) list.get(0).get("count");
+            } else {
+                arr[grade - 1] = 0;
+            }
+        }
+        return arr;
+    }
+
     /**
      * [대시보드 - 연간 배출량 누적 모니터링]
      *
      * (알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산)
      */
-    @Scheduled(cron = "0 0 1 * * *") //매일 01시 00분에 처리
-    //@Scheduled(cron = "*/10 * * * * *") // 10초마다 테스트
+    @Scheduled(cron = "0 5 0 * * *") //매일 00시 05분에 처리
     public void saveCumulativeEmissions(){
         // 질소산화물(NOX) : Map<측정소명, 테이블명> 형식
         Map<String, String> noxList = new HashMap<>();
@@ -124,30 +136,25 @@ public class Schedule {
                 String noxTable = noxList.get(placeName);
                 String fl1Table = fl1List.get(placeName);
 
+                LocalDate nowDate = LocalDate.now();
+                LocalDate yesterday = nowDate.minusDays(1);
+
                 // 질소산화물 전일 배출량
-                double emissions = getNOXYesterdayEmissions(halfPast + noxTable, halfPast + fl1Table);
-
-                // [대시보드] 연간 배출량 추이 모니터링
-                setEmissionsTransition(noxTable, emissions);
-
-                // [대시보드] 연간 배출량 누적 모니터링
-                setAnnualEmissions(noxTable, emissions);
+                double emissions = getNOXYesterdayEmissions(yesterday, halfPast + noxTable, halfPast + fl1Table);
 
                 // [분석 및 통계 - 통계자료 조회] 월별 배출량 추이
-                setMonthlyEmissions(noxTable, emissions);
+                setMonthlyEmissions(yesterday, noxTable, emissions);
             }
         }
     }
 
-    // nox 전일 배출량 계산
-    public double getNOXYesterdayEmissions(String nox, String fl1){
-        LocalDate nowDate = LocalDate.now();
-        LocalDate yesterday = nowDate.minusDays(1);
+    // nox 전일 배출량 계산 (계산식 확인 필요)
+    public double getNOXYesterdayEmissions(LocalDate yesterday, String nox, String fl1){
         List<ChartData> noxData = (List<ChartData>) mongoQuary.getCumulativeEmissions(nox, yesterday);
         List<ChartData> fl1Data = (List<ChartData>) mongoQuary.getCumulativeEmissions(fl1, yesterday);
         double emissions = 0;
 
-        // 데이터가 올바르게 들어오는지 체크하기 위한 로직
+        // 데이터가 올바르게 들어오는지 체크하기 위한 로직 (정밀 계산시 BigDecimal 사용, 현재 일반 사칙연산으로도 연산 처리 문제 없음)
         if(noxData.size()==48 && fl1Data.size()==48){
             for(int i = 0 ; i < noxData.size(); i++){
                 emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4;
@@ -165,10 +172,8 @@ public class Schedule {
         return emissions;
     }
 
-    // [분석 및 통계 - 통계자료 조회] 월별 배출량 추이 (monthly_emissions)
-    public void setMonthlyEmissions(String table, double emissions){
-        LocalDate nowDate = LocalDate.now();
-        LocalDate yesterday = nowDate.minusDays(1);
+    // [분석 및 통계 - 통계자료 조회] 월별 배출량 추이
+    public void setMonthlyEmissions(LocalDate yesterday, String table, double emissions){
         int year = yesterday.getYear();
 
         MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
@@ -221,11 +226,20 @@ public class Schedule {
 
         monthlyEmissions.setUpdateTime(new Date());
         monthlyEmissionsRepository.save(monthlyEmissions);
+
+        // [대시보드] 연간 배출량 누적 모니터링
+        setAnnualEmissions(table);
+
+        // [대시보드] 연간 배출량 추이 모니터링
+        setEmissionsTransition(yesterday, table);
     }
 
     // 연간 배출량 누적 모니터링
-    public void setAnnualEmissions(String table, double emissions){
+    public void setAnnualEmissions(String table){
         LocalDate nowDate = LocalDate.now();
+        LocalDate yesterday = nowDate.minusDays(1);
+        int year = yesterday.getYear();
+
         AnnualEmissions annualEmissions = annualEmissionsRepository.findBySensor(table);
         String format = nowDate.format(DateTimeFormatter.ofPattern("MMdd"));
 
@@ -233,29 +247,28 @@ public class Schedule {
         if(format.equals("0101")){
             annualEmissions.setYearlyValue(0);
         }else{
-            annualEmissions.setYearlyValue(annualEmissions.getYearlyValue() + (int) emissions);
+            MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
+            double total = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar() + monthlyEmissions.getApr() + monthlyEmissions.getMay()
+                    + monthlyEmissions.getJun() + monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep() + monthlyEmissions.getOct()
+                    + monthlyEmissions.getNov() + monthlyEmissions.getDec();
+            annualEmissions.setYearlyValue((int) total);
         }
         annualEmissions.setUpdateTime(new Date());
         annualEmissionsRepository.save(annualEmissions);
     }
 
     // 연간 배출량 추이 모니터링
-    public void setEmissionsTransition(String table, double emissions){
-        LocalDate nowDate = LocalDate.now();
-        LocalDate yesterday = nowDate.minusDays(1);
-        int quarter = (int) Math.ceil( yesterday.getMonthValue() / 3.0 );
-
+    public void setEmissionsTransition(LocalDate yesterday, String table){
         int year = yesterday.getYear();
         EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(table, year);
 
-        // 1월 1일의 경우 년도가 바뀌었기때문에 전년도 측정소명, 센서명 불러와서 당해년도로 초기세팅
         if(emissionsTransition==null){
-            emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(table, year-1);
+            SensorList sensorList = sensorListRepository.findByTableName(table);
 
             EmissionsTransition newEmissionsTransition = new EmissionsTransition();
             newEmissionsTransition.setTableName(table);
-            newEmissionsTransition.setPlaceName(emissionsTransition.getPlaceName());
-            newEmissionsTransition.setSensorName(emissionsTransition.getSensorName());
+            newEmissionsTransition.setPlaceName(sensorList.getPlace());
+            newEmissionsTransition.setSensorName(sensorList.getNaming());
             newEmissionsTransition.setYear(year);
             newEmissionsTransition.setFirstQuarter(0);
             newEmissionsTransition.setSecondQuarter(0);
@@ -268,26 +281,34 @@ public class Schedule {
             emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(table, year);
         }
 
-        int firstQuarter = emissionsTransition.getFirstQuarter();
-        int secondQuarter = emissionsTransition.getSecondQuarter();
-        int thirdQuarter = emissionsTransition.getThirdQuarter();
-        int fourthQuarter = emissionsTransition.getFourthQuarter();
+        int quarter = (int) Math.ceil( yesterday.getMonthValue() / 3.0 );
 
+        MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
+        double emissions = 0;
         switch(quarter) {
             case 1:
-                emissionsTransition.setFirstQuarter(firstQuarter + (int) emissions);
+                double firstQuarter = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar();
+                emissionsTransition.setFirstQuarter((int) firstQuarter);
+                emissions = firstQuarter;
                 break;
             case 2:
-                emissionsTransition.setSecondQuarter(secondQuarter + (int) emissions);
+                double secondQuarter = monthlyEmissions.getApr() + monthlyEmissions.getMay() + monthlyEmissions.getJun();
+                emissionsTransition.setSecondQuarter((int) secondQuarter);
+                emissions = secondQuarter;
                 break;
             case 3:
-                emissionsTransition.setThirdQuarter(thirdQuarter + (int) emissions);
+                double thirdQuarter = monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep();
+                emissionsTransition.setThirdQuarter((int) thirdQuarter);
+                emissions = thirdQuarter;
                 break;
             case 4:
-                emissionsTransition.setFourthQuarter(fourthQuarter + (int) emissions);
+                double fourthQuarter = monthlyEmissions.getOct() + monthlyEmissions.getNov() + monthlyEmissions.getDec();
+                emissionsTransition.setFourthQuarter((int) fourthQuarter);
+                emissions = fourthQuarter;
                 break;
         }
-        int totalEmissions = (int) (emissionsTransition.getTotalEmissions() + emissions);
+
+        int totalEmissions = emissionsTransition.getTotalEmissions() + (int) emissions;
 
         emissionsTransition.setTotalEmissions(totalEmissions);
         emissionsTransition.setUpdateTime(new Date());
@@ -295,16 +316,4 @@ public class Schedule {
         emissionsTransitionRepository.save(emissionsTransition);
     }
 
-   public int[] getReferenceValueCount(String from, String to){
-        int[] arr = new int[3];
-        for(int grade=1; grade<=3; grade++) {
-            List<HashMap> list = notificationListCustomRepository.getCount(grade, from, to);
-            if (list.size() != 0) {
-                arr[grade - 1] = (int) list.get(0).get("count");
-            } else {
-                arr[grade - 1] = 0;
-            }
-        }
-        return arr;
-    }
 }

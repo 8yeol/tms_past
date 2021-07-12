@@ -172,7 +172,7 @@
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
                                             <c:choose>
-                                                <c:when test="${past.totalEmissions == 0 and present.totalEmissions == 0}">0</c:when>
+                                                <c:when test="${past.totalEmissions == 0 and present.totalEmissions == 0}">0%</c:when>
                                                 <c:when test="${past.totalEmissions == 0}">
                                                     <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/>%
                                                 </c:when>
