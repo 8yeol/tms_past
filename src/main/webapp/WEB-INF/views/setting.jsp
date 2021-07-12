@@ -244,6 +244,11 @@
         font-size: 1.4rem;
         margin:0px 0px 0px 10px;
     }
+    #nonCheckLabel{
+        font-size: 1.4rem;
+        margin:0px 0px 0px 10px;
+        color: #777777;
+    }
     #checkLabel:hover {
         cursor: pointer;
         color: #0d6efd;
@@ -414,7 +419,9 @@
                                 <td class="groupPlace">${groupList.monitoringPlace}</td>
                                 <td><i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal"
                                        onclick="groupEditSetting(this, ${groupList.groupNum})"></i>&ensp;
-                                    <i class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
+                                    <c:if test="${groupList.groupName != 'ALL'}">
+                                        <i class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
+                                    </c:if>
                                 </td>
                             </tr>
                         </c:if>
@@ -1012,10 +1019,10 @@
     $.fn.moveToListAndDelete = function (from, to) {
         let opts = $(from + ' option:selected');
         if (opts.length == 0) return;
-        MultiSelecterModal(opts, from);                       //Modal Event
 
         $(opts).remove();
         $(to).append($(opts).clone());
+        MultiSelecterModal(opts, from);                       //Modal Event
     };
 
     function saveGroup(flag, groupNum) {
@@ -1086,9 +1093,32 @@
             Modal.html(opts.text() + length1);
         } else if (opts.length > 1) {
             Modal.html(opts.eq(0).text() + lengthLong);
+        } else{
+            Modal.html(lengthLong);
         }
         Modal.finish().fadeIn(300).delay(2000).fadeOut(300);
+
     }
+
+    // function adminGroupCheck(){
+    //     let currentMember = $('#lstBox4 option');
+    //     for (i=0; i<currentMember.length; i++){
+    //         if($(currentMember[i]).attr('id') == 1) {
+    //             $('#allPlaceCheck').prop('checked', true);
+    //             $('#allPlaceCheck').prop('disabled', true);
+    //             $('#checkLabel').attr('id', 'nonCheckLabel');
+    //             optionDisabled(true);
+    //             $('#monitoringSignModal').html('최고 관리자가 포함된 그룹은<br> 모든 측정소를 모니터링 합니다.');
+    //             $('#monitoringSignModal').finish().fadeIn(300).delay(5000).fadeOut(300);
+    //             return;
+    //         }
+    //     }
+    //     $('#allPlaceCheck').prop('checked', false);
+    //     $('#allPlaceCheck').prop('disabled', false);
+    //     $('#nonCheckLabel').attr('id', 'checkLabel');
+    //     optionDisabled(false);
+    //     return;
+    // }
 
     //그룹회원, 측정소 배열 양끝에 대괄호 없애기
     //한개씩 꺼내서 문자열 만드는것보다 더 빠르고 편해 보임.
@@ -1104,6 +1134,7 @@
         }
     }
 
+    //삭제 모달
     function deleteModal(obj, indexKey) {
         const name = $(obj).parent().parent().children().eq(0).html(); //-> tmsWP0001_NOX_01
         const key = indexKey;
@@ -1122,6 +1153,7 @@
         });
     }
 
+    //그룹Key로 그룹삭제
     function deleteGroup(key) {
         $.ajax({
             url: '<%=cp%>/deleteGroup',
@@ -1130,7 +1162,7 @@
             cache: false,
             data: {key: key},
             success: function () {
-                warning('삭제 되었습니다.');
+                success('삭제 되었습니다.');
                 setTimeout(() => {
                     location.reload()
                 }, 1500);
@@ -1141,6 +1173,7 @@
         });
     }
 
+    //그룹 수정시 모달 셋팅
     function groupEditSetting(obj, groupNum) {
         let groupMemList = $(obj).parent().parent().children().eq(1).text().split(',');
         let groupPlaList = $(obj).parent().parent().children().eq(2).text().split(',');
@@ -1149,11 +1182,11 @@
         $('#groupInput').val(groupName);
         $('.allPlaceCheck').css('display', 'none');
         $('#allPlaceCheck').prop("checked", false);
-        optionDisabled(false);
         $('.selectBox').empty();
         $('.groupModalTitle').text('그룹 수정');
         $('#saveBtn').text('수정');
         $('#saveBtn').attr('onclick', 'saveGroup("edit")');
+        optionDisabled(false);
 
         if(groupMemList[0] !="") {
             let innerHTML;
@@ -1173,14 +1206,6 @@
             $('#lstBox2').append(innerHTML2);
         }
 
-        let memInnerHTML;
-        for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "default") {
-                memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
-            }
-        }
-        $('#lstBox3').append(memInnerHTML);
-
         let plaInnerHTML;
         for (i = 0; i < placeList.length; i++) {
             if (groupPlaList.includes(placeList[i]) == false) {
@@ -1188,9 +1213,28 @@
             }
         }
         $('#lstBox1').append(plaInnerHTML);
+
+
+        let memInnerHTML;
+
+        for (i = 0; i < memberList.length; i++) {
+            if (memberList[i].monitoringGroup == "default" && groupNum != 0 && memberList[i].state <=3 && memberList[i].state != 1) {
+                memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
+            }
+            if (memberList[i].monitoringGroup == "default" && groupNum == 0 && memberList[i].state == 1) {
+                memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
+            }
+        }
+        $('#lstBox3').append(memInnerHTML);
+
+        if(groupNum == 0){
+            optionDisabled(true);
+        }
+
         $('#saveBtn').attr('onclick', 'saveGroup("edit", ' + groupNum + ')');
     }
 
+    //그룹 추가시 모달 셋팅
     function insertSetting() {
         $('.groupModalTitle').text('그룹 생성');
         $('#groupInput').val('');
@@ -1205,8 +1249,8 @@
         let plaInnerHTML;
 
         for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "default") {
-                memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
+            if (memberList[i].monitoringGroup == "default" && memberList[i].state != 1 && memberList[i].state <=3) {
+                memInnerHTML += '<option value="' + memberList[i].id +'">' + memberList[i].id + '</option>';
             }
         }
         $('#lstBox3').append(memInnerHTML);
@@ -1217,6 +1261,7 @@
         $('#lstBox1').append(plaInnerHTML);
     }
 
+    //그룹관리에 필요한 멤버리스트, 측정소 리스트
     function getMemberAndPlaceList() {
         $.ajax({
             url: '<%=cp%>/getMemberAndPlaceList',
@@ -1233,6 +1278,7 @@
         });
     }
 
+    //회원관리, 그룹관리 탭 이벤트
     function tabClick(obj, divId) {
         $('.tab li').attr('class', '');
         $(obj).attr('class', 'on');
@@ -1241,6 +1287,7 @@
         $('#' + divId).css('display', 'block');
     }
 
+    //그룹추가에서 체크박스로 측정소영역 비활성화, 활성화
     function allPlaceCheck(){
         $("#allPlaceCheck").on({click: function() {
                if($(this).is(":checked") == true){
@@ -1252,6 +1299,7 @@
         });
     }
 
+    //그룹 추가,수정 모달에서 측정소 영역 비활성화
     function optionDisabled(flag){
         if(flag == true){
             $('.allCheckEvent label').css('color','#999');
