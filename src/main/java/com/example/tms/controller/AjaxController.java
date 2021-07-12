@@ -382,7 +382,7 @@ public class AjaxController {
             long diff = sensor.getUp_time().getTime() - now.getTime();
             long sec = diff / 60000;
 
-            if(sec > 0 && sec <= 5){
+            if(sec >= 0 && sec < 5){
                 float value = sensor.getValue();
                 SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());;
                 JSONObject jsonObject = new JSONObject();
