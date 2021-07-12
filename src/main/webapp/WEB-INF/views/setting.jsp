@@ -154,7 +154,7 @@
         display: none;
     }
     #monitoringSignModal{
-        top: 0%;
+        top: -7%;
     }
 
     .multiSelectBtn input[type=button] {
@@ -548,8 +548,8 @@
                         <div class="emissionsSpan">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 페이지에서 모니터링 가능합니다.</div>
                     </div>
 
-                    <div class="multiSelectParent">
-                        <h3 class="fs-5 fw-bold groupSubTitle">모니터링 측정소</h3>
+                        <h3 class="fs-5 fw-bold groupSubTitle" style="padding-left: 20px;">모니터링 측정소</h3>
+                    <div class="multiSelectParent" id="placeSelect">
                         <input type="checkbox" id="allPlaceCheck" class="allPlaceCheck">
                         <label for="allPlaceCheck" id="checkLabel"  class="allPlaceCheck"> 전체 측정소 모니터링</label>
                         <span class="allPlaceCheckSpan allPlaceCheck" style="display: block;font-size: 0.9rem;color:#db3535;font-weight: bold;margin-bottom: 10px;">
@@ -579,7 +579,7 @@
                         <div class="clearfix"></div>
                         <!-- MultiSelecter Modal-->
                         <div class="MultiSelecterModal" id="monitoringSignModal"></div>
-                        <div class="emissionsSpan">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 페이지에서 모니터링 가능합니다.</div>
+                        <div class="emissionsSpan allCheckEvent">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 페이지에서 모니터링 가능합니다.</div>
                     </div>
 
                 </div>
@@ -1039,8 +1039,8 @@
             mList.push(member.eq(i).val());
 
         let pList
-        if($('#allPlaceCheck').is(':checked') == true){
-            pList = placeList;
+        if($('#allPlaceCheck').is(':checked') == true || $('.allCheckEvent').css('display') == 'none'){
+            pList = ["ALL"];
         }else{
             let place = $('#lstBox2 option');
             pList = new Array();
@@ -1098,27 +1098,28 @@
         }
         Modal.finish().fadeIn(300).delay(2000).fadeOut(300);
 
+        adminGroupCheck();
     }
 
-    // function adminGroupCheck(){
-    //     let currentMember = $('#lstBox4 option');
-    //     for (i=0; i<currentMember.length; i++){
-    //         if($(currentMember[i]).attr('id') == 1) {
-    //             $('#allPlaceCheck').prop('checked', true);
-    //             $('#allPlaceCheck').prop('disabled', true);
-    //             $('#checkLabel').attr('id', 'nonCheckLabel');
-    //             optionDisabled(true);
-    //             $('#monitoringSignModal').html('최고 관리자가 포함된 그룹은<br> 모든 측정소를 모니터링 합니다.');
-    //             $('#monitoringSignModal').finish().fadeIn(300).delay(5000).fadeOut(300);
-    //             return;
-    //         }
-    //     }
-    //     $('#allPlaceCheck').prop('checked', false);
-    //     $('#allPlaceCheck').prop('disabled', false);
-    //     $('#nonCheckLabel').attr('id', 'checkLabel');
-    //     optionDisabled(false);
-    //     return;
-    // }
+    function adminGroupCheck(){
+        let currentMember = $('#lstBox4 option');
+        for (i=0; i<currentMember.length; i++){
+            if($(currentMember[i]).attr('id') == 1) {
+                $('#allPlaceCheck').prop('checked', true);
+                $('#allPlaceCheck').prop('disabled', true);
+                $('#checkLabel').attr('id', 'nonCheckLabel');
+                optionDisabled(true);
+                $('#monitoringSignModal').html('최고 관리자가 포함된 그룹은<br> 모든 측정소를 모니터링 합니다.');
+                $('#monitoringSignModal').finish().fadeIn(300).delay(5000).fadeOut(300);
+                return;
+            }
+        }
+        $('#allPlaceCheck').prop('checked', false);
+        $('#allPlaceCheck').prop('disabled', false);
+        $('#nonCheckLabel').attr('id', 'checkLabel');
+        optionDisabled(false);
+        return;
+    }
 
     //그룹회원, 측정소 배열 양끝에 대괄호 없애기
     //한개씩 꺼내서 문자열 만드는것보다 더 빠르고 편해 보임.
@@ -1180,6 +1181,8 @@
         let groupName = $(obj).parent().parent().children().eq(0).text();
 
         $('#groupInput').val(groupName);
+        $('#placeSelect .allCheckEvent').css('display', 'block');
+        $('#monitoringSignModal').css('top', '-7%');
         $('.allPlaceCheck').css('display', 'none');
         $('#allPlaceCheck').prop("checked", false);
         $('.selectBox').empty();
@@ -1198,7 +1201,15 @@
             $('#lstBox4').append(innerHTML);
         }
 
-        if(groupPlaList[0] !="") {
+
+        if(groupPlaList == "ALL") {
+            $('#placeSelect .allCheckEvent').css('display', 'none');
+            $('#monitoringSignModal').css('top', '40%');
+            optionDisabled(true);
+            $('#monitoringSignModal').html('모든 측정소를 모니터링 합니다.');
+            $('#monitoringSignModal').finish().fadeIn(300)
+
+        }else if(groupPlaList[0] !="") {
             let innerHTML2;
             for (i = 0; i < groupPlaList.length; i++) {
                 groupPlaList[i] = groupPlaList[i].trim();
@@ -1207,38 +1218,34 @@
             $('#lstBox2').append(innerHTML2);
         }
 
-        let plaInnerHTML;
-        for (i = 0; i < placeList.length; i++) {
-            if (groupPlaList.includes(placeList[i]) == false) {
-                plaInnerHTML += '<option value="' + placeList[i] + '">' + placeList[i] + '</option>';
+            let plaInnerHTML;
+            for (i = 0; i < placeList.length; i++) {
+                if (groupPlaList.includes(placeList[i]) == false) {
+                    plaInnerHTML += '<option value="' + placeList[i] + '">' + placeList[i] + '</option>';
+                }
             }
-        }
-        $('#lstBox1').append(plaInnerHTML);
+            $('#lstBox1').append(plaInnerHTML);
 
 
         let memInnerHTML;
-
         for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "default" && groupNum != 0 && memberList[i].state <=3 && memberList[i].state != 1) {
+            if (memberList[i].monitoringGroup == "default" && groupPlaList != 'ALL' && memberList[i].state <=3 && memberList[i].state != 1) {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
-            if (memberList[i].monitoringGroup == "default" && groupNum == 0 && memberList[i].state <= 3) {
+            if (memberList[i].monitoringGroup == "default" && groupPlaList == 'ALL' && memberList[i].state <= 3) {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
         }
         $('#lstBox3').append(memInnerHTML);
-
-        if(groupNum == 0){
-            optionDisabled(true);
-            $('#monitoringSignModal').html('ALL 그룹은<br> 모든 측정소를 모니터링 합니다.');
-            $('#monitoringSignModal').finish().fadeIn(300)
-        }
 
         $('#saveBtn').attr('onclick', 'saveGroup("edit", ' + groupNum + ')');
     }
 
     //그룹 추가시 모달 셋팅
     function insertSetting() {
+
+        $('#placeSelect .allCheckEvent').css('display', 'block');
+        $('#monitoringSignModal').css('top', '-7%');
         $('.groupModalTitle').text('그룹 생성');
         $('#groupInput').val('');
         $('#saveBtn').text('생성');
@@ -1253,8 +1260,8 @@
         let plaInnerHTML;
 
         for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "default" && memberList[i].state != 1 && memberList[i].state <=3) {
-                memInnerHTML += '<option value="' + memberList[i].id +'">' + memberList[i].id + '</option>';
+            if (memberList[i].monitoringGroup == "default" && memberList[i].state <=3) {
+                memInnerHTML += '<option value="' + memberList[i].id +'" id="' + memberList[i].state + '">' + memberList[i].id + '</option>';
             }
         }
         $('#lstBox3').append(memInnerHTML);

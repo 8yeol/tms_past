@@ -441,16 +441,6 @@ public class AjaxController {
             inputLogSetting("측정소 추가 > " + "'"+name+"'","설정",principal);
             placeRepository.save(newplace);
 
-            //최고 관리자 그룹에 자동으로 추가
-            MonitoringGroup group = monitoringGroupRepository.findByGroupNum(0);
-            if(group != null) {
-                List placeList = group.getMonitoringPlace();
-                placeList.add(name);
-                group.setMonitoringPlace(placeList);
-                monitoringGroupRepository.save(group);
-                inputLogSetting("'" + name + "' 측정소 최고 관리자 그룹에 자동 설정", "설정", principal);
-            }
-
         } else { //수정
             Place place = placeRepository.findByName(hiddenCode); //기존 측정소 정보 불러오기
             place.setName(name);
@@ -496,18 +486,18 @@ public class AjaxController {
             }
             inputLogSetting("'"+hiddenCode+"' > '"+name+"' 측정소명 수정","설정",principal);
 
-            MonitoringGroup group = monitoringGroupRepository.findByGroupNum(0);
+            List<MonitoringGroup> group = monitoringGroupRepository.findByMonitoringPlaceIsIn(hiddenCode);
             if(group != null) {
-                List placeList = group.getMonitoringPlace();
-                for (int i = 0; i < placeList.size(); i++) {
-                    if (placeList.get(i).equals(hiddenCode)) {
-                        placeList.set(i, name);
-                    }
+                for (int i=0; i<group.size(); i++){
+                    List<String> groupPlaceList = group.get(i).getMonitoringPlace();
+                    int index = groupPlaceList.indexOf(hiddenCode);
+                    groupPlaceList.set(index, name);
+                    group.get(i).setMonitoringPlace(groupPlaceList);
+                    monitoringGroupRepository.save(group.get(i));
                 }
-                group.setMonitoringPlace(placeList);
-                monitoringGroupRepository.save(group);
                 inputLogSetting("'" + hiddenCode + "' > '" + name + "' 최고 관리자 그룹의 모니터링 측정소 수정", "설정", principal);
             }
+
         }
     }
 
@@ -531,8 +521,8 @@ public class AjaxController {
 
             for (int k = 0; k<group.size(); k++){
                 List<String> groupPlaceList = group.get(k).getMonitoringPlace();
-                int placeIndex = groupPlaceList.indexOf(placeList.get(i));
-                groupPlaceList.remove(placeIndex);
+                int index = groupPlaceList.indexOf(placeList.get(i));
+                groupPlaceList.remove(index);
                 group.get(k).setMonitoringPlace(groupPlaceList);
                 monitoringGroupRepository.save(group.get(k));
             }
@@ -1605,6 +1595,27 @@ public class AjaxController {
     @RequestMapping(value = "/gaveRank", method = RequestMethod.POST)
     public String gaveRank(String id, String value) {
         Member newMember = memberRepository.findById(id);
+
+        //회원 등급 변동에 따른 그룹 수정
+        //최고관리자를 변경하고, 해당 멤버가 default그룹이 아닐떄 default로 변경
+        MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
+        if (value.equals("1") && group.getGroupNum() != 0) {
+            newMember.setMonitoringGroup("ALL");
+            List memberList = group.getGroupMember();
+            for (int i=0; i<memberList.size(); i++){
+                if(memberList.get(i).equals(id))
+                    memberList.remove(i);
+            }
+            group.setGroupMember(memberList);
+            monitoringGroupRepository.save(group);
+
+            MonitoringGroup allGroup = monitoringGroupRepository.findByGroupNum(0);
+            List allGroupMember = allGroup.getGroupMember();
+            allGroupMember.add(id);
+            allGroup.setGroupMember(allGroupMember);
+            monitoringGroupRepository.save(allGroup);
+        }
+
         newMember.setState(value);
         memberRepository.save(newMember);
         return newMember.getName()+" 회원의 권한이 변경되었습니다.";
@@ -1792,7 +1803,7 @@ public class AjaxController {
         //수정할 그룹의 멤버 모두 default로 초기화
         }else if(flag.equals("edit")){
             group = monitoringGroupRepository.findByGroupNum(groupNum);
-            if(group.getGroupMember().size() != 0) {
+            if(group.getGroupMember() != null) {
                 for (int i = 0; i < group.getGroupMember().size(); i++) {
                     Member defaultMember = memberRepository.findById((String) group.getGroupMember().get(i));
                     defaultMember.setMonitoringGroup("default");
