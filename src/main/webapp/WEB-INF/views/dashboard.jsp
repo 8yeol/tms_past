@@ -109,8 +109,11 @@
     </div>
 
     <div class="row m-3 mt-3 bg-white ms-1" style="width: 98%; height: 370px; overflow: auto;">
-        <div class="row p-3 margin-l">
-            <div class="col fs-5 fw-bold">연간 배출량 추이 모니터링</div>
+        <div class="row margin-l" style="padding: 1rem 1rem 0">
+            <div class="col fs-5 fw-bold">
+                연간 배출량 추이 모니터링 <br>
+                <span style="color: red; font-size: 0.8rem; font-weight: normal;">* 참고용 데이터로 실제 배출량과 상이할 수 있습니다.</span>
+            </div>
             <div class="col text-end">
                 <c:choose>
                     <c:when test="${not empty emissionSettingList}">
@@ -263,7 +266,7 @@
     </div>
 
     <div class="row mt-4 bg-light margin-l pb-4" style="width: 98%; margin: 0.2rem; height: 390px; overflow: auto;">
-        <div class="row p-3 margin-l">
+        <div class="row margin-l" style="padding: 1rem 1rem 0">
             <div class="col fs-5 fw-bold">
                 연간 배출량 누적 모니터링 <br>
                 <span style="color: red; font-size: 0.8rem; font-weight: normal;">* 참고용 데이터로 실제 배출량과 상이할 수 있습니다.</span>
@@ -284,12 +287,12 @@
                 <c:if test="${placeList.size() > 3}">
                     <div class="col-md-4 pt-1" id="div${i.index}" style="width: 33%;float: left;">
                 </c:if>
-                <p class="mb-3 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
+                <p class="mb-2 fw-bold" style="margin-left: 10px; font-size: 1.2rem;">${placelist}</p>
                 <c:forEach items="${sensorList}" var="emissions">
                     <c:if test="${emissions.place eq placelist}">
                         <div class="row pe-3 margin-l" style="justify-content: space-between">
-                        <div class="fw-bold" style="margin-bottom: 2px; width: 50%;">${emissions.sensorNaming}</div>
-                            <span class="small" style="width: 50%; text-align: right">업데이트 : <span class="fw-bold"><fmt:formatDate value="${emissions.updateTime}" pattern="yyyy-MM-dd"/></span></span>
+                        <div class="fw-bold" style="margin-bottom: 2px; width: 50%; margin-top: 5px">${emissions.sensorNaming}</div>
+                            <span class="small" style="width: 50%; text-align: right; margin-top: 5px">업데이트 : <span class="fw-bold"><fmt:formatDate value="${emissions.updateTime}" pattern="yyyy-MM-dd"/></span></span>
                         <c:forEach items="${standard}" var="standard">
                         <c:if test="${emissions.sensor eq standard.tableName}">
                             <c:if test="${standard.emissionsStandard ne '0'}"> <!--sensor = standard -->
@@ -322,7 +325,7 @@
                                 </div>
                             </c:if>
                             <c:if test="${standard.emissionsStandard eq '0' and (member.state == '1' || member.state == '2')}">
-                                <div class="pb-4 text-center">
+                                <div class="pb-4 text-center rounded" style="padding-top: 20px; background-color: #e5e5e5; margin-top: 5px">
                                     연간 배출 허용 기준 미등록 &nbsp;<br>
                                     <a onclick="standardModal(this)" class="small aTag_cursor" id="${standard.tableName}">등록하기</a>
                                 </div>
@@ -365,7 +368,7 @@
     </div>
 
 <div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: 340px; overflow: auto;">
-        <div class="row p-3 pb-0 margin-l">
+        <div class="row pb-0 margin-l"  style="padding: 1rem 1rem 0">
             <div class="col fs-5 fw-bold">
                 관리등급 초과 모니터링
             </div>
