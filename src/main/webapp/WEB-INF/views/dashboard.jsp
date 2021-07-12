@@ -114,7 +114,7 @@
             <div class="col text-end">
                 <c:choose>
                     <c:when test="${not empty emissionSettingList}">
-                        <span class="text-primary" style="font-size: 0.8rem"> * 매월 1일 전월데이터 기준으로 업데이트 됩니다.</span>
+                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 자정 전일데이터 기준으로 업데이트 됩니다.</span>
                     </c:when>
                 </c:choose>
             </div>
@@ -127,6 +127,14 @@
                         측정소 통합 모니터링 설정된 센서가 없습니다. <br>
                         <b>[환경설정 - 배출량 관리] > 배출량 추이 모니터링 대상 설정 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
                         <a href="<%=cp%>/emissionsManagement">모니터링 대상 설정</a>
+                    </div>
+                </div>
+            </c:when>
+            <c:when test="${fn:length(emissionList) > 0}">
+                <div class="row pb-3 margin-l" style="height: 230px">
+                    <div class="col align-self-center text-center" style="font-size: 1.2rem">
+                        업데이트 된 데이터가 없습니다. <br>
+                        <b>연간 배출량 추이 모니터링은 매일 자정 업데이트됩니다.</b>
                     </div>
                 </div>
             </c:when>
@@ -310,7 +318,7 @@
             <div class="col text-end">
                 <c:choose>
                     <c:when test="${not empty placeList}">
-                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 01시 전일데이터 기준으로 업데이트 됩니다.</span>
+                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 자정 전일데이터 기준으로 업데이트 됩니다.</span>
                     </c:when>
                 </c:choose>
             </div>
