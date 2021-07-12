@@ -1836,6 +1836,8 @@ public class AjaxController {
                     List defaultGroupMember = defaultGroup.getGroupMember();
                     defaultGroupMember.add(group.getGroupMember().get(i));
                 }
+                group.setGroupMember(null);
+                monitoringGroupRepository.save(group);
                 monitoringGroupRepository.save(defaultGroup);
             }
         }
@@ -1847,12 +1849,11 @@ public class AjaxController {
                 MonitoringGroup prevGroup = monitoringGroupRepository.findByGroupMemberIsIn(memList.get(i));
                 if(prevGroup != null) {
                     for (int k = 0; k < prevGroup.getGroupMember().size(); k++) {
-                        if (prevGroup.getGroupMember().get(k).equals(memList.get(i))) {
-                            prevGroup.getGroupMember().remove(k);
+                            List prevGroupMember =  prevGroup.getGroupMember();
+                            prevGroupMember.remove(memList.get(i));
+                            prevGroup.setGroupMember(prevGroupMember);
                             monitoringGroupRepository.save(prevGroup);
-                        }
                     }
-
                     Member saveMember = memberRepository.findById(memList.get(i));
                     saveMember.setMonitoringGroup(name);
                     memberRepository.save(saveMember);
