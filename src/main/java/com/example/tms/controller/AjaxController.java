@@ -1848,16 +1848,14 @@ public class AjaxController {
                 //이전그룹에서 멤버 삭제
                 MonitoringGroup prevGroup = monitoringGroupRepository.findByGroupMemberIsIn(memList.get(i));
                 if(prevGroup != null) {
-                    for (int k = 0; k < prevGroup.getGroupMember().size(); k++) {
-                            List prevGroupMember =  prevGroup.getGroupMember();
-                            prevGroupMember.remove(memList.get(i));
-                            prevGroup.setGroupMember(prevGroupMember);
-                            monitoringGroupRepository.save(prevGroup);
-                    }
+                    List prevGroupMember =  prevGroup.getGroupMember();
+                    prevGroupMember.remove(memList.get(i));
+                    prevGroup.setGroupMember(prevGroupMember);
+                    monitoringGroupRepository.save(prevGroup);
+                }
                     Member saveMember = memberRepository.findById(memList.get(i));
                     saveMember.setMonitoringGroup(name);
                     memberRepository.save(saveMember);
-                }
             }
              group.setGroupMember(memList);
         }else{
