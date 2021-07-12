@@ -39,7 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/alarm").access("@authChecker.check(authentication , 'alarm')")
                 .antMatchers("/monitoring","/sensor").access("@authChecker.check(authentication , 'monitoring')")
                 .antMatchers("/dataInquiry","/dataStatistics").access("@authChecker.check(authentication , 'statistics')")
-                .antMatchers("/alarmManagement","/stationManagement","/sensorManagement","/emissionsManagement","/setting","/log").access("@authChecker.check(authentication , 'setting')");
+                .antMatchers("/alarmManagement","/stationManagement","/emissionsManagement","/setting","/log").access("@authChecker.check(authentication , 'setting')")
+                .antMatchers("/sensorManagement").access("@authChecker.check(authentication, 'sensorManagement')");
         http.formLogin().loginPage("/login").permitAll();
         http.logout().logoutSuccessUrl("/login");
         http.csrf().disable();

@@ -1618,7 +1618,7 @@ public class AjaxController {
     public String gaveRank(String id, String value) {
         Member newMember = memberRepository.findById(id);
         //회원 등급 변동에 따른 그룹 수정
-        //최고관리자를 변경하고, 해당 멤버가 default그룹이 아닐떄 default로 변경
+        //최고관리자를 변경하고, 해당 멤버가 ALL그룹이 아닐떄 ALL로 변경
         MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
         if (value.equals("1") && group.getGroupNum() != 0) {
             List memberList = group.getGroupMember();
@@ -1810,6 +1810,7 @@ public class AjaxController {
                             @RequestParam(value = "groupNum",required = false)int groupNum) {
         MonitoringGroup group = null;
         MonitoringGroup defaultGroup = null;
+        int newGroupNum;
 
         //중복 이름 리턴 fail
         if(monitoringGroupRepository.findByGroupName(name) != null &&
@@ -1820,7 +1821,11 @@ public class AjaxController {
         //그룹 Num +1하여 생성
         if(flag.equals("insert")) {
             group = new MonitoringGroup();
-            int newGroupNum = monitoringGroupRepository.findAllBy_idNotNullOrderByGroupNumDesc().get(0).getGroupNum() + 1;
+            if(monitoringGroupRepository.findAllBy_idNotNullOrderByGroupNumDesc() != null) {
+                newGroupNum = monitoringGroupRepository.findAllBy_idNotNullOrderByGroupNumDesc().get(0).getGroupNum() + 1;
+            }else{
+                newGroupNum = 0;
+            }
             group.setGroupNum(newGroupNum);
 
         //수정할 그룹의 멤버 모두 default로 초기화

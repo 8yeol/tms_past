@@ -16,4 +16,6 @@ public class RankManagement {
     private boolean monitoring;
     private boolean statistics;
     private boolean setting;
+    private boolean sensorManagement;
+
 }
