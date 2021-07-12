@@ -518,6 +518,8 @@
                 const arr = data.excess;
 
                 if(arr != undefined){
+                    $("#excess_update").text(moment(arr[0].up_time).format('YYYY-MM-DD HH:mm:ss'));
+
                     for(let i=0; i<arr.length; i++){
                         const excess = arr[i].classification;
                         const place = arr[i].place;
@@ -534,14 +536,15 @@
                             $("#normal").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
                         }
                     }
+                } else{
+                    $("#excess_update").text("최근 업데이트 된 데이터가 없습니다.");
                 }
+
             },
             error: function (request, status, error) {
                 console.log(error)
             }
         });
-
-        $("#excess_update").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
     }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

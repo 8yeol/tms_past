@@ -378,12 +378,11 @@ public class AjaxController {
 
         for(ReferenceValueSetting referenceValueSetting : monitoringOn){
             Sensor sensor = sensorCustomRepository.getSensorRecent(referenceValueSetting.getName());
-
             Date now = new Date();
             long diff = sensor.getUp_time().getTime() - now.getTime();
             long sec = diff / 60000;
 
-            if(sec <= 5){
+            if(sec > 0 && sec <= 5){
                 float value = sensor.getValue();
                 SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());;
                 JSONObject jsonObject = new JSONObject();
@@ -401,6 +400,7 @@ public class AjaxController {
                 jsonObject.put("place", sensorInfo.getPlace());
                 jsonObject.put("naming", sensorInfo.getNaming());
                 jsonObject.put("value", String.format("%.2f", value));
+                jsonObject.put("up_time", sensorInfo.getUpTime());
                 jsonArray.add(jsonObject);
                 excess.put("excess", jsonArray);
             }
