@@ -313,7 +313,7 @@
                         <th style="padding:10px 0px 10px 0px;">연락처</th>
                         <th style="padding:10px 0px 10px 0px;">부서명</th>
                         <th style="padding:10px 0px 10px 0px;">모니터링 그룹</th>
-                        <th style="padding:10px 0px 10px 0px;">최종 <a class="sign"></a>로그인</th>
+                        <th style="padding:10px 0px 10px 0px;">가입일</th>
                         <th style="padding:10px 0px 10px 0px;">관리</th>
                     </tr>
                     </thead>
@@ -334,27 +334,45 @@
                                     <td>가입대기</td>
                                 </c:when>
                                 <c:when test="${mList.state eq '3'}">
-                                    <td>일반</td>
+                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_state(this)">
+                                        <option value='${mList.state}'
+                                                selected="selected">일반</option>
+                                    </select></td>
                                 </c:when>
                                 <c:when test="${mList.state eq '2'}">
-                                    <td>관리자</td>
+                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_state(this)">
+                                        <option value='${mList.state}'
+                                                selected="selected">관리자</option>
+                                    </select></td>
                                 </c:when>
                                 <c:when test="${mList.state eq '1'}">
-                                    <td>최고 관리자</td>
+                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_state(this)">
+                                        <option value='${mList.state}'
+                                                selected="selected">최고 관리자</option>
+                                    </select></td>
                                 </c:when>
                             </c:choose>
                             <td>${mList.email}</td>
                             <td>${mList.tel}</td>
                             <td>${mList.department}</td>
                             <td onclick="event.cancelBubble=true">
+                            <c:choose>
+                                <c:when test="${mList.state == 1}">
+                                <select id='monitoringGroup${mList.id}' disabled="disabled" onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
+                                    <option value='${mList.monitoringGroup}'
+                                            selected="selected">${mList.monitoringGroup}</option>
+                                </select></td>
+                                </c:when>
+                                <c:otherwise>
                                 <select id='monitoringGroup${mList.id}' onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
                                     <option value='${mList.monitoringGroup}'
                                             selected="selected">${mList.monitoringGroup}</option>
                                 </select></td>
-
+                                </c:otherwise>
+                            </c:choose>
                             <c:choose>
-                                <c:when test="${mList.lastLogin != null}">
-                                    <td><fmt:formatDate value="${mList.lastLogin}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
+                                <c:when test="${mList.joined != null}">
+                                    <td><fmt:formatDate value="${mList.joined}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
                                 </c:when>
                                 <c:otherwise>
                                     <td></td>
@@ -609,7 +627,7 @@
                 <select name="rank" id="rank" class="btn btn-light">
                     <option value="3">일반</option>
                     <option value="2">관리자</option>
-                    <option value="1">최고관리자</option>
+                    <option value="1">최고 관리자</option>
                 </select>
             </div>
             <div class="modal-footer d-flex justify-content-center">
@@ -653,13 +671,6 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="text-center">
-                    <c:set var="member" value="${member}"/>
-                    <c:if test="${member.state == '1'}">
-                        <button class="btn btn-outline-dark fw-bold fs-4 m-2 w-75" data-bs-toggle="modal"
-                                data-bs-target="#userGrantManagementModal" data-bs-dismiss="modal"
-                                onclick="setSelectOption()">권한 관리
-                        </button>
-                    </c:if>
                     <button class="btn btn-outline-dark fw-bold fs-4 px-5 m-2 w-75" data-bs-toggle="modal"
                             data-bs-target="#userPwdmodal" data-bs-dismiss="modal">임시 비밀번호 발급
                     </button>
@@ -670,30 +681,6 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">취소</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- userGrantManagementModal -->
-<div class="modal" id="userGrantManagementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title updateRank_text"> 권한 변경</h5>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-                <select class="text-center form-select" id="gaveRank_Select">
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="3" id="normal_select_item">일반회원
-                    </option>
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="2" id="admin_select_item">관리자</option>
-                    <option class="px-5 m-2 w-75" data-bs-dismiss="modal" value="1" id="root_select_item">최고관리자</option>
-                </select>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="gave_Rank()">확인</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="test()">취소</button>
             </div>
         </div>
     </div>
@@ -774,7 +761,7 @@
         pageLength: 5,
         info: false,
         lengthChange: false,
-        order: [5, 'desc']
+        order: [7, 'asc']
     });
 
     $('#groupTable').DataTable({
@@ -832,7 +819,7 @@
 
     function sing_Up(iNumber) {
         var content = ID;
-        var rankLog = ($("#rank").val() == "1") ? " [최고관리자] " : ($("#rank").val() == "2") ? " [관리자] " : " [일반] ";
+        var rankLog = ($("#rank").val() == "1") ? " [최고 관리자] " : ($("#rank").val() == "2") ? " [관리자] " : " [일반] ";
         content += rankLog;
         (iNumber == "1") ? content += " 계정 가입 승인 " : content += " 계정 가입 거절 ";
         var settings = {
@@ -849,32 +836,58 @@
         })
     }           // sing_Up
 
-    function gave_Rank() {
-        var value = $("#gaveRank_Select").val();
-        if (value == state) {
-            warning("기존 회원 권한과 동일합니다. 확인 후 다시 이용해주세요.");
-        } else {
-            var changeRank = (value == 1) ? "최고관리자 " : (value == 2) ? "관리자 " : "일반 ";
-            var pastRank = (state == 1) ? "최고관리자 " : (state == 2) ? "관리자 " : "일반 ";
-            var content = pastRank + "> " + changeRank + "권한변경";
-            var settings = {
-                "url": "<%=cp%>/gaveRank?id=" + ID + "&value=" + value,
-                "method": "POST"
-            };
-            $.ajax(settings).done(function (response) {
-                inputLog(ID, content, "회원");
-                inputLog(user_id, ID + " 계정 " + content + " 처리", "회원");
-                success(response);
-                setTimeout(function () {
-                    location.reload();
-                }, 2000);
-            });
+    //권한 변경
+    function gave_state(select) {
+        const id = select.id.replace('state','');
+        const value = $("#"+select.id).val();
+        const changeRank = (value == 1) ? "최고 관리자 " : (value == 2) ? "관리자 " : "일반 ";
+        const pastRank = (state == 1) ? "최고 관리자 " : (state == 2) ? "관리자 " : "일반 ";
+        const content = pastRank + "> " + changeRank + "권한변경";
+        const settings = {
+            "url": "<%=cp%>/gaveRank?id=" + id + "&value=" + value,
+            "method": "POST"
+        };
+        $.ajax(settings).done(function (response) {
+            inputLog(id, content, "회원");
+            inputLog(user_id, id + " 계정 " + content + " 처리", "회원");
+            success(response);
+            setTimeout(function () {
+                location.reload();
+            }, 2000);
+        });
+        if(value==1){
+            $.ajax({
+                url: '<%=cp%>/memberGroupUpdate',
+                type: 'POST',
+                dataType: 'text',
+                async: false,
+                cache: false,
+                data: {
+                    "id": id,
+                    "monitoringGroup": 'ALL'
+                },
+                success: function (data) {
+                    if (data == "success") {
+                        swal('success', '수정완료', '성공적으로 수정되었습니다.');
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        swal('warning', '수정실패');
+                    }
+                },
+                error: function (request, status, error) {
+                    swal('warning', '수정실패');
+                    console.log('member update error');
+                    console.log(error);
+                }
+            })
         }
-    }           // gave_Rank
+    }
 
     function resetPassword() {
         if (state == '1') {
-            warning("최고관리자의 비밀번호는 초기화하실수 없습니다.");
+            warning("최고 관리자의 비밀번호는 초기화하실수 없습니다.");
             return;
         } else {
             var settings = {
@@ -895,7 +908,7 @@
 
     function kickMember() {
         if (state == '1') {
-            warning("최고관리자는 제명하실수 없습니다.");
+            warning("최고 관리자는 제명하실수 없습니다.");
             return;
         } else {
             var settings = {
@@ -1330,6 +1343,29 @@
         }
     }
 
+    //권한 selectbox
+    function select_state(select, state) {
+        Info_Set(user_id, state, name);
+        const $target = $('#'+select.id);
+        $target.empty();
+        let innerHTML = "";
+        if(state == 3){
+            innerHTML ="<option value='3' selected='selected'>일반</option>" +
+                "<option value='2'>관리자</option>" +
+                "<option value='1'>최고 관리자</option>";
+        }else if(state == 2){
+            innerHTML ="<option value='3'>일반</option>" +
+                "<option value='2' selected='selected'>관리자</option>" +
+                "<option value='1'>최고 관리자</option>";
+        }else{
+            innerHTML ="<option value='3'>일반</option>" +
+                "<option value='2'>관리자</option>" +
+                "<option value='1' selected='selected'>최고 관리자</option>";
+        }
+        $target.append(innerHTML);
+    }
+
+    //모니터링 그룹 selectbox
     function select_group(select,name) {
         const $target = $('#'+select.id);
         $target.empty();
@@ -1358,6 +1394,36 @@
         });
     }
 
+    function updatestate(id, select) {
+        $.ajax({
+            url: '<%=cp%>/memberSelectUpdate',
+            type: 'POST',
+            dataType: 'text',
+            async: false,
+            cache: false,
+            data: {
+                "id": id,
+                "state": select.value,
+            },
+            success: function (data) {
+                if (data == "success") {
+                    swal('success', '수정완료', '성공적으로 수정되었습니다.');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    swal('warning', '수정실패');
+                }
+            },
+            error: function (request, status, error) {
+                swal('warning', '수정실패');
+                console.log('member update error');
+                console.log(error);
+            }
+        })
+    }
+
+    //모니터링 그룹 변경 ajax
     function updateMember(id, select) {
         $.ajax({
             url: '<%=cp%>/memberGroupUpdate',

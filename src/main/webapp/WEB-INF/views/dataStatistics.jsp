@@ -138,7 +138,7 @@
         $("#items").empty();
 
         $.ajax({
-            url: '<%=cp%>/findSensorList',
+            url: '<%=cp%>/findSensorList2',
             type: 'POST',
             dataType: 'json',
             async: false,

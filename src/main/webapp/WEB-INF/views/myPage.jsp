@@ -147,7 +147,7 @@
                      <button class="btn btn-outline-danger m-3" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
                 </div>
             </div>
-
+            <input type="hidden" id="state" value="${member.state}">
         </div>
     </div>
 </div>
@@ -208,7 +208,9 @@
         const selectGroup = $("#monitoringGroup option:selected").val();
         const $target = $('select[id="monitoringGroup"]');
         let innerHTML = "";
-        if(TOGGLE){
+        const state = $('#state').val();
+        console.log(state)
+        if(TOGGLE || state == 1){
             $target.attr("disabled","disabled");
         }else{
             $target.empty();
