@@ -130,6 +130,7 @@
                     </div>
                 </div>
             </c:when>
+            <%--
             <c:when test="${fn:length(emissionList) > 0}">
                 <div class="row pb-3 margin-l" style="height: 230px">
                     <div class="col align-self-center text-center" style="font-size: 1.2rem">
@@ -138,6 +139,7 @@
                     </div>
                 </div>
             </c:when>
+            --%>
             <c:otherwise>
                 <c:forEach var="emissionList" items="${emissionList}">
                     <c:set var="present" value="${emissionList.get(0)}"></c:set>
