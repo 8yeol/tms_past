@@ -1809,6 +1809,7 @@ public class AjaxController {
                             @RequestParam(value="placeList[]",required = false)List<String> placeList, String flag,
                             @RequestParam(value = "groupNum",required = false)int groupNum) {
         MonitoringGroup group = null;
+        MonitoringGroup defaultGroup = null;
 
         //중복 이름 리턴 fail
         if(monitoringGroupRepository.findByGroupName(name) != null &&
@@ -1830,25 +1831,32 @@ public class AjaxController {
                     Member defaultMember = memberRepository.findById((String) group.getGroupMember().get(i));
                     defaultMember.setMonitoringGroup("default");
                     memberRepository.save(defaultMember);
+
+                    defaultGroup = monitoringGroupRepository.findByGroupName("default");
+                    List defaultGroupMember = defaultGroup.getGroupMember();
+                    defaultGroupMember.add(group.getGroupMember().get(i));
                 }
+                monitoringGroupRepository.save(defaultGroup);
             }
         }
 
         //그룹의 멤버 모두 그룹명으로 변경
-        if(memList != null) {
+        if(memList != null && memList.size() != 0) {
             for (int i = 0; i < memList.size(); i++) {
                 //이전그룹에서 멤버 삭제
                 MonitoringGroup prevGroup = monitoringGroupRepository.findByGroupMemberIsIn(memList.get(i));
-                for (int k=0; k<prevGroup.getGroupMember().size(); k++){
-                    if(prevGroup.getGroupMember().get(k).equals(memList.get(i))){
-                        prevGroup.getGroupMember().remove(k);
-                        monitoringGroupRepository.save(prevGroup);
+                if(prevGroup != null) {
+                    for (int k = 0; k < prevGroup.getGroupMember().size(); k++) {
+                        if (prevGroup.getGroupMember().get(k).equals(memList.get(i))) {
+                            prevGroup.getGroupMember().remove(k);
+                            monitoringGroupRepository.save(prevGroup);
+                        }
                     }
-                }
 
-                Member saveMember = memberRepository.findById(memList.get(i));
-                saveMember.setMonitoringGroup(name);
-                memberRepository.save(saveMember);
+                    Member saveMember = memberRepository.findById(memList.get(i));
+                    saveMember.setMonitoringGroup(name);
+                    memberRepository.save(saveMember);
+                }
             }
              group.setGroupMember(memList);
         }else{
