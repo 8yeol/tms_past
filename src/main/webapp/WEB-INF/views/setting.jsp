@@ -1186,6 +1186,7 @@
         $('.groupModalTitle').text('그룹 수정');
         $('#saveBtn').text('수정');
         $('#saveBtn').attr('onclick', 'saveGroup("edit")');
+        $('#monitoringSignModal').finish().fadeOut(0);
         optionDisabled(false);
 
         if(groupMemList[0] !="") {
@@ -1221,7 +1222,7 @@
             if (memberList[i].monitoringGroup == "default" && groupNum != 0 && memberList[i].state <=3 && memberList[i].state != 1) {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
-            if (memberList[i].monitoringGroup == "default" && groupNum == 0 && memberList[i].state == 1) {
+            if (memberList[i].monitoringGroup == "default" && groupNum == 0 && memberList[i].state <= 3) {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
         }
@@ -1229,6 +1230,8 @@
 
         if(groupNum == 0){
             optionDisabled(true);
+            $('#monitoringSignModal').html('ALL 그룹은<br> 모든 측정소를 모니터링 합니다.');
+            $('#monitoringSignModal').finish().fadeIn(300)
         }
 
         $('#saveBtn').attr('onclick', 'saveGroup("edit", ' + groupNum + ')');
@@ -1244,6 +1247,7 @@
         $('.allPlaceCheck').css('display', 'inline-block');
         $('.allPlaceCheckSpan').css('display', 'block');
         $('#allPlaceCheck').prop("checked", false);
+        $('#monitoringSignModal').finish().fadeOut(0);
         optionDisabled(false);
         let memInnerHTML;
         let plaInnerHTML;
@@ -1307,6 +1311,8 @@
             $('.allCheckEvent select').css('border','3px solid #999');
             $('.allCheckEvent input[type=button]').prop('disabled', true);
             $('.allCheckEvent select').prop('disabled', true);
+            $('#monitoringSignModal').html('모든 측정소를 측정합니다.');
+            $('#monitoringSignModal').finish().fadeIn(300).delay(3000).fadeOut(300);
 
         }else if (flag == false){
             $('.allCheckEvent label').css('color','black');
