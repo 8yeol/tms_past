@@ -334,19 +334,19 @@
                                     <td>가입대기</td>
                                 </c:when>
                                 <c:when test="${mList.state eq '3'}">
-                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_state(this)">
+                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
                                         <option value='${mList.state}'
                                                 selected="selected">일반</option>
                                     </select></td>
                                 </c:when>
                                 <c:when test="${mList.state eq '2'}">
-                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_state(this)">
+                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
                                         <option value='${mList.state}'
                                                 selected="selected">관리자</option>
                                     </select></td>
                                 </c:when>
                                 <c:when test="${mList.state eq '1'}">
-                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_state(this)">
+                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
                                         <option value='${mList.state}'
                                                 selected="selected">최고 관리자</option>
                                     </select></td>
@@ -837,7 +837,7 @@
     }           // sing_Up
 
     //권한 변경
-    function gave_state(select) {
+    function gave_rank(select) {
         const id = select.id.replace('state','');
         const value = $("#"+select.id).val();
         const changeRank = (value == 1) ? "최고 관리자 " : (value == 2) ? "관리자 " : "일반 ";
@@ -855,34 +855,6 @@
                 location.reload();
             }, 2000);
         });
-        if(value==1){
-            $.ajax({
-                url: '<%=cp%>/memberGroupUpdate',
-                type: 'POST',
-                dataType: 'text',
-                async: false,
-                cache: false,
-                data: {
-                    "id": id,
-                    "monitoringGroup": 'ALL'
-                },
-                success: function (data) {
-                    if (data == "success") {
-                        swal('success', '수정완료', '성공적으로 수정되었습니다.');
-                        setTimeout(function () {
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        swal('warning', '수정실패');
-                    }
-                },
-                error: function (request, status, error) {
-                    swal('warning', '수정실패');
-                    console.log('member update error');
-                    console.log(error);
-                }
-            })
-        }
     }
 
     function resetPassword() {
@@ -1394,35 +1366,6 @@
         });
     }
 
-    function updatestate(id, select) {
-        $.ajax({
-            url: '<%=cp%>/memberSelectUpdate',
-            type: 'POST',
-            dataType: 'text',
-            async: false,
-            cache: false,
-            data: {
-                "id": id,
-                "state": select.value,
-            },
-            success: function (data) {
-                if (data == "success") {
-                    swal('success', '수정완료', '성공적으로 수정되었습니다.');
-                    setTimeout(function () {
-                        location.reload();
-                    }, 2000);
-                } else {
-                    swal('warning', '수정실패');
-                }
-            },
-            error: function (request, status, error) {
-                swal('warning', '수정실패');
-                console.log('member update error');
-                console.log(error);
-            }
-        })
-    }
-
     //모니터링 그룹 변경 ajax
     function updateMember(id, select) {
         $.ajax({
@@ -1433,7 +1376,7 @@
             cache: false,
             data: {
                 "id": id,
-                "monitoringGroup": select.value,
+                "monitoringGroup": select.value
             },
             success: function (data) {
                 if (data == "success") {

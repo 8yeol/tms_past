@@ -1617,12 +1617,10 @@ public class AjaxController {
     @RequestMapping(value = "/gaveRank", method = RequestMethod.POST)
     public String gaveRank(String id, String value) {
         Member newMember = memberRepository.findById(id);
-
         //회원 등급 변동에 따른 그룹 수정
         //최고관리자를 변경하고, 해당 멤버가 default그룹이 아닐떄 default로 변경
         MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
         if (value.equals("1") && group.getGroupNum() != 0) {
-            newMember.setMonitoringGroup("ALL");
             List memberList = group.getGroupMember();
             for (int i=0; i<memberList.size(); i++){
                 if(memberList.get(i).equals(id))
@@ -1636,6 +1634,8 @@ public class AjaxController {
             allGroupMember.add(id);
             allGroup.setGroupMember(allGroupMember);
             monitoringGroupRepository.save(allGroup);
+
+            newMember.setMonitoringGroup("ALL");
         }
 
         newMember.setState(value);
