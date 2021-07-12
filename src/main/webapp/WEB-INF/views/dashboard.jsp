@@ -117,7 +117,7 @@
             <div class="col text-end">
                 <c:choose>
                     <c:when test="${not empty emissionSettingList}">
-                        <span class="text-primary" style="font-size: 0.8rem"> * 매월 1일 전월데이터 기준으로 업데이트 됩니다.</span>
+                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 자정 전일데이터 기준으로 업데이트 됩니다.</span>
                     </c:when>
                 </c:choose>
             </div>
@@ -133,6 +133,16 @@
                     </div>
                 </div>
             </c:when>
+            <%--
+            <c:when test="${fn:length(emissionList) > 0}">
+                <div class="row pb-3 margin-l" style="height: 230px">
+                    <div class="col align-self-center text-center" style="font-size: 1.2rem">
+                        업데이트 된 데이터가 없습니다. <br>
+                        <b>연간 배출량 추이 모니터링은 매일 자정 업데이트됩니다.</b>
+                    </div>
+                </div>
+            </c:when>
+            --%>
             <c:otherwise>
                 <c:forEach var="emissionList" items="${emissionList}">
                     <c:set var="present" value="${emissionList.get(0)}"></c:set>
@@ -173,7 +183,18 @@
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(%)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
-                                        <p class="fw-bold fs-3"><fmt:formatNumber value="${(present.totalEmissions - past.totalEmissions) / past.totalEmissions * 100}" pattern=".00"/>%</p>
+                                        <p class="fw-bold fs-3">
+                                            <c:choose>
+                                                <c:when test="${past.totalEmissions == 0 and present.totalEmissions == 0}">0%</c:when>
+                                                <c:when test="${past.totalEmissions == 0}">
+                                                    <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/>%
+                                                </c:when>
+                                                <c:when test="${past.totalEmissions == present.totalEmissions }">0%</c:when>
+                                                <c:otherwise>
+                                                    <fmt:formatNumber value="${(present.totalEmissions - past.totalEmissions) / past.totalEmissions * 100}" pattern=".00"/>%
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
@@ -197,7 +218,15 @@
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
-                                            <fmt:formatNumber value="${present.totalEmissions - past.totalEmissions}" pattern=",000"/></p>
+                                            <c:choose>
+                                                <c:when test="${present.totalEmissions - past.totalEmissions == 0}">
+                                                   0
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <fmt:formatNumber value="${present.totalEmissions - past.totalEmissions}" pattern=",000"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
@@ -221,7 +250,18 @@
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
-                                            <fmt:formatNumber value="${(presentQuater - pastQuater) / pastQuater * 100}" pattern=".00"/>%</p>
+                                            <c:choose>
+                                                <c:when test="${pastQuater == 0 and presentQuater == 0}">0</c:when>
+                                                <c:when test="${pastQuater == 0}">
+                                                    <fmt:formatNumber value="${presentQuater}" pattern=",000"/>%
+                                                </c:when>
+                                                <c:when test="${pastQuater == presentQuater }">0%</c:when>
+                                                <c:otherwise>
+                                                    <fmt:formatNumber value="${(presentQuater - pastQuater) / pastQuater * 100}" pattern=".00"/>%
+                                                </c:otherwise>
+
+                                            </c:choose>
+                                        </p>
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
@@ -244,7 +284,16 @@
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
-                                        <p class="fw-bold fs-3"><fmt:formatNumber value="${presentQuater - pastQuater}" pattern=",000"/></p>
+                                        <p class="fw-bold fs-3">
+                                            <c:choose>
+                                                <c:when test="${presentQuater - pastQuater == 0}">
+                                                    0
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <fmt:formatNumber value="${presentQuater - pastQuaters}" pattern=",000"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
@@ -274,7 +323,7 @@
             <div class="col text-end">
                 <c:choose>
                     <c:when test="${not empty placeList}">
-                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 01시 전일데이터 기준으로 업데이트 됩니다.</span>
+                        <span class="text-primary" style="font-size: 0.8rem"> * 매일 자정 전일데이터 기준으로 업데이트 됩니다.</span>
                     </c:when>
                 </c:choose>
             </div>
