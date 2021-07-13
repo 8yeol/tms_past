@@ -80,11 +80,13 @@
                     <div class="col-4">
                         <span class="fw-bold fs-5">측정소 관리</span>
                     </div>
-                    <div class="col text-end">
-                        <button data-bs-toggle="modal" data-bs-target="#addPlace" id="addpl" class="addBtn">추가</button>
-                        <button data-bs-toggle="modal" data-bs-target="#addPlace" class="updateBtn" id="uppl" onclick="updatePlaceSetting()">수정</button>
-                        <button onclick="removePlace()" class="removeBtn">삭제</button>
-                    </div>
+                    <c:if test="${state == 1}">
+                        <div class="col text-end">
+                            <button data-bs-toggle="modal" data-bs-target="#addPlace" id="addpl" class="addBtn">추가</button>
+                            <button data-bs-toggle="modal" data-bs-target="#addPlace" class="updateBtn" id="uppl" onclick="updatePlaceSetting()">수정</button>
+                            <button onclick="removePlace()" class="removeBtn">삭제</button>
+                        </div>
+                    </c:if>
                 </div>
             </div>
 
@@ -179,9 +181,14 @@
     });
 
     $(document).ready(function () {
-        placeDiv();
-        placeChange("p0");
+
+        placeDiv(${groupPlace});
+        //측정소 있다면 첫번쨰 측정소 출력
+        if(typeof $('#placeDIv tr').eq(0).attr('id') !== 'undefined') {
+            placeChange($('#placeDIv tr').eq(0).attr('id'));
+        }
     });
+
     $('#addpl').click(function () {
         document.getElementById('na1').value = '';
         document.getElementById('lo1').value = '';
@@ -221,28 +228,38 @@
     }
 
     //측정소 목록 불러오기
-    function placeDiv() {
+    function placeDiv(groupPlace) {
         $("#placeDiv").empty();
+
+        //측정가능한 측정소 없음
+        if(groupPlace[0] == null){
+            $('#placeDiv').append('<tr><td colspan="4" style="height: 250px;line-height: 250px;">측정 가능한 측정소가 없습니다.</td></tr>');
+            $('#items').append('<tr><td colspan="7" style="height: 250px;line-height: 250px;">측정 가능한 측정소가 없습니다.</td></tr>');
+            return;
+        }
+
         const data = placeDiv1();
         var onoff = "";
         for (let i = 0; i < data.length; i++) {
-            const test = data[i];
-            const name = test.name;
-            const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
-            onoff = data[i].monitoring ? "checked" : "";
+            if(groupPlace.includes(data[i].name) || groupPlace[0] == 'ALL') {
+                const test = data[i];
+                const name = test.name;
+                const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
+                onoff = data[i].monitoring ? "checked" : "";
 
-            const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
-                "<td style='padding-left:6px;' onclick='event.cancelBubble=true'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
-                "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
-                "<td style='width: 40%;'>" + time + "</td>" +
-                "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
-                "<input class='placeCheckbox' id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
-                "<span class='slider round'></span>" +
-                "</label></td>" +
-                "</tr>";
+                const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
+                    "<td style='padding-left:6px;' onclick='event.cancelBubble=true'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
+                    "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
+                    "<td style='width: 40%;'>" + time + "</td>" +
+                    "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
+                    "<input class='placeCheckbox' id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
+                    "<span class='slider round'></span>" +
+                    "</label></td>" +
+                    "</tr>";
 
-            $('#placeDiv').append(innerHTML);
-            onoff = "";
+                $('#placeDiv').append(innerHTML);
+                onoff = "";
+            }
         }
 
     }

@@ -384,11 +384,26 @@ public class MainController {
     }
 
     /**
-     * [환경설정 - 측정소 관리]
+     *  [환경설정 - 측정소 관리]
+     * @param principal 해당 페이지에 접근하는 멤버 객체
+     * @param model 멤버의 등급, 멤버가 속한 그룹의 측정 가능한 측정소
      * @return stationManagement.JSP
      */
     @RequestMapping("/stationManagement")
-    public String stationManagement() {
+    public String stationManagement(Principal principal, Model model) {
+
+        Member member =  memberRepository.findById(principal.getName());
+        model.addAttribute("state", member.getState());
+
+        MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(member.getId());
+        List<String> placeList = new ArrayList();
+        if(group.getGroupName().equals("default") || group.getMonitoringPlace() == null){
+            placeList.add("null");
+        }else {
+            for (int i = 0; i < group.getMonitoringPlace().size(); i++)
+                placeList.add("'" + group.getMonitoringPlace().get(i) + "'");
+        }
+        model.addAttribute("groupPlace", placeList);
 
         return "stationManagement";
     }
