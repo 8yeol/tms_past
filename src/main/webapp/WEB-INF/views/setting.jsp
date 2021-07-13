@@ -148,16 +148,19 @@
     }
 
     .MultiSelecterModal {
-        width: 350px;
-        border-radius: 10px;
-        background-color: rgba(99, 130, 255, 0.5);
+        width: 60%;
+        height: 50%;
+        line-height: 180px;
+        border-radius: 5px;
+        background-color: #cfe2ff;
+        border: 2px solid rgba(99, 130, 255, 0.7);
         position: absolute;
         padding: 10px;
         top: 4%;
         left: 50%;
         transform: translate(-50%, -50%);
         text-align: center;
-        color: white;
+        color: rgb(54, 71, 149);
         font-weight: bold;
         display: none;
     }
@@ -1220,7 +1223,7 @@
 
         if(groupPlaList == "ALL") {
             $('#placeSelect .allCheckEvent').css('display', 'none');
-            $('#monitoringSignModal').css('top', '40%');
+            $('#monitoringSignModal').css('top', '50%');
             optionDisabled(true);
             $('#monitoringSignModal').html('모든 측정소를 모니터링 합니다.');
             $('#monitoringSignModal').finish().fadeIn(300)
