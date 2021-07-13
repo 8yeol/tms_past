@@ -657,7 +657,6 @@
                 data:  {"sensor": sensor},
                 async: false,
                 success: function (data) {
-                    console.log(data);
                     result = {value: (data.value).toFixed(2), status: data.status, up_time:data.up_time};
                 },
                 error: function (e) {
@@ -983,10 +982,12 @@
      */
     function draw_compareData(beforeData , nowData){
         nowData = nowData.toFixed(2);
-        if(beforeData > nowData){
+        if(beforeData > nowData ){
             return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' +nowData;
-        } else if( nowData > beforeData) {
+        } else if( nowData > beforeData ) {
             return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' +nowData;
+        } else if( nowData == beforeData ){
+            return '<span style="font-weight: bold">- </span>' +nowData;
         } else{
             return nowData;
         }
