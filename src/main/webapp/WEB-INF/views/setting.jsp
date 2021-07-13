@@ -285,6 +285,12 @@
             padding-top: 10px;
         }
     }
+    .disabledOption{
+        color: #aaaaaa;
+    }
+    .selectBox option{
+        font-weight: bold;
+    }
 </style>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
@@ -1179,6 +1185,7 @@
 
     //그룹 수정시 모달 셋팅
     function groupEditSetting(obj, groupNum) {
+        console.log(memberList);
         let groupMemList = $(obj).parent().parent().children().eq(1).text().split(',');
         let groupPlaList = $(obj).parent().parent().children().eq(2).text().split(',');
         let groupName = $(obj).parent().parent().children().eq(0).text();
@@ -1199,7 +1206,13 @@
             let innerHTML;
             for (i = 0; i < groupMemList.length; i++) {
                 groupMemList[i] = groupMemList[i].trim();
-                innerHTML += '<option value="' + groupMemList[i] + '">' + groupMemList[i] + '</option>'
+                for(k=0; k<memberList.length; k++) {
+                    if(memberList[k].id == groupMemList[i] && memberList[k].state == 1 && $('#groupInput').val() == 'ALL'){
+                        innerHTML += '<option value="' + groupMemList[i] + '" disabled class="disabledOption">' + groupMemList[i] + '</option>'
+                    }else if(memberList[k].id == groupMemList[i]){
+                        innerHTML += '<option value="' + groupMemList[i] + '">' + groupMemList[i] + '</option>'
+                    }
+                }
             }
             $('#lstBox4').append(innerHTML);
         }
