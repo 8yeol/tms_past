@@ -154,14 +154,17 @@
                 </div>
 
                 <div class="col" style="padding: 0;" id="sensorStatus">
-                    <div style="border-bottom: 1px solid #2295DB;">
-                        <p>정상 : <a style="text-align: right" id="statusOn"></a></p>
+                    <div style="border-bottom: 1px solid #2295DB; position: relative">
+                        <p style="margin-left: 5px; cursor: default;">정상 : <a style="text-align: right" id="statusOn"></a></p>
+                        <div style="position: absolute; top: 8px; right: 5px; padding: 5px; border: 1px dashed; background-color: #eee">정상설명</div>
                     </div>
-                    <div style="border-bottom: 1px solid #2295DB;">
-                        <p>통신불량 : <a style="text-align: right" id="statusOff"></a></p>
+                    <div style="border-bottom: 1px solid #2295DB; position: relative">
+                        <p style="margin-left: 5px; cursor: default;">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
+                        <div style="position: absolute; top: 8px; right: 5px; padding: 5px; border: 1px dashed; background-color: #eee">통신불량설명</div>
                     </div>
-                    <div>
-                        <p>모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
+                    <div style="position: relative">
+                        <p style="margin-left: 5px; cursor: default;">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
+                        <div style="position: absolute; top: 8px; right: 5px; padding: 5px; border: 1px dashed; background-color: #eee">모니터링off설명</div>
                     </div>
                 </div>
             </div>
