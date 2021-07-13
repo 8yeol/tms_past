@@ -296,7 +296,7 @@
                             <tr>
                                 <th width="10%" style="padding:10px 2px 10px 2px;">순번</th>
                                 <th width="20%" style="padding:10px 2px 10px 2px;">측정 값</th>
-                                <th width="20%" style="padding:10px 2px 10px 2px;">관리등급</th>
+                                <th width="20%" style="padding:10px 2px 10px 2px;">상태</th>
                                 <th width="20%" style="padding:10px 2px 10px 2px;">모니터링 여부</th>
                                 <th width="30%" style="padding:10px 2px 10px 2px;">업데이트 시간</th>
                             </tr>
@@ -809,9 +809,62 @@
             chart.updateSeries([{
                 data : data
             }])
+
+            chart.clearAnnotations();
+
+            chart.updateOptions({
+                annotations: {
+                    yaxis: [
+                        {
+                            y: reference.get("management"),
+                            borderColor: '#00E396',
+                            label: {
+                                borderColor: '#00E396',
+                                style: {
+                                    color: '#fff',
+                                    background: '#00E396'
+                                },
+                                text: '관리기준',
+                                position: 'left',
+                                offsetX: 0
+                            }
+                        },
+                        {
+                            y: reference.get("company"),
+                            borderColor: '#FEB019',
+                            label: {
+                                borderColor: '#FEB019',
+                                style: {
+                                    color: '#fff',
+                                    background: '#FEB019'
+                                },
+                                text: '사내기준',
+                                position: 'left',
+                                offsetX: 0
+                            }
+                        },
+                        {
+                            y: reference.get("legal"),
+                            borderColor: '#FF4560',
+                            label: {
+                                borderColor: '#FF4560',
+                                style: {
+                                    color: '#fff',
+                                    background: '#FF4560'
+                                },
+                                text: '법적기준',
+                                position: 'left',
+                                offsetX: 0
+                            }
+                        }
+                    ]
+                }
+            })
+
             chartLine.updateSeries([{
                 data : data
             }])
+
             // brush 영역 초기화 해주기 위함
             chartLine.updateOptions({
                chart : {
@@ -821,7 +874,6 @@
                    }
                }
             })
-            chart.clearAnnotations();
         }
     }
 
