@@ -812,54 +812,56 @@
 
             chart.clearAnnotations();
 
-            chart.updateOptions({
-                annotations: {
-                    yaxis: [
-                        {
-                            y: reference.get("management"),
-                            borderColor: '#00E396',
-                            label: {
+            if(reference.length!=0){
+                chart.updateOptions({
+                    annotations: {
+                        yaxis: [
+                            {
+                                y: reference.get("management"),
                                 borderColor: '#00E396',
-                                style: {
-                                    color: '#fff',
-                                    background: '#00E396'
-                                },
-                                text: '관리기준',
-                                position: 'left',
-                                offsetX: 0
-                            }
-                        },
-                        {
-                            y: reference.get("company"),
-                            borderColor: '#FEB019',
-                            label: {
+                                label: {
+                                    borderColor: '#00E396',
+                                    style: {
+                                        color: '#fff',
+                                        background: '#00E396'
+                                    },
+                                    text: '관리기준',
+                                    position: 'left',
+                                    offsetX: 0
+                                }
+                            },
+                            {
+                                y: reference.get("company"),
                                 borderColor: '#FEB019',
-                                style: {
-                                    color: '#fff',
-                                    background: '#FEB019'
-                                },
-                                text: '사내기준',
-                                position: 'left',
-                                offsetX: 0
-                            }
-                        },
-                        {
-                            y: reference.get("legal"),
-                            borderColor: '#FF4560',
-                            label: {
+                                label: {
+                                    borderColor: '#FEB019',
+                                    style: {
+                                        color: '#fff',
+                                        background: '#FEB019'
+                                    },
+                                    text: '사내기준',
+                                    position: 'left',
+                                    offsetX: 0
+                                }
+                            },
+                            {
+                                y: reference.get("legal"),
                                 borderColor: '#FF4560',
-                                style: {
-                                    color: '#fff',
-                                    background: '#FF4560'
-                                },
-                                text: '법적기준',
-                                position: 'left',
-                                offsetX: 0
+                                label: {
+                                    borderColor: '#FF4560',
+                                    style: {
+                                        color: '#fff',
+                                        background: '#FF4560'
+                                    },
+                                    text: '법적기준',
+                                    position: 'left',
+                                    offsetX: 0
+                                }
                             }
-                        }
-                    ]
-                }
-            })
+                        ]
+                    }
+                })
+            }
 
             chartLine.updateSeries([{
                 data : data
