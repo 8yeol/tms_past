@@ -554,13 +554,13 @@
                         dataList = nSensorName;
                         draw_place_table_frame(placeName); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                         draw_place_table(placeName); // 측정소별 테이블 생성
-                        draw_place_chart_frame(placeName.length, data.length);
+                        // draw_place_chart_frame(placeName);
                     }else{
                         if(nSensorName.length != dataList.length){
                             dataList = nSensorName;
                             draw_place_table_frame(placeName); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                             draw_place_table(placeName); // 측정소별 테이블 생성
-                            draw_place_chart_frame(placeName.length, data.length);
+                            // draw_place_chart_frame(placeName.length, data.length);
                         }else{
                             draw_place_table(placeName); // 측정소별 테이블 생성
                         }
@@ -582,6 +582,7 @@
         // const sensorName = $(this).find('td input')[0].value;
         <%--location.replace("<%=cp%>/sensor?sensor=" + sensorName);--%>
         var tbodyId = $(this).parent('tbody').attr('id');
+        console.log(tbodyId);
         var chartIndex = tbodyId.substr(13,5);
         if($('#chart-'+chartIndex).css("display") == 'none'){
             $('#chart-'+chartIndex).show();

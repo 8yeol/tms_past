@@ -219,6 +219,7 @@ public class AjaxController {
             boolean monitoring = reference_value_settingRepository.findByName(sensorName).getMonitoring();
             if (monitoring) { //monitoring true
                 Sensor recentData = sensorCustomRepository.getSensorRecent(sensorName);
+                subObj.put("place", place);
                 subObj.put("value", recentData.getValue());
                 subObj.put("up_time", recentData.getUp_time());
                 subObj.put("status", recentData.isStatus());
@@ -711,31 +712,15 @@ public class AjaxController {
         return sensorCustomRepository.getSensorRecent(sensor);
     }
 
+
     /**
-     * 측정소의 모든 센서 최근 값 조회
-     * @param place 측정소명
-     * @return 모든 센서의 최근 값
+     * 최근 센서 데이터 (최근/5분/30분) 리턴
+     * @param sensor 센서명
+     * @return List<Sensor> - list[0] 최근, [1] 이전, [2] 5분 최근, [3] 5분 이전, [4] 30분 최근, [5] 30분 이전
      */
-    @RequestMapping(value = "/getSensorRecent2")
-    public Object getSensorRecent2(@RequestParam("place") String place) {
-        List<String> placeName = placeRepository.findByName(place).getSensor();
-        JSONArray jsonArray = new JSONArray();
-        for(int i=0; i<placeName.size(); i++){
-            JSONObject subObj = new JSONObject();
-            boolean monitoring = reference_value_settingRepository.findByName(placeName.get(i)).getMonitoring();
-            if(monitoring) { //monitoring true
-                try{
-                    Sensor recentData = sensorCustomRepository.getSensorRecent(placeName.get(i));
-                    subObj.put("value", recentData.getValue());
-                    subObj.put("up_time", recentData.getUp_time());
-                    subObj.put("status", recentData.isStatus());
-                }catch (Exception e){
-                    return null;
-                }
-                jsonArray.add(subObj);
-            }
-        }
-        return jsonArray;
+    @RequestMapping(value = "/getSensorRecentAll")
+    public List<Sensor> getSensorRecentAll(@RequestParam("sensor") String sensor) {
+        return sensorCustomRepository.getSensorRecentAll(sensor);
     }
 
     /**
