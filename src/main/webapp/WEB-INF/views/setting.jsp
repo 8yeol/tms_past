@@ -840,6 +840,15 @@
     function gave_rank(select) {
         const id = select.id.replace('state','');
         const value = $("#"+select.id).val();
+
+        if(user_state > value){
+            Swal.fire({
+                icon: 'warning',
+                title: '권한이 없습니다.',
+            })
+            return;
+        }
+
         const changeRank = (value == 1) ? "최고 관리자 " : (value == 2) ? "관리자 " : "일반 ";
         const pastRank = (state == 1) ? "최고 관리자 " : (state == 2) ? "관리자 " : "일반 ";
         const content = pastRank + "> " + changeRank + "권한변경";

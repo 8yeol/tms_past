@@ -1636,15 +1636,12 @@ public class AjaxController {
     @RequestMapping(value = "/gaveRank", method = RequestMethod.POST)
     public String gaveRank(String id, String value) {
         Member newMember = memberRepository.findById(id);
-        //회원 등급 변동에 따른 그룹 수정
+
         //최고관리자를 변경하고, 해당 멤버가 ALL그룹이 아닐떄 ALL로 변경
         MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
         if (value.equals("1") && group.getGroupNum() != 0) {
             List memberList = group.getGroupMember();
-            for (int i=0; i<memberList.size(); i++){
-                if(memberList.get(i).equals(id))
-                    memberList.remove(i);
-            }
+            memberList.remove(id);
             group.setGroupMember(memberList);
             monitoringGroupRepository.save(group);
 
@@ -1692,13 +1689,11 @@ public class AjaxController {
     @RequestMapping(value = "/kickMember", method = RequestMethod.POST)
     public String kickMember(String id) {
         MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
-        if(group != null){
-            for (int i = 0; i<group.getGroupMember().size(); i++){
-                if(group.getGroupMember().get(i).equals(id))
-                    group.getGroupMember().remove(i);
-            }
-            monitoringGroupRepository.save(group);
-        }
+        List memberList = group.getGroupMember();
+        memberList.remove(id);
+        group.setGroupMember(memberList);
+        monitoringGroupRepository.save(group);
+
         memberRepository.deleteById(id);
         logRepository.deleteById(id);
         return "제명처리 되었습니다.";
