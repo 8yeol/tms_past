@@ -172,7 +172,7 @@
                         <div class="row" style="margin-bottom: 15px;">
                             <div style="display: flex;">
                                 <div class="fs-6 fw-bold" style="width: 50%">${present.placeName} - ${present.sensorName}</div>
-                                <span class="small" style="width: 50%; text-align: right">마지막 업데이트 : <span class="fw-bold"><fmt:formatDate value="${present.updateTime}" pattern="yyyy-MM-dd"/></span></span>
+                                <span class="small" style="width: 50%; text-align: right">업데이트 : <span class="fw-bold"><fmt:formatDate value="${present.updateTime}" pattern="yyyy-MM-dd"/></span></span>
                             </div>
                         </div>
                         <div class="col-3">
@@ -420,7 +420,7 @@
                 관리등급 초과 모니터링
             </div>
             <div class="col text-end">
-                <span class="small">마지막 업데이트 : <span class="fw-bold" id="excess_update">업데이트 시간</span></span><br>
+                <span class="small">업데이트 : <span class="fw-bold" id="excess_update"></span></span><br>
                 <span class="text-primary" style="font-size: 0.8rem"> * 실시간으로 업데이트 됩니다.</span>
             </div>
         </div>
@@ -537,7 +537,7 @@
                         }
                     }
                 } else{
-                    $("#excess_update").text("최근 업데이트 된 데이터가 없습니다.");
+                    $("#excess_update").text("최근 5분 이내로 업데이트 된 데이터가 없습니다.");
                 }
 
             },

@@ -168,17 +168,17 @@
                 </div>
 
                 <div class="col" style="padding: 0;" id="sensorStatus">
-                    <div style="border-bottom: 1px solid #2295DB; position: relative">
+                    <div style="border-bottom: 1px solid #2295DB; position: relative" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')" >
                         <p style="margin-left: 5px; cursor: default;">정상 : <a style="text-align: right" id="statusOn"></a></p>
-                        <div class="cloud">정상설명 가나다라마바사 아자차카타파하</div>
+                        <div class="cloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 경우</div>
                     </div>
-                    <div style="border-bottom: 1px solid #2295DB; position: relative">
+                    <div style="border-bottom: 1px solid #2295DB; position: relative" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">
                         <p style="margin-left: 5px; cursor: default;">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
-                        <div class="cloud">통신불량설명</div>
+                        <div class="cloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 경우</div>
                     </div>
-                    <div style="position: relative">
+                    <div style="position: relative" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">
                         <p style="margin-left: 5px; cursor: default;">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
-                        <div class="cloud">모니터링off설명</div>
+                        <div class="cloud" id="off" style="display: none">모니터링 OFF 설정 되어있는 경우</div>
                     </div>
                 </div>
             </div>
