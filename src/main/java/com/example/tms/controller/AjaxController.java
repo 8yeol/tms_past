@@ -205,6 +205,7 @@ public class AjaxController {
 
     /**
      * 해당 측정소명의 모니터링 True 인 센서를 받아와 해당 센서의 최근, 이전, 정보들을 읽어오기 위한 메소드
+     *
      * @param place 측정소 이름
      * @return 센서의 최근, 이전, 정보
      */
@@ -283,6 +284,7 @@ public class AjaxController {
         }
         return subObj;
     }
+
     /**
      * 측정소 모니터링 업데이트
      *
@@ -344,7 +346,7 @@ public class AjaxController {
                     inputLogSetting("'" + senname + "'" + " 알림설정 값 삭제", "설정", principal);
                 }
             }
-            inputLogSetting(name+" 모니터링 OFF","설정",principal);
+            inputLogSetting(name + " 모니터링 OFF", "설정", principal);
         }
 
         place.setUp_time(new Date());
@@ -488,6 +490,17 @@ public class AjaxController {
             }
             inputLogSetting("'" + hiddenCode + "' > '" + name + "' 측정소명 수정", "설정", principal);
 
+            List<MonitoringGroup> group = monitoringGroupRepository.findByMonitoringPlaceIsIn(hiddenCode);
+            if(group != null) {
+                for (int i=0; i<group.size(); i++){
+                    List<String> groupPlaceList = group.get(i).getMonitoringPlace();
+                    int index = groupPlaceList.indexOf(hiddenCode);
+                    groupPlaceList.set(index, name);
+                    group.get(i).setMonitoringPlace(groupPlaceList);
+                    monitoringGroupRepository.save(group.get(i));
+                }
+                inputLogSetting("'" + hiddenCode + "' > '" + name + "' 해당 측정소가 포함된 그룹의 측정소명 변경", "설정", principal);
+            }
         }
     }
 
@@ -505,6 +518,16 @@ public class AjaxController {
                 removePlaceRemoveSensor(placeList.get(i), principal);       //센서 포함 삭제
             } else {
                 removePlaceChangeSensor(placeList.get(i), principal);       //측정소만 삭제
+            }
+            //삭제될 측정소 그룹에서 삭제
+            List<MonitoringGroup> group = monitoringGroupRepository.findByMonitoringPlaceIsIn(placeList.get(i));
+
+            for (int k = 0; k<group.size(); k++){
+                List<String> groupPlaceList = group.get(k).getMonitoringPlace();
+                int index = groupPlaceList.indexOf(placeList.get(i));
+                groupPlaceList.remove(index);
+                group.get(k).setMonitoringPlace(groupPlaceList);
+                monitoringGroupRepository.save(group.get(k));
             }
         }
     }
@@ -618,10 +641,6 @@ public class AjaxController {
 
             emissionsStandardSettingRepository.deleteByTableName(sensor.get(i));
             inputLogSetting("'"+sensorname+"'"+" 배출 관리 기준 삭제" ,"설정",principal);
-
-
-            monthlyEmissionsRepository.deleteBySensor(sensor.get(i));
-            inputLogSetting("'"+sensorname+"'"+" 통계자료 조회 데이터 삭제" ,"설정",principal);
 
             emissionsTransitionRepository.deleteByTableName(sensor.get(i));
             inputLogSetting("'"+sensorname+"'"+" 분기별 배출량 정보 삭제" ,"설정",principal);
@@ -1336,8 +1355,6 @@ public class AjaxController {
                 placeCheck.setMonitoring(flag);
                 placeRepository.save(placeCheck);
             }
-
-
         }
         sensorListRepository.save(sensor);
     }
@@ -1387,9 +1404,6 @@ public class AjaxController {
         //배출량 관리 - 연간 모니터링 대상 삭제
         annualEmissionsRepository.deleteBySensor(tableName);
         inputLogSetting("'"+ess.getPlace() + " - "+ess.getNaming()+"'"+" 연간 배출량 모니터링 대상 삭제", "설정", principal);
-        // 분석 및 통계 - 통계자료 조회 데이터 삭제
-        monthlyEmissionsRepository.deleteBySensor(tableName);
-        inputLogSetting("'"+ess.getPlace() + " - "+ess.getNaming()+"'"+" 분석 및 통계 데이터 삭제", "설정", principal);
 
         //센서 삭제
         SensorList sensor = sensorListRepository.findByTableName(tableName, "");
@@ -1816,9 +1830,19 @@ public class AjaxController {
      * @param groupNum 수정시 그룹을 식별할 키
      */
     @RequestMapping(value = "/saveGroup", method = RequestMethod.POST)
-    public void saveGroup(String name, @RequestParam(value="memList[]")List<String> memList,
-                          @RequestParam(value="placeList[]")List<String> placeList, String flag, @RequestParam(value = "groupNum",required = false)int groupNum) {
+    public String saveGroup(String name, @RequestParam(value="memList[]", required = false)List<String> memList,
+                            @RequestParam(value="placeList[]",required = false)List<String> placeList, String flag,
+                            @RequestParam(value = "groupNum",required = false)int groupNum) {
         MonitoringGroup group = null;
+        MonitoringGroup defaultGroup = null;
+        int newGroupNum;
+        Member defaultMember;
+
+        //중복 이름 리턴 fail
+        if(monitoringGroupRepository.findByGroupName(name) != null &&
+                monitoringGroupRepository.findByGroupName(name).getGroupNum() != groupNum){
+            return "fail";
+        }
 
         //그룹 Num +1하여 생성
         if(flag.equals("insert")) {
