@@ -657,6 +657,7 @@
                 data:  {"sensor": sensor},
                 async: false,
                 success: function (data) {
+                    console.log(data);
                     result = {value: (data.value).toFixed(2), status: data.status, up_time:data.up_time};
                 },
                 error: function (e) {

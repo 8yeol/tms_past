@@ -208,6 +208,38 @@ public class MainController {
                         }catch (Exception e){
                             subObj.put("beforeValue", 0);
                         }
+                        try{
+                            Sensor recentDataRM05 = sensorCustomRepository.getSensorRecentRM05(sensorNames.get(i)); //센서의 최근 데이터
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            subObj.put("rm05_value", recentDataRM05.getValue());
+                            subObj.put("rm05_up_time", simpleDateFormat.format(recentDataRM05.getUp_time()));
+                            subObj.put("rm05_status", recentDataRM05.isStatus());
+                        }catch (Exception e){
+                            System.out.println("error");
+                        }
+                        try{
+                            Sensor beforeDataRM05 = sensorCustomRepository.getSensorBeforeDataRM05(sensorNames.get(i)); //센서의 최근 데이터
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            subObj.put("rm05_beforeValue", beforeDataRM05.getValue());
+                        }catch (Exception e){
+                            System.out.println("error");
+                        }
+                        try{
+                            Sensor recentDataRM30 = sensorCustomRepository.getSensorRecentRM30(sensorNames.get(i)); //센서의 최근 데이터
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            subObj.put("rm30_value", recentDataRM30.getValue());
+                            subObj.put("rm30_up_time", simpleDateFormat.format(recentDataRM30.getUp_time()));
+                            subObj.put("rm30_status", recentDataRM30.isStatus());
+                        }catch (Exception e){
+                            System.out.println("error");
+                        }
+                        try{
+                            Sensor beforeDataRM30 = sensorCustomRepository.getSensorBeforeDataRM30(sensorNames.get(i)); //센서의 최근 데이터
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            subObj.put("rm30_beforeValue", beforeDataRM30.getValue());
+                        }catch (Exception e){
+                            System.out.println("error");
+                        }
                         ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorNames.get(i)); //센서의 기타 정보(기준값 등)
                         subObj.put("naming", sensorInfo.getNaming());
                         subObj.put("legalStandard", numberTypeChange(sensorInfo.getLegalStandard()));
