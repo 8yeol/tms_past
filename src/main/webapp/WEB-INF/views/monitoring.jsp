@@ -71,7 +71,7 @@
     }
 
     .cloud {
-        width: 250px;
+        width: 270px;
         height: 90px;
         position: absolute;
         top: -70px;
@@ -81,6 +81,10 @@
         background-origin: padding-box;
         text-align: center;
         line-height: 20px;
+    }
+
+    .cloud.line {
+        line-height: 40px;
     }
 
     @media all and (max-width: 1399px) and (min-width: 1001px) {
@@ -178,7 +182,7 @@
                     </div>
                     <div style="position: relative" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">
                         <p style="margin-left: 5px; cursor: default;">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
-                        <div class="cloud" id="off" style="display: none">모니터링 OFF 설정 되어있는 경우</div>
+                        <div class="cloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 경우</div>
                     </div>
                 </div>
             </div>
