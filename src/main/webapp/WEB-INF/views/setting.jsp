@@ -88,7 +88,15 @@
 
     #member-Table select {
         color: #000;
-        background-color: #f8f9fa;
+        background-color: white;
+        border-color: #aaa;
+        border-radius: 2px;
+        padding: 3px;
+        width: 130px;
+    }
+    #member-Table select:disabled {
+        color: #aaa;
+        background-color: #ddd;
         border-color: #aaa;
         border-radius: 2px;
         padding: 3px;
@@ -334,19 +342,19 @@
                                     <td>가입대기</td>
                                 </c:when>
                                 <c:when test="${mList.state eq '3'}">
-                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                    <td onclick="event.cancelBubble=true"><select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
                                         <option value='${mList.state}'
                                                 selected="selected">일반</option>
                                     </select></td>
                                 </c:when>
                                 <c:when test="${mList.state eq '2'}">
-                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                    <td onclick="event.cancelBubble=true"><select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
                                         <option value='${mList.state}'
                                                 selected="selected">관리자</option>
                                     </select></td>
                                 </c:when>
                                 <c:when test="${mList.state eq '1'}">
-                                    <td onclick="event.cancelBubble=true"><select id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                    <td onclick="event.cancelBubble=true"><select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
                                         <option value='${mList.state}'
                                                 selected="selected">최고 관리자</option>
                                     </select></td>
@@ -808,6 +816,7 @@
         substrArrayData();
         getMemberAndPlaceList();
         allPlaceCheck();
+        stateCheck();
     }); //ready
 
     function Info_Set(str_id, str_state, str_name) {
@@ -1373,6 +1382,24 @@
             error: function () {
             }
         });
+    }
+
+    //최고 관리자 인원 체크
+    function stateCheck() {
+        const state = $('select[name=state]');
+        let array= new Array();
+        for(let i=0; i<state.length; i++){
+            if(state[i].value == 1){
+                array[i] = state[i].id;
+            }
+        }
+        //배열 공백 제거
+        let filter = array.filter(function(el){
+            return el != null;
+        });
+        if(filter.length==1){
+             return $('#' + filter[0]).attr('disabled', true);
+        }
     }
 
     //모니터링 그룹 변경 ajax
