@@ -367,6 +367,8 @@
 
     function deleteModal(obj) {
         const tableName = $(obj).parent().parent().children().eq(3).html(); //-> tmsWP0001_NOX_01
+        const place = $(obj).parent().parent().children().eq(6).html(); //-> 보일러실
+        const naming = $(obj).parent().parent().children().eq(1).html(); //-> 온도
         const id = $(obj).parent().parent().children().eq(2).html();
 
         Swal.fire({
@@ -379,17 +381,17 @@
             cancelButtonText: '취소'
         }).then((result) => {
             if (result.isConfirmed)
-                deleteSensor(tableName);
+                deleteSensor(tableName,place,naming);
         });
     }
 
-    function deleteSensor(tableName) {
+    function deleteSensor(tableName, place, naming) {
         $.ajax({
             url: '<%=cp%>/deleteSensor',
             type: 'POST',
             async: false,
             cache: false,
-            data: {tableName: tableName},
+            data: {tableName: tableName, place: place, naming: naming},
             success: function () {
                 customSwal('삭제 완료','삭제 되었습니다.');
                 setTimeout(function () {

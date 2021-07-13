@@ -98,7 +98,7 @@
                         </th>
                         <th style="width: 33%">측정소 명</th>
                         <th style="width: 40%;">업데이트</th>
-                        <th style="width: 25%;">모니터링 사용</th>
+<%--                        <th style="width: 25%;">모니터링 사용</th>--%>
                     </tr>
                 </thead>
                 <tbody id="placeDiv">
@@ -175,6 +175,7 @@
     $(function () {
         $('.modal-dialog').draggable({handle: ".modal-header"});
     });
+
     //modal 팝업창 close시 form에 남아있던 데이터 리셋
     $('.modal').on('hidden.bs.modal', function (e) {
         $(this).find('form')[0].reset()
@@ -227,10 +228,10 @@
         })
     }
 
-    //측정소 목록 불러오기
+    //해당 그룹의 측정소 목록 불러오기
     function placeDiv(groupPlace) {
         $("#placeDiv").empty();
-
+        console.log(groupPlace);
         //측정가능한 측정소 없음
         if(groupPlace[0] == null){
             $('#placeDiv').append('<tr><td colspan="4" style="height: 250px;line-height: 250px;">측정 가능한 측정소가 없습니다.</td></tr>');
@@ -247,14 +248,14 @@
                 const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
                 onoff = data[i].monitoring ? "checked" : "";
 
-                const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\" >" +
+                const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\"  class='placeTr'>" +
                     "<td style='padding-left:6px;' onclick='event.cancelBubble=true'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
                     "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
                     "<td style='width: 40%;'>" + time + "</td>" +
-                    "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
-                    "<input class='placeCheckbox' id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
-                    "<span class='slider round'></span>" +
-                    "</label></td>" +
+                    // "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
+                    // "<input class='placeCheckbox' id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
+                    // "<span class='slider round'></span>" +
+                    // "</label></td>" +
                     "</tr>";
 
                 $('#placeDiv').append(innerHTML);
@@ -322,9 +323,9 @@
                                 "<td style='width: 2%;'></td>" +
                                 "<td style='width:18%;'><span id='naming" + i + "' >" + data[i].naming + "</span></td>" +
                                 "<td style='width:25%;'><span id='name" + i + "'>" + data[i].name + "</span></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input'  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input'  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input'  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input standard'  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input standard'  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input standard'  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch'>" +
                                 "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +
@@ -387,7 +388,7 @@
             customSwal('측정소를 한개만 체크해 주세요.');
             const placeall = document.querySelector('input[name="placeall"]');
             placeall.checked = false;
-            placeDiv();
+            placeDiv(${groupPlace});
             placeChange(document.getElementById('nickname').value);
             return false;
         }
@@ -535,8 +536,8 @@
             timer: 1500
         })
         document.getElementById("cancelBtn").click();
-        placeDiv();
-        placeChange(send);
+        placeDiv(${groupPlace});
+        placeChange($('#placeDIv tr').eq(0).attr('id'));
     }
 
     function removePlace() {
@@ -601,84 +602,72 @@
                         }
                     })
 
-                    placeDiv();
-                    placeChange("p0");
+                    placeDiv(${groupPlace});
+                    placeChange($('#placeDIv tr').eq(0).attr('id'));
                 });
             }
         });
     }
 
-    //측정소 모니터링 onchange
-    function p_monitoringupdate(id) {
-        const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
-        var check = $("#" + id).is(":checked"); //true/false
-        var name = $("#p" + num).attr("value"); //측정소 명
-        var timeTd = $("#" + id).parent().parent().prev();
-        var sensorCheck = findSensor(name);
-        if (sensorCheck == 'none') { //등록된 센서가 없을때
-            customSwal('등록된 센서가 없어 모니터링 기능을 사용할 수 없습니다.');
-            $("#" + id).prop("checked", false);
-            return;
+    <%--//측정소 모니터링 onchange--%>
+    <%--function p_monitoringupdate(id) {--%>
+    <%--    const num = id.replace(/[^0-9]/g, ''); //place0 -> 0--%>
+    <%--    var check = $("#" + id).is(":checked"); //true/false--%>
+    <%--    var name = $("#p" + num).attr("value"); //측정소 명--%>
+    <%--    var timeTd = $("#" + id).parent().parent().prev();--%>
+    <%--    var sensorCheck = findSensor(name);--%>
+    <%--    if (sensorCheck == 'none') { //등록된 센서가 없을때--%>
+    <%--        customSwal('등록된 센서가 없어 모니터링 기능을 사용할 수 없습니다.');--%>
+    <%--        $("#" + id).prop("checked", false);--%>
+    <%--        return;--%>
 
-        } else if (sensorCheck == "Off") {
-            customSwal('측정항목 모니터링이 전부 OFF 상태입니다.');
-            $("#" + id).prop("checked", false);
-            return;
-        }
-        $.ajax({
-            url: '<%=cp%>/MonitoringUpdate',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: {
-                "place": name, //측정소 명
-                "check": check //true/false
-            },
-            success: function (data) {
-                timeTd.html(moment(data).format('YYYY-MM-DD HH:mm:ss'));
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        })
-        if (check == true) {
-            check = "ON";
-        } else {
-            check = "OFF";
-        }
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + check + "", "설정");
-        multiSelecterModal(name, "", "monitor", check);
-    }
+    <%--    } else if (sensorCheck == "Off") {--%>
+    <%--        customSwal('측정항목 모니터링이 전부 OFF 상태입니다.');--%>
+    <%--        $("#" + id).prop("checked", false);--%>
+    <%--        return;--%>
+    <%--    }--%>
+    <%--    $.ajax({--%>
+    <%--        url: '<%=cp%>/MonitoringUpdate',--%>
+    <%--        type: 'POST',--%>
+    <%--        async: false,--%>
+    <%--        cache: false,--%>
+    <%--        data: {--%>
+    <%--            "place": name, //측정소 명--%>
+    <%--            "check": check //true/false--%>
+    <%--        },--%>
+    <%--        success: function (data) {--%>
+    <%--            timeTd.html(moment(data).format('YYYY-MM-DD HH:mm:ss'));--%>
+    <%--        },--%>
+    <%--        error: function (err) {--%>
+    <%--            console.log(err);--%>
+    <%--        }--%>
+    <%--    })--%>
+    <%--    if (check == true) {--%>
+    <%--        check = "ON";--%>
+    <%--    } else {--%>
+    <%--        check = "OFF";--%>
+    <%--    }--%>
+    <%--    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + check + "", "설정");--%>
+    <%--    multiSelecterModal(name, "", "monitor", check);--%>
+    <%--}--%>
 
     //측정항목 모니터링 onchange
     function monitoringupdate(name) {
         var id = name.id;
         const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
         const naming = $("#naming" + num).text(); //관리ID
-        var tablename = name.value; //
+        var tablename = name.value;
         var check = $("#" + id).is(":checked");
         var pname = $("#pname").text();
+        check = check  ? "ON" : "OFF";
 
         $.ajax({
             url: '<%=cp%>/referenceMonitoringUpdate',
             type: 'POST',
             async: false,
             cache: false,
-            data: {
-                "sensor": tablename,
-                "place": pname
-            }
+            data: {"sensor": tablename}
         })
-        if (check == true) {
-            check = "ON";
-        } else {
-            check = "OFF";
-        }
-        let checkFlag = false;
-        if ($("input[name=sensormonitor]").is(":checked") == true) checkFlag = true;
-        if (checkFlag == false) {
-            $('tr[value=' + pname + ']').find('.placeCheckbox').prop("checked", false);
-        }
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
         multiSelecterModal(pname, naming, "monitor", check);
     }

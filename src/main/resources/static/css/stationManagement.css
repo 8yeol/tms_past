@@ -192,3 +192,9 @@ td>input {
         right: 17.5% !important;
     }
 }
+.placeTr{
+    height: 50px;
+}
+.placeTr:hover{
+    background-color: #86b7fe;
+}
