@@ -1811,6 +1811,7 @@ public class AjaxController {
         MonitoringGroup group = null;
         MonitoringGroup defaultGroup = null;
         int newGroupNum;
+        Member defaultMember;
 
         //중복 이름 리턴 fail
         if(monitoringGroupRepository.findByGroupName(name) != null &&
@@ -1831,19 +1832,23 @@ public class AjaxController {
         //수정할 그룹의 멤버 모두 default로 초기화
         }else if(flag.equals("edit")){
             group = monitoringGroupRepository.findByGroupNum(groupNum);
+            System.out.println(group);
+            System.out.println(memList);
             if(group.getGroupMember() != null) {
                 for (int i = 0; i < group.getGroupMember().size(); i++) {
-                    Member defaultMember = memberRepository.findById((String) group.getGroupMember().get(i));
+                    defaultMember = memberRepository.findById((String) group.getGroupMember().get(i));
                     defaultMember.setMonitoringGroup("default");
                     memberRepository.save(defaultMember);
+                    System.out.println(defaultMember);
 
                     defaultGroup = monitoringGroupRepository.findByGroupName("default");
                     List defaultGroupMember = defaultGroup.getGroupMember();
                     defaultGroupMember.add(group.getGroupMember().get(i));
+                     monitoringGroupRepository.save(defaultGroup);
+                    System.out.println(defaultGroup);
                 }
                 group.setGroupMember(null);
                 monitoringGroupRepository.save(group);
-                monitoringGroupRepository.save(defaultGroup);
             }
         }
 
