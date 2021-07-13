@@ -1630,11 +1630,17 @@ public class AjaxController {
             monitoringGroupRepository.save(group);
 
             MonitoringGroup allGroup = monitoringGroupRepository.findByGroupNum(0);
-            List allGroupMember = allGroup.getGroupMember();
-            allGroupMember.add(id);
-            allGroup.setGroupMember(allGroupMember);
-            monitoringGroupRepository.save(allGroup);
+            if(allGroup.getGroupMember() == null){
+                List memList = new ArrayList();
+                memList.add(id);
+                allGroup.setGroupMember(memList);
+            }else {
+                List allGroupMember = allGroup.getGroupMember();
+                allGroupMember.add(id);
+                allGroup.setGroupMember(allGroupMember);
+            }
 
+            monitoringGroupRepository.save(allGroup);
             newMember.setMonitoringGroup("ALL");
         }
 
