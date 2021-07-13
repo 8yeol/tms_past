@@ -314,15 +314,15 @@
 
                     <thead>
                     <tr class="text-center">
-                        <th style="padding:10px 0px 10px 0px;">ID</th>
-                        <th style="padding:10px 0px 10px 0px;">이름</th>
-                        <th style="padding:10px 0px 10px 0px;">권한</th>
-                        <th style="padding:10px 0px 10px 0px;">이메일</th>
-                        <th style="padding:10px 0px 10px 0px;">연락처</th>
-                        <th style="padding:10px 0px 10px 0px;">부서명</th>
-                        <th style="padding:10px 0px 10px 0px;">모니터링 그룹</th>
-                        <th style="padding:10px 0px 10px 0px;">가입일</th>
-                        <th style="padding:10px 0px 10px 0px;">관리</th>
+                        <th style="width: 9%; padding:10px 0px 10px 0px;">ID</th>
+                        <th style="width: 9%; padding:10px 0px 10px 0px;">이름</th>
+                        <th style="width: 12%; padding:10px 0px 10px 0px;">권한</th>
+                        <th style="width: 16%; padding:10px 0px 10px 0px;">이메일</th>
+                        <th style="width: 12%; padding:10px 0px 10px 0px;">연락처</th>
+                        <th style="width: 10%; padding:10px 0px 10px 0px;">부서명</th>
+                        <th style="width: 12%; padding:10px 0px 10px 0px;">모니터링 그룹</th>
+                        <th style="width: 14%; padding:10px 0px 10px 0px;">가입일</th>
+                        <th style="width: 6%; padding:10px 0px 10px 0px;">관리</th>
                     </tr>
                     </thead>
 
