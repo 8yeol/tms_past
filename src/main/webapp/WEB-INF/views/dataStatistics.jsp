@@ -78,6 +78,7 @@
                     <%--script--%>
                 </select>
             </div>
+            <p style="margin: 5px 65px 0px 0px; font-size: 0.8rem; text-align: right">* 배출량 추이는 질소산화물 센서 항목에 한하여 조회 가능합니다.</p>
         </div>
     </div>
 
