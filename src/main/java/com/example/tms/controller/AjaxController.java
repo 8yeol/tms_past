@@ -2141,7 +2141,7 @@ public class AjaxController {
 
     // memberID = 로그인 된 회원의 ID
     @RequestMapping(value = "/getMonitoringSensor", method = RequestMethod.GET)
-    public void getMonitoringSensor(String memberId){
+    public Map<String, List> getMonitoringSensor(String memberId){
         Member member = memberRepository.findById(memberId);
         int groupNum = member.getMonitoringGroup();
 
@@ -2163,6 +2163,6 @@ public class AjaxController {
             monitoring.put(placeName, test);
         }
 
-        System.out.println(monitoring);
+        return monitoring;
     }
 }
