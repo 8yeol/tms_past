@@ -66,7 +66,7 @@
     }
 </style>
 <div class="container" id="container">
-    <div class="col fw-bold fs-3 m-4 ms-0">
+    <div class="col fw-bold fs-4 m-4 ms-0">
         환경설정 > 측정소 관리
     </div>
 

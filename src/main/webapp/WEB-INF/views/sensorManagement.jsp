@@ -139,8 +139,8 @@
 </style>
 <div class="container" id="container">
     <div class="row">
-        <div class="row m-3 mt-3 ms-1">
-            <span class="fw-bold" style="font-size: 27px;">환경설정 > 센서 관리</span>
+        <div class="row m-3 mt-3 ms-1" style="padding: 0">
+            <span class="fw-bold fs-4">환경설정 > 센서 관리</span>
         </div>
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
             <form id="saveForm" style="margin: 0;">

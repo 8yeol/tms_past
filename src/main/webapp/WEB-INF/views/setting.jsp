@@ -323,7 +323,7 @@
 
 <div class="container" id="container">
     <div class="row1 mt-4 mb-4">
-        <span style=" font-size: 27px;font-weight: bold">환경설정 > 설정</span>
+        <span class="fs-4 fw-bold" style="padding: 0 10px;">환경설정 > 설정</span>
     </div>
 
     <div class="row bg-light rounded py-3" style="margin-left: 1px; position: relative;"> <%-- 상단 콘텐츠 div --%>
