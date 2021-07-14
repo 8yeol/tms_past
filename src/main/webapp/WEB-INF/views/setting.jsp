@@ -567,7 +567,7 @@
             <div class="modal-body d-flex justify-content-center">
                 <h3>그룹명</h3>
                 <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px;" maxlength="70"
-                       id="groupInput">
+                       id="groupInput" autocomplete="off">
             </div>
             <div class="modal-body d-flex">
                 <div style="width: 100%">

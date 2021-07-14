@@ -20,5 +20,6 @@ public class MonitoringGroup {
     private List groupMember;
     private List monitoringPlace;
     private int groupNum;
+    private List sensor;
 
 }
