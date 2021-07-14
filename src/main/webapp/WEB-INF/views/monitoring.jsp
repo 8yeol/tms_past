@@ -988,11 +988,10 @@
                 width: 3
             },
             dataLabels: {
-                enabled: false,
-                // style: { //데이터 배경
-                //     fontSize: '10px',
-                //     colors: ['#629cf4'],
-                // },
+                enabled: true,
+                style: { //데이터 배경
+                    fontSize: '11px',
+                },
                 background: { //데이터 글자
                     enabled: true,
                     foreColor: 'black',
@@ -1068,44 +1067,41 @@
             annotations: {
                 yaxis: [{
                     y: managementStandard,
-                    borderColor: '#00E396',
                     label: {
-                        borderColor: '#00E396',
+                        borderColor: '#82e8b7',
                         style: {
                             color: '#fff',
-                            background: '#00E396'
+                            background: '#82e8b7'
                         },
                         text: '관리기준',
                         position: 'left',
-                        offsetX: 0
+                        offsetX: 8
                     }
                 },
                     {
                         y: companyStandard,
-                        borderColor: '#FEB019',
                         label: {
-                            borderColor: '#FEB019',
+                            borderColor: '#ffd862',
                             style: {
                                 color: '#fff',
-                                background: '#FEB019'
+                                background: '#ffd862'
                             },
                             text: '사내기준',
                             position: 'left',
-                            offsetX: 0
+                            offsetX: 8
                         }
                     },
                     {
                         y: legalStandard,
-                        borderColor: '#FF4560',
                         label: {
-                            borderColor: '#FF4560',
+                            borderColor: '#ed969e',
                             style: {
                                 color: '#fff',
-                                background: '#FF4560'
+                                background: '#ed969e'
                             },
                             text: '법적기준',
                             position: 'left',
-                            offsetX: 0
+                            offsetX: 8
                         }
                     }]
             },
