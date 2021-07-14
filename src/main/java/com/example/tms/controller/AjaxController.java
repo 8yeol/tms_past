@@ -1595,13 +1595,14 @@ public class AjaxController {
      * @return 안내메시지를 리턴
      */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public String memberSignUp(String id, String iNumber,String state) {
+    public String memberSignUp(String id, String iNumber,String state,String group) {
         String msg = "";
         Member newMember = memberRepository.findById(id);
         if (iNumber.equals("0")) {
             newMember.setState("5");
             msg = "가입 거절 되었습니다.";
         } else {
+            newMember.setMonitoringGroup(group);
             newMember.setState(state);
             Date time = new Date();
             newMember.setJoined(time);

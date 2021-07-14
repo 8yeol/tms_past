@@ -103,6 +103,8 @@
                             <td>${mList.department}</td>
                             <td onclick="event.cancelBubble=true">
                             <c:choose>
+                                <c:when test="${mList.state == 5 || mList.state == 4}">
+                                </c:when>
                                 <c:when test="${mList.state == 1}">
                                 <select id='monitoringGroup${mList.id}' disabled="disabled" onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
                                     <option value='${mList.monitoringGroup}' selected="selected">${mList.monitoringGroup}</option>
@@ -638,18 +640,25 @@
     }
 
     function sing_up(sign) {
-        if($("#m_group option:selected").val() == "선택"){
+        if(sign == 1 && $("#m_group option:selected").val() == "선택"){
             warning("모니터링 그룹을 선택해주세요.");
             return false;
         }
 
         let content = ID;
-        (sign == 1) ? content += " 계정 가입 승인 " : content += " 계정 가입 거절 ";
-
-        var rankLog = ($("#rank").val() == 1) ? " [최고 관리자] " : ($("#rank").val() == 2) ? " [관리자] " : " [일반] ";
-        content += rankLog;
+        if(sign ==0){
+            content += " 계정 가입 거절 ";
+        }else {
+            content += " 계정 가입 승인 ";
+            var rankLog = ($("#rank").val() == 1) ? " [최고 관리자] " : ($("#rank").val() == 2) ? " [관리자] " : " [일반] ";
+            content += rankLog;
+            content += " 모니터링 그룹 : ";
+            var groupLog = $("#m_group option:selected").text();
+            console.log(groupLog)
+            content += groupLog;
+        }
         var settings = {
-            "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + sign + "&state=" + $("#rank").val(),
+            "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + sign + "&state=" + $("#rank").val() + "&group=" + groupLog,
             "method": "POST"
         };
 
