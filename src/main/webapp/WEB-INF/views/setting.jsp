@@ -172,6 +172,7 @@
                 <table class="table table-striped" id="groupTable">
                     <thead>
                         <tr>
+                            <th>Index</th>
                             <th>그룹명</th>
                             <th>회원</th>
                             <th>모니터링 <a class="sign"></a> 측정소</th>
@@ -180,19 +181,29 @@
                     </thead>
                     <tbody>
                     <c:forEach items="${group}" var="groupList" varStatus="idx">
-                        <c:if test="${groupList.groupName != 'default'}">
-                            <tr>
-                                <td>${groupList.groupName}</td>
-                                <td class="groupTd">${groupList.groupMember}</td>
-                                <td class="groupPlace">${groupList.monitoringPlace}</td>
-                                <td><i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal"
+                        <tr>
+                            <td>${groupList.groupNum}</td>
+                            <td>${groupList.groupName}</td>
+                            <td>
+                                <input type="hidden" value="${groupList.groupMember}"  class="groupTd">
+                                <c:if test="${groupList.groupMember != null}">
+                                    ${groupList.groupMember.size()} 명
+                                </c:if>
+                                <c:if test="${groupList.groupMember == null}">
+                                    0 명
+                                </c:if>
+                            </td>
+                            <td class="groupPlace">${groupList.monitoringPlace}</td>
+                            <td>
+                                <c:if test="${groupList.groupName != 'default'}">
+                                    <i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal"
                                        onclick="groupEditSetting(this, ${groupList.groupNum})"></i>&ensp;
-                                    <c:if test="${groupList.groupName != 'ALL'}">
+                                    <c:if test="${groupList.groupName != '모든 측정소'}">
                                         <i class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
                                     </c:if>
-                                </td>
-                            </tr>
-                        </c:if>
+                                </c:if>
+                            </td>
+                        </tr>
                     </c:forEach>
                     </tbody>
                 </table>
@@ -509,8 +520,9 @@
 
     $('#groupTable').DataTable({
         "columns": [
-            {"width": "20%"},
-            {"width": "35%"},
+            {"width": "10%"},
+            {"width": "30%"},
+            {"width": "15%"},
             {"width": "35%"},
             {"width": "10%"}
         ],
@@ -780,7 +792,7 @@
 
         let pList
         if($('#allPlaceCheck').is(':checked') == true || $('.allCheckEvent').css('display') == 'none'){
-            pList = ["ALL"];
+            pList = ["모든 측정소"];
         }else{
             let place = $('#lstBox2 option');
             pList = new Array();
@@ -866,7 +878,7 @@
     function substrArrayData() {
         let groupMember = $('.groupTd');
         for (i = 0; i < groupMember.length; i++) {
-            groupMember.eq(i).text(groupMember.eq(i).text().substr(1, groupMember.eq(i).text().length - 2));
+            groupMember.eq(i).val(groupMember.eq(i).val().substr(1, groupMember.eq(i).val().length - 2));
         }
 
         let groupPlace = $('.groupPlace');
@@ -877,7 +889,7 @@
 
     //삭제 모달
     function deleteModal(obj, indexKey) {
-        const name = $(obj).parent().parent().children().eq(0).html(); //-> tmsWP0001_NOX_01
+        const name = $(obj).parent().parent().children().eq(1).html(); //-> tmsWP0001_NOX_01
         const key = indexKey;
 
         Swal.fire({
@@ -916,10 +928,9 @@
 
     //그룹 수정시 모달 셋팅
     function groupEditSetting(obj, groupNum) {
-        console.log(memberList);
-        let groupMemList = $(obj).parent().parent().children().eq(1).text().split(',');
-        let groupPlaList = $(obj).parent().parent().children().eq(2).text().split(',');
-        let groupName = $(obj).parent().parent().children().eq(0).text();
+        let groupMemList = $(obj).parent().parent().children().eq(2).children().val().split(',');
+        let groupPlaList = $(obj).parent().parent().children().eq(3).text().split(',');
+        let groupName = $(obj).parent().parent().children().eq(1).text();
 
         $('#groupInput').val(groupName);
         $('#placeSelect .allCheckEvent').css('display', 'block');
@@ -933,7 +944,7 @@
         $('#monitoringSignModal').finish().fadeOut(0);
         optionDisabled(false);
 
-        if(groupMemList[0] !="") {
+        if(groupMemList[0] != "") {
             let innerHTML;
             for (i = 0; i < groupMemList.length; i++) {
                 groupMemList[i] = groupMemList[i].trim();
@@ -949,7 +960,7 @@
         }
 
 
-        if(groupPlaList == "ALL") {
+        if(groupPlaList == "모든 측정소") {
             $('#placeSelect .allCheckEvent').css('display', 'none');
             $('#monitoringSignModal').css('top', '50%');
             optionDisabled(true);
@@ -976,10 +987,10 @@
 
         let memInnerHTML;
         for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "default" && groupPlaList != 'ALL' && memberList[i].state <=3 && memberList[i].state != 1) {
+            if (memberList[i].monitoringGroup == "default" && groupPlaList != '모든 측정소' && memberList[i].state <=3 && memberList[i].state != 1) {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
-            if (memberList[i].monitoringGroup == "default" && groupPlaList == 'ALL' && memberList[i].state <= 3) {
+            if (memberList[i].monitoringGroup == "default" && groupPlaList == '모든 측정소' && memberList[i].state <= 3) {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
         }

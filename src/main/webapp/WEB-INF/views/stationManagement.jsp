@@ -188,7 +188,7 @@
         if(typeof $('#placeDIv tr').eq(0).attr('id') !== 'undefined') {
             placeChange($('#placeDIv tr').eq(0).attr('id'));
         }
-        if(${groupPlace}[0] != 'ALL'){
+        if(${groupPlace}[0] != '모든 측정소'){
             $('.standard').prop('readonly', true);
         };
     });
@@ -244,7 +244,7 @@
         const data = placeDiv1();
         let onoff = "";
         for (let i = 0; i < data.length; i++) {
-            if(groupPlace.includes(data[i].name) || groupPlace[0] == 'ALL') {
+            if(groupPlace.includes(data[i].name) || groupPlace[0] == '모든 측정소') {
                 const test = data[i];
                 const name = test.name;
                 const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
@@ -306,7 +306,7 @@
         const none = "<tr><td colspan='7' class='p-3'> 등록된 센서 데이터가 없습니다. <br> 센서 등록 후 이용 가능합니다. </td></tr>";
 
         $('#items').append(none); //센서 없을때
-        let readonly = ${groupPlace}[0] != 'ALL' ? 'readonly' : '';
+        let readonly = ${groupPlace}[0] != '모든 측정소' ? 'readonly' : '';
 
         $.ajax({
             url: '<%=cp%>/getPlaceSensorValue',
