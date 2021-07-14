@@ -178,81 +178,73 @@ public class MainController {
     public void monitoring(Model model) {
         try{
             JSONArray jsonArray = new JSONArray();
-            //모니터링 페이지에서 전체 측정소의 jsonarray2(센서들의 정보(최근,이전,기준값 등)들)을 JSON 타입으로 저장하기 위한 변수
-            List<String> placeNames = new ArrayList<>();
-            // 모니터링 True 인 측정소명을 저장하기 위한 변수
-            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //측정소 모니터링 True인 측정소리스트
-            for(int z=0; z<placeList.size(); z++){
-                placeNames.add(placeList.get(z).getName()); //측정소명만 추출하여 저장
-                List<String> sensorNames = placeRepository.findByName(placeNames.get(z)).getSensor(); //측정소의 센서들
-                JSONArray jsonArray2 = new JSONArray();
-                // 모니터링 True 인 센서들의 정보(최근,이전,기준값 등) JSON 타입으로 저장하기 위한 변수
-                for(int i=0; i<sensorNames.size(); i++){
-                    JSONObject subObj = new JSONObject();
-                    //센서의 정보들(최근, 이전, 기준값)을 JSON 타입으로 저장하기 위한 변수
+            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //모니터링 On 인 측정소 정보들
+            for(int a=0; a<placeList.size(); a++){ //모니터링 On인 측정소
+                int sensorSize = 0;
+                JSONObject placeInfoList = new JSONObject();
+                JSONArray placeInfoArray = new JSONArray();
+                String placeName = placeList.get(a).getName();
+                List<String> sensorNames = placeList.get(a).getSensor();
+                int standardExist = 0;
+                int standardNotExist = 0;
+                for(int i=0; i<sensorNames.size(); i++){ //측정소의 센서조회
+                    JSONObject sensorObj = new JSONObject();
                     boolean monitoring = reference_value_settingRepository.findByName(sensorNames.get(i)).getMonitoring();  //센서 모니터링 여부
+                    boolean standardExistStatus = false;
                     if(monitoring){
-                        try{
-                            subObj.put("place", placeNames.get(z));
-                            Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i)); //센서의 최근 데이터
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            subObj.put("value", recentData.getValue());
-                            subObj.put("up_time", simpleDateFormat.format(recentData.getUp_time()));
-                            subObj.put("status", recentData.isStatus());
-                        }catch (Exception e){
-                            System.out.println("error");
-                        }
-                        try {
-                            Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorNames.get(i)); //센서의 이전 데이터
-                            subObj.put("beforeValue", beforeData.getValue());
-                        }catch (Exception e){
-                            subObj.put("beforeValue", 0);
-                        }
-                        try{
-                            Sensor recentDataRM05 = sensorCustomRepository.getSensorRecentRM05(sensorNames.get(i)); //센서의 최근 데이터
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            subObj.put("rm05_value", recentDataRM05.getValue());
-                            subObj.put("rm05_up_time", simpleDateFormat.format(recentDataRM05.getUp_time()));
-                            subObj.put("rm05_status", recentDataRM05.isStatus());
-                        }catch (Exception e){
-                            System.out.println("error");
-                        }
-                        try{
-                            Sensor beforeDataRM05 = sensorCustomRepository.getSensorBeforeDataRM05(sensorNames.get(i)); //센서의 최근 데이터
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            subObj.put("rm05_beforeValue", beforeDataRM05.getValue());
-                        }catch (Exception e){
-                            System.out.println("error");
-                        }
-                        try{
-                            Sensor recentDataRM30 = sensorCustomRepository.getSensorRecentRM30(sensorNames.get(i)); //센서의 최근 데이터
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            subObj.put("rm30_value", recentDataRM30.getValue());
-                            subObj.put("rm30_up_time", simpleDateFormat.format(recentDataRM30.getUp_time()));
-                            subObj.put("rm30_status", recentDataRM30.isStatus());
-                        }catch (Exception e){
-                            System.out.println("error");
-                        }
-                        try{
-                            Sensor beforeDataRM30 = sensorCustomRepository.getSensorBeforeDataRM30(sensorNames.get(i)); //센서의 최근 데이터
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            subObj.put("rm30_beforeValue", beforeDataRM30.getValue());
-                        }catch (Exception e){
-                            System.out.println("error");
-                        }
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i)); //센서의 최근 데이터
+                        sensorObj.put("recent_value", recentData.getValue());
+                        sensorObj.put("recent_up_time", simpleDateFormat.format(recentData.getUp_time()));
+                        sensorObj.put("recent_status", recentData.isStatus());
+                        Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorNames.get(i)); //센서의 이전 데이터
+                        sensorObj.put("recent_beforeValue", beforeData.getValue());
+                        Sensor recentDataRM05 = sensorCustomRepository.getSensorRecentRM05(sensorNames.get(i)); //센서의 최근 데이터
+                        sensorObj.put("rm05_value", recentDataRM05.getValue());
+                        sensorObj.put("rm05_up_time", simpleDateFormat.format(recentDataRM05.getUp_time()));
+                        sensorObj.put("rm05_status", recentDataRM05.isStatus());
+                        Sensor beforeDataRM05 = sensorCustomRepository.getSensorBeforeDataRM05(sensorNames.get(i)); //센서의 최근 데이터
+                        sensorObj.put("rm05_beforeValue", beforeDataRM05.getValue());
+                        Sensor recentDataRM30 = sensorCustomRepository.getSensorRecentRM30(sensorNames.get(i));
+                        sensorObj.put("rm30_value", recentDataRM30.getValue());
+                        sensorObj.put("rm30_up_time", simpleDateFormat.format(recentDataRM30.getUp_time()));
+                        sensorObj.put("rm30_status", recentDataRM30.isStatus());
+                        Sensor beforeDataRM30 = sensorCustomRepository.getSensorBeforeDataRM30(sensorNames.get(i)); //센서의 최근 데이터
+                        sensorObj.put("rm30_beforeValue", beforeDataRM30.getValue());
                         ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorNames.get(i)); //센서의 기타 정보(기준값 등)
-                        subObj.put("naming", sensorInfo.getNaming());
-                        subObj.put("legalStandard", numberTypeChange(sensorInfo.getLegalStandard()));
-                        subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
-                        subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
-                        subObj.put("name", sensorNames.get(i));
-                        jsonArray2.add(subObj);
+                        sensorObj.put("naming", sensorInfo.getNaming());
+                        Object legalStandard = numberTypeChange(sensorInfo.getLegalStandard());
+                        Object companyStandard = numberTypeChange(sensorInfo.getCompanyStandard());
+                        Object managementStandard = numberTypeChange(sensorInfo.getManagementStandard());
+                        sensorObj.put("legalStandard", legalStandard);
+                        sensorObj.put("companyStandard", companyStandard);
+                        sensorObj.put("managementStandard", managementStandard);
+                        sensorObj.put("name", sensorNames.get(i));
+                        if (legalStandard.equals(999999) && companyStandard.equals(999999) && managementStandard.equals(999999)){
+                            standardNotExist += 1;
+                            standardExistStatus = false;
+                            sensorObj.put("standardExistStatus", standardExistStatus);
+                        }else{
+                            standardExist += 1;
+                            standardExistStatus = true;
+                            sensorObj.put("standardExistStatus", standardExistStatus);
+                        }
+                        placeInfoArray.add(sensorObj);
+                        sensorSize+=1;
                     }
+                    placeInfoList.put("standardExist", standardExist);
+                    placeInfoList.put("standardNotExist", standardNotExist);
+                    placeInfoList.put("data", placeInfoArray);
                 }
-                jsonArray.add(jsonArray2);
+                if(sensorSize != 0){
+                    placeInfoList.put("place", placeName);
+                    placeInfoList.put("sensorList", sensorNames);
+                    placeInfoList.put("monitoringOn", sensorSize);
+                    placeInfoList.put("monitoringOff", sensorNames.size()-sensorSize);
+                    jsonArray.add(placeInfoList);
+                }
             }
-            model.addAttribute("place", placeNames); //측정소 목록
-            model.addAttribute("sensor", jsonArray); //전체 측정소의 센서 정보들
+            model.addAttribute("placeInfo", jsonArray); //전체 측정소의 센서 정보들
         }catch (Exception e){
             System.out.println("error");
         }

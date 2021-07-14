@@ -263,254 +263,160 @@
             </div>
         </div>
         <div class="row table" id="place_table" style="margin: 0 auto">
-            <c:if test="${!empty place}">
-            <c:forEach items="${place}" var="placeName" varStatus="pStatus">
-            <c:set value="${sensor[pStatus.index]}" var="sensorData"/>
-            <c:choose>
-                <%-- 모니터링 True 측정소의 개수에 따라 유동적 크기 변환(1개일때 100%, 2개이상일때 50%) --%>
-                <c:when test="${fn:length(place) eq 1}">
+        <c:if test="${!empty placeInfo}">
+        <c:forEach items="${placeInfo}" var="place" varStatus="pStatus">
+         <c:choose>
+            <%-- 모니터링 True 측정소의 개수에 따라 유동적 크기 변환(1개일때 100%, 2개이상일때 50%) --%>
+            <c:when test="${fn:length(placeInfo) eq 1}">
             <div class="col-md-12 mb-3 mt-2 place_border ${pStatus}">
-                </c:when>
-                <c:otherwise>
+            </c:when>
+            <c:otherwise>
             <div class="col-md-6 mb-3 mt-2 place_border ${pStatus}">
-                </c:otherwise>
+            </c:otherwise>
+         </c:choose>
+            <div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>
+                <span class='fs-5' id="placeName"><c:out value="${place.place}"/></span>
+            </div>
+            <c:forEach items="${place.data}" var="sensor" varStatus="sStatus">
+            <c:set value="${pStatus.index}-${sStatus.index}" var="idx"/>
+                <div class='text-end' style='font-size: 0.8rem'>
+                업데이트 :<span id='update-${sStatus.index}'><c:out value="${sensor.recent_up_time}"/></span></div>
+            <table class="table table-bordered table-hover text-center mt-1">
+            <c:choose>
+                <c:when test="${sensor.standardExistStatus == false}">
+                <thead>
+                    <tr class="add-bg-color">
+                        <th width=22%'>항목</th>
+                        <th width=26%'>실시간</th>
+                        <th width=26%'>5분</th>
+                        <th width=26%'>30분</th>
+                    </tr>
+                </thead>
+                </c:when>
+                <c:when test="${sensor.standardExistStatus == true}">
+                <thead>
+                    <tr class="add-bg-color">
+                        <th width=22%'>항목</th>
+                        <th width=10%'>법적기준</th>
+                        <th width=10%'>사내기준</th>
+                        <th width=10%'>관리기준</th>
+                        <th width=16%'>실시간</th>
+                        <th width=16%'>5분</th>
+                        <th width=16%'>30분</th>
+                    </tr>
+                </thead>
+                </c:when>
             </c:choose>
-                <div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>
-                    <span class='fs-5' id="placeName"><c:out value="${placeName}"/></span>
-                </div>
-                <c:forEach items="${sensor}" var="sensorList" varStatus="status">
-                    <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
-                        <c:if test="${sensorList2.place eq placeName}">
-                            <c:set var="uptime" value="${sensorList2.up_time}"/>
-                        </c:if>
-                    </c:forEach>
-                </c:forEach>
-
-<%--                    <table class='table table-bordered table-hover text-center mt-1'>--%>
-<%--                        <thead>--%>
-<%--                        <tr class="add-bg-color">--%>
-<%--                            <th width=28%'>항목</th>--%>
-<%--                            <th width=17%'>법적기준</th>--%>
-<%--                            <th width=17%'>사내기준</th>--%>
-<%--                            <th width=17%'>관리기준</th>--%>
-<%--                            <th width=21%'>실시간</th>--%>
-<%--                        </tr>--%>
-<%--                        </thead>--%>
-<%--                        <tbody id="${tbody}">--%>
-<%--                        <c:forEach items="${sensor}" var="sensorList" varStatus="status">--%>
-<%--                            <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">--%>
-<%--                                <tr>--%>
-<%--                                    <c:if test="${sensorList2.place eq placeName}">--%>
-<%--                                        <td>${sensorList2.naming}<input type="hidden" value="${sensorList2.name}"> </td>--%>
-<%--                                        <td><div class="bg-danger text-light">--%>
-<%--                                            <c:choose>--%>
-<%--                                                <c:when test="${sensorList2.legalStandard eq 999999}">--%>
-<%--                                                    ---%>
-<%--                                                </c:when>--%>
-<%--                                                <c:when test="${sensorList2.legalStandard ne 999999}">--%>
-<%--                                                    <c:out value="${sensorList2.legalStandard}"/>--%>
-<%--                                                </c:when>--%>
-<%--                                            </c:choose>--%>
-<%--                                        </div></td>--%>
-<%--                                        <td><div class="bg-warning text-light">--%>
-<%--                                            <c:choose>--%>
-<%--                                                <c:when test="${sensorList2.companyStandard eq 999999}">--%>
-<%--                                                    ---%>
-<%--                                                </c:when>--%>
-<%--                                                <c:when test="${sensorList2.companyStandard ne 999999}">--%>
-<%--                                                    <c:out value="${sensorList2.companyStandard}"/>--%>
-<%--                                                </c:when>--%>
-<%--                                            </c:choose>--%>
-<%--                                        </div></td>--%>
-<%--                                        <td><div class="bg-success text-light">--%>
-<%--                                            <c:choose>--%>
-<%--                                                <c:when test="${sensorList2.managementStandard eq 999999}">--%>
-<%--                                                    ---%>
-<%--                                                </c:when>--%>
-<%--                                                <c:when test="${sensorList2.managementStandard ne 999999}">--%>
-<%--                                                    <c:out value="${sensorList2.managementStandard}"/>--%>
-<%--                                                </c:when>--%>
-<%--                                            </c:choose>--%>
-<%--                                        </div></td>--%>
-<%--                                        <td>--%>
-<%--                                            <c:if test="${sensorList2.value != 0}">--%>
-<%--                                                <c:if test="${sensorList2.beforeValue > sensorList2.value}">--%>
-<%--                                                    <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>--%>
-<%--                                                </c:if>--%>
-<%--                                                <c:if test="${sensorList2.beforeValue < sensorList2.value}">--%>
-<%--                                                    <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>--%>
-<%--                                                </c:if>--%>
-<%--                                            </c:if>--%>
-<%--                                            <c:if test="${sensorList2.value eq 0}">--%>
-<%--                                                0.00--%>
-<%--                                            </c:if>--%>
-<%--                                        </td>--%>
-<%--                                    </c:if>--%>
-<%--                                </tr>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:forEach>--%>
-<%--                        <c:if test="${fn:length(sensorData) == 0}">--%>
-<%--                            <tr>--%>
-<%--                                <td colspan="5">--%>
-<%--                                    <div onclick="window.event.cancelBubble=true">모니터링 설정된 센서의 데이터가 없습니다.</div>--%>
-<%--                                </td>--%>
-<%--                            </tr>--%>
-<%--                        </c:if>--%>
-<%--                        </tbody>--%>
-<%--                    </table>--%>
-                    <%-- 기준 값 유무에 따라 split --%>
-                    <c:set value="${pStatus.index}" var="index1"/>
-                    <c:forEach items="${sensor}" var="sensorList" varStatus="status">
-                        <c:forEach items="${sensorList}" var="sensorList2" varStatus="status2">
-                            <c:set value="${index1}-${status2.index}" var="index2"/>
-                    <c:if test="${sensorList2.place eq placeName}">
-                    <div class='text-end' style='font-size: 0.8rem'>
-                        업데이트 :<span id='update-${index2}'><c:if test="${fn:length(sensorData) > 0 }"><c:out value="${sensorList2.up_time}"/></c:if></div>
-                    <table class='table table-bordered table-hover text-center mt-1'>
-                    <c:choose>
-                    <c:when test="${sensorList2.managementStandard eq 999999 && sensorList2.companyStandard eq 999999 && sensorList2.legalStandard eq 999999}">
-                        <tr class="add-bg-color">
-                            <th width=28%'>항목</th>
-                            <th width=24%'>실시간</th>
-                            <th width=24%'>5분</th>
-                            <th width=24%'>30분</th>
-                        </tr>
-                    </thead>
+                <tbody id="sensor-table-${idx}">
+                <tr>
+                    <td>${sensor.naming}<input type="hidden" value="${sensor.name}"> </td>
+                <c:choose>
+                    <c:when test="${sensor.managementStandard eq 999999 && sensor.companyStandard eq 999999 && sensor.legalStandard eq 999999}">
                     </c:when>
                     <c:otherwise>
-                    <thead>
-                        <tr class="add-bg-color">
-                            <th width=28%'>항목</th>
-                            <th width=10%'>법적기준</th>
-                            <th width=10%'>사내기준</th>
-                            <th width=10%'>관리기준</th>
-                            <th width=14%'>실시간</th>
-                            <th width=14%'>5분</th>
-                            <th width=14%'>30분</th>
-                        </tr>
+                        <td><div class="bg-danger text-light">
+                           <c:choose>
+                                <c:when test="${sensor.legalStandard eq 999999}">
+                                    -
+                                </c:when>
+                                <c:when test="${sensor.legalStandard ne 999999}">
+                                    <c:out value="${sensor.legalStandard}"/>
+                                </c:when>
+                            </c:choose>
+                        </div></td>
+                        <td><div class="bg-warning text-light">
+                            <c:choose>
+                                <c:when test="${sensor.companyStandard eq 999999}">
+                                    -
+                                </c:when>
+                                <c:when test="${sensor.companyStandard ne 999999}">
+                                    <c:out value="${sensor.companyStandard}"/>
+                                </c:when>
+                            </c:choose>
+                        </div></td>
+                        <td><div class="bg-success text-light">
+                            <c:choose>
+                                <c:when test="${sensor.managementStandard eq 999999}">
+                                    -
+                                </c:when>
+                                <c:when test="${sensor.managementStandard ne 999999}">
+                                    <c:out value="${sensor.managementStandard}"/>
+                                </c:when>
+                            </c:choose>
+                        </div></td>
                     </c:otherwise>
+                </c:choose>
+                <td>
+                    <c:if test="${sensor.value ne 0}">
+                        <c:choose>
+                            <c:when test="${sensor.recent_beforeValue gt sensor.recent_value}">
+                                <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
+                            </c:when>
+                            <c:when test="${sensor.recent_beforeValue lt sensor.recent_value}">
+                                <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
+                            </c:when>
+                            <c:when test="${sensor.recent_beforeValue eq sensor.recent_value}">
+                                <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
+                            </c:when>
+                            <c:otherwise>
+                                <fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+                    <c:if test="${sensor.value eq 0}">
+                        0.00
+                    </c:if>
+                </td>
+                <td>
+                    <c:if test="${sensor.rm05_value ne 0}">
+                    <c:choose>
+                        <c:when test="${sensor.rm05_beforeValue gt sensor.rm05_value}">
+                            <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
+                        </c:when>
+                        <c:when test="${sensor.rm05_beforeValue lt sensor.rm05_value}">
+                            <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
+                        </c:when>
+                        <c:when test="${sensor.rm05_beforeValue eq sensor.rm05_value}">
+                            <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
+                        </c:when>
+                        <c:otherwise>
+                            <fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
+                        </c:otherwise>
                     </c:choose>
-                        <tbody id="sensor-table-${index2}">
-                        <tr>
-                                <td>${sensorList2.naming}<input type="hidden" value="${sensorList2.name}"> </td>
-                                <c:choose>
-                                    <c:when test="${sensorList2.managementStandard eq 999999 && sensorList2.companyStandard eq 999999 && sensorList2.legalStandard eq 999999}">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <td><div class="bg-danger text-light">
-                                           <c:choose>
-                                                <c:when test="${sensorList2.legalStandard eq 999999}">
-                                                    -
-                                                </c:when>
-                                                <c:when test="${sensorList2.legalStandard ne 999999}">
-                                                    <c:out value="${sensorList2.legalStandard}"/>
-                                                </c:when>
-                                            </c:choose>
-                                        </div></td>
-                                        <td><div class="bg-warning text-light">
-                                            <c:choose>
-                                                <c:when test="${sensorList2.companyStandard eq 999999}">
-                                                    -
-                                                </c:when>
-                                                <c:when test="${sensorList2.companyStandard ne 999999}">
-                                                    <c:out value="${sensorList2.companyStandard}"/>
-                                                </c:when>
-                                            </c:choose>
-                                        </div></td>
-                                        <td><div class="bg-success text-light">
-                                            <c:choose>
-                                                <c:when test="${sensorList2.managementStandard eq 999999}">
-                                                    -
-                                                </c:when>
-                                                <c:when test="${sensorList2.managementStandard ne 999999}">
-                                                    <c:out value="${sensorList2.managementStandard}"/>
-                                                </c:when>
-                                            </c:choose>
-                                        </div></td>
-                                    </c:otherwise>
-                                </c:choose>
-                            <td>
-                                <c:if test="${sensorList2.value ne 0}">
-                                    <c:choose>
-                                        <c:when test="${sensorList2.beforeValue gt sensorList2.value}">
-                                            <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
-                                        </c:when>
-                                        <c:when test="${sensorList2.beforeValue lt sensorList2.value}">
-                                            <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
-                                        </c:when>
-                                        <c:when test="${sensorList2.beforeValue eq sensorList2.value}">
-                                            <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <fmt:formatNumber value="${sensorList2.value}" pattern=".00"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:if>
-                                <c:if test="${sensorList2.value eq 0}">
-                                    0.00
-                                </c:if>
-                            </td>
-                            <td>
-                                <c:if test="${sensorList2.rm05_value ne 0}">
-                                <c:choose>
-                                    <c:when test="${sensorList2.rm05_beforeValue gt sensorList2.rm05_value}">
-                                        <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensorList2.rm05_value}" pattern=".00"/>
-                                    </c:when>
-                                    <c:when test="${sensorList2.rm05_beforeValue lt sensorList2.rm05_value}">
-                                        <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList2.rm05_value}" pattern=".00"/>
-                                    </c:when>
-                                    <c:when test="${sensorList2.rm05_beforeValue eq sensorList2.rm05_value}">
-                                        <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensorList2.rm05_value}" pattern=".00"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <fmt:formatNumber value="${sensorList2.rm05_value}" pattern=".00"/>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:if>
-                                <c:if test="${sensorList2.rm05_value eq 0}">
-                                    0.00
-                                </c:if>
-                            </td>
-                            <td>
-                                <c:if test="${sensorList2.rm30_value ne 0}">
-                                    <c:choose>
-                                        <c:when test="${sensorList2.rm30_beforeValue gt sensorList2.rm30_value}">
-                                            <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensorList2.rm30_value}" pattern=".00"/>
-                                        </c:when>
-                                        <c:when test="${sensorList2.rm30_beforeValue lt sensorList2.rm30_value}">
-                                            <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList2.rm30_value}" pattern=".00"/>
-                                        </c:when>
-                                        <c:when test="${sensorList2.rm30_beforeValue eq sensorList2.rm30_value}">
-                                            <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensorList2.rm30_value}" pattern=".00"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <fmt:formatNumber value="${sensorList2.rm30_value}" pattern=".00"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:if>
-                                <c:if test="${sensorList2.rm30_value eq 0}">
-                                    0.00
-                                </c:if>
-                            </td>
-                        </tr>
-                        <div id="chart-${index2}"></div>
-                    </c:if>
-                    <c:if test="${fn:length(sensorData) == 0}">
-                        <tr>
-                            <td colspan="5">
-                                <div onclick="window.event.cancelBubble=true">모니터링 설정된 센서의 데이터가 없습니다.</div>
-                            </td>
-                        </tr>
-                    </c:if>
-                    </tbody>
-                </table>
-                    </c:forEach>
-                </c:forEach>
-                <%-- //기준 값 유무에 따라 split --%>
-            </div>
-                </c:forEach>
                 </c:if>
-                <c:if test="${empty place}">
+                    <c:if test="${sensor.rm05_value eq 0}">
+                        0.00
+                    </c:if>
+                </td>
+                <td>
+                    <c:if test="${sensor.rm30_value ne 0}">
+                        <c:choose>
+                            <c:when test="${sensor.rm30_beforeValue gt sensor.rm30_value}">
+                                <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
+                            </c:when>
+                            <c:when test="${sensor.rm30_beforeValue lt sensor.rm30_value}">
+                                <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
+                            </c:when>
+                            <c:when test="${sensor.rm30_beforeValue eq sensor.rm30_value}">
+                                <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
+                            </c:when>
+                            <c:otherwise>
+                                <fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+                    <c:if test="${sensor.rm30_value eq 0}">
+                        0.00
+                    </c:if>
+                </td>
+                </tr>
+                </tbody>
+            </table>
+            </c:forEach> <%-- //sensor--%>
+         </div> <%-- //col-md-@ --%>
+        </c:forEach> <%-- //place --%>
+        </c:if> <%-- //!empty place --%>
+        <c:if test="${empty placeInfo}">
             <div class="'col-md-12 mb-3 mt-2 place_border">
                 <table class='table table-bordered table-hover text-center mt-1'>
                     <thead>
@@ -527,10 +433,8 @@
                     </tbody>
                 </table>
             </div>
-                </c:if>
-        </div>
-    </div>
-</div>
+        </c:if>
+</div> <%-- //row table --%>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
@@ -538,8 +442,8 @@
     let INTERVAL; let flashCheck; let alarmCheck;
     var dataList; var chart = {};
     $(document).ready(function () {
-        let placeData2 = ${sensor}; // 모니터링 True 인 측정소 리스트의 모니터링 True인 센서 데이터(최근,이전,기준값 등)
-        draw_sensor_info(placeData2); //대시보드 생성
+        <%--let placeData2 = ${sensor}; // 모니터링 True 인 측정소 리스트의 모니터링 True인 센서 데이터(최근,이전,기준값 등)--%>
+        <%--draw_sensor_info(placeData2); //대시보드 생성--%>
         setTimeout(function () {
             getData();
         }, 1000);
@@ -552,43 +456,43 @@
      * 페이지 로딩시 측정소 별로 테이블 틀 생성, 측정소 별, 센서별 데이터를 받아 대시보드, 테이블 데이터 입력
      */
     function getData() {
-        setTimeout(function interval_getData(placeName2) { // 반복 처리를 위한 setTimeout
-            const placeName = getPlace(); // 전체 측정소명 리턴 받아 변수에 저장
-            const placeData = new Array();
-            if(placeName.length == 0){ // 측정소가 없을 때
+        setTimeout(function interval_getData() { // 반복 처리를 위한 setTimeout
+            const placeInfo = getPlaceInfo(); // 모니터링 On된 측정소의 모든 정보(센서의 최근, 5분, 30분, 기준값 등)
+            const placeCount = placeInfo.length;
+            if(placeCount == 0){ // 측정소가 없을 때
                 Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
-                draw_place_table_frame(placeName);
+                draw_place_table_frame(placeInfo);
                 INTERVAL = setTimeout(interval_getData, 60000);
             }else{ //측정소가 있을 때
-                var sensorDataNullCheck = true;
-                nSensorName = new Array(); // 페이지 로딩 후, 센서 저장
-                for (let i = 0; i < placeName.length; i++) {
-                    clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
-                    const data = getPlaceData(placeName[i]); //측정소 별 센서 데이터 (최근데이터, 이전데이터, 정보)
-                    for(let z=0; z<data.length; z++){
-                        nSensorName.push(data[z].name);
+                var tempSensorName = new Array();
+                for (let i = 0; i < placeCount; i++) {
+                    for(let z=0; z<placeInfo[i].sensorList.length; z++){
+                        tempSensorName.push(placeInfo[i].sensorList[z]);
                     }
+                }
+                for (let i = 0; i < placeCount; i++) {
+                    const data = placeInfo[i].data;
+                    clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
                     if(dataList == undefined){ //처음 페이지 로딩 시, 테이블, 차트 틀 생성
-                        dataList = nSensorName;
-                        draw_place_table_frame(placeName); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
-                        draw_place_table(placeName); // 측정소별 테이블 생성
+                        dataList = tempSensorName;
+                        draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
+                        draw_place_table(placeInfo); // 측정소별 테이블 생성
                         // draw_place_chart_frame(placeName);
                     }else{
-                        if(nSensorName.length != dataList.length){
-                            dataList = nSensorName;
-                            draw_place_table_frame(placeName); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
-                            draw_place_table(placeName); // 측정소별 테이블 생성
+                        if(tempSensorName.length != dataList.length){
+                            dataList = tempSensorName;
+                            draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
+                            draw_place_table(placeInfo); // 측정소별 테이블 생성
                             // draw_place_chart_frame(placeName.length, data.length);
                         }else{
-                            draw_place_table(placeName); // 측정소별 테이블 생성
+                            draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }
                     }
-                    placeData.push(data); //측정소별 센서 데이터 통합
                     INTERVAL = setTimeout(interval_getData, 5000);
                 }
             }
             setTimeout(function () {
-                draw_sensor_info(placeData); // 대시보드 생성(가동률, 법적기준 정보 등)
+                draw_sensor_info(placeInfo); // 대시보드 생성(가동률, 법적기준 정보 등)
             }, 0);
         }, 0);
     }
@@ -600,7 +504,6 @@
         // const sensorName = $(this).find('td input')[0].value;
         <%--location.replace("<%=cp%>/sensor?sensor=" + sensorName);--%>
         var tbodyId = $(this).parent('tbody').attr('id');
-        console.log(tbodyId);
         var chartIndex = tbodyId.substr(13,5);
         if($('#chart-'+chartIndex).css("display") == 'none'){
             $('#chart-'+chartIndex).show();
@@ -648,29 +551,6 @@
         }
     }
 
-    /**
-     * 전체 측정소명 리턴 (조건 : 모니터링 True)
-     */
-    function getPlace(){
-        const placeName = new Array();
-        $.ajax({
-            url: '<%=cp%>/getPlaceList',
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                $.each(data, function (index, item) { //item (센서명)
-                    monitoring = item.monitoring; //모니터링 True
-                    if(monitoring){
-                        placeName.push(item.name);
-                    }
-                })
-            },
-            error: function (request, status, error) {
-            }
-        });
-        return placeName;
-    }
-
     function draw_place_chart_frame(placeLength, dataLength) {
         for (let i = 0; i < placeLength; i++) {
             for(var z=0; z<dataLength;z++){
@@ -681,96 +561,75 @@
 
         }
     }
+
     /**
      * 측정소의 갯수에 따라 테이블 틀 생성 (홀수 : 테이블 1개, 짝수: 테이블 2개 씩 출력)
      */
-    function draw_place_table_frame(placeName) {
+    function draw_place_table_frame(placeInfo) {
         $('#place_table').empty();
         var col_md_size;
-        if(placeName.length != 0){
-            for(let i=0; i<placeName.length; i++){
-                const data = getPlaceData(placeName[i]);
-                if(placeName.length==1){ //1개
+        if(placeInfo.length != 0){
+            for(let i=0; i<placeInfo.length; i++){
+                var placeName = placeInfo[i].place; //측정소명
+                var dataLength = placeInfo[i].monitoringOn; //모니터링On된 센서수
+                var data = placeInfo[i].data; //모니터링On된 센서수
+                if(placeName.length==1){ // 측정소 1개 width 100%
                     col_md_size = 12;
-                }else {
+                }else { // 측정소 1개 width 50%
                     col_md_size = 6;
                 }
                 /* 기준 값 유무에 따라 split */
                 $('#place_table').append(
                     "<div class='col-md-"+col_md_size+" mb-3 mt-2 place_border "+i+"'>" +
                     "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>" +
-                    "<span class='fs-5' id='placeName'>"+placeName[i]+"</span></div>");
-                for(var z=0; z<data.length;z++){
-                    if(placeName[i] == data[z].place){
-                        if(data[z].companyStandard==999999 && data[z].legalStandard==999999 && data[z].managementStandard==999999){
-                            $('.'+i).append(
-                                "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+"-"+z+">"+"</span></div>"+
-                                "<table class='table table-bordered table-hover text-center mt-1'>" +
-                                "<thead>" +
-                                "<tr class='add-bg-color'>" +
-                                "<th width=28%'>항목</th>" +
-                                "<th width=24%'>실시간</th>" +
-                                "<th width=24%'>5분</th>" +
-                                "<th width=24%'>30분</th>" +
-                                "</tr>" +
-                                "</thead>"+
-                                "<tbody id='sensor-table-"+i+"-"+z+"'>"+
-                                "<tr>" +
-                                "<td colspan='2'></td>" +
-                                "</tr>" +
-                                "</tbody>" +
-                                "</table>" +
-                                "<div id='chart-"+i+"-"+z+"'></div>"+
-                                "</div>");
-                        }else{
-                            $('.'+i).append(
-                                "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+"-"+z+">"+"</span></div>"+
-                                "<table class='table table-bordered table-hover text-center mt-1'>" +
-                                "<thead>" +
-                                "<tr class='add-bg-color'>" +
-                                "<th width=28%'>항목</th>" +
-                                "<th width=10%'>법적기준</th>" +
-                                "<th width=10%'>사내기준</th>" +
-                                "<th width=10%'>관리기준</th>" +
-                                "<th width=14%'>실시간</th>" +
-                                "<th width=14%'>5분</th>" +
-                                "<th width=14%'>30분</th>" +
-                                "</tr>" +
-                                "</thead>"+
-                                "<tbody id='sensor-table-"+i+"-"+z+"'>"+
-                                "<tr>" +
-                                "<td colspan='4'></td>" +
-                                "</tr>" +
-                                "</tbody>" +
-                                "</table>" +
-                                "<div id='chart-"+i+"-"+z+"'></div>"+
-                                "</div>");
-                        }
+                    "<span class='fs-5' id='placeName'>"+placeName+"</span></div>");
+                for(var z=0; z<dataLength;z++){
+                    var standardExistStatus = data[z].standardExistStatus;
+                    if(!standardExistStatus){
+                        $('.'+i).append( //i:측정소idx z:센서idx
+                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+"-"+z+">"+"</span></div>"+
+                            "<table class='table table-bordered table-hover text-center mt-1'>" +
+                            "<thead>" +
+                            "<tr class='add-bg-color'>" +
+                            "<th width=22%'>항목</th>" +
+                            "<th width=26%'>실시간</th>" +
+                            "<th width=26%'>5분</th>" +
+                            "<th width=26%'>30분</th>" +
+                            "</tr>" +
+                            "</thead>"+
+                            "<tbody id='sensor-table-"+i+"-"+z+"'>"+
+                            "<tr>" +
+                            "<td colspan='2'></td>" +
+                            "</tr>" +
+                            "</tbody>" +
+                            "</table>" +
+                            "<div id='chart-"+i+"-"+z+"'></div>"+
+                            "</div>");
+                    }else{
+                        $('.'+i).append(
+                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+"-"+z+">"+"</span></div>"+
+                            "<table class='table table-bordered table-hover text-center mt-1'>" +
+                            "<thead>" +
+                            "<tr class='add-bg-color'>" +
+                            "<th width=22%'>항목</th>" +
+                            "<th width=10%'>법적기준</th>" +
+                            "<th width=10%'>사내기준</th>" +
+                            "<th width=10%'>관리기준</th>" +
+                            "<th width=16%'>실시간</th>" +
+                            "<th width=16%'>5분</th>" +
+                            "<th width=16%'>30분</th>" +
+                            "</tr>" +
+                            "</thead>"+
+                            "<tbody id='sensor-table-"+i+"-"+z+"'>"+
+                            "<tr>" +
+                            "<td colspan='4'></td>" +
+                            "</tr>" +
+                            "</tbody>" +
+                            "</table>" +
+                            "<div id='chart-"+i+"-"+z+"'></div>"+
+                            "</div>");
                     }
                 }
-                /* //기준 값 유무에 따라 split */
-                // $('#place_table').append(
-                //     "<div class='col-md-"+col_md_size+" mb-3 mt-2 place_border'>" +
-                //     "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>" +
-                //     "<span class='fs-5'>"+placeName[i]+"</span></div>" +
-                //     "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+">"+"</span></div>" +
-                //     "<table class='table table-bordered table-hover text-center mt-1'>" +
-                //     "<thead>" +
-                //     "<tr class='add-bg-color'>" +
-                //     "<th width=28%'>항목</th>" +
-                //     "<th width=17%'>법적기준</th>" +
-                //     "<th width=17%'>사내기준</th>" +
-                //     "<th width=17%'>관리기준</th>" +
-                //     "<th width=21%'>실시간</th>" +
-                //     "</tr>" +
-                //     "</thead>"+
-                //     "<tbody id='sensor-table-"+i+"'>"+
-                //     "<tr>" +
-                //     "<td colspan='4'></td>" +
-                //     "</tr>" +
-                //     "</tbody>" +
-                //     "</table>" +
-                //     "</div>");
             }
         }else{
             $('#place_table').append(
@@ -795,159 +654,110 @@
         }
     }
 
-    /**
-     * 센서의 모니터링 True인 최근, 직전, 기준 데이터 등을 리턴
-     */
-    function getPlaceData(place) {
-        var getData = null;
-        $.ajax({  //측정소의 센서명을 구함
-            url: '<%=cp%>/getPlaceData',
-            dataType: 'json',
-            data: {"place": place},
-            async: false,
-            success: function (data) {
-                getData = data;
-            },
-            error: function () {
-            }
-        });
-        return getData;
-    }
-
-    /**
-     * 센서의 모니터링 상태값 리턴 (true , false)
-     */
-    function getMonitoring(sensor) {
-        let result;
-        $.ajax({
-            url: '<%=cp%>/getMonitoring',
-            dataType: 'text',
-            data: {"name": sensor},
-            async: false,
-            success: function (data) {
-                result = data;
-            },
-            error: function (e) {
-                result = false;
-            }
-        });
-        return result;
-    }
 
     /**
      * 측정소 테이블 생성
      */
-    function draw_place_table(placeName) {
-        var monitoringIsCheck = true;
-        if(placeName.length != 0) {
-            for (var i = 0; i < placeName.length; i++) {
-                var data = getPlaceData(placeName[i]);
-                for (let i = 0; i < data.length; i++) {
-                    /* 측정소의 센서 모니터링 체크 확인 (한개라도 있으면 false) */
-                    if(data[i] != 0){
-                        monitoringIsCheck = monitoringIsCheck && false;
-                    }else {
-                        monitoringIsCheck = monitoringIsCheck && true;
-                    }
-                }
-                if(data.length != 0){
-                    for (let z = 0; z < data.length; z++) {
-                        recentData = getSensorRecentAll(data[z].name);
+    function draw_place_table(placeInfo) {
+        var placeCount = placeInfo.length;
+        if(placeCount != 0) {
+            for (var i = 0; i < placeCount; i++) {
+                var data = placeInfo[i].data;
+                var dataCount = data.length;
+                if(dataCount != 0){
+                    for (let z = 0; z < dataCount; z++) {
+                        var recentData = data[z];
+                        var standarExistStatus = data[z].standardExistStatus;
                         $('#sensor-table-' + i + '-' + z).empty();
                         const tbody = document.getElementById('sensor-table-' + i + '-' + z);
-                        /* 모니터링 ON 한개라도 있을 때 */
-                        if(!monitoringIsCheck){
-                            if(data[z] != 0){
-                                /* 기준 값 유무에 따라 split */
-                                const newRow = tbody.insertRow(tbody.rows.length);
-                                $("#update-"+i+'-'+z).text(moment(data[z].up_time).format('YYYY-MM-DD HH:mm:ss'));
-                                if(data[z].companyStandard == 999999 && data[z].legalStandard == 999999 && data[z].managementStandard == 999999){
-                                    const newCeil0 = newRow.insertCell(0);
-                                    const newCeil1 = newRow.insertCell(1);
-                                    const newCeil2 = newRow.insertCell(2);
-                                    const newCeil3 = newRow.insertCell(3);
-                                    newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
-                                    newCeil1.innerHTML = draw_compareData(data[z].beforeValue, data[z].value);
-                                    newCeil2.innerHTML = draw_compareData(recentData[3].value, recentData[2].value);
-                                    newCeil3.innerHTML = draw_compareData(recentData[5].value, recentData[4].value);
-                                }else{
-                                    const newCeil0 = newRow.insertCell(0);
-                                    const newCeil1 = newRow.insertCell(1);
-                                    const newCeil2 = newRow.insertCell(2);
-                                    const newCeil3 = newRow.insertCell(3);
-                                    const newCeil4 = newRow.insertCell(4);
-                                    const newCeil5 = newRow.insertCell(5);
-                                    const newCeil6 = newRow.insertCell(6);
+                        /* 기준 값 유무에 따라 split */
+                        const newRow = tbody.insertRow(tbody.rows.length);
+                        $("#update-"+i+'-'+z).text(moment(data[z].recent_up_time).format('YYYY-MM-DD HH:mm:ss'));
+                        if(!standarExistStatus){
+                            const newCeil0 = newRow.insertCell(0);
+                            const newCeil1 = newRow.insertCell(1);
+                            const newCeil2 = newRow.insertCell(2);
+                            const newCeil3 = newRow.insertCell(3);
+                            newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
+                            newCeil1.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
+                            newCeil2.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
+                            newCeil3.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
+                        }else{
+                            const newCeil0 = newRow.insertCell(0);
+                            const newCeil1 = newRow.insertCell(1);
+                            const newCeil2 = newRow.insertCell(2);
+                            const newCeil3 = newRow.insertCell(3);
+                            const newCeil4 = newRow.insertCell(4);
+                            const newCeil5 = newRow.insertCell(5);
+                            const newCeil6 = newRow.insertCell(6);
 
-                                    if(data[z].legalStandard == 999999){
-                                        legalStandard = '-';
-                                    }else{
-                                        legalStandard = data[z].legalStandard;
-                                    }
-                                    if(data[z].companyStandard == 999999){
-                                        companyStandard = '-';
-                                    }else{
-                                        companyStandard = data[z].companyStandard;
-                                    }
-                                    if(data[z].managementStandard == 999999){
-                                        managementStandard = '-';
-                                    }else{
-                                        managementStandard = data[z].managementStandard;
-                                    }
-                                    newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
-                                    newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
-                                    newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
-                                    newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
-                                    newCeil4.innerHTML = draw_compareData(data[z].beforeValue, data[z].value);
-                                    newCeil5.innerHTML = draw_compareData(recentData[3].value, recentData[2].value);
-                                    newCeil6.innerHTML = draw_compareData(recentData[5].value, recentData[4].value);
-                                }
-                                // "chart-"+index+'-'+i = new ApexCharts(document.querySelector("#chart-"+index+'-'+i), setChartOption());
-                                /* //기준 값 유무에 따라 split */
-                                // const newRow = tbody.insertRow(tbody.rows.length);
-                                // const newCeil0 = newRow.insertCell(0);
-                                // const newCeil1 = newRow.insertCell(1);
-                                // const newCeil2 = newRow.insertCell(2);
-                                // const newCeil3 = newRow.insertCell(3);
-                                // const newCeil4 = newRow.insertCell(4);
-                                //
-                                // if(data[i].legalStandard == 999999){
-                                //     legalStandard = '-';
-                                // }else{
-                                //     legalStandard = data[i].legalStandard;
-                                // }
-                                // if(data[i].companyStandard == 999999){
-                                //     companyStandard = '-';
-                                // }else{
-                                //     companyStandard = data[i].companyStandard;
-                                // }
-                                // if(data[i].managementStandard == 999999){
-                                //     managementStandard = '-';
-                                // }else{
-                                //     managementStandard = data[i].managementStandard;
-                                // }
-                                //
-                                // newCeil0.innerHTML = data[i].naming+'<input type="hidden" value='+data[i].name+'>';
-                                // newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
-                                // newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
-                                // newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
-                                //
-                                // if(data[i].value > data[i].legalStandard){
-                                //     newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                                // } else if( data[i].value > data[i].companyStandard){
-                                //     newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                                // } else if( data[i].value > data[i].managementStandard){
-                                //     newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                                // } else{
-                                //     newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
-                                // }
-                                // $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
+                            if(data[z].legalStandard == 999999){
+                                legalStandard = '-';
+                            }else{
+                                legalStandard = data[z].legalStandard;
                             }
+                            if(data[z].companyStandard == 999999){
+                                companyStandard = '-';
+                            }else{
+                                companyStandard = data[z].companyStandard;
+                            }
+                            if(data[z].managementStandard == 999999){
+                                managementStandard = '-';
+                            }else{
+                                managementStandard = data[z].managementStandard;
+                            }
+                            newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
+                            newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
+                            newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
+                            newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
+                            newCeil4.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
+                            newCeil5.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
+                            newCeil6.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
+                        }
+                        // "chart-"+index+'-'+i = new ApexCharts(document.querySelector("#chart-"+index+'-'+i), setChartOption());
+                        /* //기준 값 유무에 따라 split */
+                        // const newRow = tbody.insertRow(tbody.rows.length);
+                        // const newCeil0 = newRow.insertCell(0);
+                        // const newCeil1 = newRow.insertCell(1);
+                        // const newCeil2 = newRow.insertCell(2);
+                        // const newCeil3 = newRow.insertCell(3);
+                        // const newCeil4 = newRow.insertCell(4);
+                        //
+                        // if(data[i].legalStandard == 999999){
+                        //     legalStandard = '-';
+                        // }else{
+                        //     legalStandard = data[i].legalStandard;
+                        // }
+                        // if(data[i].companyStandard == 999999){
+                        //     companyStandard = '-';
+                        // }else{
+                        //     companyStandard = data[i].companyStandard;
+                        // }
+                        // if(data[i].managementStandard == 999999){
+                        //     managementStandard = '-';
+                        // }else{
+                        //     managementStandard = data[i].managementStandard;
+                        // }
+                        //
+                        // newCeil0.innerHTML = data[i].naming+'<input type="hidden" value='+data[i].name+'>';
+                        // newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
+                        // newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
+                        // newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
+                        //
+                        // if(data[i].value > data[i].legalStandard){
+                        //     newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
+                        // } else if( data[i].value > data[i].companyStandard){
+                        //     newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
+                        // } else if( data[i].value > data[i].managementStandard){
+                        //     newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
+                        // } else{
+                        //     newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
+                        // }
+                        // $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                         }
                     }
                 }
             }
-        }
     }
 
     function noData() {
@@ -963,6 +773,7 @@
      * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
      */
     function draw_compareData(beforeData , nowData){
+        beforeData = beforeData.toFixed(2);
         nowData = nowData.toFixed(2);
         if(beforeData > nowData ){
             return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' +nowData;
@@ -978,24 +789,25 @@
     /**
      *  대시보드 생성 (가동률, 통신 상태, 기준값 등)
      */
-    function draw_sensor_info(data) {
-        var sensorMonitoringOn=0, sensorMonitoringOff=0, sensorStatusSuccess=0,
-            sensorStatusFail=0, legalSCount=0, companySCount=0, managementSCount=0,
+    function draw_sensor_info(placeInfo) {
+        var placeCount = placeInfo.length;
+        var sensorMonitoringOn=0, sensorMonitoringOff=0,
+            sensorStatusSuccess=0, sensorStatusFail=0,
+            legalSCount=0, companySCount=0, managementSCount=0,
             notexistLegalStandard=0, notexistCompanyStandard=0, notexistManagementStandard=0;
-        for(var i=0; i<data.length; i++){ //측정소별
-            for(var z=0; z<data[i].length; z++){ //측정소의 센서별 조회
-                sensorData = data[i][z];
-                if(sensorData.length != 0){
-                    monitoring = sensorData.monitoring;
-                    status = sensorData.status;
-                    value = sensorData.value;
+
+        for(var i=0; i<placeCount; i++){ //측정소별
+            var data = placeInfo[i].data;
+            var dataCount = data.length;
+            sensorMonitoringOn += placeInfo[i].monitoringOn;
+            sensorMonitoringOff += placeInfo[i].monitoringOff;
+            for(var z=0; z<dataCount; z++){ //측정소의 센서별 조회
+                var sensorData = data[z];
+                    value = sensorData.recent_value;
                     legalStandard = sensorData.legalStandard;
                     companyStandard = sensorData.companyStandard;
                     managementStandard = sensorData.managementStandard;
-                    if(monitoring){
-                        sensorMonitoringOn +=1;
-                    }
-                    if(compareTime(sensorData.up_time)){
+                    if(compareTime(sensorData.recent_up_time)){ // 최근데이터가 5분 이내 일때, 통신 정상, 알림음, 점멸효과
                         sensorStatusSuccess +=1;
                         if(legalStandard == 999999){
                             notexistLegalStandard += 1;
@@ -1013,12 +825,10 @@
                         }else if(value > managementStandard){
                             managementSCount +=1;
                         }
-                    }else{
+                    }else{ // 최근데이터가 5분 이외일 때, 통신불량 처리
                         sensorStatusFail += 1;
                     }
-                }else{
-                    sensorMonitoringOff +=1;
-                }
+
             }
         }
         if(legalSCount > 0 ){
@@ -1046,7 +856,7 @@
         if(managementPercent == 'NaN'){ managementPercent = 0;}
 
         $("#sensorStatusP").text(runPercent + "%"); //가동률
-        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess +sensorMonitoringOff)); // 통신정상/전체
+        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail + sensorMonitoringOff)); // 통신정상/전체
         $("#statusOn").text(sensorStatusSuccess); //정상
         $("#statusOff").text(sensorStatusFail); //통신불량
         $("#monitoringOff").text(sensorMonitoringOff); //모니터링OFF 개수
@@ -1058,6 +868,9 @@
         $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess - notexistManagementStandard)); //관리기준 Over 개수/전체
     }
 
+    /**
+     * 현재시간과 비교하여 5분이내면 true, 외외면 false
+     */
     function compareTime(dateTime){
         var dt = new Date(dateTime);
         var now = new Date();
@@ -1095,31 +908,6 @@
                 clearTimeout(flIn1);
         }
     });
-
-
-
-    /**
-     * 센서의 최근 데이터 리턴 (5분/30분/실시간)
-     */
-    function getSensorRecentAll(sensor){
-        var result = new Array();
-        if(sensor==undefined){
-            result = null;
-        } else{
-            $.ajax({
-                url:'<%=cp%>/getSensorRecentAll',
-                dataType: 'JSON',
-                data:  {"sensor": sensor},
-                async: false,
-                success: function (data) {
-                    result = data;
-                },
-                error: function (e) {
-                }
-            });
-        }
-        return result;
-    }
 
     /**
      * 차트 기본 옵션
@@ -1314,6 +1102,25 @@
                 }
             },
         })
+    }
+
+
+    /**
+     * 모니터링On된 측정소, 센서 모든 정보 Get
+     */
+    function getPlaceInfo() {
+        var getData = null;
+        $.ajax({  //측정소의 센서명을 구함
+            url: '<%=cp%>/placeInfo',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                getData = data;
+            },
+            error: function () {
+            }
+        });
+        return getData;
     }
 
 
