@@ -7,315 +7,10 @@
     String cp = request.getContextPath();
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
-<style>
-    .bg-lightGray {
-        background: #d3d3d3;
-    }
-
-    hr {
-        color: white;
-    }
-
-    label {
-        margin-bottom: 10px;
-    }
-
-    /* 데이터테이블 */
-    .toolbar > b {
-        font-size: 1.25rem;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        box-sizing: border-box;
-        display: inline-block;
-        min-width: 1.5em;
-        padding: 0.5em 1em;
-        margin-left: 2px;
-        text-align: center;
-        text-decoration: none !important;
-        cursor: pointer;
-        *cursor: hand;
-        color: #333 !important;
-        border: 0px solid transparent !important;
-        border-radius: 50px !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-        color: #fff !important;
-        border: 0px !important;
-        background: #97bef8 !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
-        cursor: default;
-        color: #666 !important;
-        border: 1px solid transparent;
-        background: transparent;
-        box-shadow: none;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        color: white !important;
-        border: 0px !important;
-        background: #254069 !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
-        outline: none;
-        background-color: #2b2b2b;
-        box-shadow: inset 0 0 3px #111;
-    }
-
-    #information_filter label {
-        margin-bottom: 5px;
-    }
-
-    .userLog {
-        font-size: 13px;
-    }
-
-    .userLog:hover {
-        cursor: pointer;
-        background-color: rgba(99, 130, 255, 0.3);
-    }
-
-    .dataTables_wrapper {
-        min-height: 350px;
-    }
-
-    #member-Table select {
-        color: #000;
-        background-color: white;
-        border-color: #aaa;
-        border-radius: 2px;
-        padding: 3px;
-        width: 130px;
-    }
-    #member-Table select:disabled {
-        color: #aaa;
-        background-color: #ddd;
-        border-color: #aaa;
-        border-radius: 2px;
-        padding: 3px;
-        width: 130px;
-    }
-
-    #groupTable {
-        width: 100%;
-        text-align: center;
-    }
-
-    #groupModal {
-        min-width: 850px;
-    }
-
-    #groupModal > .modal-dialog {
-        max-width: 850px !important;
-    }
-
-    .multiSelectBtn {
-        margin: 100px 10px 0px 10px;
-    }
-
-    .multiSelectParent option {
-        height: 45px;
-        border-bottom: 3px solid gray;
-        padding: 10px;
-    }
-    .multiSelectComboBox {
-         width: 95%;
-         margin:50px auto;
-         display: flex;
-         justify-content: center;
-         background-color: white;
-     }
-
-    .multiSelectParent {
-        padding: 15px 15px 0px 15px;
-        margin-bottom: 10px;
-        background-color: white;
-        position: relative;
-        display: block;
-        min-width: 780px;
-        height: 400px;
-    }
-
-    .multiSelectParent div {
-        float: left;
-    }
-
-    .MultiSelecterModal.first {
-        width: 60%;
-        height: 50%;
-        border-radius: 5px;
-        background-color: rgba(207, 226, 255, 0.7);
-        position: absolute;
-        padding: 66px 10px 10px;
-        top: 49%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        color: rgb(54, 71, 149);
-        font-weight: bold;
-        display: none;
-        font-size: 1.2rem;
-    }
-
-    .MultiSelecterModal.second {
-        width: 60%;
-        height: 50%;
-        line-height: 175px;
-        border-radius: 5px;
-        background-color: #cfe2ff;
-        border: 2px solid rgba(99, 130, 255, 0.7);
-        position: absolute;
-        padding: 10px;
-        top: 4%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        color: rgb(54, 71, 149);
-        font-weight: bold;
-        display: none;
-        font-size: 1.2rem;
-    }
-    #monitoringSignModal{
-        top: -7%;
-    }
-
-    .multiSelectBtn input[type=button] {
-        width: 50px;
-        height: 50px;
-        color: rgb(99, 130, 255);
-        font-weight: bold;
-        font-size: 2rem;
-        padding: 0;
-    }
-
-    .moveBtn {
-        display: block;
-    }
-
-    .multiSelectBtn input[type=button]:hover {
-        background-color: rgba(99, 130, 255, 0.3);
-    }
-
-    .multiSelect {
-        width: 45%;
-    }
-
-    .multiSelect > select {
-        height: 230px;
-        border: 3px solid rgb(99, 130, 255);
-    }
-
-    .emissionsSpan {
-        font-size: 0.9rem;
-        margin: 10px 0px 10px 0px;
-    }
-
-    .groupSubTitle {
-        position: relative;
-        left: -15px;
-    }
-
-    svg:hover {
-        cursor: pointer;
-    }
-
-    .tab {
-        width: 70px;
-        list-style: none;
-        position: absolute;
-        left: -81px;
-        top:10px;
-        margin: 0;
-        padding: 0 10px 0;
-    }
-
-    .tab li {
-        width: 70px;
-        height: 80px;
-        background-color: #ccc;
-        color: #999;
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .tab li:nth-child(1) {
-        line-height: 80px;
-    }
-
-    .tab li:nth-child(2) {
-        padding-top: 15px;
-    }
-
-    .tab li.on {
-        background-color: #75ACFF;
-        color: #fff;
-    }
-
-    .tab li:hover {
-        background-color: #75ACFF;
-        color: #fff;
-    }
-    #allPlaceCheck{
-        width: 20px;
-        height: 20px;
-    }
-    #allPlaceCheck:hover{
-        cursor: pointer;
-    }
-    #checkLabel{
-        font-size: 1.4rem;
-        margin:0px 0px 0px 10px;
-    }
-    #nonCheckLabel{
-        font-size: 1.4rem;
-        margin:0px 0px 0px 10px;
-        color: #777777;
-    }
-    #checkLabel:hover {
-        cursor: pointer;
-        color: #0d6efd;
-    }
-    #member, #group{
-        height: 425px;
-    }
-
-    /* 반응형 미디어쿼리 */
-    @media all and (max-width:989px) {
-        .tab {
-            left: unset;
-            right: 0px;
-            top: -60px;
-            display: flex;
-            width: 160px;
-        }
-        .tab li {
-            width: 70px;
-            height: 60px;
-        }
-        .tab li:nth-child(1) {
-            line-height: 60px;
-        }
-        .tab li:nth-child(2) {
-            padding-top: 10px;
-        }
-    }
-    .disabledOption{
-        color: #aaaaaa;
-    }
-    .selectBox option{
-        font-weight: bold;
-    }
-</style>
 
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<link rel="stylesheet" href="static/css/page/setting.css">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
@@ -326,31 +21,30 @@
         <span class="fs-4 fw-bold" style="padding: 0 10px;">환경설정 > 설정</span>
     </div>
 
-    <div class="row bg-light rounded py-3" style="margin-left: 1px; position: relative;"> <%-- 상단 콘텐츠 div --%>
-
-        <%-- tab 클릭시 li.on 회원관리는 #member 모니터링그룹관리는 #group 디스플레이 변경--%>
+    <div class="row bg-light rounded py-3" style="margin-left: 1px; position: relative;">
         <ul class="tab">
-            <li class="on" onclick="tabClick(this, 'member')">회원관리</li>
-            <li class="" onclick="tabClick(this, 'group')">모니터링그룹관리</li>
+            <li class="on" onclick="tabClick(this, 'memberManagement')">회원관리</li>
+            <li class="" onclick="tabClick(this, 'groupManagement')">모니터링그룹관리</li>
         </ul>
-        <%--        <h4 class="d-flex justify-content-start">회원관리</h4>--%>
-        <div id="member" style="display: block" class="tabDiv">
-        <div style="height: 50px;"><span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;height: 20px;">회원관리</span></div>
-        <div class="col-xs-12">
-            <table class="table table-striped" id="member-Table">
 
+        <div id="memberManagement" style="display: block" class="tabDiv">
+            <div style="height: 50px;">
+                <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;height: 20px;">회원관리</span>
+            </div>
+            <div class="col-xs-12">
+                <table class="table table-striped" id="member-Table">
                     <thead>
-                    <tr class="text-center">
-                        <th style="width: 8%; padding:10px 0px 10px 0px;">ID</th>
-                        <th style="width: 8%; padding:10px 0px 10px 0px;">이름</th>
-                        <th style="width: 12%; padding:10px 0px 10px 0px;">권한</th>
-                        <th style="width: 15%; padding:10px 0px 10px 0px;">이메일</th>
-                        <th style="width: 12%; padding:10px 0px 10px 0px;">연락처</th>
-                        <th style="width: 10%; padding:10px 0px 10px 0px;">부서명</th>
-                        <th style="width: 12%; padding:10px 0px 10px 0px;">모니터링 그룹</th>
-                        <th style="width: 14%; padding:10px 0px 10px 0px;">가입일</th>
-                        <th style="width: 9%; padding:10px 0px 10px 0px;">관리</th>
-                    </tr>
+                        <tr class="text-center">
+                            <th style="width: 8%; padding:10px 0px 10px 0px;">ID</th>
+                            <th style="width: 8%; padding:10px 0px 10px 0px;">이름</th>
+                            <th style="width: 12%; padding:10px 0px 10px 0px;">권한</th>
+                            <th style="width: 15%; padding:10px 0px 10px 0px;">이메일</th>
+                            <th style="width: 12%; padding:10px 0px 10px 0px;">연락처</th>
+                            <th style="width: 10%; padding:10px 0px 10px 0px;">부서명</th>
+                            <th style="width: 12%; padding:10px 0px 10px 0px;">모니터링 그룹</th>
+                            <th style="width: 14%; padding:10px 0px 10px 0px;">가입일</th>
+                            <th style="width: 9%; padding:10px 0px 10px 0px;">관리</th>
+                        </tr>
                     </thead>
 
                     <tbody>
@@ -369,22 +63,32 @@
                                     <td>가입대기</td>
                                 </c:when>
                                 <c:when test="${mList.state eq '3'}">
-                                    <td onclick="event.cancelBubble=true"><select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
-                                        <option value='${mList.state}'
-                                                selected="selected">일반</option>
-                                    </select></td>
+                                    <td onclick="event.cancelBubble=true">
+                                        <select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                            <option value='${mList.state}' selected="selected">일반</option>
+                                        </select>
+                                    </td>
                                 </c:when>
                                 <c:when test="${mList.state eq '2'}">
-                                    <td onclick="event.cancelBubble=true"><select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
-                                        <option value='${mList.state}'
-                                                selected="selected">관리자</option>
-                                    </select></td>
+                                    <td onclick="event.cancelBubble=true">
+                                        <select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                            <option value='${mList.state}' selected="selected">관리자</option>
+                                        </select>
+                                    </td>
                                 </c:when>
                                 <c:when test="${mList.state eq '1'}">
-                                    <td onclick="event.cancelBubble=true"><select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
-                                        <option value='${mList.state}'
-                                                selected="selected">최고 관리자</option>
-                                    </select></td>
+                                    <c:choose>
+                                        <c:when test="${member.state ne 1}">
+                                            <td>최고 관리자</td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td onclick="event.cancelBubble=true">
+                                                <select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                                    <option value='${mList.state}' selected="selected">최고 관리자</option>
+                                                </select>
+                                            </td>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:when>
                             </c:choose>
                             <td>${mList.email}</td>
@@ -394,23 +98,23 @@
                             <c:choose>
                                 <c:when test="${mList.state == 1}">
                                 <select id='monitoringGroup${mList.id}' disabled="disabled" onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
-                                    <option value='${mList.monitoringGroup}'
-                                            selected="selected">${mList.monitoringGroup}</option>
-                                </select></td>
+                                    <option value='${mList.monitoringGroup}' selected="selected">${mList.monitoringGroup}</option>
+                                </select>
+                            </td>
                                 </c:when>
                                 <c:otherwise>
                                 <select id='monitoringGroup${mList.id}' onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
-                                    <option value='${mList.monitoringGroup}'
-                                            selected="selected">${mList.monitoringGroup}</option>
-                                </select></td>
+                                    <option value='${mList.monitoringGroup}' selected="selected">${mList.monitoringGroup}</option>
+                                </select>
+                            </td>
                                 </c:otherwise>
                             </c:choose>
                             <c:choose>
                                 <c:when test="${mList.joined != null}">
-                                    <td><fmt:formatDate value="${mList.joined}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
+                            <td><fmt:formatDate value="${mList.joined}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
                                 </c:when>
                                 <c:otherwise>
-                                    <td></td>
+                            <td></td>
                                 </c:otherwise>
                             </c:choose>
                             <c:choose>
@@ -441,28 +145,25 @@
                         </tr>
                     </c:forEach>
                     </tbody>
-
                 </table>
             </div>
         </div>
-<%--            회원관리 div--%>
-        <div id="group" style="display: none;"  class="tabDiv">
-        <div style="height: 50px;">
-            <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
-            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal"
-                    onclick="insertSetting()">그룹 추가</button>
-        </div>
-        <div style="width: 100%; height:350px;">
-            <table class="table table-striped" id="groupTable">
-                <thead>
-                <tr>
-                    <th>그룹명</th>
-                    <th>회원</th>
-                    <th>모니터링 <a class="sign"></a> 측정소</th>
-                    <th>관리</th>
-                </tr>
-                </thead>
 
+        <div id="groupManagement" style="display: none;"  class="tabDiv">
+            <div style="height: 50px;">
+                <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal" onclick="insertSetting()">그룹 추가</button>
+            </div>
+            <div style="width: 100%; height:350px;">
+                <table class="table table-striped" id="groupTable">
+                    <thead>
+                        <tr>
+                            <th>그룹명</th>
+                            <th>회원</th>
+                            <th>모니터링 <a class="sign"></a> 측정소</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     <c:forEach items="${group}" var="groupList" varStatus="idx">
                         <c:if test="${groupList.groupName != 'default'}">
@@ -483,14 +184,11 @@
                 </table>
             </div>
         </div>
-        </div> <%-- 모니터링그룹 div --%>
-
+    </div>
 
     <div class="row bg-light" style="padding: 1rem 40px 25px; margin-left: 1px;margin-top: 15px; ">
-
         <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">권한관리</span>
         <div class="d-flex mt-1 p-0">
-
             <div class="col-md-3">
                 <div class="bg-lightGray p-4 me-4 fw-bold" style="height: 314px;">
                     <div class="d-flex justify-content-start">
@@ -545,20 +243,13 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
-    <%--권한관리 DIV--%>
+</div>
 
-</div> <%-- 상단 콘텐츠 div --%>
-
-
-<%--                                           ↓↓↓ 모달영역 ↓↓↓                                                              --%>
 
 <!-- groupModal -->
-<div class="modal" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
+<div class="modal" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header justify-content-center">
@@ -566,8 +257,7 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <h3>그룹명</h3>
-                <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px;" maxlength="70"
-                       id="groupInput" autocomplete="off">
+                <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px;" maxlength="70" id="groupInput" autocomplete="off">
             </div>
             <div class="modal-body d-flex">
                 <div style="width: 100%">
@@ -582,10 +272,8 @@
                         </div>
 
                         <div class="multiSelectBtn">
-                            <input type='button' id='btnRight2' value='>' class="btn btn-default moveBtn"
-                                   onclick="moveEvent('#lstBox3', '#lstBox4')"/>
-                            <input type='button' id='btnLeft2' value='<' class="btn btn-default moveBtn"
-                                   onclick="moveEvent('#lstBox4', '#lstBox3')"/>
+                            <input type='button' id='btnRight2' value='>' class="btn btn-default moveBtn" onclick="moveEvent('#lstBox3', '#lstBox4')"/>
+                            <input type='button' id='btnLeft2' value='<' class="btn btn-default moveBtn" onclick="moveEvent('#lstBox4', '#lstBox3')"/>
                         </div>
 
                         <div class="multiSelect">
@@ -598,15 +286,16 @@
                         <div class="clearfix"></div>
                         <!-- MultiSelecter Modal-->
                         <div class="MultiSelecterModal first" id="groupSignModal"></div>
-                        <div class="emissionsSpan">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 페이지에서 모니터링 가능합니다.</div>
+                        <div class="emissionsSpan">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 가능합니다.</div>
                     </div>
 
-                        <h3 class="fs-5 fw-bold groupSubTitle" style="padding-left: 20px;">모니터링 측정소</h3>
+                    <h3 class="fs-5 fw-bold groupSubTitle" style="padding-left: 20px;">모니터링 측정소</h3>
+
                     <div class="multiSelectParent" id="placeSelect">
                         <input type="checkbox" id="allPlaceCheck" class="allPlaceCheck">
                         <label for="allPlaceCheck" id="checkLabel"  class="allPlaceCheck"> 전체 측정소 모니터링</label>
                         <span class="allPlaceCheckSpan allPlaceCheck" style="display: block;font-size: 0.9rem;color:#db3535;font-weight: bold;margin-bottom: 10px;">
-                            * 체크시 측정소 추가 여부와 상관없이 모든 측정소 모니터링</span>
+                            * 체크시 시스템에 등록된 모든 측정소 모니터링 (변경 불가)</span>
 
                         <div class="multiSelect allCheckEvent">
                             <label><b>측정소명</b></label>
@@ -616,10 +305,8 @@
                         </div>
 
                         <div class="multiSelectBtn allCheckEvent">
-                            <input type='button' id='btnRight1' value='>' class="btn btn-default moveBtn"
-                                   onclick="moveEvent('#lstBox1', '#lstBox2')"/>
-                            <input type='button' id='btnLeft1' value='<' class="btn btn-default moveBtn"
-                                   onclick="moveEvent('#lstBox2', '#lstBox1')"/>
+                            <input type='button' id='btnRight1' value='>' class="btn btn-default moveBtn" onclick="moveEvent('#lstBox1', '#lstBox2')"/>
+                            <input type='button' id='btnLeft1' value='<' class="btn btn-default moveBtn" onclick="moveEvent('#lstBox2', '#lstBox1')"/>
                         </div>
 
                         <div class="multiSelect allCheckEvent">
@@ -632,7 +319,7 @@
                         <div class="clearfix"></div>
                         <!-- MultiSelecter Modal-->
                         <div class="MultiSelecterModal second" id="monitoringSignModal"></div>
-                        <div class="emissionsSpan allCheckEvent">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 페이지에서 모니터링 가능합니다.</div>
+                        <div class="emissionsSpan allCheckEvent">* 해당 그룹은 모니터링 측정소에 포함된 측정소만 모니터링 가능합니다.</div>
                     </div>
 
                 </div>
@@ -654,21 +341,34 @@
             <div class="modal-header justify-content-center">
                 <h5 class="modal-title">가입 승인</h5>
             </div>
-            <div class="modal-body d-flex justify-content-center">
-                <h3 id="okModal_Body">가입승인 하시겠습니까?</h3>
-            </div>
-            <div class="modal-body d-flex justify-content-center">
-                <h5 class="me-1">회원권한 : </h5>
-                <select name="rank" id="rank" class="btn btn-light">
-                    <option value="3">일반</option>
-                    <option value="2">관리자</option>
-                    <option value="1">최고 관리자</option>
-                </select>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <h3 id="okModal_Body">가입승인 하시겠습니까?</h3>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <h5 class="me-1">회원권한: </h5>
+                    <select name="rank" id="rank" class="btn btn-light">
+                        <option value="3">일반</option>
+                        <option value="2">관리자</option>
+                        <c:choose>
+                            <c:when test="${member.state eq 1}">
+                                <option value="1">최고 관리자</option>
+                            </c:when>
+                        </c:choose>
+                    </select>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <h5 class="me-1">모니터링 그룹 : </h5>
+                    <select name="m_group" id="m_group" class="btn btn-light">
+                        <option>선택</option>
+                        <c:forEach items="${group}" var="group" varStatus="idx">
+                            <option value="${group.groupNum}">${group.groupName}</option>
+                        </c:forEach>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" value="1"
-                        onclick="sing_Up(value)">승인
-                </button>
+                <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" onclick="sing_up(1)">승인</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
@@ -686,15 +386,13 @@
                 <h3>가입거절 하시겠습니까?</h3>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal" value="0"
-                        onclick="sing_Up(value)">거절
+                <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal"onclick="sing_up(0)">거절
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- managementModal -->
 <div class="modal" id="managementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -768,15 +466,11 @@
         </div>
     </div>
 </div>
-<%--                                           ↑↑↑ 모달영역 ↑↑↑                                                              --%>
-
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
     $("#member-Table").DataTable({
-        //     scrollX:true,
-        //     scrollXInner:"130%",
         autoWidth: false,
         language: {
             emptyTable: "데이터가 없어요.",
@@ -854,24 +548,6 @@
         textfield_management();
     }// row 의 승인 및 거절 버튼 클릭시 전역변수 ID에 해당row 의 ID가 저장됨
 
-    function sing_Up(iNumber) {
-        var content = ID;
-        var rankLog = ($("#rank").val() == "1") ? " [최고 관리자] " : ($("#rank").val() == "2") ? " [관리자] " : " [일반] ";
-        content += rankLog;
-        (iNumber == "1") ? content += " 계정 가입 승인 " : content += " 계정 가입 거절 ";
-        var settings = {
-            "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + iNumber + "&state=" + $("#rank").val(),
-            "method": "POST"
-        };
-        $.ajax(settings).done(function (response) {
-            (iNumber == "1") ? inputLog(ID, rankLog + "가입 승인", "회원") : inputLog(ID, "가입 거절", "회원"); //대상자 로그
-            inputLog(user_id, content, "회원"); // 관리자로그
-            success(response);
-            setTimeout(function () {
-                location.reload();
-            }, 2000);
-        })
-    }           // sing_Up
 
     //권한 변경
     function gave_rank(select) {
@@ -942,6 +618,33 @@
             });
         }
     }           // kickMember
+
+    function sing_up(sign) {
+        if($("#m_group option:selected").val() == "선택"){
+            warning("모니터링 그룹을 선택해주세요.");
+            return false;
+        }
+
+        let content = ID;
+        (sign == 1) ? content += " 계정 가입 승인 " : content += " 계정 가입 거절 ";
+
+        var rankLog = ($("#rank").val() == 1) ? " [최고 관리자] " : ($("#rank").val() == 2) ? " [관리자] " : " [일반] ";
+        content += rankLog;
+        var settings = {
+            "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + sign + "&state=" + $("#rank").val(),
+            "method": "POST"
+        };
+
+        $.ajax(settings).done(function (response) {
+            (sign == 1) ? inputLog(ID, rankLog + "가입 승인", "회원") : inputLog(ID, "가입 거절", "회원"); //대상자 로그
+            inputLog(user_id, content, "회원"); // 관리자로그
+            success(response);
+            setTimeout(function () {
+                location.reload();
+            }, 2000);
+        })
+
+    }
 
     function rankRadioChanged(name) {
         rName = name;
@@ -1371,23 +1074,24 @@
     //권한 selectbox
     function select_state(select, state) {
         Info_Set(user_id, state, name);
-        const $target = $('#'+select.id);
-        $target.empty();
-        let innerHTML = "";
-        if(state == 3){
-            innerHTML ="<option value='3' selected='selected'>일반</option>" +
-                "<option value='2'>관리자</option>" +
-                "<option value='1'>최고 관리자</option>";
-        }else if(state == 2){
-            innerHTML ="<option value='3'>일반</option>" +
-                "<option value='2' selected='selected'>관리자</option>" +
-                "<option value='1'>최고 관리자</option>";
-        }else{
-            innerHTML ="<option value='3'>일반</option>" +
-                "<option value='2'>관리자</option>" +
-                "<option value='1' selected='selected'>최고 관리자</option>";
+        const target = $('#'+select.id);
+        target.empty();
+        let innerHTML = "<option value='3'>일반</option>" +
+            "<option value='2'>관리자</option>";
+
+        if(${member.state == 1}){
+            innerHTML += "<option value='1'>최고 관리자</option>";
         }
-        $target.append(innerHTML);
+
+        target.append(innerHTML);
+
+        if(state == 3){
+            target.val("3").prop("selected", true);
+        }else if(state == 2){
+            target.val("2").prop("selected", true);
+        }else{
+            target.val("1").prop("selected", true);
+        }
     }
 
     //모니터링 그룹 selectbox
@@ -1480,8 +1184,6 @@
             timer: 2000
         })
     }
-
-
 </script>
 
 
