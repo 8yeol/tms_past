@@ -18,194 +18,21 @@
 
 <link rel="stylesheet" href="static/css/datepicker.min.css">
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<link rel="stylesheet" href="static/css/page/dataInquiry.css">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/datepicker.min.js"></script>
 <script src="static/js/datepicker.ko.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
 <script src="static/js/moment.min.js"></script>
-<%--공통코드--%>
 <script src="static/js/common/common.js"></script>
+<script src="static/js/sweetalert2.min.js"></script>
 <%-- export excel --%>
 <script src="static/js/jszip.min.js"></script>
 <script src="static/js/dataTables.buttons.min.js"></script>
 <script src="static/js/buttons.html5.min.js"></script>
 
-<style>
-    .search {
-        position: relative;
-        left: 285px;
-        top: -18px;
-    }
-    .picker {
-        position: relative;
-        top: 20px;
-    }
-    .toolbar {
-        float: left;
-    }
-    .add-bg {
-        background-color: #fff;
-        width: 100%;
-        position: relative;
-        left: -20px;
-        top: -3px;
-    }
-    .add-margin {
-        margin-left: 28px;
-    }
-
-    .add-bg-color {
-        background-color: #97bef8;
-        color: #fff;
-    }
-    .height {
-        height: 1085px;
-    }
-    .add-margin-top {
-        margin-top: 10px;
-    }
-    .sizing {
-        width: 1087px;
-        height: 638px;
-        position: relative;
-    }
-
-    .h-fix {
-        height: 300px;
-    }
-
-    /* 데이터테이블 */
-    .toolbar>b {
-        font-size: 1.25rem;
-    }
-    /*.toolbar:after {content:""; display: block; clear: both;}*/
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        box-sizing: border-box;
-        display: inline-block;
-        min-width: 1.5em;
-        padding: 0.5em 1em;
-        margin-left: 2px;
-        text-align: center;
-        text-decoration: none !important;
-        cursor: pointer;
-        *cursor: hand;
-        color: #333 !important;
-        border: 0px solid transparent;
-        border-radius: 50px;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-        color: #fff !important;
-        border: 0px;
-        background: #97bef8;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
-        cursor: default;
-        color: #666 !important;
-        border: 1px solid transparent;
-        background: transparent;
-        box-shadow: none;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        color: white !important;
-        border: 0px;
-        background: #254069;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
-        outline: none;
-        background-color: #2b2b2b;
-        box-shadow: inset 0 0 3px #111;
-    }
-
-    #information_filter label {
-        margin-bottom: 5px;
-    }
-
-    .buttons-excel {
-        background-color: #000;
-        color: #fff;
-        border: 0px;
-        border-radius: 5px;
-        position: relative;
-        margin-top: 2px;
-    }
-    .dt-buttons {
-        margin: 0 10px;
-        display: inline-block;
-    }
-
-    .dataTables_wrapper {
-        min-height: 450px;
-    }
-
-    .down{
-        margin-top: 1.61rem;
-        position: relative;
-        top:-663px;
-    }
-
-    #items{
-        border: 1px solid #dee2e6;
-        border-color: #dee2e6;
-    }
-    #searchDiv{height: 130px;}
-
-    /* 미디어쿼리 */
-    @media all and (max-width: 1399px) and (min-width: 1200px) {
-        .sizing {width:937px;}
-        body {font-size: 0.8rem;}
-        .search {left:260px;}
-        #searchDiv{height: 170px;}
-    }
-    @media all and (max-width: 1199px) and (min-width: 990px) {
-        .sizing {width:787px;}
-        body {font-size: 0.7rem;}
-        .add-margin {margin-left: 5px;}
-        .search {left:160px;}
-        .f-sizing {font-size: 0.9rem!important;}
-        #searchDiv{height: 180px;}
-
-    }
-
-    @media all and (max-width: 989px) {
-        .sizing {width: 720px;top:45px;}
-        .picker {width: 100%;}
-        .add-margin {margin-left: 15px;}
-        .search {left:0px;top:15px;}
-        .search>button {margin-left: 10px !important;}
-        body {font-size: 0.8rem;}
-        .f-sizing {font-size: 0.9rem!important;}
-        .add-bg{width:720px; height: 120px;}
-        #date_start, #date_end {width:120px;}
-        .down {top:-1190px; width: 720px; margin-top: 0; border: 1px solid; border-color: #dee2e6; background-color: #fff; height: 41px; overflow: auto;}
-        .down div{
-            float: left;
-            margin-left: 0.5rem;
-        }
-        #items{ border: 0px}
-        .m-top{padding-top: 100px;}
-        .h-fix {height: 20px;}
-        #searchDiv{height: 190px;}
-        #container>div:nth-child(4)>div:nth-child(1)>div:nth-child(1) {width: 720px;}
-        #searchDiv {margin: 10px auto 0px !important;}
-        hr {width: 720px; margin-left: 100px;}
-        #container>div:nth-child(3) {margin-left: 100px!important;}
-        #container>div:nth-child(4) {margin:0 0 0 100px!important;}
-        #container>div:nth-child(4)>div:nth-child(1) {padding: 0!important;}
-    }
-</style>
-
-
-<link rel="stylesheet" href="static/css/sweetalert2.min.css">
-<script src="static/js/sweetalert2.min.js"></script>
 
 <div class="container" id="container">
     <div class="ms-3 mt-3 add-bg row" id="searchDiv">
@@ -328,94 +155,6 @@
         search(0);
     });
 
-    function addTable(reference){
-        $("#informationBody").empty();
-        $('#information').DataTable().clear();
-        $('#information').DataTable().destroy();
-
-        const management = reference.get("management");
-        const company = reference.get("company");
-        const legal = reference.get("legal");
-
-        $.ajax({
-            url: '<%=cp%>/searchInformatin',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {"date_start":$('#date_start').val(),
-                "date_end":$('#date_end').val(),
-                "item":$('input[name="item"]:checked').val(),
-                "off":$('#off').is(":checked")
-            },
-            success : function(data) {
-                const tbody = document.getElementById('informationBody');
-
-                for(let i=0; i<data.length; i++){
-                    const row = tbody.insertRow( tbody.rows.length );
-                    const cell1 = row.insertCell(0);
-                    const cell2 = row.insertCell(1);
-                    const cell3 = row.insertCell(2);
-                    const cell4 = row.insertCell(3);
-                    const cell5 = row.insertCell(4);
-                    cell1.innerHTML = i+1;
-                    let value = data[i].value.toFixed(2);
-                    cell2.innerHTML = value;
-                    let grade = '정상';
-                    if(value > legal){
-                        grade = '<div class="bg-danger text-light">법적기준 초과</div>';
-                    } else if(value > company){
-                        grade = '<div class="bg-warning text-light">사내기준 초과</div>';
-                    } else if(value > management){
-                        grade = '<div class="bg-success text-light">관리기준 초과</div>';
-                    }
-                    cell3.innerHTML = grade;
-                    cell4.innerHTML = (data[i].status?"ON":"OFF");
-                    cell5.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
-                }
-            },
-            error : function(request, status, error) {
-                console.log('add table error');
-                console.log(error)
-            }
-        })
-
-        $('#information').dataTable({
-            dom: '<"toolbar">Bfrtip',
-            buttons: [{
-                extend: 'excelHtml5',
-                autoFilter: true,
-                sheetName: 'Exported data',
-                text:'엑셀 다운로드',
-                filename: function(){
-                    const d = moment(new Date()).format('YYYYMMDDHHmmss');
-                    return d + '_' + $("#place").val() + '_' + $("label[for='"+$('input[name="item"]:checked').val()+"']").text();
-                },
-            }],
-            lengthChange : false,
-            pageLength: 8,
-            order :[4, 'desc'],
-            info: false,
-            language: {
-                emptyTable: "데이터가 없어요.",
-                lengthMenu: "페이지당 _MENU_ 개씩 보기",
-                info: "현재 _START_ - _END_ / _TOTAL_건",
-                infoEmpty: "데이터 없음",
-                infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
-                search: "전체검색 : ",
-                zeroRecords: "일치하는 데이터가 없어요.",
-                loadingRecords: "로딩중...",
-                processing: "잠시만 기다려 주세요...",
-                paginate: {
-                    next: "다음",
-                    previous: "이전"
-                },
-            },
-        });
-
-        $("div.toolbar").html('<b>상세보기</b>');
-    }
-
     $("#date_start").datepicker({
         language:'ko',
         minDate: new Date("2021-05-12"),
@@ -494,10 +233,6 @@
         }
     }
 
-    $('#off').click(function(){
-        search(1);
-    });
-
     $("input:radio[name=day]").click(function() {
         $("#date_start").val("");
         $("#date_end").val("");
@@ -520,6 +255,13 @@
             }
         }
     });
+
+    function getDays(dayType){
+        if(dayType == 'week'){
+            return moment(new Date()).subtract(7, 'd').format('YYYY-MM-DD');
+        }
+        return moment(new Date).format('YYYY-MM-DD');
+    }
 
     function placeChange(){
         const place = $("#place").val();
@@ -555,19 +297,6 @@
         })
     }
 
-
-    function changeItem(){
-        search(1);
-    }
-
-    function reset(){
-        addChart([], [], [], 1);
-        $('#information').DataTable().clear();
-        $('#information').DataTable().destroy();
-        const innerHtml = "<tr><td colspan='5'> 저장된 센서 데이터가 없습니다. </td></tr>";
-        $('#information > tbody').append(innerHtml);
-    }
-
     function search(flag){
         const date_start =  $('#date_start').val();
         const date_end = $('#date_end').val();
@@ -583,6 +312,7 @@
             reset();
             return false;
         }
+
         if(date_start==""||date_end==""){
             Swal.fire({
                 icon: 'warning',
@@ -597,6 +327,7 @@
         $('#title').text(place + " - " + category);
 
         const reference = getReferenceValue(item);
+
         $.ajax({
             url: '<%=cp%>/searchChart',
             type: 'POST',
@@ -610,14 +341,15 @@
             },
             success : function(data) {
                 if(data.length==0){
+                    addChart([], [], reference, 0);
+                    if(chart!=null){
+                        reset();
+                    }
                     Swal.fire({
                         icon: 'warning',
                         title: '경고',
                         text: '해당 기간 내의 검색 결과가 없습니다.'
                     })
-                    if(chart!=null){
-                        reset();
-                    }
                     return false;
                 }else{
                     addChart(data, category, reference, flag);
@@ -654,6 +386,112 @@
             }
         });
         return reference;
+    }
+
+    function addTable(reference){
+        $("#informationBody").empty();
+        $('#information').DataTable().clear();
+        $('#information').DataTable().destroy();
+
+        const management = reference.get("management");
+        const company = reference.get("company");
+        const legal = reference.get("legal");
+
+        $.ajax({
+            url: '<%=cp%>/searchInformatin',
+            type: 'POST',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            data: {"date_start":$('#date_start').val(),
+                "date_end":$('#date_end').val(),
+                "item":$('input[name="item"]:checked').val(),
+                "off":$('#off').is(":checked")
+            },
+            success : function(data) {
+                const tbody = document.getElementById('informationBody');
+
+                for(let i=0; i<data.length; i++){
+                    const row = tbody.insertRow( tbody.rows.length );
+                    const cell1 = row.insertCell(0);
+                    const cell2 = row.insertCell(1);
+                    const cell3 = row.insertCell(2);
+                    const cell4 = row.insertCell(3);
+                    const cell5 = row.insertCell(4);
+                    cell1.innerHTML = i+1;
+                    let value = data[i].value.toFixed(2);
+                    cell2.innerHTML = value;
+                    let grade = '정상';
+                    if(value > legal){
+                        grade = '<div class="bg-danger text-light">법적기준 초과</div>';
+                    } else if(value > company){
+                        grade = '<div class="bg-warning text-light">사내기준 초과</div>';
+                    } else if(value > management){
+                        grade = '<div class="bg-success text-light">관리기준 초과</div>';
+                    }
+                    cell3.innerHTML = grade;
+                    cell4.innerHTML = (data[i].status?"ON":"OFF");
+                    cell5.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
+                }
+            },
+            error : function(request, status, error) {
+                console.log('add table error');
+                console.log(error)
+            }
+        })
+
+        $('#information').dataTable({
+            dom: '<"toolbar">Bfrtip',
+            buttons: [{
+                extend: 'excelHtml5',
+                autoFilter: true,
+                sheetName: 'Exported data',
+                text:'엑셀 다운로드',
+                filename: function(){
+                    const d = moment(new Date()).format('YYYYMMDDHHmmss');
+                    return d + '_' + $("#place").val() + '_' + $("label[for='"+$('input[name="item"]:checked').val()+"']").text();
+                },
+            }],
+            lengthChange : false,
+            pageLength: 7,
+            order :[4, 'desc'],
+            info: false,
+            language: {
+                emptyTable: "데이터가 없어요.",
+                lengthMenu: "페이지당 _MENU_ 개씩 보기",
+                info: "현재 _START_ - _END_ / _TOTAL_건",
+                infoEmpty: "데이터 없음",
+                infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
+                search: "전체검색 : ",
+                zeroRecords: "일치하는 데이터가 없어요.",
+                loadingRecords: "로딩중...",
+                processing: "잠시만 기다려 주세요...",
+                paginate: {
+                    next: "다음",
+                    previous: "이전"
+                },
+            },
+        });
+
+        $("div.toolbar").html('<b>상세보기</b>');
+    }
+
+
+    $('#off').click(function(){
+        search(1);
+    });
+
+
+    function changeItem(){
+        search(1);
+    }
+
+    function reset(){
+        addChart([], [], [], 1);
+        $('#information').DataTable().clear();
+        $('#information').DataTable().destroy();
+        const innerHtml = "<tr><td colspan='5'> 저장된 센서 데이터가 없습니다. </td></tr>";
+        $('#information > tbody').append(innerHtml);
     }
 
     let options = null, chart = null, optionsLine =null, chartLine =null;
@@ -878,14 +716,6 @@
             })
         }
     }
-
-    function getDays(dayType){
-        if(dayType == 'week'){
-            return moment(new Date()).subtract(7, 'd').format('YYYY-MM-DD');
-        }
-        return moment(new Date).format('YYYY-MM-DD');
-    }
-
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />
