@@ -653,7 +653,7 @@
             var rankLog = ($("#rank").val() == 1) ? " [최고 관리자] " : ($("#rank").val() == 2) ? " [관리자] " : " [일반] ";
             content += rankLog;
             content += " 모니터링 그룹 : ";
-            var groupLog = $("#m_group option:selected").text();
+            var groupLog = $("#m_group option:selected").val();
             console.log(groupLog)
             content += groupLog;
         }
@@ -996,10 +996,10 @@
 
         let memInnerHTML;
         for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "default" && groupPlaList != '모든 측정소' && memberList[i].state <=3 && memberList[i].state != 1) {
+            if (memberList[i].monitoringGroup == "1" && groupPlaList != '모든 측정소' && memberList[i].state <=3 && memberList[i].state != 1) {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
-            if (memberList[i].monitoringGroup == "default" && groupPlaList == '모든 측정소' && memberList[i].state <= 3) {
+            if (memberList[i].monitoringGroup == "1" && groupPlaList == '모든 측정소' && memberList[i].state <= 3) {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
         }
@@ -1027,7 +1027,7 @@
         let plaInnerHTML;
 
         for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "default" && memberList[i].state <=3) {
+            if (memberList[i].monitoringGroup == "1" && memberList[i].state <=3) {
                 memInnerHTML += '<option value="' + memberList[i].id +'" id="' + memberList[i].state + '">' + memberList[i].id + '</option>';
             }
         }

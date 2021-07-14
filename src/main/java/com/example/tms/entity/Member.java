@@ -22,7 +22,7 @@ public class Member {
     private Date lastLogin;
     private String state;
     private String department;
-    private String monitoringGroup;
+    private int monitoringGroup;
     private String grade;
 
     public void encodePassword(PasswordEncoder passwordEncoder){
