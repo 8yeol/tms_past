@@ -520,17 +520,23 @@
         var tbodyId = $(this).parent('tbody').attr('id');
         const sensorName = $(this).find('td input')[0].value;
         var chartIndex = tbodyId.substr(13,5);
-        console.log("chart-"+chartIndex, sensorName);
-        var sensorDataList = getSensor(sensorName, 1490);
+        var sensorDataList = getSensor(sensorName, 1600);
+        var sensorDataLength = sensorDataList.length;
         var recentData = getSensorData(sensorName);
+        console.log(document.getElementsByTagName('tbody').value);
         if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
             draw_place_chart_frame(chartIndex);
             updateChart(sensorDataList, recentData, chartIndex);
         }else{
             if($('#chart-'+chartIndex).css("display") == 'none'){
                 $('#chart-'+chartIndex).show();
+                if(sensorDataList[sensorDataLength-1].x != recentData.up_time){
+                    sensorDataList.push({x: recentData.up_time, y: recentData.value});
+                }
+                updateChart(sensorDataList, recentData, chartIndex);
             }else{
-                $('#chart-'+chartIndex).hide();
+                // $('#chart-'+chartIndex).hide();
+                chart['chart-'+chartIndex].destroy();
             }
         }
 
@@ -962,7 +968,7 @@
             colors: ['#629cf4'],
             markers: { //점
                 size: 1,
-                strokeWidth:0.1,
+                strokeWidth:1,
                 shape: "circle",
                 radius: 0,
                 colors: ["#629cf4"],
@@ -1161,6 +1167,7 @@
                             result.push({x: item.up_time, y: (item.value).toFixed(2)});
                         })
                     }else{
+                        console.log("sensor_data is none")
                         // 조회 결과 없을 때 return [];
                         result = [];
                     }
