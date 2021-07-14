@@ -133,6 +133,28 @@
             const chartData = getWeekChartData();
             addChart(chartData);
         }
+
+        $('#information').dataTable({
+            lengthChange : false,
+            pageLength: 10,
+            info: false,
+            order :[3, 'desc'],
+            language: {
+                emptyTable: "데이터가 없어요.",
+                lengthMenu: "페이지당 _MENU_ 개씩 보기",
+                info: "현재 _START_ - _END_ / _TOTAL_건",
+                infoEmpty: "데이터 없음",
+                infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
+                search: "테이블 내용 검색 : ",
+                zeroRecords: "일치하는 데이터가 없어요.",
+                loadingRecords: "로딩중...",
+                processing: "잠시만 기다려 주세요...",
+                paginate: {
+                    next: "다음",
+                    previous: "이전"
+                },
+            },
+        });
     });
 
     $("#date_start").datepicker({
@@ -228,9 +250,6 @@
     }
 
     function search(type){
-        $('#information').DataTable().clear();
-        $('#information').DataTable().destroy();
-
         let from = $('#date_start').val();
         const to =$('#date_end').val();
 
@@ -239,93 +258,82 @@
             $("input:radio[id='s_day']").prop("checked",true);
         }
 
-        $.ajax({
-            url: '<%=cp%>/getNotificationList',
-            type: 'POST',
-            dataType: 'json',
-            async: false,
-            cache: false,
-            data: {
-                "from" : from,
-                "to" : to
-            },
-            success : function(data) {
-                if(data.length != 0){
-                    const tbody = document.getElementById('informationBody');
-                    for(let i=0; i<data.length; i++){
-                        const row = tbody.insertRow( tbody.rows.length );
-                        const cell1 = row.insertCell(0);
-                        const cell2 = row.insertCell(1);
-                        const cell3 = row.insertCell(2);
-                        const cell4 = row.insertCell(3);
-                        const cell5 = row.insertCell(4);
+        if(from == "" || to == ""){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '검색기간을 입력해주세요.'
+            })
+        }else{
+            $('#information').DataTable().clear();
+            $('#information').DataTable().destroy();
 
-                        const now = moment();
-                        const upTime = moment(new Date(data[i].up_time), 'YYYY-MM-DD HH:mm:ss');
-                        const minutes = moment.duration(now.diff(upTime)).asMinutes();
-
-                        if(minutes <= 5){
-                            cell1.innerHTML = "<span class='new'>N</span> " + data[i].place;
-                        } else{
-                            cell1.innerHTML = data[i].place;
-                        }
-
-                        let notify;
-                        if(data[i].grade==1){
-                            notify = '법적기준 초과';
-                        }else if(data[i].grade==2){
-                            notify = '사내기준 초과';
-                        }else if(data[i].grade==3){
-                            notify = '관리기준 초과';
-                        }
-
-                        cell2.innerHTML = data[i].sensor + " 센서 " + notify;
-                        cell3.innerHTML = data[i].value.toFixed(2);
-                        cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
-                        if(data[i].grade==1){
-                            cell5.innerHTML = '<div class="bg-danger text-light">'+notify+'</div>'
-                        }else if(data[i].grade==2){
-                            cell5.innerHTML = '<div class="bg-warning text-light">'+notify+'</div>'
-                        }else if(data[i].grade==3){
-                            cell5.innerHTML = '<div class="bg-success text-light">'+notify+'</div>'
-                        }
-                    }
-
-                    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 조회("+from+" ~ "+to+")","조회");
-                }else{
-                    Swal.fire({
-                        icon: 'warning',
-                        title: '경고',
-                        text: '알림 목록이 없습니다.'
-                    })
-                }
-            },
-            error : function(request, status, error) {
-                console.log(error)
-            }
-        })
-
-        $('#information').dataTable({
-            lengthChange : false,
-            pageLength: 10,
-            info: false,
-            order :[3, 'desc'],
-            language: {
-                emptyTable: "데이터가 없어요.",
-                lengthMenu: "페이지당 _MENU_ 개씩 보기",
-                info: "현재 _START_ - _END_ / _TOTAL_건",
-                infoEmpty: "데이터 없음",
-                infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
-                search: "테이블 내용 검색 : ",
-                zeroRecords: "일치하는 데이터가 없어요.",
-                loadingRecords: "로딩중...",
-                processing: "잠시만 기다려 주세요...",
-                paginate: {
-                    next: "다음",
-                    previous: "이전"
+            $.ajax({
+                url: '<%=cp%>/getNotificationList',
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                cache: false,
+                data: {
+                    "from" : from,
+                    "to" : to
                 },
-            },
-        });
+                success : function(data) {
+                    if(data.length != 0){
+                        const tbody = document.getElementById('informationBody');
+                        for(let i=0; i<data.length; i++){
+                            const row = tbody.insertRow( tbody.rows.length );
+                            const cell1 = row.insertCell(0);
+                            const cell2 = row.insertCell(1);
+                            const cell3 = row.insertCell(2);
+                            const cell4 = row.insertCell(3);
+                            const cell5 = row.insertCell(4);
+
+                            const now = moment();
+                            const upTime = moment(new Date(data[i].up_time), 'YYYY-MM-DD HH:mm:ss');
+                            const minutes = moment.duration(now.diff(upTime)).asMinutes();
+
+                            if(minutes <= 5){
+                                cell1.innerHTML = "<span class='new'>N</span> " + data[i].place;
+                            } else{
+                                cell1.innerHTML = data[i].place;
+                            }
+
+                            let notify;
+                            if(data[i].grade==1){
+                                notify = '법적기준 초과';
+                            }else if(data[i].grade==2){
+                                notify = '사내기준 초과';
+                            }else if(data[i].grade==3){
+                                notify = '관리기준 초과';
+                            }
+
+                            cell2.innerHTML = data[i].sensor + " 센서 " + notify;
+                            cell3.innerHTML = data[i].value.toFixed(2);
+                            cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
+                            if(data[i].grade==1){
+                                cell5.innerHTML = '<div class="bg-danger text-light">'+notify+'</div>'
+                            }else if(data[i].grade==2){
+                                cell5.innerHTML = '<div class="bg-warning text-light">'+notify+'</div>'
+                            }else if(data[i].grade==3){
+                                cell5.innerHTML = '<div class="bg-success text-light">'+notify+'</div>'
+                            }
+                        }
+
+                        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 조회("+from+" ~ "+to+")","조회");
+                    }else{
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '경고',
+                            text: '알림 목록이 없습니다.'
+                        })
+                    }
+                },
+                error : function(request, status, error) {
+                    console.log(error)
+                }
+            })
+        }
     }
 
     $("input[name=day]").on('click' , function (){
