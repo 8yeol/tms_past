@@ -1,0 +1,78 @@
+#blue {
+    width: 20px;
+    height: 15px;
+    background: #0C64E8;
+    display: inline-block;
+}
+
+#yellow {
+    width: 20px;
+    height: 15px;
+    background: #DB510B;
+    display: inline-block;
+}
+
+#red {
+    width: 20px;
+    height: 15px;
+    background: #D6032B;
+    display: inline-block;
+}
+
+.progress-blue {
+    background-color: #0C64E8;
+}
+
+.progress-yellow {
+    background-color: #DB510B;
+}
+
+.progress-red {
+    background-color: #D6032B;
+}
+
+.margin-l {
+    margin-left: 0;
+}
+
+.card-body {
+    border-radius: 5px;
+}
+
+.progress-info {
+    width: 200px;
+}
+
+.center-position {
+    position: relative;
+    left: 25%;
+}
+
+
+.standard {
+    text-align: right;
+    font-size: 0.6rem;
+    margin-top: 2px;
+    padding-right: 25px;
+}
+
+.aTag_cursor:hover{
+    cursor: pointer;
+}
+
+@media all and (max-width: 1399px) and (min-width: 1200px) {
+    .center-position {left: 20%;}
+}
+
+@media all and (max-width: 1199px) and (min-width: 990px) {
+    .center-position {left: 15%;}
+}
+
+@media all and (max-width: 989px) {
+    .center-position {left: 18%;}
+    .m-fs {font-size: 0.7rem !important;}
+    .card-title {font-size:0.7rem !important;}
+    .m-fs>div:nth-child(2)>p:nth-child(2) {font-size: 1.2rem;}
+
+    h5 {font-size: 0.75rem;}
+}

@@ -16,113 +16,22 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="static/css/datepicker.min.css">
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<link rel="stylesheet" href="static/css/page/alarm.css">
+
 <script src="static/js/common/common.js"></script>
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
 <script src="static/js/datepicker.min.js"></script>
 <script src="static/js/datepicker.ko.js"></script>
-
-<style>
-    .new {
-        font-size: 14px;
-        color: #fff;
-        background-color: #db3535;
-        border-radius: 50px;
-        display: inline-block;
-        width: 23px;
-        height: 23px;
-        margin-right: 5px;
-    }
-
-    /* 데이터테이블 */
-    .toolbar>b {
-        font-size: 1.25rem;
-    }
-
-    table thead {
-        background-color: #97bef8;
-        color: #fff;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        box-sizing: border-box;
-        display: inline-block;
-        min-width: 1.5em;
-        padding: 0.5em 1em;
-        margin-left: 2px;
-        text-align: center;
-        text-decoration: none !important;
-        cursor: pointer;
-        *cursor: hand;
-        color: #333 !important;
-        border: 0px solid transparent;
-        border-radius: 50px;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-        color: #fff !important;
-        border: 0px;
-        background: #97bef8;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
-        cursor: default;
-        color: #666 !important;
-        border: 1px solid transparent;
-        background: transparent;
-        box-shadow: none
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        color: white !important;
-        border: 0px;
-        background: #254069;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
-        outline: none;
-        background-color: #2b2b2b;
-        box-shadow: inset 0 0 3px #111
-    }
-
-    #information_filter label {
-        margin-bottom: 5px;
-    }
-
-    .dataTables_wrapper {
-        min-height: 550px;
-    }
-    .search{
-        margin-left: 70px;
-    }
-
-    @media all and (max-width: 989px) {
-        .col-auto{
-            width: 25%;
-        }
-        .search{
-            margin-left: 0px;
-        }
-        .search .text-center{
-           width: 150px;
-        }
-    }
-</style>
-
-<link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
 
 
 <div class="container" id="container">
-
     <div class="row m-3 mt-3 ms-1">
         <span class="fs-4 fw-bold">알림</span>
     </div>
-
     <div class="row m-3 mt-3 bg-light ms-1">
         <div class="row p-3 pb-0 ms-1">
             <div class="col-auto fs-5 fw-bold">
@@ -175,9 +84,6 @@
                     <tbody id="informationBody">
                     <%--script--%>
                     </tbody>
-                    <tfoot>
-                    <%--script--%>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -209,8 +115,9 @@
             </div>
         </div>
         <div class="row">
-            <div id="chart">
+            <div id="chart"></div>
         </div>
+    </div>
 </div>
 
 
@@ -223,9 +130,9 @@
         search();
 
         if($("input[id=week]:radio" ).is( ":checked")){
-            var chartData = getWeekChartData();
+            const chartData = getWeekChartData();
+            addChart(chartData);
         }
-        addChart(chartData);
     });
 
     $("#date_start").datepicker({
@@ -422,7 +329,7 @@
     }
 
     $("input[name=day]").on('click' , function (){
-        var chartData = null;
+        let chartData;
         if($("input[id=week]:radio" ).is( ":checked")){
             chartData = getWeekChartData();
         }else{
@@ -435,7 +342,7 @@
      * 일주일 ~ 현재 알림현황 리턴
      */
     function  getWeekChartData() {
-        var getData = new Array();
+        let getData = new Array();
         $.ajax({  /* 현재 데이터 */
            url: '<%=cp%>/getNSNow',
            dataType: 'json',
@@ -449,7 +356,7 @@
             dataType: 'json',
             async: false,
             success: function (data) {
-                for(var i=0; i<data.length; i++){
+                for(let i=0; i<data.length; i++){
                     getData.push({day: data[i].day, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});
                 }
             }
@@ -465,13 +372,13 @@
      * @returns {any[]}
      */
     function  getMonthChartData() {
-        var getData = new Array();
+        const getData = new Array();
         $.ajax({
             url: '<%=cp%>/getNSMonth',
             dataType: 'json',
             async: false,
             success: function (data) {
-                for(var i=0; i<data.length; i++){
+                for(let i=0; i<data.length; i++){
                     getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});
                 }
             },
@@ -482,11 +389,11 @@
     }
 
     function addChart(chartData){
-        var day = new Array();
-        var legalCount = new Array();
-        var companyCount = new Array();
-        var managementCount = new Array();
-        for(var i=chartData.length-1; 0<=i; i--){
+        const day = new Array();
+        const legalCount = new Array();
+        const companyCount = new Array();
+        const managementCount = new Array();
+        for(let i=chartData.length-1; 0<=i; i--){
             day.push(chartData[i].day);
             legalCount.push(chartData[i].legalCount);
             companyCount.push(chartData[i].companyCount);
@@ -542,7 +449,6 @@
         const chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
     }
-
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 

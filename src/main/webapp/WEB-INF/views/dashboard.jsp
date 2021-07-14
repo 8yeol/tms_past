@@ -18,90 +18,10 @@
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<link rel="stylesheet" href="static/css/page/dashboard.css">
 
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
-
-<style>
-    #blue {
-        width: 20px;
-        height: 15px;
-        background: #0C64E8;
-        display: inline-block;
-    }
-
-    #yellow {
-        width: 20px;
-        height: 15px;
-        background: #DB510B;
-        display: inline-block;
-    }
-
-    #red {
-        width: 20px;
-        height: 15px;
-        background: #D6032B;
-        display: inline-block;
-    }
-
-    .progress-blue {
-        background-color: #0C64E8;
-    }
-
-    .progress-yellow {
-        background-color: #DB510B;
-    }
-
-    .progress-red {
-        background-color: #D6032B;
-    }
-
-    .margin-l {
-        margin-left: 0;
-    }
-
-    .card-body {
-        border-radius: 5px;
-    }
-
-    .progress-info {
-        width: 200px;
-    }
-
-    .center-position {
-        position: relative;
-        left: 25%;
-    }
-
-
-    .standard {
-        text-align: right;
-        font-size: 0.6rem;
-        margin-top: 2px;
-        padding-right: 25px;
-    }
-
-    .aTag_cursor:hover{
-        cursor: pointer;
-    }
-
-    @media all and (max-width: 1399px) and (min-width: 1200px) {
-        .center-position {left: 20%;}
-    }
-
-    @media all and (max-width: 1199px) and (min-width: 990px) {
-        .center-position {left: 15%;}
-    }
-
-    @media all and (max-width: 989px) {
-        .center-position {left: 18%;}
-        .m-fs {font-size: 0.7rem !important;}
-        .card-title {font-size:0.7rem !important;}
-        .m-fs>div:nth-child(2)>p:nth-child(2) {font-size: 1.2rem;}
-
-        h5 {font-size: 0.75rem;}
-    }
-</style>
 
 <div class="container"  id="container">
     <div class="row m-3 mt-3 ms-1">
@@ -312,6 +232,7 @@
         </c:choose>
     </div>
 
+
     <div class="row mt-4 bg-light margin-l pb-4" style="width: 98%; margin: 0.2rem; height: 390px; overflow: auto;">
         <div class="row margin-l" style="padding: 1rem 1rem 0">
             <div class="col fs-5 fw-bold">
@@ -326,6 +247,7 @@
                 </c:choose>
             </div>
         </div>
+
         <div class="row pb-1 px-3 margin-l">
             <c:forEach items="${placeList}" var="placelist" varStatus="i">
                 <c:if test="${placeList.size() <= 3}">
@@ -388,6 +310,7 @@
                     </c:if>
                 </c:forEach>
                 </div>
+
                 <c:if test="${(i.index+1)%3!=0 && placeList.size() !=1}">
                     <div id="line${i.index}" style="width: 1px;float: right;background-color: black;padding: 0"></div>
                 </c:if>
@@ -414,7 +337,8 @@
         </div>
     </div>
 
-<div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: 340px; overflow: auto;">
+
+    <div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: 340px; overflow: auto;">
         <div class="row pb-0 margin-l"  style="padding: 1rem 1rem 0">
             <div class="col fs-5 fw-bold">
                 관리등급 초과 모니터링
@@ -455,7 +379,7 @@
             </div>
         </div>
     </div>
-
+</div>
 
 <script>
     $(document).ready(function () {

@@ -56,7 +56,7 @@
     <div class="row  ms-3 mt-4">
         <div class="col text-end">
             <p class="small m-0"> 업데이트 : <span class="small fw-bold" id="update"></span></p>
-            <span class="text-primary" style="font-size: 0.8rem;"> * 매월 1일 전월 통계값이 업데이트 됩니다.</span>
+            <span class="text-primary" style="font-size: 0.8rem;"> * 매일 자정 전일 기준으로 통계값이 업데이트 됩니다.</span>
         </div>
     </div>
     <div class="row mt-2 p-3 add-bg" style="margin-left: 5px;">
@@ -78,7 +78,7 @@
                     <%--script--%>
                 </select>
             </div>
-            <p style="margin: 5px 65px 0px 0px; font-size: 0.8rem; text-align: right">* 배출량 추이는 질소산화물 센서 항목에 한하여 조회 가능합니다.</p>
+            <p style="margin: 5px 95px 0px 0px; font-size: 0.8rem; text-align: right">* 배출량 추이는 질소산화물 센서에 한하여 조회 가능합니다.</p>
         </div>
     </div>
 
@@ -168,7 +168,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
-                text: '해당 측정소에 등록된 측정 항목이 없습니다.'
+                text: '측정소에 등록된 \'질소산화물\' 센서가 없습니다.'
             })
         }
 
