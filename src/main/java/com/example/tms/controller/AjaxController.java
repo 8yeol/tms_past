@@ -1499,6 +1499,7 @@ public class AjaxController {
         memberService.updateLog(member);
         return "success";
     }
+
     @RequestMapping(value = "/memberGroupUpdate")
     public String memberGroupUpdate(String id, int monitoringGroup) {
         memberService.updateMemberGroup(id, monitoringGroup);
@@ -1621,6 +1622,7 @@ public class AjaxController {
         memberRepository.save(newMember);
         return msg;
     }
+
     /**
      * 입력받은 값으로 유저의 등급을 결정
      *
@@ -2135,5 +2137,32 @@ public class AjaxController {
             System.out.println("error");
         }
         return null;
+    }
+
+    // memberID = 로그인 된 회원의 ID
+    @RequestMapping(value = "/getMonitoringSensor", method = RequestMethod.GET)
+    public void getMonitoringSensor(String memberId){
+        Member member = memberRepository.findById(memberId);
+        int groupNum = member.getMonitoringGroup();
+
+        MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(groupNum);
+        List<String> placeList = monitoringGroup.getMonitoringPlace();
+        List<String> sensorList= monitoringGroup.getSensor();
+        
+        Map<String, List> monitoring = new HashMap<>();
+        
+        for(String placeName : placeList) {
+            Place place = placeRepository.findByName(placeName);
+            List<String> placeSensor = place.getSensor();
+
+            List<String> test = new ArrayList<>();
+            
+            for(String pSensor : placeSensor){
+                test.add(pSensor);
+            }
+            monitoring.put(placeName, test);
+        }
+
+        System.out.println(monitoring);
     }
 }

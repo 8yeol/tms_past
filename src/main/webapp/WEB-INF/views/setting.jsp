@@ -174,7 +174,7 @@
                 <table class="table table-striped" id="groupTable">
                     <thead>
                         <tr>
-                            <th>Index</th>
+                            <th>순번</th>
                             <th>그룹명</th>
                             <th>회원</th>
                             <th>모니터링 <a class="sign"></a> 측정소</th>
@@ -184,7 +184,7 @@
                     <tbody>
                     <c:forEach items="${group}" var="groupList" varStatus="idx">
                         <tr>
-                            <td>${groupList.groupNum}</td>
+                            <td>${groupList.groupNum + 1}</td>
                             <td>${groupList.groupName}</td>
                             <td>
                                 <input type="hidden" value="${groupList.groupMember}"  class="groupTd">
@@ -263,8 +263,7 @@
                     <div class="d-flex align-items-end">
                         <c:set var="member" value="${member}"/>
                         <c:if test="${member.state == '1'}">
-                            <button class="btn btn-primary align-text-bottom me-2 mb-2 py-1 px-3 fw-bold fs-6"
-                                    onclick="rankSettingSave()">저장
+                            <button class="btn btn-primary align-text-bottom me-2 mb-2 py-1 px-3 fw-bold fs-6" onclick="rankSettingSave()">저장
                             </button>
                         </c:if>
                     </div>
