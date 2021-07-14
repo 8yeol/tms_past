@@ -42,7 +42,7 @@
                             <th style="width: 12%; padding:10px 0px 10px 0px;">연락처</th>
                             <th style="width: 10%; padding:10px 0px 10px 0px;">부서명</th>
                             <th style="width: 12%; padding:10px 0px 10px 0px;">모니터링 그룹</th>
-                            <th style="width: 14%; padding:10px 0px 10px 0px;">가입일</th>
+                            <th style="width: 14%; padding:10px 0px 10px 0px;">가입승인일</th>
                             <th style="width: 9%; padding:10px 0px 10px 0px;">관리</th>
                         </tr>
                     </thead>
@@ -70,15 +70,22 @@
                                     </td>
                                 </c:when>
                                 <c:when test="${mList.state eq '2'}">
-                                    <td onclick="event.cancelBubble=true">
-                                        <select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
-                                            <option value='${mList.state}' selected="selected">관리자</option>
-                                        </select>
-                                    </td>
+                                    <c:choose>
+                                        <c:when test="${mList.id eq member.id}">
+                                            <td>관리자</td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td onclick="event.cancelBubble=true">
+                                                <select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                                    <option value='${mList.state}' selected="selected">관리자</option>
+                                                </select>
+                                            </td>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:when>
                                 <c:when test="${mList.state eq '1'}">
                                     <c:choose>
-                                        <c:when test="${member.state ne 1}">
+                                        <c:when test="${member.state ne 1 or (mList.id eq member.id)}">
                                             <td>최고 관리자</td>
                                         </c:when>
                                         <c:otherwise>
@@ -131,7 +138,7 @@
                                         </button>
                                     </td>
                                 </c:when>
-                                <c:when test="${(mList.state eq '1' || mList.state eq '2' || mList.state eq '3') and (member.id != mList.id)}">
+                                <c:when test="${(mList.state eq '2' || mList.state eq '3') and (member.id != mList.id)}">
                                     <td onclick="event.cancelBubble=true">
                                         <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
                                            data-bs-target="#managementModal"
@@ -490,7 +497,7 @@
         pageLength: 5,
         info: false,
         lengthChange: false,
-        order: [7, 'asc']
+        order: [[7, 'asc']]
     });
 
     $('#groupTable').DataTable({
@@ -579,45 +586,37 @@
         });
     }
 
+    // 임시비밀번호 발급
     function resetPassword() {
-        if (state == '1') {
-            warning("최고 관리자의 비밀번호는 초기화하실수 없습니다.");
-            return;
-        } else {
-            var settings = {
-                "url": "<%=cp%>/resetPassword?id=" + ID,
-                "method": "POST"
-            };
-            $.ajax(settings).done(function (response) {
-                inputLog(ID, "임시비밀번호 발급", "회원");
-                inputLog(user_id, ID + " 계정 비밀번호 초기화 처리", "회원");
-                Swal.fire({
-                    icon: 'success',
-                    title: '임시 비밀번호가 발급되었습니다.',
-                    text: response
-                })
-            });
-        }
-    }           // resetPassword
+        var settings = {
+            "url": "<%=cp%>/resetPassword?id=" + ID,
+            "method": "POST"
+        };
+        $.ajax(settings).done(function (response) {
+            inputLog(ID, "임시비밀번호 발급", "회원");
+            inputLog(user_id, ID + " 계정 비밀번호 초기화 처리", "회원");
+            Swal.fire({
+                icon: 'success',
+                title: '임시 비밀번호가 발급되었습니다.',
+                text: response
+            })
+        });
+    }
 
+    // 제명
     function kickMember() {
-        if (state == '1') {
-            warning("최고 관리자는 제명하실수 없습니다.");
-            return;
-        } else {
-            var settings = {
-                "url": "<%=cp%>/kickMember?id=" + ID,
-                "method": "POST"
-            };
-            $.ajax(settings).done(function (response) {
-                inputLog(user_id, ID + " 계정 제명처리", "회원");
-                success(response);
-                setTimeout(function () {
-                    location.reload();
-                }, 2000);
-            });
-        }
-    }           // kickMember
+        var settings = {
+            "url": "<%=cp%>/kickMember?id=" + ID,
+            "method": "POST"
+        };
+        $.ajax(settings).done(function (response) {
+            inputLog(user_id, ID + " 계정 제명처리", "회원");
+            success(response);
+            setTimeout(function () {
+                location.reload();
+            }, 2000);
+        });
+    }
 
     function sing_up(sign) {
         if($("#m_group option:selected").val() == "선택"){
