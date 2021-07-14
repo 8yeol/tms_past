@@ -138,7 +138,14 @@
                                         </button>
                                     </td>
                                 </c:when>
-                                <c:when test="${(mList.state eq '2' || mList.state eq '3') and (member.id != mList.id)}">
+                                <c:when test="${(member.state eq '1') and (mList.state eq '2' || mList.state eq '3') and (member.id != mList.id)}">
+                                    <td onclick="event.cancelBubble=true">
+                                        <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
+                                           data-bs-target="#managementModal"
+                                           onclick="Info_Set('${mList.id}','${mList.state}','${mList.name}')"></i>
+                                    </td>
+                                </c:when>
+                                <c:when test="${(member.state eq '2') and (mList.state eq '3') and (member.id != mList.id)}">
                                     <td onclick="event.cancelBubble=true">
                                         <i class="fas fa-edit btn p-0" data-bs-toggle="modal"
                                            data-bs-target="#managementModal"
