@@ -2025,6 +2025,7 @@ public class AjaxController {
                 JSONArray placeInfoArray = new JSONArray();
                 String placeName = placeList.get(a).getName();
                 List<String> sensorNames = placeList.get(a).getSensor();
+                List<String> sensorNameList = new ArrayList<>();
                 int standardExist = 0;
                 int standardNotExist = 0;
                 for (int i = 0; i < sensorNames.size(); i++) { //측정소의 센서조회
@@ -2060,6 +2061,7 @@ public class AjaxController {
                         sensorObj.put("companyStandard", companyStandard);
                         sensorObj.put("managementStandard", managementStandard);
                         sensorObj.put("name", sensorNames.get(i));
+                        sensorNameList.add(sensorNames.get(i));
                         if (legalStandard.equals(999999) && companyStandard.equals(999999) && managementStandard.equals(999999)) {
                             standardNotExist += 1;
                             standardExistStatus = false;
@@ -2078,7 +2080,7 @@ public class AjaxController {
                 }
                 if (sensorSize != 0) {
                     placeInfoList.put("place", placeName);
-                    placeInfoList.put("sensorList", sensorNames);
+                    placeInfoList.put("sensorList", sensorNameList);
                     placeInfoList.put("monitoringOn", sensorSize);
                     placeInfoList.put("monitoringOff", sensorNames.size() - sensorSize);
                     jsonArray.add(placeInfoList);

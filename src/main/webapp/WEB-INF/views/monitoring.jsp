@@ -440,7 +440,7 @@
 
 <script>
     let INTERVAL; let flashCheck; let alarmCheck;
-    var dataList; var chart = {};
+    var oldSensorList; var chart = {};
     $(document).ready(function () {
         <%--let placeData2 = ${sensor}; // 모니터링 True 인 측정소 리스트의 모니터링 True인 센서 데이터(최근,이전,기준값 등)--%>
         <%--draw_sensor_info(placeData2); //대시보드 생성--%>
@@ -464,26 +464,41 @@
                 draw_place_table_frame(placeInfo);
                 INTERVAL = setTimeout(interval_getData, 60000);
             }else{ //측정소가 있을 때
-                var tempSensorName = new Array();
+                var newSensorList = new Array();
                 for (let i = 0; i < placeCount; i++) {
                     for(let z=0; z<placeInfo[i].sensorList.length; z++){
-                        tempSensorName.push(placeInfo[i].sensorList[z]);
+                        newSensorList.push(placeInfo[i].sensorList[z]);
                     }
                 }
                 for (let i = 0; i < placeCount; i++) {
-                    const data = placeInfo[i].data;
                     clearTimeout(INTERVAL); // 실행중인 interval 있다면 삭제
-                    if(dataList == undefined){ //처음 페이지 로딩 시, 테이블, 차트 틀 생성
-                        dataList = tempSensorName;
+                    if(oldSensorList == undefined){ //처음 페이지 로딩 시, 테이블, 차트 틀 생성
+                        oldSensorList = newSensorList;
                         draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                         draw_place_table(placeInfo); // 측정소별 테이블 생성
-                        // draw_place_chart_frame(placeName);
+                        draw_place_chart_frame(placeInfo); 
                     }else{
-                        if(tempSensorName.length != dataList.length){
-                            dataList = tempSensorName;
+                        var sensorCount = 0;
+                        for(var x=0; x<newSensorList.length; x++) {
+                            for (var y = 0; y < oldSensorList.length; y++) {
+                                if (newSensorList[x] == oldSensorList[y]) {
+                                    sensorCount += 1;
+                                }
+                            }
+                        }
+                        var dataChecking = false;
+                        if(oldSensorList.length < newSensorList.length && newSensorList.length != sensorCount){
+                            dataChecking = true;
+                        }else if(oldSensorList.length > newSensorList.length && oldSensorList.length != sensorCount){
+                            dataChecking = true;
+                        }else if(oldSensorList.length ==newSensorList.length && newSensorList.length != sensorCount){
+                            dataChecking = true;
+                        }
+                       if(dataChecking){
+                            oldSensorList = newSensorList;
                             draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
+                            draw_place_chart_frame(placeInfo);
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
-                            // draw_place_chart_frame(placeName.length, data.length);
                         }else{
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }
@@ -504,6 +519,7 @@
         // const sensorName = $(this).find('td input')[0].value;
         <%--location.replace("<%=cp%>/sensor?sensor=" + sensorName);--%>
         var tbodyId = $(this).parent('tbody').attr('id');
+        console.log(tbodyId);
         var chartIndex = tbodyId.substr(13,5);
         if($('#chart-'+chartIndex).css("display") == 'none'){
             $('#chart-'+chartIndex).show();
@@ -551,9 +567,11 @@
         }
     }
 
-    function draw_place_chart_frame(placeLength, dataLength) {
-        for (let i = 0; i < placeLength; i++) {
-            for(var z=0; z<dataLength;z++){
+    function draw_place_chart_frame(placeInfo) {
+        var placeCount = placeInfo.length;
+        for (let i = 0; i < placeCount; i++) {
+            var dataCount = placeInfo[i].data.length;
+            for(var z=0; z<dataCount;z++){
                 chart['chart-'+i+'-'+z] = new ApexCharts(document.querySelector("#chart-"+i+'-'+z), setChartOption());
                 chart['chart-'+i+'-'+z].render();
                 $('#chart-'+i+'-'+z).hide();
