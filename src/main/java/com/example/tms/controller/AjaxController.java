@@ -1482,13 +1482,11 @@ public class AjaxController {
     public String memberUpdate(Member member) {
         memberService.updateMember(member);
         memberService.updateLog(member);
-        groupChange(member.getId(), member.getMonitoringGroup());
         return "success";
     }
     @RequestMapping(value = "/memberGroupUpdate")
     public String memberGroupUpdate(String id, String monitoringGroup) {
         memberService.updateMemberGroup(id, monitoringGroup);
-        memberService.updateGroupLog(id);
         groupChange(id, monitoringGroup);
         return "success";
     }

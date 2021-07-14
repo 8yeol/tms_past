@@ -71,7 +71,6 @@ public class MemberService implements UserDetailsService {
         updateMember.setEmail(member.getEmail());
         updateMember.setTel(member.getTel());
         updateMember.setDepartment(member.getDepartment());
-        updateMember.setMonitoringGroup(member.getMonitoringGroup());
         updateMember.setGrade(member.getGrade());
         memberRepository.save(updateMember);
     }
@@ -98,17 +97,6 @@ public class MemberService implements UserDetailsService {
             logRepository.save(pwdLog);
         }
         infoLog.setId(member.getId());
-        infoLog.setType("회원");
-        infoLog.setContent("정보수정");
-        infoLog.setDate(date);
-        logRepository.save(infoLog);
-    }
-
-    public void updateGroupLog(String id){
-        Date date = new Date();
-        Log infoLog = new Log();
-
-        infoLog.setId(id);
         infoLog.setType("회원");
         infoLog.setContent("정보수정");
         infoLog.setDate(date);

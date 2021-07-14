@@ -833,6 +833,7 @@
     var rName = "root"; // 권한관리영역 checkBox 변수
     var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
     var user_id = "${member.id}"; // 페이지에 접근한 유저의 ID
+    var monitoringGroup = "${member.monitoringGroup}";
     let memberList; // 모든 멤버리스트
     let placeList; // 모든 측정소 리스트
 
@@ -912,7 +913,7 @@
                 "method": "POST"
             };
             $.ajax(settings).done(function (response) {
-                inputLog(ID, "비밀번호 초기화", "회원");
+                inputLog(ID, "임시비밀번호 발급", "회원");
                 inputLog(user_id, ID + " 계정 비밀번호 초기화 처리", "회원");
                 Swal.fire({
                     icon: 'success',
@@ -1438,6 +1439,9 @@
 
     //모니터링 그룹 변경 ajax
     function updateMember(id, select) {
+        const changeGroup = select.value;
+        const pastGroup = monitoringGroup;
+        const content = "모니터링 그룹 변경 "+ pastGroup + " > " + changeGroup;
         $.ajax({
             url: '<%=cp%>/memberGroupUpdate',
             type: 'POST',
@@ -1446,10 +1450,12 @@
             cache: false,
             data: {
                 "id": id,
-                "monitoringGroup": select.value
+                "monitoringGroup": changeGroup
             },
             success: function (data) {
                 if (data == "success") {
+                    inputLog(id, content, "회원");
+                    inputLog(user_id, id + " 계정 " + content + " 처리", "회원");
                     swal('success', '수정완료', '성공적으로 수정되었습니다.');
                     setTimeout(function () {
                         location.reload();
