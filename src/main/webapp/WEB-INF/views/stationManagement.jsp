@@ -242,7 +242,7 @@
         }
 
         const data = placeDiv1();
-        var onoff = "";
+        let onoff = "";
         for (let i = 0; i < data.length; i++) {
             if(groupPlace.includes(data[i].name) || groupPlace[0] == 'ALL') {
                 const test = data[i];
