@@ -193,29 +193,4 @@ public class SensorCustomRepository {
         return null;
     }
 
-    /**
-     * 최근 센서 데이터 (최근/5분/30분) 리턴
-     * @param sensor 센서명
-     * @return List<Sensor> - list[0] 최근, [1] 이전, [2] 5분 최근, [3] 5분 이전, [4] 30분 최근, [5] 30분 이전
-     */
-    public List<Sensor> getSensorRecentAll(String sensor){
-        String[] sensorList = {sensor, "RM05_"+sensor, "RM30_"+sensor};
-        List<Sensor> list = new ArrayList<>();
-            try{
-                for(int i=0; i<sensorList.length; i++){
-                    Query query = new Query();
-                    query.with(Sort.by(Sort.Direction.DESC,"_id"));
-                    query.limit(2);
-//                    query.limit(1);
-//                    list.add(mongoTemplate.findOne(query, Sensor.class, sensorList[i]));
-                    List<Sensor> list2 = mongoTemplate.find(query, Sensor.class, sensorList[i]);
-                    list.add(list2.get(0));
-                    list.add(list2.get(1));
-                }
-            }catch (Exception e){
-                log.info("getSensorRecent error" + e.getMessage());
-            }
-        return list;
-    }
-
 }

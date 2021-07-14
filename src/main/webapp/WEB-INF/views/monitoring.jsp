@@ -412,6 +412,7 @@
                 </tr>
                 </tbody>
             </table>
+            <div id="chart-${pStatus.index}-${sStatus.index}"></div>
             </c:forEach> <%-- //sensor--%>
          </div> <%-- //col-md-@ --%>
         </c:forEach> <%-- //place --%>
@@ -476,7 +477,7 @@
                         oldSensorList = newSensorList;
                         draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                         draw_place_table(placeInfo); // 측정소별 테이블 생성
-                        draw_place_chart_frame(placeInfo); 
+                        // draw_place_chart_frame(placeInfo);
                     }else{
                         var sensorCount = 0;
                         for(var x=0; x<newSensorList.length; x++) {
@@ -497,7 +498,6 @@
                        if(dataChecking){
                             oldSensorList = newSensorList;
                             draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
-                            draw_place_chart_frame(placeInfo);
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }else{
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
@@ -513,18 +513,25 @@
     }
 
     /**
-     *  센서명 클릭 이벤트 (해당센서의 상세페이지 이동)
+     *  센서명 클릭 이벤트 (해당 센서 차트)
      */
     $("#place_table").on('click', 'tbody tr', function () {
-        // const sensorName = $(this).find('td input')[0].value;
         <%--location.replace("<%=cp%>/sensor?sensor=" + sensorName);--%>
         var tbodyId = $(this).parent('tbody').attr('id');
-        console.log(tbodyId);
+        const sensorName = $(this).find('td input')[0].value;
         var chartIndex = tbodyId.substr(13,5);
-        if($('#chart-'+chartIndex).css("display") == 'none'){
-            $('#chart-'+chartIndex).show();
+        console.log("chart-"+chartIndex, sensorName);
+        var sensorDataList = getSensor(sensorName, 1490);
+        var recentData = getSensorData(sensorName);
+        if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
+            draw_place_chart_frame(chartIndex);
+            updateChart(sensorDataList, recentData, chartIndex);
         }else{
-            $('#chart-'+chartIndex).hide();
+            if($('#chart-'+chartIndex).css("display") == 'none'){
+                $('#chart-'+chartIndex).show();
+            }else{
+                $('#chart-'+chartIndex).hide();
+            }
         }
 
     });
@@ -567,17 +574,10 @@
         }
     }
 
-    function draw_place_chart_frame(placeInfo) {
-        var placeCount = placeInfo.length;
-        for (let i = 0; i < placeCount; i++) {
-            var dataCount = placeInfo[i].data.length;
-            for(var z=0; z<dataCount;z++){
-                chart['chart-'+i+'-'+z] = new ApexCharts(document.querySelector("#chart-"+i+'-'+z), setChartOption());
-                chart['chart-'+i+'-'+z].render();
-                $('#chart-'+i+'-'+z).hide();
-            }
-
-        }
+    function draw_place_chart_frame(index) {
+                chart['chart-'+index] = new ApexCharts(document.querySelector("#chart-"+index), setChartOption());
+                chart['chart-'+index].render();
+                // $('#chart-'+i+'-'+z).hide();
     }
 
     /**
@@ -959,12 +959,12 @@
                     },
                 }
             },
-            colors: ['#97bef8'],
+            colors: ['#629cf4'],
             markers: { //점
-                size: 2,
-                strokeWidth:1,
-                shape: "square",
-                radius: 1,
+                size: 1,
+                strokeWidth:0.1,
+                shape: "circle",
+                radius: 0,
                 colors: ["#629cf4"],
                 hover: {
                     size: 5,
@@ -1026,7 +1026,7 @@
     /**
      *  차트 업데이트
      */
-    function updateChart(sensor_data_list, sensor_data, tableIndex, sensorIndex){
+    function updateChart(sensor_data_list, sensor_data, chartIndex){
         // chart.resetSeries();
         var arr =new Array();
         if(sensor_data_list != null){
@@ -1055,7 +1055,7 @@
             companyStandard = 999999;
             legalStandard = 999999;
         }
-        chart['chart-'+tableIndex+'-'+sensorIndex].updateOptions({
+        chart['chart-'+chartIndex].updateOptions({
             series: [{
                 name: sensor_data.naming,
                 data: sensor_data_list.slice()
@@ -1141,5 +1141,54 @@
         return getData;
     }
 
+    /**
+     * 센서의 최근 1시간 / 24시간 데이터 리턴
+     */
+    function getSensor(sensor_name, min) {
+        let result = new Array();
+        if(sensor_name==undefined){
+            return null;
+        }else{
+            $.ajax({
+                url:'<%=cp%>/getSensor2',
+                dataType: 'JSON',
+                contentType: "application/json",
+                data: {"sensor": sensor_name, "min": min},
+                async: false,
+                success: function (data) {
+                    if(data.length != 0){
+                        $.each(data, function (index, item) {
+                            result.push({x: item.up_time, y: (item.value).toFixed(2)});
+                        })
+                    }else{
+                        // 조회 결과 없을 때 return [];
+                        result = [];
+                    }
+                },
+                error: function (e) {
+                }
+            });
+        }
+        return result;
+    }
+
+    /**
+     * 센서의 모니터링 True인 최근, 직전, 기준 데이터 등을 리턴
+     */
+    function getSensorData(sensor) {
+        let result = null;
+        $.ajax({
+            url:'<%=cp%>/getSensorData',
+            dataType: 'JSON',
+            data:  {"sensor": sensor},
+            async: false,
+            success: function (data) {
+                result = data;
+            },
+            error: function (e) {
+            }
+        })
+        return result;
+    }
 
 </script>
