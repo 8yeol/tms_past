@@ -726,17 +726,6 @@ public class AjaxController {
         return sensorCustomRepository.getSensorRecent(sensor);
     }
 
-
-    /**
-     * 최근 센서 데이터 (최근/5분/30분) 리턴
-     * @param sensor 센서명
-     * @return List<Sensor> - list[0] 최근, [1] 이전, [2] 5분 최근, [3] 5분 이전, [4] 30분 최근, [5] 30분 이전
-     */
-    @RequestMapping(value = "/getSensorRecentAll")
-    public List<Sensor> getSensorRecentAll(@RequestParam("sensor") String sensor) {
-        return sensorCustomRepository.getSensorRecentAll(sensor);
-    }
-
     /**
      * 센서의 최근 전 값 조회 (limit:2) -> 조회한 결과 중 2번째 데이터 리턴
      *
@@ -759,26 +748,9 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/getSensor2")
-    public JSONArray getSensor2(@RequestParam("place") String place,
-                                @RequestParam("min") String min) {
-        List<String> placeName = placeRepository.findByName(place).getSensor();
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < placeName.size(); i++) {
-            JSONArray jsonArray2 = new JSONArray();
-            String sensorName = placeName.get(i);
-            boolean monitoring = reference_value_settingRepository.findByName(sensorName).getMonitoring();
-            if (monitoring) {
-                List<Sensor> sensorList = sensorCustomRepository.getSenor2(sensorName, min);
-                for(int z=0; z<sensorList.size(); z++){
-                    JSONObject subObj = new JSONObject();
-                    subObj.put("x", sensorList.get(z).getUp_time());
-                    subObj.put("y", sensorList.get(z).getValue());
-                    jsonArray2.add(subObj);
-                }
-                jsonArray.add(jsonArray2);
-            }
-        }
-        return jsonArray;
+    public List<Sensor> getSensor2(@RequestParam("sensor") String sensor,
+                                  @RequestParam("min") String min) {
+        return sensorCustomRepository.getSenor2(sensor, min);
     }
 
     /**
