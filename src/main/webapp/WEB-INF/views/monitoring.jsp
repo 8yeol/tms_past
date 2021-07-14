@@ -520,10 +520,9 @@
         var tbodyId = $(this).parent('tbody').attr('id');
         const sensorName = $(this).find('td input')[0].value;
         var chartIndex = tbodyId.substr(13,5);
-        var sensorDataList = getSensor(sensorName, 1600);
+        var sensorDataList = getSensor(sensorName, 10);
         var sensorDataLength = sensorDataList.length;
         var recentData = getSensorData(sensorName);
-        console.log(document.getElementsByTagName('tbody').value);
         if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
             draw_place_chart_frame(chartIndex);
             updateChart(sensorDataList, recentData, chartIndex);
