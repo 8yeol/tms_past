@@ -265,9 +265,6 @@
                 text: '검색기간을 입력해주세요.'
             })
         }else{
-            $('#information').DataTable().clear();
-            $('#information').DataTable().destroy();
-
             $.ajax({
                 url: '<%=cp%>/getNotificationList',
                 type: 'POST',
@@ -280,6 +277,9 @@
                 },
                 success : function(data) {
                     if(data.length != 0){
+                        $('#information').DataTable().clear();
+                        $('#information').DataTable().destroy();
+
                         const tbody = document.getElementById('informationBody');
                         for(let i=0; i<data.length; i++){
                             const row = tbody.insertRow( tbody.rows.length );
