@@ -149,9 +149,9 @@
                 <audio id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>
                 <div id="alarmAudio"></div>
                 <span>알림음 :</span>
-                <input class="ms-2" type="radio" name="alarmTone" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp;</label>
-                <input type="radio" name="alarmTone" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off&nbsp;&nbsp;&nbsp;</label>
-                <span>|&nbsp;&nbsp;&nbsp;점멸효과 :</span>
+                <input class="ms-2" type="radio" name="alarmTone" value="on" id="alarmOn" checked><label class="ms-2" for="alarmOn"> On&nbsp;</label>
+                <input type="radio" name="alarmTone" value="off" id="alarmOff"><label class="ms-2" for="alarmOff"> Off&emsp;</label>
+                <span>|&emsp;점멸효과 :</span>
                 <input class="ms-2" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp;</label>
                 <input type="radio" name="flashing" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off</label>
             </div>
@@ -521,19 +521,30 @@
         const sensorName = $(this).find('td input')[0].value;
         var chartIndex = tbodyId.substr(13,5);
         var sensorDataList = getSensor(sensorName, 10);
+        var recentData;
         var sensorDataLength = sensorDataList.length;
-        var recentData = getSensorData(sensorName);
+        var realTime = {};
         if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
             draw_place_chart_frame(chartIndex);
+            recentData = getSensorData(sensorName);
             updateChart(sensorDataList, recentData, chartIndex);
-        }else{
-            if($('#chart-'+chartIndex).css("display") == 'none'){
-                $('#chart-'+chartIndex).show();
+            setTimeout(function realTime() {
+                console.log("realtime");
+                recentData = getSensorData(sensorName);
                 if(sensorDataList[sensorDataLength-1].x != recentData.up_time){
                     sensorDataList.push({x: recentData.up_time, y: recentData.value});
                 }
                 updateChart(sensorDataList, recentData, chartIndex);
+                if(sensorDataList.length > sensorDataLength*2){
+                    sensorDataList = getSensor(sensorName, 10);
+                }
+                realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
+            }, 0);
+        }else{
+            if($('#chart-'+chartIndex).css("display") == 'none'){
+                $('#chart-'+chartIndex).show();
             }else{
+                clearTimeout(realTime['chart-'+chartIndex]);
                 // $('#chart-'+chartIndex).hide();
                 chart['chart-'+chartIndex].destroy();
             }
@@ -989,6 +1000,7 @@
             },
             dataLabels: {
                 enabled: true,
+                textAnchor: 'middle',
                 style: { //데이터 배경
                     fontSize: '11px',
                 },

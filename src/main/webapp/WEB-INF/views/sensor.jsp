@@ -281,8 +281,8 @@
                                     <input class="form-check-input" type="radio" name="chartLabel" id="on">
                                     <label for='on'>on</label>
                                     <input class="form-check-input" type="radio" name="chartLabel" id="off" checked>
-                                    <label for="off">off&nbsp;&nbsp;&nbsp;</label>
-                                    <span>|&nbsp;&nbsp;&nbsp;최근</span>
+                                    <label for="off">off&emsp;</label>
+                                    <span>|&emsp;최근</span>
                                     <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
                                     <label for='hour'>1시간</label>
                                     <input class="form-check-input" type="radio" name="chartRadio" id="day">
