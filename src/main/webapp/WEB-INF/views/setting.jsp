@@ -565,7 +565,6 @@
         substrArrayData();
         getMemberAndPlaceList();
         allPlaceCheck();
-        stateCheck();
     }); //ready
 
     function Info_Set(str_id, str_state, str_name) {
@@ -657,7 +656,7 @@
             content += groupLog;
         }
         var settings = {
-            "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + sign + "&state=" + $("#rank").val() + "&group=" + groupLog,
+            "url": "<%=cp%>/signUp?id=" + ID + "&iNumber=" + sign + "&state=" + $("#rank").val() + "&group=" + $("#m_group").val(),
             "method": "POST"
         };
 
@@ -1146,24 +1145,6 @@
             error: function () {
             }
         });
-    }
-
-    //최고 관리자 인원 체크
-    function stateCheck() {
-        const state = $('select[name=state]');
-        let array= new Array();
-        for(let i=0; i<state.length; i++){
-            if(state[i].value == 1){
-                array[i] = state[i].id;
-            }
-        }
-        //배열 공백 제거
-        let filter = array.filter(function(el){
-            return el != null;
-        });
-        if(filter.length==1){
-             return $('#' + filter[0]).attr('disabled', true);
-        }
     }
 
     //모니터링 그룹 변경 ajax
