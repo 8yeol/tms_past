@@ -343,11 +343,11 @@
             </div>
             <div class="modal-body">
                 <div class="d-flex justify-content-center">
-                    <h3 id="okModal_Body">가입승인 하시겠습니까?</h3>
+                    <h4 id="okModal_Body" style="margin: 5px 0 20px;">가입승인 하시겠습니까?</h4>
                 </div>
-                <div class="d-flex justify-content-center">
-                    <h5 class="me-1">회원권한: </h5>
-                    <select name="rank" id="rank" class="btn btn-light">
+                <div class="d-flex justify-content-center" style="margin: 5px">
+                    <h5 class="me-1" style="width: 30%; text-align: left; margin-top: .3rem;">회원권한 : </h5>
+                    <select name="rank" id="rank" class="btn btn-light" style="width: 220px;">
                         <option value="3">일반</option>
                         <option value="2">관리자</option>
                         <c:choose>
@@ -357,9 +357,9 @@
                         </c:choose>
                     </select>
                 </div>
-                <div class="d-flex justify-content-center">
-                    <h5 class="me-1">모니터링 그룹 : </h5>
-                    <select name="m_group" id="m_group" class="btn btn-light">
+                <div class="d-flex justify-content-center" style="margin: 5px">
+                    <h5 class="me-1" style="width: 30%; text-align: left; margin-top: .3rem;">모니터링 그룹 : </h5>
+                    <select name="m_group" id="m_group" class="btn btn-light" style="width: 220px;">
                         <option>선택</option>
                         <c:forEach items="${group}" var="group" varStatus="idx">
                             <option value="${group.groupNum}">${group.groupName}</option>
