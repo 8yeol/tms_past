@@ -439,7 +439,12 @@ public class MainController {
      */
     @RequestMapping(value = "/alarmManagement")
     public String alarmManagement(Model model) {
-        model.addAttribute("place", placeRepository.findByMonitoringIsTrue());
+        List<Place> placeList = placeRepository.findByMonitoringIsTrue();
+        for (int i =0; i<placeList.size(); i++){
+            if (placeList.get(i).getSensor().size() == 0)
+                placeList.remove(i);
+        }
+        model.addAttribute("place", placeList);
 
         return "alarmManagement";
     }

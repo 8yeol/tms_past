@@ -188,6 +188,9 @@
         if(typeof $('#placeDIv tr').eq(0).attr('id') !== 'undefined') {
             placeChange($('#placeDIv tr').eq(0).attr('id'));
         }
+        if(${groupPlace}[0] != 'ALL'){
+            $('.standard').prop('readonly', true);
+        };
     });
 
     $('#addpl').click(function () {
@@ -231,7 +234,6 @@
     //해당 그룹의 측정소 목록 불러오기
     function placeDiv(groupPlace) {
         $("#placeDiv").empty();
-        console.log(groupPlace);
         //측정가능한 측정소 없음
         if(groupPlace[0] == null){
             $('#placeDiv').append('<tr><td colspan="4" style="height: 250px;line-height: 250px;">측정 가능한 측정소가 없습니다.</td></tr>');
@@ -304,6 +306,7 @@
         const none = "<tr><td colspan='7' class='p-3'> 등록된 센서 데이터가 없습니다. <br> 센서 등록 후 이용 가능합니다. </td></tr>";
 
         $('#items').append(none); //센서 없을때
+        let readonly = ${groupPlace}[0] != 'ALL' ? 'readonly' : '';
 
         $.ajax({
             url: '<%=cp%>/getPlaceSensorValue',
@@ -323,9 +326,9 @@
                                 "<td style='width: 2%;'></td>" +
                                 "<td style='width:18%;'><span id='naming" + i + "' >" + data[i].naming + "</span></td>" +
                                 "<td style='width:25%;'><span id='name" + i + "'>" + data[i].name + "</span></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input standard'  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input standard'  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input standard'  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' "+readonly+"  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' "+readonly+"  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
+                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' "+readonly+"  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch'>" +
                                 "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdate(this)'>" +
                                 "<div class='slider round'></div>" +

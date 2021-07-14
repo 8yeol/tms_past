@@ -17,12 +17,17 @@ import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.*;
@@ -94,7 +99,7 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/getPlaceList2")
-    public Object getPlaceList2() {
+    public Object getPlaceList2() throws IOException, ParseException {
         List<Place> placeName = placeRepository.findAll();
         JSONArray array = new JSONArray();
         for (int i = 0; i < placeName.size(); i++) {
@@ -108,6 +113,12 @@ public class AjaxController {
             obj.put("up_time", place.getUp_time());
             array.add(obj);
         }
+
+
+//        JSONObject jsonObject= (JSONObject) new JSONParser().parse(String.valueOf(monitoringGroupRepository.findByGroupNum(0).getSensor().get(0)));
+//        System.out.println(jsonObject);
+//        System.out.println(jsonObject.get("lghausys_NOX_01"));
+        System.out.println("AjaxController.java_120_Line groupSensor Test");
         return array;
     }
 
@@ -197,9 +208,10 @@ public class AjaxController {
         List<String> sensorName = placeRepository.findByName(place).getSensor();
         List valueList = new ArrayList();
 
-        for (int i = 0; i < sensorName.size(); i++)
+        for (int i = 0; i < sensorName.size(); i++) {
             valueList.add(reference_value_settingRepository.findByName(sensorName.get(i)));
 
+        }
         return valueList;
     }
 
@@ -318,7 +330,6 @@ public class AjaxController {
      * 측정항목 모니터링 변경
      * 현재 모니터링값 반대로 적용
      *
-     * @param name      측정소명
      * @param tablename 센서명
      */
     @RequestMapping(value = "/referenceMonitoringUpdate")
@@ -1806,17 +1817,18 @@ public class AjaxController {
     @RequestMapping(value = "/saveGroup", method = RequestMethod.POST)
     public String saveGroup(String name, @RequestParam(value="memList[]", required = false)List<String> memList,
                             @RequestParam(value="placeList[]",required = false)List<String> placeList, String flag,
-                            @RequestParam(value = "groupNum",required = false)int groupNum) {
-        MonitoringGroup group = null;
-        MonitoringGroup defaultGroup = null;
-        int newGroupNum;
-        Member defaultMember;
-
+                            @RequestParam(value = "groupNum",required = false)int groupNum, Principal principal) {
         //중복 이름 리턴 fail
         if(monitoringGroupRepository.findByGroupName(name) != null &&
                 monitoringGroupRepository.findByGroupName(name).getGroupNum() != groupNum){
             return "fail";
         }
+
+        MonitoringGroup group = null;
+        MonitoringGroup defaultGroup = null;
+        int newGroupNum;
+        Member defaultMember;
+        List<String> groupSensorList = new ArrayList();
 
         //그룹 Num +1하여 생성
         if(flag.equals("insert")) {
@@ -1828,9 +1840,26 @@ public class AjaxController {
             }
             group.setGroupNum(newGroupNum);
 
-        //수정할 그룹의 멤버 모두 default로 초기화
+            //추가될 측정소의 센서 리스트 그룹에 각각 생성
+            if(placeList != null){
+                group.setMonitoringPlace(placeList);
+
+                for (int i=0; i<placeList.size(); i++){
+                    Place place = placeRepository.findByName(placeList.get(i));
+                    for (int k=0; k<place.getSensor().size(); k++)
+                        groupSensorList.add("{\"" + place.getSensor().get(k) + "\" : false}");
+                }
+                group.setSensor(groupSensorList);
+            }
+            inputLogSetting("'"+ name +"'그룹 생성", "설정", principal);
+            setMemberPreviousGroup(memList, group, name);
+
+        //수정
         }else if(flag.equals("edit")){
             group = monitoringGroupRepository.findByGroupNum(groupNum);
+            groupLogPrint(name, group, placeList, memList, principal);
+
+            //기존 회원 모두 default로 초기화 & default그룹으로 이동
             if(group.getGroupMember() != null) {
                 for (int i = 0; i < group.getGroupMember().size(); i++) {
                     defaultMember = memberRepository.findById((String) group.getGroupMember().get(i));
@@ -1845,33 +1874,24 @@ public class AjaxController {
                 group.setGroupMember(null);
                 monitoringGroupRepository.save(group);
             }
-        }
-
-        //그룹의 멤버 모두 그룹명으로 변경
-        if(memList != null && memList.size() != 0) {
-            for (int i = 0; i < memList.size(); i++) {
-                //이전그룹에서 멤버 삭제
-                MonitoringGroup prevGroup = monitoringGroupRepository.findByGroupMemberIsIn(memList.get(i));
-                if(prevGroup != null) {
-                    List prevGroupMember =  prevGroup.getGroupMember();
-                    prevGroupMember.remove(memList.get(i));
-                    prevGroup.setGroupMember(prevGroupMember);
-                    monitoringGroupRepository.save(prevGroup);
-                }
-                    Member saveMember = memberRepository.findById(memList.get(i));
-                    saveMember.setMonitoringGroup(name);
-                    memberRepository.save(saveMember);
-            }
-             group.setGroupMember(memList);
-        }else{
-            group.setGroupMember(null);
-        }
-
-        if(placeList != null){
+            setMemberPreviousGroup(memList, group, name);
             group.setMonitoringPlace(placeList);
-        }else{
-            group.setMonitoringPlace(null);
-        }
+
+            //기존 측정소와 수정된 측정소 비교하여 센서리스트 수정
+//           if(placeList != null){
+//               for (int i=0; i<)
+//
+//
+//
+//           }else{
+//               group.setMonitoringPlace(null);
+//               group.setSensor(null);
+//           }
+
+
+        } // 수정 end
+
+
 
         //그룹에 데이터 셋팅하고 저장
         group.setGroupName(name);
@@ -1880,11 +1900,75 @@ public class AjaxController {
     }
 
     /**
+     *  수정시 그룹로그 출력
+     * @param name 적용될 이름
+     * @param group 수정할 그룹 객체
+     * @param placeList 적용될 측정소 목록
+     * @param memList 적용될 멤버 목록
+     * @param principal log에 필요한 로그인 객체
+     */
+    public void groupLogPrint(String name, MonitoringGroup group, List placeList, List memList, Principal principal){
+        if(!name.equals(group.getGroupName()))
+            inputLogSetting("'"+ group.getGroupName() + "' -> '" + name +"'으로 그룹명 수정", "수정", principal);
+        if(isEqualsList(placeList, group.getMonitoringPlace()))
+            inputLogSetting("'" + group.getGroupName() + "'그룹 모니터링 측정소 수정", "수정", principal);
+        if(isEqualsList(memList, group.getGroupMember()))
+            inputLogSetting("'" + group.getGroupName() + "'그룹 회원목록 수정", "수정", principal);
+    }
+
+    /**
+     * 그룹에 적용될 멤버 이전그룹에서 삭제 & 멤버의 그룹명 변경
+     * @param memList 그룹을 수정한 멤버 리스트
+     * @param group 멤버들이 적용될 그룹
+     * @param name 멤버들이 적용될 그룹 이름
+     */
+    public void setMemberPreviousGroup(List<String> memList, MonitoringGroup group, String name){
+        if(memList != null && memList.size() != 0) {
+            for (int i = 0; i < memList.size(); i++) {
+                //이전그룹에서 멤버 삭제
+                MonitoringGroup prevGroup = monitoringGroupRepository.findByGroupMemberIsIn(memList.get(i));
+                List prevGroupMember =  prevGroup.getGroupMember();
+                prevGroupMember.remove(memList.get(i));
+                prevGroup.setGroupMember(prevGroupMember);
+                monitoringGroupRepository.save(prevGroup);
+
+                //멤버객체의 그룹 변경
+                Member saveMember = memberRepository.findById(memList.get(i));
+                saveMember.setMonitoringGroup(name);
+                memberRepository.save(saveMember);
+            }
+            //현재 그룹에 멤버 적용
+            group.setGroupMember(memList);
+        }else{
+            group.setGroupMember(null);
+        }
+    }
+
+    /**
+     * 그룹 수정시 어떤걸 수정하는지 판별하기위해 정의한 리스트 비교 메소드
+     * 두개 리스트가 null 일수도 아닐수도 있기에 조건문으로 비교
+     * @param list 수정될 멤버 혹은 측정소 리스트
+     * @param group 그룹의 멤버 혹은 측정소 리스트
+     * @return boolean
+     */
+    public boolean isEqualsList(List<String> list, List<String> group){
+        if(list != null && group != null && ( !list.containsAll(group) || !group.containsAll(list) )){
+            return true;
+        }else if(list == null && group != null){
+            return true;
+        }else if(list != null && group == null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
      * 그룹 삭제 하면서 멤버의 그룹명도 default로 변경
      * @param key 식별 키
      */
     @RequestMapping(value = "/deleteGroup", method = RequestMethod.POST)
-    public void deleteGroup(int key) {
+    public void deleteGroup(int key, Principal principal) {
 
         MonitoringGroup group = monitoringGroupRepository.findByGroupNum(key);
         if(group.getGroupMember() != null) {
@@ -1894,6 +1978,7 @@ public class AjaxController {
                 memberRepository.save(saveMember);
             }
         }
+        inputLogSetting("'"+ group.getGroupName() +"'그룹 삭제", "삭제", principal);
         monitoringGroupRepository.delete(group);
     }
 
