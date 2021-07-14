@@ -447,7 +447,7 @@
         <%--draw_sensor_info(placeData2); //대시보드 생성--%>
         setTimeout(function () {
             getData();
-        }, 300);
+        }, 0);
         // 페이지 로딩 후 1초뒤 실시간 동기화
         flashCheck = "on"; //플래시 효과의 기본값 설정
         alarmCheck = "on";
