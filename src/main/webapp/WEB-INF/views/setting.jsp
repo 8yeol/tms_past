@@ -147,10 +147,27 @@
         float: left;
     }
 
-    .MultiSelecterModal {
+    .MultiSelecterModal.first {
         width: 60%;
         height: 50%;
-        line-height: 180px;
+        border-radius: 5px;
+        background-color: rgba(207, 226, 255, 0.7);
+        position: absolute;
+        padding: 66px 10px 10px;
+        top: 49%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: rgb(54, 71, 149);
+        font-weight: bold;
+        display: none;
+        font-size: 1.2rem;
+    }
+
+    .MultiSelecterModal.second {
+        width: 60%;
+        height: 50%;
+        line-height: 175px;
         border-radius: 5px;
         background-color: #cfe2ff;
         border: 2px solid rgba(99, 130, 255, 0.7);
@@ -163,6 +180,7 @@
         color: rgb(54, 71, 149);
         font-weight: bold;
         display: none;
+        font-size: 1.2rem;
     }
     #monitoringSignModal{
         top: -7%;
@@ -579,7 +597,7 @@
 
                         <div class="clearfix"></div>
                         <!-- MultiSelecter Modal-->
-                        <div class="MultiSelecterModal" id="groupSignModal"></div>
+                        <div class="MultiSelecterModal first" id="groupSignModal"></div>
                         <div class="emissionsSpan">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 페이지에서 모니터링 가능합니다.</div>
                     </div>
 
@@ -613,7 +631,7 @@
 
                         <div class="clearfix"></div>
                         <!-- MultiSelecter Modal-->
-                        <div class="MultiSelecterModal" id="monitoringSignModal"></div>
+                        <div class="MultiSelecterModal second" id="monitoringSignModal"></div>
                         <div class="emissionsSpan allCheckEvent">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 페이지에서 모니터링 가능합니다.</div>
                     </div>
 
