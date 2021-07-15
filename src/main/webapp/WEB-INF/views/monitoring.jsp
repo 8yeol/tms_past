@@ -257,10 +257,10 @@
     <%-- 상단 대시보드 --%>
     <div class="row m-3 mt-3 bg-light" style="padding: 5px 0px 10px;">
         <div style="width: 50%; display: flex; flex-wrap: wrap; border-right: 1px solid #0d6efd;">
-            <div class="operatingDiv">
+            <div class="operatingDiv bg-lightBlue p-1">
                 <span class="fw-bold">가동률</span>
-                <p id="sensorStatusP">100%</p>
-                <div id="operating">4 / 4</div>
+                <p id="sensorStatusP" class="text-center">100%</p>
+                <div id="operating" class="align-self-center bg-white text-dark">4 / 4</div>
             </div>
             <div style="width: 100%; display: flex; padding: 0 25px; margin-top: 5px;">
                 <div class="topDash-l">

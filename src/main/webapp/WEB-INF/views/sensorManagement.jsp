@@ -143,7 +143,7 @@
             <span class="fw-bold fs-4">환경설정 > 센서 관리</span>
         </div>
         <div class="col text-end align-self-end" style="color:red; font-size: 0.8rem; font-weight: normal">
-            * 센서 관리는 '최고 관리자' 권한을 가진 회원만 가능합니다.
+            * 센서 관리는 '최고 관리자' 권한을 가진 회원만 설정 가능합니다.
         </div>
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
             <form id="saveForm" style="margin: 0;">
@@ -200,9 +200,7 @@
                     <th scope="col" width="17%">업데이트</th>
                     <th scope="col" width="15%">측정소</th>
                     <th scope="col" width="10%">통신상태</th>
-                    <c:if test="${state == 1}">
-                        <th scope="col" width="10%">관리</th>
-                    </c:if>
+                    <th scope="col" width="10%">관리</th>
                 </tr>
                 </thead>
                 <tbody id="tbody">
@@ -320,6 +318,7 @@
                     const cell5 = row.insertCell(4);
                     const cell6 = row.insertCell(5);
                     const cell7 = row.insertCell(6);
+                    const cell8 = row.insertCell(7);
                     cell1.innerHTML = data[i].classification;
                     cell2.innerHTML = data[i].naming;
                     cell3.innerHTML = data[i].managementId;
@@ -328,7 +327,6 @@
                     cell6.innerHTML = data[i].place;
                     cell7.innerHTML = status;
                     if('${state}' == '1'){
-                        const cell8 = row.insertCell(7);
                         cell8.innerHTML = '<i  class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editSetting(this)"></i>' +
                             '<i  class="fas fa-times" onclick="deleteModal(this)"></i>';
                     }
