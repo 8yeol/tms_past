@@ -2185,7 +2185,6 @@ public class AjaxController {
                         monitoringSensor.put(placeName, sensorList);
                     }
                 }
-                System.out.println(monitoringSensor);
             }
         }
         return monitoringSensor;
