@@ -2154,7 +2154,7 @@ public class AjaxController {
 
     // memberID = 로그인 된 회원의 ID
     @RequestMapping(value = "/getMonitoringSensor", method = RequestMethod.GET)
-    public Map<String, List> getMonitoringSensor(String memberId){
+    public LinkedHashMap<String, List> getMonitoringSensor(String memberId){
         Member member = memberRepository.findById(memberId);
         int groupNum = member.getMonitoringGroup();
 
@@ -2162,7 +2162,7 @@ public class AjaxController {
         List<String> memberPlaceList = monitoringGroup.getMonitoringPlace();
         List<String> memberSensorList= monitoringGroup.getSensor();
 
-        Map<String, List> monitoringSensor = new HashMap<>();
+        LinkedHashMap <String, List> monitoringSensor = new LinkedHashMap <>();
 
         for(String placeName : memberPlaceList) {
             if(placeName.equals("모든 측정소")){
@@ -2185,6 +2185,7 @@ public class AjaxController {
                         monitoringSensor.put(placeName, sensorList);
                     }
                 }
+                System.out.println(monitoringSensor);
             }
         }
         return monitoringSensor;
