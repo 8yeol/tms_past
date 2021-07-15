@@ -1537,7 +1537,6 @@ public class AjaxController {
 
     @RequestMapping(value = "/getGroupName")
     public String memberUpdate(int group) {
-        System.out.println(monitoringGroupRepository.findByGroupNum(group).getGroupName());
         return monitoringGroupRepository.findByGroupNum(group).getGroupName();
     }
 
