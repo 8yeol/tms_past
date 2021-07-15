@@ -178,7 +178,7 @@
                             <th>순번</th>
                             <th>그룹명</th>
                             <th>회원</th>
-                            <th>모니터링 <a class="sign"></a> 측정소</th>
+                            <th>모니터링 측정소</th>
                             <th>관리</th>
                         </tr>
                     </thead>
@@ -374,8 +374,8 @@
                 </div>
                 <div class="d-flex justify-content-center" style="margin: 5px">
                     <h5 class="me-1" style="width: 30%; text-align: left; margin-top: .3rem;">회원권한 : </h5>
-                    <select name="rank" id="rank" class="btn btn-light" style="width: 220px;">
-                        <option value="3">일반</option>
+                    <select name="rank" id="rank" class="btn btn-light" style="width: 220px;" onchange="stateCheck()">
+                        <option value="3" selected="selected">일반</option>
                         <option value="2">관리자</option>
                         <c:choose>
                             <c:when test="${member.state eq 1}">
@@ -387,7 +387,7 @@
                 <div class="d-flex justify-content-center" style="margin: 5px">
                     <h5 class="me-1" style="width: 30%; text-align: left; margin-top: .3rem;">모니터링 그룹 : </h5>
                     <select name="m_group" id="m_group" class="btn btn-light" style="width: 220px;">
-                        <option>선택</option>
+                        <option selected="selected">선택</option>
                         <c:forEach items="${group}" var="group" varStatus="idx">
                             <option value="${group.groupNum}">${group.groupName}</option>
                         </c:forEach>
@@ -396,7 +396,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" onclick="sing_up(1)">승인</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetGroup()">취소</button>
             </div>
         </div>
     </div>
@@ -627,6 +627,25 @@
                 location.reload();
             }, 2000);
         });
+    }
+
+    //가입승인모달 취소시 selectbox 초기화
+    function resetGroup() {
+        $('#m_group').attr("disabled",false);
+        $('#m_group option:eq(0)').prop('selected', true);
+        $('#rank option:eq(0)').prop('selected', true);
+    }
+
+    //가입승인모달 최고관리자시 그룹 disabled
+    function stateCheck() {
+        const state = $('#rank').val();
+        if(state == 1){
+            $('#m_group').val('0').attr("selected","selected");
+            $('#m_group').attr("disabled","disabled");
+        }else{
+            $('#m_group').attr("disabled",false);
+            $('#m_group option:eq(0)').prop('selected', true);
+        }
     }
 
     // 임시비밀번호 발급
