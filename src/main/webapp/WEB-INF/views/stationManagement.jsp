@@ -670,10 +670,22 @@
             type: 'POST',
             async: false,
             cache: false,
-            data: {"sensor": tablename}
-        })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
-        multiSelecterModal(pname, naming, "monitor", check);
+            data: {"sensor": tablename},
+            success: function (data) {
+                 if(data == 'permissionError'){
+                     $(name).prop("checked", false);
+                     Swal.fire({
+                         icon: 'warning',
+                         title: '경고',
+                         text: '관리자에 의해 모니터링 On이 불가능 합니다.'
+                     })
+                     return;
+                 }else{
+                     inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
+                     multiSelecterModal(pname, naming, "monitor", check);
+                 }
+            }
+        });
     }
 
     function ifsum(value) {

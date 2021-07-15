@@ -178,7 +178,7 @@
                             <th>순번</th>
                             <th>그룹명</th>
                             <th>회원</th>
-                            <th>모니터링 <a class="sign"></a> 측정소</th>
+                            <th>모니터링 측정소</th>
                             <th>관리</th>
                         </tr>
                     </thead>
