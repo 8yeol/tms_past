@@ -196,7 +196,7 @@
                     <tbody>
                     <c:forEach items="${group}" var="groupList" varStatus="idx">
                         <tr>
-                            <td>${groupList.groupNum + 1}</td>
+                            <td>${groupList.groupNum}</td>
                             <td>${groupList.groupName}</td>
                             <td>
                                 <input type="hidden" value="${groupList.groupMember}" class="groupTd">
