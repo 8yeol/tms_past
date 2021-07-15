@@ -610,7 +610,7 @@
                 var placeName = placeInfo[i].place; //측정소명
                 var dataLength = placeInfo[i].monitoringOn; //모니터링On된 센서수
                 var data = placeInfo[i].data; //모니터링On된 센서수
-                if(placeName.length==1){ // 측정소 1개 width 100%
+                if(placeInfo.length==1){ // 측정소 1개 width 100%
                     col_md_size = 12;
                 }else { // 측정소 1개 width 50%
                     col_md_size = 6;
