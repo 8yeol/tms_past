@@ -2156,13 +2156,16 @@ public class AjaxController {
                 List<String> onSensorList = new ArrayList<>();
 
                 for(String pSensor : placeSensor){
-                    onSensorList.add(pSensor);
+                    for(String aSensor : allSensorList){
+                        if(aSensor.equals(pSensor)){
+                            onSensorList.add(pSensor);
+                        }
+                    }
                 }
                 monitoringSensor.put(placeName, onSensorList);
             }
         }
 
-        System.out.println(monitoringSensor);
         return monitoringSensor;
     }
 

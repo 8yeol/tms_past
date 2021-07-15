@@ -279,7 +279,7 @@
                                                 <div class="progress-bar progress-yellow" role="progressbar" style="width: ${percent}%;"
                                             </c:when>
                                             <c:when test="${percent gt 80}">
-                                            <div class="progress-bar progress-red" role="progressbar" style="width: ${percent}%;"
+                                                <div class="progress-bar progress-red" role="progressbar" style="width: ${percent}%;"
                                             </c:when>
                                             </c:choose>
                                                  aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100"><fmt:formatNumber value="${emissions.yearlyValue}" groupingUsed="true"/>
