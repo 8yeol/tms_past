@@ -40,7 +40,7 @@
         }
         .row2{
             margin-bottom: 20px;
-            margin-left: -150px;
+            margin-left: -130px;
         }
         #gradeText{
             text-align: left !important;
@@ -68,8 +68,8 @@
         background-color: white;
         position: relative;
         display: block;
-        min-width: 670px;
-        max-width: 670px;
+        min-width: 660px;
+        max-width: 660px;
     }
 
     .multiSelectParent div {
@@ -102,7 +102,7 @@
     }
 
     .multiSelect {
-        width: 280px;
+        width: 275px;
         height: 350px;
     }
 
