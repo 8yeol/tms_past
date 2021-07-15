@@ -139,8 +139,11 @@
 </style>
 <div class="container" id="container">
     <div class="row">
-        <div class="row m-3 mt-3 ms-1" style="padding: 0">
+        <div class="col m-3 mt-3 ms-1" style="padding: 0">
             <span class="fw-bold fs-4">환경설정 > 센서 관리</span>
+        </div>
+        <div class="col text-end align-self-end" style="color:red; font-size: 0.8rem; font-weight: normal">
+            * 센서 관리는 '최고 관리자' 권한을 가진 회원만 가능합니다.
         </div>
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
             <form id="saveForm" style="margin: 0;">
@@ -182,9 +185,7 @@
             </form>
             <div class="row">
                 <div class="col text-end">
-                    <c:if test="${state == 1}">
-                        <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensorCheck(0)" >센서 추가</button>
-                    </c:if>
+                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensorCheck(0)" >센서 추가</button>
                 </div>
             </div>
         </div>
@@ -445,6 +446,11 @@
         let form = "";
         let title = "";
         let content = "";
+
+        if ('${state}' != '1'){
+            customSwal('경고', '최고 관리자만 센서 등록이 가능합니다.');
+            return;
+        }
 
         if (idx == 0) {
             if ($('#tableName').val() == '선택') {
