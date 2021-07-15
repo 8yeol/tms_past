@@ -2171,17 +2171,40 @@ public class AjaxController {
 
         LinkedHashMap <String, List> monitoringSensor = new LinkedHashMap <>();
 
+        int allCount = 0;
+        int allFalse = 0;
+
         for(String placeName : memberPlaceList) {
+            Place place;
             if(placeName.equals("모든 측정소")){
-                List<String> list = new ArrayList<>();
-                monitoringSensor.put("ALL", list);
+                for(Place placeList : placeRepository.findAll()){
+                    place = placeRepository.findByName(placeList.getName());
+                    List<String> placeSensorList = place.getSensor();
+                    List<String> sensorList = new ArrayList<>();
+
+                    allCount += placeSensorList.size();
+
+                    if(placeSensorList.size()!=0){
+                        for(String pSensor : placeSensorList){
+                            ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(pSensor);
+                            if(referenceValueSetting.getMonitoring()){
+                                sensorList.add(pSensor);
+                            }else{
+                                allFalse++;
+                            }
+                            monitoringSensor.put(placeList.getName(), sensorList);
+                        }
+                    }
+                }
             }else{
-                Place place = placeRepository.findByName(placeName);
-                List<String> placeSensor = place.getSensor();
+                place = placeRepository.findByName(placeName);
+                List<String> placeSensorList = place.getSensor();
                 List<String> sensorList = new ArrayList<>();
 
-                if(placeSensor.size()!=0){
-                    for(String pSensor : placeSensor){
+                allCount += placeSensorList.size();
+
+                if(placeSensorList.size()!=0){
+                    for(String pSensor : placeSensorList){
                         for(String mSensor : memberSensorList){
                             if(mSensor.equals(pSensor)){
                                 sensorList.add(pSensor);
@@ -2194,6 +2217,15 @@ public class AjaxController {
                 }
             }
         }
+
+        List<String> count = new ArrayList<>();
+        if(memberPlaceList.get(0).equals("모든 측정소")){
+            count.add(String.valueOf(allFalse));
+        }else{
+            count.add(String.valueOf(allCount - memberSensorList.size()));
+        }
+        monitoringSensor.put("OFF", count);
+
         return monitoringSensor;
     }
 
