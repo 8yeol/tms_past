@@ -383,13 +383,7 @@ public class AjaxController {
             ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
             reference.setMonitoring(!reference.getMonitoring());
             reference_value_settingRepository.save(reference);
-
-            if(reference.getMonitoring() == false) {
-                groupSensorRemove(tablename);
-                return "adminControl";
-            }else{
-                return "";
-            }
+            return "";
         }
 
         if(reference_value_settingRepository.findByName(tablename).getMonitoring() == false){

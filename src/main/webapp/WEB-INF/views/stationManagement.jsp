@@ -331,7 +331,7 @@
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' "+readonly+"  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input' "+readonly+"  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch'>" +
-                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdate(this)'>" +
+                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdateCheck(this)'>" +
                                 "<div class='slider round'></div>" +
                                 "</label></td>";
                             const elem = document.createElement('tr');
@@ -655,6 +655,36 @@
     <%--    multiSelecterModal(name, "", "monitor", check);--%>
     <%--}--%>
 
+    function monitoringupdateCheck(name){
+        let state = ${state};
+        let id = name.id;
+        let tablename = name.value;
+
+        if(state == 1 && $("#" + id).is(":checked") == false) {
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                html: '<label style="color:#2295DB;font-weight: bold">' + tablename + '</label> '
+                    + '센서의<br> 모니터링 상태 <label style="color:red;font-weight: bold">OFF</label>는 모든 그룹에 적용됩니다.'
+                    + '<br>OFF 하시겠습니까?',
+                showCancelButton: true,
+                confirmButtonColor: 'red',
+                cancelButtonColor: 'gray',
+                confirmButtonText: '모니터링 OFF',
+                cancelButtonText: '취소'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    monitoringupdate(name);
+                }else{
+                    $("#" + id).prop("checked", true);
+                }
+            });
+        }else{
+            monitoringupdate(name);
+        }
+    }
+
+
     //측정항목 모니터링 onchange
     function monitoringupdate(name) {
         var id = name.id;
@@ -679,16 +709,6 @@
                          title: '경고',
                          html: '<label style="color:#2295DB;font-weight: bold">'+tablename+'</label> 센서는 ' +
                              '<br>관리자에 의해 모니터링 On이 불가능 합니다.'
-                     })
-                     return;
-
-                 }else if(data == 'adminControl'){
-                     inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + " - " + naming + "' 모니터링 " + check + "", "설정");
-                     Swal.fire({
-                         icon: 'warning',
-                         title: '경고',
-                         html: '<label style="color:#2295DB;font-weight: bold">'+tablename+'</label> '
-                             +'센서의<br> 모니터링 상태 <label style="color:red;font-weight: bold">OFF</label>는 모든 그룹에 적용됩니다.'
                      })
                      return;
 
