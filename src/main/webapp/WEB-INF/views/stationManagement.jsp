@@ -303,7 +303,8 @@
             "<input type='hidden' id='nickname' value='" + name + "'>";
         $('#p_monitoring').append(innerHTMLPlace); //측정소 명  div
 
-        const none = "<tr><td colspan='7' class='p-3'> 등록된 센서 데이터가 없습니다. <br> 센서 등록 후 이용 가능합니다. </td></tr>";
+        const none = "<tr><td colspan='7' class='p-3'><br> 등록된 센서 데이터가 없습니다. <br> 센서 등록 후 이용 가능합니다. <br><br>" +
+            " <a href='<%=cp%>/sensorManagement'>센서 등록 바로가기</a></td></tr>";
 
         $('#items').append(none); //센서 없을때
         let readonly = ${groupPlace}[0] != '모든 측정소' ? 'readonly' : '';
