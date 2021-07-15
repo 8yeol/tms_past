@@ -34,17 +34,17 @@
             <div class="col-xs-12">
                 <table class="table table-striped" id="member-Table">
                     <thead>
-                        <tr class="text-center">
-                            <th style="width: 8%; padding:10px 0px 10px 0px;">ID</th>
-                            <th style="width: 8%; padding:10px 0px 10px 0px;">이름</th>
-                            <th style="width: 12%; padding:10px 0px 10px 0px;">권한</th>
-                            <th style="width: 15%; padding:10px 0px 10px 0px;">이메일</th>
-                            <th style="width: 12%; padding:10px 0px 10px 0px;">연락처</th>
-                            <th style="width: 10%; padding:10px 0px 10px 0px;">부서명</th>
-                            <th style="width: 12%; padding:10px 0px 10px 0px;">모니터링 그룹</th>
-                            <th style="width: 14%; padding:10px 0px 10px 0px;">가입승인일</th>
-                            <th style="width: 9%; padding:10px 0px 10px 0px;">관리</th>
-                        </tr>
+                    <tr class="text-center">
+                        <th style="width: 8%; padding:10px 0px 10px 0px;">ID</th>
+                        <th style="width: 8%; padding:10px 0px 10px 0px;">이름</th>
+                        <th style="width: 12%; padding:10px 0px 10px 0px;">권한</th>
+                        <th style="width: 15%; padding:10px 0px 10px 0px;">이메일</th>
+                        <th style="width: 12%; padding:10px 0px 10px 0px;">연락처</th>
+                        <th style="width: 10%; padding:10px 0px 10px 0px;">부서명</th>
+                        <th style="width: 12%; padding:10px 0px 10px 0px;">모니터링 그룹</th>
+                        <th style="width: 14%; padding:10px 0px 10px 0px;">가입승인일</th>
+                        <th style="width: 9%; padding:10px 0px 10px 0px;">관리</th>
+                    </tr>
                     </thead>
 
                     <tbody>
@@ -64,7 +64,8 @@
                                 </c:when>
                                 <c:when test="${mList.state eq '3'}">
                                     <td onclick="event.cancelBubble=true">
-                                        <select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                        <select name="state" id='state${mList.id}'
+                                                onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
                                             <option value='${mList.state}' selected="selected">일반</option>
                                         </select>
                                     </td>
@@ -76,7 +77,9 @@
                                         </c:when>
                                         <c:otherwise>
                                             <td onclick="event.cancelBubble=true">
-                                                <select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                                <select name="state" id='state${mList.id}'
+                                                        onclick="select_state(this,${mList.state})"
+                                                        onchange="gave_rank(this)">
                                                     <option value='${mList.state}' selected="selected">관리자</option>
                                                 </select>
                                             </td>
@@ -90,7 +93,9 @@
                                         </c:when>
                                         <c:otherwise>
                                             <td onclick="event.cancelBubble=true">
-                                                <select name="state" id='state${mList.id}' onclick="select_state(this,${mList.state})" onchange="gave_rank(this)">
+                                                <select name="state" id='state${mList.id}'
+                                                        onclick="select_state(this,${mList.state})"
+                                                        onchange="gave_rank(this)">
                                                     <option value='${mList.state}' selected="selected">최고 관리자</option>
                                                 </select>
                                             </td>
@@ -102,28 +107,32 @@
                             <td>${mList.tel}</td>
                             <td>${mList.department}</td>
                             <td onclick="event.cancelBubble=true">
-                            <c:choose>
+                                <c:choose>
                                 <c:when test="${mList.state == 5 || mList.state == 4}">
                                 </c:when>
                                 <c:when test="${mList.state == 1}">
-                                <select name="group" id='monitoringGroup${mList.id}' disabled="disabled" onclick="select_group(this)" onchange="updateMember('${mList.id}', this)">
-                                    <option value='${mList.monitoringGroup}' selected="selected">${mList.monitoringGroup}</option>
+                                <select name="group" id='monitoringGroup${mList.id}' disabled="disabled"
+                                        onclick="select_group(this)" onchange="updateMember('${mList.id}', this)">
+                                    <option value='${mList.monitoringGroup}'
+                                            selected="selected">${mList.monitoringGroup}</option>
                                 </select>
                             </td>
-                                </c:when>
-                                <c:otherwise>
-                                <select name="group" id='monitoringGroup${mList.id}' onclick="select_group(this)" onchange="updateMember('${mList.id}', this)">
-                                    <option value='${mList.monitoringGroup}' selected="selected">${mList.monitoringGroup}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <select name="group" id='monitoringGroup${mList.id}' onclick="select_group(this)"
+                                        onchange="updateMember('${mList.id}', this)">
+                                    <option value='${mList.monitoringGroup}'
+                                            selected="selected">${mList.monitoringGroup}</option>
                                 </select>
-                            </td>
-                                </c:otherwise>
+                                </td>
+                            </c:otherwise>
                             </c:choose>
                             <c:choose>
                                 <c:when test="${mList.joined != null}">
-                            <td><fmt:formatDate value="${mList.joined}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
+                                    <td><fmt:formatDate value="${mList.joined}" pattern="YYYY-MM-dd HH:mm:ss"/></td>
                                 </c:when>
                                 <c:otherwise>
-                            <td></td>
+                                    <td></td>
                                 </c:otherwise>
                             </c:choose>
                             <c:choose>
@@ -166,21 +175,23 @@
             </div>
         </div>
 
-        <div id="groupManagement" style="display: none;"  class="tabDiv">
+        <div id="groupManagement" style="display: none;" class="tabDiv">
             <div style="height: 50px;">
                 <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
-                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal" onclick="insertSetting()">그룹 추가</button>
+                <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal"
+                        onclick="insertSetting()">그룹 추가
+                </button>
             </div>
             <div style="width: 100%; height:350px;">
                 <table class="table table-striped" id="groupTable">
                     <thead>
-                        <tr>
-                            <th>순번</th>
-                            <th>그룹명</th>
-                            <th>회원</th>
-                            <th>모니터링 측정소</th>
-                            <th>관리</th>
-                        </tr>
+                    <tr>
+                        <th>순번</th>
+                        <th>그룹명</th>
+                        <th>회원</th>
+                        <th>모니터링 측정소</th>
+                        <th>관리</th>
+                    </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${group}" var="groupList" varStatus="idx">
@@ -188,7 +199,7 @@
                             <td>${groupList.groupNum + 1}</td>
                             <td>${groupList.groupName}</td>
                             <td>
-                                <input type="hidden" value="${groupList.groupMember}"  class="groupTd">
+                                <input type="hidden" value="${groupList.groupMember}" class="groupTd">
                                 <c:if test="${groupList.groupMember != null}">
                                     ${groupList.groupMember.size()} 명
                                 </c:if>
@@ -219,21 +230,38 @@
         <div class="d-flex mt-1 p-0">
             <div class="col-md-3">
                 <div class="bg-lightGray p-4 me-4 fw-bold" style="height: 314px;">
-                    <div class="d-flex justify-content-start">
-                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="root_radio" value="root"
-                               onclick="rankRadioChanged(value)" checked>
-                        <label for="root_radio" class="w-75">최고 관리자</label>
-                    </div>
-                    <div class="d-flex justify-content-start mt-4">
-                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="admin_radio"
-                               value="admin" onclick="rankRadioChanged(value)">
-                        <label for="admin_radio" class="w-75">관리자</label>
-                    </div>
-                    <div class="d-flex justify-content-start mt-4">
-                        <input type="radio" class="form-check-input me-2" name="grandRadio" id="normal_radio"
-                               value="normal" onclick="rankRadioChanged(value)">
-                        <label for="normal_radio" class="w-75">일반</label>
-                    </div>
+                    <c:choose>
+                        <c:when test="${member.state == 1}">
+                            <div class="d-flex justify-content-start">
+                                <input type="radio" class="form-check-input me-2" name="grandRadio" id="root_radio1"
+                                       value="root"
+                                       onclick="rankRadioChanged(value)" checked>
+                                <label for="root_radio1" class="w-75">최고 관리자</label>
+                            </div>
+                            <div class="d-flex justify-content-start mt-4">
+                                <input type="radio" class="form-check-input me-2" name="grandRadio" id="admin_radio1"
+                                       value="admin" onclick="rankRadioChanged(value)">
+                                <label for="admin_radio1" class="w-75">관리자</label>
+                            </div>
+                            <div class="d-flex justify-content-start mt-4">
+                                <input type="radio" class="form-check-input me-2" name="grandRadio" id="normal_radio1"
+                                       value="normal" onclick="rankRadioChanged(value)">
+                                <label for="normal_radio1" class="w-75">일반</label>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="d-flex justify-content-start mt-4">
+                                <input type="radio" class="form-check-input me-2" name="grandRadio" id="admin_radio2"
+                                       value="admin" onclick="rankRadioChanged(value)" checked>
+                                <label for="admin_radio2" class="w-75">관리자</label>
+                            </div>
+                            <div class="d-flex justify-content-start mt-4">
+                                <input type="radio" class="form-check-input me-2" name="grandRadio" id="normal_radio2"
+                                       value="normal" onclick="rankRadioChanged(value)">
+                                <label for="normal_radio2" class="w-75">일반</label>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
 
@@ -262,11 +290,9 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-end">
-                        <c:set var="member" value="${member}"/>
-                        <c:if test="${member.state == '1'}">
-                            <button class="btn btn-primary align-text-bottom me-2 mb-2 py-1 px-3 fw-bold fs-6" onclick="rankSettingSave()">저장
+                            <button class="btn btn-primary align-text-bottom me-2 mb-2 py-1 px-3 fw-bold fs-6"
+                                    onclick="rankSettingSave()">저장
                             </button>
-                        </c:if>
                     </div>
                 </div>
             </div>
@@ -284,7 +310,8 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <h3>그룹명</h3>
-                <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px;" maxlength="70" id="groupInput" autocomplete="off">
+                <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px;" maxlength="70"
+                       id="groupInput" autocomplete="off">
             </div>
             <div class="modal-body d-flex">
                 <div style="width: 100%">
@@ -299,8 +326,10 @@
                         </div>
 
                         <div class="multiSelectBtn">
-                            <input type='button' id='btnRight2' value='>' class="btn btn-default moveBtn" onclick="moveEvent('#lstBox3', '#lstBox4')"/>
-                            <input type='button' id='btnLeft2' value='<' class="btn btn-default moveBtn" onclick="moveEvent('#lstBox4', '#lstBox3')"/>
+                            <input type='button' id='btnRight2' value='>' class="btn btn-default moveBtn"
+                                   onclick="moveEvent('#lstBox3', '#lstBox4')"/>
+                            <input type='button' id='btnLeft2' value='<' class="btn btn-default moveBtn"
+                                   onclick="moveEvent('#lstBox4', '#lstBox3')"/>
                         </div>
 
                         <div class="multiSelect">
@@ -320,8 +349,9 @@
 
                     <div class="multiSelectParent" id="placeSelect">
                         <input type="checkbox" id="allPlaceCheck" class="allPlaceCheck">
-                        <label for="allPlaceCheck" id="checkLabel"  class="allPlaceCheck"> 전체 측정소 모니터링</label>
-                        <span class="allPlaceCheckSpan allPlaceCheck" style="display: block;font-size: 0.9rem;color:#db3535;font-weight: bold;margin-bottom: 10px;">
+                        <label for="allPlaceCheck" id="checkLabel" class="allPlaceCheck"> 전체 측정소 모니터링</label>
+                        <span class="allPlaceCheckSpan allPlaceCheck"
+                              style="display: block;font-size: 0.9rem;color:#db3535;font-weight: bold;margin-bottom: 10px;">
                             * 체크시 시스템에 등록된 모든 측정소 모니터링 (변경 불가)</span>
 
                         <div class="multiSelect allCheckEvent">
@@ -332,8 +362,10 @@
                         </div>
 
                         <div class="multiSelectBtn allCheckEvent">
-                            <input type='button' id='btnRight1' value='>' class="btn btn-default moveBtn" onclick="moveEvent('#lstBox1', '#lstBox2')"/>
-                            <input type='button' id='btnLeft1' value='<' class="btn btn-default moveBtn" onclick="moveEvent('#lstBox2', '#lstBox1')"/>
+                            <input type='button' id='btnRight1' value='>' class="btn btn-default moveBtn"
+                                   onclick="moveEvent('#lstBox1', '#lstBox2')"/>
+                            <input type='button' id='btnLeft1' value='<' class="btn btn-default moveBtn"
+                                   onclick="moveEvent('#lstBox2', '#lstBox1')"/>
                         </div>
 
                         <div class="multiSelect allCheckEvent">
@@ -395,8 +427,10 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" onclick="sing_up(1)">승인</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetGroup()">취소</button>
+                <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" onclick="sing_up(1)">승인
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetGroup()">취소
+                </button>
             </div>
         </div>
     </div>
@@ -413,7 +447,7 @@
                 <h3>가입거절 하시겠습니까?</h3>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal"onclick="sing_up(0)">거절
+                <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal" onclick="sing_up(0)">거절
                 </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
@@ -552,15 +586,15 @@
     var ID = ""; //데이터테이블 해당항목의 ID정보
     var name = "";
     var state = ""; //해당항목의 등급 정보
-    var rName = "root"; // 권한관리영역 checkBox 변수
     var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
+    var rName = ${member.state} == 1 ? "root" : "admin"; // 권한관리영역 checkBox 변수
     var user_id = "${member.id}"; // 페이지에 접근한 유저의 ID
     let memberList; // 모든 멤버리스트
     let placeList; // 모든 측정소 리스트
 
 
     $(document).ready(function () {
-        rankRadioChanged("root"); //기본값
+        rankRadioChanged(rName); //기본값
         $('.Modal').modal({keyboard: false, backdrop: 'static'}); // esc , 백스페이스 클릭방지
         substrArrayData();
         getMemberAndPlaceList();
@@ -581,9 +615,9 @@
 
     function groupCheck() {
         const group = $("select[name=group]");
-        for(let i = 0; i<group.length;i++){
+        for (let i = 0; i < group.length; i++) {
             const id = group[i].id;
-            const str = id.replace('monitoringGroup','past');
+            const str = id.replace('monitoringGroup', 'past');
             const groupNum = group[i].value;
             $.ajax({
                 url: '<%=cp%>/getGroupName',
@@ -592,8 +626,8 @@
                 cache: false,
                 data: {"group": groupNum},
                 success: function (data) {
-                    $("#"+id+" option:eq(0)").replaceWith('<option value="'+id+'" selected="selected">'+data+'</option>');
-                    $("#"+str).val(data);
+                    $("#" + id + " option:eq(0)").replaceWith('<option value="' + id + '" selected="selected">' + data + '</option>');
+                    $("#" + str).val(data);
                 },
                 error: function (request, status, error) {
                     console.log(error)
@@ -605,10 +639,10 @@
 
     //권한 변경
     function gave_rank(select) {
-        const id = select.id.replace('state','');
-        const value = $("#"+select.id).val();
+        const id = select.id.replace('state', '');
+        const value = $("#" + select.id).val();
 
-        if(user_state > value){
+        if (user_state > value) {
             Swal.fire({
                 icon: 'warning',
                 title: '권한이 없습니다.',
@@ -635,7 +669,7 @@
 
     //가입승인모달 취소시 selectbox 초기화
     function resetGroup() {
-        $('#m_group').attr("disabled",false);
+        $('#m_group').attr("disabled", false);
         $('#m_group option:eq(0)').prop('selected', true);
         $('#rank option:eq(0)').prop('selected', true);
     }
@@ -643,11 +677,11 @@
     //가입승인모달 최고관리자시 그룹 disabled
     function stateCheck() {
         const state = $('#rank').val();
-        if(state == 1){
-            $('#m_group').val('0').attr("selected","selected");
-            $('#m_group').attr("disabled","disabled");
-        }else{
-            $('#m_group').attr("disabled",false);
+        if (state == 1) {
+            $('#m_group').val('0').attr("selected", "selected");
+            $('#m_group').attr("disabled", "disabled");
+        } else {
+            $('#m_group').attr("disabled", false);
             $('#m_group option:eq(0)').prop('selected', true);
         }
     }
@@ -686,15 +720,15 @@
 
     //가입
     function sing_up(sign) {
-        if(sign == 1 && $("#m_group option:selected").val() == "선택"){
+        if (sign == 1 && $("#m_group option:selected").val() == "선택") {
             warning("모니터링 그룹을 선택해주세요.");
             return false;
         }
 
         let content = ID;
-        if(sign ==0){
+        if (sign == 0) {
             content += " 계정 가입 거절 ";
-        }else {
+        } else {
             content += " 계정 가입 승인 ";
             var rankLog = ($("#rank").val() == 1) ? " [최고 관리자] " : ($("#rank").val() == 2) ? " [관리자] " : " [일반] ";
             content += rankLog;
@@ -730,28 +764,11 @@
             $("#settingChk").prop("checked", ("${rank_managements.setting}" == "true") ? true : false);
             if (rName == "root") {
                 $("#settingChk").prop("disabled", true);
-            } else {
+            }else if(rName == "normal"){
+                $("#settingChk").prop("disabled", true);
+            }else{
                 $("#settingChk").prop("disabled", false);
             }
-            $("#settingChk").click(function () {
-                if ($("#settingChk").is(":checked") && rName == "normal") {
-                    Swal.fire({
-                        html: "환경설정 메뉴 열람 허용시 <br>일반 회원도 설정값을 변경할 수 있습니다. <br>일반 회원의 환경설정 메뉴 열람을 허용하시겠습니까?",
-                        title: '경고',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: "확인",
-                        cancelButtonColor: '#d33',
-                        cancelButtonText: "취소",
-                        reverseButtons: false,
-                        preConfirm: (function () {
-                            $("#settingChk").prop("checked", true);
-                        }),
-                    })
-                    $("#settingChk").prop("checked", false);
-                }
-            })
         }
         </c:forEach>
     }       //rankRadioChanged
@@ -845,12 +862,12 @@
             mList.push(member.eq(i).val());
 
         let pList
-        if($('#allPlaceCheck').is(':checked') == true || $('.allCheckEvent').css('display') == 'none'){
+        if ($('#allPlaceCheck').is(':checked') == true || $('.allCheckEvent').css('display') == 'none') {
             pList = ["모든 측정소"];
-        }else{
+        } else {
             let place = $('#lstBox2 option');
             pList = new Array();
-            for (i=0; i<place.length; i++)
+            for (i = 0; i < place.length; i++)
                 pList.push(place.eq(i).val());
         }
 
@@ -862,9 +879,9 @@
             cache: false,
             data: {"name": name, "memList": mList, "placeList": pList, "flag": flag, "groupNum": groupNum},
             success: function (data) {
-                if(data == 'fail'){
+                if (data == 'fail') {
                     warning("이미 존재하는 그룹명 입니다.");
-                }else {
+                } else {
                     $('#gModalCancle').trigger("click");
                     success('그룹이 저장 되었습니다.');
                     setTimeout(() => {
@@ -899,7 +916,7 @@
             Modal.html(opts.text() + length1);
         } else if (opts.length > 1) {
             Modal.html(opts.eq(0).text() + lengthLong);
-        } else{
+        } else {
             Modal.html(lengthLong);
         }
         Modal.finish().fadeIn(300).delay(2000).fadeOut(300);
@@ -907,10 +924,10 @@
         adminGroupCheck();
     }
 
-    function adminGroupCheck(){
+    function adminGroupCheck() {
         let currentMember = $('#lstBox4 option');
-        for (i=0; i<currentMember.length; i++){
-            if($(currentMember[i]).attr('id') == 1) {
+        for (i = 0; i < currentMember.length; i++) {
+            if ($(currentMember[i]).attr('id') == 1) {
                 $('#allPlaceCheck').prop('checked', true);
                 $('#allPlaceCheck').prop('disabled', true);
                 $('#checkLabel').attr('id', 'nonCheckLabel');
@@ -998,14 +1015,14 @@
         $('#monitoringSignModal').finish().fadeOut(0);
         optionDisabled(false);
 
-        if(groupMemList[0] != "") {
+        if (groupMemList[0] != "") {
             let innerHTML;
             for (i = 0; i < groupMemList.length; i++) {
                 groupMemList[i] = groupMemList[i].trim();
-                for(k=0; k<memberList.length; k++) {
-                    if(memberList[k].id == groupMemList[i] && memberList[k].state == 1 && $('#groupInput').val() == 'ALL'){
+                for (k = 0; k < memberList.length; k++) {
+                    if (memberList[k].id == groupMemList[i] && memberList[k].state == 1 && $('#groupInput').val() == 'ALL') {
                         innerHTML += '<option value="' + groupMemList[i] + '" disabled class="disabledOption">' + groupMemList[i] + '</option>'
-                    }else if(memberList[k].id == groupMemList[i]){
+                    } else if (memberList[k].id == groupMemList[i]) {
                         innerHTML += '<option value="' + groupMemList[i] + '">' + groupMemList[i] + '</option>'
                     }
                 }
@@ -1014,14 +1031,14 @@
         }
 
 
-        if(groupPlaList == "모든 측정소") {
+        if (groupPlaList == "모든 측정소") {
             $('#placeSelect .allCheckEvent').css('display', 'none');
             $('#monitoringSignModal').css('top', '50%');
             optionDisabled(true);
             $('#monitoringSignModal').html('모든 측정소를 모니터링 합니다.');
             $('#monitoringSignModal').finish().fadeIn(300)
 
-        }else if(groupPlaList[0] !="") {
+        } else if (groupPlaList[0] != "") {
             let innerHTML2;
             for (i = 0; i < groupPlaList.length; i++) {
                 groupPlaList[i] = groupPlaList[i].trim();
@@ -1030,18 +1047,18 @@
             $('#lstBox2').append(innerHTML2);
         }
 
-            let plaInnerHTML;
-            for (i = 0; i < placeList.length; i++) {
-                if (groupPlaList.includes(placeList[i]) == false) {
-                    plaInnerHTML += '<option value="' + placeList[i] + '">' + placeList[i] + '</option>';
-                }
+        let plaInnerHTML;
+        for (i = 0; i < placeList.length; i++) {
+            if (groupPlaList.includes(placeList[i]) == false) {
+                plaInnerHTML += '<option value="' + placeList[i] + '">' + placeList[i] + '</option>';
             }
-            $('#lstBox1').append(plaInnerHTML);
+        }
+        $('#lstBox1').append(plaInnerHTML);
 
 
         let memInnerHTML;
         for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "1" && groupPlaList != '모든 측정소' && memberList[i].state <=3 && memberList[i].state != 1) {
+            if (memberList[i].monitoringGroup == "1" && groupPlaList != '모든 측정소' && memberList[i].state <= 3 && memberList[i].state != 1) {
                 memInnerHTML += '<option value="' + memberList[i].id + '">' + memberList[i].id + '</option>';
             }
             if (memberList[i].monitoringGroup == "1" && groupPlaList == '모든 측정소' && memberList[i].state <= 3) {
@@ -1072,8 +1089,8 @@
         let plaInnerHTML;
 
         for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "1" && memberList[i].state <=3) {
-                memInnerHTML += '<option value="' + memberList[i].id +'" id="' + memberList[i].state + '">' + memberList[i].id + '</option>';
+            if (memberList[i].monitoringGroup == "1" && memberList[i].state <= 3) {
+                memInnerHTML += '<option value="' + memberList[i].id + '" id="' + memberList[i].state + '">' + memberList[i].id + '</option>';
             }
         }
         $('#lstBox3').append(memInnerHTML);
@@ -1111,32 +1128,33 @@
     }
 
     //그룹추가에서 체크박스로 측정소영역 비활성화, 활성화
-    function allPlaceCheck(){
-        $("#allPlaceCheck").on({click: function() {
-               if($(this).is(":checked") == true){
-                   optionDisabled(true);
-               }else{
-                   optionDisabled(false);
-               }
+    function allPlaceCheck() {
+        $("#allPlaceCheck").on({
+            click: function () {
+                if ($(this).is(":checked") == true) {
+                    optionDisabled(true);
+                } else {
+                    optionDisabled(false);
+                }
             }
         });
     }
 
     //그룹 추가,수정 모달에서 측정소 영역 비활성화
-    function optionDisabled(flag){
-        if(flag == true){
-            $('.allCheckEvent label').css('color','#999');
-            $('.allCheckEvent input[type=button]').css('color','#999');
-            $('.allCheckEvent select').css('border','3px solid #999');
+    function optionDisabled(flag) {
+        if (flag == true) {
+            $('.allCheckEvent label').css('color', '#999');
+            $('.allCheckEvent input[type=button]').css('color', '#999');
+            $('.allCheckEvent select').css('border', '3px solid #999');
             $('.allCheckEvent input[type=button]').prop('disabled', true);
             $('.allCheckEvent select').prop('disabled', true);
             $('#monitoringSignModal').html('모든 측정소를 측정합니다.');
             $('#monitoringSignModal').finish().fadeIn(300).delay(3000).fadeOut(300);
 
-        }else if (flag == false){
-            $('.allCheckEvent label').css('color','black');
-            $('.allCheckEvent input[type=button]').css('color','rgb(99, 130, 255)');
-            $('.allCheckEvent select').css('border','3px solid rgb(99, 130, 255)');
+        } else if (flag == false) {
+            $('.allCheckEvent label').css('color', 'black');
+            $('.allCheckEvent input[type=button]').css('color', 'rgb(99, 130, 255)');
+            $('.allCheckEvent select').css('border', '3px solid rgb(99, 130, 255)');
             $('.allCheckEvent input[type=button]').prop('disabled', false);
             $('.allCheckEvent select').prop('disabled', false);
         }
@@ -1145,30 +1163,30 @@
     //권한 selectbox
     function select_state(select, state) {
         Info_Set(user_id, state, name);
-        const target = $('#'+select.id);
+        const target = $('#' + select.id);
         target.empty();
         let innerHTML = "<option value='3'>일반</option>" +
             "<option value='2'>관리자</option>";
 
-        if(${member.state == 1}){
+        if (${member.state == 1}) {
             innerHTML += "<option value='1'>최고 관리자</option>";
         }
 
         target.append(innerHTML);
 
-        if(state == 3){
+        if (state == 3) {
             target.val("3").prop("selected", true);
-        }else if(state == 2){
+        } else if (state == 2) {
             target.val("2").prop("selected", true);
-        }else{
+        } else {
             target.val("1").prop("selected", true);
         }
     }
 
     //모니터링 그룹 selectbox
     function select_group(select) {
-        const $target = $('#'+select.id);
-        const name = $('#'+select.id +" option:selected").text();
+        const $target = $('#' + select.id);
+        const name = $('#' + select.id + " option:selected").text();
         $target.empty();
         let innerHTML = "";
         $.ajax({
@@ -1179,11 +1197,11 @@
             success: function (data) {
                 for (let i = 0; i < data.length; i++) {
                     const group = data[i].groupName;
-                    if (name == group){
+                    if (name == group) {
                         innerHTML =
                             "<option value ='" + group + "' selected='selected'>" + group + "</option>";
 
-                }else{
+                    } else {
                         innerHTML =
                             "<option value ='" + group + "'>" + group + "</option>";
                     }
@@ -1198,8 +1216,8 @@
     //모니터링 그룹 변경 ajax
     function updateMember(id, select) {
         const changeGroup = select.value;
-        const pastGroup = $('#past'+id).val();
-        const content = "모니터링 그룹 변경 "+ pastGroup + " > " + changeGroup;
+        const pastGroup = $('#past' + id).val();
+        const content = "모니터링 그룹 변경 " + pastGroup + " > " + changeGroup;
         $.ajax({
             url: '<%=cp%>/memberGroupUpdate',
             type: 'POST',
