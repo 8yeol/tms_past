@@ -331,7 +331,7 @@
                 <p class="text-danger">0%</p>
                 <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
             </div>
-            <div class="topDash-l">
+            <div class="topDash-l text-center">
                 <span onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
                 <p>100%</p>
                 <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>

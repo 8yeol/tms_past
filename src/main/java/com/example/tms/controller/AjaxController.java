@@ -2149,11 +2149,17 @@ public class AjaxController {
         Member member = memberRepository.findById(memberId);
         int groupNum = member.getMonitoringGroup();
 
+        LinkedHashMap <String, List> monitoringSensor = new LinkedHashMap <>();
+
+        if( groupNum == 1 ){
+            monitoringSensor.put("default", new ArrayList());
+            monitoringSensor.put("OFF", Collections.singletonList("0"));
+            return monitoringSensor;
+        }
+
         MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(groupNum);
         List<String> memberPlaceList = monitoringGroup.getMonitoringPlace();
         List<String> memberSensorList= monitoringGroup.getSensor();
-
-        LinkedHashMap <String, List> monitoringSensor = new LinkedHashMap <>();
 
         int allCount = 0;
         int allFalse = 0;

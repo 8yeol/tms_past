@@ -16,74 +16,29 @@
 %>
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
-<link rel="stylesheet" href="static/css/stationManagement.css">
+<link rel="stylesheet" href="static/css/page/stationManagement.css">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/moment.min.js"></script>
 
-<style>
-    .multiSelecterModal {
-        width: auto;
-        border-radius: 10px;
-        background-color: #0d6efd;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -40%);
-        text-align: center;
-        color: white;
-        font-weight: bold;
-        display: none;
-        line-height: 55px;
-        padding: 10px;
-    }
-    #placeinfo input {
-        border-radius: 5px;
-        border: 1px solid #999 !important;
-    }
-
-    @media all and (max-width: 1400px) {
-        #btnDiv {
-            float: right;
-        }
-    }
-
-    @media all and (max-width: 1024px) {
-        #station1 {
-            margin-top: 20px !important;
-            padding-bottom: 30px !important;
-        }
-
-        #station2 {
-            margin-top: 30px !important;
-            padding-bottom: 30px !important;
-        }
-
-        #btnDiv {
-            float: right;
-        }
-    }
-    .readonlyCSS{
-        background-color: #ddd;
-        color:#999;
-    }
-
-</style>
 <div class="container" id="container">
     <div class="col fw-bold fs-4 m-4 ms-0">
         환경설정 > 측정소 관리
     </div>
 
     <div class="row bg-light rounded">
-        <span class="p-3 ps-4 fs-4 fw-bold">
+        <div class="col p-3 ps-4 fs-4 fw-bold">
             <c:if test="${state == 1}">
-                측정소 및 기준 값 관리
+                <span>측정소 및 기준 값 관리 </span>
             </c:if>
             <c:if test="${state != 1}">
-                ${groupName} 그룹 측정소 모니터링 관리
+                <span>${groupName} 그룹 측정소 모니터링 관리</span>
             </c:if>
-        </span>
+        </div>
+        <div class="col text-end align-self-end" style="color: red; font-size: 0.8rem; font-weight: normal;">
+            * 기준 값은 '최고 관리자' 권한을 가진 회원만 설정 가능합니다.
+        </div>
     </div>
     <div class="row bg-light p-3 pt-0" style="min-height:70%;">
         <div class="col-6 border-end me-4" id="station1" style="width: 37%; background: rgba(0, 0, 0, 0.05);">
@@ -270,7 +225,6 @@
                     check = "";
                 }
 
-
                 const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\"  class='placeTr'>" +
                     check +
                     "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
@@ -287,6 +241,7 @@
         }
 
     }
+
     function placeDiv1() {
         var getData = null;
         $.ajax({
@@ -324,8 +279,11 @@
             "<input type='hidden' id='nickname' value='" + name + "'>";
         $('#p_monitoring').append(innerHTMLPlace); //측정소 명  div
 
-        const none = "<tr><td colspan='7' class='p-3'><br> 등록된 센서 데이터가 없습니다. <br> 센서 등록 후 이용 가능합니다. <br><br>" +
-            " <a href='<%=cp%>/sensorManagement'>센서 등록 바로가기</a></td></tr>";
+        let none = "<tr><td colspan='7' class='p-3'><br> 등록된 센서 데이터가 없습니다. <br> 센서 등록 후 이용 가능합니다. <br><br>";
+
+        if(${state == 1}){
+            none += " <a href='<%=cp%>/sensorManagement'>센서 등록 바로가기</a></td></tr>";
+        }
 
         $('#items').append(none); //센서 없을때
         let readonly = ${state} != 1 ? 'readonly' : '';
