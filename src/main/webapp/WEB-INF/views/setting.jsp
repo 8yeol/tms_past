@@ -106,13 +106,13 @@
                                 <c:when test="${mList.state == 5 || mList.state == 4}">
                                 </c:when>
                                 <c:when test="${mList.state == 1}">
-                                <select id='monitoringGroup${mList.id}' disabled="disabled" onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
+                                <select name="group" id='monitoringGroup${mList.id}' disabled="disabled" onclick="select_group(this)" onchange="updateMember('${mList.id}', this)">
                                     <option value='${mList.monitoringGroup}' selected="selected">${mList.monitoringGroup}</option>
                                 </select>
                             </td>
                                 </c:when>
                                 <c:otherwise>
-                                <select id='monitoringGroup${mList.id}' onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
+                                <select name="group" id='monitoringGroup${mList.id}' onclick="select_group(this)" onchange="updateMember('${mList.id}', this)">
                                     <option value='${mList.monitoringGroup}' selected="selected">${mList.monitoringGroup}</option>
                                 </select>
                             </td>
@@ -159,6 +159,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </tr>
+                        <input type="hidden" value="" id="past${mList.id}"/>
                     </c:forEach>
                     </tbody>
                 </table>
@@ -177,7 +178,7 @@
                             <th>순번</th>
                             <th>그룹명</th>
                             <th>회원</th>
-                            <th>모니터링 <a class="sign"></a> 측정소</th>
+                            <th>모니터링 측정소</th>
                             <th>관리</th>
                         </tr>
                     </thead>
@@ -200,7 +201,7 @@
                                 <c:if test="${groupList.groupName != 'default'}">
                                     <i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal"
                                        onclick="groupEditSetting(this, ${groupList.groupNum})"></i>&ensp;
-                                    <c:if test="${groupList.groupName != '모든 측정소'}">
+                                    <c:if test="${groupList.groupName != 'ALL'}">
                                         <i class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
                                     </c:if>
                                 </c:if>
@@ -373,8 +374,8 @@
                 </div>
                 <div class="d-flex justify-content-center" style="margin: 5px">
                     <h5 class="me-1" style="width: 30%; text-align: left; margin-top: .3rem;">회원권한 : </h5>
-                    <select name="rank" id="rank" class="btn btn-light" style="width: 220px;">
-                        <option value="3">일반</option>
+                    <select name="rank" id="rank" class="btn btn-light" style="width: 220px;" onchange="stateCheck()">
+                        <option value="3" selected="selected">일반</option>
                         <option value="2">관리자</option>
                         <c:choose>
                             <c:when test="${member.state eq 1}">
@@ -386,7 +387,7 @@
                 <div class="d-flex justify-content-center" style="margin: 5px">
                     <h5 class="me-1" style="width: 30%; text-align: left; margin-top: .3rem;">모니터링 그룹 : </h5>
                     <select name="m_group" id="m_group" class="btn btn-light" style="width: 220px;">
-                        <option>선택</option>
+                        <option selected="selected">선택</option>
                         <c:forEach items="${group}" var="group" varStatus="idx">
                             <option value="${group.groupNum}">${group.groupName}</option>
                         </c:forEach>
@@ -395,7 +396,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-success me-5" data-bs-dismiss="modal" onclick="sing_up(1)">승인</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetGroup()">취소</button>
             </div>
         </div>
     </div>
@@ -554,7 +555,6 @@
     var rName = "root"; // 권한관리영역 checkBox 변수
     var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
     var user_id = "${member.id}"; // 페이지에 접근한 유저의 ID
-    var monitoringGroup = "${member.monitoringGroup}";
     let memberList; // 모든 멤버리스트
     let placeList; // 모든 측정소 리스트
 
@@ -565,7 +565,12 @@
         substrArrayData();
         getMemberAndPlaceList();
         allPlaceCheck();
+        groupCheck();
     }); //ready
+
+    $('.paginate_button').click(function () {
+        groupCheck();
+    });
 
     function Info_Set(str_id, str_state, str_name) {
         ID = str_id;
@@ -574,6 +579,29 @@
         textfield_management();
     }// row 의 승인 및 거절 버튼 클릭시 전역변수 ID에 해당row 의 ID가 저장됨
 
+    function groupCheck() {
+        const group = $("select[name=group]");
+        for(let i = 0; i<group.length;i++){
+            const id = group[i].id;
+            const str = id.replace('monitoringGroup','past');
+            const groupNum = group[i].value;
+            $.ajax({
+                url: '<%=cp%>/getGroupName',
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: {"group": groupNum},
+                success: function (data) {
+                    $("#"+id+" option:eq(0)").replaceWith('<option value="'+id+'" selected="selected">'+data+'</option>');
+                    $("#"+str).val(data);
+                },
+                error: function (request, status, error) {
+                    console.log(error)
+                }
+            });
+        }
+
+    }
 
     //권한 변경
     function gave_rank(select) {
@@ -603,6 +631,25 @@
                 location.reload();
             }, 2000);
         });
+    }
+
+    //가입승인모달 취소시 selectbox 초기화
+    function resetGroup() {
+        $('#m_group').attr("disabled",false);
+        $('#m_group option:eq(0)').prop('selected', true);
+        $('#rank option:eq(0)').prop('selected', true);
+    }
+
+    //가입승인모달 최고관리자시 그룹 disabled
+    function stateCheck() {
+        const state = $('#rank').val();
+        if(state == 1){
+            $('#m_group').val('0').attr("selected","selected");
+            $('#m_group').attr("disabled","disabled");
+        }else{
+            $('#m_group').attr("disabled",false);
+            $('#m_group option:eq(0)').prop('selected', true);
+        }
     }
 
     // 임시비밀번호 발급
@@ -637,6 +684,7 @@
         });
     }
 
+    //가입
     function sing_up(sign) {
         if(sign == 1 && $("#m_group option:selected").val() == "선택"){
             warning("모니터링 그룹을 선택해주세요.");
@@ -652,7 +700,6 @@
             content += rankLog;
             content += " 모니터링 그룹 : ";
             var groupLog = $("#m_group option:selected").val();
-            console.log(groupLog)
             content += groupLog;
         }
         var settings = {
@@ -1119,8 +1166,9 @@
     }
 
     //모니터링 그룹 selectbox
-    function select_group(select,name) {
+    function select_group(select) {
         const $target = $('#'+select.id);
+        const name = $('#'+select.id +" option:selected").text();
         $target.empty();
         let innerHTML = "";
         $.ajax({
@@ -1150,7 +1198,7 @@
     //모니터링 그룹 변경 ajax
     function updateMember(id, select) {
         const changeGroup = select.value;
-        const pastGroup = monitoringGroup;
+        const pastGroup = $('#past'+id).val();
         const content = "모니터링 그룹 변경 "+ pastGroup + " > " + changeGroup;
         $.ajax({
             url: '<%=cp%>/memberGroupUpdate',

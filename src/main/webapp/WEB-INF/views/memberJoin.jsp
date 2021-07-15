@@ -154,7 +154,6 @@
 
 <script>
     function join_submit() {
-        let group ="default";
        if (blankCheck() && idCheck() &&passwordCheck() && emailCheck()) {
 
             if ($("#password").val() !== $("#passwordCheck").val()) {
@@ -174,7 +173,7 @@
                     "name": $("#name").val(),
                     "email": $("#email").val(),
                     "department": $("#department").val(),
-                    "monitoringGroup": group,
+                    "monitoringGroup": 1,
                     "grade": $("#grade").val(),
                     "tel": $("#tel").val()
                 },

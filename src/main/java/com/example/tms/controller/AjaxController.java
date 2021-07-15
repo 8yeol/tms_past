@@ -201,6 +201,7 @@ public class AjaxController {
     public Object getPlaceSensorValue(String place,Principal principal) {
         List<String> sensorName = placeRepository.findByName(place).getSensor();
         List<ReferenceValueSetting> valueList = new ArrayList();
+        List<ReferenceValueSetting> valueListCopy = new ArrayList();
 
         //회원이 속한 그룹 검색
         MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(principal.getName());
@@ -208,32 +209,34 @@ public class AjaxController {
         //센서명으로 상세설정값 목록 생성
         for (int i = 0; i < sensorName.size(); i++) {
             valueList.add(reference_value_settingRepository.findByName(sensorName.get(i)));
+            valueListCopy.add(reference_value_settingRepository.findByName(sensorName.get(i)));
         }
 
         //관리자 그룹은 실제 ReferenceValueSetting 반환
         if(group.getGroupNum() == 0) return valueList;
 
-        //그외 모든그룹 일단 모니터링 false후, 그룹에서 센서 포함 한다면 true
         List<String> sensorList = group.getSensor();
 
         //해당 그룹의 센서목록이 하나도 없다면 모두 false
         if(sensorList == null || sensorList.size() == 0) {
-            for (int i = 0; i < valueList.size(); i++) {
+            for (int i = 0; i < valueList.size(); i++)
                 valueList.get(i).setMonitoring(false);
-            }
             return valueList;
-        }else {
 
+        }else {
+            //복사본 모두 false하고 원본으로 검사후 복사본 설정 및 리턴
             for (int i = 0; i < valueList.size(); i++) {
-                valueList.get(i).setMonitoring(false);
+                valueListCopy.get(i).setMonitoring(false);
                 for (int k = 0; k < sensorList.size(); k++) {
-                    if (sensorList.get(k).equals(valueList.get(i).getName())) {
-                        valueList.get(i).setMonitoring(true);
+                    if (sensorList.get(k).equals(valueListCopy.get(i).getName()) && valueList.get(i).getMonitoring() == true) {
+                        valueListCopy.get(i).setMonitoring(true);
+                        break;
                     }
                 }
             }
-            return valueList;
+            return valueListCopy;
         }
+
     }
 
     /**
@@ -346,6 +349,23 @@ public class AjaxController {
         placeRepository.save(savePlace);
         return savePlace.getUp_time();
     }
+    public void groupSensorRemove(String sensorName){
+        //삭제될 센서를 포함하는 그룹 검색하여 센서 삭제
+        List<MonitoringGroup> groups = monitoringGroupRepository.findBySensorIsIn(sensorName);
+        if(groups != null && groups.size() != 0) {
+            for (int i = 0; i < groups.size(); i++) {
+                List<String> sensorList = groups.get(i).getSensor();
+                if (sensorList != null && sensorList.size() != 0) {
+                    for (int k = 0; k < sensorList.size(); k++) {
+                        if (sensorList.get(k).equals(sensorName))
+                            sensorList.remove(k);
+                    }
+                }
+                groups.get(i).setSensor(sensorList);
+                monitoringGroupRepository.save(groups.get(i));
+            }
+        }
+    }
 
     /**
      * 측정항목 모니터링 변경
@@ -354,7 +374,7 @@ public class AjaxController {
      * @param tablename 센서명
      */
     @RequestMapping(value = "/referenceMonitoringUpdate")
-    public void referenceMonitoringUpdate(@RequestParam("sensor") String tablename,Principal principal)  {
+    public String referenceMonitoringUpdate(@RequestParam("sensor") String tablename,Principal principal)  {
         MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(principal.getName());
         List<String> sensorList = group.getSensor();
 
@@ -363,7 +383,11 @@ public class AjaxController {
             ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
             reference.setMonitoring(!reference.getMonitoring());
             reference_value_settingRepository.save(reference);
-            return;
+            return "";
+        }
+
+        if(reference_value_settingRepository.findByName(tablename).getMonitoring() == false){
+            return "permissionError" ;
         }
 
         //센서목록 하나도 없다면
@@ -372,7 +396,7 @@ public class AjaxController {
             sensorList.add(tablename);
             group.setSensor(sensorList);
             monitoringGroupRepository.save(group);
-            return;
+            return "";
         }
 
         //설정된 센서가 그룹의 센서목록에 있다면 On -> Off로 간주하고 목록에서 삭제 후 리턴
@@ -381,7 +405,7 @@ public class AjaxController {
                 sensorList.remove(tablename);
                 group.setSensor(sensorList);
                 monitoringGroupRepository.save(group);
-                return;
+                return "";
             }
         }
 
@@ -389,7 +413,7 @@ public class AjaxController {
         sensorList.add(tablename);
         group.setSensor(sensorList);
         monitoringGroupRepository.save(group);
-        return;
+        return "";
     }
 
     /**
@@ -553,37 +577,41 @@ public class AjaxController {
     public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList, boolean flag, Principal principal) {
 
         for (int i = 0; i < placeList.size(); i++) {
-//            if (flag) {
-//                removePlaceRemoveSensor(placeList.get(i), principal);       //센서 포함 삭제
-//            } else {
-//                removePlaceChangeSensor(placeList.get(i), principal);       //측정소만 삭제
-//            }
-
             //삭제할 측정소의 센서 목록
             List<String> placeSensorList = placeRepository.findByName(placeList.get(i)).getSensor();
 
             //삭제될 측정소 그룹에서 삭제
             List<MonitoringGroup> group = monitoringGroupRepository.findByMonitoringPlaceIsIn(placeList.get(i));
             for (int k = 0; k<group.size(); k++){
-//                List<String> groupPlaceList = group.get(k).getMonitoringPlace();
-//                groupPlaceList.remove(placeList.get(i));
-//                group.get(k).setMonitoringPlace(groupPlaceList);
-//                monitoringGroupRepository.save(group.get(k));
-//                inputLogSetting("'" + group.get(k).getGroupName() + "'그룹의 측정소 '" + placeList.get(i) + "' 삭제" , "삭제", principal);
+                List<String> groupPlaceList = group.get(k).getMonitoringPlace();
+                groupPlaceList.remove(placeList.get(i));
+                group.get(k).setMonitoringPlace(groupPlaceList);
+                monitoringGroupRepository.save(group.get(k));
+                if(!group.get(k).getMonitoringPlace().get(0).equals("모든 측정소")) {
+                    inputLogSetting("'" + group.get(k).getGroupName() + "'그룹의 측정소 '" + placeList.get(i) + "' 삭제", "삭제", principal);
+                }
 
                 //삭체할 측정소가 포함된 그룹의 센서 목록
                 List<String> groupSensorList = group.get(k).getSensor();
 
+                //그룹의 센서 목록에서 삭제될 센서 삭제
                 for (int j=0; j<placeSensorList.size(); j++) {
                     for (int p = 0; p < groupSensorList.size(); p++) {
                         if (groupSensorList.get(p).contains(placeSensorList.get(j))) {
                             groupSensorList.remove(p);
+                            inputLogSetting("'" + group.get(k).getGroupName() + "'그룹의 센서  '" + groupSensorList.get(p) + "' 삭제", "삭제", principal);
                         }
                     }
                 }
                 group.get(k).setSensor(groupSensorList);
                 monitoringGroupRepository.save(group.get(k));
             } // -- for
+
+            if (flag) {
+                removePlaceRemoveSensor(placeList.get(i), principal);       //센서 포함 삭제
+            } else {
+                removePlaceChangeSensor(placeList.get(i), principal);       //측정소만 삭제
+            }
         }// ----for
     }
 
@@ -1213,17 +1241,13 @@ public class AjaxController {
             //센서관련 법적기준,사내기준,관리기준값 사용자 동의하에 초기화
             if (isValueDelete.equals("delete")) {
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
-                float legal = 999999.0f;
-                float management = 999999.0f;
-                float company = 999999.0f;
-                reference.setLegalStandard(legal);
+                reference.setLegalStandard(999999.0f);
+                reference.setCompanyStandard(999999.0f);
+                reference.setManagementStandard(999999.0f);
                 reference.setNaming(naming2);
-                reference.setCompanyStandard(company);
-                reference.setManagementStandard(management);
                 reference.setMonitoring(false);
                 reference_value_settingRepository.save(reference);
                 inputLogSetting("'"+oldPlace + " - " + sensor.getNaming()+"'" + " 관리 기준 초기화", "설정", principal);
-
             }
 
             //항목명 변경
@@ -1316,9 +1340,6 @@ public class AjaxController {
                 if (placeremove != null) {
                     //센서리스트에서 센서 제거
                     placeremove.getSensor().remove(hiddenCode);
-                    if (placeremove.getSensor().size() == 0) {
-                        placeremove.setMonitoring(false);
-                    }
                     placeremove.setUp_time(new Date());
                     placeRepository.save(placeremove);
                 }
@@ -1334,26 +1355,12 @@ public class AjaxController {
                 inputLogSetting("'"+oldPlace + " - " + oldNaming+"'" + " 센서 알림설정 값 삭제", "설정", principal);
                 inputLogSetting("'"+place + " - " + oldNaming+"'" + " 센서 등록", "설정", principal);
                 inputLogSetting("'"+oldNaming+"'"+" 센서의 측정소명 "+"'"+oldPlace+"'" + " > " + "'"+place+"'" + " 수정 ", "설정", principal);
-            }
 
-            //수정된 이전 측정소 모니터링 체크후 False or True
-            if(!oldPlace.equals("측정소 없음")) {
-                //place 모니터링 체크
-                Place placeCheck = placeRepository.findByName(oldPlace);
-
-                List sensorList = placeCheck.getSensor();
-                boolean flag = false;
-
-                for (int i = 0; i < sensorList.size(); i++) {
-                    if (reference_value_settingRepository.findByName((String) sensorList.get(i)).getMonitoring() == true){
-                        flag = true;
-                        break;
-                    }
-                }
-                placeCheck.setMonitoring(flag);
-                placeRepository.save(placeCheck);
+                //측정소 수정할 센서를 포함하는 그룹 검색하여 센서 삭제
+                groupSensorRemove(hiddenCode);
             }
         }
+
         sensorListRepository.save(sensor);
     }
 
@@ -1398,6 +1405,10 @@ public class AjaxController {
             notification_settingsRepository.deleteByName(tableName);
             inputLogSetting("'"+place + " - " + naming+"'" + " 알림 설정값 삭제", "설정", principal);
         }
+
+        //삭제될 센서를 포함하는 그룹 검색하여 센서 삭제
+        groupSensorRemove(tableName);
+
         //place 업데이트 시간 수정
         if (placeRepository.findBySensorIsIn(tableName) != null) {
             Place placeObject = placeRepository.findBySensorIsIn(tableName);
@@ -1510,10 +1521,17 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/memberGroupUpdate")
-    public String memberGroupUpdate(String id, int monitoringGroup) {
-        memberService.updateMemberGroup(id, monitoringGroup);
-        groupChange(id, monitoringGroup);
+    public String memberGroupUpdate(String id, String monitoringGroup) {
+        MonitoringGroup group = monitoringGroupRepository.findByGroupName(monitoringGroup);
+        int groupNum = group.getGroupNum();
+        memberService.updateMemberGroup(id, groupNum);
+        groupChange(id, groupNum);
         return "success";
+    }
+
+    @RequestMapping(value = "/getGroupName")
+    public String memberUpdate(int group) {
+        return monitoringGroupRepository.findByGroupNum(group).getGroupName();
     }
 
     public void groupChange(String id, int monitoringGroup){
@@ -1855,31 +1873,7 @@ public class AjaxController {
                 newGroupNum = 0;
             }
             group.setGroupNum(newGroupNum);
-
-            //추가될 측정소의 센서 리스트 그룹에 각각 생성
             group.setMonitoringPlace(placeList);
-
-            //선택 측정소가 null이 아니고, 모든측정소 체크가 아닐떄
-            if(placeList != null && !placeList.get(0).equals("모든 측정소")){
-                for (int i=0; i<placeList.size(); i++){
-                    Place place = placeRepository.findByName(placeList.get(i));
-                    for (int k=0; k<place.getSensor().size(); k++) {
-                        groupSensorList.add("{\"" + place.getSensor().get(k) + "\" : false}");
-                    }
-                }
-                group.setSensor(groupSensorList);
-            }
-
-            //모든 측정소 체크되었을때, 모든 센서 추가
-            if(placeList != null && placeList.get(0).equals("모든 측정소")){
-                List<Place> allPlaceList = placeRepository.findAll();
-                for (int i=0; i<allPlaceList.size(); i++){
-                    for (int k=0; k<allPlaceList.get(i).getSensor().size(); k++) {
-                        groupSensorList.add("{\"" + allPlaceList.get(i).getSensor().get(k) + "\" : false}");
-                    }
-                }
-                group.setSensor(groupSensorList);
-            }
 
             inputLogSetting("'"+ name +"'그룹 생성", "설정", principal);
             setMemberPreviousGroup(memList, group, name);
@@ -1914,38 +1908,18 @@ public class AjaxController {
             }
 
             if(placeList != null && group.getSensor() != null && group.getSensor().size() != 0 && !placeList.get(0).equals("모든 측정소")){
-//                //기존 그룹에 없는 새로운 측정소의 센서 추가
-//                for (int i=0; i<placeList.size(); i++){
-//                     if(!group.getMonitoringPlace().contains(placeList.get(i))){
-//                         Place place = placeRepository.findByName(placeList.get(i));
-//                         for (int k=0; k<place.getSensor().size(); k++)
-//                             groupSensorList.add("{\"" + place.getSensor().get(k) + "\" : false}");
-//                     }
-//                }
                 //기존 그룹에서 삭제될 측정소의 센서 삭제
                 for (int i=0; i<group.getMonitoringPlace().size(); i++){
                     if(!placeList.contains(group.getMonitoringPlace().get(i))){
                         Place place = placeRepository.findByName((String) group.getMonitoringPlace().get(i));
                         for (int k=0; k<place.getSensor().size(); k++) {
                             groupSensorList.remove(place.getSensor().get(k));
-                         //   groupSensorList.remove("{\"" + place.getSensor().get(k) + "\" : true}");
                         }
                     }
                 }
                 group.setSensor(groupSensorList);
 
             }
-//            else if(placeList != null && (group.getSensor() == null || group.getSensor().size() == 0) && !placeList.get(0).equals("모든 측정소")){
-//                //추가될 측정소의 센서 추가
-//                for (int i=0; i<placeList.size(); i++){
-//                    Place place = placeRepository.findByName(placeList.get(i));
-//                    for (int k=0; k<place.getSensor().size(); k++) {
-//                        groupSensorList.add("{\"" + place.getSensor().get(k) + "\" : false}");
-//                    }
-//                }
-//                group.setSensor(groupSensorList);
-//            }
-
             setMemberPreviousGroup(memList, group, name);
             group.setMonitoringPlace(placeList);
         } // 수정 end
@@ -2033,6 +2007,13 @@ public class AjaxController {
                 Member saveMember = memberRepository.findById((String) group.getGroupMember().get(i));
                 saveMember.setMonitoringGroup(1);
                 memberRepository.save(saveMember);
+
+                MonitoringGroup defaultGroup = monitoringGroupRepository.findByGroupNum(1);
+                List defaultGroupMember = defaultGroup.getGroupMember();
+                defaultGroupMember.add(group.getGroupMember().get(i));
+                defaultGroup.setGroupMember(defaultGroupMember);
+                monitoringGroupRepository.save(defaultGroup);
+                inputLogSetting("'"+ group.getGroupName() +"'그룹 삭제에 의한 '"+group.getGroupMember().get(i)+"' 유저 default 그룹으로 이동", "수정", principal);
             }
         }
         inputLogSetting("'"+ group.getGroupName() +"'그룹 삭제", "삭제", principal);
@@ -2073,18 +2054,12 @@ public class AjaxController {
     @RequestMapping(value = "/placeInfo", method = RequestMethod.GET)
     public JSONArray getPlaceInfo(Principal principal){
         try {
-            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //모니터링 On 인 측정소 정보
             Map<String, List> gMS = getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
             List<String> gMS_placeName = new ArrayList<>();
             for(String key : gMS.keySet()){ //key(측정소명) 추출
                 gMS_placeName.add(key);
             }
-            int placeListSize =0;
-            if(gMS.containsKey("ALL")){
-               placeListSize = placeList.size();
-            }else{
-               placeListSize = gMS.size();
-            }
+            int placeListSize = gMS.size()-1;
             JSONArray jsonArray = new JSONArray();
             for (int a = 0; a < placeListSize; a++) { //모니터링 On인 측정소
                 int sensorSize = 0;
@@ -2092,15 +2067,10 @@ public class AjaxController {
                 JSONArray placeInfoArray = new JSONArray();
                 String placeName = "";
                 List<String> sensorNames = new ArrayList<String>();
-                if(gMS.containsKey("ALL")){ //all = []
-                    placeName = placeList.get(a).getName();
-                    sensorNames = placeList.get(a).getSensor();
-                }else{
-                    placeName = gMS_placeName.get(a);
-                    List<String> temp = gMS.get(placeName);
-                    for(int b=0; b<temp.size(); b++){
-                        sensorNames.add(temp.get(b));
-                    }
+                placeName = gMS_placeName.get(a);
+                List<String> temp = gMS.get(placeName);
+                for(int b=0; b<temp.size(); b++){
+                    sensorNames.add(temp.get(b));
                 }
                 List<String> sensorNameList = new ArrayList<>();
                 int standardExist = 0;
@@ -2156,11 +2126,12 @@ public class AjaxController {
                     placeInfoList.put("standardNotExist", standardNotExist);
                     placeInfoList.put("data", placeInfoArray);
                 }
+                String allMonitoringOFF = String.valueOf(gMS.get("OFF").get(0));
                 if (sensorSize != 0) {
                     placeInfoList.put("place", placeName);
                     placeInfoList.put("sensorList", sensorNameList);
                     placeInfoList.put("monitoringOn", sensorSize);
-                    placeInfoList.put("monitoringOff", sensorNames.size() - sensorSize);
+                    placeInfoList.put("allMonitoringOFF", Integer.parseInt(allMonitoringOFF));
                     jsonArray.add(placeInfoList);
                 }
             }
@@ -2174,41 +2145,71 @@ public class AjaxController {
 
     // memberID = 로그인 된 회원의 ID
     @RequestMapping(value = "/getMonitoringSensor", method = RequestMethod.GET)
-    public Map<String, List> getMonitoringSensor(String memberId){
+    public LinkedHashMap<String, List> getMonitoringSensor(String memberId){
         Member member = memberRepository.findById(memberId);
         int groupNum = member.getMonitoringGroup();
 
         MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(groupNum);
-        List<String> placeList = monitoringGroup.getMonitoringPlace();
+        List<String> memberPlaceList = monitoringGroup.getMonitoringPlace();
+        List<String> memberSensorList= monitoringGroup.getSensor();
 
-        List<String> allSensorList= monitoringGroup.getSensor();
+        LinkedHashMap <String, List> monitoringSensor = new LinkedHashMap <>();
 
-        Map<String, List> monitoringSensor = new HashMap<>();
+        int allCount = 0;
+        int allFalse = 0;
 
-        for(String placeName : placeList) {
+        for(String placeName : memberPlaceList) {
+            Place place;
             if(placeName.equals("모든 측정소")){
-                List<String> list = new ArrayList<>();
-                monitoringSensor.put("ALL", list);
+                for(Place placeList : placeRepository.findAll()){
+                    place = placeRepository.findByName(placeList.getName());
+                    List<String> placeSensorList = place.getSensor();
+                    List<String> sensorList = new ArrayList<>();
+
+                    allCount += placeSensorList.size();
+
+                    if(placeSensorList.size()!=0){
+                        for(String pSensor : placeSensorList){
+                            ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(pSensor);
+                            if(referenceValueSetting.getMonitoring()){
+                                sensorList.add(pSensor);
+                            }else{
+                                allFalse++;
+                            }
+                            monitoringSensor.put(placeList.getName(), sensorList);
+                        }
+                    }
+                }
             }else{
-                Place place = placeRepository.findByName(placeName);
-                List<String> placeSensor = place.getSensor();
+                place = placeRepository.findByName(placeName);
+                List<String> placeSensorList = place.getSensor();
+                List<String> sensorList = new ArrayList<>();
 
-                List<String> onSensorList = new ArrayList<>();
+                allCount += placeSensorList.size();
 
-                if(placeSensor.size()!=0){
-                    for(String pSensor : placeSensor){
-                        for(String aSensor : allSensorList){
-                            if(aSensor.equals(pSensor)){
-                                onSensorList.add(pSensor);
+                if(placeSensorList.size()!=0){
+                    for(String pSensor : placeSensorList){
+                        for(String mSensor : memberSensorList){
+                            if(mSensor.equals(pSensor)){
+                                sensorList.add(pSensor);
                             }
                         }
                     }
-                    // 측정소에 맵핑 된 센서 값이 없는경우 화면에 표시하지 않게 하려면 else문 밖에 put 삭제 후 주석 해제
-                    //monitoringSensor.put(placeName, onSensorList);
+                    if(sensorList.size()!=0){
+                        monitoringSensor.put(placeName, sensorList);
+                    }
                 }
-                monitoringSensor.put(placeName, onSensorList);
             }
         }
+
+        List<String> count = new ArrayList<>();
+        if(memberPlaceList.get(0).equals("모든 측정소")){
+            count.add(String.valueOf(allFalse));
+        }else{
+            count.add(String.valueOf(allCount - memberSensorList.size()));
+        }
+        monitoringSensor.put("OFF", count);
+
         return monitoringSensor;
     }
 

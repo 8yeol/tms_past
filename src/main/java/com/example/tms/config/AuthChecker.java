@@ -54,9 +54,7 @@ public class AuthChecker {
             return rankManagement.isStatistics();
         } else if(url.equals("setting")){
             return rankManagement.isSetting();
-        } else if(url.equals("sensorManagement")){
-            return rankManagement.isSensorManagement();
-        }else{
+        } else{
                 return false;
             }
         }
