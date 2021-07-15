@@ -71,12 +71,12 @@
         font-size: 1.8rem;
     }
 
-    .cloud {
+    .Gcloud {
         width: 270px;
         height: 90px;
         position: absolute;
-        top: -70px;
-        left: -90px;
+        top: -75px;
+        left: -120px;
         padding: 15px 20px;
         background: url(static/images/greenCloud.png) no-repeat center / 100% 99%;
         background-origin: padding-box;
@@ -84,9 +84,80 @@
         line-height: 20px;
     }
 
-    .cloud.line {
+    .Gcloud.line {
         line-height: 40px;
     }
+
+    .Bcloud {
+        width: 100px;
+        height: 50px;
+        position: absolute;
+        padding-top: 20px;
+        top: 40px;
+        left: 95px;
+        background: url(static/images/blueCloud.png) no-repeat center / 100% 99%;
+        background-origin: padding-box;
+        text-align: center;
+        line-height: 20px;
+    }
+
+    .Bcloud#operating {
+        left: 50px;
+    }
+
+    .topDash-l {
+        display: flex;
+        width: 25%;
+        position: relative;
+    }
+
+    .topDash-l span {
+        width: 80px;
+        margin: auto;
+        font-weight: bold;
+    }
+
+    .topDash-l p {
+        width: 50%;
+        display: inline-block;
+        margin: auto;
+        font-size: 1.2rem;
+    }
+
+    .topDash-l:nth-child(1) > p {
+        color: #0d6efd;
+    }
+
+    .topDash-l:nth-child(4) > p {
+        padding-left: 10px;
+        color: #0440a3;
+    }
+
+    .topDash-r {
+        display: flex;
+        width: 33.3%;
+        position: relative;
+        padding: 0 15px;
+    }
+
+    .topDash-r span {
+        width: 100px;
+        margin: auto;
+        font-weight: bold;
+    }
+
+    .topDash-r p {
+        width: 40%;
+        display: inline-block;
+        margin: auto;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    .topDash-r:nth-child(2) > p {
+        color: #DB510B;
+    }
+
 
     @media all and (max-width: 1399px) and (min-width: 1001px) {
         .m-size {height: 200px;}
@@ -160,87 +231,127 @@
         </div>
     </div>
     <%-- 상단 대시보드 --%>
-    <div class="row m-3 mt-3">
-        <div class="col bg-white fw-bold" style="margin-right: 5px; border-top-left-radius: 20px; border-top-right-radius: 20px;">
-            <div class="row titleDiv" style="border-top-left-radius: 20px; border-top-right-radius: 20px; height: 38px;">
-                <span class="fs-5 text-center" style="margin: 0 auto; line-height: 38px;">가동률</span>
-            </div>
-            <div class="row">
-                <div class="col text-center" style="border-right: 1px solid #2295DB;">
-                    <p class="fs-1" id="sensorStatusP" style="margin-top: 25px; margin-bottom: -3px"></p>
-                    <hr style="margin: 0 30px 0;">
-                    <p id="statusMore"></p>
-                </div>
+    <div class="row m-3 mt-3 bg-light" style="padding: 10px 0px;">
+<%--        <div class="col bg-white fw-bold" style="">--%>
+<%--            <div class="row titleDiv" style="border-top-left-radius: 20px; border-top-right-radius: 20px; height: 38px;">--%>
+<%--                <span class="fs-5 text-center" style="margin: 0 auto; line-height: 38px;">가동률</span>--%>
+<%--            </div>--%>
+<%--            <div class="row">--%>
+<%--                <div class="col text-center" style="border-right: 1px solid #2295DB;">--%>
+<%--                    <p class="fs-1" id="sensorStatusP" style="margin-top: 25px; margin-bottom: -3px"></p>--%>
+<%--                    <hr style="margin: 0 30px 0;">--%>
+<%--                    <p id="statusMore"></p>--%>
+<%--                </div>--%>
 
-                <div class="col" style="padding: 0;" id="sensorStatus">
-                    <div style="border-bottom: 1px solid #2295DB; position: relative" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')" >
-                        <p style="margin-left: 5px; cursor: default;">정상 : <a style="text-align: right" id="statusOn"></a></p>
-                        <div class="cloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
-                    </div>
-                    <div style="border-bottom: 1px solid #2295DB; position: relative" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">
-                        <p style="margin-left: 5px; cursor: default;">통신불량 : <a style="text-align: right" id="statusOff"></a></p>
-                        <div class="cloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
-                    </div>
-                    <div style="position: relative" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">
-                        <p style="margin-left: 5px; cursor: default;">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>
-                        <div class="cloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
-                    </div>
-                </div>
+<%--                <div class="col" style="padding: 0;" id="sensorStatus">--%>
+<%--                    <div style="border-bottom: 1px solid #2295DB; position: relative" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')" >--%>
+<%--                        <p style="margin-left: 5px; cursor: default;">정상 : <a style="text-align: right" id="statusOn"></a></p>--%>
+<%--                        <div class="cloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>--%>
+<%--                    </div>--%>
+<%--                    <div style="border-bottom: 1px solid #2295DB; position: relative" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">--%>
+<%--                        <p style="margin-left: 5px; cursor: default;">통신불량 : <a style="text-align: right" id="statusOff"></a></p>--%>
+<%--                        <div class="cloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>--%>
+<%--                    </div>--%>
+<%--                    <div style="position: relative" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">--%>
+<%--                        <p style="margin-left: 5px; cursor: default;">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>--%>
+<%--                        <div class="cloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+
+<%--        <div class="col bg-white m-size" style="margin-left: 5px;border-top-left-radius: 20px;border-top-right-radius: 20px;">--%>
+<%--            <div class="row standardParent" style="height: 38px">--%>
+<%--                <div class="col fw-bold standardDiv" style="border-right: 2px solid white;">--%>
+<%--                    <span>법적기준 초과</span>--%>
+<%--                </div>--%>
+<%--                <div class="col fw-bold standardDiv"style="border-right:2px solid white;">--%>
+<%--                    <span>사내기준 초과</span>--%>
+<%--                </div>--%>
+<%--                <div class="col  fw-bold standardDiv">--%>
+<%--                    <span>관리기준 초과</span>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--            <div class="row">--%>
+<%--                &lt;%&ndash; 법적 기준 &ndash;%&gt;--%>
+<%--                <div class="col standardImg" style="border-right: 2px solid #2295DB;">--%>
+<%--                    <div class="row text-center" style="height: 155px;">--%>
+<%--                        <div class="col">--%>
+<%--                            <img src="static/images/sad.png" class="emoji">--%>
+<%--                        </div>--%>
+<%--                        <div class="col remove-m" style="margin-top: 3px;">--%>
+<%--                            <p class="mb-0" id="legal_standard_text_A"></p>--%>
+<%--                            <hr class="m-0">--%>
+<%--                            <p id="legal_standard_text_B"></p>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--                &lt;%&ndash; 사내 기준 &ndash;%&gt;--%>
+<%--                <div class="col standardImg" style="border-right: 2px solid #2295DB;">--%>
+<%--                    <div class="row text-center" style="height: 155px;">--%>
+<%--                        <div class="col">--%>
+<%--                            <img src="static/images/thinking.png" class="emoji">--%>
+<%--                        </div>--%>
+<%--                        <div class="col remove-m" style="margin-top: 5px;">--%>
+<%--                            <p class="mb-0" id="company_standard_text_A"></p>--%>
+<%--                            <hr class="m-0">--%>
+<%--                            <p id="company_standard_text_B"></p>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--                &lt;%&ndash; 관리 기준 &ndash;%&gt;--%>
+<%--                <div class="col standardImg">--%>
+<%--                    <div class="row text-center" style="height: 155px;">--%>
+<%--                        <div class="col">--%>
+<%--                            <img src="static/images/sceptic.png" class="emoji">--%>
+<%--                        </div>--%>
+<%--                        <div class="col remove-m" style="margin-top: 5px;">--%>
+<%--                            <p class="mb-0" id="management_standard_text_A"></p>--%>
+<%--                            <hr class="m-0">--%>
+<%--                            <p id="management_standard_text_B"></p>--%>
+<%--                        </div>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+
+        <div style="width: 50%; height: 60px; display: flex; border-right: 1px solid #0d6efd;">
+            <div class="topDash-l">
+                <span>가동률</span>
+                <p onmouseover="$('#operating').css('display','block')" onmouseout="$('#operating').css('display','none')">100%</p>
+                <div class="Bcloud" id="operating" style="display: none">4 / 4</div>
+            </div>
+            <div class="topDash-l">
+                <span onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
+                <p class="text-success">100%</p>
+                <div class="Gcloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
+            </div>
+            <div class="topDash-l">
+                <span onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
+                <p class="text-danger">0%</p>
+                <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
+            </div>
+            <div class="topDash-l">
+                <span onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
+                <p>100%</p>
+                <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
             </div>
         </div>
-
-        <div class="col bg-white m-size" style="margin-left: 5px;border-top-left-radius: 20px;border-top-right-radius: 20px;">
-            <div class="row standardParent" style="height: 38px">
-                <div class="col fw-bold standardDiv" style="border-right: 2px solid white;">
-                    <span>법적기준 초과</span>
-                </div>
-                <div class="col fw-bold standardDiv"style="border-right:2px solid white;">
-                    <span>사내기준 초과</span>
-                </div>
-                <div class="col  fw-bold standardDiv">
-                    <span>관리기준 초과</span>
-                </div>
+        <div style="width: 50%; height: 60px; display: flex;">
+            <div class="topDash-r">
+                <span>법적기준 초과</span>
+                <p class="text-danger" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">100%</p>
+                <div class="Bcloud" id="legal" style="display: none">4 / 4</div>
             </div>
-            <div class="row">
-                <%-- 법적 기준 --%>
-                <div class="col standardImg" style="border-right: 2px solid #2295DB;">
-                    <div class="row text-center" style="height: 155px;">
-                        <div class="col">
-                            <img src="static/images/sad.png" class="emoji">
-                        </div>
-                        <div class="col remove-m" style="margin-top: 3px;">
-                            <p class="mb-0" id="legal_standard_text_A"></p>
-                            <hr class="m-0">
-                            <p id="legal_standard_text_B"></p>
-                        </div>
-                    </div>
-                </div>
-                <%-- 사내 기준 --%>
-                <div class="col standardImg" style="border-right: 2px solid #2295DB;">
-                    <div class="row text-center" style="height: 155px;">
-                        <div class="col">
-                            <img src="static/images/thinking.png" class="emoji">
-                        </div>
-                        <div class="col remove-m" style="margin-top: 5px;">
-                            <p class="mb-0" id="company_standard_text_A"></p>
-                            <hr class="m-0">
-                            <p id="company_standard_text_B"></p>
-                        </div>
-                    </div>
-                </div>
-                <%-- 관리 기준 --%>
-                <div class="col standardImg">
-                    <div class="row text-center" style="height: 155px;">
-                        <div class="col">
-                            <img src="static/images/sceptic.png" class="emoji">
-                        </div>
-                        <div class="col remove-m" style="margin-top: 5px;">
-                            <p class="mb-0" id="management_standard_text_A"></p>
-                            <hr class="m-0">
-                            <p id="management_standard_text_B"></p>
-                        </div>
-                    </div>
-                </div>
+            <div class="topDash-r">
+                <span>사내기준 초과</span>
+                <p onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">100%</p>
+                <div class="Bcloud" id="company" style="display: none">4 / 4</div>
+            </div>
+            <div class="topDash-r">
+                <span>관리기준 초과</span>
+                <p class="text-success" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">100%</p>
+                <div class="Bcloud" id="management" style="display: none">4 / 4</div>
             </div>
         </div>
     </div>
