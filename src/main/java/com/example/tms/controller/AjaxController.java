@@ -2179,31 +2179,31 @@ public class AjaxController {
         int groupNum = member.getMonitoringGroup();
 
         MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(groupNum);
-        List<String> placeList = monitoringGroup.getMonitoringPlace();
-
-        List<String> allSensorList= monitoringGroup.getSensor();
+        List<String> memberPlaceList = monitoringGroup.getMonitoringPlace();
+        List<String> memberSensorList= monitoringGroup.getSensor();
 
         Map<String, List> monitoringSensor = new HashMap<>();
 
-        for(String placeName : placeList) {
+        for(String placeName : memberPlaceList) {
             if(placeName.equals("모든 측정소")){
                 List<String> list = new ArrayList<>();
                 monitoringSensor.put("ALL", list);
             }else{
                 Place place = placeRepository.findByName(placeName);
                 List<String> placeSensor = place.getSensor();
-
-                List<String> onSensorList = new ArrayList<>();
+                List<String> sensorList = new ArrayList<>();
 
                 if(placeSensor.size()!=0){
                     for(String pSensor : placeSensor){
-                        for(String aSensor : allSensorList){
-                            if(aSensor.equals(pSensor)){
-                                onSensorList.add(pSensor);
+                        for(String mSensor : memberSensorList){
+                            if(mSensor.equals(pSensor)){
+                                sensorList.add(pSensor);
                             }
                         }
                     }
-                    monitoringSensor.put(placeName, onSensorList);
+                    if(sensorList.size()!=0){
+                        monitoringSensor.put(placeName, sensorList);
+                    }
                 }
             }
         }
