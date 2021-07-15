@@ -2203,10 +2203,8 @@ public class AjaxController {
                             }
                         }
                     }
-                    // 측정소에 맵핑 된 센서 값이 없는경우 화면에 표시하지 않게 하려면 else문 밖에 put 삭제 후 주석 해제
-                    //monitoringSensor.put(placeName, onSensorList);
+                    monitoringSensor.put(placeName, onSensorList);
                 }
-                monitoringSensor.put(placeName, onSensorList);
             }
         }
         return monitoringSensor;
