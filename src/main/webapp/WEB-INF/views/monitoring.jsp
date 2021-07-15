@@ -827,6 +827,7 @@
      *  대시보드 생성 (가동률, 통신 상태, 기준값 등)
      */
     function draw_sensor_info(placeInfo) {
+        console.log(placeInfo);
         var placeCount = placeInfo.length;
         var sensorMonitoringOn=0, sensorMonitoringOff=0,
             sensorStatusSuccess=0, sensorStatusFail=0,
