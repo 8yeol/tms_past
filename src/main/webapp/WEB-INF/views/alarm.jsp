@@ -254,7 +254,8 @@
 
         if(type=='refresh'){
             from = to;
-            $("input:radio[id='s_day']").prop("checked",true);
+            $("input:radio[id='s_day']").last().trigger('click');
+            return;
         }
 
         if(from == "" || to == ""){
