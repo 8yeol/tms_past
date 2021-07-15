@@ -2162,22 +2162,26 @@ public class AjaxController {
 
         Map<String, List> monitoringSensor = new HashMap<>();
 
-        if(groupNum == 0){
-            List<String> list = new ArrayList<>();
-            monitoringSensor.put("ALL", list);
-        }else{
-            for(String placeName : placeList) {
+        for(String placeName : placeList) {
+            if(placeName.equals("모든 측정소")){
+                List<String> list = new ArrayList<>();
+                monitoringSensor.put("ALL", list);
+            }else{
                 Place place = placeRepository.findByName(placeName);
                 List<String> placeSensor = place.getSensor();
 
                 List<String> onSensorList = new ArrayList<>();
 
-                for(String pSensor : placeSensor){
-                    for(String aSensor : allSensorList){
-                        if(aSensor.equals(pSensor)){
-                            onSensorList.add(pSensor);
+                if(placeSensor.size()!=0){
+                    for(String pSensor : placeSensor){
+                        for(String aSensor : allSensorList){
+                            if(aSensor.equals(pSensor)){
+                                onSensorList.add(pSensor);
+                            }
                         }
                     }
+                    // 측정소에 맵핑 된 센서 값이 없는경우 화면에 표시하지 않게 하려면 else문 밖에 put 삭제 후 주석 해제
+                    //monitoringSensor.put(placeName, onSensorList);
                 }
                 monitoringSensor.put(placeName, onSensorList);
             }
