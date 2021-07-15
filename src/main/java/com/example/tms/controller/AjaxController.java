@@ -379,7 +379,7 @@ public class AjaxController {
         List<String> sensorList = group.getSensor();
 
         //관리자 그룹이라면 실제 reference_value_setting 을 조작
-        if(group.getGroupNum() == 0) {
+        if(group.getGroupNum() == 1) {
             ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
             reference.setMonitoring(!reference.getMonitoring());
             reference_value_settingRepository.save(reference);
