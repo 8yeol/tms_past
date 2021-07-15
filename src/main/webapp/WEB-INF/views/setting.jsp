@@ -568,6 +568,10 @@
         groupCheck();
     }); //ready
 
+    $('.paginate_button').click(function () {
+        groupCheck();
+    });
+
     function Info_Set(str_id, str_state, str_name) {
         ID = str_id;
         state = str_state;
