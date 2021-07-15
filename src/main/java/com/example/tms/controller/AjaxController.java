@@ -553,12 +553,6 @@ public class AjaxController {
     public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList, boolean flag, Principal principal) {
 
         for (int i = 0; i < placeList.size(); i++) {
-            if (flag) {
-                removePlaceRemoveSensor(placeList.get(i), principal);       //센서 포함 삭제
-            } else {
-                removePlaceChangeSensor(placeList.get(i), principal);       //측정소만 삭제
-            }
-
             //삭제할 측정소의 센서 목록
             List<String> placeSensorList = placeRepository.findByName(placeList.get(i)).getSensor();
 
@@ -588,6 +582,12 @@ public class AjaxController {
                 group.get(k).setSensor(groupSensorList);
                 monitoringGroupRepository.save(group.get(k));
             } // -- for
+
+            if (flag) {
+                removePlaceRemoveSensor(placeList.get(i), principal);       //센서 포함 삭제
+            } else {
+                removePlaceChangeSensor(placeList.get(i), principal);       //측정소만 삭제
+            }
         }// ----for
     }
 
@@ -1217,17 +1217,13 @@ public class AjaxController {
             //센서관련 법적기준,사내기준,관리기준값 사용자 동의하에 초기화
             if (isValueDelete.equals("delete")) {
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
-                float legal = 999999.0f;
-                float management = 999999.0f;
-                float company = 999999.0f;
-                reference.setLegalStandard(legal);
+                reference.setLegalStandard(999999.0f);
+                reference.setCompanyStandard(999999.0f);
+                reference.setManagementStandard(999999.0f);
                 reference.setNaming(naming2);
-                reference.setCompanyStandard(company);
-                reference.setManagementStandard(management);
                 reference.setMonitoring(false);
                 reference_value_settingRepository.save(reference);
                 inputLogSetting("'"+oldPlace + " - " + sensor.getNaming()+"'" + " 관리 기준 초기화", "설정", principal);
-
             }
 
             //항목명 변경
@@ -1402,6 +1398,23 @@ public class AjaxController {
             notification_settingsRepository.deleteByName(tableName);
             inputLogSetting("'"+place + " - " + naming+"'" + " 알림 설정값 삭제", "설정", principal);
         }
+
+        //삭제될 센서를 포함하는 그룹 검색하여 센서 삭제
+        List<MonitoringGroup> groups = monitoringGroupRepository.findBySensorIsIn(tableName);
+        if(groups != null && groups.size() != 0){
+            for (int i=0; i<groups.size(); i++){
+                List<String> sensorList = groups.get(i).getSensor();
+                if(sensorList != null && sensorList.size() != 0){
+                    for (int k=0; k<sensorList.size(); k++){
+                        if(sensorList.get(k).equals(tableName))
+                            sensorList.remove(k);
+                    }
+                }
+                groups.get(i).setSensor(sensorList);
+                monitoringGroupRepository.save(groups.get(i));
+            }
+        }
+
         //place 업데이트 시간 수정
         if (placeRepository.findBySensorIsIn(tableName) != null) {
             Place placeObject = placeRepository.findBySensorIsIn(tableName);

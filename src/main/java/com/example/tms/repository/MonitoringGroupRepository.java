@@ -13,4 +13,5 @@ public interface MonitoringGroupRepository extends MongoRepository<MonitoringGro
     MonitoringGroup findByGroupMemberIsIn(String id);
     MonitoringGroup findTopByOrderByGroupNumDesc();
     List<MonitoringGroup> findByMonitoringPlaceIsIn(String place);
+    List<MonitoringGroup> findBySensorIsIn(String sensor);
 }
