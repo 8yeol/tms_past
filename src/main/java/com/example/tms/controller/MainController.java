@@ -406,9 +406,9 @@ public class MainController {
 
         MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(member.getId());
         List<String> placeList = new ArrayList();
-        if(group.getGroupName().equals("default") || group.getMonitoringPlace() == null){
+        if(group.getMonitoringPlace() == null){
             placeList.add("null");
-        }else {
+        }else if(group.getGroupName().equals("default") || group.getMonitoringPlace() != null){
             for (int i = 0; i < group.getMonitoringPlace().size(); i++)
                 placeList.add("'" + group.getMonitoringPlace().get(i) + "'");
         }

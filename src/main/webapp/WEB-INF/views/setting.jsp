@@ -212,9 +212,7 @@
                                 <c:if test="${groupList.groupName != 'default'}">
                                     <i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal"
                                        onclick="groupEditSetting(this, ${groupList.groupNum})"></i>&ensp;
-                                    <c:if test="${groupList.groupName != 'ALL'}">
-                                        <i class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
-                                    </c:if>
+                                    <i class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
                                 </c:if>
                             </td>
                         </tr>
@@ -1020,7 +1018,7 @@
             for (i = 0; i < groupMemList.length; i++) {
                 groupMemList[i] = groupMemList[i].trim();
                 for (k = 0; k < memberList.length; k++) {
-                    if (memberList[k].id == groupMemList[i] && memberList[k].state == 1 && $('#groupInput').val() == 'ALL') {
+                    if (memberList[k].id == groupMemList[i] && memberList[k].state == 1 && $('#groupInput').val() == 'default') {
                         innerHTML += '<option value="' + groupMemList[i] + '" disabled class="disabledOption">' + groupMemList[i] + '</option>'
                     } else if (memberList[k].id == groupMemList[i]) {
                         innerHTML += '<option value="' + groupMemList[i] + '">' + groupMemList[i] + '</option>'

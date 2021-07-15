@@ -100,7 +100,7 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/getPlaceList2")
-    public Object getPlaceList2() throws IOException, ParseException {
+    public Object getPlaceList2()  {
         List<Place> placeName = placeRepository.findAll();
         JSONArray array = new JSONArray();
         for (int i = 0; i < placeName.size(); i++) {
@@ -213,7 +213,7 @@ public class AjaxController {
         }
 
         //관리자 그룹은 실제 ReferenceValueSetting 반환
-        if(group.getGroupNum() == 0) return valueList;
+        if(group.getGroupNum() == 1) return valueList;
 
         List<String> sensorList = group.getSensor();
 
@@ -1638,6 +1638,7 @@ public class AjaxController {
         Member newMember = memberRepository.findById(id);
         if (iNumber.equals("0")) {
             newMember.setState("5");
+            newMember.setMonitoringGroup(-1);
             msg = "가입 거절 되었습니다.";
         } else {
             newMember.setMonitoringGroup(group);
@@ -1663,13 +1664,13 @@ public class AjaxController {
 
         //최고관리자를 변경하고, 해당 멤버가 모든 측정소가 아닐떄 모든 측정소로 변경
         MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
-        if (value.equals("1") && group.getGroupNum() != 0) {
+        if (value.equals("1") && group.getGroupNum() != 1) {
             List memberList = group.getGroupMember();
             memberList.remove(id);
             group.setGroupMember(memberList);
             monitoringGroupRepository.save(group);
 
-            MonitoringGroup allGroup = monitoringGroupRepository.findByGroupNum(0);
+            MonitoringGroup allGroup = monitoringGroupRepository.findByGroupNum(1);
             if(allGroup.getGroupMember() == null){
                 List memList = new ArrayList();
                 memList.add(id);
@@ -1681,7 +1682,7 @@ public class AjaxController {
             }
 
             monitoringGroupRepository.save(allGroup);
-            newMember.setMonitoringGroup(0);
+            newMember.setMonitoringGroup(1);
         }
 
         newMember.setState(value);
@@ -1717,6 +1718,7 @@ public class AjaxController {
         memberList.remove(id);
         group.setGroupMember(memberList);
         monitoringGroupRepository.save(group);
+
 
         memberRepository.deleteById(id);
         logRepository.deleteById(id);
