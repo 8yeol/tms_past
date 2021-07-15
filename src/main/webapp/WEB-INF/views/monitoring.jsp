@@ -522,7 +522,6 @@
         var tbodyId = $(this).parent('tbody').attr('id');
         const sensorName = $(this).find('td input')[0].value;
         const sensorValue = $(this).find('td')[1].value;
-        console.log(sensorValue);
         var chartIndex = tbodyId.substr(13,5);
         var sensorDataList = getSensor(sensorName, 10);
         var recentData;
@@ -827,18 +826,17 @@
      *  대시보드 생성 (가동률, 통신 상태, 기준값 등)
      */
     function draw_sensor_info(placeInfo) {
-        console.log(placeInfo);
         var placeCount = placeInfo.length;
-        var sensorMonitoringOn=0, sensorMonitoringOff=0,
+        var sensorMonitoringOn=0, allMonitoringOFF=0,
             sensorStatusSuccess=0, sensorStatusFail=0,
             legalSCount=0, companySCount=0, managementSCount=0,
             notexistLegalStandard=0, notexistCompanyStandard=0, notexistManagementStandard=0;
 
+        allMonitoringOFF = placeInfo[0].allMonitoringOFF;
         for(var i=0; i<placeCount; i++){ //측정소별
             var data = placeInfo[i].data;
             var dataCount = data.length;
             sensorMonitoringOn += placeInfo[i].monitoringOn;
-            sensorMonitoringOff += placeInfo[i].monitoringOff;
             for(var z=0; z<dataCount; z++){ //측정소의 센서별 조회
                 var sensorData = data[z];
                     value = sensorData.recent_value;
@@ -882,7 +880,7 @@
             flashing(flashCheck, null);
             alarmTone('off');
         }
-        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess +sensorMonitoringOff)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
+        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess +allMonitoringOFF)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
         var legalPercent = ((legalSCount / (sensorStatusSuccess - notexistLegalStandard)) * 100).toFixed(0); //법적기준 %
         var companyPercent = ((companySCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); //사내기준 %
         var managementPercent = ((managementSCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); ////관리기준 %
@@ -894,10 +892,10 @@
         if(managementPercent == 'NaN'){ managementPercent = 0;}
 
         $("#sensorStatusP").text(runPercent + "%"); //가동률
-        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail + sensorMonitoringOff)); // 통신정상/전체
+        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail + allMonitoringOFF)); // 통신정상/전체
         $("#statusOn").text(sensorStatusSuccess); //정상
         $("#statusOff").text(sensorStatusFail); //통신불량
-        $("#monitoringOff").text(sensorMonitoringOff); //모니터링OFF 개수
+        $("#monitoringOff").text(allMonitoringOFF); //모니터링OFF 개수
         $("#legal_standard_text_A").text(legalPercent + "%"); //법적기준 Over
         $("#legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess - notexistLegalStandard)); //법적기준 Over 개수/전체
         $("#company_standard_text_A").text(companyPercent + "%"); //사내기준 Over
