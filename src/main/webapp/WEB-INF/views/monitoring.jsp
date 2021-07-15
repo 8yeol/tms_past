@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
@@ -437,6 +438,7 @@
         </c:if>
 </div> <%-- //row table --%>
 
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
@@ -519,6 +521,8 @@
         <%--location.replace("<%=cp%>/sensor?sensor=" + sensorName);--%>
         var tbodyId = $(this).parent('tbody').attr('id');
         const sensorName = $(this).find('td input')[0].value;
+        const sensorValue = $(this).find('td')[1].value;
+        console.log(sensorValue);
         var chartIndex = tbodyId.substr(13,5);
         var sensorDataList = getSensor(sensorName, 10);
         var recentData;
@@ -529,15 +533,14 @@
             recentData = getSensorData(sensorName);
             updateChart(sensorDataList, recentData, chartIndex);
             setTimeout(function realTime() {
-                console.log("realtime");
-                recentData = getSensorData(sensorName);
-                if(sensorDataList[sensorDataLength-1].x != recentData.up_time){
-                    sensorDataList.push({x: recentData.up_time, y: recentData.value});
-                }
-                updateChart(sensorDataList, recentData, chartIndex);
-                if(sensorDataList.length > sensorDataLength*2){
-                    sensorDataList = getSensor(sensorName, 10);
-                }
+                // recentData = getSensorData(sensorName);
+                // if(sensorDataList[sensorDataLength-1].x != recentData.up_time){
+                //     sensorDataList.push({x: recentData.up_time, y: recentData.value});
+                // }
+                // updateChart(sensorDataList, recentData, chartIndex);
+                // if(sensorDataList.length > sensorDataLength*2){
+                //     sensorDataList = getSensor(sensorName, 10);
+                // }
                 realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
             }, 0);
         }else{

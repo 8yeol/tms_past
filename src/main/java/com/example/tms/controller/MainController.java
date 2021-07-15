@@ -31,8 +31,9 @@ public class MainController {
     final ReferenceValueSettingRepository reference_value_settingRepository;
     final SensorCustomRepository sensorCustomRepository;
     final MonitoringGroupRepository monitoringGroupRepository;
+    final AjaxController ajaxController;
 
-    public MainController(PlaceRepository placeRepository, MonitoringGroupRepository monitoringGroupRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, ReferenceValueSettingRepository reference_value_settingRepository, SensorCustomRepository sensorCustomRepository) {
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, ReferenceValueSettingRepository reference_value_settingRepository, SensorCustomRepository sensorCustomRepository, MonitoringGroupRepository monitoringGroupRepository, AjaxController ajaxController) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -46,7 +47,9 @@ public class MainController {
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.monitoringGroupRepository = monitoringGroupRepository;
+        this.ajaxController = ajaxController;
     }
+
 
     /**
      * [회원가입]
@@ -175,23 +178,46 @@ public class MainController {
      * sensor - 위 측정소 리스트에 해당하는 모니터링 True 인 센서 리스트(최근,이전,기준값 등)
      */
     @RequestMapping("/monitoring")
-    public void monitoring(Model model) {
+    public void monitoring(Model model, Principal principal) {
         try{
+            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //모니터링 On 인 측정소 정보
+            Map<String, List> gMS = ajaxController.getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
+            List<String> gMS_placeName = new ArrayList<>();
+            for(String key : gMS.keySet()){ //key(측정소명) 추출
+                gMS_placeName.add(key);
+            }
+            int placeListSize =0;
+            if(gMS.containsKey("ALL")){
+                placeListSize = placeList.size();
+            }else{
+                placeListSize = gMS.size();
+            }
             JSONArray jsonArray = new JSONArray();
-            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //모니터링 On 인 측정소 정보들
-            for(int a=0; a<placeList.size(); a++){ //모니터링 On인 측정소
+            for (int a = 0; a < placeListSize; a++) { //모니터링 On인 측정소
                 int sensorSize = 0;
                 JSONObject placeInfoList = new JSONObject();
                 JSONArray placeInfoArray = new JSONArray();
-                String placeName = placeList.get(a).getName();
-                List<String> sensorNames = placeList.get(a).getSensor();
+                String placeName = "";
+                List<String> sensorNames = new ArrayList<String>();
+                if(gMS.containsKey("ALL")){ //all = []
+                    placeName = placeList.get(a).getName();
+                    sensorNames = placeList.get(a).getSensor();
+                }else{
+                    placeName = gMS_placeName.get(a);
+                    List<String> temp = gMS.get(placeName);
+                    for(int b=0; b<temp.size(); b++){
+                        sensorNames.add(temp.get(b));
+                    }
+                }
+                List<String> sensorNameList = new ArrayList<>();
                 int standardExist = 0;
                 int standardNotExist = 0;
-                for(int i=0; i<sensorNames.size(); i++){ //측정소의 센서조회
+                for (int i = 0; i < sensorNames.size(); i++) { //측정소의 센서조회
+                    //센서명
                     JSONObject sensorObj = new JSONObject();
                     boolean monitoring = reference_value_settingRepository.findByName(sensorNames.get(i)).getMonitoring();  //센서 모니터링 여부
                     boolean standardExistStatus = false;
-                    if(monitoring){
+                    if (monitoring) {
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i)); //센서의 최근 데이터
                         sensorObj.put("recent_value", recentData.getValue());
@@ -220,27 +246,28 @@ public class MainController {
                         sensorObj.put("companyStandard", companyStandard);
                         sensorObj.put("managementStandard", managementStandard);
                         sensorObj.put("name", sensorNames.get(i));
-                        if (legalStandard.equals(999999) && companyStandard.equals(999999) && managementStandard.equals(999999)){
+                        sensorNameList.add(sensorNames.get(i));
+                        if (legalStandard.equals(999999) && companyStandard.equals(999999) && managementStandard.equals(999999)) {
                             standardNotExist += 1;
                             standardExistStatus = false;
                             sensorObj.put("standardExistStatus", standardExistStatus);
-                        }else{
+                        } else {
                             standardExist += 1;
                             standardExistStatus = true;
                             sensorObj.put("standardExistStatus", standardExistStatus);
                         }
                         placeInfoArray.add(sensorObj);
-                        sensorSize+=1;
+                        sensorSize += 1;
                     }
                     placeInfoList.put("standardExist", standardExist);
                     placeInfoList.put("standardNotExist", standardNotExist);
                     placeInfoList.put("data", placeInfoArray);
                 }
-                if(sensorSize != 0){
+                if (sensorSize != 0) {
                     placeInfoList.put("place", placeName);
-                    placeInfoList.put("sensorList", sensorNames);
+                    placeInfoList.put("sensorList", sensorNameList);
                     placeInfoList.put("monitoringOn", sensorSize);
-                    placeInfoList.put("monitoringOff", sensorNames.size()-sensorSize);
+                    placeInfoList.put("monitoringOff", sensorNames.size() - sensorSize);
                     jsonArray.add(placeInfoList);
                 }
             }
