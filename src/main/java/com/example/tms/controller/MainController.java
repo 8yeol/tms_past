@@ -422,6 +422,7 @@ public class MainController {
                 placeList.add("'" + group.getMonitoringPlace().get(i) + "'");
         }
         model.addAttribute("groupPlace", placeList);
+        model.addAttribute("groupName", group.getGroupName());
 
         return "stationManagement";
     }

@@ -76,7 +76,14 @@
     </div>
 
     <div class="row bg-light rounded">
-        <span class="p-3 ps-4 fs-4 fw-bold">측정소 등록 및 측정소별 항목 등록</span>
+        <span class="p-3 ps-4 fs-4 fw-bold">
+            <c:if test="${state == 1}">
+                측정소 및 기준 값 관리
+            </c:if>
+            <c:if test="${state != 1}">
+                ${groupName} 그룹 측정소 모니터링 관리
+            </c:if>
+        </span>
     </div>
     <div class="row bg-light p-3 pt-0" style="min-height:70%;">
         <div class="col-6 border-end me-4" id="station1" style="width: 37%; background: rgba(0, 0, 0, 0.05);">
@@ -98,9 +105,11 @@
             <table class="text-center w-100">
                 <thead style="background-color: transparent; color: #333; border-bottom: 2px solid silver;">
                     <tr class="fw-bold m-3">
+                        <c:if test="${state == 1}">
                         <th>
                             <input name="placeall" class="form-check-input" type=checkbox onclick="placeAll(this)" style="margin-left: 3px;">
                         </th>
+                        </c:if>
                         <th style="width: 33%">측정소 명</th>
                         <th style="width: 40%;">업데이트</th>
 <%--                        <th style="width: 25%;">모니터링 사용</th>--%>
@@ -254,9 +263,16 @@
                 const name = test.name;
                 const time = moment(test.up_time).format('YYYY-MM-DD HH:mm:ss');
                 onoff = data[i].monitoring ? "checked" : "";
+                let check;
+                if('${state}' == '1'){
+                    check = "<td style='padding-left:6px;' onclick='event.cancelBubble=true'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>";
+                }else{
+                    check = "";
+                }
+
 
                 const innerHTML = "<tr id='p" + i + "' style='border-bottom: silver solid 2px; cursor: pointer;' value = '" + name + "' onclick=\"placeChange('p" + i + "')\"  class='placeTr'>" +
-                    "<td style='padding-left:6px;' onclick='event.cancelBubble=true'><input class='form-check-input' id='check" + i + "' name='place' type='checkbox' value ='" + name + "' onclick='checkPlaceAll()'></td>" +
+                    check +
                     "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
                     "<td style='width: 40%;'>" + time + "</td>" +
                     // "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
