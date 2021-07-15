@@ -220,18 +220,17 @@
     }
 
     $("input:radio[name=s_day]").click(function() {
-        $("#date_start").val("");
-        $("#date_end").val("");
+        const $dates = $('#date_start, #date_end').datepicker();
 
         const id = $(this).attr('id');
 
         if(id == 's_custom'){
             $("#date_start").attr('disabled',false);
             $("#date_end").attr('disabled',false);
+            $dates.datepicker('setDate',null);
         } else {
             $("#date_start").attr('disabled',true);
             $("#date_end").attr('disabled',true);
-
             $("#date_end").val(getDays());
 
             if(id == 's_week'){

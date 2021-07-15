@@ -219,7 +219,6 @@
                 sdp.selectDate(new Date(sDay.replace(/-/g, "/"))); //익스에서는 그냥 new Date하면 -을 인식못함 replace필요
             }
 
-
             sDate.datepicker({
                 language: 'ko',
                 autoClose: true
@@ -233,19 +232,19 @@
         }
     }
 
-    $("input:radio[name=day]").click(function() {
-        $("#date_start").val("");
-        $("#date_end").val("");
+    $("input:radio[name=day]").on('click',function() {
+        const $dates = $('#date_start, #date_end').datepicker();
 
         const id = $(this).attr('id');
 
         if(id == 'custom'){
             $("#date_start").attr('disabled',false);
             $("#date_end").attr('disabled',false);
+            $dates.datepicker('setDate',null);
+
         } else {
             $("#date_start").attr('disabled',true);
             $("#date_end").attr('disabled',true);
-
             $("#date_end").val(getDays());
 
             if(id == 'week'){
