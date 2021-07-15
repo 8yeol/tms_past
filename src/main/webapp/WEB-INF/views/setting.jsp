@@ -200,7 +200,7 @@
                                 <c:if test="${groupList.groupName != 'default'}">
                                     <i class="fas fa-edit btn p-0" data-bs-toggle="modal" data-bs-target="#groupModal"
                                        onclick="groupEditSetting(this, ${groupList.groupNum})"></i>&ensp;
-                                    <c:if test="${groupList.groupName != '모든 측정소'}">
+                                    <c:if test="${groupList.groupName != 'ALL'}">
                                         <i class="fas fa-times" onclick="deleteModal(this, ${groupList.groupNum})"></i>
                                     </c:if>
                                 </c:if>
