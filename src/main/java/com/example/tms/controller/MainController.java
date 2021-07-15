@@ -435,7 +435,7 @@ public class MainController {
      * @return sensorManagement.jsp
      */
     @RequestMapping("/sensorManagement")
-    public String sensorManagement(Model model) {
+    public String sensorManagement(Model model, Principal principal) {
         List<String> result = mongoQuary.getCollection();
         for(SensorList sensorList : sensorListRepository.findAll()){
             for(String tableName : mongoQuary.getCollection()){
@@ -444,6 +444,8 @@ public class MainController {
                 }
             }
         }
+        Member member =  memberRepository.findById(principal.getName());
+        model.addAttribute("state", member.getState());
         model.addAttribute("collections", result);
         model.addAttribute("place", placeRepository.findAll());
 

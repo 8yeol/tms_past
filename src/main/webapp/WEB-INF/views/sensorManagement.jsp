@@ -182,7 +182,9 @@
             </form>
             <div class="row">
                 <div class="col text-end">
-                    <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensorCheck(0)" >센서 추가</button>
+                    <c:if test="${state == 1}">
+                        <button class="saveBtn btn btn-primary m-0 mb-3 me-3" onclick="saveSensorCheck(0)" >센서 추가</button>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -197,7 +199,9 @@
                     <th scope="col" width="17%">업데이트</th>
                     <th scope="col" width="15%">측정소</th>
                     <th scope="col" width="10%">통신상태</th>
-                    <th scope="col" width="10%">관리</th>
+                    <c:if test="${state == 1}">
+                        <th scope="col" width="10%">관리</th>
+                    </c:if>
                 </tr>
                 </thead>
                 <tbody id="tbody">
@@ -306,6 +310,7 @@
                     } else {
                         status = '<i class="fas fa-circle text-success"></i>'
                     }
+
                     const row = tbody.insertRow(tbody.rows.length);
                     const cell1 = row.insertCell(0);
                     const cell2 = row.insertCell(1);
@@ -314,7 +319,6 @@
                     const cell5 = row.insertCell(4);
                     const cell6 = row.insertCell(5);
                     const cell7 = row.insertCell(6);
-                    const cell8 = row.insertCell(7);
                     cell1.innerHTML = data[i].classification;
                     cell2.innerHTML = data[i].naming;
                     cell3.innerHTML = data[i].managementId;
@@ -322,8 +326,11 @@
                     cell5.innerHTML = moment(data[i].upTime).format('YYYY-MM-DD HH:mm:ss');
                     cell6.innerHTML = data[i].place;
                     cell7.innerHTML = status;
-                    cell8.innerHTML = '<i  class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editSetting(this)"></i>' +
-                        '<i  class="fas fa-times" onclick="deleteModal(this)"></i>';
+                    if('${state}' == '1'){
+                        const cell8 = row.insertCell(7);
+                        cell8.innerHTML = '<i  class="fas fa-edit me-2" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editSetting(this)"></i>' +
+                            '<i  class="fas fa-times" onclick="deleteModal(this)"></i>';
+                    }
                 }
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
