@@ -1527,10 +1527,18 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/memberGroupUpdate")
-    public String memberGroupUpdate(String id, int monitoringGroup) {
-        memberService.updateMemberGroup(id, monitoringGroup);
-        groupChange(id, monitoringGroup);
+    public String memberGroupUpdate(String id, String monitoringGroup) {
+        MonitoringGroup group = monitoringGroupRepository.findByGroupName(monitoringGroup);
+        int groupNum = group.getGroupNum();
+        memberService.updateMemberGroup(id, groupNum);
+        groupChange(id, groupNum);
         return "success";
+    }
+
+    @RequestMapping(value = "/getGroupName")
+    public String memberUpdate(int group) {
+        System.out.println(monitoringGroupRepository.findByGroupNum(group).getGroupName());
+        return monitoringGroupRepository.findByGroupNum(group).getGroupName();
     }
 
     public void groupChange(String id, int monitoringGroup){
@@ -1595,7 +1603,6 @@ public class AjaxController {
     @RequestMapping(value = "/getMonitoringGroup")
     public List<MonitoringGroup> getMonitoringGroup() {
         return monitoringGroupRepository.findAll();
-
     }
 
     /**

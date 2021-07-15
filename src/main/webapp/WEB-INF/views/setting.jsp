@@ -106,13 +106,13 @@
                                 <c:when test="${mList.state == 5 || mList.state == 4}">
                                 </c:when>
                                 <c:when test="${mList.state == 1}">
-                                <select id='monitoringGroup${mList.id}' disabled="disabled" onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
+                                <select name="group" id='monitoringGroup${mList.id}' disabled="disabled" onclick="select_group(this)" onchange="updateMember('${mList.id}', this)">
                                     <option value='${mList.monitoringGroup}' selected="selected">${mList.monitoringGroup}</option>
                                 </select>
                             </td>
                                 </c:when>
                                 <c:otherwise>
-                                <select id='monitoringGroup${mList.id}' onclick="select_group(this,'${mList.monitoringGroup}')" onchange="updateMember('${mList.id}', this)">
+                                <select name="group" id='monitoringGroup${mList.id}' onclick="select_group(this)" onchange="updateMember('${mList.id}', this)">
                                     <option value='${mList.monitoringGroup}' selected="selected">${mList.monitoringGroup}</option>
                                 </select>
                             </td>
@@ -159,6 +159,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </tr>
+                        <input type="hidden" value="" id="past${mList.id}"/>
                     </c:forEach>
                     </tbody>
                 </table>
@@ -554,7 +555,6 @@
     var rName = "root"; // 권한관리영역 checkBox 변수
     var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
     var user_id = "${member.id}"; // 페이지에 접근한 유저의 ID
-    var monitoringGroup = "${member.monitoringGroup}";
     let memberList; // 모든 멤버리스트
     let placeList; // 모든 측정소 리스트
 
@@ -565,6 +565,7 @@
         substrArrayData();
         getMemberAndPlaceList();
         allPlaceCheck();
+        groupCheck();
     }); //ready
 
     function Info_Set(str_id, str_state, str_name) {
@@ -574,6 +575,29 @@
         textfield_management();
     }// row 의 승인 및 거절 버튼 클릭시 전역변수 ID에 해당row 의 ID가 저장됨
 
+    function groupCheck() {
+        const group = $("select[name=group]");
+        for(let i = 0; i<group.length;i++){
+            const id = group[i].id;
+            const str = id.replace('monitoringGroup','past');
+            const groupNum = group[i].value;
+            $.ajax({
+                url: '<%=cp%>/getGroupName',
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: {"group": groupNum},
+                success: function (data) {
+                    $("#"+id+" option:eq(0)").replaceWith('<option value="'+id+'" selected="selected">'+data+'</option>');
+                    $("#"+str).val(data);
+                },
+                error: function (request, status, error) {
+                    console.log(error)
+                }
+            });
+        }
+
+    }
 
     //권한 변경
     function gave_rank(select) {
@@ -637,6 +661,7 @@
         });
     }
 
+    //가입
     function sing_up(sign) {
         if(sign == 1 && $("#m_group option:selected").val() == "선택"){
             warning("모니터링 그룹을 선택해주세요.");
@@ -652,7 +677,6 @@
             content += rankLog;
             content += " 모니터링 그룹 : ";
             var groupLog = $("#m_group option:selected").val();
-            console.log(groupLog)
             content += groupLog;
         }
         var settings = {
@@ -1119,8 +1143,9 @@
     }
 
     //모니터링 그룹 selectbox
-    function select_group(select,name) {
+    function select_group(select) {
         const $target = $('#'+select.id);
+        const name = $('#'+select.id +" option:selected").text();
         $target.empty();
         let innerHTML = "";
         $.ajax({
@@ -1150,7 +1175,7 @@
     //모니터링 그룹 변경 ajax
     function updateMember(id, select) {
         const changeGroup = select.value;
-        const pastGroup = monitoringGroup;
+        const pastGroup = $('#past'+id).val();
         const content = "모니터링 그룹 변경 "+ pastGroup + " > " + changeGroup;
         $.ajax({
             url: '<%=cp%>/memberGroupUpdate',
