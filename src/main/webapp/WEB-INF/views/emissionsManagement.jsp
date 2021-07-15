@@ -42,6 +42,10 @@
             margin-bottom: 20px;
             margin-left: -150px;
         }
+        #gradeText{
+            text-align: left !important;
+            left: 20px;
+        }
     }
     .emissionsSpan{
         margin-top: 15px;
@@ -292,9 +296,11 @@
                         <td>${standard.formula}</td>
                         <td><fmt:formatDate value="${standard.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
                         <td>
+                            <c:if test="${state == 1}">
                             <i onclick="clickModal(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
                                data-bs-target="#addModal" id="${standard.tableName}"></i>
                             <!--<i class="fas fa-times" onclick="deleteModal(${standard.tableName})"></i>-->
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>
@@ -311,6 +317,10 @@
         </div>
     </div>
 
+
+<div class="col" style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:40px;text-align: end" id="gradeText">
+    * 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.
+</div>
 <!--멀티셀렉터 콤보박스 -->
 <div class="multiSelectComboBox" >
     <div class="multiSelectParent">
@@ -470,6 +480,7 @@
 
 <script>
     $(function () {
+        if('${state}' != '1') optionDisabled();
 
         //배출량 모니터링대상 스크롤 길이만큼 옵션길이 적용
        $('.lstBox1Option').width(document.querySelector('#lstBox1').scrollWidth -32);
@@ -498,6 +509,16 @@
             this.value = num;
         });
     });
+
+    //그룹 추가,수정 모달에서 측정소 영역 비활성화
+    function optionDisabled(){
+        $('.multiSelectParent label').css('color','#999');
+        $('.multiSelectParent input[type=button]').css('color','#999');
+        $('.multiSelectParent select').css('border','3px solid #999');
+        $('.multiSelectParent input[type=button]').prop('disabled', true);
+        $('.multiSelectParent select').prop('disabled', true);
+    }
+
 
     // //기준 추가
     // function insert() {

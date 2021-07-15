@@ -470,11 +470,13 @@ public class MainController {
      * @return emissionsManagement.jsp
      * */
     @RequestMapping("emissionsManagement")
-    public String emissionsManagement(Model model) {
+    public String emissionsManagement(Model model, Principal principal) {
         //측정소 없으면 제외
         model.addAttribute("emissions", emissionsSettingRepository.findByPlaceIsNotIn(""));
         model.addAttribute("yearlyEmissions", annualEmissionsRepository.findByPlaceIsNotIn(""));
         model.addAttribute("standard",emissionsStandardSettingRepository.findAll());
+        Member member =  memberRepository.findById(principal.getName());
+        model.addAttribute("state", member.getState());
 
         return "emissionsManagement";
     }
