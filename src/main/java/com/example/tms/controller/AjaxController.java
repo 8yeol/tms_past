@@ -566,13 +566,22 @@ public class AjaxController {
             }
         }
     }
+    @RequestMapping(value = "/countPlaceSensor")
+    public int countPlaceSensor(@RequestParam(value = "placeList[]") List<String> placeList) {
+        int count = 0;
+        for(int i=0; i<placeList.size(); i++){
+            List<String> placeSensorList = placeRepository.findByName(placeList.get(i)).getSensor();
+            count += placeSensorList.size();
+        }
+        return count;
+    }
 
-    /**
-     * 측정소 +센서 삭제, 측정소만 삭제를 판별
-     *
-     * @param placeList 측정소 배열
-     * @param flag      어떻게 삭제할지 판별할 데이터
-     */
+        /**
+         * 측정소 +센서 삭제, 측정소만 삭제를 판별
+         *
+         * @param placeList 측정소 배열
+         * @param flag      어떻게 삭제할지 판별할 데이터
+         */
     @RequestMapping(value = "/removePlace")
     public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList, boolean flag, Principal principal) {
 

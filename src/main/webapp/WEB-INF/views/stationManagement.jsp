@@ -524,12 +524,31 @@
         placeChange($('#placeDIv tr').eq(0).attr('id'));
     }
 
+    //센서 개수 확인
+    function countPlaceSensor(placeList) {
+        let count = 0;
+        $.ajax({
+            url: '<%=cp%>/countPlaceSensor',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {"placeList": placeList},
+            success: function (data) {
+                count = data;
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error)
+            }
+        })
+        return count;
+    }
+
+    //측정소 제거
     function removePlace() {
         const placeList = new Array();
         $("input:checkbox[name=place]:checked").each(function () {
             placeList.push($(this).attr('value'));
         });
-
         if (placeList.length == 0) {
             customSwal('삭제할 측정소를 체크해주세요.');
             return false;
@@ -546,20 +565,9 @@
             cancelButtonText: '취소'
         }).then((result) => {
             if (result.isConfirmed) {
-                swal.fire({
-                    title: '센서 삭제',
-                    text: '해당 측정소의 센서도 삭제 하시겠습니까?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    showCloseButton: true,
-                    confirmButtonColor: 'red',
-                    cancelButtonColor: 'gray',
-                    confirmButtonText: '포함된 센서 삭제',
-                    cancelButtonText: '측정소만 삭제'
-                }).then((result) => {
-
+                const count = countPlaceSensor(placeList);
+                if(count == 0){
                     let flag;
-
                     if (result.isConfirmed) {
                         flag = true;
                     } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -588,7 +596,51 @@
 
                     placeDiv(${groupPlace});
                     placeChange($('#placeDIv tr').eq(0).attr('id'));
-                });
+                }else{
+                    swal.fire({
+                        title: '센서 삭제',
+                        text: '해당 측정소의 센서도 삭제 하시겠습니까?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        showCloseButton: true,
+                        confirmButtonColor: 'red',
+                        cancelButtonColor: 'gray',
+                        confirmButtonText: '포함된 센서 삭제',
+                        cancelButtonText: '측정소만 삭제'
+                    }).then((result) => {
+                        let flag;
+
+                        if (result.isConfirmed) {
+                            flag = true;
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            flag = false;
+                        } else {
+                            return false;
+                        }
+
+                        $.ajax({
+                            url: '<%=cp%>/removePlace',
+                            type: 'POST',
+                            async: false,
+                            cache: false,
+                            data: {"placeList": placeList, "flag": flag},
+                            success: function () {
+                                swal.fire({
+                                    title: '삭제 완료',
+                                    icon: 'success',
+                                    timer: 1500
+                                });
+                            },
+                            error: function (request, status, error) { // 결과 에러 콜백함수
+                                console.log(error)
+                            }
+                        })
+
+                        placeDiv(${groupPlace});
+                        placeChange($('#placeDIv tr').eq(0).attr('id'));
+                    });
+                }
+
             }
         });
     }
