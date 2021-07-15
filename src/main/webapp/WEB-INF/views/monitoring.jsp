@@ -283,18 +283,18 @@
         <div style="width: 50%; height: 60px; display: flex; margin: auto 0;">
             <div class="topDash-r">
                 <span>법적기준 초과</span>
-                <p id="legal_standard_text_A" class="text-danger" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">100%</p>
-                <div class="Bcloud legal_standard_text_B" id="legal" style="display: none">4 / 4</div>
+                <p id="legal_standard_text_A" class="text-danger" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
+<%--                <div class="Bcloud legal_standard_text_B" id="legal" style="display: none">4 / 4</div>--%>
             </div>
             <div class="topDash-r">
                 <span>사내기준 초과</span>
-                <p id="company_standard_text_A" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">100%</p>
-                <div class="Bcloud company_standard_text_B" id="company" style="display: none">4 / 4</div>
+                <p id="company_standard_text_A" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
+<%--                <div class="Bcloud company_standard_text_B" id="company" style="display: none">4 / 4</div>--%>
             </div>
             <div class="topDash-r">
                 <span>관리기준 초과</span>
-                <p id="management_standard_text_A" class="text-success" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">100%</p>
-                <div class="Bcloud management_standard_text_B" id="management" style="display: none">4 / 4</div>
+                <p id="management_standard_text_A" class="text-success" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>
+<%--                <div class="Bcloud management_standard_text_B" id="management" style="display: none">4 / 4</div>--%>
             </div>
         </div>
     </div>
@@ -887,30 +887,27 @@
         }
         var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + allMonitoringOFF)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
         var run = sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail + allMonitoringOFF);
-        var statusOn = ((sensorStatusSuccess/(sensorStatusSuccess+sensorStatusFail+allMonitoringOFF)).toFixed(2) *100).toFixed(0);
-        var statusOff = ((sensorStatusFail/(sensorStatusSuccess+sensorStatusFail+allMonitoringOFF)).toFixed(2) *100).toFixed(0);
-        var monitoringOFF = ((allMonitoringOFF/(sensorStatusSuccess+sensorStatusFail+allMonitoringOFF)).toFixed(2) *100).toFixed(0);
-        var legalPercent = ((legalSCount / (sensorStatusSuccess - notexistLegalStandard)) * 100).toFixed(0); //법적기준 %
-        var companyPercent = ((companySCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); //사내기준 %
-        var managementPercent = ((managementSCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); ////관리기준 %
+        // var legalPercent = ((legalSCount / (sensorStatusSuccess - notexistLegalStandard)) * 100).toFixed(0); //법적기준 %
+        // var companyPercent = ((companySCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); //사내기준 %
+        // var managementPercent = ((managementSCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); ////관리기준 %
 
         /* NaN 처리 */
         if(runPercent == 'NaN'){ runPercent = 0; }
-        if(legalPercent == 'NaN'){ legalPercent = 0; }
-        if(companyPercent == 'NaN'){ companyPercent = 0; }
-        if(managementPercent == 'NaN'){ managementPercent = 0;}
+        // if(legalPercent == 'NaN'){ legalPercent = 0; }
+        // if(companyPercent == 'NaN'){ companyPercent = 0; }
+        // if(managementPercent == 'NaN'){ managementPercent = 0;}
 
         $("#sensorStatusP").text(runPercent + "%"); //가동률
         $("#operating").text(run); // 통신정상/전체
-        $("#statusOn").text(statusOn + "%"); //정상
-        $("#statusOff").text(statusOff + "%"); //통신불량
-        $("#monitoringOff").text(monitoringOFF + "%"); //모니터링OFF 개수
-        $("#legal_standard_text_A").text(legalPercent + "%"); //법적기준 Over
-        $(".legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess - notexistLegalStandard)); //법적기준 Over 개수/전체
-        $("#company_standard_text_A").text(companyPercent + "%"); //사내기준 Over
-        $(".company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess - notexistCompanyStandard)); //사내기준 Over 개수/전체
-        $("#management_standard_text_A").text(managementPercent + "%"); //관리기준 Over
-        $(".management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess - notexistManagementStandard)); //관리기준 Over 개수/전체
+        $("#statusOn").text(sensorStatusSuccess); //정상
+        $("#statusOff").text(sensorStatusFail); //통신불량
+        $("#monitoringOff").text(allMonitoringOFF); //모니터링OFF 개수
+        $("#legal_standard_text_A").text(legalSCount); //법적기준 Over
+        // $(".legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess - notexistLegalStandard)); //법적기준 Over 개수/전체
+        $("#company_standard_text_A").text(companySCount); //사내기준 Over
+        // $(".company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess - notexistCompanyStandard)); //사내기준 Over 개수/전체
+        $("#management_standard_text_A").text(managementSCount); //관리기준 Over
+        // $(".management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess - notexistManagementStandard)); //관리기준 Over 개수/전체
     }
 
     /**

@@ -179,19 +179,13 @@ public class MainController {
      */
     @RequestMapping("/monitoring")
     public void monitoring(Model model, Principal principal) {
-        try{
-            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //모니터링 On 인 측정소 정보
+        try {
             Map<String, List> gMS = ajaxController.getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
             List<String> gMS_placeName = new ArrayList<>();
             for(String key : gMS.keySet()){ //key(측정소명) 추출
                 gMS_placeName.add(key);
             }
-            int placeListSize =0;
-            if(gMS.containsKey("ALL")){
-                placeListSize = placeList.size();
-            }else{
-                placeListSize = gMS.size();
-            }
+            int placeListSize = gMS.size()-1;
             JSONArray jsonArray = new JSONArray();
             for (int a = 0; a < placeListSize; a++) { //모니터링 On인 측정소
                 int sensorSize = 0;
@@ -199,15 +193,10 @@ public class MainController {
                 JSONArray placeInfoArray = new JSONArray();
                 String placeName = "";
                 List<String> sensorNames = new ArrayList<String>();
-                if(gMS.containsKey("ALL")){ //all = []
-                    placeName = placeList.get(a).getName();
-                    sensorNames = placeList.get(a).getSensor();
-                }else{
-                    placeName = gMS_placeName.get(a);
-                    List<String> temp = gMS.get(placeName);
-                    for(int b=0; b<temp.size(); b++){
-                        sensorNames.add(temp.get(b));
-                    }
+                placeName = gMS_placeName.get(a);
+                List<String> temp = gMS.get(placeName);
+                for(int b=0; b<temp.size(); b++){
+                    sensorNames.add(temp.get(b));
                 }
                 List<String> sensorNameList = new ArrayList<>();
                 int standardExist = 0;
@@ -263,17 +252,19 @@ public class MainController {
                     placeInfoList.put("standardNotExist", standardNotExist);
                     placeInfoList.put("data", placeInfoArray);
                 }
+                String allMonitoringOFF = String.valueOf(gMS.get("OFF").get(0));
                 if (sensorSize != 0) {
                     placeInfoList.put("place", placeName);
                     placeInfoList.put("sensorList", sensorNameList);
                     placeInfoList.put("monitoringOn", sensorSize);
-                    placeInfoList.put("monitoringOff", sensorNames.size() - sensorSize);
+                    placeInfoList.put("allMonitoringOFF", Integer.parseInt(allMonitoringOFF));
                     jsonArray.add(placeInfoList);
                 }
             }
             model.addAttribute("placeInfo", jsonArray); //전체 측정소의 센서 정보들
         }catch (Exception e){
-            System.out.println("error");
+            System.out.println(e);
+
         }
     }
 
@@ -329,7 +320,7 @@ public class MainController {
                         subObj.put("up_time", simpleDateFormat.format(recentData.getUp_time()));
                         subObj.put("status", recentData.isStatus());
                     }catch (Exception e){
-                        System.out.println("error");
+                        System.out.println(e);
                     }
                     try {
                         Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorName); //센서의 이전 데이터
@@ -371,7 +362,7 @@ public class MainController {
             model.addAttribute("sensor", jsonArray); //선택된 측정소의 센서 테이블
             model.addAttribute("sensorData", jsonArray2); //선택된 센서의 최근 1시간 데이터
         }catch (Exception e){
-            System.out.println("error");
+            System.out.println(e);
         }
     }
 
