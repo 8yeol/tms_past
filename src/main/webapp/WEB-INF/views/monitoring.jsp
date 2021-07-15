@@ -232,126 +232,43 @@
     </div>
     <%-- 상단 대시보드 --%>
     <div class="row m-3 mt-3 bg-light" style="padding: 10px 0px;">
-<%--        <div class="col bg-white fw-bold" style="">--%>
-<%--            <div class="row titleDiv" style="border-top-left-radius: 20px; border-top-right-radius: 20px; height: 38px;">--%>
-<%--                <span class="fs-5 text-center" style="margin: 0 auto; line-height: 38px;">가동률</span>--%>
-<%--            </div>--%>
-<%--            <div class="row">--%>
-<%--                <div class="col text-center" style="border-right: 1px solid #2295DB;">--%>
-<%--                    <p class="fs-1" id="sensorStatusP" style="margin-top: 25px; margin-bottom: -3px"></p>--%>
-<%--                    <hr style="margin: 0 30px 0;">--%>
-<%--                    <p id="statusMore"></p>--%>
-<%--                </div>--%>
-
-<%--                <div class="col" style="padding: 0;" id="sensorStatus">--%>
-<%--                    <div style="border-bottom: 1px solid #2295DB; position: relative" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')" >--%>
-<%--                        <p style="margin-left: 5px; cursor: default;">정상 : <a style="text-align: right" id="statusOn"></a></p>--%>
-<%--                        <div class="cloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>--%>
-<%--                    </div>--%>
-<%--                    <div style="border-bottom: 1px solid #2295DB; position: relative" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">--%>
-<%--                        <p style="margin-left: 5px; cursor: default;">통신불량 : <a style="text-align: right" id="statusOff"></a></p>--%>
-<%--                        <div class="cloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>--%>
-<%--                    </div>--%>
-<%--                    <div style="position: relative" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">--%>
-<%--                        <p style="margin-left: 5px; cursor: default;">모니터링 OFF : <a style="text-align: right" id="monitoringOff"></a></p>--%>
-<%--                        <div class="cloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-
-<%--        <div class="col bg-white m-size" style="margin-left: 5px;border-top-left-radius: 20px;border-top-right-radius: 20px;">--%>
-<%--            <div class="row standardParent" style="height: 38px">--%>
-<%--                <div class="col fw-bold standardDiv" style="border-right: 2px solid white;">--%>
-<%--                    <span>법적기준 초과</span>--%>
-<%--                </div>--%>
-<%--                <div class="col fw-bold standardDiv"style="border-right:2px solid white;">--%>
-<%--                    <span>사내기준 초과</span>--%>
-<%--                </div>--%>
-<%--                <div class="col  fw-bold standardDiv">--%>
-<%--                    <span>관리기준 초과</span>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--            <div class="row">--%>
-<%--                &lt;%&ndash; 법적 기준 &ndash;%&gt;--%>
-<%--                <div class="col standardImg" style="border-right: 2px solid #2295DB;">--%>
-<%--                    <div class="row text-center" style="height: 155px;">--%>
-<%--                        <div class="col">--%>
-<%--                            <img src="static/images/sad.png" class="emoji">--%>
-<%--                        </div>--%>
-<%--                        <div class="col remove-m" style="margin-top: 3px;">--%>
-<%--                            <p class="mb-0" id="legal_standard_text_A"></p>--%>
-<%--                            <hr class="m-0">--%>
-<%--                            <p id="legal_standard_text_B"></p>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--                &lt;%&ndash; 사내 기준 &ndash;%&gt;--%>
-<%--                <div class="col standardImg" style="border-right: 2px solid #2295DB;">--%>
-<%--                    <div class="row text-center" style="height: 155px;">--%>
-<%--                        <div class="col">--%>
-<%--                            <img src="static/images/thinking.png" class="emoji">--%>
-<%--                        </div>--%>
-<%--                        <div class="col remove-m" style="margin-top: 5px;">--%>
-<%--                            <p class="mb-0" id="company_standard_text_A"></p>--%>
-<%--                            <hr class="m-0">--%>
-<%--                            <p id="company_standard_text_B"></p>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--                &lt;%&ndash; 관리 기준 &ndash;%&gt;--%>
-<%--                <div class="col standardImg">--%>
-<%--                    <div class="row text-center" style="height: 155px;">--%>
-<%--                        <div class="col">--%>
-<%--                            <img src="static/images/sceptic.png" class="emoji">--%>
-<%--                        </div>--%>
-<%--                        <div class="col remove-m" style="margin-top: 5px;">--%>
-<%--                            <p class="mb-0" id="management_standard_text_A"></p>--%>
-<%--                            <hr class="m-0">--%>
-<%--                            <p id="management_standard_text_B"></p>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-
         <div style="width: 50%; height: 60px; display: flex; border-right: 1px solid #0d6efd;">
             <div class="topDash-l">
                 <span>가동률</span>
-                <p onmouseover="$('#operating').css('display','block')" onmouseout="$('#operating').css('display','none')">100%</p>
+                <p id="sensorStatusP" onmouseover="$('#operating').css('display','block')" onmouseout="$('#operating').css('display','none')">100%</p>
                 <div class="Bcloud" id="operating" style="display: none">4 / 4</div>
             </div>
             <div class="topDash-l">
                 <span onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
-                <p class="text-success">100%</p>
+                <p id="statusOn" class="text-success">100%</p>
                 <div class="Gcloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
             </div>
             <div class="topDash-l">
                 <span onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
-                <p class="text-danger">0%</p>
+                <p id="statusOff" class="text-danger">0%</p>
                 <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
             </div>
             <div class="topDash-l text-center">
                 <span onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
-                <p>100%</p>
+                <p id="monitoringOff">100%</p>
                 <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
             </div>
         </div>
         <div style="width: 50%; height: 60px; display: flex;">
             <div class="topDash-r">
                 <span>법적기준 초과</span>
-                <p class="text-danger" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">100%</p>
-                <div class="Bcloud" id="legal" style="display: none">4 / 4</div>
+                <p id="legal_standard_text_A" class="text-danger" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">100%</p>
+                <div class="Bcloud legal_standard_text_B" id="legal" style="display: none">4 / 4</div>
             </div>
             <div class="topDash-r">
                 <span>사내기준 초과</span>
-                <p onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">100%</p>
-                <div class="Bcloud" id="company" style="display: none">4 / 4</div>
+                <p id="company_standard_text_A" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">100%</p>
+                <div class="Bcloud company_standard_text_B" id="company" style="display: none">4 / 4</div>
             </div>
             <div class="topDash-r">
                 <span>관리기준 초과</span>
-                <p class="text-success" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">100%</p>
-                <div class="Bcloud" id="management" style="display: none">4 / 4</div>
+                <p id="management_standard_text_A" class="text-success" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">100%</p>
+                <div class="Bcloud management_standard_text_B" id="management" style="display: none">4 / 4</div>
             </div>
         </div>
     </div>
@@ -590,7 +507,6 @@
                         oldSensorList = newSensorList;
                         draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                         draw_place_table(placeInfo); // 측정소별 테이블 생성
-                        // draw_place_chart_frame(placeInfo);
                     }else{
                         var sensorCount = 0;
                         for(var x=0; x<newSensorList.length; x++) {
@@ -643,14 +559,6 @@
             recentData = getSensorData(sensorName);
             updateChart(sensorDataList, recentData, chartIndex);
             setTimeout(function realTime() {
-                // recentData = getSensorData(sensorName);
-                // if(sensorDataList[sensorDataLength-1].x != recentData.up_time){
-                //     sensorDataList.push({x: recentData.up_time, y: recentData.value});
-                // }
-                // updateChart(sensorDataList, recentData, chartIndex);
-                // if(sensorDataList.length > sensorDataLength*2){
-                //     sensorDataList = getSensor(sensorName, 10);
-                // }
                 realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
             }, 0);
         }else{
@@ -861,46 +769,6 @@
                             newCeil5.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
                             newCeil6.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
                         }
-                        // "chart-"+index+'-'+i = new ApexCharts(document.querySelector("#chart-"+index+'-'+i), setChartOption());
-                        /* //기준 값 유무에 따라 split */
-                        // const newRow = tbody.insertRow(tbody.rows.length);
-                        // const newCeil0 = newRow.insertCell(0);
-                        // const newCeil1 = newRow.insertCell(1);
-                        // const newCeil2 = newRow.insertCell(2);
-                        // const newCeil3 = newRow.insertCell(3);
-                        // const newCeil4 = newRow.insertCell(4);
-                        //
-                        // if(data[i].legalStandard == 999999){
-                        //     legalStandard = '-';
-                        // }else{
-                        //     legalStandard = data[i].legalStandard;
-                        // }
-                        // if(data[i].companyStandard == 999999){
-                        //     companyStandard = '-';
-                        // }else{
-                        //     companyStandard = data[i].companyStandard;
-                        // }
-                        // if(data[i].managementStandard == 999999){
-                        //     managementStandard = '-';
-                        // }else{
-                        //     managementStandard = data[i].managementStandard;
-                        // }
-                        //
-                        // newCeil0.innerHTML = data[i].naming+'<input type="hidden" value='+data[i].name+'>';
-                        // newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
-                        // newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
-                        // newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
-                        //
-                        // if(data[i].value > data[i].legalStandard){
-                        //     newCeil4.innerHTML = '<span class="text-danger fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                        // } else if( data[i].value > data[i].companyStandard){
-                        //     newCeil4.innerHTML = '<span class="text-warning fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                        // } else if( data[i].value > data[i].managementStandard){
-                        //     newCeil4.innerHTML = '<span class="text-success fw-bold">' + draw_compareData(data[i].beforeValue, data[i].value) + '</span>';
-                        // } else{
-                        //     newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
-                        // }
-                        // $("#update-" + index).text(moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss'));
                         }
                     }
                 }
@@ -991,7 +859,11 @@
             flashing(flashCheck, null);
             alarmTone('off');
         }
-        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess +allMonitoringOFF)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
+        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + allMonitoringOFF)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
+        var run = sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail + allMonitoringOFF);
+        var statusOn = ((sensorStatusSuccess/(sensorStatusSuccess+sensorStatusFail+allMonitoringOFF)).toFixed(2) *100).toFixed(0);
+        var statusOff = ((sensorStatusFail/(sensorStatusSuccess+sensorStatusFail+allMonitoringOFF)).toFixed(2) *100).toFixed(0);
+        var monitoringOFF = ((allMonitoringOFF/(sensorStatusSuccess+sensorStatusFail+allMonitoringOFF)).toFixed(2) *100).toFixed(0);
         var legalPercent = ((legalSCount / (sensorStatusSuccess - notexistLegalStandard)) * 100).toFixed(0); //법적기준 %
         var companyPercent = ((companySCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); //사내기준 %
         var managementPercent = ((managementSCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); ////관리기준 %
@@ -1003,16 +875,16 @@
         if(managementPercent == 'NaN'){ managementPercent = 0;}
 
         $("#sensorStatusP").text(runPercent + "%"); //가동률
-        $("#statusMore").text(sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail + allMonitoringOFF)); // 통신정상/전체
-        $("#statusOn").text(sensorStatusSuccess); //정상
-        $("#statusOff").text(sensorStatusFail); //통신불량
-        $("#monitoringOff").text(allMonitoringOFF); //모니터링OFF 개수
+        $("#operating").text(run); // 통신정상/전체
+        $("#statusOn").text(statusOn + "%"); //정상
+        $("#statusOff").text(statusOff + "%"); //통신불량
+        $("#monitoringOff").text(monitoringOFF + "%"); //모니터링OFF 개수
         $("#legal_standard_text_A").text(legalPercent + "%"); //법적기준 Over
-        $("#legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess - notexistLegalStandard)); //법적기준 Over 개수/전체
+        $(".legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess - notexistLegalStandard)); //법적기준 Over 개수/전체
         $("#company_standard_text_A").text(companyPercent + "%"); //사내기준 Over
-        $("#company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess - notexistCompanyStandard)); //사내기준 Over 개수/전체
+        $(".company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess - notexistCompanyStandard)); //사내기준 Over 개수/전체
         $("#management_standard_text_A").text(managementPercent + "%"); //관리기준 Over
-        $("#management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess - notexistManagementStandard)); //관리기준 Over 개수/전체
+        $(".management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess - notexistManagementStandard)); //관리기준 Over 개수/전체
     }
 
     /**
