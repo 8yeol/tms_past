@@ -26,9 +26,61 @@
         background-color: #EDF2F8;
         font-family : notoSansKR;
     }
+    .alarmCount{
+        position: absolute;
+        top: 0px;
+        left: 18px;
+        background-color: red;
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        color: white;
+        line-height: 20px;
+        padding-right:7px;
+        display: none;
+        font-size: 0.9rem;
+    }
+    .alarmOff{
+        position: absolute;
+        top: 10px;
+        left: 28px;
+        width: 20px;
+        height: 20px;
+        border-radius: 10px;
+        color: red;
+        line-height: 20px;
+        padding-right:7px;
+        font-size: 1.3rem;
+    }
 
 
     @media (min-width: 990px) {
+        .alarmCount{
+            position: absolute;
+            top: 0px;
+            left: 18px;
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            color: white;
+            line-height: 20px;
+            padding-right:7px;
+            display: none;
+            font-size: 0.9rem;
+        }
+        .alarmOff{
+            position: absolute;
+            top: 10px;
+            left: 28px;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            color: red;
+            line-height: 20px;
+            padding-right:7px;
+            font-size: 1.3rem;
+        }
         #mobile{
             display: none;
         }
@@ -248,6 +300,32 @@
         #swal2-title{font-size: 3rem;}
         .swal2-actions button{width: 300px;font-size: 2rem!important; }
 
+        .alarmOff{
+            position: absolute;
+            top: 10px;
+            left: 28px;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            color: red;
+            line-height: 20px;
+            padding-right:7px;
+            font-size: 1.3rem;
+        }
+        .alarmCount{
+            position: absolute;
+            top: 0px;
+            left: 18px;
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            color: white;
+            line-height: 20px;
+            padding-right:7px;
+            display: none;
+            font-size: 0.9rem;
+        }
         #desktop{
             display: none;
         }
@@ -326,6 +404,7 @@
             .sidebar {padding-top: 15px;}
             .sidebar a {font-size: 18px;}
         }
+
         .dropdown {
             position: relative;
         }
@@ -380,8 +459,11 @@
             border: none;
         }
     }
-    .opacity{
+    .opacity {
         opacity: 0.9;
+    }
+    #parentDivAlarm{
+        position: relative !important;
     }
 </style>
 
@@ -431,8 +513,10 @@
                     </div>
                 </div>
 
-                <div>
+                <div id="parentDivAlarm">
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
+                    <div class="alarmCount"></div>
+                    <div class="alarmOff"  style="display: none">off</div>
                 </div>
 
                 <div class="message text-start" style="padding: 10px;">
@@ -496,8 +580,10 @@
                     </div>
                 </div>
 
-                <div>
+                <div style="position: relative;">
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
+                    <div class="alarmCount"></div>
+                    <div class="alarmOff" style="display: none">off</div>
                 </div>
 
                 <div class="message text-start" style="padding: 10px;">
@@ -511,20 +597,32 @@
 </header>
 
 <script>
+    let intervalAlarm=null;
 
     $(document).ready(function () {
-        getAlarm();
 
-        setInterval(function () {
-            getAlarm();
-        }, 5000)
+        if (typeof getCookie('isAlarm') == 'undefined') {
+            setCookie('isAlarm', 'true', 1);
+        }
+        if (getCookie('isAlarm') == 'true') {
+        intervalAlarm = setInterval(function () {
+                getAlarm();
+            }
+            , 5000);
+            $('.alarmOff').css('display', 'none');
+        }else{
+            $('.alarmOff').css('display', 'block');
+        }
     });
+
 
     function getAlarm(){
         $('.dangerOuter').html('');
         $('.warningOuter').html('');
         $('.cautionOuter').html('');
         $('.message').css('display', 'none');
+        $('.alarmCount').css('display', 'none');
+        $('.alarmCount').text('');
 
         //그룹 측정소에서 ON된 센서 추출
         $.ajax({
@@ -532,8 +630,10 @@
             dataType: 'json',
             async: false,
             success: function (data) {
+                console.log(data);
                 const arr = data.excess;
                 let message;
+                let count=0;
                 if(arr != undefined){
                     for(let i=0; i<arr.length; i++){
 
@@ -558,23 +658,31 @@
                                         $('.dangerOuter').append(innerHTML);
                                         $('.danger').css('display', 'block');
                                         $('.message').css('display', 'block');
+                                        count++;
                                     }else if(excess == "warning"){
                                         innerHTML =  '<span class="messageText warning" style="background-color:#ffc107;">'
                                         innerHTML += '<span  id="warningInner" style="margin-right: 10px;display: block">사내기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
                                         $('.warningOuter').append(innerHTML);
                                         $('.warning').css('display', 'block');
                                         $('.message').css('display', 'block');
+                                        count++;
                                     }else if(excess == "caution"){
                                         innerHTML =  '<span class="messageText caution" style="background-color:rgb(25, 135, 84);">'
                                         innerHTML += '<span id="warningInner" style="margin-right: 10px;display: block">관리기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
                                         $('.cautionOuter').append(innerHTML);
                                         $('.caution').css('display', 'block');
                                         $('.message').css('display', 'block');
+                                        count++;
                                     }
                                 }
                             }
                         });
                     }
+                }
+                if(count != 0){
+                    $('.alarmCount').text(count);
+                    $('.alarmCount').css('display', 'block');
+
                 }
             },
             error: function (request, status, error) {
@@ -616,13 +724,51 @@
         });
     }
 
-    function messageOpen() {
-        if($('.message').css('display') == 'none'){
-            $('.message').css('display', 'block');
-        }else{
-            $('.message').css('display', 'none');
+    /**
+     * 쿠키 값 가져오는 메소드
+     */
+    function getCookie(cookie_name) {
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+            x = val[i].substr(0, val[i].indexOf('='));
+            y = val[i].substr(val[i].indexOf('=') + 1);
+            x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+            if (x == cookie_name) {
+                return unescape(y); // unescape로 디코딩 후 값 리턴
+            }
         }
     }
+    /**
+     * 쿠키 값 저장하는 메소드 (이름, 값, 저장일수)
+     */
+    function setCookie(cookie_name, value, days) {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + days);
+        // 설정 일수만큼 현재시간에 만료값으로 지정
+
+        //var cookie_value = escape(value) + ((days == null) ? '' : '; expires=' + exdate.toUTCString());
+        document.cookie = cookie_name + '=' + value;
+    }
+
+    function messageOpen() {
+       if(getCookie('isAlarm') == 'true'){
+           setCookie('isAlarm', 'false', 1);
+           clearInterval(intervalAlarm);
+           $('.message').css('display', 'none');
+           $('.alarmCount').css('display', 'none');
+           $('.alarmOff').css('display', 'block');
+       }else{
+           setCookie('isAlarm', 'true', 1);
+           intervalAlarm = setInterval(function (){
+                   getAlarm();}
+               , 5000);
+           $('.alarmOff').css('display', 'none');
+       }
+    }
+
+
     function messageOpen2() {
         $('.message').css('display', 'block');
     }

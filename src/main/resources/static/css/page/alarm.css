@@ -80,7 +80,7 @@ table thead {
     left: -111px;
     top:0px;
     margin: 0;
-    padding: 0px 10px 0;
+    padding: 0px 10px 10px;
     width: 100px;
 }
 .tab li {
@@ -113,14 +113,14 @@ table thead {
     }
     .tab {
         width: unset;
-        top:-60px;
+        top:-70px;
         left: -10px;
         z-index: 0;
         display: flex;
     }
     .tab li {
         width: 100px;
-        height: 60px;
+        height: 70px;
         background-color: #ccc;
         color: #999;
         text-align: center;
