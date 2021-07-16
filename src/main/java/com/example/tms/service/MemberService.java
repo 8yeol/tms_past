@@ -75,6 +75,11 @@ public class MemberService implements UserDetailsService {
         memberRepository.save(updateMember);
     }
 
+    /**
+     * 멤버 그룹 업데이트
+     * @param id
+     * @param monitoringGroup
+     */
     public void updateMemberGroup(String id, int monitoringGroup) {
         Member updateMember = memberRepository.findById(id);
         updateMember.setMonitoringGroup(monitoringGroup);
