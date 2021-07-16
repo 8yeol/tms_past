@@ -2137,6 +2137,9 @@ public class AjaxController {
                         boolean monitoring = reference_value_settingRepository.findByName(sensorNames.get(i)).getMonitoring();  //센서 모니터링 여부
                         boolean standardExistStatus = false;
                         if (monitoring) {
+                            String sensorName = sensorNames.get(i);
+                            String[] splitSensor = sensorName.split("_");
+                            Item sensorItem = itemRepository.findByClassification(splitSensor[1]);
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i)); //센서의 최근 데이터
                             sensorObj.put("recent_value", recentData.getValue());
@@ -2165,6 +2168,11 @@ public class AjaxController {
                             sensorObj.put("companyStandard", companyStandard);
                             sensorObj.put("managementStandard", managementStandard);
                             sensorObj.put("name", sensorNames.get(i));
+                            if(sensorItem != null) {
+                                sensorObj.put("unit", sensorItem.getUnit());
+                            }else{
+                                sensorObj.put("unit", "");
+                            }
                             sensorNameList.add(sensorNames.get(i));
                             if (legalStandard.equals(999999) && companyStandard.equals(999999) && managementStandard.equals(999999)) {
                                 standardNotExist += 1;

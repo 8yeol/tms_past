@@ -10,4 +10,5 @@ public class Item {
     public ObjectId _id;
     public String classification;
     public String naming;
+    public String unit;
 }

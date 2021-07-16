@@ -575,14 +575,13 @@
         var tbodyId = $(this).parent('tbody').attr('id');
         const sensorName = $(this).find('td input')[0].value;
         var chartIndex = tbodyId.substr(13,5);
-        // var sensorDataList = getSensor(sensorName, 10);
-        var sensorDataList = [];
+        var sensorDataList = getSensor(sensorName, 10);
         var recentData;
         var sensorDataLength = sensorDataList.length;
         var realTime = {};
         if(sensorDataList.length == 0){
             if($('#chart-'+chartIndex)[0].innerHTML.length ==0){
-               $('#chart-'+chartIndex).append("<span style='height: 300px; background-color: red'>최근 10분 데이터가 없습니다.</span>")
+               $('#chart-'+chartIndex).append("<p style='height: 50px; text-align:center; padding-top:12px; background-color: #e6e6e7'>최근 10분 데이터가 없습니다.</p>")
             }else{
                 $('#chart-'+chartIndex).find('span').remove();
             }
@@ -592,28 +591,30 @@
                 recentData = getSensorData(sensorName);
                 updateChart(sensorDataList, recentData, chartIndex);
                 setTimeout(function realTime() {
-                    var update = $('#update-'+chartIndex)[0].innerText;
-                    var columnCount = $('#sensor-table-'+chartIndex).find('td').length;
-                    var recentValue;
-                    if(columnCount == 4){
-                        recentValue = $('#sensor-table-'+chartIndex).find('td')[1].innerText;
-                    }else if(columnCount == 7){
-                        recentValue = $('#sensor-table-'+chartIndex).find('td')[4].innerText;
-                    }
-                    if(recentValue.indexOf("-") !== -1){
-                        recentValue = recentValue.substr(2);
-                    }
-                    // recentData = getSensorData(sensorName);
-                    if(sensorDataList.length != 0){
-                        if(sensorDataList[sensorDataLength-1].x != update){
-                            sensorDataList.push({x: update, y: recentValue});
+                    if($('#chart-'+chartIndex)[0].childNodes[0] != undefined){
+                        var update = $('#update-'+chartIndex)[0].innerText;
+                        var columnCount = $('#sensor-table-'+chartIndex).find('td').length;
+                        var recentValue;
+                        if(columnCount == 4){
+                            recentValue = $('#sensor-table-'+chartIndex).find('td')[1].innerText;
+                        }else if(columnCount == 7){
+                            recentValue = $('#sensor-table-'+chartIndex).find('td')[4].innerText;
                         }
-                        updateChart(sensorDataList, recentData, chartIndex);
-                        if(sensorDataList.length > sensorDataLength*2){
-                            sensorDataList = getSensor(sensorName, 10);
+                        if(recentValue.indexOf("-") !== -1){
+                            recentValue = recentValue.substr(2);
                         }
+                        // recentData = getSensorData(sensorName);
+                        if(sensorDataList.length != 0){
+                            if(sensorDataList[sensorDataLength-1].x != update){
+                                sensorDataList.push({x: update, y: recentValue});
+                            }
+                            updateChart(sensorDataList, recentData, chartIndex);
+                            if(sensorDataList.length > sensorDataLength*2){
+                                sensorDataList = getSensor(sensorName, 10);
+                            }
+                        }
+                        realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
                     }
-                    realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
                 }, 0);
             }else{
                 clearTimeout(realTime['chart-'+chartIndex]);
@@ -772,6 +773,7 @@
                 var dataCount = data.length;
                 if(dataCount != 0){
                     for (let z = 0; z < dataCount; z++) {
+                        var unit;
                         var recentData = data[z];
                         var standarExistStatus = data[z].standardExistStatus;
                         $('#sensor-table-' + i + '-' + z).empty();
@@ -779,12 +781,17 @@
                         /* 기준 값 유무에 따라 split */
                         const newRow = tbody.insertRow(tbody.rows.length);
                         $("#update-"+i+'-'+z).text(moment(data[z].recent_up_time).format('YYYY-MM-DD HH:mm:ss'));
+                        if(data[z].unit != ""){
+                            unit = "("+data[z].unit + ")";
+                        }else{
+                            unit = "";
+                        }
                         if(!standarExistStatus){
                             const newCeil0 = newRow.insertCell(0);
                             const newCeil1 = newRow.insertCell(1);
                             const newCeil2 = newRow.insertCell(2);
                             const newCeil3 = newRow.insertCell(3);
-                            newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
+                            newCeil0.innerHTML = data[z].naming+unit+'<input type="hidden" value='+data[z].name+'>';
                             newCeil1.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
                             newCeil2.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
                             newCeil3.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
@@ -985,7 +992,7 @@
                 data: [],
             }],
             chart: {
-                height: '150px',
+                height: '200px',
                 type: 'line',
                 animations: {
                     enabled: true,
@@ -996,9 +1003,9 @@
                     }
                 },
                 toolbar: {
-                    show: true,
+                    show: false,
                     tools: {
-                        download: true,
+                        download: false,
                         selection: false,
                         zoom: false,
                         zoomin: false,
