@@ -488,11 +488,11 @@
 <script>
 
     $(document).ready(function () {
-        // getAlarm();
+        getAlarm();
 
-        // setInterval(function () {
-        //     getAlarm();
-        // }, 5000)
+        setInterval(function () {
+            getAlarm();
+        }, 5000)
     });
 
     function getAlarm(){
@@ -501,10 +501,12 @@
             dataType: 'json',
             async: false,
             success: function (data) {
+                console.log(data);
+                console.log(data.excess);
                 const arr = data.excess;
                 let message;
                 if(arr != undefined){
-                    messageOpen()
+                    messageOpen2();
                     for(let i=0; i<arr.length; i++){
                         const excess = arr[i].classification;
                         const place = arr[i].place;
@@ -567,6 +569,9 @@
         }else{
             $('.message').css('display', 'none');
         }
+    }
+    function messageOpen2() {
+        $('.message').css('display', 'block');
     }
     var current_page_URL = location.href; //현재 URL 주소
     $("#menu a").each(function() { //menu a 태그의 주소
