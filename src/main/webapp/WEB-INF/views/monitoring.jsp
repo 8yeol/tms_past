@@ -826,7 +826,7 @@
                         /* 기준 값 유무에 따라 split */
                         const newRow = tbody.insertRow(tbody.rows.length);
                         $("#update-"+i+'-'+z).text(moment(data[z].recent_up_time).format('YYYY-MM-DD HH:mm:ss'));
-                        if(data[z].unit != ""){
+                        if(data[z].unit != "" && data[z].unit != null){
                             unit = data[z].unit;
                             $("#unit-"+i+'-'+z).text("단위 : "+unit);
                             $("#unit-"+i+'-'+z).css("padding-left", "10px");
