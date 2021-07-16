@@ -567,21 +567,13 @@
             if (result.isConfirmed) {
                 const count = countPlaceSensor(placeList);
                 if(count == 0){
-                    let flag;
-                    if (result.isConfirmed) {
-                        flag = true;
-                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                        flag = false;
-                    } else {
-                        return false;
-                    }
 
                     $.ajax({
                         url: '<%=cp%>/removePlace',
                         type: 'POST',
                         async: false,
                         cache: false,
-                        data: {"placeList": placeList, "flag": flag},
+                        data: {"placeList": placeList, "flag": false},
                         success: function () {
                             swal.fire({
                                 title: '삭제 완료',
