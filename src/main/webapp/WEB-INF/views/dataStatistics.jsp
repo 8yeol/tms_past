@@ -294,7 +294,7 @@
                 $('#information > tfoot').empty();
                 $('#information > tbody').empty();
 
-                const innerHtml = "<tr><td colspan='14' rowspan='3'> 통계 데이터가 없습니다. <br> 통계 데이터는 매월 1일 전월 통계값이 업데이트 됩니다. </td></tr>";
+                const innerHtml = "<tr><td colspan='14' rowspan='3'> 통계 데이터가 없습니다. <br> 통계 데이터는 매일 자정 전일 기준으로 업데이트 됩니다. </td></tr>";
                 $('#information > tbody').append(innerHtml);
                 return false
             }

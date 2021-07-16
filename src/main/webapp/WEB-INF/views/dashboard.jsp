@@ -46,11 +46,24 @@
         <c:choose>
             <c:when test="${empty emissionSettingList}">
                 <div class="row pb-3 margin-l" style="height: 230px">
-                    <div class="col align-self-center text-center" style="font-size: 1.2rem">
-                        측정소 통합 모니터링 설정된 센서가 없습니다. <br>
-                        <b>[환경설정 - 배출량 관리] > 배출량 추이 모니터링 대상 설정 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
-                        <a href="<%=cp%>/emissionsManagement">모니터링 대상 설정</a>
-                    </div>
+                <c:choose>
+                    <c:when test="${place_count eq 0}">
+                        <div class="col align-self-center text-center" style="font-size: 1.2rem">
+                            모니터링 중인 측정소가 없습니다.
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="col align-self-center text-center" style="font-size: 1.2rem">
+                            측정소 통합 모니터링 설정된 센서가 없습니다. <br>
+                            <c:choose>
+                                <c:when test="${member.state eq 1}">
+                                    <b>[환경설정 - 배출량 관리] > 배출량 추이 모니터링 대상 설정 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
+                                    <a href="<%=cp%>/emissionsManagement">모니터링 대상 설정</a>
+                                </c:when>
+                            </c:choose>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
                 </div>
             </c:when>
             <c:when test="${fn:length(emissionList) > 0}">
@@ -316,11 +329,24 @@
                 </c:if>
             </c:forEach>
             <c:if test="${empty placeList}">
-                <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
-                    연간 배출량 누적 모니터링 설정된 센서가 없습니다. <br>
-                    <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
-                    <a href="<%=cp%>/emissionsManagement">모니터링 대상 설정</a>
-                </div>
+                <c:choose>
+                    <c:when test="${place_count eq 0}">
+                    <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
+                        모니터링 중인 측정소가 없습니다.
+                    </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="pt-4 pb-4" style="text-align: center;font-size: 1.2rem;">
+                            연간 배출량 누적 모니터링 설정된 센서가 없습니다. <br>
+                            <c:choose>
+                                <c:when test="${member.state eq 1}">
+                                    <b>[환경설정 - 배출량 관리] > 연간 배출량 누적 모니터링 대상 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
+                                    <a href="<%=cp%>/emissionsManagement">모니터링 대상 설정</a>
+                                </c:when>
+                            </c:choose>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </c:if>
         </div>
 

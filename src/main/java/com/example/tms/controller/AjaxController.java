@@ -458,15 +458,30 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/getExcessSensor", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getExcessSensor() {
-        List<ReferenceValueSetting> monitoringOn = reference_value_settingRepository.findByMonitoringIsTrue();
+    public Object getExcessSensor(Principal principal) {
+        Member member = memberRepository.findById(principal.getName());
+        int memberGroup = member.getMonitoringGroup();
 
+        List<String> sensorList = new ArrayList<>();
+        if(!member.getState().equals("1")){
+            MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(memberGroup);
+            sensorList = monitoringGroup.getSensor();
+        }else{
+            List<ReferenceValueSetting> monitoringOn = reference_value_settingRepository.findByMonitoringIsTrue();
+            for(ReferenceValueSetting referenceValueSetting : monitoringOn){
+                sensorList.add(referenceValueSetting.getName());
+            }
+        }
+        return getExcessList(sensorList);
+    }
+
+    public Object getExcessList(List<String> sensorList){
         JSONObject excess = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        for(ReferenceValueSetting referenceValueSetting : monitoringOn){
-            Sensor sensor = sensorCustomRepository.getSensorRecent(referenceValueSetting.getName());
-
+        for(String sensorName : sensorList){
+            Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName);
+            ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(sensorName);
             Date now = new Date();
             long diff = sensor.getUp_time().getTime() - now.getTime();
             long sec = diff / 60000;
@@ -493,7 +508,6 @@ public class AjaxController {
                 excess.put("excess", jsonArray);
             }
         }
-
         return excess;
     }
 

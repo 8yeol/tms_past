@@ -340,7 +340,7 @@
             },
             success : function(data) {
                 if(data.length==0){
-                    addChart([], [], reference, 0);
+                    //addChart([], [], reference, 0);
                     if(chart!=null){
                         reset();
                     }

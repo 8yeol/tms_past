@@ -134,6 +134,9 @@ public class MainController {
                 emissionsSettings.remove(i);
             }
         }
+
+        model.addAttribute("place_count", group.getMonitoringPlace().size());
+
         model.addAttribute("emissionSettingList", emissionsSettings);
 
         List<ArrayList<EmissionsTransition>> emissionList = new ArrayList<>();

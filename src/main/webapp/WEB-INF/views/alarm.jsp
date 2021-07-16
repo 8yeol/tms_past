@@ -250,9 +250,10 @@
 
     function search(type){
         let from = $('#date_start').val();
-        const to =$('#date_end').val();
+        let to =$('#date_end').val();
 
         if(type=='refresh'){
+            to = getDays();
             from = to;
             $("input:radio[id='s_day']").last().trigger('click');
         }
