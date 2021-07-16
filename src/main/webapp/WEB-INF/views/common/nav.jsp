@@ -405,13 +405,11 @@
                         <a href="<%=cp%>/logout">로그아웃</a>
                     </div>
                 </div>
-                <%--
                 <div>
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
                 </div>
-                --%>
                 <div class="message text-start">
-                    <span class="messageText text-white"></span>
+                    <span class="messageText"></span>
                 </div>
             </div>
 
@@ -468,13 +466,11 @@
                         <a href="<%=cp%>/logout" class="fs-6 fw-bold">로그아웃</a>
                     </div>
                 </div>
-                <%--
                 <div>
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
                 </div>
-                --%>
                 <div class="message text-start">
-                    <span class="messageText text-white"></span>
+                    <span class="messageText"></span>
                 </div>
             </div>
         </div>
@@ -499,7 +495,6 @@
             success: function (data) {
                 const arr = data.excess;
                 let message;
-                let style;
                 if(arr != undefined){
                     messageOpen()
                     for(let i=0; i<arr.length; i++){
@@ -510,18 +505,14 @@
 
                         if(excess == "danger" ){
                             message = place +" - " + naming + " 법적 기준 초과 ( " + value + " )";
-                            style = 'bg-danger';
                         }else if(excess == "warning"){
                             message = place +" - " + naming + " 사내 기준 초과 ( " + value + " )";
-                            style = 'bg-warning';
                         }else if(excess == "caution"){
                             message = place +" - " + naming + " 관리 기준 초과 ( " + value + " )";
-                            style = 'bg-success';
                         }
                     }
                 }
                 $('.messageText').text(message);
-                $('.message').addClass(style);
             },
             error: function (request, status, error) {
                 console.log(error)
