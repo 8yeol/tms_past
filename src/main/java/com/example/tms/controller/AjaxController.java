@@ -566,6 +566,12 @@ public class AjaxController {
             }
         }
     }
+
+    /**
+     * 측정소에있는 센서 개수 확인
+     * @param placeList 측정소 배열
+     * @return
+     */
     @RequestMapping(value = "/countPlaceSensor")
     public int countPlaceSensor(@RequestParam(value = "placeList[]") List<String> placeList) {
         int count = 0;
@@ -1529,6 +1535,12 @@ public class AjaxController {
         return "success";
     }
 
+    /**
+     * 회원 그룹 업데이트
+     * @param id 멤버 아이디
+     * @param monitoringGroup 모니터링그룹 명
+     * @return
+     */
     @RequestMapping(value = "/memberGroupUpdate")
     public String memberGroupUpdate(String id, String monitoringGroup) {
         MonitoringGroup group = monitoringGroupRepository.findByGroupName(monitoringGroup);
@@ -1538,11 +1550,21 @@ public class AjaxController {
         return "success";
     }
 
+    /**
+     * 그룹명 가져오기
+     * @param group 그룹번호
+     * @return
+     */
     @RequestMapping(value = "/getGroupName")
     public String memberUpdate(int group) {
         return monitoringGroupRepository.findByGroupNum(group).getGroupName();
     }
 
+    /**
+     * 그룹 변경
+     * @param id 멤버 아이디
+     * @param monitoringGroup 그룹번호
+     */
     public void groupChange(String id, int monitoringGroup){
         MonitoringGroup memberRemove = monitoringGroupRepository.findByGroupMemberIsIn(id);
         if(memberRemove != null){
@@ -1602,10 +1624,13 @@ public class AjaxController {
         }
     }
 
+    /**
+     * 모니터링 그룹정보 가져오기
+     * @return
+     */
     @RequestMapping(value = "/getMonitoringGroup")
     public List<MonitoringGroup> getMonitoringGroup() {
         return monitoringGroupRepository.findAll();
-
     }
 
     /**
