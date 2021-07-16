@@ -28,6 +28,16 @@
 <script src="static/js/datepicker.ko.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
+<style>
+    #alarmTable {
+        height: 570px;
+    }
+    @media all and (max-width: 1000px) {
+        #alarmTable{
+            height: 800px;
+        }
+    }
+</style>
 <div class="container" id="container">
     <div class="row m-3 mt-3 ms-1">
         <span class="fs-4 fw-bold">알림</span>
@@ -85,8 +95,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col p-3">
-                <table id="information" class="table table-bordered table-hover text-center mb-0" >
+            <div class="col p-3" id="alarmTable">
+                <table id="information" class="table table-bordered table-hover text-center mb-0" he>
                     <thead class="add-bg-color">
                     <tr>
                         <th>측정소</th>
@@ -243,10 +253,16 @@
         var chartData;
         if($("input[id=week]:radio" ).is( ":checked")){
             chartData = getWeekChartData(placeName);
+            console.log(chartData);
         }else{
             chartData = getMonthChartData(placeName);
         }
-        addChart(chartData);
+        if(chartData.length != 0){
+          addChart(chartData);
+        }else{
+            $("#chart").empty();
+            $("#chart").append("<p style='text-align: center; padding-top: 150px'>센서 알림 현황이 없습니다.</p>");
+        }
         search();
     }
 
