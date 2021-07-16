@@ -186,7 +186,14 @@
             background-color: #f1f1f1;
             min-width: 160px;
             box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.5);
-            z-index: 1;
+            z-index: 2;
+        }
+
+        .dropdown-content span {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
         }
 
         .dropdown-content a {
@@ -202,6 +209,29 @@
 
         .dropdown:hover .dropdown-content {
             display: block;
+        }
+
+        .message {
+            color: black;
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 5px;
+            background-color: white;
+            min-width: 250px;
+            min-height: 70px;
+            z-index: 1;
+            border: solid 2px darkgrey;
+        }
+
+        div .alarm{
+            width: 21px;
+            height: 23px;
+            margin-top: 17px;
+        }
+        .alarmbtn {
+            background: none;
+            border: none;
         }
     }
 
@@ -302,6 +332,31 @@
             font-size: 16px;
             border: none;
         }
+
+        .message {
+            color: black;
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 100px;
+            background-color: white;
+            min-width: 250px;
+            min-height: 70px;
+            z-index: 1;
+            border: solid 2px darkgrey;
+        }
+
+        div .alarm{
+            width: 25px;
+            height: 28px;
+            margin-top: 18px;
+        }
+
+        .alarmbtn {
+            background: none;
+            border: none;
+        }
+
     }
 </style>
 
@@ -342,13 +397,19 @@
                 </nav>
             </div>
 
-            <div class="text-end">
+            <div class="text-end" style="display: inline-flex; position: relative">
                 <div class="dropdown">
                     <button class="dropbtn rounded" id="dropBtn"><i class="fas fa-caret-down"></i></button>
                     <div class="dropdown-content text-start">
                         <a href="<%=cp%>/myPage">마이페이지</a>
                         <a href="<%=cp%>/logout">로그아웃</a>
                     </div>
+                </div>
+                <div>
+                    <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
+                </div>
+                <div class="message text-start">
+                    <span>알림이 왔습니다.</span>
                 </div>
             </div>
 
@@ -397,13 +458,19 @@
                     대기 TMS 관제 시스템
                 </a>
             </div>
-            <div class="text-end">
+            <div class="text-end" style="display: inline-flex">
                 <div class="dropdown">
                     <button class="dropbtn rounded fs-5 fw-bold" id="m_dropBtn"><i class="fas fa-caret-down"></i></button>
                     <div class="dropdown-content text-start">
                         <a href="<%=cp%>/myPage" class="fs-6 fw-bold">마이페이지</a>
                         <a href="<%=cp%>/logout" class="fs-6 fw-bold">로그아웃</a>
                     </div>
+                </div>
+                <div>
+                    <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
+                </div>
+                <div class="message text-start">
+                    <span>알림이 왔습니다.</span>
                 </div>
             </div>
         </div>
@@ -442,6 +509,14 @@
             if(!rank.setting)
                 $('#setting').hide();
         });
+    }
+
+    function messageOpen() {
+        if($('.message').css('display') == 'none'){
+            $('.message').css('display', 'block');
+        }else{
+            $('.message').css('display', 'none');
+        }
     }
     var current_page_URL = location.href; //현재 URL 주소
     $("#menu a").each(function() { //menu a 태그의 주소
