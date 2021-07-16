@@ -1082,81 +1082,7 @@ public class AjaxController {
         placeRepository.save(place);
     }
 
-    /**
-     * 일별 / 월별  알림 현황 (기준초과 카운팅) 저장
-     * notification_day_statistics(일) , notification_month_statistics(월)
-     */
-    /*
-    @RequestMapping(value = "saveNS")
-    public ArrayList saveNS() {
-        ArrayList al = new ArrayList();
-        LocalDate nowDate = LocalDate.now(); //현재시간
-        int getYear = nowDate.getYear();
-        int getMonth = nowDate.getMonthValue();
-        int getDay = nowDate.getDayOfMonth();
-        LocalDate getYesterday = nowDate.minusDays(1);
-        LocalDate getLastMonth = nowDate.minusMonths(1);
 
-        *//**
-         * 일별 알림 현황 저장 ( 1월1일 ~ 전날(yesterday))
-         *//*
-        for (int m = 1; m <= getMonth; m++) {
-            LocalDate date = LocalDate.of(getYear, m, 1);
-            int lastDay = date.lengthOfMonth();
-            if (m == getMonth) { // 이번 달, 어제 날짜까지 구하기 위함
-                lastDay = getDay - 1;
-            }
-            for (int d = 1; d <= lastDay; d++) {
-                LocalDate date2 = LocalDate.of(getYear, m, d);
-                notificationDayStatisticsRepository.deleteByDay(String.valueOf(date2)); //데이터가 존재할 경우 삭제
-                try {
-                    int[] arr = new int[3];
-                    for (int grade = 1; grade <= 3; grade++) {
-                        List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(date2), String.valueOf(date2));
-                        if (list.size() != 0) {
-                            arr[grade - 1] = (int) list.get(0).get("count");
-                        } else {
-                            arr[grade - 1] = 0;
-                        }
-                    }
-                    NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), arr[0], arr[1], arr[2]);
-                    al.add(date2 + ", " + arr[0] + ", " + arr[1] + ", " + arr[2]);
-                    notificationDayStatisticsRepository.save(ns);
-                } catch (Exception e) {
-                    NotificationDayStatistics ns = new NotificationDayStatistics(String.valueOf(date2), 0, 0, 0);
-                    notificationDayStatisticsRepository.save(ns);
-                }
-            }
-        }
-        *//**
-         * 월별 알림 현황 저장 (1월 ~ 이번달)
-         *//*
-        for (int m = 1; m <= getMonth; m++) {
-            LocalDate from_date = LocalDate.of(getYear, m, 1);
-            LocalDate to_date = LocalDate.of(getYear, m, from_date.lengthOfMonth());
-            String date = String.valueOf(from_date).substring(0, 7);
-            notificationMonthStatisticsRepository.deleteByMonth(date); //데이터가 존재할 경우 삭제
-            try {
-                int[] arr = new int[3];
-                for (int grade = 1; grade <= 3; grade++) {
-                    List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(from_date), String.valueOf(to_date));
-                    if (list.size() != 0) {
-                        arr[grade - 1] = (int) list.get(0).get("count");
-                    } else {
-                        arr[grade - 1] = 0;
-                    }
-                }
-                NotificationMonthStatistics ns = new NotificationMonthStatistics(date, arr[0], arr[1], arr[2]);
-                al.add(date + ", " + arr[0] + ", " + arr[1] + ", " + arr[2]);
-                notificationMonthStatisticsRepository.save(ns);
-            } catch (Exception e) {
-                NotificationMonthStatistics ns = new NotificationMonthStatistics(date, 0, 0, 0);
-                notificationMonthStatisticsRepository.save(ns);
-            }
-        }
-        return al;
-    }
-    */
     /**
      * 당일 알림 현황 조회 메소드
      *
@@ -1168,6 +1094,7 @@ public class AjaxController {
         MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(group);
         List<String> placeList = monitoringGroup.getMonitoringPlace();
 
+    public ArrayList getNotificationStatistics(@RequestParam("place") String place) {
         ArrayList al = new ArrayList();
 
         for(String place : placeList){
@@ -1184,6 +1111,18 @@ public class AjaxController {
                 }
             } catch (Exception e) {
             }
+        try {
+            LocalDate nowDate = LocalDate.now();
+            al.add(nowDate);
+            for (int grade = 1; grade <= 3; grade++) {
+                List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(nowDate), String.valueOf(nowDate), place);
+                if (list.size() != 0) {
+                    al.add(list.get(0).get("count"));
+                } else {
+                    al.add(null);
+                }
+            }
+        } catch (Exception e) {
         }
 
         return al;
@@ -1196,8 +1135,8 @@ public class AjaxController {
      * @return day(' yyyy - MM - dd '), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
     @RequestMapping(value = "getNSWeek")
-    public List<NotificationDayStatistics> getNotificationWeekStatistics() {
-        return notificationStatisticsCustomRepository.getNotificationWeekStatistics();
+    public List<NotificationDayStatistics> getNotificationWeekStatistics(@RequestParam(value = "place") String place) {
+        return notificationStatisticsCustomRepository.getNotificationWeekStatistics(place);
     }
 
     /**
@@ -1206,8 +1145,8 @@ public class AjaxController {
      * @return month(' yyyy - MM '), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
     @RequestMapping(value = "getNSMonth")
-    public List<NotificationMonthStatistics> getNotificationMonthStatistics() {
-        return notificationStatisticsCustomRepository.getNotificationMonthStatistics();
+    public List<NotificationMonthStatistics> getNotificationMonthStatistics(@RequestParam(value = "place") String place) {
+        return notificationStatisticsCustomRepository.getNotificationMonthStatistics(place);
     }
 
     /**

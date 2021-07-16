@@ -5,5 +5,5 @@ import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface NotificationMonthStatisticsRepository extends MongoRepository<NotificationMonthStatistics, ObjectId> {
-    NotificationMonthStatistics findByMonthAndPlace(String month,String place);
+    NotificationMonthStatistics findByMonthAndPlace(String month, String place);
 }

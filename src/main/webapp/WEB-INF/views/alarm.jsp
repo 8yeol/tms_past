@@ -240,6 +240,8 @@
         $('.tab li').attr('class', '');
         $(obj).attr('class', 'on');
         $('#s_day').trigger('click');
+        const chartData = getWeekChartData(placeName);
+        addChart(chartData);
         search();
     }
 
@@ -379,13 +381,14 @@
      * 일주일 ~ 현재 알림현황 리턴
      */
     function  getWeekChartData() {
+        var place = $('.on')[0].innerText;
         let getData = new Array();
         $.ajax({  /* 현재 데이터 */
             url: '<%=cp%>/getNSNow',
             dataType: 'json',
             async: false,
             data: {
-                group : "${member.monitoringGroup}"
+                group : "${member.monitoringGroup}", "place": place
             },
            success: function (data) {
                 getData.push({day: data[0], legalCount:data[1], companyCount:data[2], managementCount: data[3]});
@@ -394,6 +397,7 @@
         $.ajax({ /* 일주일 ~ 전날 데이터 */
             url: '<%=cp%>/getNSWeek',
             dataType: 'json',
+            data: {"place": place},
             async: false,
             success: function (data) {
                 for(let i=0; i<data.length; i++){
@@ -408,15 +412,17 @@
     }
 
     /**
-     * 최근 12개 
+     * 최근 12개
      * @returns {any[]}
      */
     function  getMonthChartData() {
+        var place = $('.on')[0].innerText;
         const getData = new Array();
         $.ajax({
             url: '<%=cp%>/getNSMonth',
             dataType: 'json',
             async: false,
+            data: {"place": place},
             success: function (data) {
                 for(let i=0; i<data.length; i++){
                     getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});

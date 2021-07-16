@@ -33,9 +33,9 @@ public class NotificationListCustomRepository {
         try{
             if(fromDate.isBefore(toDate)){
                 ProjectionOperation projectionOperation = Aggregation.project()
+                        .andInclude("place")
                         .andInclude("grade")
                         .andInclude("up_time")
-                        .andInclude("place")
                         .andInclude("count");
                 MatchOperation matchOperation = Aggregation.match(new Criteria()
                             .andOperator(Criteria.where("up_time").gte(fromDate).lte(toDate)
