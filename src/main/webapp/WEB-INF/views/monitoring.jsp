@@ -496,16 +496,62 @@
     let INTERVAL; let flashCheck; let alarmCheck;
     var oldSensorList; var chart = {};
     $(document).ready(function () {
+
         <%--let placeData2 = ${sensor}; // 모니터링 True 인 측정소 리스트의 모니터링 True인 센서 데이터(최근,이전,기준값 등)--%>
         <%--draw_sensor_info(placeData2); //대시보드 생성--%>
         setTimeout(function () {
             getData();
         }, 0);
         // 페이지 로딩 후 1초뒤 실시간 동기화
-        flashCheck = "on"; //플래시 효과의 기본값 설정
-        alarmCheck = "on";
+        if(getCookie("flashCheck") ==undefined){
+            setCookie("flashCheck", "on", 999);
+        }
+        if(getCookie("alarmCheck") ==undefined){
+            setCookie("alarmCheck", "on", 999);
+        }
+        flashCheck = getCookie("flashCheck");
+        if(flashCheck == "on"){
+            $("input:radio[name='flashing']:radio[value='on']").prop("checked", true);
+            $("input:radio[name='flashing']:radio[value='off']").prop("checked", false);
+        }else{
+            $("input:radio[name='flashing']:radio[value='on']").prop("checked", false);
+            $("input:radio[name='flashing']:radio[value='off']").prop("checked", true);
+
+        }
+        alarmCheck = getCookie("alarmCheck");
+        if(alarmCheck == "on"){
+            $("input:radio[name='alarmTone']:radio[value='on']").prop("checked", true);
+            $("input:radio[name='alarmTone']:radio[value='off']").prop("checked", false);
+        }else{
+            $("input:radio[name='alarmTone']:radio[value='on']").prop("checked", false);
+            $("input:radio[name='alarmTone']:radio[value='off']").prop("checked", true);
+
+        }
     });
 
+
+    function getCookie(cookie_name) {
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+            x = val[i].substr(0, val[i].indexOf('='));
+            y = val[i].substr(val[i].indexOf('=') + 1);
+            x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+            if (x == cookie_name) {
+                return unescape(y); // unescape로 디코딩 후 값 리턴
+            }
+        }
+    }
+
+    function setCookie(cookie_name, value, days) {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + days);
+        // 설정 일수만큼 현재시간에 만료값으로 지정
+
+        var cookie_value = escape(value) + ((days == null) ? '' : '; expires=' + exdate.toUTCString());
+        document.cookie = cookie_name + '=' + cookie_value;
+    }
     /**
      * 페이지 로딩시 측정소 별로 테이블 틀 생성, 측정소 별, 센서별 데이터를 받아 대시보드, 테이블 데이터 입력
      */
@@ -965,6 +1011,7 @@
             if(typeof flIn2 !== "undefined")
                 clearTimeout(flIn2);
         }
+        setCookie("alarmCheck", alarmCheck, 999);
     });
     /**
      * 점멸 효과 On / Off 이벤트
@@ -978,6 +1025,7 @@
             if(typeof flIn1 !== "undefined")
                 clearTimeout(flIn1);
         }
+        setCookie("flashCheck", flashCheck, 999);
     });
 
     /**
