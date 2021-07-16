@@ -472,7 +472,10 @@ public class AjaxController {
                 sensorList.add(referenceValueSetting.getName());
             }
         }
-        return getExcessList(sensorList);
+        if(sensorList != null){
+            return getExcessList(sensorList);
+        }
+        return null;
     }
 
     public Object getExcessList(List<String> sensorList){

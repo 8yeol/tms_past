@@ -259,23 +259,23 @@
         <div style="width: 50%; display: flex; flex-wrap: wrap; border-right: 1px solid #0d6efd;">
             <div class="operatingDiv bg-lightBlue p-1">
                 <span class="fw-bold">가동률</span>
-                <p id="sensorStatusP" class="text-center">100%</p>
-                <div id="operating" class="align-self-center bg-white text-dark">4 / 4</div>
+                <p id="sensorStatusP" class="text-center">0%</p>
+                <div id="operating" class="align-self-center bg-white text-dark">0 / 0</div>
             </div>
             <div style="width: 100%; display: flex; padding: 0 25px; margin-top: 5px;">
                 <div class="topDash-l">
                     <span onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
-                    <p id="statusOn" class="text-success">100%</p>
+                    <p id="statusOn" class="text-success">0</p>
                     <div class="Gcloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
                 </div>
                 <div class="topDash-l">
                     <span onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
-                    <p id="statusOff" class="text-danger">0%</p>
+                    <p id="statusOff" class="text-danger">0</p>
                     <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
                 </div>
                 <div class="topDash-l text-center">
                     <span onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
-                    <p id="monitoringOff">100%</p>
+                    <p id="monitoringOff">0</p>
                     <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
                 </div>
             </div>
