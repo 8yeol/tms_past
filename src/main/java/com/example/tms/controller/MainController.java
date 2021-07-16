@@ -128,16 +128,20 @@ public class MainController {
 
         // 연간 배출량 추이 모니터링 ON + 멤버의 그룹에 포함된 센서가 아니라면 제외
         List<EmissionsSetting> emissionsSettings = emissionsSettingRepository.findByStatus(true);
-        for (int i=0; i<emissionsSettings.size(); i++){
-            String placeName = emissionsSettings.get(i).getPlace();
-            if(group.getGroupNum() != 1 && !group.getMonitoringPlace().contains(placeName)){
-                emissionsSettings.remove(i);
+        if(group.getMonitoringPlace() == null || group.getMonitoringPlace().size() == 0){
+            model.addAttribute("emissionSettingList", null);
+            model.addAttribute("place_count",0);
+        }else {
+            for (int i = 0; i < emissionsSettings.size(); i++) {
+                String placeName = emissionsSettings.get(i).getPlace();
+                if (group.getGroupNum() != 1 && !group.getMonitoringPlace().contains(placeName)) {
+                    emissionsSettings.remove(i);
+                }
             }
+            model.addAttribute("emissionSettingList", emissionsSettings);
+            model.addAttribute("place_count", group.getMonitoringPlace().size());
         }
 
-        model.addAttribute("place_count", group.getMonitoringPlace().size());
-
-        model.addAttribute("emissionSettingList", emissionsSettings);
 
         List<ArrayList<EmissionsTransition>> emissionList = new ArrayList<>();
         for(int i = 0; i < emissionsSettings.size();i++){
@@ -156,14 +160,17 @@ public class MainController {
 
         //연간 배출량 모니터링 대상중 멤버 그룹에 포함된것만 추가
         List<String> placeList = new ArrayList<>();
-        for (AnnualEmissions place : setting) {
-            if(group.getGroupNum() == 1 || group.getMonitoringPlace().contains(place.getPlace())) {
-                placeList.add(place.getPlace());
+        if(group.getMonitoringPlace() == null || group.getMonitoringPlace().size() ==0){
+            model.addAttribute("placeList", null);
+        }else {
+            for (AnnualEmissions place : setting) {
+                if (group.getGroupNum() == 1 || group.getMonitoringPlace().contains(place.getPlace())) {
+                    placeList.add(place.getPlace());
+                }
             }
+            TreeSet<String> placeSet = new TreeSet<>(placeList);
+            model.addAttribute("placeList", placeSet);
         }
-        TreeSet<String> placeSet = new TreeSet<>(placeList);
-        model.addAttribute("placeList", placeSet);
-
         List<EmissionsStandardSetting> standard = new ArrayList<>();
         for (int i = 0; i<setting.size(); i++){
             standard.add(emissionsStandardSettingRepository.findByTableNameIsIn(setting.get(i).getSensor()));
@@ -182,8 +189,11 @@ public class MainController {
      * @return alarm.jsp
      */
     @RequestMapping("/alarm")
-    public String alarm() {
-
+    public String alarm(Model model, Principal principal) {
+        Member member = memberRepository.findById(principal.getName());
+        MonitoringGroup group = monitoringGroupRepository.findByGroupNum(member.getMonitoringGroup());
+        model.addAttribute("group", group);
+        model.addAttribute("allPlace", placeRepository.findAll());
         return "alarm";
     }
 

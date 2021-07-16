@@ -81,9 +81,10 @@ public class MongoQuary {
      * @param to 검색종료시간
      * @return 검색기간내의 알림목록
      */
-    public Object getNotificationList(String from, String to) {
+    public Object getNotificationList(String from, String to, String placeName) {
         MatchOperation where = Aggregation.match(
                 new Criteria().andOperator(
+                        Criteria.where("place").is(placeName),
                         Criteria.where("up_time")
                                 .gte(LocalDateTime.parse(from + "T00:00:00"))
                                 .lte(LocalDateTime.parse(to + "T23:59:59"))

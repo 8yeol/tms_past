@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
     pageContext.setAttribute("br", "<br/>");
@@ -27,12 +28,56 @@
 <script src="static/js/datepicker.ko.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
+<style>
 
+    .tab {
+        width: 70px;
+        list-style: none;
+        position: absolute;
+        left: -111px;
+        top:10px;
+        margin: 0;
+        padding: 0px 10px 0;
+    }
+    .tab li {
+        width: 100px;
+        height: 80px;
+        background-color: #ccc;
+        color: #999;
+        text-align: center;
+        cursor: pointer;
+        padding: 15px 10px 0 10px;
+    }
+    .tab li.on {
+        background-color: #75ACFF;
+        color: #fff;
+    }
+
+    .tab li:hover {
+        background-color: #75ACFF;
+        color: #fff;
+    }
+</style>
 <div class="container" id="container">
     <div class="row m-3 mt-3 ms-1">
         <span class="fs-4 fw-bold">알림</span>
     </div>
-    <div class="row m-3 mt-3 bg-light ms-1">
+
+    <div class="row m-3 mt-3 bg-light ms-1" style="position: relative">
+
+        <ul class="tab">
+            <c:if test="${group.groupNum == 1}">
+                <c:forEach var="place" items="${allPlace}" varStatus="staus">
+                    <li class="" onclick="tabClick(this, '${place.name}')">${place.name}</li>
+                </c:forEach>
+            </c:if>
+            <c:if test="${group.groupNum != 1}">
+                <c:forEach var="place" items="${group.monitoringPlace}" varStatus="staus">
+                     <li class="" onclick="tabClick(this, '${place}')">${place}</li>
+                </c:forEach>
+            </c:if>
+        </ul>
+
         <div class="row p-3 pb-0 ms-1">
             <div class="col-auto fs-5 fw-bold">
                 알림 목록 <button class="btn" onclick="search('refresh')"> <i class="fas fa-sync-alt"></i> </button>
@@ -123,6 +168,7 @@
 
 <script>
     $( document ).ready(function() {
+        $('.tab').children().eq(0).attr("class", "on");
         $("#date_start").val(getDays());
         $("#date_end").val(getDays());
 
@@ -133,6 +179,7 @@
             const chartData = getWeekChartData();
             addChart(chartData);
         }
+
 
         $('#information').dataTable({
             lengthChange : false,
@@ -241,6 +288,13 @@
         }
     });
 
+    //탭 이벤트
+    function tabClick(obj, placeName) {
+        $('.tab li').attr('class', '');
+        $(obj).attr('class', 'on');
+        search();
+    }
+
     function getDays(dayType){
         if(dayType == 'week'){
             return moment(new Date()).subtract(7, 'd').format('YYYY-MM-DD');
@@ -273,7 +327,8 @@
                 cache: false,
                 data: {
                     "from" : from,
-                    "to" : to
+                    "to" : to,
+                    "placeName" : $('.on').text()
                 },
                 success : function(data) {
                     if(data.length != 0){

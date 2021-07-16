@@ -453,8 +453,8 @@ public class AjaxController {
      * @return 전체 알람 목록
      */
     @RequestMapping(value = "/getNotificationList")
-    public Object getNotificationList(String from, String to) {
-        return mongoQuary.getNotificationList(from, to);
+    public Object getNotificationList(String from, String to, String placeName) {
+        return mongoQuary.getNotificationList(from, to, placeName);
     }
 
     @RequestMapping(value = "/getExcessSensor", produces = MediaType.APPLICATION_JSON_VALUE)
