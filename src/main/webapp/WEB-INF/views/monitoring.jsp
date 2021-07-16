@@ -583,7 +583,7 @@
             if($('#chart-'+chartIndex)[0].innerHTML.length ==0){
                $('#chart-'+chartIndex).append("<p style='height: 50px; text-align:center; padding-top:12px; background-color: #e6e6e7'>최근 10분 데이터가 없습니다.</p>")
             }else{
-                $('#chart-'+chartIndex).find('span').remove();
+                $('#chart-'+chartIndex).find('p').remove();
             }
         }else{
             if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
@@ -694,7 +694,7 @@
                     var standardExistStatus = data[z].standardExistStatus;
                     if(!standardExistStatus){
                         $('.'+i).append( //i:측정소idx z:센서idx
-                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+"-"+z+">"+"</span></div>"+
+                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span style='padding: 0' id=update-"+i+"-"+z+">"+"</span><span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
                             "<table class='table table-bordered table-hover text-center mt-1'>" +
                             "<thead>" +
                             "<tr class='add-bg-color'>" +
@@ -714,7 +714,7 @@
                             "</div>");
                     }else{
                         $('.'+i).append(
-                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span id=update-"+i+"-"+z+">"+"</span></div>"+
+                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span style='padding: 0' id=update-"+i+"-"+z+"></span><span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
                             "<table class='table table-bordered table-hover text-center mt-1'>" +
                             "<thead>" +
                             "<tr class='add-bg-color'>" +
@@ -766,6 +766,7 @@
      * 측정소 테이블 생성
      */
     function draw_place_table(placeInfo) {
+        console.log(placeInfo);
         var placeCount = placeInfo.length;
         if(placeCount != 0) {
             for (var i = 0; i < placeCount; i++) {
@@ -782,16 +783,16 @@
                         const newRow = tbody.insertRow(tbody.rows.length);
                         $("#update-"+i+'-'+z).text(moment(data[z].recent_up_time).format('YYYY-MM-DD HH:mm:ss'));
                         if(data[z].unit != ""){
-                            unit = "("+data[z].unit + ")";
-                        }else{
-                            unit = "";
+                            unit = data[z].unit;
+                            $("#unit-"+i+'-'+z).text("단위 : "+unit);
+                            $("#unit-"+i+'-'+z).css("padding-left", "10px");
                         }
                         if(!standarExistStatus){
                             const newCeil0 = newRow.insertCell(0);
                             const newCeil1 = newRow.insertCell(1);
                             const newCeil2 = newRow.insertCell(2);
                             const newCeil3 = newRow.insertCell(3);
-                            newCeil0.innerHTML = data[z].naming+unit+'<input type="hidden" value='+data[z].name+'>';
+                            newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
                             newCeil1.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
                             newCeil2.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
                             newCeil3.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);

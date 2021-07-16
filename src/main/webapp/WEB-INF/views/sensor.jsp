@@ -204,36 +204,42 @@
                                 </c:otherwise>
                             </c:choose>
                                 <td><c:out value="${sensorList.naming}"/><input type="hidden" value="<c:out value="${sensorList.name}"/>"> </td>
-                                <td><div class="bg-danger text-light">
+                                <td>
                                     <c:choose>
                                         <c:when test="${sensorList.legalStandard eq 999999}">
                                             -
                                         </c:when>
                                         <c:when test="${sensorList.legalStandard ne 999999}">
+                                        <div class="bg-danger text-light">
                                             <c:out value="${sensorList.legalStandard}"/>
+                                        </div>
                                         </c:when>
                                     </c:choose>
-                                </div></td>
-                                <td><div class="bg-warning text-light">
+                                </td>
+                                <td>
                                     <c:choose>
                                         <c:when test="${sensorList.companyStandard eq 999999}">
                                             -
                                         </c:when>
                                         <c:when test="${sensorList.companyStandard ne 999999}">
+                                        <div class="bg-warning text-light">
                                             <c:out value="${sensorList.companyStandard}"/>
+                                        </div>
                                         </c:when>
                                     </c:choose>
-                                </div></td>
-                                <td><div class="bg-success text-light">
+                                </td>
+                                <td>
                                     <c:choose>
                                         <c:when test="${sensorList.managementStandard eq 999999}">
                                             -
                                         </c:when>
                                         <c:when test="${sensorList.managementStandard ne 999999}">
+                                        <div class="bg-success text-light">
                                             <c:out value="${sensorList.managementStandard}"/>
+                                        </div>
                                         </c:when>
                                     </c:choose>
-                                </div></td>
+                                </td>
                                 <td>
                                     <c:if test="${sensorList.value != 0}">
                                         <c:if test="${sensorList.beforeValue > sensorList.value}">
@@ -242,7 +248,6 @@
                                         <c:if test="${sensorList.beforeValue < sensorList.value}">
                                             <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
                                         </c:if>
-
                                     </c:if>
                                     <c:if test="${sensorList.value eq 0}">
                                         0.00
@@ -292,6 +297,7 @@
                             <span class="text-primary" style="font-size: 0.8rem; position: absolute; right: 15px;"> * 최근 1시간은 실시간, 최근 24시간은 5분평균 데이터로 실시간 업데이트됩니다.</span>
                         </div>
                         <div id="chart" style=" margin-right: 10px; margin-top: 20px;"></div>
+                        <div id="noData"><p style='height: 350px; text-align:center; padding-top:160px; background-color: #F2F2F3'>최근 데이터가 없습니다.</p></div>
                     </div>
                 </div>
                 <%-- 하단 테이블 --%>
@@ -408,7 +414,7 @@
         }, 300)
     });
     /**
-     * 최근 1시간 or 최근 24시간(5분 단위 데이터) 클릭 이벤트 (조건에 맞는 해당 센서 조회)
+     *  숫자 표시 On / Off
      */
     $("input[name=chartLabel]").on('click' , function (){
         if(document.getElementsByName("chartLabel")[0].checked){ //off
@@ -521,6 +527,8 @@
             var sensorDataLength = sensor_data_list.length;
             var dt = draw_sensor_table(sensor_data_list, sensor_data); // 센서 테이블 생성 (측정시간, 측정값, 관리등급)
             if(sensor_data_list.length != 0){
+                $('#chart').show();
+                $('#noData').hide();
                 $("#radio_text").text(sensor_data.naming); // 선택된 센서명 텍스트 출력
                 setTimeout(function interval_getData2() { //$초 마다 업데이트
                     // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
@@ -547,6 +555,7 @@
                         updateChart(null, sensor_data);
                         $("#radio_text").text("-") ;
                         $("#standard_text").text("");
+                        $("#unit_text").text("");
                         draw_frame();
                     }
                     interval2 = setTimeout(interval_getData2, 5000);
@@ -558,14 +567,16 @@
                         title: '경고',
                         text: '최근 '+sensor_time_length+'시간의 결과가 없습니다.'
                     })
-                    draw_sensor_table(sensor_data_list, sensor_data);
+                    // draw_sensor_table(sensor_data_list, sensor_data);
                     $("#radio_text").text(sensor_data.naming);
-                    updateChart(sensor_data_list, sensor_data);
+                    $('#chart').hide();
+                    $('#noData').show();
                 }
             }
         }else{ // 측정소 데이터, 센서데이터가 없을 때
             $("#radio_text").text("-") ;
             $("#standard_text").text("");
+            $("#unit_text").text("");
             draw_sensor_table(null);
             updateChart(null, sensor_data);
         }
@@ -937,18 +948,24 @@
 
                     if(data[i].legalStandard == 999999){
                         legalStandard = '-';
+                        newCeil1.innerHTML = legalStandard;
                     }else{
                         legalStandard = data[i].legalStandard;
+                        newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
                     }
                     if(data[i].companyStandard == 999999){
                         companyStandard = '-';
+                        newCeil2.innerHTML = companyStandard;
                     }else{
                         companyStandard = data[i].companyStandard;
+                        newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
                     }
                     if(data[i].managementStandard == 999999){
                         managementStandard = '-';
+                        newCeil3.innerHTML = managementStandard;
                     }else{
                         managementStandard = data[i].managementStandard;
+                        newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
                     }
                     var selectSensorName = $('#radio_text').text();
                     var sensorName = data[i].naming;
@@ -956,9 +973,6 @@
                         newRow.setAttribute('class', 'rowSelected');
                     }
                     newCeil0.innerHTML = sensorName+'<input type="hidden" value="'+ data[i].name+'">';
-                    newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
-                    newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
-                    newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
                     newCeil4.innerHTML = draw_compareData(data[i].beforeValue, data[i].value);
 
                     if(data[i].value > data[i].legalStandard){
@@ -1001,7 +1015,7 @@
         $('#sensor-table').empty();
         $('#sensor-standard').empty();
         $('#sensor-table').append('<thead><td>측정 시간</td><td>측정 값</td><td>관리 등급</td></thead>');
-        $('#sensor-standard').append('<div style="color: #000;  margin-right:5px">법적/사내/관리 기준 :</div><div id="standard_text" style="color: #000;"></div>');
+        $('#sensor-standard').append('<div id="standard_text" style="color: #000; padding-right: 8px"></div><div id="unit_text" style="color: #000;"></div>');
         $("#sensor-table").DataTable().clear();
         $("#sensor-table").DataTable().destroy();
         if(sensor_data_list == null){
@@ -1037,7 +1051,14 @@
             }else{
                 managementStandard = sensor_data.managementStandard;
             }
-            $("#standard_text").text(legalStandard+"/"+companyStandard+"/"+managementStandard+" mg/Sm³ 이하");
+            var unit;
+            if(sensor_data.unit != ""){
+                unit = sensor_data.unit;
+                $('#unit_text').text("단위:"+unit);
+            }
+            if(legalStandard != '-' || companyStandard != '-' || managementStandard != '-'){
+                $("#standard_text").text("법적/사내/관리기준 : "+legalStandard+"/"+companyStandard+"/"+managementStandard+"이하");
+            }
         }
 
         var dt = $('#sensor-table').dataTable({

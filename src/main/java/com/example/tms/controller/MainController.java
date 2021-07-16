@@ -321,18 +321,6 @@ public class MainController {
             // 선택된 센서의 최근 1시간 데이터들을 JSON 타입으로 저장하기 위한 변수
             List<String> placeNames = new ArrayList<>();
             // 모니터링 True 인 측정소명을 저장하기 위한 변수
-
-//            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //측정소 모니터링 True인 측정소 정보
-//            String placeName = "";
-//            for(int z=0; z<placeList.size(); z++){
-//                placeNames.add(placeList.get(z).getName()); //측정소 리스트에서 측정소명만 추출하여 저장
-//                if(sensor.equals("")){ //파라미터가 없을 경우
-//                    placeName = placeList.get(0).getName(); //0번째 측정소명을 default 로 설정
-//                }else{ //파라미터가 있을 경우
-//                    placeName = placeRepository.findBySensorIsIn(sensor).getName(); //해당 파라미터의 센서에 해당하는 측정소명
-//                }
-//            }
-//            List<String> sensorNames = placeRepository.findByName(placeName).getSensor(); //측정소의 센서명 저장
             Map<String, List> gMS = ajaxController.getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
             List<String> gMS_placeName = new ArrayList<>();
             List<String> place = new ArrayList<>();

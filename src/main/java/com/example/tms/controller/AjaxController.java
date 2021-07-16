@@ -267,13 +267,14 @@ public class AjaxController {
     public JSONArray getPlaceData(String place, Principal principal) {
         Map<String, List> gMS = getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
         List<String> sensorNames = gMS.get(place);
-//        List<String> sensorNames = placeRepository.findByName(place).getSensor();
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < sensorNames.size(); i++) {
             JSONObject subObj = new JSONObject();
             String sensorName = sensorNames.get(i);
             boolean monitoring = reference_value_settingRepository.findByName(sensorName).getMonitoring();
             if (monitoring) { //monitoring true
+                String[] splitSensor = sensorName.split("_");
+                Item sensorItem = itemRepository.findByClassification(splitSensor[1]);
                 Sensor recentData = sensorCustomRepository.getSensorRecent(sensorName);
                 subObj.put("place", place);
                 subObj.put("value", recentData.getValue());
@@ -287,6 +288,11 @@ public class AjaxController {
                 subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
                 subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
                 subObj.put("name", sensorName);
+                if(sensorItem != null) {
+                    subObj.put("unit", sensorItem.getUnit());
+                }else{
+                    subObj.put("unit", "");
+                }
                 jsonArray.add(subObj);
             }
         }
@@ -318,6 +324,8 @@ public class AjaxController {
         boolean monitoring = reference_value_settingRepository.findByName(sensor).getMonitoring();
         JSONObject subObj = new JSONObject();
         if (monitoring) {
+            String[] splitSensor = sensor.split("_");
+            Item sensorItem = itemRepository.findByClassification(splitSensor[1]);
             try {
                 Sensor recentData = sensorCustomRepository.getSensorRecent(sensor);
                 subObj.put("value", recentData.getValue());
@@ -338,6 +346,11 @@ public class AjaxController {
             subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
             subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
             subObj.put("name", sensor);
+            if(sensorItem != null) {
+                subObj.put("unit", sensorItem.getUnit());
+            }else{
+                subObj.put("unit", "");
+            }
         }
         return subObj;
     }
