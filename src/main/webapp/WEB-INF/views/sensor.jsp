@@ -818,7 +818,7 @@
     function updateChart(sensor_data_list, sensor_data){
         // chart.resetSeries();
         var arr =new Array();
-        if(sensor_data_list != null){
+        if(sensor_data_list.length != 0){
             for(var i in sensor_data_list){
                 arr.push(sensor_data_list[i].y);
             }

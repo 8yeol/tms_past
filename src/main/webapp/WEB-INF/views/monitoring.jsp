@@ -593,12 +593,14 @@
                 // }
                 // console.log(recentValue);
                 recentData = getSensorData(sensorName);
-                if(sensorDataList[sensorDataLength-1].x != recentData.up_time){
-                    sensorDataList.push({x: recentData.up_time, y: recentData.value});
-                }
-                updateChart(sensorDataList, recentData, chartIndex);
-                if(sensorDataList.length > sensorDataLength*2){
-                    sensorDataList = getSensor(sensorName, 10);
+                if(sensorDataList.length != 0){
+                    if(sensorDataList[sensorDataLength-1].x != recentData.up_time){
+                        sensorDataList.push({x: recentData.up_time, y: recentData.value});
+                    }
+                    updateChart(sensorDataList, recentData, chartIndex);
+                    if(sensorDataList.length > sensorDataLength*2){
+                        sensorDataList = getSensor(sensorName, 10);
+                    }
                 }
                 realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
             }, 0);
@@ -1069,7 +1071,7 @@
     function updateChart(sensor_data_list, sensor_data, chartIndex){
         // chart.resetSeries();
         var arr =new Array();
-        if(sensor_data_list != null){
+        if(sensor_data_list.length != 0){
             for(var i in sensor_data_list){
                 arr.push(sensor_data_list[i].y);
             }
