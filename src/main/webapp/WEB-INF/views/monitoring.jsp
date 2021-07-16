@@ -994,7 +994,7 @@
         var dt = new Date(dateTime);
         var now = new Date();
         var diffTime = (now.getTime()-dt.getTime())/1000/60;
-        if (diffTime <= 5){ //5분 차이
+        if (diffTime >= -5 && diffTime <= 5){ //5분 차이
             return true;
         }else{
             return false;
