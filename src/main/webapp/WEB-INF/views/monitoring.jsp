@@ -575,44 +575,48 @@
         var tbodyId = $(this).parent('tbody').attr('id');
         const sensorName = $(this).find('td input')[0].value;
         var chartIndex = tbodyId.substr(13,5);
-        var sensorDataList = getSensor(sensorName, 10);
+        // var sensorDataList = getSensor(sensorName, 10);
+        var sensorDataList = [];
         var recentData;
         var sensorDataLength = sensorDataList.length;
         var realTime = {};
-        if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
-            draw_place_chart_frame(chartIndex);
-            recentData = getSensorData(sensorName);
-            updateChart(sensorDataList, recentData, chartIndex);
-            setTimeout(function realTime() {
-                var update = $('#update-'+chartIndex)[0].innerText;
-                var columnCount = $('#sensor-table-'+chartIndex).find('td').length;
-                var recentValue;
-                if(columnCount == 4){
-                    recentValue = $('#sensor-table-'+chartIndex).find('td')[1].innerText;
-                }else if(columnCount == 7){
-                    recentValue = $('#sensor-table-'+chartIndex).find('td')[4].innerText;
-                }
-                if(recentValue.indexOf("-") !== -1){
-                    recentValue = recentValue.substr(2);
-                }
-                // recentData = getSensorData(sensorName);
-                if(sensorDataList.length != 0){
-                    if(sensorDataList[sensorDataLength-1].x != update){
-                        sensorDataList.push({x: update, y: recentValue});
-                    }
-                    updateChart(sensorDataList, recentData, chartIndex);
-                    if(sensorDataList.length > sensorDataLength*2){
-                        sensorDataList = getSensor(sensorName, 10);
-                    }
-                }
-                realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
-            }, 0);
+        if(sensorDataList.length == 0){
+            if($('#chart-'+chartIndex)[0].innerHTML.length ==0){
+               $('#chart-'+chartIndex).append("<span style='height: 300px; background-color: red'>최근 10분 데이터가 없습니다.</span>")
+            }else{
+                $('#chart-'+chartIndex).find('span').remove();
+            }
         }else{
-            if($('#chart-'+chartIndex).css("display") == 'none'){
-                $('#chart-'+chartIndex).show();
+            if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
+                draw_place_chart_frame(chartIndex);
+                recentData = getSensorData(sensorName);
+                updateChart(sensorDataList, recentData, chartIndex);
+                setTimeout(function realTime() {
+                    var update = $('#update-'+chartIndex)[0].innerText;
+                    var columnCount = $('#sensor-table-'+chartIndex).find('td').length;
+                    var recentValue;
+                    if(columnCount == 4){
+                        recentValue = $('#sensor-table-'+chartIndex).find('td')[1].innerText;
+                    }else if(columnCount == 7){
+                        recentValue = $('#sensor-table-'+chartIndex).find('td')[4].innerText;
+                    }
+                    if(recentValue.indexOf("-") !== -1){
+                        recentValue = recentValue.substr(2);
+                    }
+                    // recentData = getSensorData(sensorName);
+                    if(sensorDataList.length != 0){
+                        if(sensorDataList[sensorDataLength-1].x != update){
+                            sensorDataList.push({x: update, y: recentValue});
+                        }
+                        updateChart(sensorDataList, recentData, chartIndex);
+                        if(sensorDataList.length > sensorDataLength*2){
+                            sensorDataList = getSensor(sensorName, 10);
+                        }
+                    }
+                    realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
+                }, 0);
             }else{
                 clearTimeout(realTime['chart-'+chartIndex]);
-                // $('#chart-'+chartIndex).hide();
                 chart['chart-'+chartIndex].destroy();
             }
         }
@@ -1059,7 +1063,7 @@
             yaxis:{
                 labels: {
                     show: true,
-                    formatter: function (val) {
+                    formatter: function () {
                         return 'No data'
                     }
                 },
@@ -1072,7 +1076,6 @@
      *  차트 업데이트
      */
     function updateChart(sensor_data_list, sensor_data, chartIndex){
-        // chart.resetSeries();
         var arr =new Array();
         if(sensor_data_list.length != 0){
             for(var i in sensor_data_list){
