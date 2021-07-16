@@ -412,17 +412,11 @@
 
                 <div class="message text-start" style="padding: 10px;">
                     <p>알림</p>
-                    <span class="messageText" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd; height: 100px">
-                        <span class="text-danger" style="margin-right: 10px;">법적기준 초과</span>
-                        보일러실- 질소산화물 (82)<br><br>
+                    <span class="messageText danger dangerOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd; ">
                     </span>
-                    <span class="messageText" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
-                        <span class="text-warning" style="margin-right: 10px;">관리기준 초과</span>
-                        보일러실- 질소산화물 (82)<br><br>
+                    <span class="messageText warning warningOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
                     </span>
-                    <span class="messageText" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
-                        <span class="text-success" style="margin-right: 10px;">법적기준 초과</span>
-                        보일러실- 질소산화물 (82)<br><br>
+                    <span class="messageText caution cautionOuter"  style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
                     </span>
                 </div>
             </div>
@@ -486,7 +480,13 @@
                 </div>
 
                 <div class="message text-start">
-                    <span class="messageText"></span>
+                    <p>알림</p>
+                    <span class="messageText danger dangerOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd; ">
+                    </span>
+                    <span class="messageText warning warningOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
+                    </span>
+                    <span class="messageText caution cautionOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
+                    </span>
                 </div>
             </div>
         </div>
@@ -504,33 +504,52 @@
     });
 
     function getAlarm(){
+        $('.dangerOuter').html('');
+        $('.warningOuter').html('');
+        $('.cautionOuter').html('');
+        $('.message').css('display', 'none');
+
         $.ajax({
             url: '<%=cp%>/getExcessSensor',
             dataType: 'json',
             async: false,
             success: function (data) {
-                console.log(data);
-                console.log(data.excess);
                 const arr = data.excess;
                 let message;
                 if(arr != undefined){
-                    messageOpen2();
                     for(let i=0; i<arr.length; i++){
-                        const excess = arr[i].classification;
-                        const place = arr[i].place;
-                        const naming = arr[i].naming;
-                        const value = arr[i].value;
 
-                        if(excess == "danger" ){
-                            message = place +" - " + naming + " 법적 기준 초과 ( " + value + " )";
-                        }else if(excess == "warning"){
-                            message = place +" - " + naming + " 사내 기준 초과 ( " + value + " )";
-                        }else if(excess == "caution"){
-                            message = place +" - " + naming + " 관리 기준 초과 ( " + value + " )";
-                        }
+                        $.ajax({
+                            url: '<%=cp%>/getExcessSensorCheck',
+                            dataType: 'json',
+                            async: false,
+                            data : {"naming" : arr[i].naming , "place" : arr[i].place},
+                            success: function (data) {
+
+                                if(data == true){
+                                    const excess = arr[i].classification;
+                                    const place = arr[i].place;
+                                    const naming = arr[i].naming;
+                                    const value = arr[i].value;
+
+                                    if(excess == "danger" ){
+                                        $('.dangerOuter').append('<span class="text-danger" id="dangerInner" style="margin-right: 10px;">법적기준 초과</span>'+place +' - '+naming+' ('+value+')<br><br>');
+                                        $('.danger').css('display', 'block');
+                                        $('.message').css('display', 'block');
+                                    }else if(excess == "warning"){
+                                        $('.warningOuter').append('<span class="text-warning" id="dangerInner" style="margin-right: 10px;">사내기준 초과</span>'+place +' - '+naming+' ('+value+')<br><br>');
+                                        $('.warning').css('display', 'block');
+                                        $('.message').css('display', 'block');
+                                    }else if(excess == "caution"){
+                                        $('.cautionOuter').append('<span class="text-success" id="dangerInner" style="margin-right: 10px;">관리기준 초과</span>'+place +' - '+naming+' ('+value+')<br><br>');
+                                        $('.cautionOuter').css('display', 'block');
+                                        $('.message').css('display', 'block');
+                                    }
+                                }
+                            }
+                        });
                     }
                 }
-                $('.messageText').text(message);
             },
             error: function (request, status, error) {
                 console.log(error)

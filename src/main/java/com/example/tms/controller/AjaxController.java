@@ -514,6 +514,21 @@ public class AjaxController {
         return excess;
     }
 
+    /**
+     * 항목명과 측정소로 센서 -> 센서로 알림설정값 리턴
+     * @param naming
+     * @param place
+     * @return
+     */
+    @RequestMapping(value = "/getExcessSensorCheck", produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean getExcessSensorCheck(String naming, String place) {
+
+        SensorList sensor = sensorListRepository.findByPlaceAndNaming(place, naming);
+        NotificationSettings setting = notification_settingsRepository.findByName(sensor.getTableName());
+
+        return setting.isStatus();
+    }
+
     public JSONObject getExcessList(List<String> sensorList){
         JSONObject excess = new JSONObject();
         JSONArray jsonArray = new JSONArray();
