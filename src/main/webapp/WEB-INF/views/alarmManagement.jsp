@@ -69,8 +69,12 @@
                             <div style="padding-top: 10px;" id="items${status.index}">
                                     <%-- script --%>
                             </div>
-                            <button type="button" class="btn btn-primary saveBtn" onClick="insert(${status.index})">저장
-                            </button>
+                            <c:if test="${state == 1}">
+                                <button type="button" class="btn btn-primary saveBtn" onClick="insert(${status.index})">저장</button>
+                            </c:if>
+                            <c:if test="${state != 1}">
+                                <button type="button" class="btn btn-primary saveBtn" onClick="permissionError()">저장</button>
+                            </c:if>
                         </div>
 
                     </div>
@@ -83,6 +87,8 @@
 </div>
 
 <script>
+    let state = '${state}' == '1' ? '' : 'disabled';
+    let stateEvent = '${state}' == '1' ? '' : 'onclick="permissionError()"';
 
     $(document).ready(function () {
         const placeLength = ${place.size()};
@@ -115,8 +121,6 @@
         let tableName ;
         let naming ;
         let check =-1;
-        let state = '${state}' == '1' ? '' : 'disabled';
-        let stateEvent = '${state}' == '1' ? '' : 'onclick="permissionError()"';
 
         let innerHTMLTimePicker = "<div><span class=\"textSpanParent\">알림 시간</span></div>";
         innerHTMLTimePicker += "<div style='display: inline-flex; margin-top: 10px;'>";
@@ -151,8 +155,8 @@
 
                         const innerHtml =
                             "<label style='font-size: 18px; ' class='form-check-label' id='" + tableName + "'for='" + tableName + "'>" + naming + "</label>" +
-                            "<label class='switch'>" +
-                            "<input id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + status + ">" +
+                            "<label class='switch' "+stateEvent+">" +
+                            "<input "+state +" id='" + tableName + "' name='status" + idx + "' type='checkbox'  " + status + ">" +
                             "<div class='slider round'></div>" +
                             "</label>"
 

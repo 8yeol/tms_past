@@ -484,16 +484,34 @@ public class MainController {
      */
     @RequestMapping(value = "/alarmManagement")
     public String alarmManagement(Model model, Principal principal) {
+        Member member = memberRepository.findById(principal.getName());
+        model.addAttribute("state", member.getState());
+
         List<Place> placeList = placeRepository.findByMonitoringIsTrue();
         for (int i =0; i<placeList.size(); i++){
             if (placeList.get(i).getSensor().size() == 0)
                 placeList.remove(i);
         }
-        model.addAttribute("place", placeList);
+        MonitoringGroup group = monitoringGroupRepository.findByGroupNum(member.getMonitoringGroup());
 
-        Member member = memberRepository.findById(principal.getName());
-        model.addAttribute("state", member.getState());
+        if(group.getGroupNum() == 1){
+            model.addAttribute("place", placeList);
+            return "alarmManagement";
+        }
+
+        if(group.getMonitoringPlace() == null || group.getMonitoringPlace().size() == 0) {
+            model.addAttribute("place", new ArrayList<>());
+            return "alarmManagement";
+        }else{
+            for (int i = 0; i < placeList.size(); i++) {
+                if (!group.getMonitoringPlace().contains(placeList.get(i).getName())) {
+                    placeList.remove(i);
+                    i--;
+                }
+            }
+        model.addAttribute("place", placeList);
         return "alarmManagement";
+        }
     }
 
     /**
