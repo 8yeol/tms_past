@@ -358,7 +358,7 @@
             console.log("sensor_data is none");
             return;
         }
-        chart = new ApexCharts(document.querySelector("#chart"), setChartOption(chartLabel)); //차트 틀 생성
+        chart = new ApexCharts(document.querySelector("#chart"), setChartOption(JSON.parse(chartLabel))); //차트 틀 생성
         chart.render();
         updateChart(sensor_data_list, sensor_data);
         draw_frame();
@@ -846,17 +846,9 @@
             },
             dataLabels: {
                 enabled: chartLabel,
-                // style: { //데이터 배경
-                //     fontSize: '10px',
-                //     colors: ['#629cf4'],
-                // },
                 background: { //데이터 글자
                     enabled: true,
                     foreColor: 'black',
-                    // padding: 1,
-                    // borderRadius: 1,
-                    // borderWidth: 0.3,
-                    // borderColor: 'green',
                     opacity: 0,
                 },
             },
@@ -1077,7 +1069,7 @@
         $('#sensor-table').empty();
         $('#sensor-standard').empty();
         $('#sensor-table').append('<thead><td>측정 시간</td><td>측정 값</td><td>관리 등급</td></thead>');
-        $('#sensor-standard').append('<div id="standard_text" style="color: #000; padding-right: 8px"></div><div id="unit_text" style="color: #000;"></div>');
+        $('#sensor-standard').append('<div id="standard_text" style="color: #000;"></div><div id="unit_text" style="color: #000;"></div>');
         $("#sensor-table").DataTable().clear();
         $("#sensor-table").DataTable().destroy();
         if(sensor_data_list == null){
@@ -1114,9 +1106,10 @@
                 managementStandard = sensor_data.managementStandard;
             }
             var unit;
-            if(sensor_data.unit != ""){
+            if(sensor_data.unit != "" && sensor_data.unit != null){
                 unit = sensor_data.unit;
                 $('#unit_text').text("단위:"+unit);
+                $('#standard_text').css("padding-right", "10px");
             }
             if(legalStandard != '-' || companyStandard != '-' || managementStandard != '-'){
                 $("#standard_text").text("법적/사내/관리기준 : "+legalStandard+"/"+companyStandard+"/"+managementStandard+"이하");
