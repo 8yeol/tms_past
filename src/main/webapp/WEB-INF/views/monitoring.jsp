@@ -574,7 +574,6 @@
         <%--location.replace("<%=cp%>/sensor?sensor=" + sensorName);--%>
         var tbodyId = $(this).parent('tbody').attr('id');
         const sensorName = $(this).find('td input')[0].value;
-        const sensorValue = $(this).find('td')[1].value;
         var chartIndex = tbodyId.substr(13,5);
         var sensorDataList = getSensor(sensorName, 10);
         var recentData;
@@ -585,6 +584,22 @@
             recentData = getSensorData(sensorName);
             updateChart(sensorDataList, recentData, chartIndex);
             setTimeout(function realTime() {
+                var columnCount = $('#sensor-table-'+chartIndex).find('td').length;
+                // var recentValue;
+                // if(columnCount == 4){
+                //     recentValue = $('#sensor-table-'+chartIndex).find('td span')[1];
+                // }else if(columnCount == 7){
+                //     recentValue = $('#sensor-table-'+chartIndex).find('td span')[4];
+                // }
+                // console.log(recentValue);
+                recentData = getSensorData(sensorName);
+                if(sensorDataList[sensorDataLength-1].x != recentData.up_time){
+                    sensorDataList.push({x: recentData.up_time, y: recentData.value});
+                }
+                updateChart(sensorDataList, recentData, chartIndex);
+                if(sensorDataList.length > sensorDataLength*2){
+                    sensorDataList = getSensor(sensorName, 10);
+                }
                 realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
             }, 0);
         }else{
@@ -598,6 +613,7 @@
         }
 
     });
+
 
     /**
      * 알림음
@@ -817,11 +833,11 @@
         beforeData = beforeData.toFixed(2);
         nowData = nowData.toFixed(2);
         if(beforeData > nowData ){
-            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' +nowData;
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i><span value="'+nowData+'">' +nowData+'</span>';
         } else if( nowData > beforeData ) {
-            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' +nowData;
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i><span value="'+nowData+'">' +nowData+'</span>';
         } else if( nowData == beforeData ){
-            return '<span style="font-weight: bold">- </span>' +nowData;
+            return '<span style="font-weight: bold">- </span><span value="'+nowData+'">' +nowData+'</span>';
         } else{
             return nowData;
         }

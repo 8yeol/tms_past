@@ -287,7 +287,7 @@ public class MainController {
      * @param model
      */
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
-    public void sensorInfo(@RequestParam(required = false, defaultValue = "", value = "sensor") String sensor, Model model) {
+    public void sensorInfo(@RequestParam(required = false, defaultValue = "", value = "sensor") String sensor, Model model, Principal principal) {
         try{
             JSONArray jsonArray = new JSONArray();
             //모니터링 페이지에서 선택된 측정소의 센서들의 정보(최근,이전,기준값 등)들을 JSON 타입으로 저장하기위한 변수
@@ -296,17 +296,36 @@ public class MainController {
             List<String> placeNames = new ArrayList<>();
             // 모니터링 True 인 측정소명을 저장하기 위한 변수
 
-            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //측정소 모니터링 True인 측정소 정보
+//            List<Place> placeList = placeRepository.findByMonitoringIsTrue(); //측정소 모니터링 True인 측정소 정보
+//            String placeName = "";
+//            for(int z=0; z<placeList.size(); z++){
+//                placeNames.add(placeList.get(z).getName()); //측정소 리스트에서 측정소명만 추출하여 저장
+//                if(sensor.equals("")){ //파라미터가 없을 경우
+//                    placeName = placeList.get(0).getName(); //0번째 측정소명을 default 로 설정
+//                }else{ //파라미터가 있을 경우
+//                    placeName = placeRepository.findBySensorIsIn(sensor).getName(); //해당 파라미터의 센서에 해당하는 측정소명
+//                }
+//            }
+//            List<String> sensorNames = placeRepository.findByName(placeName).getSensor(); //측정소의 센서명 저장
+            Map<String, List> gMS = ajaxController.getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
+            List<String> gMS_placeName = new ArrayList<>();
+            List<String> place = new ArrayList<>();
+            for(String key : gMS.keySet()){ //key(측정소명) 추출
+                gMS_placeName.add(key);
+            }
             String placeName = "";
-            for(int z=0; z<placeList.size(); z++){
-                placeNames.add(placeList.get(z).getName()); //측정소 리스트에서 측정소명만 추출하여 저장
-                if(sensor.equals("")){ //파라미터가 없을 경우
-                    placeName = placeList.get(0).getName(); //0번째 측정소명을 default 로 설정
-                }else{ //파라미터가 있을 경우
-                    placeName = placeRepository.findBySensorIsIn(sensor).getName(); //해당 파라미터의 센서에 해당하는 측정소명
+            List<String> sensorNames = new ArrayList<String>();
+            placeName = gMS_placeName.get(0);
+            List<String> temp = gMS.get(placeName);
+            for (int a=0; a<gMS_placeName.size()-1; a++){
+                int sensorSize = gMS.get(gMS_placeName.get(a)).size();
+                if(sensorSize != 0) {
+                    placeNames.add(gMS_placeName.get(a));
                 }
             }
-            List<String> sensorNames = placeRepository.findByName(placeName).getSensor(); //측정소의 센서명 저장
+            for(int b=0; b<temp.size(); b++){
+                sensorNames.add(temp.get(b));
+            }
             for(int i=0; i<sensorNames.size(); i++){
                 JSONObject subObj = new JSONObject();
                 //센서의 정보들(최근, 이전, 기준값)을 JSON 타입으로 저장하기 위한 변수

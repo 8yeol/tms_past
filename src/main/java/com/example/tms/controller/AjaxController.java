@@ -95,8 +95,26 @@ public class AjaxController {
      * @return 전체 측정소 정보
      */
     @RequestMapping(value = "/getPlaceList")
-    public List<Place> getPlaceList() {
-        return placeRepository.findAll();
+    public List<Place> getPlaceList(Principal principal) {
+        Map<String, List> gMS = getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
+        List<String> gMS_placeName = new ArrayList<>();
+        List<Place> newList = new ArrayList<>();
+        for(String key : gMS.keySet()){ //key(측정소명) 추출
+            gMS_placeName.add(key);
+        }
+        int placeListSize = gMS.size()-1;
+        List<Place> placeAll = placeRepository.findAll();
+        for(int a=0; a<placeListSize; a++){
+            for(int b=0; b<placeAll.size(); b++){
+                if(gMS_placeName.get(a).equals(placeAll.get(b).getName())){
+                    int sensorSize = gMS.get(gMS_placeName.get(a)).size();
+                    if(sensorSize != 0) {
+                        newList.add(placeAll.get(b));
+                    }
+                }
+            }
+        }
+        return newList;
     }
 
     @RequestMapping(value = "/getPlaceList2")
@@ -246,12 +264,14 @@ public class AjaxController {
      * @return 센서의 최근, 이전, 정보
      */
     @RequestMapping(value = "/getPlaceData")
-    public JSONArray getPlaceData(String place) {
-        List<String> placeName = placeRepository.findByName(place).getSensor();
+    public JSONArray getPlaceData(String place, Principal principal) {
+        Map<String, List> gMS = getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
+        List<String> sensorNames = gMS.get(place);
+//        List<String> sensorNames = placeRepository.findByName(place).getSensor();
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < placeName.size(); i++) {
+        for (int i = 0; i < sensorNames.size(); i++) {
             JSONObject subObj = new JSONObject();
-            String sensorName = placeName.get(i);
+            String sensorName = sensorNames.get(i);
             boolean monitoring = reference_value_settingRepository.findByName(sensorName).getMonitoring();
             if (monitoring) { //monitoring true
                 Sensor recentData = sensorCustomRepository.getSensorRecent(sensorName);
