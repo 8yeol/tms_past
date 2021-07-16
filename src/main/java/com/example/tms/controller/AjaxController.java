@@ -1094,7 +1094,6 @@ public class AjaxController {
         MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(group);
         List<String> placeList = monitoringGroup.getMonitoringPlace();
 
-    public ArrayList getNotificationStatistics(@RequestParam("place") String place) {
         ArrayList al = new ArrayList();
 
         for(String place : placeList){
@@ -1111,23 +1110,10 @@ public class AjaxController {
                 }
             } catch (Exception e) {
             }
-        try {
-            LocalDate nowDate = LocalDate.now();
-            al.add(nowDate);
-            for (int grade = 1; grade <= 3; grade++) {
-                List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(nowDate), String.valueOf(nowDate), place);
-                if (list.size() != 0) {
-                    al.add(list.get(0).get("count"));
-                } else {
-                    al.add(null);
-                }
-            }
-        } catch (Exception e) {
         }
 
         return al;
     }
-
 
     /**
      * 일별 알림 현황 조회 - 최근 일주일 (limit:7)
