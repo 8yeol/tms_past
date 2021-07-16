@@ -346,11 +346,11 @@
                     <h3 class="fs-5 fw-bold groupSubTitle" style="padding-left: 20px;">모니터링 측정소</h3>
 
                     <div class="multiSelectParent" id="placeSelect">
-                        <input type="checkbox" id="allPlaceCheck" class="allPlaceCheck">
+                      <!--  <input type="checkbox" id="allPlaceCheck" class="allPlaceCheck">
                         <label for="allPlaceCheck" id="checkLabel" class="allPlaceCheck"> 전체 측정소 모니터링</label>
                         <span class="allPlaceCheckSpan allPlaceCheck"
                               style="display: block;font-size: 0.9rem;color:#db3535;font-weight: bold;margin-bottom: 10px;">
-                            * 체크시 시스템에 등록된 모든 측정소 모니터링 (변경 불가)</span>
+                            * 체크시 시스템에 등록된 모든 측정소 모니터링 (변경 불가)</span> -->
 
                         <div class="multiSelect allCheckEvent">
                             <label><b>측정소명</b></label>
@@ -596,7 +596,7 @@
         $('.Modal').modal({keyboard: false, backdrop: 'static'}); // esc , 백스페이스 클릭방지
         substrArrayData();
         getMemberAndPlaceList();
-        allPlaceCheck();
+       // allPlaceCheck();
         groupCheck();
     }); //ready
 
@@ -860,14 +860,14 @@
             mList.push(member.eq(i).val());
 
         let pList
-        if ($('#allPlaceCheck').is(':checked') == true || $('.allCheckEvent').css('display') == 'none') {
-            pList = ["모든 측정소"];
-        } else {
+        // if ($('#allPlaceCheck').is(':checked') == true || $('.allCheckEvent').css('display') == 'none') {
+        //     pList = ["모든 측정소"];
+        // } else {
             let place = $('#lstBox2 option');
             pList = new Array();
             for (i = 0; i < place.length; i++)
                 pList.push(place.eq(i).val());
-        }
+        //}
 
         if (flag == "insert") groupNum = -1;
         $.ajax({
@@ -1087,7 +1087,7 @@
         let plaInnerHTML;
 
         for (i = 0; i < memberList.length; i++) {
-            if (memberList[i].monitoringGroup == "1" && memberList[i].state <= 3) {
+            if (memberList[i].monitoringGroup == "1" && memberList[i].state <= 3 && memberList[i].state != 1) {
                 memInnerHTML += '<option value="' + memberList[i].id + '" id="' + memberList[i].state + '">' + memberList[i].id + '</option>';
             }
         }

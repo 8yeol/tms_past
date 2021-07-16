@@ -157,9 +157,6 @@
         if(typeof $('#placeDIv tr').eq(0).attr('id') !== 'undefined') {
             placeChange($('#placeDIv tr').eq(0).attr('id'));
         }
-        if(${groupPlace}[0] != '모든 측정소'){
-            $('.standard').prop('readonly', true);
-        };
     });
 
     $('#addpl').click(function () {
@@ -229,10 +226,6 @@
                     check +
                     "<td style='width: 34%; word-break: break-all;' id='place" + i + "'>" + name + "</td>" +
                     "<td style='width: 40%;'>" + time + "</td>" +
-                    // "<td style='width: 24%; padding:5px;' onclick='event.cancelBubble=true'><label class='switch'>" +
-                    // "<input class='placeCheckbox' id='pmonitor" + i + "' type='checkbox' " + onoff + " onchange=\"p_monitoringupdate('pmonitor" + i + "')\">" +
-                    // "<span class='slider round'></span>" +
-                    // "</label></td>" +
                     "</tr>";
 
                 $('#placeDiv').append(innerHTML);
@@ -288,6 +281,12 @@
         $('#items').append(none); //센서 없을때
         let readonly = ${state} != 1 ? 'readonly' : '';
         let readonlyCSS = ${state} != 1 ? 'readonlyCSS' : '';
+        let monitoringDisabled;
+        let labelEvent;
+        if('${groupName}' == 'default' && '${state}' != '1'){
+            monitoringDisabled = 'disabled';
+            labelEvent = 'onclick="permissionError()"';
+        }
 
         $.ajax({
             url: '<%=cp%>/getPlaceSensorValue',
@@ -310,8 +309,8 @@
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
                                 "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
-                                "<td style='width:13%;'><label class='switch'>" +
-                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdateCheck(this)'>" +
+                                "<td style='width:13%;'><label class='switch' "+labelEvent+">" +
+                                "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdateCheck(this)' "+monitoringDisabled+">" +
                                 "<div class='slider round'></div>" +
                                 "</label></td>";
                             const elem = document.createElement('tr');
@@ -337,6 +336,10 @@
                 console.log(error);
             }
         })
+    }
+
+    function permissionError(){
+        customSwal('권한이 없습니다.');
     }
 
     //측정소 명 중복 확인
@@ -636,48 +639,6 @@
             }
         });
     }
-
-    <%--//측정소 모니터링 onchange--%>
-    <%--function p_monitoringupdate(id) {--%>
-    <%--    const num = id.replace(/[^0-9]/g, ''); //place0 -> 0--%>
-    <%--    var check = $("#" + id).is(":checked"); //true/false--%>
-    <%--    var name = $("#p" + num).attr("value"); //측정소 명--%>
-    <%--    var timeTd = $("#" + id).parent().parent().prev();--%>
-    <%--    var sensorCheck = findSensor(name);--%>
-    <%--    if (sensorCheck == 'none') { //등록된 센서가 없을때--%>
-    <%--        customSwal('등록된 센서가 없어 모니터링 기능을 사용할 수 없습니다.');--%>
-    <%--        $("#" + id).prop("checked", false);--%>
-    <%--        return;--%>
-
-    <%--    } else if (sensorCheck == "Off") {--%>
-    <%--        customSwal('측정항목 모니터링이 전부 OFF 상태입니다.');--%>
-    <%--        $("#" + id).prop("checked", false);--%>
-    <%--        return;--%>
-    <%--    }--%>
-    <%--    $.ajax({--%>
-    <%--        url: '<%=cp%>/MonitoringUpdate',--%>
-    <%--        type: 'POST',--%>
-    <%--        async: false,--%>
-    <%--        cache: false,--%>
-    <%--        data: {--%>
-    <%--            "place": name, //측정소 명--%>
-    <%--            "check": check //true/false--%>
-    <%--        },--%>
-    <%--        success: function (data) {--%>
-    <%--            timeTd.html(moment(data).format('YYYY-MM-DD HH:mm:ss'));--%>
-    <%--        },--%>
-    <%--        error: function (err) {--%>
-    <%--            console.log(err);--%>
-    <%--        }--%>
-    <%--    })--%>
-    <%--    if (check == true) {--%>
-    <%--        check = "ON";--%>
-    <%--    } else {--%>
-    <%--        check = "OFF";--%>
-    <%--    }--%>
-    <%--    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + name + "' 모니터링 " + check + "", "설정");--%>
-    <%--    multiSelecterModal(name, "", "monitor", check);--%>
-    <%--}--%>
 
     function monitoringupdateCheck(name){
         let state = ${state};

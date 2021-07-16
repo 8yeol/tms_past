@@ -427,7 +427,7 @@ public class MainController {
         List<String> placeList = new ArrayList();
         if(group.getMonitoringPlace() == null){
             placeList.add("null");
-        }else if(group.getGroupName().equals("default") || group.getMonitoringPlace() != null){
+        }else {
             for (int i = 0; i < group.getMonitoringPlace().size(); i++)
                 placeList.add("'" + group.getMonitoringPlace().get(i) + "'");
         }

@@ -1946,7 +1946,7 @@ public class AjaxController {
                     defaultMember.setMonitoringGroup(1);
                     memberRepository.save(defaultMember);
 
-                    defaultGroup = monitoringGroupRepository.findByGroupName("default");
+                    defaultGroup = monitoringGroupRepository.findByGroupNum(1);
                     List defaultGroupMember = defaultGroup.getGroupMember();
                     defaultGroupMember.add(group.getGroupMember().get(i));
                      monitoringGroupRepository.save(defaultGroup);
@@ -2034,8 +2034,8 @@ public class AjaxController {
     /**
      * 그룹 수정시 어떤걸 수정하는지 판별하기위해 정의한 리스트 비교 메소드
      * 두개 리스트가 null 일수도 아닐수도 있기에 조건문으로 비교
-     * @param list 수정될 멤버 혹은 측정소 리스트
-     * @param group 그룹의 멤버 혹은 측정소 리스트
+     * @param list 수정될 멤버 혹은 수정될 측정소
+     * @param group 그룹의 멤버 혹은 그룹의 측정소
      * @return boolean
      */
     public boolean isEqualsList(List<String> list, List<String> group){
