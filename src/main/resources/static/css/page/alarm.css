@@ -81,6 +81,7 @@ table thead {
     top:0px;
     margin: 0;
     padding: 0px 10px 0;
+    width: 100px;
 }
 .tab li {
     width: 100px;
@@ -111,9 +112,10 @@ table thead {
         width: 150px;
     }
     .tab {
+        width: unset;
         top:-60px;
         left: -10px;
-        z-index: 99;
+        z-index: 0;
         display: flex;
     }
     .tab li {
@@ -124,7 +126,6 @@ table thead {
         text-align: center;
         cursor: pointer;
         padding: 15px 10px 0 10px;
-
     }
     #mainDiv{
         margin-top: 70px!important;
