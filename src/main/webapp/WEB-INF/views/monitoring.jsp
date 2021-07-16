@@ -906,8 +906,8 @@
             flashing(flashCheck, null);
             alarmTone('off');
         }
-        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + allMonitoringOFF)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
-        var run = sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail + allMonitoringOFF);
+        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
+        var run = sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail);
         // var legalPercent = ((legalSCount / (sensorStatusSuccess - notexistLegalStandard)) * 100).toFixed(0); //법적기준 %
         // var companyPercent = ((companySCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); //사내기준 %
         // var managementPercent = ((managementSCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); ////관리기준 %
