@@ -75,10 +75,10 @@
         width: 270px;
         height: 90px;
         position: absolute;
-        top: -75px;
+        top: 20px;
         left: -120px;
-        padding: 15px 20px;
-        background: url(static/images/greenCloud.png) no-repeat center / 100% 99%;
+        padding: 35px 20px 0px;
+        background: url(static/images/greencloud.png) no-repeat center / 100% 99%;
         background-origin: padding-box;
         text-align: center;
         line-height: 20px;
@@ -106,7 +106,6 @@
         display: flex;
         position: relative;
         border-bottom: 1px solid #0d6efd;
-        text-align: center;
     }
 
     .operatingDiv > span {
@@ -124,9 +123,7 @@
 
     .operatingDiv > div {
         width: 33.3%;
-        background-color: #0d6efd;
         height: 80%;
-        color: #fff;
     }
 
     .topDash-l {
@@ -245,11 +242,11 @@
                 <audio id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>
                 <div id="alarmAudio"></div>
                 <span>알림음 :</span>
-                <input class="ms-2" type="radio" name="alarmTone" value="on" id="alarmOn" checked><label class="ms-2" for="alarmOn"> On&nbsp;</label>
-                <input type="radio" name="alarmTone" value="off" id="alarmOff"><label class="ms-2" for="alarmOff"> Off&emsp;</label>
+                <input class="ms-2 form-check-input" type="radio" name="alarmTone" value="on" id="alarmOn" checked><label class="ms-2" for="alarmOn"> On&nbsp;</label>
+                <input type="radio" name="alarmTone" value="off" id="alarmOff" class="form-check-input"><label class="ms-2" for="alarmOff"> Off&emsp;</label>
                 <span>|&emsp;점멸효과 :</span>
-                <input class="ms-2" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp;</label>
-                <input type="radio" name="flashing" value="off" id="checkOff"><label class="ms-2" for="checkOff"> Off</label>
+                <input class="ms-2 form-check-input" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp;</label>
+                <input type="radio" name="flashing" value="off" id="checkOff" class="form-check-input"><label class="ms-2" for="checkOff"> Off</label>
             </div>
             <span class="text-primary small" style="font-size: 0.8rem"> * 실시간으로 업데이트됩니다.</span>
         </div>
@@ -257,10 +254,10 @@
     <%-- 상단 대시보드 --%>
     <div class="row m-3 mt-3 bg-light" style="padding: 5px 0px 10px;">
         <div style="width: 50%; display: flex; flex-wrap: wrap; border-right: 1px solid #0d6efd;">
-            <div class="operatingDiv bg-lightBlue p-1">
-                <span class="fw-bold">가동률</span>
+            <div class="operatingDiv p-1">
+                <span class="fw-bold text-center">가동률</span>
                 <p id="sensorStatusP" class="text-center">0%</p>
-                <div id="operating" class="align-self-center bg-white text-dark">0 / 0</div>
+                <div id="operating" class="align-self-center bg-lightBlue text-dark text-center">0 / 0</div>
             </div>
             <div style="width: 100%; display: flex; padding: 0 25px; margin-top: 5px;">
                 <div class="topDash-l">

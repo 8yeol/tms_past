@@ -306,16 +306,16 @@
             <div class="modal-header justify-content-center">
                 <h4 class="modal-title groupModalTitle">그룹 생성</h4>
             </div>
-            <div class="modal-body d-flex justify-content-center">
-                <h3>그룹명</h3>
-                <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px;" maxlength="70"
+            <div class="modal-body d-flex justify-content-center" style="flex-wrap: wrap;">
+                <h3 class="fs-5 fw-bold" style="text-align: center; width: 100%;">그룹명</h3>
+                <input type="text" style="width: 80%;margin-left: 20px;padding-left: 5px; border:2px solid #0d6efd; border-radius: 3px;" maxlength="70"
                        id="groupInput" autocomplete="off">
             </div>
             <div class="modal-body d-flex">
                 <div style="width: 100%">
 
-                    <div class="multiSelectParent">
-                        <h3 class="fs-5 fw-bold groupSubTitle">그룹회원 관리</h3>
+                    <div class="multiSelectParent" style="border-bottom: 1px solid #bbb; margin-bottom: 20px;">
+                        <h3 class="fs-5 fw-bold groupSubTitle" style="padding-left: 5px;">그룹회원 관리</h3>
                         <div class="multiSelect">
                             <label><b>회원명</b></label>
                             <select multiple class="form-control scroll selectBox" id="lstBox3">

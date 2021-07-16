@@ -218,7 +218,7 @@
             top: 60px;
             right: 5px;
             background-color: white;
-            min-width: 250px;
+            min-width: 300px;
             min-height: 70px;
             z-index: 1;
             border: solid 2px darkgrey;
@@ -344,6 +344,7 @@
             min-height: 70px;
             z-index: 1;
             border: solid 2px darkgrey;
+
         }
 
         div .alarm{
@@ -405,13 +406,17 @@
                         <a href="<%=cp%>/logout">로그아웃</a>
                     </div>
                 </div>
-                <%--
+
                 <div>
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
                 </div>
-                --%>
-                <div class="message text-start">
-                    <span class="messageText text-white"></span>
+
+                <div class="message text-start" style="padding: 10px;">
+                    <p>알림</p>
+                    <span class="messageText" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
+                        <span class="text-danger" style="margin-right: 10px;">위험</span>
+                        보일러실 질소산화물 법적기준 초과(82)
+                    </span>
                 </div>
             </div>
 
@@ -468,13 +473,13 @@
                         <a href="<%=cp%>/logout" class="fs-6 fw-bold">로그아웃</a>
                     </div>
                 </div>
-                <%--
+
                 <div>
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
                 </div>
-                --%>
+
                 <div class="message text-start">
-                    <span class="messageText text-white"></span>
+                    <span class="messageText"></span>
                 </div>
             </div>
         </div>
@@ -484,11 +489,11 @@
 <script>
 
     $(document).ready(function () {
-        getAlarm();
+        // getAlarm();
 
-        setInterval(function () {
-            getAlarm();
-        }, 5000)
+        // setInterval(function () {
+        //     getAlarm();
+        // }, 5000)
     });
 
     function getAlarm(){
