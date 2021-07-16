@@ -763,7 +763,6 @@
      * 측정소 테이블 생성
      */
     function draw_place_table(placeInfo) {
-        console.log(placeInfo);
         var placeCount = placeInfo.length;
         if(placeCount != 0) {
             for (var i = 0; i < placeCount; i++) {

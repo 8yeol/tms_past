@@ -344,7 +344,6 @@
             min-height: 70px;
             z-index: 1;
             border: solid 2px darkgrey;
-
         }
 
         div .alarm{
@@ -504,7 +503,6 @@
             success: function (data) {
                 const arr = data.excess;
                 let message;
-                let style;
                 if(arr != undefined){
                     messageOpen()
                     for(let i=0; i<arr.length; i++){
@@ -515,18 +513,14 @@
 
                         if(excess == "danger" ){
                             message = place +" - " + naming + " 법적 기준 초과 ( " + value + " )";
-                            style = 'bg-danger';
                         }else if(excess == "warning"){
                             message = place +" - " + naming + " 사내 기준 초과 ( " + value + " )";
-                            style = 'bg-warning';
                         }else if(excess == "caution"){
                             message = place +" - " + naming + " 관리 기준 초과 ( " + value + " )";
-                            style = 'bg-success';
                         }
                     }
                 }
                 $('.messageText').text(message);
-                $('.message').addClass(style);
             },
             error: function (request, status, error) {
                 console.log(error)
