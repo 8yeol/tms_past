@@ -342,16 +342,8 @@
                         <div class="MultiSelecterModal first" id="groupSignModal"></div>
                         <div class="emissionsSpan">* 그룹에 포함된 회원은 해당 그룹의 모니터링 측정소에 포함된 측정소만 모니터링 가능합니다.</div>
                     </div>
-
                     <h3 class="fs-5 fw-bold groupSubTitle" style="padding-left: 20px;">모니터링 측정소</h3>
-
                     <div class="multiSelectParent" id="placeSelect">
-                      <!--  <input type="checkbox" id="allPlaceCheck" class="allPlaceCheck">
-                        <label for="allPlaceCheck" id="checkLabel" class="allPlaceCheck"> 전체 측정소 모니터링</label>
-                        <span class="allPlaceCheckSpan allPlaceCheck"
-                              style="display: block;font-size: 0.9rem;color:#db3535;font-weight: bold;margin-bottom: 10px;">
-                            * 체크시 시스템에 등록된 모든 측정소 모니터링 (변경 불가)</span> -->
-
                         <div class="multiSelect allCheckEvent">
                             <label><b>측정소명</b></label>
                             <select multiple class="form-control scroll selectBox" id="lstBox1">
@@ -859,14 +851,10 @@
             mList.push(member.eq(i).val());
 
         let pList
-        // if ($('#allPlaceCheck').is(':checked') == true || $('.allCheckEvent').css('display') == 'none') {
-        //     pList = ["모든 측정소"];
-        // } else {
-            let place = $('#lstBox2 option');
-            pList = new Array();
-            for (i = 0; i < place.length; i++)
-                pList.push(place.eq(i).val());
-        //}
+        let place = $('#lstBox2 option');
+        pList = new Array();
+        for (i = 0; i < place.length; i++)
+            pList.push(place.eq(i).val());
 
         if (flag == "insert") groupNum = -1;
         $.ajax({
@@ -917,29 +905,8 @@
             Modal.html(lengthLong);
         }
         Modal.finish().fadeIn(300).delay(2000).fadeOut(300);
-
-        adminGroupCheck();
     }
 
-    function adminGroupCheck() {
-        let currentMember = $('#lstBox4 option');
-        for (i = 0; i < currentMember.length; i++) {
-            if ($(currentMember[i]).attr('id') == 1) {
-                $('#allPlaceCheck').prop('checked', true);
-                $('#allPlaceCheck').prop('disabled', true);
-                $('#checkLabel').attr('id', 'nonCheckLabel');
-                optionDisabled(true);
-                $('#monitoringSignModal').html('최고 관리자가 포함된 그룹은<br> 모든 측정소를 모니터링 합니다.');
-                $('#monitoringSignModal').finish().fadeIn(300).delay(5000).fadeOut(300);
-                return;
-            }
-        }
-        $('#allPlaceCheck').prop('checked', false);
-        $('#allPlaceCheck').prop('disabled', false);
-        $('#nonCheckLabel').attr('id', 'checkLabel');
-        optionDisabled(false);
-        return;
-    }
 
     //그룹회원, 측정소 배열 양끝에 대괄호 없애기
     //한개씩 꺼내서 문자열 만드는것보다 더 빠르고 편해 보임.

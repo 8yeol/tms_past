@@ -120,8 +120,20 @@ public class MainController {
      */
     @RequestMapping("/dashboard")
     public String dashboard(Model model, Principal principal) {
-        // 연간 배출량 추이 모니터링 ON
+
+        Member member = memberRepository.findById(principal.getName());
+        model.addAttribute("member", member);
+
+        MonitoringGroup group = monitoringGroupRepository.findByGroupNum(member.getMonitoringGroup());
+
+        // 연간 배출량 추이 모니터링 ON + 멤버의 그룹에 포함된 센서가 아니라면 제외
         List<EmissionsSetting> emissionsSettings = emissionsSettingRepository.findByStatus(true);
+        for (int i=0; i<emissionsSettings.size(); i++){
+            String placeName = emissionsSettings.get(i).getPlace();
+            if(group.getGroupNum() != 1 && !group.getMonitoringPlace().contains(placeName)){
+                emissionsSettings.remove(i);
+            }
+        }
         model.addAttribute("emissionSettingList", emissionsSettings);
 
         List<ArrayList<EmissionsTransition>> emissionList = new ArrayList<>();
@@ -139,9 +151,12 @@ public class MainController {
         List<AnnualEmissions> setting = annualEmissionsRepository.findByStatusIsTrue();
         model.addAttribute("sensorList",setting);
 
+        //연간 배출량 모니터링 대상중 멤버 그룹에 포함된것만 추가
         List<String> placeList = new ArrayList<>();
         for (AnnualEmissions place : setting) {
-            placeList.add(place.getPlace());
+            if(group.getGroupNum() == 1 || group.getMonitoringPlace().contains(place.getPlace())) {
+                placeList.add(place.getPlace());
+            }
         }
         TreeSet<String> placeSet = new TreeSet<>(placeList);
         model.addAttribute("placeList", placeSet);
@@ -155,8 +170,6 @@ public class MainController {
         if(principal == null){
             return "redirect:logout";
         }
-        Member member = memberRepository.findById(principal.getName());
-        model.addAttribute("member", member);
 
         return "dashboard";
     }

@@ -1926,7 +1926,7 @@ public class AjaxController {
             if(monitoringGroupRepository.findTopByOrderByGroupNumDesc() != null) {
                 newGroupNum = monitoringGroupRepository.findTopByOrderByGroupNumDesc().getGroupNum() + 1;
             }else{
-                newGroupNum = 0;
+                newGroupNum = 1;
             }
             group.setGroupNum(newGroupNum);
             group.setMonitoringPlace(placeList);
