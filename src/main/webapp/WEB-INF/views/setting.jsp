@@ -747,7 +747,6 @@
                 location.reload();
             }, 2000);
         })
-
     }
 
     function rankRadioChanged(name) {
@@ -1003,7 +1002,6 @@
 
         $('#groupInput').val(groupName);
         $('#placeSelect .allCheckEvent').css('display', 'block');
-        $('#monitoringSignModal').css('top', '-7%');
         $('.allPlaceCheck').css('display', 'none');
         $('#allPlaceCheck').prop("checked", false);
         $('.selectBox').empty();
@@ -1072,7 +1070,6 @@
     function insertSetting() {
 
         $('#placeSelect .allCheckEvent').css('display', 'block');
-        $('#monitoringSignModal').css('top', '-7%');
         $('.groupModalTitle').text('그룹 생성');
         $('#groupInput').val('');
         $('#saveBtn').text('생성');

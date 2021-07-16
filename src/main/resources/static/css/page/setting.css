@@ -158,11 +158,10 @@ label {
     width: 60%;
     height: 50%;
     border-radius: 5px;
-    background-color: #cfe2ff;
-    border: 2px solid rgba(99, 130, 255, 0.7);
+    background-color: rgba(207, 226, 255, 0.7);
     position: absolute;
     padding: 66px 10px 10px 10px;
-    top: 4%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -170,9 +169,6 @@ label {
     font-weight: bold;
     display: none;
     font-size: 1.2rem;
-}
-#monitoringSignModal{
-    top: -7%;
 }
 
 .multiSelectBtn input[type=button] {

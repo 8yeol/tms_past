@@ -403,6 +403,7 @@ public class AjaxController {
             ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
             reference.setMonitoring(!reference.getMonitoring());
             reference_value_settingRepository.save(reference);
+            groupSensorRemove(tablename);
             return "";
         }
 
@@ -1617,8 +1618,7 @@ public class AjaxController {
             memberService.deleteById(id);
             MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
             if(group != null){
-               int memberIndex = group.getGroupMember().indexOf(id);
-               group.getGroupMember().remove(memberIndex);
+               group.getGroupMember().remove(id);
                monitoringGroupRepository.save(group);
             }
             return "success";
