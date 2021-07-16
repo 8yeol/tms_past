@@ -630,7 +630,6 @@
             dataType: 'json',
             async: false,
             success: function (data) {
-                console.log(data);
                 const arr = data.excess;
                 let message;
                 let count=0;
