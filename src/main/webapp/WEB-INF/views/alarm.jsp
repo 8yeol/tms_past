@@ -239,6 +239,7 @@
     function tabClick(obj, placeName) {
         $('.tab li').attr('class', '');
         $(obj).attr('class', 'on');
+        $('#s_day').trigger('click');
         search();
     }
 
@@ -278,7 +279,7 @@
                     "placeName" : $('.on').text()
                 },
                 success : function(data) {
-                    if(data.length != 0){
+                    if(data.length != 0 || data == null){
                         $('#information').DataTable().clear();
                         $('#information').DataTable().destroy();
 
@@ -323,6 +324,7 @@
                         }
 
                         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 조회("+from+" ~ "+to+")","조회");
+                        setDateTable();
                     }else{
                         Swal.fire({
                             icon: 'warning',
@@ -336,7 +338,6 @@
                 }
             })
         }
-        setDateTable();
     }
 
     function setDateTable(){
