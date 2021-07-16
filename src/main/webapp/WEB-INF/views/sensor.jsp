@@ -297,7 +297,7 @@
                             <span class="text-primary" style="font-size: 0.8rem; position: absolute; right: 15px;"> * 최근 1시간은 실시간, 최근 24시간은 5분평균 데이터로 실시간 업데이트됩니다.</span>
                         </div>
                         <div id="chart" style=" margin-right: 10px; margin-top: 20px;"></div>
-                        <div id="noData"><p style='height: 350px; text-align:center; padding-top:160px; background-color: #F2F2F3'>최근 데이터가 없습니다.</p></div>
+                        <div id="noData"><p style="text-align:center; padding-top:150px;"></p></div>
                     </div>
                 </div>
                 <%-- 하단 테이블 --%>
@@ -528,6 +528,7 @@
             var dt = draw_sensor_table(sensor_data_list, sensor_data); // 센서 테이블 생성 (측정시간, 측정값, 관리등급)
             if(sensor_data_list.length != 0){
                 $('#chart').show();
+                $('#noData').css("height", "0px");
                 $('#noData').hide();
                 $("#radio_text").text(sensor_data.naming); // 선택된 센서명 텍스트 출력
                 setTimeout(function interval_getData2() { //$초 마다 업데이트
@@ -570,6 +571,9 @@
                     // draw_sensor_table(sensor_data_list, sensor_data);
                     $("#radio_text").text(sensor_data.naming);
                     $('#chart').hide();
+                    $('#noData').css("height", "350px");
+                    $('#noData').css("background-color", "#F2F2F3");
+                    $('#noData p').text("최근 데이터가 없습니다.");
                     $('#noData').show();
                 }
             }
@@ -1076,7 +1080,7 @@
             "ordering": true,
             "pagingType": 'numbers',
             "language": {
-                "emptyTable": "센서 데이터가 없습니다.",
+                "emptyTable": "최근 데이터가 없습니다.",
                 "lengthMenu": "페이지당 _MENU_ 개씩 보기",
                 "info": "현재 _START_ - _END_ / _TOTAL_건",
                 "infoEmpty": "데이터 없음",
