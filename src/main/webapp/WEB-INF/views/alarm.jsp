@@ -144,9 +144,9 @@
 
         $("#notify_chart").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
         search();
-
+        var placeName = $('.on').text();
         if($("input[id=week]:radio" ).is( ":checked")){
-            const chartData = getWeekChartData();
+            const chartData = getWeekChartData(placeName);
             addChart(chartData);
         }
     });
@@ -240,7 +240,12 @@
         $('.tab li').attr('class', '');
         $(obj).attr('class', 'on');
         $('#s_day').trigger('click');
-        const chartData = getWeekChartData(placeName);
+        var chartData;
+        if($("input[id=week]:radio" ).is( ":checked")){
+            chartData = getWeekChartData(placeName);
+        }else{
+            chartData = getMonthChartData(placeName);
+        }
         addChart(chartData);
         search();
     }
@@ -387,9 +392,7 @@
             url: '<%=cp%>/getNSNow',
             dataType: 'json',
             async: false,
-            data: {
-                group : "${member.monitoringGroup}", "place": place
-            },
+            data: {"place": place},
            success: function (data) {
                 getData.push({day: data[0], legalCount:data[1], companyCount:data[2], managementCount: data[3]});
            }
@@ -424,6 +427,7 @@
             async: false,
             data: {"place": place},
             success: function (data) {
+                console.log(data);
                 for(let i=0; i<data.length; i++){
                     getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});
                 }
