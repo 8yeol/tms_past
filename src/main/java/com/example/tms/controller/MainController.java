@@ -482,7 +482,7 @@ public class MainController {
      * @return alarmManagement.jsp
      */
     @RequestMapping(value = "/alarmManagement")
-    public String alarmManagement(Model model) {
+    public String alarmManagement(Model model, Principal principal) {
         List<Place> placeList = placeRepository.findByMonitoringIsTrue();
         for (int i =0; i<placeList.size(); i++){
             if (placeList.get(i).getSensor().size() == 0)
@@ -490,6 +490,8 @@ public class MainController {
         }
         model.addAttribute("place", placeList);
 
+        Member member = memberRepository.findById(principal.getName());
+        model.addAttribute("state", member.getState());
         return "alarmManagement";
     }
 

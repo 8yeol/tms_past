@@ -35,9 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/memberJoin").anonymous()
                 .antMatchers("/myPage").authenticated()
-                .antMatchers("/").access("@authChecker.check(authentication , 'dashboard')")
+                .antMatchers("/dashboard").access("@authChecker.check(authentication , 'dashboard')")
                 .antMatchers("/alarm").access("@authChecker.check(authentication , 'alarm')")
-                .antMatchers("/monitoring","/sensor").access("@authChecker.check(authentication , 'monitoring')")
+                .antMatchers("/","/monitoring","/sensor").access("@authChecker.check(authentication , 'monitoring')")
                 .antMatchers("/dataInquiry","/dataStatistics").access("@authChecker.check(authentication , 'statistics')")
                 .antMatchers("/alarmManagement","/stationManagement","/sensorManagement","/emissionsManagement","/setting","/log").access("@authChecker.check(authentication , 'setting')");
         http.formLogin().loginPage("/login").permitAll();

@@ -35,7 +35,9 @@
 
 <div class="container" id="container">
     <div class="row m-3 mt-3 ms-1" style="padding-left: 10px;">
-        <span class=" fw-bold fs-4">환경설정 > 알림설정</span>
+        <span class="col fw-bold fs-4">환경설정 > 알림설정</span>
+        <span class="col"  style="color:red; font-size: 0.8rem;position: relative;top: 20px; font-weight: normal;text-align: end">
+            * 알림 시간은 최고 관리자만 변경 하실 수 있습니다.</span>
     </div>
 
     <div class="row m-3 mt-3 bg-light">
@@ -96,6 +98,15 @@
 
     });
 
+    function permissionError(){
+        swal.fire({
+            icon: 'warning',
+            title: '경고',
+            text: '최고 관리자만 변경 가능합니다.'
+        })
+    }
+
+
     //측정소 생성
     function placeMake(name, idx) {
         const place = name;
@@ -104,11 +115,15 @@
         let tableName ;
         let naming ;
         let check =-1;
+        let state = '${state}' == '1' ? '' : 'disabled';
+        let stateEvent = '${state}' == '1' ? '' : 'onclick="permissionError()"';
 
         let innerHTMLTimePicker = "<div><span class=\"textSpanParent\">알림 시간</span></div>";
         innerHTMLTimePicker += "<div style='display: inline-flex; margin-top: 10px;'>";
-        innerHTMLTimePicker += '<div><span class="textSpan" style="margin-right: 20px;">From </span>  <input style="background-color: white;"class="form-control example timePicker" name="start" type="text" id="start'+idx+'" readonly/></div>';
-        innerHTMLTimePicker += '<div><span class="textSpan" style="margin-right: 20px;">To </span>  <input style="background-color: white;"class="form-control example timePicker" name="end" type="text"id="end'+idx+'"readonly/></div>';
+        innerHTMLTimePicker += '<div '+stateEvent+'><span class="textSpan" style="margin-right: 20px;">From </span>  ' ;
+        innerHTMLTimePicker += '<input style="background-color: white;"class="form-control example timePicker" name="start" type="text" id="start'+idx+'" readonly '+state+'/></div>';
+        innerHTMLTimePicker += '<div '+stateEvent+'><span class="textSpan" style="margin-right: 20px;">To </span>  ' ;
+        innerHTMLTimePicker += '<input style="background-color: white;"class="form-control example timePicker" name="end" type="text"id="end'+idx+'"readonly '+state+'/></div>';
         innerHTMLTimePicker += "</div>";
 
         $('#alarm' + idx).append(innerHTMLTimePicker);
