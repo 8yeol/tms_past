@@ -325,7 +325,6 @@
      * 선택된 센서의 최근 1시간, 24시간 데이터로 차트 및 테이블 생성
      */
     $(document).ready(function() {
-
         if(getCookie("chartLabel") ==undefined){
             setCookie("chartLabel", true, 999);
         }
@@ -351,8 +350,6 @@
 
         }
 
-        chart = new ApexCharts(document.querySelector("#chart"), setChartOption(chartLabel)); //차트 틀 생성
-        chart.render();
         var sensor_data_list = ${sensorData};
         var sensor_data = ${activeSensor};
 
@@ -361,6 +358,8 @@
             console.log("sensor_data is none");
             return;
         }
+        chart = new ApexCharts(document.querySelector("#chart"), setChartOption(chartLabel)); //차트 틀 생성
+        chart.render();
         updateChart(sensor_data_list, sensor_data);
         draw_frame();
     }); //ready
