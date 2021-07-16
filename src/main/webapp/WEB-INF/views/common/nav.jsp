@@ -59,6 +59,15 @@
         #topMenu ul li ul li a{
             font-size: 1.1rem;
         }
+        .messageText{
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
 
         .menuLink, .submenuLink { /* 상위 메뉴와 하위 메뉴의 a 태그에 공통으로 설정할 스타일 */
             text-decoration: none;
@@ -217,11 +226,9 @@
             position: absolute;
             top: 60px;
             right: 5px;
-            background-color: white;
             min-width: 300px;
             min-height: 70px;
             z-index: 1;
-            border: solid 2px darkgrey;
         }
 
         div .alarm{
@@ -244,7 +251,25 @@
         #desktop{
             display: none;
         }
-
+        .messageText{
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .message {
+            color: black;
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 5px;
+            min-width: 300px;
+            min-height: 70px;
+            z-index: 1;
+        }
         .sidebar {
             height: 100%;
             width: 250px;
@@ -339,11 +364,9 @@
             position: absolute;
             top: 80px;
             right: 100px;
-            background-color: white;
             min-width: 250px;
             min-height: 70px;
             z-index: 1;
-            border: solid 2px darkgrey;
         }
 
         div .alarm{
@@ -356,7 +379,9 @@
             background: none;
             border: none;
         }
-
+    }
+    .opacity{
+        opacity: 0.9;
     }
 </style>
 
@@ -411,13 +436,9 @@
                 </div>
 
                 <div class="message text-start" style="padding: 10px;">
-                    <p>알림</p>
-                    <span class="messageText danger dangerOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd; ">
-                    </span>
-                    <span class="messageText warning warningOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
-                    </span>
-                    <span class="messageText caution cautionOuter"  style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
-                    </span>
+                    <div class="dangerOuter opacity"></div>
+                    <div class="warningOuter opacity"></div>
+                    <div class="cautionOuter opacity"></div>
                 </div>
             </div>
 
@@ -479,14 +500,10 @@
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
                 </div>
 
-                <div class="message text-start">
-                    <p>알림</p>
-                    <span class="messageText danger dangerOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd; ">
-                    </span>
-                    <span class="messageText warning warningOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
-                    </span>
-                    <span class="messageText caution cautionOuter" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
-                    </span>
+                <div class="message text-start" style="padding: 10px;">
+                    <div class="dangerOuter opacity"></div>
+                    <div class="warningOuter opacity"></div>
+                    <div class="cautionOuter opacity"></div>
                 </div>
             </div>
         </div>
@@ -509,6 +526,7 @@
         $('.cautionOuter').html('');
         $('.message').css('display', 'none');
 
+        //그룹 측정소에서 ON된 센서 추출
         $.ajax({
             url: '<%=cp%>/getExcessSensor',
             dataType: 'json',
@@ -519,6 +537,7 @@
                 if(arr != undefined){
                     for(let i=0; i<arr.length; i++){
 
+                        //추출된 센서 알림설정값이 On Off 인지 체크
                         $.ajax({
                             url: '<%=cp%>/getExcessSensorCheck',
                             dataType: 'json',
@@ -531,18 +550,25 @@
                                     const place = arr[i].place;
                                     const naming = arr[i].naming;
                                     const value = arr[i].value;
+                                    let innerHTML ;
 
                                     if(excess == "danger" ){
-                                        $('.dangerOuter').append('<span class="text-danger" id="dangerInner" style="margin-right: 10px;">법적기준 초과</span>'+place +' - '+naming+' ('+value+')<br><br>');
+                                        innerHTML =  '<span class="messageText danger" style="background-color:#dc3545;">'
+                                        innerHTML += '<span  id="dangerInner" style="margin-right: 10px;display: block">법적기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
+                                        $('.dangerOuter').append(innerHTML);
                                         $('.danger').css('display', 'block');
                                         $('.message').css('display', 'block');
                                     }else if(excess == "warning"){
-                                        $('.warningOuter').append('<span class="text-warning" id="dangerInner" style="margin-right: 10px;">사내기준 초과</span>'+place +' - '+naming+' ('+value+')<br><br>');
+                                        innerHTML =  '<span class="messageText warning" style="background-color:#ffc107;">'
+                                        innerHTML += '<span  id="warningInner" style="margin-right: 10px;display: block">사내기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
+                                        $('.warningOuter').append(innerHTML);
                                         $('.warning').css('display', 'block');
                                         $('.message').css('display', 'block');
                                     }else if(excess == "caution"){
-                                        $('.cautionOuter').append('<span class="text-success" id="dangerInner" style="margin-right: 10px;">관리기준 초과</span>'+place +' - '+naming+' ('+value+')<br><br>');
-                                        $('.cautionOuter').css('display', 'block');
+                                        innerHTML =  '<span class="messageText caution" style="background-color:rgb(25, 135, 84);">'
+                                        innerHTML += '<span id="warningInner" style="margin-right: 10px;display: block">관리기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
+                                        $('.cautionOuter').append(innerHTML);
+                                        $('.caution').css('display', 'block');
                                         $('.message').css('display', 'block');
                                     }
                                 }
