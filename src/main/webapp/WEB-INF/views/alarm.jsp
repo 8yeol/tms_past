@@ -28,42 +28,12 @@
 <script src="static/js/datepicker.ko.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
-<style>
-
-    .tab {
-        width: 70px;
-        list-style: none;
-        position: absolute;
-        left: -111px;
-        top:10px;
-        margin: 0;
-        padding: 0px 10px 0;
-    }
-    .tab li {
-        width: 100px;
-        height: 80px;
-        background-color: #ccc;
-        color: #999;
-        text-align: center;
-        cursor: pointer;
-        padding: 15px 10px 0 10px;
-    }
-    .tab li.on {
-        background-color: #75ACFF;
-        color: #fff;
-    }
-
-    .tab li:hover {
-        background-color: #75ACFF;
-        color: #fff;
-    }
-</style>
 <div class="container" id="container">
     <div class="row m-3 mt-3 ms-1">
         <span class="fs-4 fw-bold">알림</span>
     </div>
 
-    <div class="row m-3 mt-3 bg-light ms-1" style="position: relative">
+    <div class="row m-3 mt-3 bg-light ms-1" style="position: relative" id="mainDiv">
 
         <ul class="tab">
             <c:if test="${group.groupNum == 1}">
@@ -179,29 +149,6 @@
             const chartData = getWeekChartData();
             addChart(chartData);
         }
-
-
-        $('#information').dataTable({
-            lengthChange : false,
-            pageLength: 10,
-            info: false,
-            order :[3, 'desc'],
-            language: {
-                emptyTable: "데이터가 없어요.",
-                lengthMenu: "페이지당 _MENU_ 개씩 보기",
-                info: "현재 _START_ - _END_ / _TOTAL_건",
-                infoEmpty: "데이터 없음",
-                infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
-                search: "테이블 내용 검색 : ",
-                zeroRecords: "일치하는 데이터가 없어요.",
-                loadingRecords: "로딩중...",
-                processing: "잠시만 기다려 주세요...",
-                paginate: {
-                    next: "다음",
-                    previous: "이전"
-                },
-            },
-        });
     });
 
     $("#date_start").datepicker({
@@ -389,7 +336,33 @@
                 }
             })
         }
+        setDateTable();
     }
+
+    function setDateTable(){
+        $('#information').dataTable({
+            lengthChange : false,
+            pageLength: 10,
+            info: false,
+            order :[3, 'desc'],
+            language: {
+                emptyTable: "데이터가 없어요.",
+                lengthMenu: "페이지당 _MENU_ 개씩 보기",
+                info: "현재 _START_ - _END_ / _TOTAL_건",
+                infoEmpty: "데이터 없음",
+                infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
+                search: "테이블 내용 검색 : ",
+                zeroRecords: "일치하는 데이터가 없어요.",
+                loadingRecords: "로딩중...",
+                processing: "잠시만 기다려 주세요...",
+                paginate: {
+                    next: "다음",
+                    previous: "이전"
+                },
+            },
+        });
+    }
+
 
     $("input[name=day]").on('click' , function (){
         let chartData;

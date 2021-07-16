@@ -74,6 +74,32 @@ table thead {
     margin-left: 70px;
 }
 
+.tab {
+    list-style: none;
+    position: absolute;
+    left: -111px;
+    top:0px;
+    margin: 0;
+    padding: 0px 10px 0;
+}
+.tab li {
+    width: 100px;
+    height: 80px;
+    background-color: #ccc;
+    color: #999;
+    text-align: center;
+    cursor: pointer;
+    padding: 15px 10px 0 10px;
+}
+.tab li.on {
+    background-color: #75ACFF;
+    color: #fff;
+}
+
+.tab li:hover {
+    background-color: #75ACFF;
+    color: #fff;
+}
 @media all and (max-width: 989px) {
     .col-auto{
         width: 25%;
@@ -83,5 +109,24 @@ table thead {
     }
     .search .text-center{
         width: 150px;
+    }
+    .tab {
+        top:-60px;
+        left: -10px;
+        z-index: 99;
+        display: flex;
+    }
+    .tab li {
+        width: 100px;
+        height: 60px;
+        background-color: #ccc;
+        color: #999;
+        text-align: center;
+        cursor: pointer;
+        padding: 15px 10px 0 10px;
+
+    }
+    #mainDiv{
+        margin-top: 70px!important;
     }
 }
