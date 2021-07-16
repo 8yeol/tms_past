@@ -326,11 +326,11 @@
                         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 조회("+from+" ~ "+to+")","조회");
                         setDateTable();
                     }else{
-                        Swal.fire({
-                            icon: 'warning',
-                            title: '경고',
-                            text: '알림 목록이 없습니다.'
-                        })
+                        $('#information > tbody').empty();
+
+                        const innerHtml = "<tr><td colspan='5'> 검색기간 내 알림 목록이 없습니다. </td></tr>";
+
+                        $('#information > tbody').append(innerHtml);
                     }
                 },
                 error : function(request, status, error) {
