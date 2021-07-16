@@ -589,7 +589,20 @@
                     x: {
                         format : 'yyyy-MM-dd HH:mm'
                     }
-                }
+                },
+                xaxis: {
+                    type: 'datetime',
+                    labels: {
+                        show: true,
+                        datetimeUTC: false,
+                        datetimeFormatter: {
+                            year: 'yyyy년',
+                            month: 'MM월',
+                            day: 'dd일',
+                            hour: 'HH:mm:ss',
+                        },
+                    },
+                },
             };
 
             chart = new ApexCharts(document.querySelector("#chart-line2"), options);
@@ -635,7 +648,20 @@
                             return value.toFixed(2);
                         }
                     }
-                }
+                },
+                xaxis: {
+                    type: 'datetime',
+                    labels: {
+                        show: true,
+                        datetimeUTC: false,
+                        datetimeFormatter: {
+                            year: 'yyyy년',
+                            month: 'MM월',
+                            day: 'dd일',
+                            hour: 'HH:mm:ss',
+                        },
+                    },
+                },
             };
             chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
             chartLine.render();
