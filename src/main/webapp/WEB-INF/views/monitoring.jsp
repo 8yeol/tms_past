@@ -496,13 +496,10 @@
     let INTERVAL; let flashCheck; let alarmCheck;
     var oldSensorList; var chart = {};
     $(document).ready(function () {
-
-        <%--let placeData2 = ${sensor}; // 모니터링 True 인 측정소 리스트의 모니터링 True인 센서 데이터(최근,이전,기준값 등)--%>
-        <%--draw_sensor_info(placeData2); //대시보드 생성--%>
         setTimeout(function () {
             getData();
         }, 0);
-        // 페이지 로딩 후 1초뒤 실시간 동기화
+
         if(getCookie("flashCheck") ==undefined){
             setCookie("flashCheck", "on", 999);
         }
@@ -529,7 +526,9 @@
         }
     });
 
-
+    /**
+     * 쿠키 값 가져오는 메소드
+     */
     function getCookie(cookie_name) {
         var x, y;
         var val = document.cookie.split(';');
@@ -544,6 +543,9 @@
         }
     }
 
+    /**
+     * 쿠키 값 저장하는 메소드 (이름, 값, 저장일수)
+     */
     function setCookie(cookie_name, value, days) {
         var exdate = new Date();
         exdate.setDate(exdate.getDate() + days);

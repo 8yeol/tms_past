@@ -283,14 +283,14 @@
                                 <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px; display: inline-block; width: 50%;">${activeSensor.naming}</span>
                                 <div style="width: 50%; text-align: right; margin-right: 15px;">
                                     <span>숫자표시</span>
-                                    <input class="form-check-input" type="radio" name="chartLabel" id="on">
+                                    <input class="form-check-input" type="radio" name="chartLabel" id="on" value="on">
                                     <label for='on'>on</label>
-                                    <input class="form-check-input" type="radio" name="chartLabel" id="off" checked>
+                                    <input class="form-check-input" type="radio" name="chartLabel" id="off" value="off" checked>
                                     <label for="off">off&emsp;</label>
                                     <span>|&emsp;최근</span>
-                                    <input class="form-check-input" type="radio" name="chartRadio" id="hour" checked>
+                                    <input class="form-check-input" type="radio" name="chartRadio" id="hour"  value="on" checked>
                                     <label for='hour'>1시간</label>
-                                    <input class="form-check-input" type="radio" name="chartRadio" id="day">
+                                    <input class="form-check-input" type="radio" name="chartRadio" id="day" value="off">
                                     <label for="day">24시간</label>
                                 </div>
                             </div>
@@ -325,10 +325,37 @@
      * 선택된 센서의 최근 1시간, 24시간 데이터로 차트 및 테이블 생성
      */
     $(document).ready(function() {
-        chart = new ApexCharts(document.querySelector("#chart"), setChartOption(false)); //차트 틀 생성
+
+        if(getCookie("chartLabel") ==undefined){
+            setCookie("chartLabel", true, 999);
+        }
+        if(getCookie("sensor_time_length") ==undefined){
+            setCookie("sensor_time_length", 1, 999);
+        }
+        chartLabel = getCookie("chartLabel");
+        if(chartLabel == "true"){
+            $("input:radio[name='chartLabel']:radio[value='on']").prop("checked", true);
+            $("input:radio[name='chartLabel']:radio[value='off']").prop("checked", false);
+        }else{
+            $("input:radio[name='chartLabel']:radio[value='on']").prop("checked", false);
+            $("input:radio[name='chartLabel']:radio[value='off']").prop("checked", true);
+
+        }
+        sensor_time_length = getCookie("sensor_time_length");
+        if(sensor_time_length == 1){
+            $("input:radio[name='chartRadio']:radio[value='on']").prop("checked", true);
+            $("input:radio[name='chartRadio']:radio[value='off']").prop("checked", false);
+        }else{
+            $("input:radio[name='chartRadio']:radio[value='on']").prop("checked", false);
+            $("input:radio[name='chartRadio']:radio[value='off']").prop("checked", true);
+
+        }
+
+        chart = new ApexCharts(document.querySelector("#chart"), setChartOption(chartLabel)); //차트 틀 생성
         chart.render();
         var sensor_data_list = ${sensorData};
         var sensor_data = ${activeSensor};
+
         draw_sensor_table(sensor_data_list, sensor_data);
         if (sensor_data_list.length == 0){
             console.log("sensor_data is none");
@@ -337,6 +364,36 @@
         updateChart(sensor_data_list, sensor_data);
         draw_frame();
     }); //ready
+
+
+    /**
+     * 쿠키 값 가져오는 메소드
+     */
+    function getCookie(cookie_name) {
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+            x = val[i].substr(0, val[i].indexOf('='));
+            y = val[i].substr(val[i].indexOf('=') + 1);
+            x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+            if (x == cookie_name) {
+                return unescape(y); // unescape로 디코딩 후 값 리턴
+            }
+        }
+    }
+
+    /**
+     * 쿠키 값 저장하는 메소드 (이름, 값, 저장일수)
+     */
+    function setCookie(cookie_name, value, days) {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + days);
+        // 설정 일수만큼 현재시간에 만료값으로 지정
+
+        var cookie_value = escape(value) + ((days == null) ? '' : '; expires=' + exdate.toUTCString());
+        document.cookie = cookie_name + '=' + cookie_value;
+    }
 
     function draw_frame(){
         setTimeout( function draw_frame() {
@@ -422,6 +479,7 @@
         }else{ //최근 24시간 선택 시
             chartLabel = false;
         }
+        setCookie("chartLabel", chartLabel, 999);
         chart.destroy();
         chart = new ApexCharts(document.querySelector("#chart"), setChartOption(chartLabel)); //차트 틀 생성
         chart.render();
@@ -446,6 +504,7 @@
             //$('#textUpdate').text("* 최근 24시간(실시간 업데이트) - 5분 평균데이터");
             sensor_naming = $('#radio_text').text();
         }
+        setCookie("sensor_time_length", sensor_time_length, 999);
         var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
         if(temp.length != 0){
             sensor_name = temp[0].childNodes[1].value; //측정소 테이블로부터 센서명을 구함
