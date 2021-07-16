@@ -381,9 +381,12 @@
     function  getWeekChartData() {
         let getData = new Array();
         $.ajax({  /* 현재 데이터 */
-           url: '<%=cp%>/getNSNow',
-           dataType: 'json',
-           async: false,
+            url: '<%=cp%>/getNSNow',
+            dataType: 'json',
+            async: false,
+            data: {
+                group : "${member.monitoringGroup}"
+            },
            success: function (data) {
                 getData.push({day: data[0], legalCount:data[1], companyCount:data[2], managementCount: data[3]});
            }

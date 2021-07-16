@@ -412,9 +412,17 @@
 
                 <div class="message text-start" style="padding: 10px;">
                     <p>알림</p>
+                    <span class="messageText" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd; height: 100px">
+                        <span class="text-danger" style="margin-right: 10px;">법적기준 초과</span>
+                        보일러실- 질소산화물 (82)<br><br>
+                    </span>
                     <span class="messageText" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
-                        <span class="text-danger" style="margin-right: 10px;">위험</span>
-                        보일러실 질소산화물 법적기준 초과(82)
+                        <span class="text-warning" style="margin-right: 10px;">관리기준 초과</span>
+                        보일러실- 질소산화물 (82)<br><br>
+                    </span>
+                    <span class="messageText" style="font-size: 0.9rem; padding-bottom: 3px; border-bottom: 1px solid #0d6efd">
+                        <span class="text-success" style="margin-right: 10px;">법적기준 초과</span>
+                        보일러실- 질소산화물 (82)<br><br>
                     </span>
                 </div>
             </div>

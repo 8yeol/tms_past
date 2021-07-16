@@ -49,55 +49,63 @@ public class Schedule {
      */
     @Scheduled(cron = "0 1 0 * * *") //매일 00시 01분에 처리
     public void saveNotificationStatistics(){
+        // 일
         LocalDate nowDate = LocalDate.now();
         // 어제 날짜 불러오기
         LocalDate yesterday = nowDate.minusDays(1);
-        // 어제 날짜로 저장되어있는 데이터 불러오기
-        NotificationDayStatistics yesterdayData = notificationDayStatisticsRepository.findByDay(String.valueOf(yesterday));
-        // 어제 날짜 데이터가 없는 경우 new 객체 생성 후 데이터 set
-        if(yesterdayData == null){
-            yesterdayData = new NotificationDayStatistics();
+
+        List<Place> placeList = placeRepository.findAll();
+        for(Place place : placeList){
+            String placeName = place.getName();
+            NotificationDayStatistics yesterdayData = notificationDayStatisticsRepository.findByDayAndPlace(String.valueOf(yesterday), placeName);
+
+            // 어제 날짜 데이터가 없는 경우 new 객체 생성 후 데이터 set
+            if(yesterdayData == null){
+                yesterdayData = new NotificationDayStatistics();
+            }
+            yesterdayData.setDay(String.valueOf(yesterday));
+
+            int[] dayValue = getReferenceValueCount(String.valueOf(yesterday), String.valueOf(yesterday), placeName);
+            yesterdayData.setLegalCount(dayValue[0]);
+            yesterdayData.setCompanyCount(dayValue[1]);
+            yesterdayData.setManagementCount(dayValue[2]);
+            yesterdayData.setPlace(placeName);
+            notificationDayStatisticsRepository.save(yesterdayData);
+
+            // 월
+            // 오늘 날짜 체크 (1일인 경우 전일데이터로 계산)
+            int getDay = nowDate.getDayOfMonth();
+            if (getDay == 1)
+                nowDate = nowDate.minusDays(1);
+
+            // nowDate 해당월의 시작일
+            LocalDate from = nowDate.withDayOfMonth(1);
+            // nowDate 해당월의 종료일
+            LocalDate to = nowDate.withDayOfMonth(nowDate.lengthOfMonth());
+
+            // nowDate 날짜 포맷변경 DB 저장용(YYYY-MM)
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM");
+            String year_month = formatter.format(nowDate);
+
+            NotificationMonthStatistics monthData = notificationMonthStatisticsRepository.findByMonthAndPlace(year_month, placeName);
+            if(monthData == null){
+                monthData = new NotificationMonthStatistics();
+            }
+            monthData.setMonth(year_month);
+
+            int[] monthValue = getReferenceValueCount(String.valueOf(from), String.valueOf(to), placeName);
+            monthData.setLegalCount(monthValue[0]);
+            monthData.setCompanyCount(monthValue[1]);
+            monthData.setManagementCount(monthValue[2]);
+            monthData.setPlace(placeName);
+            notificationMonthStatisticsRepository.save(monthData);
         }
-        yesterdayData.setDay(String.valueOf(yesterday));
-
-        int[] dayValue = getReferenceValueCount(String.valueOf(yesterday), String.valueOf(yesterday));
-        yesterdayData.setLegalCount(dayValue[0]);
-        yesterdayData.setCompanyCount(dayValue[1]);
-        yesterdayData.setManagementCount(dayValue[2]);
-        notificationDayStatisticsRepository.save(yesterdayData);
-
-        // 오늘 날짜 체크 (1일인 경우 전일데이터로 계산)
-        int getDay = nowDate.getDayOfMonth();
-        if (getDay == 1)
-            nowDate = nowDate.minusDays(1);
-
-        // nowDate 해당월의 시작일
-        LocalDate from = nowDate.withDayOfMonth(1);
-        // nowDate 해당월의 종료일
-        LocalDate to = nowDate.withDayOfMonth(nowDate.lengthOfMonth());
-
-        // nowDate 날짜 포맷변경 DB 저장용(YYYY-MM)
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM");
-        String year_month = formatter.format(nowDate);
-
-        NotificationMonthStatistics monthData = notificationMonthStatisticsRepository.findByMonth(year_month);
-        if(monthData == null){
-            monthData = new NotificationMonthStatistics();
-        }
-
-        monthData.setMonth(year_month);
-
-        int[] monthValue = getReferenceValueCount(String.valueOf(from), String.valueOf(to));
-        monthData.setLegalCount(monthValue[0]);
-        monthData.setCompanyCount(monthValue[1]);
-        monthData.setManagementCount(monthValue[2]);
-        notificationMonthStatisticsRepository.save(monthData);
     }
 
-    public int[] getReferenceValueCount(String from, String to){
+    public int[] getReferenceValueCount(String from, String to, String place){
         int[] arr = new int[3];
         for(int grade=1; grade<=3; grade++) {
-            List<HashMap> list = notificationListCustomRepository.getCount(grade, from, to);
+            List<HashMap> list = notificationListCustomRepository.getCount(grade, from, to, place);
             if (list.size() != 0) {
                 arr[grade - 1] = (int) list.get(0).get("count");
             } else {

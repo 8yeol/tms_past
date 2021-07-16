@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class NotificationMonthStatistics {
     @Id
     private ObjectId _id;
+    private String place;
     private String month;
     private int legalCount;
     private int companyCount;

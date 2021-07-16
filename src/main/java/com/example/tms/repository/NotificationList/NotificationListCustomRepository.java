@@ -27,7 +27,7 @@ public class NotificationListCustomRepository {
      * @param to_date
      * @return int 기준별, 날짜별 카운팅된 숫자
      */
-    public List<HashMap> getCount(int grade, String from_date, String to_date){
+    public List<HashMap> getCount(int grade, String from_date, String to_date, String place){
         LocalDateTime fromDate = LocalDateTime.parse(from_date + "T00:00:00");
         LocalDateTime toDate = LocalDateTime.parse(to_date + "T23:59:59");
         try{
@@ -35,11 +35,14 @@ public class NotificationListCustomRepository {
                 ProjectionOperation projectionOperation = Aggregation.project()
                         .andInclude("grade")
                         .andInclude("up_time")
+                        .andInclude("place")
                         .andInclude("count");
                 MatchOperation matchOperation = Aggregation.match(new Criteria()
                             .andOperator(Criteria.where("up_time").gte(fromDate).lte(toDate)
                                     .andOperator(Criteria.where("grade").is(grade)
-                                    )));
+                                            .andOperator(Criteria.where("place").is(place)
+                                    )
+                            )));
 
                 SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC, "up_time");
 

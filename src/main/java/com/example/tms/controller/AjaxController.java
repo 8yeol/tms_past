@@ -1144,21 +1144,29 @@ public class AjaxController {
      * @return day(현재날짜), legalCount(법적기준초과), companyCount(사내기준초과), managementCount(관리기준초과)
      */
     @RequestMapping(value = "getNSNow")
-    public ArrayList getNotificationStatistics() {
+    public ArrayList getNotificationStatistics(int group) {
+
+        MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(group);
+        List<String> placeList = monitoringGroup.getMonitoringPlace();
+
         ArrayList al = new ArrayList();
-        try {
-            LocalDate nowDate = LocalDate.now();
-            al.add(nowDate);
-            for (int grade = 1; grade <= 3; grade++) {
-                List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(nowDate), String.valueOf(nowDate));
-                if (list.size() != 0) {
-                    al.add(list.get(0).get("count"));
-                } else {
-                    al.add(null);
+
+        for(String place : placeList){
+            try {
+                LocalDate nowDate = LocalDate.now();
+                al.add(nowDate);
+                for (int grade = 1; grade <= 3; grade++) {
+                    List<HashMap> list = notificationListCustomRepository.getCount(grade, String.valueOf(nowDate), String.valueOf(nowDate), place);
+                    if (list.size() != 0) {
+                        al.add(list.get(0).get("count"));
+                    } else {
+                        al.add(null);
+                    }
                 }
+            } catch (Exception e) {
             }
-        } catch (Exception e) {
         }
+
         return al;
     }
 

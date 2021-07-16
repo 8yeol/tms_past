@@ -191,6 +191,7 @@ public class MainController {
     @RequestMapping("/alarm")
     public String alarm(Model model, Principal principal) {
         Member member = memberRepository.findById(principal.getName());
+        model.addAttribute("member", member);
         MonitoringGroup group = monitoringGroupRepository.findByGroupNum(member.getMonitoringGroup());
         model.addAttribute("group", group);
         model.addAttribute("allPlace", placeRepository.findAll());
