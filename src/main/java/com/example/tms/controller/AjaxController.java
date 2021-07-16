@@ -462,6 +462,8 @@ public class AjaxController {
         Member member = memberRepository.findById(principal.getName());
         int memberGroup = member.getMonitoringGroup();
 
+        JSONObject excess = new JSONObject();
+
         List<String> sensorList = new ArrayList<>();
         if(!member.getState().equals("1")){
             MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(memberGroup);
@@ -473,12 +475,12 @@ public class AjaxController {
             }
         }
         if(sensorList != null){
-            return getExcessList(sensorList);
+            excess = getExcessList(sensorList);
         }
-        return null;
+        return excess;
     }
 
-    public Object getExcessList(List<String> sensorList){
+    public JSONObject getExcessList(List<String> sensorList){
         JSONObject excess = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 

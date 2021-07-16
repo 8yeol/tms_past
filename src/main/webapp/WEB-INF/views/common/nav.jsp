@@ -405,11 +405,13 @@
                         <a href="<%=cp%>/logout">로그아웃</a>
                     </div>
                 </div>
+                <%--
                 <div>
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
                 </div>
+                --%>
                 <div class="message text-start">
-                    <span>알림이 왔습니다.</span>
+                    <span class="messageText text-white"></span>
                 </div>
             </div>
 
@@ -466,11 +468,13 @@
                         <a href="<%=cp%>/logout" class="fs-6 fw-bold">로그아웃</a>
                     </div>
                 </div>
+                <%--
                 <div>
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
                 </div>
+                --%>
                 <div class="message text-start">
-                    <span>알림이 왔습니다.</span>
+                    <span class="messageText text-white"></span>
                 </div>
             </div>
         </div>
@@ -478,6 +482,53 @@
 </header>
 
 <script>
+
+    $(document).ready(function () {
+        getAlarm();
+
+        setInterval(function () {
+            getAlarm();
+        }, 5000)
+    });
+
+    function getAlarm(){
+        $.ajax({
+            url: '<%=cp%>/getExcessSensor',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                const arr = data.excess;
+                let message;
+                let style;
+                if(arr != undefined){
+                    messageOpen()
+                    for(let i=0; i<arr.length; i++){
+                        const excess = arr[i].classification;
+                        const place = arr[i].place;
+                        const naming = arr[i].naming;
+                        const value = arr[i].value;
+
+                        if(excess == "danger" ){
+                            message = place +" - " + naming + " 법적 기준 초과 ( " + value + " )";
+                            style = 'bg-danger';
+                        }else if(excess == "warning"){
+                            message = place +" - " + naming + " 사내 기준 초과 ( " + value + " )";
+                            style = 'bg-warning';
+                        }else if(excess == "caution"){
+                            message = place +" - " + naming + " 관리 기준 초과 ( " + value + " )";
+                            style = 'bg-success';
+                        }
+                    }
+                }
+                $('.messageText').text(message);
+                $('.message').addClass(style);
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
+
     function openNav() {
         document.getElementById("mySidebar").style.left = "0px";
         $('#mySidebar').height( document.documentElement.clientHeight );
