@@ -37,7 +37,7 @@
             </c:if>
         </div>
         <div class="col text-end align-self-end" style="color: red; font-size: 0.8rem; font-weight: normal;">
-            * 기준 값은 '최고 관리자' 권한을 가진 회원만 설정 가능합니다.
+            * 모니터링 On/Off 는 모니터링 그룹별로 설정 가능하며, 기준 값은 '최고 관리자' 권한을 가진 회원만 설정 가능합니다.
         </div>
     </div>
     <div class="row bg-light p-3 pt-0" style="min-height:70%;">
