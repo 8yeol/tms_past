@@ -19,7 +19,6 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/page/dashboard.css">
-
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
@@ -54,7 +53,7 @@
                     </c:when>
                     <c:otherwise>
                         <div class="col align-self-center text-center" style="font-size: 1.2rem">
-                            측정소 통합 모니터링 설정된 센서가 없습니다. <br>
+                            연간 배출량 추이 모니터링 설정된 센서가 없습니다. <br>
                             <c:choose>
                                 <c:when test="${member.state eq 1}">
                                     <b>[환경설정 - 배출량 관리] > 배출량 추이 모니터링 대상 설정 설정</b>에서 모니터링 대상가스를 선택해주세요.<br>
@@ -409,12 +408,11 @@
 
 <script>
     $(document).ready(function () {
-        //div의 크기에 비례하는 라인높이, 마진값 계산후 적용
-        for (let i=0; i<${placeList.size()}; i++) {
+        const placeListSize = "${placeList.size()}";
+        for (let i=0; i<placeListSize; i++) {
             $('#line' + i).height($('#div' + i).height() / 1.5);
             $('#line' + i).css({"margin-top": ($('#div' + i).height() - $('#line' + i).height()) / 2 + "px"});
         }
-        const placeListSize = ${placeList.size()};
         if(placeListSize==2) $('#line1').remove();
         excess();
     });
@@ -435,20 +433,8 @@
         });
     }
 
-    // 관리등급 초과 모니터링 (처음 로딩될 때 한번, 그 후로 매 5분마다 실행) - 완료
     function excess() {
         addExcessData();
-        // 매 5분마다(5분, 10분, 15분..) 실행되게 하는 평션
-        /*
-        const FIVE_MINUTES = 5 * 60 * 1000;
-        const timeSinceBoundary = new Date() % FIVE_MINUTES;
-        const timeToSetInterval = timeSinceBoundary === 0 ? 0 : (FIVE_MINUTES - timeSinceBoundary);
-        setTimeout(function () {
-            setInterval(function () {
-                addExcessData();
-            }, FIVE_MINUTES);
-        }, timeToSetInterval);
-        */
         setInterval(function () {
             addExcessData();
         }, 5000)
@@ -498,6 +484,3 @@
     }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-
-
-

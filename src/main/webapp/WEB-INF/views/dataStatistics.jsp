@@ -87,7 +87,7 @@
     <div class="row">
         <div class="col bg-white">
             <span class="fs-5 fw-bold add-margin title-span"><span class="placeAndItem"></span>월별 배출량 추이 </span>
-            <div id="chart" class="p-3 mt-5 mb-5"></div>
+            <div id="chart" class="p-3 mt-5 mb-5 text-center" style="height: 500px"></div>
         </div>
     </div>
 
@@ -225,65 +225,70 @@
     }
 
     function addChart(previousYear, thisYear, previousYearData, thisYearData){
+
         $('#chart').empty();
 
-        const options = {
-            series: [{
-                name: previousYear,
-                data: previousYearData
-            }, {
-                name: thisYear,
-                data: thisYearData
-            }],
-            chart: {
-                type: 'bar',
-                height: 500
-            },
-            legend:{
-              position : 'top'
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '55%',
-                    endingShape: 'rounded'
+        if(thisYearData.length == 0){
+            $('#chart').append("모니터링 가능한 월별 배출량 추이 데이터가 없습니다. <br> 월별 배출량 추이 데이터는 매일 자정 전일 기준으로 업데이트 되며, 해당 측정소에 유량 및 질소산화물 센서가 정상적으로 등록되어 있어야 이용 가능합니다.");
+        } else{
+            const options = {
+                series: [{
+                    name: previousYear,
+                    data: previousYearData
+                }, {
+                    name: thisYear,
+                    data: thisYearData
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 500
                 },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
-            xaxis: {
-                categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-            },
-            yaxis: {
-                title: {
-                    text: '(kg/월)'
+                legend:{
+                    position : 'top'
                 },
-                labels:{
-                    formatter: function(value){
-                        return numberWithCommas(Math.round(value));
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
+                xaxis: {
+                    categories: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                },
+                yaxis: {
+                    title: {
+                        text: '(kg/월)'
+                    },
+                    labels:{
+                        formatter: function(value){
+                            return numberWithCommas(Math.round(value));
+                        }
+                    }
+                },
+                fill: {
+                    opacity: 1
+                },
+                tooltip: {
+                    y: {
+                        formatter: function (value) {
+                            return numberWithCommas(Math.round(value)) + " kg"
+                        }
                     }
                 }
-            },
-            fill: {
-                opacity: 1
-            },
-            tooltip: {
-                y: {
-                    formatter: function (value) {
-                        return numberWithCommas(Math.round(value)) + " kg"
-                    }
-                }
-            }
-        };
+            };
 
-        const chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
+            const chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+        }
     }
 
     function addTable(previousYear, thisYear, previousYearData, thisYearData){
@@ -294,7 +299,7 @@
                 $('#information > tfoot').empty();
                 $('#information > tbody').empty();
 
-                const innerHtml = "<tr><td colspan='14' rowspan='3'> 통계 데이터가 없습니다. <br> 통계 데이터는 매일 자정 전일 기준으로 업데이트 됩니다. </td></tr>";
+                const innerHtml = "<tr><td colspan='14'> 통계 데이터가 없습니다. <br> 통계 데이터는 매일 자정 전일 기준으로 업데이트 됩니다. </td></tr>";
                 $('#information > tbody').append(innerHtml);
                 return false
             }

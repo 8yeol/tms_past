@@ -165,7 +165,8 @@ public class Schedule {
         // 데이터가 올바르게 들어오는지 체크하기 위한 로직 (정밀 계산시 BigDecimal 사용, 현재 일반 사칙연산으로도 연산 처리 문제 없음)
         if(noxData.size()==48 && fl1Data.size()==48){
             for(int i = 0 ; i < noxData.size(); i++){
-                emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4;
+                // 마지막 /1000은 kg 으로 한산해주기 위함 (기존단위 g)
+                emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4 / 1000;
             /*
             BigDecimal noxValue = new BigDecimal(noxData.get(i).getY());
             BigDecimal fl1Value = new BigDecimal(fl1Data.get(i).getY());

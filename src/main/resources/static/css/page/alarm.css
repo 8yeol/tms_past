@@ -131,3 +131,18 @@ table thead {
         margin-top: 70px!important;
     }
 }
+
+.tab li {
+    border-bottom: 1px solid #06357a;
+}
+.tab li:last-child {
+    border-bottom: none;
+}
+#alarmTable {
+    height: 570px;
+}
+@media all and (max-width: 1000px) {
+    #alarmTable{
+        height: 800px;
+    }
+}

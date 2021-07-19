@@ -28,22 +28,6 @@
 <script src="static/js/datepicker.ko.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
-<style>
-    .tab li {
-        border-bottom: 1px solid #06357a;
-    }
-    .tab li:last-child {
-        border-bottom: none;
-    }
-    #alarmTable {
-        height: 570px;
-    }
-    @media all and (max-width: 1000px) {
-        #alarmTable{
-            height: 800px;
-        }
-    }
-</style>
 <div class="container" id="container">
     <div class="row m-3 mt-3 ms-1">
         <span class="fs-4 fw-bold">알림</span>
@@ -158,9 +142,9 @@
         $("#date_start").val(getDays());
         $("#date_end").val(getDays());
 
-        $("#notify_chart").text(moment(new Date()).format('YYYY-MM-DD HH:mm:ss'));
         search();
-        var placeName = $('.on').text();
+
+        const placeName = $('.on').text();
         if($("input[id=week]:radio" ).is( ":checked")){
             const chartData = getWeekChartData(placeName);
             addChart(chartData);
@@ -221,6 +205,7 @@
                 datePickerSet(sDate, eDate);
             }
         });
+
         function isValidStr(str) {
             if (str == null || str == undefined || str == "")
                 return true;
@@ -256,19 +241,25 @@
         $('.tab li').attr('class', '');
         $(obj).attr('class', 'on');
         $('#s_day').trigger('click');
-        var chartData;
+        let chartData;
         if($("input[id=week]:radio" ).is( ":checked")){
             chartData = getWeekChartData(placeName);
         }else{
             chartData = getMonthChartData(placeName);
         }
+
+        chartDataCheck(chartData);
+
+        search();
+    }
+
+    function chartDataCheck(chartData){
         if(chartData.length != 0){
-          addChart(chartData);
+            addChart(chartData);
         }else{
             $("#chart").empty();
             $("#chart").append("<p style='text-align: center; padding-top: 150px'>센서 알림 현황이 없습니다.</p>");
         }
-        search();
     }
 
     function getDays(dayType){
@@ -399,14 +390,14 @@
         }else{
             chartData = getMonthChartData();
         }
-        addChart(chartData);
+        chartDataCheck(chartData);
     });
 
     /**
      * 일주일 ~ 현재 알림현황 리턴
      */
     function  getWeekChartData() {
-        var place = $('.on')[0].innerText;
+        const place = $('.on')[0].innerText;
         let getData = new Array();
         $.ajax({  /* 현재 데이터 */
             url: '<%=cp%>/getNSNow',
@@ -439,7 +430,7 @@
      * @returns {any[]}
      */
     function  getMonthChartData() {
-        var place = $('.on')[0].innerText;
+        const place = $('.on')[0].innerText;
         const getData = new Array();
         $.ajax({
             url: '<%=cp%>/getNSMonth',
@@ -504,12 +495,11 @@
             },
             fill: {
                 opacity: 1,
-                // colors: ['#F44336', '#ffc107', '#198754']
             },
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return val + "번"
+                        return val;
                     }
                 }
             }
@@ -520,6 +510,3 @@
     }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
-
-
-
