@@ -91,7 +91,7 @@
                 <div class="row add-margin-top">
                     <div class="col add-margin">
                         <div class="float-start">
-                            <div class="fs-5 fw-bold mb-2" id="title" style="display: inline-block;"> </div> <span style="margin-left: 10px;">단위 : 111</span>
+                            <div class="fs-5 fw-bold mb-2" id="title" style="display: inline-block;"> </div> <span style="margin-left: 10px;" id="unit"></span>
                         </div>
                     </div>
 
@@ -324,6 +324,27 @@
         const place = $("#place").val();
         const category = findSensorCategory(item);
         $('#title').text(place + " - " + category);
+
+        // 단위 받아오는 로직 추가
+        const str = item.split('_');
+        const type = str[1];
+        $.ajax({
+            url:'<%=cp%>/getUnit',
+            dataType: 'text',
+            data:  {"type": type},
+            async: false,
+            success: function (data) {
+                if(data!='null'){
+                    $('#unit').text("[ 단위 : " + data +" ]");
+                }else{
+                    $('#unit').text("");
+                }
+            },
+            error: function(request, status, error) {
+                console.log('get unit error');
+                console.log(error);
+            }
+        });
 
         const reference = getReferenceValue(item);
 

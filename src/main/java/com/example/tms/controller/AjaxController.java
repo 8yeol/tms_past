@@ -2333,4 +2333,15 @@ public class AjaxController {
         return monitoringSensor;
     }
 
+    @RequestMapping(value = "/getUnit", method = RequestMethod.GET)
+    public String getUnit(String type) {
+        Item item = itemRepository.findByClassification(type);
+        String unit = "";
+        try{
+            unit = item.getUnit();
+        }catch (NullPointerException e){
+            unit = "null";
+        }
+        return unit;
+    }
 }
