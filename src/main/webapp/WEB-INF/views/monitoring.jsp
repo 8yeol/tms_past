@@ -103,8 +103,11 @@
     }
 
     .operatingDiv {
-        width: 40%;
+        width: 50%;
         position: relative;
+        background-color: #0d6efd;
+        border-radius: 15px;
+        color: #fff;
     }
 
     .operatingDiv > span {
@@ -112,23 +115,27 @@
     }
 
     .operatingDiv > p {
-        color: #0d6efd;
         font-size: 1.4rem;
         margin: 0;
     }
 
     .topDash-l {
         display: flex;
-        width: 33.3%;
         position: relative;
-        flex-wrap: wrap;
-        height: 90px;
+        width: 100%;
         margin: auto;
+        border-bottom: 1px solid #a9a9a9;
+    }
+
+    .topDash-l:last-child {
+        border-bottom: none;
     }
 
     .topDash-l span {
         width: 100%;
         margin: auto;
+        text-align: left;
+        padding-left: 10px;
     }
 
     .topDash-l p {
@@ -136,15 +143,8 @@
         display: inline-block;
         margin: auto;
         font-size: 1.2rem;
-    }
-
-    .topDash-l:nth-child(1) > p {
-        color: #0d6efd;
-    }
-
-    .topDash-l:nth-child(4) > p {
-        padding-left: 10px;
-        color: #0440a3;
+        text-align: right;
+        padding-right: 10px;
     }
 
     .topDash-r {
@@ -173,11 +173,6 @@
         height: 70%;
         line-height: 80px;
     }
-
-    .topDash-r:nth-child(2) > p {
-        color: #DB510B;
-    }
-
 
     @media all and (max-width: 1399px) and (min-width: 1001px) {
         .m-size {height: 200px;}
@@ -253,25 +248,27 @@
     <%-- 상단 대시보드 --%>
     <div class="row m-3 mt-3 bg-light" style="padding: 10px 0px; height: 180px;">
         <div style="width: 50%; display: flex; border-right: 1px solid #aaa;">
-            <div class="operatingDiv" style="display: inline-grid; padding: .25rem .25rem .25rem 20px;">
+            <div class="operatingDiv" style="display: inline-grid; padding: .25rem .5rem;">
                 <span class="fw-bold">가동률</span>
                 <p id="sensorStatusP" class="fs-2 fw-bold text-center">0%</p>
-                <div id="operating" class="text-dark text-center">0 / 0</div>
+                <div id="operating" class="text-center">0 / 0</div>
             </div>
-            <div class="topDash-l text-center" style="width: 20%;">
-                <span class="fw-bold fs-5" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
-                <p id="statusOn" class="text-success fs-2">0</p>
-                <div class="Gcloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
-            </div>
-            <div class="topDash-l text-center">
-                <span class="fw-bold fs-5" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
-                <p id="statusOff" class="text-danger fs-2">0</p>
-                <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
-            </div>
-            <div class="topDash-l text-center">
-                <span class="fw-bold fs-5" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
-                <p id="monitoringOff" class="fs-2">0</p>
-                <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
+            <div style="display: flex; flex-wrap: wrap; margin-left: 20px; border: 1px solid #a9a9a9">
+                <div class="topDash-l text-center">
+                    <span class="fw-bold fs-5" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
+                    <p id="statusOn" class="text-success fs-3">0</p>
+                    <div class="Gcloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
+                </div>
+                <div class="topDash-l text-center">
+                    <span class="fw-bold fs-5" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
+                    <p id="statusOff" class="text-danger fs-3">0</p>
+                    <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
+                </div>
+                <div class="topDash-l text-center">
+                    <span class="fw-bold fs-5" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
+                    <p id="monitoringOff" class="fs-3">0</p>
+                    <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
+                </div>
             </div>
         </div>
         <div style="width: 50%; height: 80%; display: flex; margin: auto 0;">
