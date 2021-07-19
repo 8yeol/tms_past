@@ -543,6 +543,7 @@
 <script>
     let intervalAlarmON=null;
     let intervalAlarmOFF=null;
+    let count=0;
 
     $(document).ready(function () {
         if (typeof getCookie('isAlarm') == 'undefined') {
@@ -563,15 +564,23 @@
             $('.alarm').attr('src', "static/images/bellOff.png");
             getAlarm();
             alarmEmpty();
+            viewCount();
             clearInterval(intervalAlarmON)
             intervalAlarmOFF = setInterval(function () {
                     getAlarm();
                     alarmEmpty();
+                    viewCount();
                 }
                 , 5000);
         }
     });
 
+    function viewCount(){
+        if(count != 0){
+            $('.alarmCount').text(count);
+            $('.alarmCount').css('display', 'block');
+        }
+    }
     function alarmEmpty(){
         $('.dangerOuter').html('');
         $('.warningOuter').html('');
@@ -592,7 +601,7 @@
             success: function (data) {
                 const arr = data.excess;
                 let message;
-                let count=0;
+                count = 0;
                 if(arr != undefined){
                     for(let i=0; i<arr.length; i++){
                         if(arr[i].state == true){
@@ -627,10 +636,7 @@
                         }
                     }
                }
-                if(count != 0){
-                    $('.alarmCount').text(count);
-                    $('.alarmCount').css('display', 'block');
-                }
+
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -704,9 +710,12 @@
            $('.alarm').attr('src', "static/images/bellOff.png");
            setCookie('isAlarm', 'false', 1);
            clearInterval(intervalAlarmON);
-           $('.message').css('display', 'none');
+           getAlarm();
+           viewCount();
+           alarmEmpty();
            intervalAlarmOFF = setInterval(function () {
                    getAlarm();
+                   viewCount();
                    alarmEmpty();
                }
                , 5000);
