@@ -13,4 +13,6 @@ public interface SensorListRepository extends MongoRepository<SensorList, Object
     void deleteByTableName(String tableName);
     List<SensorList> findByClassification(String classification);
     SensorList findByPlaceAndNaming(String place, String naming);
+
+    List<SensorList> findByPlaceAndClassification(String place, String classification);
 }

@@ -17,17 +17,12 @@ import lombok.extern.log4j.Log4j2;
 import org.bson.types.ObjectId;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -466,10 +461,10 @@ public class AjaxController {
             Sensor sensorData = sensorCustomRepository.getSensorRecent(sensor.getTableName());
 
             Date now = new Date();
-            long diff = sensorData.getUp_time().getTime() - now.getTime();
+            long diff = now.getTime() - sensorData.getUp_time().getTime();
             long sec = diff / 60000;
 
-            if(sec >= 0 && sec < 5){
+            if(sec < 5){
                 sensor.setStatus(true);
             }else{
                 sensor.setStatus(false);
@@ -493,12 +488,10 @@ public class AjaxController {
     public Object getExcessSensor(Principal principal) {
         Member member = memberRepository.findById(principal.getName());
         int memberGroup = member.getMonitoringGroup();
-        MonitoringGroup group = monitoringGroupRepository.findByGroupNum(memberGroup);
-
         JSONObject excess = new JSONObject();
 
         List<String> sensorList = new ArrayList<>();
-        if(group.getGroupNum() != 1){
+        if(memberGroup != 1){
             MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(memberGroup);
             sensorList = monitoringGroup.getSensor();
         }else{
@@ -511,6 +504,7 @@ public class AjaxController {
         if(sensorList != null){
             excess = getExcessList(sensorList);
         }
+
         return excess;
     }
 
@@ -537,10 +531,10 @@ public class AjaxController {
             Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName);
             ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(sensorName);
             Date now = new Date();
-            long diff = sensor.getUp_time().getTime() - now.getTime();
+            long diff = now.getTime() - sensor.getUp_time().getTime();
             long sec = diff / 60000;
 
-            if(sec >= 0 && sec < 5){
+            if(sec < 5){
                 float value = sensor.getValue();
                 SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());;
                 JSONObject jsonObject = new JSONObject();
@@ -867,25 +861,8 @@ public class AjaxController {
      */
     @RequestMapping(value = "/findSensorList")
     public List findSensorCategoryList(@RequestParam("place") String place) {
-        List<SensorList> list = sensorListRepository.findByPlace(place);
+        List<SensorList> list = sensorListRepository.findByPlaceAndClassification(place, "NOX");
         return list;
-    }
-
-    @RequestMapping(value = "/findSensorList2")
-    public List findSensorList2(@RequestParam("place") String place) {
-        List<SensorList> list = sensorListRepository.findByPlace(place);
-        List<SensorList> list1 = sensorListRepository.findByPlace(place);
-        for (int i = 0; i < list.size(); i++) {
-            SensorList sensor = list.get(i);
-            MonthlyEmissions monthly = monthlyEmissionsRepository.findBySensor(sensor.getTableName());
-            try {
-                if (monthly == null) {
-                    list1.remove(sensor);
-                }
-            } catch (NullPointerException e) {
-            }
-        }
-        return list1;
     }
 
     /**

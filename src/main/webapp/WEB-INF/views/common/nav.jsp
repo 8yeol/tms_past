@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="static/js/fontawesome.js"></script>
 
 <%
@@ -435,9 +436,18 @@
     <div class="container">
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-around">
-                <a href="<%=cp%>/monitoring" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
-                    대기 TMS 관제 시스템
-                </a>
+                <c:choose>
+                    <c:when test="${member.state eq 1}">
+                        <a href="<%=cp%>/dashboard" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
+                            대기 TMS 관제 시스템
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<%=cp%>/monitoring" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
+                            대기 TMS 관제 시스템
+                        </a>
+                    </c:otherwise>
+                </c:choose>
 
                 <nav id="topMenu">
                     <ul id="menu">

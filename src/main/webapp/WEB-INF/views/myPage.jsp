@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     pageContext.setAttribute("br", "<br/>");
@@ -135,7 +136,11 @@
                 <div class="col text-center" style="padding-left: 10%;">
                     <button class="btn btn-outline-primary m-3" id="update_btn" onclick="setLayout()" >회원정보 수정</button>
                     <button class="btn btn-primary m-3" style="display:none;" id="up_btn" onclick="submit()" >정보수정</button>
-                     <button class="btn btn-outline-danger m-3" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
+                    <c:choose>
+                        <c:when test="${member.state ne 1}">
+                            <button class="btn btn-outline-danger m-3" id="memberOut" data-bs-toggle="modal" data-bs-target="#memberOutmodal">회원탈퇴</button>
+                        </c:when>
+                    </c:choose>
                 </div>
             </div>
             <input type="hidden" id="state" value="${member.state}">
