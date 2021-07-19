@@ -253,7 +253,6 @@
         var chartData;
         if($("input[id=week]:radio" ).is( ":checked")){
             chartData = getWeekChartData(placeName);
-            console.log(chartData);
         }else{
             chartData = getMonthChartData(placeName);
         }
@@ -442,7 +441,6 @@
             async: false,
             data: {"place": place},
             success: function (data) {
-                console.log(data);
                 for(let i=0; i<data.length; i++){
                     getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});
                 }
