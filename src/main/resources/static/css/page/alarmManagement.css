@@ -162,3 +162,8 @@ button>img {
 .dp>div:nth-child(3) {
     margin-left: 20px;
 }
+
+.border-bottom-custom {
+    border-bottom: 2px solid #a9a9a9;
+    padding: 16px 16px 25px 16px;
+}

@@ -18,50 +18,37 @@
 
 <link rel="stylesheet" type="text/css" href="static/css/timepicker.css">
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
-<%--make css--%>
-<link rel="stylesheet" type="text/css" href="static/css/alarmManagement.css">
+<link rel="stylesheet" type="text/css" href="static/css/page/alarmManagement.css">
 <script src="static/js/common/common.js"></script>
 <script src="static/js/timepicker.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
-
-<style>
-    .border-bottom-custom {
-        border-bottom: 2px solid #a9a9a9;
-        padding: 16px 16px 25px 16px;
-    }
-</style>
-
-
 
 <div class="container" id="container">
     <div class="row m-3 mt-3 ms-1" style="padding-left: 10px;">
         <span class="col fw-bold fs-4">환경설정 > 알림설정</span>
         <span class="col"  style="color:red; font-size: 0.8rem;position: relative;top: 20px; font-weight: normal;text-align: end">
-            * 알림 설정은 '최고 관리자' 권한을 가진 회원만 변경 가능합니다.</span>
+            * 알림 설정은 '최고 관리자' 권한을 가진 회원만 변경 가능합니다.
+        </span>
     </div>
 
     <div class="row m-3 mt-3 bg-light">
         <div id="noneDiv" style="border-bottom: 2px solid #a9a9a9; margin: auto;">
             <div class="fw-bold fs-5" style='margin: auto; text-align: center; height: 151px; padding-top: 35px;'>
-                모니터링 ON 설정된 측정소가 없습니다. <br> <b>[환경설정 > 측정소 관리]</b> 에서 측정소 모니터링을 설정해주세요.
+                모니터링 ON 설정된 측정소가 없습니다. <br>
+                <b>[환경설정 > 측정소 관리]</b> 에서 측정소 모니터링을 설정해주세요.
             </div>
         </div>
 
         <c:forEach var="place" items="${place}" varStatus="status">
             <div id="placeDiv${status.index}">
-
                 <div class="row bg-light border-bottom-custom">
-
-                    <span class="fs-5 placeName" style="margin-bottom: 20px; display: inline-block; width: auto"
-                          id="place${status.index}">${place.name}</span>
-                    <button type="button" class="cancelBtn" onClick="cancel(${status.index})"><img
-                            src="static/images/reload.png" width="22" height="22"></button>
-
+                    <span class="fs-5 placeName" style="margin-bottom: 20px; display: inline-block; width: auto" id="place${status.index}">${place.name}</span>
+                    <button type="button" class="cancelBtn" onClick="cancel(${status.index})">
+                        <img src="static/images/reload.png" width="22" height="22">
+                    </button>
                     <div style="" id="div${status.index}">
                         <div style="position: relative; padding-bottom: 5px;">
-                            <div class="dp" id="alarm${status.index}" style="width: 65%; margin: 0 auto 10px;">
-                            </div>
-
+                            <div class="dp" id="alarm${status.index}" style="width: 65%; margin: 0 auto 10px;"></div>
                         </div>
                         <hr>
                         <div class="add-dp" style="width: 75%; margin: 0 auto; position: relative;">
@@ -76,13 +63,11 @@
                                 <button type="button" class="btn btn-primary saveBtn" onClick="permissionError()">저장</button>
                             </c:if>
                         </div>
-
                     </div>
                 </div>
             </div>
         </c:forEach>
     </div>
-
     <h6 style="padding-left: 12px;">* 알림을 받을 측정항목을 선택해 주세요. [환경설정 > 측정소 관리]에서 설정된 항목의 기준이 초과하는 경우 알림이 발생합니다.</h6>
 </div>
 
@@ -91,17 +76,17 @@
     let stateEvent = '${state}' == '1' ? '' : 'onclick="permissionError()"';
 
     $(document).ready(function () {
-        const placeLength = ${place.size()};
-        //저장소 DIV 반복 생성
+        const placeLength = "${place.size()}";
+
         for (let i = 0; i < placeLength; i++) {
                 $("#noneDiv").empty();
                 document.getElementById("noneDiv").style = "";
                 placeMake($("#place" + i).text(), i);
         }
+
         for (let i = 0; i < placeLength; i++) {
             $(".example").timepicker();
         }
-
     });
 
     function permissionError(){
@@ -111,7 +96,6 @@
             text: '최고 관리자만 변경 가능합니다.'
         })
     }
-
 
     //측정소 생성
     function placeMake(name, idx) {
@@ -315,10 +299,6 @@
         placeMake($("#place" + idx).text(), idx);
         $(".example").timepicker();
     }
-
-
-
-
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

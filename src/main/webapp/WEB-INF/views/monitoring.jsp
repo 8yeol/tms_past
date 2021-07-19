@@ -250,7 +250,7 @@
         <div style="width: 50%; display: flex; border-right: 1px solid #aaa;">
             <div class="operatingDiv" style="display: inline-grid; padding: .25rem .5rem;">
                 <span class="fw-bold">가동률</span>
-                <p id="sensorStatusP" class="fs-2 fw-bold text-center">0%</p>
+                <p id="sensorStatusP" class="fs-1 fw-bold text-center">0%</p>
                 <div id="operating" class="text-center">0 / 0</div>
             </div>
             <div style="display: flex; flex-wrap: wrap; margin-left: 20px; border: 1px solid #a9a9a9">

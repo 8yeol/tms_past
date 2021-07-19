@@ -15,128 +15,13 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="static/css/page/sensorManagement.css">
+
 <script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/jquery.dataTables.min.js"></script>
 
-<style>
-    .swal2-close{
-        width: 30px;
-        height: 30px;
-        font-weight: bold !important;
-        margin-top: 10px;
-        margin-right: 10px;
-        color:black;
-    }
-    .label {
-        width: 100px;
-        font-size: 1.3rem;
-    }
-
-    /* 데이터테이블 */
-    .toolbar>b {
-        font-size: 1.25rem;
-    }
-
-    table thead {
-        background-color: #97bef8;
-        color: #fff;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        box-sizing: border-box;
-        display: inline-block;
-        min-width: 1.5em;
-        padding: 0.5em 1em;
-        margin-left: 2px;
-        text-align: center;
-        text-decoration: none !important;
-        cursor: pointer;
-        *cursor: hand;
-        color: #333 !important;
-        border: 0px solid transparent !important;
-        border-radius: 50px !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-        color: #fff !important;
-        border: 0px !important;
-        background: #97bef8 !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
-        cursor: default;
-        color: #666 !important;
-        border: 1px solid transparent;
-        background: transparent;
-        box-shadow: none;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-        color: white !important;
-        border: 0px !important;
-        background: #254069 !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button:active {
-        outline: none;
-        background-color: #2b2b2b;
-        box-shadow: inset 0 0 3px #111;
-    }
-
-    #sensorTable_filter label {
-        margin-bottom: 5px;
-        margin-top: 5px;
-    }
-
-    .dataTables_wrapper {
-        min-height: 340px;
-    }
-    .inputLayout{
-        width: 33%;
-        display: inline;
-        text-align: center;
-    }
-    .inputText{
-        width: 223px;
-        padding-left: 20px;
-    }
-    .inputText2{
-        width: 223px;
-        padding-left: 20px;
-    }
-
-    .label{
-        text-align: right;
-    }
-    .s-style {
-        font-size: 0.8rem;
-        display: inline-block;
-        width: auto;
-        position: absolute;
-        right: 0;
-    }
-    .inputDisabled{
-        background-color: rgba(239, 239, 239, 0.3);
-        border:1px solid rgba(118, 118, 118, 0.3);
-        pointer-events: none;
-    }
-    @media all and  (max-width:989px) {
-        .label {text-align: center; margin: 0 !important;}
-        .m-margin {margin: 15px 0 15px 35px !important;}
-        .mediaText{width: 80%;}
-    }
-    @media all and  (max-width:789px) {
-        .mediaText{width: 70%;}
-    }
-    @media all and  (max-width:589px) {
-        .mediaText{width: 50%;}
-    }
-</style>
 <div class="container" id="container">
     <div class="row">
         <div class="col m-3 mt-3 ms-1" style="padding: 0">
@@ -290,7 +175,6 @@
         });
     });
 
-
     //데이터 가져와서 그리기
     function getSensor() {
         $('#tbody').children().remove();  //테이블 비우기
@@ -360,21 +244,21 @@
     }
 
     function editSetting(obj) {
-        var sensor = $(obj).parent().parent().children();
-        $("input[name=classification2]").val(sensor.eq(0).html()); //-> NOX
-        $("input[name=naming2]").val(sensor.eq(1).html());         //-> 질소산화물
-        $("input[name=managementId2]").val(sensor.eq(2).html());  // -> NOX_01
-        $("input[name=tableName2]").val(sensor.eq(3).html());  // -> tmsWP0001_NOX_01
-        $("input[name=hiddenCode]").val(sensor.eq(3).html());  // -> tmsWP0001_NOX_01
+        const sensor = $(obj).parent().parent().children();
+        $("input[name=classification2]").val(sensor.eq(0).html());
+        $("input[name=naming2]").val(sensor.eq(1).html());
+        $("input[name=managementId2]").val(sensor.eq(2).html());
+        $("input[name=tableName2]").val(sensor.eq(3).html());
+        $("input[name=hiddenCode]").val(sensor.eq(3).html());
 
         $("#modal_title").html("관리 ID : <font class='text-primary'><b>"+sensor.eq(2).html()+"</b></font>");
         $("#place2").val(sensor.eq(5).html());
     }
 
     function deleteModal(obj) {
-        const tableName = $(obj).parent().parent().children().eq(3).html(); //-> tmsWP0001_NOX_01
-        const place = $(obj).parent().parent().children().eq(6).html(); //-> 보일러실
-        const naming = $(obj).parent().parent().children().eq(1).html(); //-> 온도
+        const tableName = $(obj).parent().parent().children().eq(3).html();
+        const place = $(obj).parent().parent().children().eq(6).html();
+        const naming = $(obj).parent().parent().children().eq(1).html();
         const id = $(obj).parent().parent().children().eq(2).html();
 
         Swal.fire({
@@ -411,7 +295,6 @@
     }
 
     function updateSensor(){
-
         if(saveSensorCheck(2)) {
             let form = $('#editForm').serialize();
             let content = '센서 측정소가 수정 되었습니다.';
@@ -436,7 +319,6 @@
                 }
             });
         }
-
     }
 
     //데이터 저장 후 페이지 새로고침
@@ -479,8 +361,8 @@
             form = $('#saveForm').serialize();
             content = '센서가 추가 되었습니다.';
             title = '센서 추가';
-            $("input[name=hiddenCode]").val("");    //수정했을때 남아있는 히든코드 초기화
-            $('input[name=isValueDelete]').val(""); //수정했을때 남아있는 히든코드 초기화
+            $("input[name=hiddenCode]").val("");
+            $('input[name=isValueDelete]').val("");
 
         } else {
             $("#naming2").val( strReplace($("#naming2").val()));
@@ -598,6 +480,4 @@
             timer: 1500
         })
     }
-
-
 </script>

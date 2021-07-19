@@ -91,7 +91,7 @@
                 <div class="row add-margin-top">
                     <div class="col add-margin">
                         <div class="float-start">
-                            <div class="fs-5 fw-bold mb-2" id="title"> </div>
+                            <div class="fs-5 fw-bold mb-2" id="title"> </div> <span>단위 : 111</span>
                         </div>
                     </div>
 

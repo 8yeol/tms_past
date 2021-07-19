@@ -30,7 +30,7 @@
         <div id="memberManagement" style="display: block" class="tabDiv">
             <div style="height: 50px; display: flex; justify-content: space-between">
                 <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;height: 20px;">회원관리</span>
-                <span style="font-size: 0.8rem; color: red;">* '최고 관리자' 권한을 가진 회원은 측정소 & 센서 관리를 위해 default 그룹에 고정됩니다.</span>
+                <span style="font-size: 0.8rem; color: red;">* '최고 관리자' 권한을 가진 회원은 측정소 & 센서 관리를 위해 'default' 그룹에 고정됩니다.</span>
             </div>
             <div class="col-xs-12">
                 <table class="table table-striped" id="member-Table">
@@ -315,31 +315,27 @@
             </div>
             <div class="modal-body d-flex">
                 <div style="width: 100%">
-
                     <div class="multiSelectParent" style="border-bottom: 1px solid #bbb; margin-bottom: 20px; position: relative;">
                         <h3 class="fs-5 fw-bold groupSubTitle" style="padding-left: 5px;">그룹회원 관리</h3>
-                        <span style="font-size: 0.8rem; color: red; position: absolute; left: 130px; top:20px;">* '최고 관리자 권한'을 가진 회원은 default 그룹에 고정되어 모니터링 설정 회원에서 제외됩니다.</span>
+                        <span style="font-size: 0.8rem; color: red; position: absolute; left: 130px; top:20px;">* '최고 관리자 권한'을 가진 회원은 'default' 그룹에 고정되어 모니터링 설정 회원에서 제외됩니다.</span>
                         <div class="multiSelect">
                             <label><b>회원명</b></label>
                             <select multiple class="form-control scroll selectBox" id="lstBox3">
                                 <!-- script -->
                             </select>
                         </div>
-
                         <div class="multiSelectBtn">
                             <input type='button' id='btnRight2' value='>' class="btn btn-default moveBtn"
                                    onclick="moveEvent('#lstBox3', '#lstBox4')"/>
                             <input type='button' id='btnLeft2' value='<' class="btn btn-default moveBtn"
                                    onclick="moveEvent('#lstBox4', '#lstBox3')"/>
                         </div>
-
                         <div class="multiSelect">
                             <label><b>그룹 회원</b></label>
                             <select multiple class="form-control scroll selectBox" id="lstBox4">
                                 <!-- script -->
                             </select>
                         </div>
-
                         <div class="clearfix"></div>
                         <!-- MultiSelecter Modal-->
                         <div class="MultiSelecterModal first" id="groupSignModal"></div>
@@ -353,21 +349,18 @@
                                 <!-- script -->
                             </select>
                         </div>
-
                         <div class="multiSelectBtn allCheckEvent">
                             <input type='button' id='btnRight1' value='>' class="btn btn-default moveBtn"
                                    onclick="moveEvent('#lstBox1', '#lstBox2')"/>
                             <input type='button' id='btnLeft1' value='<' class="btn btn-default moveBtn"
                                    onclick="moveEvent('#lstBox2', '#lstBox1')"/>
                         </div>
-
                         <div class="multiSelect allCheckEvent">
                             <label><b>모니터링 측정소</b></label>
                             <select multiple class="form-control scroll selectBox" id="lstBox2">
                                 <!-- script -->
                             </select>
                         </div>
-
                         <div class="clearfix"></div>
                         <!-- MultiSelecter Modal-->
                         <div class="MultiSelecterModal second" id="monitoringSignModal"></div>
@@ -489,9 +482,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">
-                    확인
-                </button>
+                <button type="button" class="btn btn-primary me-5" data-bs-dismiss="modal" onclick="resetPassword()">확인</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
@@ -514,7 +505,6 @@
             </div>
             <div class="modal-footer d-flex justify-content-center">
                 <button type="button" class="btn btn-danger me-5" data-bs-dismiss="modal" onclick="kickMember()">제명
-                </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
             </div>
         </div>
