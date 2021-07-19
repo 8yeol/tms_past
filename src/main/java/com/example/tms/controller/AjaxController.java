@@ -866,6 +866,18 @@ public class AjaxController {
     }
 
     /**
+     * 테이블 명으로 센서 가져오기
+     *
+     * @param place 측정소명
+     * @return 센서의 네이밍 리스트
+     */
+    @RequestMapping(value = "/findSensorListAll")
+    public List findSensorCategoryListAll(@RequestParam("place") String place) {
+        List<SensorList> list = sensorListRepository.findByPlace(place);
+        return list;
+    }
+
+    /**
      * 선세의 최근 데이터 조회 (limit:1)
      *
      * @return classification, naming, managementId, tableName, upTime, place, status
