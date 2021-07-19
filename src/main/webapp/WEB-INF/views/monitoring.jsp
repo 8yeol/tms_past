@@ -253,7 +253,7 @@
                 <p id="sensorStatusP" class="fs-1 fw-bold text-center">0%</p>
                 <div id="operating" class="text-center">0 / 0</div>
             </div>
-            <div style="display: flex; flex-wrap: wrap; margin-left: 20px; border: 1px solid #a9a9a9">
+            <div style="display: flex; flex-wrap: wrap; margin-left: 20px; border: 0px solid #a9a9a9">
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
                     <p id="statusOn" class="text-success fs-3">0</p>
