@@ -259,7 +259,6 @@
         var chartData;
         if($("input[id=week]:radio" ).is( ":checked")){
             chartData = getWeekChartData(placeName);
-            console.log(chartData);
         }else{
             chartData = getMonthChartData(placeName);
         }
@@ -308,7 +307,7 @@
                     "placeName" : $('.on').text()
                 },
                 success : function(data) {
-                    if(data.length != 0 || data == null){
+                    if(data.length != 0 && data != null){
                         $('#information').DataTable().clear();
                         $('#information').DataTable().destroy();
 
@@ -354,12 +353,11 @@
 
                         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 조회("+from+" ~ "+to+")","조회");
                         setDateTable();
+
                     }else{
-                        $('#information > tbody').empty();
-
-                        const innerHtml = "<tr><td colspan='5'> 검색기간 내 알림 목록이 없습니다. </td></tr>";
-
-                        $('#information > tbody').append(innerHtml);
+                        $('#information').DataTable().clear();
+                        $('#information').DataTable().destroy();
+                        setDateTable();
                     }
                 },
                 error : function(request, status, error) {
@@ -376,7 +374,7 @@
             info: false,
             order :[3, 'desc'],
             language: {
-                emptyTable: "데이터가 없어요.",
+                emptyTable: "검색기간 내 알림 목록이 없습니다.",
                 lengthMenu: "페이지당 _MENU_ 개씩 보기",
                 info: "현재 _START_ - _END_ / _TOTAL_건",
                 infoEmpty: "데이터 없음",
@@ -449,7 +447,6 @@
             async: false,
             data: {"place": place},
             success: function (data) {
-                console.log(data);
                 for(let i=0; i<data.length; i++){
                     getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});
                 }
