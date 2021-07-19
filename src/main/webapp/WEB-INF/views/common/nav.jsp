@@ -595,7 +595,6 @@
                 }
                 , 5000);
         }
-
     });
 
     function alarmEmpty(){
@@ -612,7 +611,7 @@
 
         //그룹 측정소에서 ON된 센서 추출
         $.ajax({
-            url: '<%=cp%>/getExcessSensor',
+            url: '<%=cp%>/getAlarmData',
             dataType: 'json',
             async: false,
             success: function (data) {
@@ -621,53 +620,41 @@
                 let count=0;
                 if(arr != undefined){
                     for(let i=0; i<arr.length; i++){
+                        if(arr[i].state == true){
+                            const excess = arr[i].classification;
+                            const place = arr[i].place;
+                            const naming = arr[i].naming;
+                            const value = arr[i].value;
+                            let innerHTML ;
 
-                        //추출된 센서 알림설정값이 On Off 인지 체크
-                        $.ajax({
-                            url: '<%=cp%>/getExcessSensorCheck',
-                            dataType: 'json',
-                            async: false,
-                            data : {"naming" : arr[i].naming , "place" : arr[i].place},
-                            success: function (data) {
-
-                                if(data == true){
-                                    const excess = arr[i].classification;
-                                    const place = arr[i].place;
-                                    const naming = arr[i].naming;
-                                    const value = arr[i].value;
-                                    let innerHTML ;
-
-                                    if(excess == "danger" ){
-                                        innerHTML =  '<span class="messageText danger" style="background-color:#dc3545;">'
-                                        innerHTML += '<span  id="dangerInner" style="margin-right: 10px;display: block">법적기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
-                                        $('.dangerOuter').append(innerHTML);
-                                        $('.danger').css('display', 'block');
-                                        $('.message').css('display', 'block');
-                                        count++;
-                                    }else if(excess == "warning"){
-                                        innerHTML =  '<span class="messageText warning" style="background-color:#ffc107;">'
-                                        innerHTML += '<span  id="warningInner" style="margin-right: 10px;display: block">사내기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
-                                        $('.warningOuter').append(innerHTML);
-                                        $('.warning').css('display', 'block');
-                                        $('.message').css('display', 'block');
-                                        count++;
-                                    }else if(excess == "caution"){
-                                        innerHTML =  '<span class="messageText caution" style="background-color:rgb(25, 135, 84);">'
-                                        innerHTML += '<span id="warningInner" style="margin-right: 10px;display: block">관리기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
-                                        $('.cautionOuter').append(innerHTML);
-                                        $('.caution').css('display', 'block');
-                                        $('.message').css('display', 'block');
-                                        count++;
-                                    }
-                                }
+                            if(excess == "danger" ){
+                                innerHTML =  '<span class="messageText danger" style="background-color:#dc3545;">'
+                                innerHTML += '<span  id="dangerInner" style="margin-right: 10px;display: block">법적기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
+                                $('.dangerOuter').append(innerHTML);
+                                $('.danger').css('display', 'block');
+                                $('.message').css('display', 'block');
+                                count++;
+                            }else if(excess == "warning"){
+                                innerHTML =  '<span class="messageText warning" style="background-color:#ffc107;">'
+                                innerHTML += '<span  id="warningInner" style="margin-right: 10px;display: block">사내기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
+                                $('.warningOuter').append(innerHTML);
+                                $('.warning').css('display', 'block');
+                                $('.message').css('display', 'block');
+                                count++;
+                            }else if(excess == "caution"){
+                                innerHTML =  '<span class="messageText caution" style="background-color:rgb(25, 135, 84);">'
+                                innerHTML += '<span id="warningInner" style="margin-right: 10px;display: block">관리기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
+                                $('.cautionOuter').append(innerHTML);
+                                $('.caution').css('display', 'block');
+                                $('.message').css('display', 'block');
+                                count++;
                             }
-                        });
+                        }
                     }
-                }
+               }
                 if(count != 0){
                     $('.alarmCount').text(count);
                     $('.alarmCount').css('display', 'block');
-
                 }
             },
             error: function (request, status, error) {

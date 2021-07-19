@@ -509,19 +509,85 @@ public class AjaxController {
     }
 
     /**
-     * 항목명과 측정소로 센서 -> 센서로 알림설정값 리턴
-     * @param naming
-     * @param place
-     * @return
+     * 그룹마다 허용된 센서 리스트 검색하여 기준초과 데이터 가져오기
+     * @param principal 로그인 객체
+     * @return 기준 초과데이터
      */
-    @RequestMapping(value = "/getExcessSensorCheck", produces = MediaType.APPLICATION_JSON_VALUE)
-    public boolean getExcessSensorCheck(String naming, String place) {
+    @RequestMapping(value = "/getAlarmData", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getAlarmData(Principal principal) {
+        Member member = memberRepository.findById(principal.getName());
+        int memberGroup = member.getMonitoringGroup();
+        JSONObject excess = new JSONObject();
 
-        SensorList sensor = sensorListRepository.findByPlaceAndNaming(place, naming);
-        NotificationSettings setting = notification_settingsRepository.findByName(sensor.getTableName());
+        List<String> sensorList = new ArrayList<>();
+        if(memberGroup != 1){
+            MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(memberGroup);
+            sensorList = monitoringGroup.getSensor();
+        }else{
+            List<ReferenceValueSetting> monitoringOn = reference_value_settingRepository.findByMonitoringIsTrue();
+            for(ReferenceValueSetting referenceValueSetting : monitoringOn){
+                sensorList.add(referenceValueSetting.getName());
+            }
+        }
 
-        return setting.isStatus();
+        if(sensorList != null){
+            excess = getAlarmDataCheck(sensorList);
+        }
+
+        return excess;
     }
+
+    /**
+     * 기준초과 알람에 필요한 데이터 설정
+     * @param sensorList 센서 리스트
+     * @return 기준초과 데이터
+     */
+    public JSONObject getAlarmDataCheck(List<String> sensorList){
+        JSONObject excess = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for(String sensorName : sensorList){
+            Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName);
+            ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(sensorName);
+            Date now = new Date();
+            long diff = now.getTime() - sensor.getUp_time().getTime();
+            long sec = diff / 60000;
+
+            if(sec < 5){
+                float value = sensor.getValue();
+                SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());;
+                JSONObject jsonObject = new JSONObject();
+
+                if( value > referenceValueSetting.getLegalStandard() ){
+                    jsonObject.put("classification", "danger");
+                }else if( value > referenceValueSetting.getCompanyStandard() ){
+                    jsonObject.put("classification", "warning");
+                }else if( value > referenceValueSetting.getManagementStandard() ){
+                    jsonObject.put("classification", "caution");
+                }else{
+                    jsonObject.put("classification", "normal");
+                }
+
+                SensorList sensorData = sensorListRepository.findByPlaceAndNaming(sensorInfo.getPlace(), sensorInfo.getNaming());
+                NotificationSettings setting = notification_settingsRepository.findByName(sensorData.getTableName());
+
+                if(setting.isStatus() == true){
+                    jsonObject.put("state", true);
+                }else{
+                    jsonObject.put("state", false);
+                }
+
+                jsonObject.put("place", sensorInfo.getPlace());
+                jsonObject.put("naming", sensorInfo.getNaming());
+                jsonObject.put("value", String.format("%.2f", value));
+                jsonArray.add(jsonObject);
+                excess.put("excess", jsonArray);
+            }
+        }
+        return excess;
+    }
+
+
 
     public JSONObject getExcessList(List<String> sensorList){
         JSONObject excess = new JSONObject();
