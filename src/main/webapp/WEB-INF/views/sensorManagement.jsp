@@ -143,7 +143,7 @@
             <span class="fw-bold fs-4">환경설정 > 센서 관리</span>
         </div>
         <div class="col text-end align-self-end" style="color:red; font-size: 0.8rem; font-weight: normal">
-            * 센서 관리는 '최고 관리자' 권한을 가진 회원만 설정 가능합니다.
+            * 센서 관리는 '최고 관리자' 권한을 가진 회원만 사용 가능합니다.
         </div>
         <div class="col-xs-12 bg-light rounded border border-dark-1 my-1 text-center">
             <form id="saveForm" style="margin: 0;">

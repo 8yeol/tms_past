@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.security.Principal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -514,7 +515,7 @@ public class AjaxController {
      * @return 기준 초과데이터
      */
     @RequestMapping(value = "/getAlarmData", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getAlarmData(Principal principal) {
+    public Object getAlarmData(Principal principal) throws ParseException {
         Member member = memberRepository.findById(principal.getName());
         int memberGroup = member.getMonitoringGroup();
         JSONObject excess = new JSONObject();
@@ -542,7 +543,7 @@ public class AjaxController {
      * @param sensorList 센서 리스트
      * @return 기준초과 데이터
      */
-    public JSONObject getAlarmDataCheck(List<String> sensorList){
+    public JSONObject getAlarmDataCheck(List<String> sensorList) throws ParseException {
         JSONObject excess = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
@@ -570,8 +571,13 @@ public class AjaxController {
 
                 SensorList sensorData = sensorListRepository.findByPlaceAndNaming(sensorInfo.getPlace(), sensorInfo.getNaming());
                 NotificationSettings setting = notification_settingsRepository.findByName(sensorData.getTableName());
+                Date date = new Date(System.currentTimeMillis());
+                SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                Date startDate = format.parse(setting.getStart());
+                Date endDate = format.parse(setting.getEnd());
+                Date nowDate = format.parse(format.format(date));
 
-                if(setting.isStatus() == true){
+                if(nowDate.after(startDate) && endDate.after(nowDate) && setting.isStatus() == true){
                     jsonObject.put("state", true);
                 }else{
                     jsonObject.put("state", false);

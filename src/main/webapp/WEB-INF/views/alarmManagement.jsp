@@ -37,7 +37,7 @@
     <div class="row m-3 mt-3 ms-1" style="padding-left: 10px;">
         <span class="col fw-bold fs-4">환경설정 > 알림설정</span>
         <span class="col"  style="color:red; font-size: 0.8rem;position: relative;top: 20px; font-weight: normal;text-align: end">
-            * 알림 시간은 최고 관리자만 변경 하실 수 있습니다.</span>
+            * 알림 설정은 '최고 관리자' 권한을 가진 회원만 변경 가능합니다.</span>
     </div>
 
     <div class="row m-3 mt-3 bg-light">
