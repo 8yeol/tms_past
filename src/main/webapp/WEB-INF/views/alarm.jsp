@@ -302,7 +302,7 @@
                     "placeName" : $('.on').text()
                 },
                 success : function(data) {
-                    if(data.length != 0 || data == null){
+                    if(data.length != 0 && data != null){
                         $('#information').DataTable().clear();
                         $('#information').DataTable().destroy();
 

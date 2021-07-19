@@ -40,18 +40,6 @@
         display: none;
         font-size: 0.9rem;
     }
-    .alarmOff{
-        position: absolute;
-        top: 10px;
-        left: 28px;
-        width: 20px;
-        height: 20px;
-        border-radius: 10px;
-        color: red;
-        line-height: 20px;
-        padding-right:7px;
-        font-size: 1.3rem;
-    }
 
 
     @media (min-width: 990px) {
@@ -68,18 +56,6 @@
             padding-right:7px;
             display: none;
             font-size: 0.9rem;
-        }
-        .alarmOff{
-            position: absolute;
-            top: 10px;
-            left: 28px;
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            color: red;
-            line-height: 20px;
-            padding-right:7px;
-            font-size: 1.3rem;
         }
         #mobile{
             display: none;
@@ -300,18 +276,6 @@
         #swal2-title{font-size: 3rem;}
         .swal2-actions button{width: 300px;font-size: 2rem!important; }
 
-        .alarmOff{
-            position: absolute;
-            top: 10px;
-            left: 28px;
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            color: red;
-            line-height: 20px;
-            padding-right:7px;
-            font-size: 1.3rem;
-        }
         .alarmCount{
             position: absolute;
             top: 0px;
@@ -516,7 +480,6 @@
                 <div id="parentDivAlarm">
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
                     <div class="alarmCount"></div>
-                    <div class="alarmOff"  style="display: none">off</div>
                 </div>
 
                 <div class="message text-start" style="padding: 10px;">
@@ -583,7 +546,6 @@
                 <div style="position: relative;">
                     <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell7.png"></button>
                     <div class="alarmCount"></div>
-                    <div class="alarmOff" style="display: none">off</div>
                 </div>
 
                 <div class="message text-start" style="padding: 10px;">
@@ -600,27 +562,39 @@
     let intervalAlarm=null;
 
     $(document).ready(function () {
-
         if (typeof getCookie('isAlarm') == 'undefined') {
+            getAlarm();
             setCookie('isAlarm', 'true', 1);
         }
+
         if (getCookie('isAlarm') == 'true') {
-        intervalAlarm = setInterval(function () {
-                getAlarm();
-            }
-            , 5000);
-            $('.alarmOff').css('display', 'none');
+            getAlarm();
+            intervalAlarm = setInterval(function () {
+                    getAlarm();
+                }
+                , 5000);
+
         }else{
-            $('.alarmOff').css('display', 'block');
+            getAlarm();
+            alarmEmpty();
+            intervalAlarm = setInterval(function () {
+                    getAlarm();
+                    alarmEmpty();
+                }
+                , 5000);
         }
+
     });
 
-
-    function getAlarm(){
+    function alarmEmpty(){
         $('.dangerOuter').html('');
         $('.warningOuter').html('');
         $('.cautionOuter').html('');
         $('.message').css('display', 'none');
+    }
+
+    function getAlarm(){
+        alarmEmpty();
         $('.alarmCount').css('display', 'none');
         $('.alarmCount').text('');
 
@@ -756,21 +730,19 @@
            setCookie('isAlarm', 'false', 1);
            clearInterval(intervalAlarm);
            $('.message').css('display', 'none');
-           $('.alarmCount').css('display', 'none');
-           $('.alarmOff').css('display', 'block');
        }else{
+           getAlarm();
            setCookie('isAlarm', 'true', 1);
            intervalAlarm = setInterval(function (){
                    getAlarm();}
                , 5000);
-           $('.alarmOff').css('display', 'none');
        }
     }
-
 
     function messageOpen2() {
         $('.message').css('display', 'block');
     }
+
     var current_page_URL = location.href; //현재 URL 주소
     $("#menu a").each(function() { //menu a 태그의 주소
         if ($(this).attr("href") !== "#") { // 주소링크가 # 아닐때
