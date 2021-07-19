@@ -488,7 +488,7 @@
                 </div>
 
                 <div id="parentDivAlarm">
-                    <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell.png"></button>
+                    <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bellOn.png"></button>
                     <div class="alarmCount"></div>
                 </div>
 
@@ -554,7 +554,7 @@
                 </div>
 
                 <div style="position: relative;">
-                    <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bell.png"></button>
+                    <button class="alarmbtn" onclick="messageOpen()"><img class="alarm" src="static/images/bellOn.png"></button>
                     <div class="alarmCount"></div>
                 </div>
 
@@ -578,7 +578,7 @@
         }
 
         if (getCookie('isAlarm') == 'true') {
-            $('.alarm').attr('src', "static/images/bell.png");
+            $('.alarm').attr('src', "static/images/bellOn.png");
             getAlarm();
             intervalAlarm = setInterval(function () {
                     getAlarm();
@@ -586,7 +586,7 @@
                 , 5000);
 
         }else{
-            $('.alarm').attr('src', "static/images/bell7.png");
+            $('.alarm').attr('src', "static/images/bellOff.png");
             getAlarm();
             alarmEmpty();
             intervalAlarm = setInterval(function () {
@@ -739,12 +739,12 @@
 
     function messageOpen() {
        if(getCookie('isAlarm') == 'true'){
-           $('.alarm').attr('src', "static/images/bell7.png");
+           $('.alarm').attr('src', "static/images/bellOFF.png");
            setCookie('isAlarm', 'false', 1);
            clearInterval(intervalAlarm);
            $('.message').css('display', 'none');
        }else{
-           $('.alarm').attr('src', "static/images/bell.png");
+           $('.alarm').attr('src', "static/images/bellOn.png");
            getAlarm();
            setCookie('isAlarm', 'true', 1);
            intervalAlarm = setInterval(function (){
