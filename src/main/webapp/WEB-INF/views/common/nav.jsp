@@ -569,7 +569,8 @@
 </header>
 
 <script>
-    let intervalAlarm=null;
+    let intervalAlarmON=null;
+    let intervalAlarmOFF=null;
 
     $(document).ready(function () {
         if (typeof getCookie('isAlarm') == 'undefined') {
@@ -580,7 +581,8 @@
         if (getCookie('isAlarm') == 'true') {
             $('.alarm').attr('src', "static/images/bellOn.png");
             getAlarm();
-            intervalAlarm = setInterval(function () {
+            clearInterval(intervalAlarmOFF)
+            intervalAlarmON = setInterval(function () {
                     getAlarm();
                 }
                 , 5000);
@@ -589,7 +591,8 @@
             $('.alarm').attr('src', "static/images/bellOff.png");
             getAlarm();
             alarmEmpty();
-            intervalAlarm = setInterval(function () {
+            clearInterval(intervalAlarmON)
+            intervalAlarmOFF = setInterval(function () {
                     getAlarm();
                     alarmEmpty();
                 }
@@ -728,13 +731,19 @@
        if(getCookie('isAlarm') == 'true'){
            $('.alarm').attr('src', "static/images/bellOff.png");
            setCookie('isAlarm', 'false', 1);
-           clearInterval(intervalAlarm);
+           clearInterval(intervalAlarmON);
            $('.message').css('display', 'none');
+           intervalAlarmOFF = setInterval(function () {
+                   getAlarm();
+                   alarmEmpty();
+               }
+               , 5000);
        }else{
            $('.alarm').attr('src', "static/images/bellOn.png");
            getAlarm();
            setCookie('isAlarm', 'true', 1);
-           intervalAlarm = setInterval(function (){
+           clearInterval(intervalAlarmOFF);
+           intervalAlarmON = setInterval(function (){
                    getAlarm();}
                , 5000);
        }
