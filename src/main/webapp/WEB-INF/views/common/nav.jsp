@@ -726,7 +726,7 @@
 
     function messageOpen() {
        if(getCookie('isAlarm') == 'true'){
-           $('.alarm').attr('src', "static/images/bellOFF.png");
+           $('.alarm').attr('src', "static/images/bellOff.png");
            setCookie('isAlarm', 'false', 1);
            clearInterval(intervalAlarm);
            $('.message').css('display', 'none');
