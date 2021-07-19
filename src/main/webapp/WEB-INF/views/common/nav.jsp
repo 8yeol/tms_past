@@ -29,35 +29,21 @@
     }
     .alarmCount{
         position: absolute;
-        top: 9px;
-        left: 18px;
+        top: 15px;
+        left: 20px;
         background-color: red;
-        width: 20px;
-        height: 20px;
+        width: 15px;
+        height: 15px;
         border-radius: 10px;
         color: white;
-        line-height: 20px;
-        padding-right:7px;
+        line-height: 15px;
+        padding-right: 4px;
         display: none;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
 
     @media (min-width: 990px) {
-        .alarmCount{
-            position: absolute;
-            top: 9px;
-            left: 18px;
-            background-color: red;
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            color: white;
-            line-height: 20px;
-            padding-right:7px;
-            display: none;
-            font-size: 0.9rem;
-        }
         #mobile{
             display: none;
         }
@@ -261,8 +247,8 @@
         }
 
         div .alarm{
-            width: 21px;
-            height: 23px;
+            width: 28px;
+            height: 25px;
             margin-top: 17px;
         }
         .alarmbtn {
@@ -277,20 +263,6 @@
         #swal2-title{font-size: 3rem;}
         .swal2-actions button{width: 300px;font-size: 2rem!important; }
 
-        .alarmCount{
-            position: absolute;
-            top: 9px;
-            left: 18px;
-            background-color: red;
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            color: white;
-            line-height: 20px;
-            padding-right:7px;
-            display: none;
-            font-size: 0.9rem;
-        }
         #desktop{
             display: none;
         }
@@ -414,8 +386,8 @@
         }
 
         div .alarm{
-            width: 25px;
-            height: 28px;
+            width: 30px;
+            height: 33px;
             margin-top: 18px;
         }
 

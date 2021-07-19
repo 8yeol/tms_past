@@ -28,8 +28,9 @@
         </ul>
 
         <div id="memberManagement" style="display: block" class="tabDiv">
-            <div style="height: 50px;">
+            <div style="height: 50px; display: flex; justify-content: space-between">
                 <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;height: 20px;">회원관리</span>
+                <span style="font-size: 0.8rem; color: red;">* '최고 관리자' 권한을 가진 회원은 측정소 & 센서 관리를 위해 default 그룹에 고정됩니다.</span>
             </div>
             <div class="col-xs-12">
                 <table class="table table-striped" id="member-Table">
@@ -176,11 +177,12 @@
         </div>
 
         <div id="groupManagement" style="display: none;" class="tabDiv">
-            <div style="height: 50px;">
+            <div style="height: 50px; position: relative;">
                 <span style=";font-size: 22px; font-weight: bold;padding: 0px 20px 20px 10px;">모니터링 그룹관리</span>
                 <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#groupModal"
                         onclick="insertSetting()">그룹 추가
                 </button>
+                <span style="font-size: 0.8rem; color: red; position: absolute; right: 0;">* 'default' 그룹은 등록된 모든 측정소를 모니터링하며, 관리를 위해 수정하실 수 없습니다.</span>
             </div>
             <div style="width: 100%; height:350px;">
                 <table class="table table-striped" id="groupTable">
@@ -306,16 +308,17 @@
             <div class="modal-header justify-content-center">
                 <h4 class="modal-title groupModalTitle">그룹 생성</h4>
             </div>
-            <div class="modal-body d-flex justify-content-center" style="flex-wrap: wrap;">
-                <h3 class="fs-5 fw-bold" style="text-align: center; width: 100%;">그룹명</h3>
-                <input type="text" style="width: 80%;margin-left: 20px;padding-left: 5px; border:2px solid #0d6efd; border-radius: 3px;" maxlength="70"
+            <div class="modal-body d-flex justify-content-center">
+                <h3 class="fs-5 fw-bold" style="text-align: center; margin: 5px 0px 0px;">그룹명</h3>
+                <input type="text" style="width: 85%;margin-left: 20px;padding-left: 5px; border:2px solid #0d6efd; border-radius: 3px;" maxlength="70"
                        id="groupInput" autocomplete="off">
             </div>
             <div class="modal-body d-flex">
                 <div style="width: 100%">
 
-                    <div class="multiSelectParent" style="border-bottom: 1px solid #bbb; margin-bottom: 20px;">
+                    <div class="multiSelectParent" style="border-bottom: 1px solid #bbb; margin-bottom: 20px; position: relative;">
                         <h3 class="fs-5 fw-bold groupSubTitle" style="padding-left: 5px;">그룹회원 관리</h3>
+                        <span style="font-size: 0.8rem; color: red; position: absolute; left: 130px; top:20px;">* '최고 관리자 권한'을 가진 회원은 default 그룹에 고정되어 모니터링 설정 회원에서 제외됩니다.</span>
                         <div class="multiSelect">
                             <label><b>회원명</b></label>
                             <select multiple class="form-control scroll selectBox" id="lstBox3">
