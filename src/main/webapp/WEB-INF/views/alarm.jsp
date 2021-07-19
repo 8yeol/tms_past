@@ -29,6 +29,12 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <style>
+    .tab li {
+        border-bottom: 1px solid #06357a;
+    }
+    .tab li:last-child {
+        border-bottom: none;
+    }
     #alarmTable {
         height: 570px;
     }

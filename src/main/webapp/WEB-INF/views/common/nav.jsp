@@ -28,7 +28,7 @@
     }
     .alarmCount{
         position: absolute;
-        top: 0px;
+        top: 9px;
         left: 18px;
         background-color: red;
         width: 20px;
@@ -57,7 +57,7 @@
     @media (min-width: 990px) {
         .alarmCount{
             position: absolute;
-            top: 0px;
+            top: 9px;
             left: 18px;
             background-color: red;
             width: 20px;
@@ -314,7 +314,7 @@
         }
         .alarmCount{
             position: absolute;
-            top: 0px;
+            top: 9px;
             left: 18px;
             background-color: red;
             width: 20px;
@@ -519,7 +519,7 @@
                     <div class="alarmOff"  style="display: none">off</div>
                 </div>
 
-                <div class="message text-start" style="padding: 10px;">
+                <div class="message text-start" style="padding: 10px; background-color: rgba(256,256,256,0.3)">
                     <div class="dangerOuter opacity"></div>
                     <div class="warningOuter opacity"></div>
                     <div class="cautionOuter opacity"></div>

@@ -268,7 +268,7 @@
                     <th>관리</th>
                 </tr>
                 </thead>
-                <tbody id="tbody">
+                <tbody id="tbody" style="vertical-align: middle;">
                 <c:forEach items="${standard}" var="standard" varStatus="i">
 
                     <tr>
