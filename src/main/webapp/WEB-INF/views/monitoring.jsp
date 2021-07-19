@@ -75,13 +75,14 @@
         width: 270px;
         height: 90px;
         position: absolute;
-        top: 20px;
-        left: -120px;
+        top: 25px;
+        left: -90px;
         padding: 35px 20px 0px;
         background: url(static/images/greencloud.png) no-repeat center / 100% 99%;
         background-origin: padding-box;
         text-align: center;
         line-height: 20px;
+        z-index: 99;
     }
 
     .Gcloud.line {
@@ -102,44 +103,36 @@
     }
 
     .operatingDiv {
-        width: 100%;
-        display: flex;
+        width: 40%;
         position: relative;
-        border-bottom: 1px solid #0d6efd;
     }
 
     .operatingDiv > span {
         font-size: 1.3rem;
-        width: 33.3%;
     }
 
     .operatingDiv > p {
         color: #0d6efd;
         font-size: 1.4rem;
-        width: 33.3%;
         margin: 0;
-        text-align: left;
-    }
-
-    .operatingDiv > div {
-        width: 33.3%;
-        height: 80%;
     }
 
     .topDash-l {
         display: flex;
         width: 33.3%;
         position: relative;
+        flex-wrap: wrap;
+        height: 90px;
+        margin: auto;
     }
 
     .topDash-l span {
-        width: 100px;
+        width: 100%;
         margin: auto;
-        font-weight: bold;
     }
 
     .topDash-l p {
-        width: 50%;
+        width: 100%;
         display: inline-block;
         margin: auto;
         font-size: 1.2rem;
@@ -159,20 +152,26 @@
         width: 33.3%;
         position: relative;
         padding: 0 15px;
+        flex-wrap: wrap;
+        color: #fff;
     }
 
     .topDash-r span {
-        width: 100px;
-        margin: auto;
-        font-weight: bold;
+        width: 100%;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        height: 30%;
+        padding-top: 4px;
     }
 
     .topDash-r p {
-        width: 40%;
+        width: 100%;
         display: inline-block;
         margin: auto;
         font-size: 1.2rem;
         text-align: center;
+        height: 70%;
+        line-height: 80px;
     }
 
     .topDash-r:nth-child(2) > p {
@@ -252,45 +251,43 @@
         </div>
     </div>
     <%-- 상단 대시보드 --%>
-    <div class="row m-3 mt-3 bg-light" style="padding: 5px 0px 10px;">
-        <div style="width: 50%; display: flex; flex-wrap: wrap; border-right: 1px solid #0d6efd;">
-            <div class="operatingDiv p-1">
-                <span class="fw-bold text-center">가동률</span>
-                <p id="sensorStatusP" class="text-center">0%</p>
-                <div id="operating" class="align-self-center bg-lightBlue text-dark text-center">0 / 0</div>
+    <div class="row m-3 mt-3 bg-light" style="padding: 10px 0px; height: 180px;">
+        <div style="width: 50%; display: flex; border-right: 1px solid #aaa;">
+            <div class="operatingDiv" style="display: inline-grid; padding: .25rem .25rem .25rem 20px;">
+                <span class="fw-bold">가동률</span>
+                <p id="sensorStatusP" class="fs-2 fw-bold text-center">0%</p>
+                <div id="operating" class="text-dark text-center">0 / 0</div>
             </div>
-            <div style="width: 100%; display: flex; padding: 0 25px; margin-top: 5px;">
-                <div class="topDash-l">
-                    <span onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
-                    <p id="statusOn" class="text-success">0</p>
-                    <div class="Gcloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
-                </div>
-                <div class="topDash-l">
-                    <span onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
-                    <p id="statusOff" class="text-danger">0</p>
-                    <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
-                </div>
-                <div class="topDash-l text-center">
-                    <span onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
-                    <p id="monitoringOff">0</p>
-                    <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
-                </div>
+            <div class="topDash-l text-center" style="width: 20%;">
+                <span class="fw-bold fs-5" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
+                <p id="statusOn" class="text-success fs-2">0</p>
+                <div class="Gcloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
+            </div>
+            <div class="topDash-l text-center">
+                <span class="fw-bold fs-5" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
+                <p id="statusOff" class="text-danger fs-2">0</p>
+                <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
+            </div>
+            <div class="topDash-l text-center">
+                <span class="fw-bold fs-5" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
+                <p id="monitoringOff" class="fs-2">0</p>
+                <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
             </div>
         </div>
-        <div style="width: 50%; height: 60px; display: flex; margin: auto 0;">
+        <div style="width: 50%; height: 80%; display: flex; margin: auto 0;">
             <div class="topDash-r">
-                <span>법적기준 초과</span>
-                <p id="legal_standard_text_A" class="text-danger" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
+                <span class="text-center fs-5 fw-bold bg-danger">법적기준 초과</span>
+                <p id="legal_standard_text_A" class="text-danger fs-2 bg-white" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
 <%--                <div class="Bcloud legal_standard_text_B" id="legal" style="display: none">4 / 4</div>--%>
             </div>
             <div class="topDash-r">
-                <span>사내기준 초과</span>
-                <p id="company_standard_text_A" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
+                <span class="text-center fs-5 fw-bold bg-warning">사내기준 초과</span>
+                <p id="company_standard_text_A" class="text-warning fs-2 bg-white" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
 <%--                <div class="Bcloud company_standard_text_B" id="company" style="display: none">4 / 4</div>--%>
             </div>
             <div class="topDash-r">
-                <span>관리기준 초과</span>
-                <p id="management_standard_text_A" class="text-success" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>
+                <span class="text-center fs-5 fw-bold bg-success">관리기준 초과</span>
+                <p id="management_standard_text_A" class="text-success fs-2 bg-white" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>
 <%--                <div class="Bcloud management_standard_text_B" id="management" style="display: none">4 / 4</div>--%>
             </div>
         </div>
