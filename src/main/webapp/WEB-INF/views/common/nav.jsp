@@ -385,6 +385,10 @@
             background: none;
             border: none;
         }
+
+        .alarmCount {
+            left: 25px;
+        }
     }
     .opacity {
         opacity: 0.9;
