@@ -506,12 +506,12 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="w-100">
         <div class="d-flex justify-content-between">
             <div id="main">
                 <button class="openbtn rounded" onclick="openNav()">&#9776;</button>
             </div>
-            <div class="d-flex justify-content-between ms-5">
+            <div class="d-flex justify-content-between" style="margin-left: 11rem;">
                 <c:choose>
                     <c:when test="${state eq 1}">
                         <a href="<%=cp%>/dashboard" class="mb-2 mb-lg-0 text-white text-decoration-none fs-2 pe-5 fw-bold">
