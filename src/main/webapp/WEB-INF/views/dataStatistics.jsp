@@ -24,6 +24,14 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <style>
+
+    <!-- 테스트 -->
+    body{
+        overflow: auto !important;
+    }
+    <!-- 테스트 -->
+
+
     p.pos {
         position: relative;
         top: 40%;
@@ -174,7 +182,7 @@
     function itemChange(){
         const item = $("#items").val();
         const itemName = $("#items option:checked").text();
-        const thisYear = new Date().getFullYear();
+        const thisYear = moment().format('YYYY');
         const previousYear = thisYear-1;
 
         if(item==null){

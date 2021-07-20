@@ -846,13 +846,13 @@
      * 현재시간과 비교하여 5분이내면 true, 외외면 false
      */
     function compareTime(dateTime){
-        var dt = new Date(dateTime);
-        var now = new Date();
-        var diffTime = (now.getTime()-dt.getTime())/1000/60;
-        if (diffTime >= -5 && diffTime <= 5){ //5분 차이
-            return true;
-        }else{
+        const dt = moment(dateTime, 'YYYY-MM-DD HH:mm:ss');
+        const now = moment();
+        const diffTime = moment.duration(now.diff(dt)).asMinutes();
+        if (diffTime > 5){ //5분 차이
             return false;
+        }else{
+            return true;
         }
     }
 
