@@ -275,16 +275,6 @@
             font-weight: bold;
             margin-bottom: 15px;
         }
-        .message {
-            color: black;
-            display: none;
-            position: absolute;
-            top: 60px;
-            right: 5px;
-            min-width: 300px;
-            min-height: 70px;
-            z-index: 1;
-        }
         .sidebar {
             height: 100%;
             width: 250px;
@@ -379,7 +369,7 @@
             display: none;
             position: absolute;
             top: 80px;
-            right: 100px;
+            right: 15px;
             min-width: 250px;
             min-height: 70px;
             z-index: 1;
