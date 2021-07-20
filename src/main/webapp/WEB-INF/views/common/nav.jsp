@@ -546,13 +546,6 @@
     let count=0;
 
     $(document).ready(function () {
-
-
-        const worker = new Worker("static/js/webWorker.js");
-        worker.postMessage("hello");
-        worker.onmessage = ({data})=>console.log("main : " + data);
-
-
         if (typeof getCookie('isAlarm') == 'undefined') {
             getAlarm();
             setCookie('isAlarm', 'true', 1);
@@ -580,9 +573,6 @@
                 }
                 , 5000);
         }
-
-
-
     });
 
     function viewCount(){
