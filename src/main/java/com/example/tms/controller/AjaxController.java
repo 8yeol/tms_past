@@ -573,6 +573,7 @@ public class AjaxController {
                 NotificationSettings setting = notification_settingsRepository.findByName(sensorData.getTableName());
                 Date date = new Date(System.currentTimeMillis());
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+
                 Date startDate = format.parse(setting.getStart());
                 Date endDate = format.parse(setting.getEnd());
                 Date nowDate = format.parse(format.format(date));
