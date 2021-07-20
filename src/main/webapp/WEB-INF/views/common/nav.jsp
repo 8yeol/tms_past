@@ -261,7 +261,7 @@
         .swal2-popup{width: 50rem !important;}
         #swal2-content{font-size: 2rem;}
         #swal2-title{font-size: 3rem;}
-        .swal2-actions button{width: 300px;font-size: 2rem!important; }
+        .swal2-actions button{width:300px;font-size: 1.7rem!important; }
 
         #desktop{
             display: none;

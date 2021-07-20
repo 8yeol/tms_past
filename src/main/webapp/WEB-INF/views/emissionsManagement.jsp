@@ -40,7 +40,7 @@
         }
         .row2{
             margin-bottom: 20px;
-            margin-left: -130px;
+            margin-left: -100px;
         }
         #gradeText{
             text-align: left !important;
