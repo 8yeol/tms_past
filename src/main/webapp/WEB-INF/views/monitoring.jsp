@@ -150,7 +150,7 @@
                                 <c:choose>
                                     <c:when test="${sensor.standardExistStatus == false}">
                                         <thead>
-                                        <tr class="add-bg-color test">
+                                        <tr class="add-bg-color">
                                             <th width=22%'>항목</th>
                                             <th width=26%'>실시간</th>
                                             <th width=26%'>5분</th>
@@ -160,7 +160,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <thead>
-                                        <tr class="add-bg-color test">
+                                        <tr class="add-bg-color">
                                             <th width=22%'>항목</th>
                                             <th width=10%'>법적기준</th>
                                             <th width=10%'>사내기준</th>

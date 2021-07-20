@@ -521,6 +521,14 @@ public class AjaxController {
      */
     @RequestMapping(value = "/getAlarmData", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getAlarmData(Principal principal) throws ParseException {
+        //로그인 객체 없다면 null 리턴하여 login.jsp로 이동
+        if(principal == null) {
+            JSONObject memberIsNull = new JSONObject();
+            memberIsNull.put("null", "null");
+            return memberIsNull;
+        }
+
+
         Member member = memberRepository.findById(principal.getName());
         int memberGroup = member.getMonitoringGroup();
         JSONObject excess = new JSONObject();

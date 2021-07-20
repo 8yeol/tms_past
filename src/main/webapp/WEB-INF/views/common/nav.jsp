@@ -600,6 +600,9 @@
             dataType: 'json',
             async: false,
             success: function (data) {
+                //로그인 객체 없으면 로그인페이지로 이동
+                if(data.null == "null") window.location.href = '<%=cp%>/login';
+
                 const arr = data.excess;
                 let message;
                 count = 0;
