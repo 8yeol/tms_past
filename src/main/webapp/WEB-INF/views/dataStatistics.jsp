@@ -24,14 +24,6 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <style>
-
-    <!-- 테스트 -->
-    body{
-        overflow: auto !important;
-    }
-    <!-- 테스트 -->
-
-
     p.pos {
         position: relative;
         top: 40%;
