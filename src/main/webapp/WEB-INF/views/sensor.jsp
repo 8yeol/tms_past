@@ -1108,11 +1108,11 @@
             var unit;
             if(sensor_data.unit != "" && sensor_data.unit != null){
                 unit = sensor_data.unit;
-                $('#unit_text').text("단위:"+unit);
+                $('#unit_text').text("[ 단위 : "+unit+ " ]");
                 $('#standard_text').css("padding-right", "10px");
             }
             if(legalStandard != '-' || companyStandard != '-' || managementStandard != '-'){
-                $("#standard_text").text("법적/사내/관리기준 : "+legalStandard+"/"+companyStandard+"/"+managementStandard+"이하");
+                $("#standard_text").text("법적/사내/관리 기준 : "+legalStandard+"/"+companyStandard+"/"+managementStandard+" 이하");
             }
         }
 

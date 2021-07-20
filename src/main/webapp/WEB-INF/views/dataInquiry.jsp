@@ -151,8 +151,18 @@
     $( document ).ready(function() {
         $("#date_start").val(getDays());
         $("#date_end").val(getDays());
-        placeChange();
-        search(0);
+
+        if("${place}"==""){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '모니터링 중인 측정소가 없습니다.'
+            })
+        }else{
+            placeChange();
+            search(0);
+        }
+
     });
 
     $("#date_start").datepicker({
@@ -334,7 +344,7 @@
             data:  {"type": type},
             async: false,
             success: function (data) {
-                if(data!='null'){
+                if(data!='null' && data!=""){
                     $('#unit').text("[ 단위 : " + data +" ]");
                 }else{
                     $('#unit').text("");

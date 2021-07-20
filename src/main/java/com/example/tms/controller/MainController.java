@@ -88,9 +88,10 @@ public class MainController {
      * @return myPage.jsp
      */
     @RequestMapping("/myPage")
-    public String myPage(Principal principal,Model model){
+    public String myPage(Principal principal, Model model){
         Member member = memberRepository.findById(principal.getName());
         model.addAttribute("member", member);
+        model.addAttribute("state", member.getState());
         return "myPage";
     }
 
@@ -129,6 +130,7 @@ public class MainController {
 
         Member member = memberRepository.findById(principal.getName());
         model.addAttribute("member", member);
+        model.addAttribute("state", member.getState());
 
         MonitoringGroup group = monitoringGroupRepository.findByGroupNum(member.getMonitoringGroup());
 
@@ -194,6 +196,7 @@ public class MainController {
     public String alarm(Model model, Principal principal) {
         Member member = memberRepository.findById(principal.getName());
         model.addAttribute("member", member);
+        model.addAttribute("state", member.getState());
         MonitoringGroup group = monitoringGroupRepository.findByGroupNum(member.getMonitoringGroup());
         model.addAttribute("group", group);
         model.addAttribute("allPlace", placeRepository.findAll());
@@ -208,6 +211,10 @@ public class MainController {
      */
     @RequestMapping("/monitoring")
     public void monitoring(Model model, Principal principal) {
+
+        Member member =  memberRepository.findById(principal.getName());
+        model.addAttribute("state", member.getState());
+
         try {
             Map<String, List> gMS = ajaxController.getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
             List<String> gMS_placeName = new ArrayList<>();
@@ -316,6 +323,10 @@ public class MainController {
      */
     @RequestMapping(value = "/sensor", method = RequestMethod.GET)
     public void sensorInfo(@RequestParam(required = false, defaultValue = "", value = "sensor") String sensor, Model model, Principal principal) {
+
+        Member member =  memberRepository.findById(principal.getName());
+        model.addAttribute("state", member.getState());
+
         try{
             JSONArray jsonArray = new JSONArray();
             //모니터링 페이지에서 선택된 측정소의 센서들의 정보(최근,이전,기준값 등)들을 JSON 타입으로 저장하기위한 변수
@@ -407,9 +418,15 @@ public class MainController {
      * @return dataInquiry.jsp
      */
     @RequestMapping("/dataInquiry")
-    public String dataInquiry(Model model) {
+    public String dataInquiry(Model model, Principal principal) {
 
-        model.addAttribute("place", mongoQuary.findPlaceSensorNotEmpty());
+        Member member = memberRepository.findById(principal.getName());
+
+        List<String> monitoringPlace = findMemberMonitoringPlace(member.getMonitoringGroup());
+
+        model.addAttribute("place", monitoringPlace);
+
+        model.addAttribute("state", member.getState());
 
         return "dataInquiry";
     }
@@ -420,11 +437,31 @@ public class MainController {
      * @return dataStatistics.jsp
      */
     @RequestMapping("/dataStatistics")
-    public String statistics(Model model) {
+    public String dataStatistics(Model model, Principal principal) {
 
-        model.addAttribute("place", mongoQuary.findPlaceSensorNotEmpty());
+        Member member = memberRepository.findById(principal.getName());
+
+        List<String> monitoringPlace = findMemberMonitoringPlace(member.getMonitoringGroup());
+
+        model.addAttribute("place", monitoringPlace);
+
+        model.addAttribute("state", member.getState());
 
         return "dataStatistics";
+    }
+
+    public List<String> findMemberMonitoringPlace(int group){
+
+        MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(group);
+
+        List<String> monitoringPlace = monitoringGroup.getMonitoringPlace();
+
+        if(monitoringPlace!=null){
+            if(monitoringPlace.get(0).equals("모든 측정소")){
+                monitoringPlace = mongoQuary.findPlaceSensorNotEmpty();
+            }
+        }
+        return monitoringPlace;
     }
 
     /**
@@ -560,6 +597,8 @@ public class MainController {
         model.addAttribute("rank_managements", rank_managements);
         model.addAttribute("group", group);
         model.addAttribute("place", place);
+
+        model.addAttribute("state", member.getState());
         return "setting";
     }
 
@@ -572,12 +611,15 @@ public class MainController {
      * @return log.jsp
      */
     @RequestMapping("log")
-    public String log(Model model, @RequestParam(value = "id",required = false) String id) {
+    public String log(Model model, @RequestParam(value = "id",required = false) String id, Principal principal) {
 
         //페이징 처리 하기위한 전체 count
         model.addAttribute("count",logRepository.countById(id));
         model.addAttribute("logList",mongoQuary.pagination(1, id,null,null));
         model.addAttribute("member",memberRepository.findById(id));
+
+        Member loginState = memberRepository.findById(principal.getName());
+        model.addAttribute("state", loginState.getState());
         return "log";
     }
 

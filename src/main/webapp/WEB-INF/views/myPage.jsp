@@ -10,46 +10,12 @@
 
 <link rel="stylesheet" href="static/css/jqueryui-1.12.1.css">
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
-<link rel="shortcut icon" href="#">
+<link rel="stylesheet" href="static/css/page/myPage.css">
+
 <script src="static/js/jquery-ui.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
 <script src="static/js/common/member.js"></script>
-<style>
-    #passwordBox {
-        background-color: #97bef8;
-        color: #fff;
-        border-radius: 15px;
-        border: 2px solid #97bef8;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-        position: relative;
-        left: 35px;
-    }
-    #passwordBox2{
-        background-color: #86b7fe;
-        color: #fff;
-        border-radius: 15px;
-        border: 2px solid #86b7fe;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-        position: relative;
-        left: 35px;
-        margin-bottom: 10px;
-    }
-    #mainDIv{text-align: center;}
-
-    @media all and (max-width: 989px) {
-        #passwordBox2 {left:5px !important;}
-        #nowPassword {margin: 10px auto 10px !important;}
-
-        #passwordBox {left: 5px !important;}
-        #passwordBox>div {margin: 10px auto 10px !important;}
-
-        .btnDiv {width: 500px; position: relative; left: 70px;}
-        #mainDIv{width: 75% !important;}
-        input[type=text]{width: 300px;}
-        .mypage-bg{margin-top: 100px !important;}
-    }
-</style>
 
 <div class="container" id="container" >
     <div class="row bg-light rounded p-5 mt-5 mypage-bg">
@@ -175,11 +141,6 @@
 
 <script>
     let TOGGLE = false;
-    var name;
-    var email;
-    var tel;
-    var department;
-    var grade;
 
     $(document).ready(function(){
         textFieldManagement(TOGGLE);
@@ -281,14 +242,14 @@
                 return false;
             }
         }
-        if ($("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "" && $("#monitoringGroup").val() != "") {
+        if ($("#name").val() != "" && $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "" ) {
             return true;
         } else {
             return false;
         }
     }
 
-    var debounce2 = null;
+    let debounce2 = null;
     function nowPasswordCheck() {
         clearTimeout(debounce2);
         debounce2 = setTimeout(() => {
@@ -349,20 +310,19 @@
         })
     }
 
+    let name, email, tel, department, grade;
     function textFieldManagement(toggle){
         if(!toggle){
             name = $("#name").val();
             email = $("#email").val();
             tel = $("#tel").val();
             department = $("#department").val();
-            monitoringGroup = $("#monitoringGroup").val();
             grade = $("#grade").val();
         } else {
             $("#name").val(name);
             $("#email").val(email);
             $("#tel").val(tel);
             $("#department").val(department);
-            $("#monitoringGroup").val(monitoringGroup);
             $("#grade").val(grade);
             $("#now_password").val("");
             $("#password").val("");

@@ -135,7 +135,15 @@
 
 <script>
     $( document ).ready(function() {
-        placeChange();
+        if("${place}"==""){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '모니터링 중인 측정소가 없습니다.'
+            })
+        }else{
+            placeChange();
+        }
     });
 
     function placeChange(){

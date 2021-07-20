@@ -409,7 +409,7 @@
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-around">
                 <c:choose>
-                    <c:when test="${member.state eq 1}">
+                    <c:when test="${state eq 1}">
                         <a href="<%=cp%>/dashboard" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
                             대기 TMS 관제 시스템
                         </a>
@@ -512,9 +512,18 @@
                 <button class="openbtn rounded" onclick="openNav()">&#9776;</button>
             </div>
             <div class="d-flex justify-content-between ms-5">
-                <a href="<%=cp%>/monitoring" class="mb-2 mb-lg-0 text-white text-decoration-none fs-2 pe-5 fw-bold">
-                    대기 TMS 관제 시스템
-                </a>
+                <c:choose>
+                    <c:when test="${state eq 1}">
+                        <a href="<%=cp%>/dashboard" class="mb-2 mb-lg-0 text-white text-decoration-none fs-2 pe-5 fw-bold">
+                            대기 TMS 관제 시스템
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<%=cp%>/monitoring" class="mb-2 mb-lg-0 text-white text-decoration-none fs-2 pe-5 fw-bold">
+                            대기 TMS 관제 시스템
+                        </a>
+                    </c:otherwise>
+                </c:choose>
             </div>
             <div class="text-end" style="display: inline-flex">
                 <div class="dropdown">

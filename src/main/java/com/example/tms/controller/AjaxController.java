@@ -2351,7 +2351,7 @@ public class AjaxController {
     @RequestMapping(value = "/getUnit", method = RequestMethod.GET)
     public String getUnit(String type) {
         Item item = itemRepository.findByClassification(type);
-        String unit = "";
+        String unit;
         try{
             unit = item.getUnit();
         }catch (NullPointerException e){

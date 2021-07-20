@@ -692,7 +692,7 @@
                          icon: 'error',
                          title: '경고',
                          html: '<label style="color:#2295DB;font-weight: bold">'+tablename+'</label> 센서는 ' +
-                             '<br>관리자에 의해 모니터링 On이 불가능 합니다.'
+                             '<br>관리자에 의해 모니터링 On으로 변경이 불가능 합니다.'
                      })
 
                  }else{

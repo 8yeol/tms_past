@@ -317,7 +317,7 @@
                 <div style="width: 100%">
                     <div class="multiSelectParent" style="border-bottom: 1px solid #bbb; margin-bottom: 20px; position: relative;">
                         <h3 class="fs-5 fw-bold groupSubTitle" style="padding-left: 5px;">그룹회원 관리</h3>
-                        <span style="font-size: 0.8rem; color: red; position: absolute; left: 130px; top:20px;">* '최고 관리자 권한'을 가진 회원은 'default' 그룹에 고정되어 모니터링 설정 회원에서 제외됩니다.</span>
+                        <span style="font-size: 0.8rem; color: red; position: absolute; left: 130px; top:20px;">* '최고 관리자' 권한을 가진 회원은 'default' 그룹에 고정되어 모니터링 설정 회원에서 제외됩니다.</span>
                         <div class="multiSelect">
                             <label><b>회원명</b></label>
                             <select multiple class="form-control scroll selectBox" id="lstBox3">
@@ -532,11 +532,11 @@
         getMemberAndPlaceList();
        // allPlaceCheck();
         groupCheck();
-    }); //ready
 
-    $('.paginate_button').click(function () {
-        groupCheck();
-    });
+        $('.paginate_button').click(function () {
+            groupCheck();
+        });
+    }); //ready
 
     function Info_Set(str_id, str_state, str_name) {
         ID = str_id;
