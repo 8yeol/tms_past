@@ -275,16 +275,6 @@
             font-weight: bold;
             margin-bottom: 15px;
         }
-        .message {
-            color: black;
-            display: none;
-            position: absolute;
-            top: 60px;
-            right: 5px;
-            min-width: 300px;
-            min-height: 70px;
-            z-index: 1;
-        }
         .sidebar {
             height: 100%;
             width: 250px;
@@ -379,7 +369,7 @@
             display: none;
             position: absolute;
             top: 80px;
-            right: 100px;
+            right: 15px;
             min-width: 250px;
             min-height: 70px;
             z-index: 1;
@@ -506,12 +496,12 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="w-100">
         <div class="d-flex justify-content-between">
             <div id="main">
                 <button class="openbtn rounded" onclick="openNav()">&#9776;</button>
             </div>
-            <div class="d-flex justify-content-between ms-5">
+            <div class="d-flex justify-content-between" style="margin-left: 11rem;">
                 <c:choose>
                     <c:when test="${state eq 1}">
                         <a href="<%=cp%>/dashboard" class="mb-2 mb-lg-0 text-white text-decoration-none fs-2 pe-5 fw-bold">

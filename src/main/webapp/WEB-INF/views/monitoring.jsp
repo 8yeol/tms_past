@@ -71,15 +71,15 @@
         </div>
         <div style="width: 50%; height: 80%; display: flex; margin: auto 0;">
             <div class="topDash-r">
-                <span class="text-center fs-5 fw-bold bg-danger">법적기준 초과</span>
+                <span class="text-center fw-bold bg-danger">법적기준 초과</span>
                 <p id="legal_standard_text_A" class="text-danger fs-1 bg-white" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
             </div>
             <div class="topDash-r">
-                <span class="text-center fs-5 fw-bold bg-warning">사내기준 초과</span>
+                <span class="text-center fw-bold bg-warning">사내기준 초과</span>
                 <p id="company_standard_text_A" class="text-warning fs-1 bg-white" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
             </div>
             <div class="topDash-r">
-                <span class="text-center fs-5 fw-bold bg-success">관리기준 초과</span>
+                <span class="text-center fw-bold bg-success">관리기준 초과</span>
                 <p id="management_standard_text_A" class="text-success fs-1 bg-white" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>
             </div>
         </div>
