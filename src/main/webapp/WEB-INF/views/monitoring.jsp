@@ -11,223 +11,15 @@
     pageContext.setAttribute("cn", "\n");
     String cp = request.getContextPath();
 %>
+<link rel="stylesheet" href="static/css/sweetalert2.min.css">
+<link rel="stylesheet" href="static/css/page/monitoring.css">
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/vue-apexcharts.js"></script>
-
-<style>
-    div {
-        padding: 1px;
-    }
-
-    h1 {
-        text-align: center;
-    }
-
-    #sensorStatus p{
-        padding-left: 2px; margin-top: 10px;
-    }
-
-    .add-bg-color {
-        background-color: #97bef8;
-        color: #fff;
-    }
-
-    tbody tr:hover{
-        cursor: pointer;
-    }
-    .place_border{
-        box-shadow: 0 0 2px 0 #2295DB inset;
-    }
-    .standardParent {
-        border: 5px solid #2295DB;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-        background-color: #2295DB;
-        color: white;
-    }
-    .standardDiv{
-        text-align: center;
-    }
-    .titleDiv{
-        background-color: #2295DB;
-        color: white;
-    }
-
-    tr {
-        border-bottom: solid #dee2e6;
-    }
-
-    .emoji {
-        width: 60px;
-        height: 60px;
-        position: relative;
-        top: 2rem;
-        margin-left: 0.75rem;
-    }
-
-    .mb-0{
-        padding-top: 1.9rem;
-        font-size: 1.8rem;
-    }
-
-    .Gcloud {
-        width: 270px;
-        height: 90px;
-        position: absolute;
-        top: 25px;
-        left: -90px;
-        padding: 35px 20px 0px;
-        background: url(static/images/greencloud.png) no-repeat center / 100% 99%;
-        background-origin: padding-box;
-        text-align: center;
-        line-height: 20px;
-        z-index: 99;
-    }
-
-    .Gcloud.line {
-        line-height: 40px;
-    }
-
-    .Bcloud {
-        width: 100px;
-        height: 50px;
-        position: absolute;
-        padding-top: 20px;
-        top: 40px;
-        left: 95px;
-        background: url(static/images/blueCloud.png) no-repeat center / 100% 99%;
-        background-origin: padding-box;
-        text-align: center;
-        line-height: 20px;
-    }
-
-    .operatingDiv {
-        width: 50%;
-        position: relative;
-        background-color: #0d6efd;
-        border-radius: 15px;
-        color: #fff;
-    }
-
-    .operatingDiv > span {
-        font-size: 1.3rem;
-    }
-
-    .operatingDiv > p {
-        font-size: 1.4rem;
-        margin: 0;
-    }
-
-    .topDash-l {
-        display: flex;
-        position: relative;
-        width: 100%;
-        margin: auto;
-        border-bottom: 1px solid #a9a9a9;
-    }
-
-    .topDash-l:last-child {
-        border-bottom: none;
-    }
-
-    .topDash-l span {
-        width: 100%;
-        margin: auto;
-        text-align: left;
-        padding-left: 10px;
-    }
-
-    .topDash-l p {
-        width: 100%;
-        display: inline-block;
-        margin: auto;
-        font-size: 1.2rem;
-        text-align: right;
-        padding-right: 10px;
-    }
-
-    .topDash-r {
-        display: flex;
-        width: 33.3%;
-        position: relative;
-        padding: 0 15px;
-        flex-wrap: wrap;
-        color: #fff;
-    }
-
-    .topDash-r span {
-        width: 100%;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-        height: 30%;
-        padding-top: 4px;
-    }
-
-    .topDash-r p {
-        width: 100%;
-        display: inline-block;
-        margin: auto;
-        font-size: 1.2rem;
-        text-align: center;
-        height: 70%;
-        line-height: 80px;
-    }
-
-    @media all and (max-width: 1399px) and (min-width: 1001px) {
-        .m-size {height: 200px;}
-        .emoji {width: 60px; height: 60px; top:1rem;}
-        #legal_standard_text_A, #company_standard_text_A, #management_standard_text_A {font-size: 1.5rem;}
-        #legal_standard_text_B, #company_standard_text_B, #management_standard_text_B {font-size: 1rem;}
-        .remove-m {margin: 0 !important;}
-    }
-
-    @media all and (max-width: 1000px) {
-        .standardDiv span{
-            font-size: 0.75rem;
-        }
-
-        .emoji {
-            width: 65px !important;
-            height: 65px !important;
-            position: relative;
-            top: 0.75rem;
-            margin-left: 0.25rem;
-        }
-        .mb-0{
-            padding-top: 1rem;
-            font-size: 1rem;
-        }
-        .fs-6{
-            padding-top: 0.45rem;
-            padding-left: 0.25rem;
-        }
-
-        .row table tr{
-            margin: auto;
-            font-size: 0.8rem;
-        }
-        .svg-inline--fa{
-            font-size: 0.6rem;
-        }
-        .text-end {
-            font-size: 0.25rem;
-        }
-        #legal_standard_text_A, #company_standard_text_A, #management_standard_text_A {font-size: 1.5rem;}
-        #legal_standard_text_B, #company_standard_text_B, #management_standard_text_B {font-size: 1rem;}
-        .remove-m {margin: 0 !important;}
-    }
-
-    .bg-lightBlue{
-        background-color: #EDF2F8;
-    }
-
-</style>
-
-<link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <script src="static/js/sweetalert2.min.js"></script>
+
 <div class="container"  id="container">
-    <div class="row m-3 mt-3">
+    <div class="row m-3 mt-3 mb-2">
         <div class="col">
             <span class="fs-4 flashToggle fw-bold">모니터링 > 실시간 모니터링</span>
         </div>
@@ -235,18 +27,24 @@
             <div style="font-size: 1rem">
                 <audio id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>
                 <div id="alarmAudio"></div>
-                <span>알림음 :</span>
+                <span>알림음 </span>
                 <input class="ms-2 form-check-input" type="radio" name="alarmTone" value="on" id="alarmOn" checked><label class="ms-2" for="alarmOn"> On&nbsp;</label>
                 <input type="radio" name="alarmTone" value="off" id="alarmOff" class="form-check-input"><label class="ms-2" for="alarmOff"> Off&emsp;</label>
-                <span>|&emsp;점멸효과 :</span>
+                <span>|&emsp;점멸효과 </span>
                 <input class="ms-2 form-check-input" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp;</label>
                 <input type="radio" name="flashing" value="off" id="checkOff" class="form-check-input"><label class="ms-2" for="checkOff"> Off</label>
             </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col text-end pe-4">
             <span class="text-primary small" style="font-size: 0.8rem"> * 실시간으로 업데이트됩니다.</span>
         </div>
     </div>
+
     <%-- 상단 대시보드 --%>
-    <div class="row m-3 mt-3 bg-light" style="padding: 10px 0px; height: 180px;">
+    <div class="row m-3 mt-0 bg-light" style="padding: 10px 0px; height: 180px;">
         <div style="width: 50%; display: flex; border-right: 1px solid #aaa;">
             <div class="operatingDiv" style="display: inline-grid; padding: .25rem .5rem;">
                 <span class="fw-bold">가동률</span>
@@ -274,22 +72,22 @@
         <div style="width: 50%; height: 80%; display: flex; margin: auto 0;">
             <div class="topDash-r">
                 <span class="text-center fs-5 fw-bold bg-danger">법적기준 초과</span>
-                <p id="legal_standard_text_A" class="text-danger fs-2 bg-white" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
+                <p id="legal_standard_text_A" class="text-danger fs-1 bg-white" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
 <%--                <div class="Bcloud legal_standard_text_B" id="legal" style="display: none">4 / 4</div>--%>
             </div>
             <div class="topDash-r">
                 <span class="text-center fs-5 fw-bold bg-warning">사내기준 초과</span>
-                <p id="company_standard_text_A" class="text-warning fs-2 bg-white" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
+                <p id="company_standard_text_A" class="text-warning fs-1 bg-white" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
 <%--                <div class="Bcloud company_standard_text_B" id="company" style="display: none">4 / 4</div>--%>
             </div>
             <div class="topDash-r">
                 <span class="text-center fs-5 fw-bold bg-success">관리기준 초과</span>
-                <p id="management_standard_text_A" class="text-success fs-2 bg-white" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>
+                <p id="management_standard_text_A" class="text-success fs-1 bg-white" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>
 <%--                <div class="Bcloud management_standard_text_B" id="management" style="display: none">4 / 4</div>--%>
             </div>
         </div>
     </div>
-    <%-- //상단 대시보드 --%>
+    <%--상단 대시보드 end--%>
 
     <%-- 하단 모니터링 On인 측정소의 센서 테이블 --%>
     <div class="row m-3 mt-3 bg-light">
@@ -308,6 +106,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row table" id="place_table" style="margin: 0 auto">
         <c:if test="${!empty placeInfo}">
         <c:forEach items="${placeInfo}" var="place" varStatus="pStatus">
@@ -482,9 +281,6 @@
             </div>
         </c:if>
 </div> <%-- //row table --%>
-
-
-<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
     let INTERVAL; let flashCheck; let alarmCheck;
@@ -1286,3 +1082,5 @@
     }
 
 </script>
+
+<jsp:include page="/WEB-INF/views/common/footer.jsp"/>

@@ -1,0 +1,206 @@
+
+div {
+    padding: 1px;
+}
+
+h1 {
+    text-align: center;
+}
+
+#sensorStatus p{
+    padding-left: 2px; margin-top: 10px;
+}
+
+.add-bg-color {
+    background-color: #97bef8;
+    color: #fff;
+}
+
+tbody tr:hover{
+    cursor: pointer;
+}
+.place_border{
+    box-shadow: 0 0 2px 0 #2295DB inset;
+}
+.standardParent {
+    border: 5px solid #2295DB;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: #2295DB;
+    color: white;
+}
+.standardDiv{
+    text-align: center;
+}
+.titleDiv{
+    background-color: #2295DB;
+    color: white;
+}
+
+tr {
+    border-bottom: solid #dee2e6;
+}
+
+.emoji {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    top: 2rem;
+    margin-left: 0.75rem;
+}
+
+.mb-0{
+    padding-top: 1.9rem;
+    font-size: 1.8rem;
+}
+
+.Gcloud {
+    width: 270px;
+    height: 90px;
+    position: absolute;
+    top: 25px;
+    left: -90px;
+    padding: 35px 20px 0px;
+    background: url('../../images/greencloud.png') no-repeat center / 100% 99%;
+    background-origin: padding-box;
+    text-align: center;
+    line-height: 20px;
+    z-index: 99;
+}
+
+.Gcloud.line {
+    line-height: 40px;
+}
+
+.Bcloud {
+    width: 100px;
+    height: 50px;
+    position: absolute;
+    padding-top: 20px;
+    top: 40px;
+    left: 95px;
+    background: url('../../images/blueCloud.png') no-repeat center / 100% 99%;
+    background-origin: padding-box;
+    text-align: center;
+    line-height: 20px;
+}
+
+.operatingDiv {
+    width: 50%;
+    position: relative;
+    background-color: #0d6efd;
+    border-radius: 15px;
+    color: #fff;
+}
+
+.operatingDiv > span {
+    font-size: 1.3rem;
+}
+
+.operatingDiv > p {
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.topDash-l {
+    display: flex;
+    position: relative;
+    width: 100%;
+    margin: auto;
+    border-bottom: 1px solid #a9a9a9;
+}
+
+.topDash-l:last-child {
+    border-bottom: none;
+}
+
+.topDash-l span {
+    width: 100%;
+    margin: auto;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.topDash-l p {
+    width: 100%;
+    display: inline-block;
+    margin: auto;
+    font-size: 1.2rem;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.topDash-r {
+    display: flex;
+    width: 33.3%;
+    position: relative;
+    padding: 0 15px;
+    flex-wrap: wrap;
+    color: #fff;
+}
+
+.topDash-r span {
+    width: 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    height: 30%;
+    padding-top: 4px;
+}
+
+.topDash-r p {
+    width: 100%;
+    display: inline-block;
+    margin: auto;
+    font-size: 1.2rem;
+    text-align: center;
+    height: 70%;
+    line-height: 80px;
+}
+
+@media all and (max-width: 1399px) and (min-width: 1001px) {
+    .m-size {height: 200px;}
+    .emoji {width: 60px; height: 60px; top:1rem;}
+    #legal_standard_text_A, #company_standard_text_A, #management_standard_text_A {font-size: 1.5rem;}
+    #legal_standard_text_B, #company_standard_text_B, #management_standard_text_B {font-size: 1rem;}
+    .remove-m {margin: 0 !important;}
+}
+
+@media all and (max-width: 1000px) {
+    .standardDiv span{
+        font-size: 0.75rem;
+    }
+
+    .emoji {
+        width: 65px !important;
+        height: 65px !important;
+        position: relative;
+        top: 0.75rem;
+        margin-left: 0.25rem;
+    }
+    .mb-0{
+        padding-top: 1rem;
+        font-size: 1rem;
+    }
+    .fs-6{
+        padding-top: 0.45rem;
+        padding-left: 0.25rem;
+    }
+
+    .row table tr{
+        margin: auto;
+        font-size: 0.8rem;
+    }
+    .svg-inline--fa{
+        font-size: 0.6rem;
+    }
+    .text-end {
+        font-size: 0.25rem;
+    }
+    #legal_standard_text_A, #company_standard_text_A, #management_standard_text_A {font-size: 1.5rem;}
+    #legal_standard_text_B, #company_standard_text_B, #management_standard_text_B {font-size: 1rem;}
+    .remove-m {margin: 0 !important;}
+}
+
+.bg-lightBlue{
+    background-color: #EDF2F8;
+}
