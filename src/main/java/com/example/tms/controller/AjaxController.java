@@ -576,15 +576,19 @@ public class AjaxController {
 
                 SensorList sensorData = sensorListRepository.findByPlaceAndNaming(sensorInfo.getPlace(), sensorInfo.getNaming());
                 NotificationSettings setting = notification_settingsRepository.findByName(sensorData.getTableName());
-                Date date = new Date(System.currentTimeMillis());
-                SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                if (setting != null) {
+                    Date date = new Date(System.currentTimeMillis());
+                    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 
-                Date startDate = format.parse(setting.getStart());
-                Date endDate = format.parse(setting.getEnd());
-                Date nowDate = format.parse(format.format(date));
+                    Date startDate = format.parse(setting.getStart());
+                    Date endDate = format.parse(setting.getEnd());
+                    Date nowDate = format.parse(format.format(date));
 
-                if(nowDate.after(startDate) && endDate.after(nowDate) && setting.isStatus() == true){
-                    jsonObject.put("state", true);
+                    if(nowDate.after(startDate) && endDate.after(nowDate) && setting.isStatus() == true){
+                        jsonObject.put("state", true);
+                    }else{
+                        jsonObject.put("state", false);
+                    }
                 }else{
                     jsonObject.put("state", false);
                 }
@@ -1432,7 +1436,7 @@ public class AjaxController {
                     inputLogSetting("'"+oldPlace + " - " +oldNaming+"'" + " 센서 분기별 배출량 측정소명 수정", "설정", principal);
                 }
 
-                //측정소 센서 삭제 or sensor가 없을때 monitoring false
+                //측정소 센서 삭제
                 //place 업데이트 시간 수정
                 Place placeremove = placeRepository.findBySensorIsIn(hiddenCode);
                 if (placeremove != null) {
@@ -1512,9 +1516,6 @@ public class AjaxController {
             Place placeObject = placeRepository.findBySensorIsIn(tableName);
             placeObject.getSensor().remove(tableName); //리스트에서 센서 제거
             placeObject.setUp_time(new Date()); //시간 업데이트
-            if (placeObject.getSensor().size() == 0) {
-                placeObject.setMonitoring(false);
-            }
             placeRepository.save(placeObject);
         }
 
