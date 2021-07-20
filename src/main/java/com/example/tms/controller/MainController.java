@@ -183,10 +183,6 @@ public class MainController {
         }
         model.addAttribute("standard",standard);
 
-        if(principal == null){
-            return "redirect:logout";
-        }
-
         return "dashboard";
     }
 
@@ -287,7 +283,7 @@ public class MainController {
                 }
                 String allMonitoringOFF = String.valueOf(gMS.get("OFF").get(0));
                 if (sensorSize != 0) {
-                    placeInfoList.put("place", placeName);
+                    placeInfoList.put("placeName", placeName);
                     placeInfoList.put("sensorList", sensorNameList);
                     placeInfoList.put("monitoringOn", sensorSize);
                     placeInfoList.put("allMonitoringOFF", Integer.parseInt(allMonitoringOFF));
@@ -297,7 +293,6 @@ public class MainController {
             model.addAttribute("placeInfo", jsonArray); //전체 측정소의 센서 정보들
         }catch (Exception e){
             System.out.println(e);
-
         }
     }
 

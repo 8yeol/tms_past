@@ -86,7 +86,7 @@
     </div>
     <%--상단 대시보드 end--%>
 
-    <%-- 하단 모니터링 On인 측정소의 센서 테이블 --%>
+    <%-- 하단 대시보드 --%>
     <div class="row m-3 mt-3 bg-light">
         <div style="margin-top: 12px;">
             <div class="col text-center border">
@@ -104,184 +104,229 @@
             </div>
         </div>
 
+        <%-- 측정소 ALL --%>
         <div class="row table" id="place_table" style="margin: 0 auto">
-        <c:if test="${!empty placeInfo}">
-        <c:forEach items="${placeInfo}" var="place" varStatus="pStatus">
-         <c:choose>
-            <%-- 모니터링 True 측정소의 개수에 따라 유동적 크기 변환(1개일때 100%, 2개이상일때 50%) --%>
-            <c:when test="${fn:length(placeInfo) eq 1}">
-            <div class="col-md-12 mb-3 mt-2 place_border ${pStatus}">
-            </c:when>
-            <c:otherwise>
-            <div class="col-md-6 mb-3 mt-2 place_border ${pStatus}">
-            </c:otherwise>
-         </c:choose>
-            <div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>
-                <span class='fs-5' id="placeName"><c:out value="${place.place}"/></span>
-            </div>
-            <c:forEach items="${place.data}" var="sensor" varStatus="sStatus">
-            <c:set value="${pStatus.index}-${sStatus.index}" var="idx"/>
-                <div class='text-end' style='font-size: 0.8rem'>
-                업데이트 :<span id='update-${sStatus.index}'><c:out value="${sensor.recent_up_time}"/></span></div>
-            <table class="table table-bordered table-hover text-center mt-1">
             <c:choose>
-                <c:when test="${sensor.standardExistStatus == false}">
-                <thead>
-                    <tr class="add-bg-color">
-                        <th width=22%'>항목</th>
-                        <th width=26%'>실시간</th>
-                        <th width=26%'>5분</th>
-                        <th width=26%'>30분</th>
-                    </tr>
-                </thead>
+                <c:when test="${empty placeInfo}">
+                <div class="'col-md-12 mb-3 mt-2 place_border">
+                    <table class='table table-bordered table-hover text-center mt-1'>
+                        <thead>
+                        <tr class="add-bg-color">
+                            <th width=28%'>항목</th>
+                            <th width=17%'>법적기준</th>
+                            <th width=17%'>사내기준</th>
+                            <th width=17%'>관리기준</th>
+                            <th width=21%'>실시간</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td colspan=5">데이터가 없습니다.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
                 </c:when>
-                <c:when test="${sensor.standardExistStatus == true}">
-                <thead>
-                    <tr class="add-bg-color">
-                        <th width=22%'>항목</th>
-                        <th width=10%'>법적기준</th>
-                        <th width=10%'>사내기준</th>
-                        <th width=10%'>관리기준</th>
-                        <th width=16%'>실시간</th>
-                        <th width=16%'>5분</th>
-                        <th width=16%'>30분</th>
-                    </tr>
-                </thead>
-                </c:when>
+                <c:otherwise>
+                    <c:forEach items="${placeInfo}" var="place" varStatus="pStatus">
+                        <c:choose>
+                            <c:when test="${fn:length(placeInfo) eq 1}">
+                <div class="col-md-12 mb-3 mt-2 place_border ${pStatus}">
+                            </c:when>
+                            <c:otherwise>
+                <div class="col-md-6 mb-3 mt-2 place_border ${pStatus}">
+                            </c:otherwise>
+                        </c:choose>
+                    <div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>
+                        <span class='fs-5' id="placeName"><c:out value="${place.placeName}"/></span>
+                    </div>
+                        <c:forEach items="${place.data}" var="sensor" varStatus="sStatus">
+                            <c:set value="${pStatus.index}-${sStatus.index}" var="idx"/>
+                            <div class='text-end' style='font-size: 0.8rem'>
+                                업데이트 : <span id='update-${pStatus.index}-${sStatus.index}'><c:out value="${sensor.recent_up_time}"/></span> <br>
+                                <span id='unit-${pStatus.index}-${sStatus.index}'></span>
+                            </div>
+                            <table class="table table-bordered table-hover text-center mt-1">
+                                <c:choose>
+                                    <c:when test="${sensor.standardExistStatus == false}">
+                                        <thead>
+                                        <tr class="add-bg-color">
+                                            <th width=22%'>항목</th>
+                                            <th width=26%'>실시간</th>
+                                            <th width=26%'>5분</th>
+                                            <th width=26%'>30분</th>
+                                        </tr>
+                                        </thead>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <thead>
+                                        <tr class="add-bg-color">
+                                            <th width=22%'>항목</th>
+                                            <th width=10%'>법적기준</th>
+                                            <th width=10%'>사내기준</th>
+                                            <th width=10%'>관리기준</th>
+                                            <th width=16%'>실시간</th>
+                                            <th width=16%'>5분</th>
+                                            <th width=16%'>30분</th>
+                                        </tr>
+                                        </thead>
+                                    </c:otherwise>
+                                </c:choose>
+                                <tbody id="sensor-table-${idx}">
+
+                                <%-- 현재시간 - 업데이트 시간 해서 업데이트 시간이 5분 이상이면 회색으로 --%>
+                                <jsp:useBean id="now" class="java.util.Date" />
+                                <fmt:parseDate var="uptime" value="${sensor.recent_up_time}" pattern="yyyy-MM-dd HH:mm:ss" />
+                                <fmt:parseNumber var="now_N" value="${now.time / (1000 * 60)}" integerOnly="true"/>
+                                <fmt:parseNumber var="uptime_N" value="${uptime.time / (1000 * 60)}" integerOnly="true"/>
+
+                                <c:choose>
+                                    <c:when  test="${sensor.recent_value gt sensor.legalStandard}">
+                                        <tr class="bg-danger text-light">
+                                    </c:when>
+                                    <c:when  test="${sensor.recent_value gt sensor.companyStandard}">
+                                        <tr class="bg-warning text-light">
+                                    </c:when>
+                                    <c:when  test="${sensor.recent_value gt sensor.managementStandard}">
+                                        <tr class="bg-success text-light">
+                                    </c:when>
+                                    <c:when  test="${now_N - uptime_N gt 5}">
+                                        <tr class="bg-secondary text-light">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                    <td>${sensor.naming}<input type="hidden" value="${sensor.name}"> </td>
+                                    <c:choose>
+                                        <c:when test="${sensor.managementStandard eq 999999 && sensor.companyStandard eq 999999 && sensor.legalStandard eq 999999}">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td>
+                                                <div class="bg-danger text-light">
+                                                    <c:choose>
+                                                        <c:when test="${sensor.legalStandard eq 999999}">
+                                                            -
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:out value="${sensor.legalStandard}"/>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="bg-warning text-light">
+                                                    <c:choose>
+                                                        <c:when test="${sensor.companyStandard eq 999999}">
+                                                            -
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:out value="${sensor.companyStandard}"/>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="bg-success text-light">
+                                                    <c:choose>
+                                                        <c:when test="${sensor.managementStandard eq 999999}">
+                                                            -
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <c:out value="${sensor.managementStandard}"/>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </td>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <td>
+                                    <c:choose>
+                                        <c:when test="${sensor.value ne 0}">
+                                            <c:choose>
+                                                <c:when test="${sensor.recent_beforeValue gt sensor.recent_value}">
+                                                    <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
+                                                </c:when>
+                                                <c:when test="${sensor.recent_beforeValue lt sensor.recent_value}">
+                                                    <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
+                                                </c:when>
+                                                <c:when test="${sensor.recent_beforeValue eq sensor.recent_value}">
+                                                    <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:when>
+                                        <c:otherwise>
+                                            0.00
+                                        </c:otherwise>
+                                    </c:choose>
+                                    </td>
+                                    <td>
+                                    <c:choose>
+                                        <c:when test="${sensor.rm05_value ne 0}">
+                                            <c:choose>
+                                                <c:when test="${sensor.rm05_beforeValue gt sensor.rm05_value}">
+                                                    <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
+                                                </c:when>
+                                                <c:when test="${sensor.rm05_beforeValue lt sensor.rm05_value}">
+                                                    <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
+                                                </c:when>
+                                                <c:when test="${sensor.rm05_beforeValue eq sensor.rm05_value}">
+                                                    <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:when>
+                                        <c:otherwise>
+                                            0.00
+                                        </c:otherwise>
+                                    </c:choose>
+                                    </td>
+                                    <td>
+                                    <c:choose>
+                                        <c:when test="${sensor.rm30_value ne 0}">
+                                            <c:choose>
+                                                <c:when test="${sensor.rm30_beforeValue gt sensor.rm30_value}">
+                                                    <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
+                                                </c:when>
+                                                <c:when test="${sensor.rm30_beforeValue lt sensor.rm30_value}">
+                                                    <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
+                                                </c:when>
+                                                <c:when test="${sensor.rm30_beforeValue eq sensor.rm30_value}">
+                                                    <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:when>
+                                        <c:otherwise>
+                                            0.00
+                                        </c:otherwise>
+                                    </c:choose>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div id="chart-${pStatus.index}-${sStatus.index}"></div>
+                        </c:forEach> <%-- 센서 --%>
+                </div> <%-- 개별 측정소 end--%>
+                    </c:forEach>
+                </c:otherwise>
             </c:choose>
-                <tbody id="sensor-table-${idx}">
-                <tr>
-                    <td>${sensor.naming}<input type="hidden" value="${sensor.name}"> </td>
-                <c:choose>
-                    <c:when test="${sensor.managementStandard eq 999999 && sensor.companyStandard eq 999999 && sensor.legalStandard eq 999999}">
-                    </c:when>
-                    <c:otherwise>
-                        <td><div class="bg-danger text-light">
-                           <c:choose>
-                                <c:when test="${sensor.legalStandard eq 999999}">
-                                    -
-                                </c:when>
-                                <c:when test="${sensor.legalStandard ne 999999}">
-                                    <c:out value="${sensor.legalStandard}"/>
-                                </c:when>
-                            </c:choose>
-                        </div></td>
-                        <td><div class="bg-warning text-light">
-                            <c:choose>
-                                <c:when test="${sensor.companyStandard eq 999999}">
-                                    -
-                                </c:when>
-                                <c:when test="${sensor.companyStandard ne 999999}">
-                                    <c:out value="${sensor.companyStandard}"/>
-                                </c:when>
-                            </c:choose>
-                        </div></td>
-                        <td><div class="bg-success text-light">
-                            <c:choose>
-                                <c:when test="${sensor.managementStandard eq 999999}">
-                                    -
-                                </c:when>
-                                <c:when test="${sensor.managementStandard ne 999999}">
-                                    <c:out value="${sensor.managementStandard}"/>
-                                </c:when>
-                            </c:choose>
-                        </div></td>
-                    </c:otherwise>
-                </c:choose>
-                <td>
-                    <c:if test="${sensor.value ne 0}">
-                        <c:choose>
-                            <c:when test="${sensor.recent_beforeValue gt sensor.recent_value}">
-                                <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
-                            </c:when>
-                            <c:when test="${sensor.recent_beforeValue lt sensor.recent_value}">
-                                <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
-                            </c:when>
-                            <c:when test="${sensor.recent_beforeValue eq sensor.recent_value}">
-                                <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
-                            </c:when>
-                            <c:otherwise>
-                                <fmt:formatNumber value="${sensor.recent_value}" pattern=".00"/>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:if>
-                    <c:if test="${sensor.value eq 0}">
-                        0.00
-                    </c:if>
-                </td>
-                <td>
-                    <c:if test="${sensor.rm05_value ne 0}">
-                    <c:choose>
-                        <c:when test="${sensor.rm05_beforeValue gt sensor.rm05_value}">
-                            <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
-                        </c:when>
-                        <c:when test="${sensor.rm05_beforeValue lt sensor.rm05_value}">
-                            <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
-                        </c:when>
-                        <c:when test="${sensor.rm05_beforeValue eq sensor.rm05_value}">
-                            <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
-                        </c:when>
-                        <c:otherwise>
-                            <fmt:formatNumber value="${sensor.rm05_value}" pattern=".00"/>
-                        </c:otherwise>
-                    </c:choose>
-                </c:if>
-                    <c:if test="${sensor.rm05_value eq 0}">
-                        0.00
-                    </c:if>
-                </td>
-                <td>
-                    <c:if test="${sensor.rm30_value ne 0}">
-                        <c:choose>
-                            <c:when test="${sensor.rm30_beforeValue gt sensor.rm30_value}">
-                                <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
-                            </c:when>
-                            <c:when test="${sensor.rm30_beforeValue lt sensor.rm30_value}">
-                                <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
-                            </c:when>
-                            <c:when test="${sensor.rm30_beforeValue eq sensor.rm30_value}">
-                                <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
-                            </c:when>
-                            <c:otherwise>
-                                <fmt:formatNumber value="${sensor.rm30_value}" pattern=".00"/>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:if>
-                    <c:if test="${sensor.rm30_value eq 0}">
-                        0.00
-                    </c:if>
-                </td>
-                </tr>
-                </tbody>
-            </table>
-            <div id="chart-${pStatus.index}-${sStatus.index}"></div>
-            </c:forEach> <%-- //sensor--%>
-         </div> <%-- //col-md-@ --%>
-        </c:forEach> <%-- //place --%>
-        </c:if> <%-- //!empty place --%>
-        <c:if test="${empty placeInfo}">
-            <div class="'col-md-12 mb-3 mt-2 place_border">
-                <table class='table table-bordered table-hover text-center mt-1'>
-                    <thead>
-                    <tr class="add-bg-color">
-                        <th width=28%'>항목</th>
-                        <th width=17%'>법적기준</th>
-                        <th width=17%'>사내기준</th>
-                        <th width=17%'>관리기준</th>
-                        <th width=21%'>실시간</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <td colspan=5">No data</td>
-                    </tbody>
-                </table>
-            </div>
-        </c:if>
-</div> <%-- //row table --%>
+        </div> <%-- 측정소 ALL end--%>
+    </div> <%-- 하단 대시보드 end --%>
+</div> <%-- 컨테이너 end --%>
 
 <script>
     let INTERVAL; let flashCheck; let alarmCheck;
     var oldSensorList; var chart = {};
+
     $(document).ready(function () {
         setTimeout(function () {
             getData();
@@ -382,7 +427,7 @@
                         }else if(oldSensorList.length ==newSensorList.length && newSensorList.length != sensorCount){
                             dataChecking = true;
                         }
-                       if(dataChecking){
+                        if(dataChecking){
                             oldSensorList = newSensorList;
                             draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
@@ -413,7 +458,7 @@
         var realTime = {};
         if(sensorDataList.length == 0){
             if($('#chart-'+chartIndex)[0].innerHTML.length ==0){
-               $('#chart-'+chartIndex).append("<p style='height: 50px; text-align:center; padding-top:12px; background-color: #e6e6e7'>최근 10분 데이터가 없습니다.</p>")
+                $('#chart-'+chartIndex).append("<p style='height: 50px; text-align:center; padding-top:12px; background-color: #e6e6e7'>최근 10분 데이터가 없습니다.</p>")
             }else{
                 $('#chart-'+chartIndex).find('p').remove();
             }
@@ -496,9 +541,9 @@
     }
 
     function draw_place_chart_frame(index) {
-                chart['chart-'+index] = new ApexCharts(document.querySelector("#chart-"+index), setChartOption());
-                chart['chart-'+index].render();
-                // $('#chart-'+i+'-'+z).hide();
+        chart['chart-'+index] = new ApexCharts(document.querySelector("#chart-"+index), setChartOption());
+        chart['chart-'+index].render();
+        // $('#chart-'+i+'-'+z).hide();
     }
 
     /**
@@ -526,7 +571,7 @@
                     var standardExistStatus = data[z].standardExistStatus;
                     if(!standardExistStatus){
                         $('.'+i).append( //i:측정소idx z:센서idx
-                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span style='padding: 0' id=update-"+i+"-"+z+">"+"</span><span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
+                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span style='padding: 0' id=update-"+i+"-"+z+"></span>&nbsp;<span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
                             "<table class='table table-bordered table-hover text-center mt-1'>" +
                             "<thead>" +
                             "<tr class='add-bg-color'>" +
@@ -546,7 +591,7 @@
                             "</div>");
                     }else{
                         $('.'+i).append(
-                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span style='padding: 0' id=update-"+i+"-"+z+"></span><span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
+                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span style='padding: 0' id=update-"+i+"-"+z+"></span>&nbsp;<span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
                             "<table class='table table-bordered table-hover text-center mt-1'>" +
                             "<thead>" +
                             "<tr class='add-bg-color'>" +
@@ -585,7 +630,7 @@
                 "</thead>"+
                 "<tbody>"+
                 "<tr>" +
-                "<td colspan='5'>No data</td>" +
+                "<td colspan='5'>데이터가 없습니다.</td>" +
                 "</tr>" +
                 "</tbody>" +
                 "</table>" +
@@ -615,8 +660,7 @@
                         $("#update-"+i+'-'+z).text(moment(data[z].recent_up_time).format('YYYY-MM-DD HH:mm:ss'));
                         if(data[z].unit != "" && data[z].unit != null){
                             unit = data[z].unit;
-                            $("#unit-"+i+'-'+z).text("단위 : "+unit);
-                            $("#unit-"+i+'-'+z).css("padding-left", "10px");
+                            $("#unit-"+i+'-'+z).text("[ 단위 : " + unit + " ]");
                         }
                         if(!standarExistStatus){
                             const newCeil0 = newRow.insertCell(0);
@@ -659,10 +703,10 @@
                             newCeil5.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
                             newCeil6.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
                         }
-                        }
                     }
                 }
             }
+        }
     }
 
     function noData() {
@@ -708,31 +752,31 @@
             sensorMonitoringOn += placeInfo[i].monitoringOn;
             for(var z=0; z<dataCount; z++){ //측정소의 센서별 조회
                 var sensorData = data[z];
-                    value = sensorData.recent_value;
-                    legalStandard = sensorData.legalStandard;
-                    companyStandard = sensorData.companyStandard;
-                    managementStandard = sensorData.managementStandard;
-                    if(compareTime(sensorData.recent_up_time)){ // 최근데이터가 5분 이내 일때, 통신 정상, 알림음, 점멸효과
-                        sensorStatusSuccess +=1;
-                        if(legalStandard == 999999){
-                            notexistLegalStandard += 1;
-                        }
-                        if(companyStandard == 999999){
-                            notexistCompanyStandard += 1;
-                        }
-                        if(managementStandard == 999999){
-                            notexistManagementStandard += 1;
-                        }
-                        if(value > legalStandard){
-                            legalSCount +=1;
-                        }else if(value > companyStandard){
-                            companySCount +=1;
-                        }else if(value > managementStandard){
-                            managementSCount +=1;
-                        }
-                    }else{ // 최근데이터가 5분 이외일 때, 통신불량 처리
-                        sensorStatusFail += 1;
+                value = sensorData.recent_value;
+                legalStandard = sensorData.legalStandard;
+                companyStandard = sensorData.companyStandard;
+                managementStandard = sensorData.managementStandard;
+                if(compareTime(sensorData.recent_up_time)){ // 최근데이터가 5분 이내 일때, 통신 정상, 알림음, 점멸효과
+                    sensorStatusSuccess +=1;
+                    if(legalStandard == 999999){
+                        notexistLegalStandard += 1;
                     }
+                    if(companyStandard == 999999){
+                        notexistCompanyStandard += 1;
+                    }
+                    if(managementStandard == 999999){
+                        notexistManagementStandard += 1;
+                    }
+                    if(value > legalStandard){
+                        legalSCount +=1;
+                    }else if(value > companyStandard){
+                        companySCount +=1;
+                    }else if(value > managementStandard){
+                        managementSCount +=1;
+                    }
+                }else{ // 최근데이터가 5분 이외일 때, 통신불량 처리
+                    sensorStatusFail += 1;
+                }
 
             }
         }
@@ -1079,5 +1123,4 @@
     }
 
 </script>
-
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
