@@ -72,8 +72,6 @@
 </div>
 
 <script>
-    let state = '${state}' == '1' ? '' : 'disabled';
-    let stateEvent = '${state}' == '1' ? '' : 'onclick="permissionError()"';
 
     $(document).ready(function () {
         const placeLength = "${place.size()}";
@@ -99,12 +97,14 @@
 
     //측정소 생성
     function placeMake(name, idx) {
+        const state = "${state}" == "1" ? '' : 'disabled';
+        const stateEvent = "${state}" == "1" ? '' : 'onclick="permissionError()"';
         const place = name;
         const parentElem = $('#items' + idx);
         let status ;
         let tableName ;
         let naming ;
-        let check =-1;
+        let notificationIndex =-1;
 
         let innerHTMLTimePicker = "<div><span class=\"textSpanParent\">알림 시간</span></div>";
         innerHTMLTimePicker += "<div style='display: inline-flex; margin-top: 10px;'>";
@@ -130,7 +130,7 @@
                             status = data[i].status ? 'checked' : '';
                             tableName = data[i].name.split(",")[0]  //->lghausys_NOX_01
                             naming = data[i].name.split(",")[1]     //->질소산화물
-                            check = i;
+                            notificationIndex = i;
                         }else{
                             status = '';
                             tableName = data[i].tableName;
@@ -149,20 +149,17 @@
                         elem.setAttribute('style', 'margin-top:5px')
                         elem.innerHTML = innerHtml;
                         parentElem.append(elem);
-
                     }  //--for
 
-                    if(check!=-1){
-                        fromTime = data[check].start;
-                        endTime = data[check].end;
+                    if(notificationIndex != -1){
+                        fromTime = data[notificationIndex].start;
+                        endTime = data[notificationIndex].end;
                     }else{
                         fromTime = '00:00';
                         endTime = '23:59';
                     }
                     $("#start" + idx).val(fromTime);
                     $("#end" + idx).val(endTime);
-
-
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
@@ -212,41 +209,43 @@
                 return;
             }
         }
-        const onList = new Array();
-        const onList2 = new Array();
-        const offList = new Array();
-        const offList2 = new Array();
+        const stateOn_TableName = new Array();
+        const stateOn_Naming = new Array();
+        const stateOff_TableName = new Array();
+        const stateOff_Naming = new Array();
+
         $("input:checkbox[name=status" + idx + "]:checked").each(function () {
-            onList.push($(this).attr('id'));
-            sensorName = $(this).attr('id');
-            onList2.push($('#'+sensorName).text());
+            stateOn_TableName.push($(this).attr('id'));
+            let sensorName = $(this).attr('id');
+            stateOn_Naming.push($('#'+sensorName).text());
         });
         $("input:checkbox[name=status" + idx + "]:not(:checked)").each(function () {
-            offList.push($(this).attr('id'));
-            sensorName = $(this).attr('id');
-            offList2.push($('#'+sensorName).text());
+            stateOff_TableName.push($(this).attr('id'));
+            let sensorName = $(this).attr('id');
+            stateOff_Naming.push($('#'+sensorName).text());
         });
+
         $.ajax({
             url: '<%=cp%>/saveNotification',
             type: 'POST',
             async: false,
             cache: false,
             data: {
-                "onList": onList,
-                "offList": offList,
+                "onList": stateOn_TableName,
+                "offList": stateOff_TableName,
                 "from": start,
                 "to": end
             }
         })
-        if(onList.length==0){
+        if(stateOn_TableName.length==0){
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
-                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+" 알림 OFF : "+ offList2 + ")","설정");
-        }else if(offList2.length==0){
+                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+" 알림 OFF : "+ stateOff_Naming + ")","설정");
+        }else if(stateOff_TableName.length==0){
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
-                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", 알림 ON : "+ onList2+")","설정");
+                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", 알림 ON : "+ stateOn_Naming+")","설정");
         }else{
             inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}',
-                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", ON : "+ onList2+", OFF : "+ offList2 + ")","설정");
+                $("#place" + idx).text() + " - 알림 설정 변경(알림 시간 : "+start+"~"+end+", ON : "+ stateOn_Naming+", OFF : "+ stateOff_Naming + ")","설정");
         }
         Swal.fire({
             icon: 'success',
@@ -254,43 +253,6 @@
         })
     }
 
-    //시작 시간이 종료시간보다 클때 endTime 변경
-    //TimePicker 객체에서 아이디->인덱스 추출
-    function changeEndTime(self) {
-        let objId = obj.ele[0].id;               //console.log(objId) -> start0
-        let idx = objId.replace(/[^0-9]/g, ''); //console.log(idx) -> 0
-        let stime = $('#start' + idx).val();
-        let etime = $('#end' + idx).val();
-        if (stime.length == 3) {
-            swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '시간을 정확히 입력 해주세요.'
-            })
-            $("#start" + idx).val("");
-            return;
-        }
-        if (etime.length == 3) {
-            swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '시간을 정확히 입력 해주세요.'
-            })
-            $("#end" + idx).val("");
-            return;
-        }
-        if (etime != "") {
-            if (stime >= etime) {
-                swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: 'To 시간이 From 시간 보다 적거나 같을 수 없습니다.'
-                })
-                $("#end" + idx).val("");
-                return;
-            }
-        }
-    }
     //임시로 설정한값 삭제후 다시 생성
     function cancel(idx) {
         $('#alarm' + idx).empty();

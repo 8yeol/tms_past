@@ -158,23 +158,28 @@ public class AjaxController {
      *
      * @param place   측정소명
      * @param naming  중복 체크할 센서명  --추가
-     * @param naming2 중복 체크할 센서명  -- 수정
+     * @param edit_naming 중복 체크할 센서명  -- 수정
      * @return 해당 측정소에 등록된 센서 값
      */
     @RequestMapping(value = "/isNamingEquals")
-    public String isNamingEquals(String place, @RequestParam(value = "naming", required = false) String naming, @RequestParam(value = "naming2", required = false) String naming2) {
+    public String isNamingEquals(String place, @RequestParam(value = "naming", required = false) String naming, @RequestParam(value = "edit_naming", required = false) String edit_naming) {
         Place placeObject = placeRepository.findByName(place);
 
-        if (null == naming2) {  //추가
-            for (int i = 0; i < placeObject.getSensor().size(); i++) {
-                if (sensorListRepository.findByTableName(placeObject.getSensor().get(i) + "").getNaming().equals(naming))
-                    return "addFalse";
+        if (null == edit_naming) {  //추가
+            if(placeObject.getSensor().size() != 0) {
+                for (int i = 0; i < placeObject.getSensor().size(); i++) {
+                    if (sensorListRepository.findByTableName(placeObject.getSensor().get(i) + "").getNaming().equals(naming))
+                        return "addFalse";
+                }
             }
         }
+
         if (null == naming) {  //수정
-            for (int i = 0; i < placeObject.getSensor().size(); i++) {
-                if (sensorListRepository.findByTableName(placeObject.getSensor().get(i) + "").getNaming().equals(naming2))
-                    return "editFalse";
+            if(placeObject.getSensor().size() != 0) {
+                for (int i = 0; i < placeObject.getSensor().size(); i++) {
+                    if (sensorListRepository.findByTableName(placeObject.getSensor().get(i) + "").getNaming().equals(edit_naming))
+                        return "editFalse";
+                }
             }
         }
         return "true";  //중복없음
@@ -1288,7 +1293,7 @@ public class AjaxController {
                            @RequestParam(value = "classification", required = false) String classification,
                            @RequestParam(value = "naming", required = false) String naming,
                            @RequestParam(value = "place") String place,
-                           @RequestParam(value = "naming2", required = false) String naming2,
+                           @RequestParam(value = "edit_naming", required = false) String edit_naming,
                            @RequestParam(value = "tableName", required = false) String tableName,
                            @RequestParam(value = "hiddenCode", required = false) String hiddenCode,
                            @RequestParam(value = "isValueDelete", required = false) String isValueDelete,Principal principal) {
@@ -1326,7 +1331,7 @@ public class AjaxController {
             String oldPlace = sensor.getPlace();
             String oldNaming = sensor.getNaming();
             sensor.setPlace(place);
-            sensor.setNaming(naming2);
+            sensor.setNaming(edit_naming);
             sensor.setUpTime(new Date());
 
             if(oldPlace.equals("")) oldPlace = "측정소 없음";
@@ -1337,35 +1342,35 @@ public class AjaxController {
                 reference.setLegalStandard(999999.0f);
                 reference.setCompanyStandard(999999.0f);
                 reference.setManagementStandard(999999.0f);
-                reference.setNaming(naming2);
+                reference.setNaming(edit_naming);
                 reference.setMonitoring(false);
                 reference_value_settingRepository.save(reference);
                 inputLogSetting("'"+oldPlace + " - " + sensor.getNaming()+"'" + " 관리 기준 초기화", "설정", principal);
             }
 
             //항목명 변경
-            if(!oldNaming.equals(naming2)){
+            if(!oldNaming.equals(edit_naming)){
 
                 //질소산화물만 수정
                 String sensorCode = hiddenCode.split("_")[1]; //-> NOX, IRS ..
                 if(sensorCode.equals("NOX")) {
                     //연간 배출 모니터링 대상 수정
                     AnnualEmissions aemis = annualEmissionsRepository.findBySensor(hiddenCode);
-                    aemis.setSensorNaming(naming2);
+                    aemis.setSensorNaming(edit_naming);
                     aemis.setStatus(false);
                     annualEmissionsRepository.save(aemis);
                     inputLogSetting("'" + oldPlace + " - " + sensor.getNaming() + "'" + " 센서 연간 배출 모니터링 대상 항목명 수정", "설정", principal);
 
                     //배출 모니터링 대상 수정
                     EmissionsSetting emis = emissionsSettingRepository.findBySensor(hiddenCode);
-                    emis.setSensorNaming(naming2);
+                    emis.setSensorNaming(edit_naming);
                     emis.setStatus(false);
                     emissionsSettingRepository.save(emis);
                     inputLogSetting("'" + oldPlace + " - " + sensor.getNaming() + "'" + " 센서 배출량 추이 모니터링 대상 항목명 수정", "설정", principal);
 
                     //배출 관리 기준 수정
                     EmissionsStandardSetting ess = emissionsStandardSettingRepository.findByTableNameIsIn(hiddenCode);
-                    ess.setNaming(naming2);
+                    ess.setNaming(edit_naming);
                     ess.setDate(new Date());
                     emissionsStandardSettingRepository.save(ess);
                     inputLogSetting("'" + oldPlace + " - " + sensor.getNaming() + "'" + " 센서 연간 배출 허용 기준 항목명 수정", "설정", principal);
@@ -1375,15 +1380,15 @@ public class AjaxController {
                 List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(hiddenCode);
                 if (et.size() != 0) {
                     for (int i = 0; i<et.size(); i++) {
-                        et.get(i).setSensorName(naming2);
+                        et.get(i).setSensorName(edit_naming);
                         emissionsTransitionRepository.save(et.get(i));
                     }
                     inputLogSetting("'"+et.get(0).getPlaceName() + " - " + sensor.getNaming()+"'" + " 센서 분기별 배출량 항목명 수정", "설정", principal);
                 }
 
-                inputLogSetting("'"+oldNaming+"' 센서의 항목명 "+"'"+oldNaming+"'" + " > " + "'"+naming2+"'" + " 수정 ", "설정", principal);
+                inputLogSetting("'"+oldNaming+"' 센서의 항목명 "+"'"+oldNaming+"'" + " > " + "'"+edit_naming+"'" + " 수정 ", "설정", principal);
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
-                reference.setNaming(naming2);
+                reference.setNaming(edit_naming);
                 reference_value_settingRepository.save(reference);
 
             }
