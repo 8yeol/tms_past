@@ -73,17 +73,14 @@
             <div class="topDash-r">
                 <span class="text-center fs-5 fw-bold bg-danger">법적기준 초과</span>
                 <p id="legal_standard_text_A" class="text-danger fs-1 bg-white" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
-<%--                <div class="Bcloud legal_standard_text_B" id="legal" style="display: none">4 / 4</div>--%>
             </div>
             <div class="topDash-r">
                 <span class="text-center fs-5 fw-bold bg-warning">사내기준 초과</span>
                 <p id="company_standard_text_A" class="text-warning fs-1 bg-white" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
-<%--                <div class="Bcloud company_standard_text_B" id="company" style="display: none">4 / 4</div>--%>
             </div>
             <div class="topDash-r">
                 <span class="text-center fs-5 fw-bold bg-success">관리기준 초과</span>
                 <p id="management_standard_text_A" class="text-success fs-1 bg-white" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>
-<%--                <div class="Bcloud management_standard_text_B" id="management" style="display: none">4 / 4</div>--%>
             </div>
         </div>
     </div>
