@@ -150,7 +150,7 @@
                                 <c:choose>
                                     <c:when test="${sensor.standardExistStatus == false}">
                                         <thead>
-                                        <tr class="add-bg-color">
+                                        <tr class="add-bg-color test">
                                             <th width=22%'>항목</th>
                                             <th width=26%'>실시간</th>
                                             <th width=26%'>5분</th>
@@ -160,7 +160,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <thead>
-                                        <tr class="add-bg-color">
+                                        <tr class="add-bg-color test">
                                             <th width=22%'>항목</th>
                                             <th width=10%'>법적기준</th>
                                             <th width=10%'>사내기준</th>
@@ -432,6 +432,7 @@
                             draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }else{
+                            draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }
                     }
@@ -668,29 +669,23 @@
                         let nowTime = new Date();
                         nowTime.setMinutes(nowTime.getMinutes()-5);
 
+                        const newCeil0 = newRow.insertCell(0);
+                        const newCeil1 = newRow.insertCell(1);
+                        const newCeil2 = newRow.insertCell(2);
+                        const newCeil3 = newRow.insertCell(3);
+                        newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
+
                         if(!standarExistStatus){
                             if(dataTime < nowTime){
                                 $(newRow).attr('class', 'bg-secondary text-light');
                             }else{
                                 $(newRow).attr('class', '');
                             }
-                            const newCeil0 = newRow.insertCell(0);
-                            const newCeil1 = newRow.insertCell(1);
-                            const newCeil2 = newRow.insertCell(2);
-                            const newCeil3 = newRow.insertCell(3);
-                            newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
+
                             newCeil1.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
                             newCeil2.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
                             newCeil3.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
-
                         }else {
-                            const newCeil0 = newRow.insertCell(0);
-                            const newCeil1 = newRow.insertCell(1);
-                            const newCeil2 = newRow.insertCell(2);
-                            const newCeil3 = newRow.insertCell(3);
-                            const newCeil4 = newRow.insertCell(4);
-                            const newCeil5 = newRow.insertCell(5);
-                            const newCeil6 = newRow.insertCell(6);
 
                             if (data[z].legalStandard == 999999) {
                                 legalStandard = '-';
@@ -722,7 +717,9 @@
                                 $(newRow).attr('class', '');
                             }
 
-                            newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
+                            const newCeil4 = newRow.insertCell(4);
+                            const newCeil5 = newRow.insertCell(5);
+                            const newCeil6 = newRow.insertCell(6);
                             newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
                             newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
                             newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
