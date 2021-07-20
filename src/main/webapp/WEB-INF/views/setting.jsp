@@ -514,63 +514,12 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    $("#member-Table").DataTable({
-        autoWidth: false,
-        language: {
-            emptyTable: "데이터가 없어요.",
-            lengthMenu: "페이지당 _MENU_ 개씩 보기",
-            info: "현재 _START_ - _END_ / _TOTAL_건",
-            infoEmpty: "데이터 없음",
-            infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
-            search: "전체검색 : ",
-            zeroRecords: "일치하는 데이터가 없어요.",
-            loadingRecords: "로딩중...",
-            processing: "잠시만 기다려 주세요...",
-            paginate: {
-                "next": "다음",
-                "previous": "이전"
-            },
-        },
-        pageLength: 5,
-        info: false,
-        lengthChange: false,
-        order: [[7, 'asc']]
-    });
-
-    $('#groupTable').DataTable({
-        "columns": [
-            {"width": "10%"},
-            {"width": "30%"},
-            {"width": "15%"},
-            {"width": "35%"},
-            {"width": "10%"}
-        ],
-        autoWidth: false,
-        language: {
-            emptyTable: "데이터가 없어요.",
-            lengthMenu: "페이지당 _MENU_ 개씩 보기",
-            info: "현재 _START_ - _END_ / _TOTAL_건",
-            infoEmpty: "데이터 없음",
-            infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
-            search: "전체검색 : ",
-            zeroRecords: "일치하는 데이터가 없어요.",
-            loadingRecords: "로딩중...",
-            processing: "잠시만 기다려 주세요...",
-            paginate: {
-                "next": "다음",
-                "previous": "이전"
-            },
-        },
-        pageLength: 5,
-        info: false,
-        lengthChange: false,
-    });
 
     var ID = ""; //데이터테이블 해당항목의 ID정보
     var name = "";
     var state = ""; //해당항목의 등급 정보
     var user_state = "${member.state}"; // 페이지에 접근한 유저의 등급정보
-    var rName = ${member.state} == 1 ? "root" : "admin"; // 권한관리영역 checkBox 변수
+    var rName = "${member.state}" == "1" ? "root" : "admin"; // 권한관리영역 checkBox 변수
     var user_id = "${member.id}"; // 페이지에 접근한 유저의 ID
     let memberList; // 모든 멤버리스트
     let placeList; // 모든 측정소 리스트
@@ -1211,6 +1160,58 @@
             timer: 2000
         })
     }
+
+    $("#member-Table").DataTable({
+        autoWidth: false,
+        language: {
+            emptyTable: "데이터가 없어요.",
+            lengthMenu: "페이지당 _MENU_ 개씩 보기",
+            info: "현재 _START_ - _END_ / _TOTAL_건",
+            infoEmpty: "데이터 없음",
+            infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
+            search: "전체검색 : ",
+            zeroRecords: "일치하는 데이터가 없어요.",
+            loadingRecords: "로딩중...",
+            processing: "잠시만 기다려 주세요...",
+            paginate: {
+                "next": "다음",
+                "previous": "이전"
+            },
+        },
+        pageLength: 5,
+        info: false,
+        lengthChange: false,
+        order: [[7, 'asc']]
+    });
+
+    $('#groupTable').DataTable({
+        "columns": [
+            {"width": "10%"},
+            {"width": "30%"},
+            {"width": "15%"},
+            {"width": "35%"},
+            {"width": "10%"}
+        ],
+        autoWidth: false,
+        language: {
+            emptyTable: "데이터가 없어요.",
+            lengthMenu: "페이지당 _MENU_ 개씩 보기",
+            info: "현재 _START_ - _END_ / _TOTAL_건",
+            infoEmpty: "데이터 없음",
+            infoFiltered: "( _MAX_건의 데이터에서 필터링됨 )",
+            search: "전체검색 : ",
+            zeroRecords: "일치하는 데이터가 없어요.",
+            loadingRecords: "로딩중...",
+            processing: "잠시만 기다려 주세요...",
+            paginate: {
+                "next": "다음",
+                "previous": "이전"
+            },
+        },
+        pageLength: 5,
+        info: false,
+        lengthChange: false,
+    });
 </script>
 
 

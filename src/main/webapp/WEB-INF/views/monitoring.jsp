@@ -662,7 +662,18 @@
                             unit = data[z].unit;
                             $("#unit-"+i+'-'+z).text("[ 단위 : " + unit + " ]");
                         }
+
+                        //현재시간 -5분 후 현재시간이 더 크다면 css 적용
+                        let dataTime = new Date(data[z].recent_up_time);
+                        let nowTime = new Date();
+                        nowTime.setMinutes(nowTime.getMinutes()-5);
+
                         if(!standarExistStatus){
+                            if(dataTime < nowTime){
+                                $(newRow).attr('class', 'bg-secondary text-light');
+                            }else{
+                                $(newRow).attr('class', '');
+                            }
                             const newCeil0 = newRow.insertCell(0);
                             const newCeil1 = newRow.insertCell(1);
                             const newCeil2 = newRow.insertCell(2);
@@ -671,7 +682,8 @@
                             newCeil1.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
                             newCeil2.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
                             newCeil3.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
-                        }else{
+
+                        }else {
                             const newCeil0 = newRow.insertCell(0);
                             const newCeil1 = newRow.insertCell(1);
                             const newCeil2 = newRow.insertCell(2);
@@ -680,21 +692,36 @@
                             const newCeil5 = newRow.insertCell(5);
                             const newCeil6 = newRow.insertCell(6);
 
-                            if(data[z].legalStandard == 999999){
+                            if (data[z].legalStandard == 999999) {
                                 legalStandard = '-';
-                            }else{
+                            } else {
                                 legalStandard = data[z].legalStandard;
                             }
-                            if(data[z].companyStandard == 999999){
+                            if (data[z].companyStandard == 999999) {
                                 companyStandard = '-';
-                            }else{
+                            } else {
                                 companyStandard = data[z].companyStandard;
                             }
-                            if(data[z].managementStandard == 999999){
+                            if (data[z].managementStandard == 999999) {
                                 managementStandard = '-';
-                            }else{
+                            } else {
                                 managementStandard = data[z].managementStandard;
                             }
+
+                            //시간비교후 css 적용, 그외 기준값 비교후 css 적용
+                            let newValue = data[z].recent_value;
+                            if(dataTime < nowTime){
+                                $(newRow).attr('class', 'bg-secondary text-light');
+                            }else if(newValue > data[z].legalStandard){
+                                $(newRow).attr('class', 'bg-danger text-light');
+                            }else if(newValue > data[z].companyStandard){
+                                $(newRow).attr('class', 'bg-warning text-light');
+                            }else if(newValue > data[z].managementStandard){
+                                $(newRow).attr('class', 'bg-success text-light');
+                            }else{
+                                $(newRow).attr('class', '');
+                            }
+
                             newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
                             newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
                             newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';

@@ -491,8 +491,10 @@ public class MainController {
 
         List<Place> placeList = placeRepository.findByMonitoringIsTrue();
         for (int i =0; i<placeList.size(); i++){
-            if (placeList.get(i).getSensor().size() == 0)
+            if (placeList.get(i).getSensor().size() == 0) {
                 placeList.remove(i);
+                i--;
+            }
         }
         MonitoringGroup group = monitoringGroupRepository.findByGroupNum(member.getMonitoringGroup());
 

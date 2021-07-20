@@ -130,6 +130,13 @@ table thead {
     #mainDiv{
         margin-top: 70px!important;
     }
+    .tab li:last-child {
+        border-right: none !important;
+    }
+    .tab li {
+        border-right: 1px solid #06357a !important;
+        border-bottom: none !important;
+    }
 }
 
 .tab li {
