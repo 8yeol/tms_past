@@ -182,7 +182,7 @@
     function itemChange(){
         const item = $("#items").val();
         const itemName = $("#items option:checked").text();
-        const thisYear = new Date().getFullYear();
+        const thisYear = moment().format('YYYY');
         const previousYear = thisYear-1;
 
         if(item==null){
