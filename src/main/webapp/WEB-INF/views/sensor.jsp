@@ -25,151 +25,153 @@
 <script src="static/js/buttons.html5.min.js"></script>
 <script src="static/js/sweetalert2.min.js"></script>
 
-<div class="container"  id="container" style="padding-left: 0;">
-    <div class="row bg-white sizing">
-        <%-- 측정소 리스트 --%>
-        <div class="col-md-2 rounded-0 pt-5 px-0 navPlace">
-            <ul id="place_name">
-                <c:forEach var="placeNames" items="${placeList}">
-                    <li class='place-item btn d-block fs-3 mt-3 me-3<c:if test="${placeNames eq activePlace}"> active</c:if>' id='<c:out value="${placeNames}"/>'>
-                        <span><c:out value='${placeNames}'/></span>
-                    </li>
-                    <hr style="height: 2px">
-                </c:forEach>
-            </ul>
-        </div>
-        <%-- 상단 테이블 --%>
-        <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
-            <div class="d-flex justify-content-end">
-                <span class="fs-7 mb-2" id="update">업데이트 : ${activeSensor.up_time}</span>
-            </div>
-            <span class="fs-4 fw-bold d-flex justify-content-center titleSpan" id="title">${activePlace}</span>
-            <div id="place_table" style="margin:0 10px 0;">
-                <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: 0.8rem"> * 측정항목 클릭시 해당 항목의 상세 데이터로 하단의 차트/표가 변경됩니다.</span></div>
-                <table class="table table-bordered table-hover text-center">
-                    <thead>
-                    <tr>
-                        <th width="20%">항목</th>
-                        <th width="15%">법적기준</th>
-                        <th width="15%">사내기준</th>
-                        <th width="15%">관리기준</th>
-                        <th width="15%">측정값</th>
-                        <th width="20%">관리등급</th>
-                    </tr>
-                    <thead>
-                    <tbody id="place-tbody-table">
-                    <c:forEach items="${sensor}" var="sensorList">
-                        <c:choose>
-                            <c:when test="${activeSensor.naming eq sensorList.naming}">
-                        <tr class="rowSelected">
-                            </c:when>
-                            <c:otherwise>
-                        <tr>
-                            </c:otherwise>
-                        </c:choose>
-                            <td><c:out value="${sensorList.naming}"/><input type="hidden" value="<c:out value="${sensorList.name}"/>"> </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${sensorList.legalStandard eq 999999}">
-                                        -
-                                    </c:when>
-                                    <c:when test="${sensorList.legalStandard ne 999999}">
-                                    <div class="bg-danger text-light">
-                                        <c:out value="${sensorList.legalStandard}"/>
-                                    </div>
-                                    </c:when>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${sensorList.companyStandard eq 999999}">
-                                        -
-                                    </c:when>
-                                    <c:when test="${sensorList.companyStandard ne 999999}">
-                                    <div class="bg-warning text-light">
-                                        <c:out value="${sensorList.companyStandard}"/>
-                                    </div>
-                                    </c:when>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${sensorList.managementStandard eq 999999}">
-                                        -
-                                    </c:when>
-                                    <c:when test="${sensorList.managementStandard ne 999999}">
-                                    <div class="bg-success text-light">
-                                        <c:out value="${sensorList.managementStandard}"/>
-                                    </div>
-                                    </c:when>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <c:if test="${sensorList.value != 0}">
-                                    <c:if test="${sensorList.beforeValue > sensorList.value}">
-                                        <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
-                                    </c:if>
-                                    <c:if test="${sensorList.beforeValue < sensorList.value}">
-                                        <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
-                                    </c:if>
-                                </c:if>
-                                <c:if test="${sensorList.value eq 0}">
-                                    0.00
-                                </c:if>
-                            </td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${sensorList.value > sensorList.legalStandard}">
-                                        <div class="bg-danger text-light">법적기준 초과</div>
-                                    </c:when>
-                                    <c:when test="${sensorList.value > sensorList.companyStandard}">
-                                        <div class="bg-warning text-light">사내기준 초과</div>
-                                    </c:when>
-                                    <c:when test="${sensorList.value > sensorList.managementStandard}">
-                                        <div class="bg-success text-light">관리기준 초과</div>
-                                    </c:when>
-                                    <c:when test="${sensorList.value <= sensorList.managementStandard}">
-                                        정상
-                                    </c:when>
-                                </c:choose>
-                            </td>
-                        </tr>
+<div class="container" id="container" style="padding-left: 0;">
+    <div class="row">
+        <div class="row bg-white sizing">
+            <%-- 측정소 리스트 --%>
+            <div class="col-md-2 rounded-0 pt-5 px-0 navPlace">
+                <ul id="place_name">
+                    <c:forEach var="placeNames" items="${placeList}">
+                        <li class='place-item btn d-block fs-3 mt-3 me-3<c:if test="${placeNames eq activePlace}"> active</c:if>' id='<c:out value="${placeNames}"/>'>
+                            <span><c:out value='${placeNames}'/></span>
+                        </li>
+                        <hr style="height: 2px">
                     </c:forEach>
-                    </tbody>
-                </table>
+                </ul>
             </div>
-            <hr>
-            <%-- 차트 --%>
-            <div class="row" style="margin-left: 1px; padding-bottom: 15px;">
-                <div class="col">
-                    <div class="justify-content-between" style="position: relative;">
-                        <div class="d-flex radio" style="width: 100%;">
-                            <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px; display: inline-block; width: 50%;">${activeSensor.naming}</span>
-                            <div style="width: 50%; text-align: right; margin-right: 15px;">
-                                <span>숫자표시</span>
-                                <input class="form-check-input" type="radio" name="chartLabel" id="on" value="on">
-                                <label for='on'>on</label>
-                                <input class="form-check-input" type="radio" name="chartLabel" id="off" value="off" checked>
-                                <label for="off">off&emsp;</label>
-                                <span>|&emsp;최근</span>
-                                <input class="form-check-input" type="radio" name="chartRadio" id="hour"  value="on" checked>
-                                <label for='hour'>1시간</label>
-                                <input class="form-check-input" type="radio" name="chartRadio" id="day" value="off">
-                                <label for="day">24시간</label>
-                            </div>
-                        </div>
-                        <span class="text-primary" style="font-size: 0.8rem; position: absolute; right: 15px;"> * 최근 1시간은 실시간, 최근 24시간은 5분평균 데이터로 실시간 업데이트됩니다.</span>
-                    </div>
-                    <div id="chart" style=" margin-right: 10px; margin-top: 20px;"></div>
-                    <div id="noData"><p style="text-align:center; padding-top:150px;"></p></div>
+            <%-- 상단 테이블 --%>
+            <div class="col-md-10 bg-light rounded p-0" style="position: relative;">
+                <div class="d-flex justify-content-end">
+                    <span class="fs-7 mb-2" id="update">업데이트 : ${activeSensor.up_time}</span>
                 </div>
-            </div>
-            <%-- 하단 테이블 --%>
-            <div class="row ms-2 bg-white" style="padding-top: 15px;">
-                <div class="col">
-                    <div class="d-flex fw-bold pos-a align-self-end" id="sensor-standard"></div>
-                    <div class="col-md-12" style="position: relative">
-                        <table id="sensor-table" class="table table-striped table-bordered table-hover text-center no-footer dataTable"></table>
+                <span class="fs-4 fw-bold d-flex justify-content-center titleSpan" id="title">${activePlace}</span>
+                <div id="place_table" style="margin:0 10px 0;">
+                    <div class="col text-end align-self-end mt-2 mb-1"><span class="text-primary" style="font-size: 0.8rem"> * 측정항목 클릭시 해당 항목의 상세 데이터로 하단의 차트/표가 변경됩니다.</span></div>
+                    <table class="table table-bordered table-hover text-center">
+                        <thead>
+                        <tr>
+                            <th width="20%">항목</th>
+                            <th width="15%">법적기준</th>
+                            <th width="15%">사내기준</th>
+                            <th width="15%">관리기준</th>
+                            <th width="15%">측정값</th>
+                            <th width="20%">관리등급</th>
+                        </tr>
+                        <thead>
+                        <tbody id="place-tbody-table">
+                        <c:forEach items="${sensor}" var="sensorList">
+                            <c:choose>
+                                <c:when test="${activeSensor.naming eq sensorList.naming}">
+                            <tr class="rowSelected">
+                                </c:when>
+                                <c:otherwise>
+                            <tr>
+                                </c:otherwise>
+                            </c:choose>
+                                <td><c:out value="${sensorList.naming}"/><input type="hidden" value="<c:out value="${sensorList.name}"/>"> </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${sensorList.legalStandard eq 999999}">
+                                            -
+                                        </c:when>
+                                        <c:when test="${sensorList.legalStandard ne 999999}">
+                                        <div class="bg-danger text-light">
+                                            <c:out value="${sensorList.legalStandard}"/>
+                                        </div>
+                                        </c:when>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${sensorList.companyStandard eq 999999}">
+                                            -
+                                        </c:when>
+                                        <c:when test="${sensorList.companyStandard ne 999999}">
+                                        <div class="bg-warning text-light">
+                                            <c:out value="${sensorList.companyStandard}"/>
+                                        </div>
+                                        </c:when>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${sensorList.managementStandard eq 999999}">
+                                            -
+                                        </c:when>
+                                        <c:when test="${sensorList.managementStandard ne 999999}">
+                                        <div class="bg-success text-light">
+                                            <c:out value="${sensorList.managementStandard}"/>
+                                        </div>
+                                        </c:when>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:if test="${sensorList.value != 0}">
+                                        <c:if test="${sensorList.beforeValue > sensorList.value}">
+                                            <i class="fas fa-sort-down fa-fw" style="color: blue"></i><fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
+                                        </c:if>
+                                        <c:if test="${sensorList.beforeValue < sensorList.value}">
+                                            <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
+                                        </c:if>
+                                    </c:if>
+                                    <c:if test="${sensorList.value eq 0}">
+                                        0.00
+                                    </c:if>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${sensorList.value > sensorList.legalStandard}">
+                                            <div class="bg-danger text-light">법적기준 초과</div>
+                                        </c:when>
+                                        <c:when test="${sensorList.value > sensorList.companyStandard}">
+                                            <div class="bg-warning text-light">사내기준 초과</div>
+                                        </c:when>
+                                        <c:when test="${sensorList.value > sensorList.managementStandard}">
+                                            <div class="bg-success text-light">관리기준 초과</div>
+                                        </c:when>
+                                        <c:when test="${sensorList.value <= sensorList.managementStandard}">
+                                            정상
+                                        </c:when>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+                <hr>
+                <%-- 차트 --%>
+                <div class="row" style="margin-left: 1px; padding-bottom: 15px;">
+                    <div class="col">
+                        <div class="justify-content-between" style="position: relative;">
+                            <div class="d-flex radio" style="width: 100%;">
+                                <span class="me-3 fs-5" id="radio_text" style="margin-left: 10px; display: inline-block; width: 50%;">${activeSensor.naming}</span>
+                                <div style="width: 50%; text-align: right; margin-right: 15px;">
+                                    <span>숫자표시</span>
+                                    <input class="form-check-input" type="radio" name="chartLabel" id="on" value="on">
+                                    <label for='on'>on</label>
+                                    <input class="form-check-input" type="radio" name="chartLabel" id="off" value="off" checked>
+                                    <label for="off">off&emsp;</label>
+                                    <span>|&emsp;최근</span>
+                                    <input class="form-check-input" type="radio" name="chartRadio" id="hour"  value="on" checked>
+                                    <label for='hour'>1시간</label>
+                                    <input class="form-check-input" type="radio" name="chartRadio" id="day" value="off">
+                                    <label for="day">24시간</label>
+                                </div>
+                            </div>
+                            <span class="text-primary" style="font-size: 0.8rem; position: absolute; right: 15px;"> * 최근 1시간은 실시간, 최근 24시간은 5분평균 데이터로 실시간 업데이트됩니다.</span>
+                        </div>
+                        <div id="chart" style=" margin-right: 10px; margin-top: 20px;"></div>
+                        <div id="noData"><p style="text-align:center; padding-top:150px;"></p></div>
+                    </div>
+                </div>
+                <%-- 하단 테이블 --%>
+                <div class="row ms-2 bg-white" style="padding-top: 15px;">
+                    <div class="col">
+                        <div class="d-flex fw-bold pos-a align-self-end" id="sensor-standard"></div>
+                        <div class="col-md-12" style="position: relative">
+                            <table id="sensor-table" class="table table-striped table-bordered table-hover text-center no-footer dataTable"></table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -202,8 +204,8 @@
         }else{
             $("input:radio[name='chartLabel']:radio[value='on']").prop("checked", false);
             $("input:radio[name='chartLabel']:radio[value='off']").prop("checked", true);
-
         }
+
         sensor_time_length = getCookie("sensor_time_length");
         if(sensor_time_length == 1){
             $("input:radio[name='chartRadio']:radio[value='on']").prop("checked", true);
@@ -214,12 +216,12 @@
 
         }
 
-        var sensor_data_list = ${sensorData};
-        var sensor_data = ${activeSensor};
+        const sensor_data_list = ${sensorData};
+        const sensor_data = ${activeSensor};
 
         draw_sensor_table(sensor_data_list, sensor_data);
         if (sensor_data_list.length == 0){
-            console.log("sensor_data is none");
+            getData2([]);
             return;
         }
         chart = new ApexCharts(document.querySelector("#chart"), setChartOption(JSON.parse(chartLabel))); //차트 틀 생성

@@ -181,7 +181,7 @@
                                 <fmt:parseNumber var="uptime_N" value="${uptime.time / (1000 * 60)}" integerOnly="true"/>
 
                                 <c:choose>
-                                    <c:when  test="${(now_N - uptime_N) lt 5}">
+                                    <c:when  test="${now_N - uptime_N gt 5}">
                                         <tr class="bg-secondary text-light">
                                     </c:when>
                                     <c:when  test="${sensor.recent_value gt sensor.legalStandard}">
@@ -1130,7 +1130,6 @@
                             result.push({x: item.up_time, y: (item.value).toFixed(2)});
                         })
                     }else{
-                        console.log("sensor_data is none")
                         // 조회 결과 없을 때 return [];
                         result = [];
                     }

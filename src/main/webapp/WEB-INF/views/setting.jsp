@@ -405,9 +405,15 @@
                 <div class="d-flex justify-content-center" style="margin: 5px">
                     <h5 class="me-1" style="width: 30%; text-align: left; margin-top: .3rem;">모니터링 그룹 : </h5>
                     <select name="m_group" id="m_group" class="btn btn-light" style="width: 220px;">
-                        <option selected="selected">선택</option>
                         <c:forEach items="${group}" var="group" varStatus="idx">
-                            <option value="${group.groupNum}">${group.groupName}</option>
+                            <c:choose>
+                                <c:when test="${group.groupNum eq 1}">
+                                    <option value="${group.groupNum}" selected>${group.groupName}</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${group.groupNum}">${group.groupName}</option>
+                                </c:otherwise>
+                            </c:choose>
                         </c:forEach>
                     </select>
                 </div>
@@ -602,7 +608,7 @@
     //가입승인모달 취소시 selectbox 초기화
     function resetGroup() {
         $('#m_group').attr("disabled", false);
-        $('#m_group option:eq(0)').prop('selected', true);
+        $('#m_group').val('1').attr("selected", "selected");
         $('#rank option:eq(0)').prop('selected', true);
     }
 
@@ -610,11 +616,10 @@
     function stateCheck() {
         const state = $('#rank').val();
         if (state == 1) {
-            $('#m_group').val('0').attr("selected", "selected");
+            $('#m_group').val('1').attr("selected", "selected");
             $('#m_group').attr("disabled", "disabled");
         } else {
             $('#m_group').attr("disabled", false);
-            $('#m_group option:eq(0)').prop('selected', true);
         }
     }
 
@@ -652,11 +657,6 @@
 
     //가입
     function sing_up(sign) {
-        if (sign == 1 && $("#m_group option:selected").val() == "선택") {
-            warning("모니터링 그룹을 선택해주세요.");
-            return false;
-        }
-
         let content = ID;
         if (sign == 0) {
             content += " 계정 가입 거절 ";
