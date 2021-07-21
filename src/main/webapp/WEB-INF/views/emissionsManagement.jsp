@@ -256,12 +256,11 @@
             <span class="text-primary" style="font-size: 0.9rem;">* 배출량 모니터링은 측정소에 유량 및 질소산화물 센서가 정상적으로 등록된 경우 이용 가능합니다.</span>
         </div>
 
-        <div class="col text-end pb-2" style="color:red; font-size: 0.8rem;" >
-            * 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량(%) 계산에 사용됩니다.
-        </div>
-
-        <div class="col-xs-12 bg-light">
-        <h4 class="mt-2 fs-5 fw-bold"style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
+       <div class="col-xs-12 bg-light">
+           <div class="pb-2 justify-content-between" style="display: flex">
+               <h4 class="mt-2 fs-5 fw-bold" style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
+               <p class="mt-2" style="color:red; font-size: 0.8rem; text-align: right">* 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량(%) 계산에 사용됩니다.</p>
+           </div>
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -324,9 +323,6 @@
     </div>
 
 
-<div class="col" style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:40px;text-align: end" id="gradeText">
-    * 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.
-</div>
 <!--멀티셀렉터 콤보박스 -->
 <div class="multiSelectComboBox" >
     <div class="multiSelectParent">
@@ -369,7 +365,10 @@
     </div>
 
     <div class="multiSelectParent">
-        <h4 class="fs-5 fw-bold emissionsh4">연간 배출량 누적 모니터링 대상 설정</h4><br>
+        <div>
+            <h4 class="fs-5 fw-bold emissionsh4">연간 배출량 누적 모니터링 대상 설정</h4>
+            <p style="color:red; font-size: 0.8rem; font-weight: normal; margin-bottom: 5px;" id="gradeText">* 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.</p>
+        </div><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
             <select multiple class="form-control scroll" id="lstBox3">
