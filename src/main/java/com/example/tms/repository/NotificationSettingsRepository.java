@@ -4,7 +4,10 @@ import com.example.tms.entity.NotificationSettings;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
+
 public interface NotificationSettingsRepository extends MongoRepository<NotificationSettings, ObjectId> {
     NotificationSettings findByName(String name);
     void deleteByName(String name);
+    List<NotificationSettings> findByStatusIsTrue();
 }

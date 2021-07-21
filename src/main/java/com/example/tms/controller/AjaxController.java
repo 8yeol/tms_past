@@ -535,14 +535,22 @@ public class AjaxController {
         List<String> sensorList = new ArrayList<>();
         if(memberGroup != 1){
             MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(memberGroup);
-            sensorList = monitoringGroup.getSensor();
+            List<String> placeList = monitoringGroup.getMonitoringPlace();
+            for (int i=0; i<placeList.size(); i++){
+                Place place = placeRepository.findByName(placeList.get(i));
+                List<String> placeSensor = place.getSensor();
+                for (int k=0; k<placeSensor.size(); k++){
+                    if(notification_settingsRepository.findByName(placeSensor.get(k)).isStatus() == true){
+                        sensorList.add(placeSensor.get(k));
+                    }
+                }
+            }
         }else{
-            List<ReferenceValueSetting> monitoringOn = reference_value_settingRepository.findByMonitoringIsTrue();
-            for(ReferenceValueSetting referenceValueSetting : monitoringOn){
-                sensorList.add(referenceValueSetting.getName());
+            List<NotificationSettings> monitoringOn = notification_settingsRepository.findByStatusIsTrue();
+            for(NotificationSettings notificationSettings : monitoringOn){
+                sensorList.add(notificationSettings.getName());
             }
         }
-
         if(sensorList != null){
             excess = getAlarmDataCheck(sensorList);
         }
