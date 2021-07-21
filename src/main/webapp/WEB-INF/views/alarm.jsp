@@ -405,7 +405,9 @@
             async: false,
             data: {"place": place},
            success: function (data) {
-                getData.push({day: data[0], legalCount:data[1], companyCount:data[2], managementCount: data[3]});
+                if(data[1]!=null||data[2]!=null||data[3]!=null){
+                    getData.push({day: data[0], legalCount:data[1]==null?0:data[1], companyCount:data[2]==null?0:data[2], managementCount: data[3]==null?0:data[3]});
+                }
            }
         });
         $.ajax({ /* 일주일 ~ 전날 데이터 */
@@ -419,7 +421,7 @@
                 }
             }
         });
-        if(getData.length == 1){
+        if(getData.length == 0){
             getData = [];
         }
         return getData;
