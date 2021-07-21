@@ -528,7 +528,6 @@ public class AjaxController {
             return memberIsNull;
         }
 
-
         Member member = memberRepository.findById(principal.getName());
         int memberGroup = member.getMonitoringGroup();
         JSONObject excess = new JSONObject();
@@ -1603,14 +1602,26 @@ public class AjaxController {
      */
     @RequestMapping(value = "/memberJoin")
     public String memberJoinPost(Member member) {
+        //최초 생성시 default 그룹도 동시 생성하여 적용
         if (memberRepository.findAll().size() == 0) {
+            MonitoringGroup defaultGroup = new MonitoringGroup();
+            List<String> memberList = new ArrayList<>();
+            List<String> placeList = new ArrayList<>();
+            memberList.add(member.getId());
+            placeList.add("모든 측정소");
+            defaultGroup.setGroupMember(memberList);
+            defaultGroup.setGroupNum(1);
+            defaultGroup.setGroupName("default");
+            defaultGroup.setMonitoringPlace(placeList);
+            monitoringGroupRepository.save(defaultGroup);
+
+            member.setMonitoringGroup(1);
             memberService.memberSave(member, "1");
             if (rankManagementRepository.findAll().size() == 0)
                 rankManagementService.defaultRankSetting();
             return "root";
         } else if (!memberRepository.existsById(member.getId())) {
             memberService.memberSave(member, "4");
-            groupChange(member.getId(), member.getMonitoringGroup());
             return "success";
         } else {
             return "failed";
@@ -1766,14 +1777,8 @@ public class AjaxController {
 
         if (iNumber.equals("0")) {
             newMember.setState("5");
-            newMember.setMonitoringGroup(-1);
             msg = "가입 거절 되었습니다.";
         } else {
-            //디폴트 그룹에서 삭제
-            MonitoringGroup defaultGroup = monitoringGroupRepository.findByGroupNum(1);
-            defaultGroup.getGroupMember().remove(id);
-            monitoringGroupRepository.save(defaultGroup);
-
             //해당 그룹에 회원 추가
             MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(Integer.parseInt(group));
             List<String> groupMember = monitoringGroup.getGroupMember();

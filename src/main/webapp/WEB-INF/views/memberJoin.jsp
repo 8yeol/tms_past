@@ -173,7 +173,7 @@
                     "name": $("#name").val(),
                     "email": $("#email").val(),
                     "department": $("#department").val(),
-                    "monitoringGroup": 1,
+                    "monitoringGroup": -1,
                     "grade": $("#grade").val(),
                     "tel": $("#tel").val()
                 },
