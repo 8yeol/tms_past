@@ -782,12 +782,14 @@ public class AjaxController {
                 //삭체할 측정소가 포함된 그룹의 센서 목록
                 List<String> groupSensorList = group.get(k).getSensor();
 
-                //그룹의 센서 목록에서 삭제될 센서 삭제
-                for (int j=0; j<placeSensorList.size(); j++) {
-                    for (int p = 0; p < groupSensorList.size(); p++) {
-                        if (groupSensorList.get(p).contains(placeSensorList.get(j))) {
-                            groupSensorList.remove(p);
-                            inputLogSetting("'" + group.get(k).getGroupName() + "'그룹의 센서  '" + groupSensorList.get(p) + "' 삭제", "삭제", principal);
+                if(groupSensorList != null && groupSensorList.size() != 0) {
+                    //그룹의 센서 목록에서 삭제될 센서 삭제
+                    for (int j = 0; j < placeSensorList.size(); j++) {
+                        for (int p = 0; p < groupSensorList.size(); p++) {
+                            if (groupSensorList.get(p).contains(placeSensorList.get(j))) {
+                                groupSensorList.remove(p);
+                                inputLogSetting("'" + group.get(k).getGroupName() + "'그룹의 센서  '" + groupSensorList.get(p) + "' 삭제", "삭제", principal);
+                            }
                         }
                     }
                 }
