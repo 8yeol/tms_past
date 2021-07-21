@@ -49,7 +49,7 @@
                     </div>
                     <c:if test="${state == 1}">
                         <div class="col text-end">
-                            <button data-bs-toggle="modal" data-bs-target="#addPlace" id="addpl" class="addBtn">추가</button>
+                            <button data-bs-toggle="modal" data-bs-target="#addPlace" id="addpl" class="addBtn" onclick="$('input[id=na1]').attr('readonly', false);">추가</button>
                             <button data-bs-toggle="modal" data-bs-target="#addPlace" class="updateBtn" id="uppl" onclick="updatePlaceSetting()">수정</button>
                             <button onclick="removePlace()" class="removeBtn">삭제</button>
                         </div>
@@ -391,6 +391,7 @@
             data: {"place": place},
             success: function (data) {
                 $('input[id=na1]').attr('value', data.name);
+                $('input[id=na1]').attr('readonly', true);
                 $('input[id=lo1]').attr('value', data.location);
                 $('input[id=ad1]').attr('value', data.admin);
                 $('input[id=te1]').attr('value', data.tel);
