@@ -326,6 +326,7 @@
 <script>
     let INTERVAL; let flashCheck; let alarmCheck;
     var oldSensorList; var chart = {};
+    let placeInfoCopy;
 
     $(document).ready(function () {
         setTimeout(function () {
@@ -419,6 +420,9 @@
                                 }
                             }
                         }
+
+
+
                         var dataChecking = false;
                         if(oldSensorList.length < newSensorList.length && newSensorList.length != sensorCount){
                             dataChecking = true;
@@ -427,12 +431,23 @@
                         }else if(oldSensorList.length ==newSensorList.length && newSensorList.length != sensorCount){
                             dataChecking = true;
                         }
+
+                        if(typeof placeInfoCopy == 'undefined') placeInfoCopy = placeInfo;
+
+                        for(let k=0; k<placeInfo.length; k++){
+                            for(let j=0; j<placeInfo[k].data.length; j++) {
+                                if (placeInfo[k].data[j].standardExistStatus != placeInfoCopy[k].data[j].standardExistStatus) {
+                                    dataChecking = true;
+                                }
+                            }
+                        }
+                        placeInfoCopy = placeInfo;
+
                         if(dataChecking){
                             oldSensorList = newSensorList;
                             draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }else{
-                            draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }
                     }
