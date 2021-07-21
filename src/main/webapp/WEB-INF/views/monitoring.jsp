@@ -25,10 +25,12 @@
         </div>
         <div class="col text-end align-self-end">
             <div style="font-size: 1rem">
-                <audio id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>
+                <div id="audioDiv">
+                    <audio muted id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>
+                </div>
                 <div id="alarmAudio"></div>
                 <span>알림음 </span>
-                <input class="ms-2 form-check-input" type="radio" name="alarmTone" value="on" id="alarmOn" checked><label class="ms-2" for="alarmOn"> On&nbsp;</label>
+                <input class="ms-2 form-check-input" type="radio" name="alarmTone" value="on" id="alarmOn"><label class="ms-2" for="alarmOn"> On&nbsp;</label>
                 <input type="radio" name="alarmTone" value="off" id="alarmOff" class="form-check-input"><label class="ms-2" for="alarmOff"> Off&emsp;</label>
                 <span>|&emsp;점멸효과 </span>
                 <input class="ms-2 form-check-input" type="radio" name="flashing" value="on" id="checkOn" checked><label class="ms-2" for="checkOn"> On&nbsp;</label>
@@ -326,13 +328,9 @@
 <script>
     let INTERVAL; let flashCheck; let alarmCheck;
     var oldSensorList; var chart = {};
-    let placeInfoCopy;
+    let placeInfoCopy;let audioInnerHTML;
 
     $(document).ready(function () {
-        setTimeout(function () {
-            getData();
-        }, 0);
-
         if(getCookie("flashCheck") ==undefined){
             setCookie("flashCheck", "on", 999);
         }
@@ -351,12 +349,15 @@
         alarmCheck = getCookie("alarmCheck");
         if(alarmCheck == "on"){
             $("input:radio[name='alarmTone']:radio[value='on']").prop("checked", true);
-            $("input:radio[name='alarmTone']:radio[value='off']").prop("checked", false);
+            //$('#alarmOn').trigger('click');
         }else{
-            $("input:radio[name='alarmTone']:radio[value='on']").prop("checked", false);
             $("input:radio[name='alarmTone']:radio[value='off']").prop("checked", true);
-
+           // $('#alarmOff').trigger('click');
         }
+
+        setTimeout(function () {
+            getData();
+        }, 0);
     });
 
     /**
@@ -520,11 +521,13 @@
      * 알림음
      */
     function alarmTone(onOff) {
-        if(onOff == 'on'){
-            document.getElementById("audio").muted = false;// 소리 켜기
+        if(onOff == 'on' && $('input:radio[name=alarmTone]:checked').val() == 'on'){
+            audioInnerHTML = '<audio id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>';
         }else{
-            document.getElementById("audio").muted = true;// 소리 끄기
+            audioInnerHTML = '<audio muted id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>';
         }
+        $('#audioDiv').empty();
+        $('#audioDiv').append(audioInnerHTML);
     }
 
     /**
@@ -872,14 +875,15 @@
     /**
      * 알림음 On / Off 이벤트
      */
-    document.querySelector('input[name="alarmTone"]:checked').value;
     $('input:radio[name=alarmTone]').click(function () {
+
         if($('input:radio[name=alarmTone]:checked').val() == 'on'){
             alarmCheck = "on";
         }else{
+            $('#audioDiv').empty();
+            audioInnerHTML = '<audio muted id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>';
+            $('#audioDiv').append(audioInnerHTML);
             alarmCheck = "off";
-            if(typeof flIn2 !== "undefined")
-                clearTimeout(flIn2);
         }
         setCookie("alarmCheck", alarmCheck, 999);
     });
