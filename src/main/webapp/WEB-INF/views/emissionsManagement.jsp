@@ -323,6 +323,9 @@
     </div>
 
 
+<div class="col" style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:40px;text-align: end" id="gradeText">
+    * 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.
+</div>
 <!--멀티셀렉터 콤보박스 -->
 <div class="multiSelectComboBox" >
     <div class="multiSelectParent">
@@ -365,10 +368,7 @@
     </div>
 
     <div class="multiSelectParent">
-        <div>
-            <h4 class="fs-5 fw-bold emissionsh4">연간 배출량 누적 모니터링 대상 설정</h4>
-            <p style="color:red; font-size: 0.8rem; font-weight: normal; margin-bottom: 5px;" id="gradeText">* 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.</p>
-        </div><br>
+        <h4 class="fs-5 fw-bold emissionsh4">연간 배출량 누적 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
             <select multiple class="form-control scroll" id="lstBox3">
