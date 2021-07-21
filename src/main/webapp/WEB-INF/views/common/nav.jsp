@@ -551,7 +551,7 @@
     $(document).ready(function () {
         if (typeof getCookie('isAlarm') == 'undefined') {
             getAlarm();
-            setCookie('isAlarm', 'true', 1);
+            setCookie('isAlarm', 'true', 999);
         }
 
         if (getCookie('isAlarm') == 'true') {
@@ -715,7 +715,7 @@
     function messageOpen() {
        if(getCookie('isAlarm') == 'true'){
            $('.alarm').attr('src', "static/images/bellOff.png");
-           setCookie('isAlarm', 'false', 1);
+           setCookie('isAlarm', 'false', 999);
            clearInterval(intervalAlarmON);
            getAlarm();
            viewCount();
@@ -729,7 +729,7 @@
        }else{
            $('.alarm').attr('src', "static/images/bellOn.png");
            getAlarm();
-           setCookie('isAlarm', 'true', 1);
+           setCookie('isAlarm', 'true', 999);
            clearInterval(intervalAlarmOFF);
            intervalAlarmON = setInterval(function (){
                    getAlarm();}

@@ -1763,11 +1763,24 @@ public class AjaxController {
     public String memberSignUp(String id, String iNumber,String state,String group) {
         String msg = "";
         Member newMember = memberRepository.findById(id);
+
         if (iNumber.equals("0")) {
             newMember.setState("5");
             newMember.setMonitoringGroup(-1);
             msg = "가입 거절 되었습니다.";
         } else {
+            //디폴트 그룹에서 삭제
+            MonitoringGroup defaultGroup = monitoringGroupRepository.findByGroupNum(1);
+            defaultGroup.getGroupMember().remove(id);
+            monitoringGroupRepository.save(defaultGroup);
+
+            //해당 그룹에 회원 추가
+            MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(Integer.parseInt(group));
+            List<String> groupMember = monitoringGroup.getGroupMember();
+            groupMember.add(id);
+            monitoringGroup.setGroupMember(groupMember);
+            monitoringGroupRepository.save(monitoringGroup);
+
             newMember.setMonitoringGroup(Integer.parseInt(group));
             newMember.setState(state);
             Date time = new Date();

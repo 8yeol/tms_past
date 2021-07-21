@@ -421,8 +421,6 @@
                             }
                         }
 
-
-
                         var dataChecking = false;
                         if(oldSensorList.length < newSensorList.length && newSensorList.length != sensorCount){
                             dataChecking = true;
