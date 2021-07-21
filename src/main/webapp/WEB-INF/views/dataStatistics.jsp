@@ -24,11 +24,6 @@
 <script src="static/js/sweetalert2.min.js"></script>
 
 <style>
-    p.pos {
-        position: relative;
-        top: 40%;
-    }
-
     .add-bg {
         background-color: #fff;
         width: 102%;
@@ -242,7 +237,7 @@
         $('#chart').empty();
 
         if(thisYearData.length == 0){
-            $('#chart').append("<p class='pos'>모니터링 가능한 월별 배출량 추이 데이터가 없습니다. <br> 월별 배출량 추이 데이터는 매일 자정 전일 기준으로 업데이트 되며, 해당 측정소에 <b>유량</b> 및 <b>질소산화물</b> 센서가 정상적으로 등록되어 있어야 이용 가능합니다.</p>");
+            $('#chart').append("<p style='position: relative; top: 40%;'>모니터링 가능한 월별 배출량 추이 데이터가 없습니다. <br> 월별 배출량 추이 데이터는 매일 자정 전일 기준으로 업데이트 되며, 해당 측정소에 <b>유량</b> 및 <b>질소산화물</b> 센서가 정상적으로 등록되어 있어야 이용 가능합니다.</p>");
         } else{
             const options = {
                 series: [{
