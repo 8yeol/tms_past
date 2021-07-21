@@ -36,7 +36,7 @@
                 <span>${groupName} 그룹 측정소 모니터링 관리</span>
             </c:if>
         </div>
-        <div class="col text-end align-self-end" style="color: red; font-size: 0.8rem; font-weight: normal;">
+        <div class="col text-end align-self-end pb-1" style="color: red; font-size: 0.8rem; font-weight: normal;">
             * 모니터링 On/Off 는 모니터링 그룹별로 설정 가능하며, 기준 값은 '최고 관리자' 권한을 가진 회원만 설정 가능합니다.
         </div>
     </div>

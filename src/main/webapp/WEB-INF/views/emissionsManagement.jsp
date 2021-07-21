@@ -251,9 +251,15 @@
                      style="background-color:green;color:white"> 추가 버튼
              </button> -->
         </div>
+
         <div class="row2">
-            <span class="text-primary" style="font-size: 0.9rem;">* 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량(%) 계산에 사용됩니다.</span>
+            <span class="text-primary" style="font-size: 0.9rem;">* 배출량 모니터링은 측정소에 유량 및 질소산화물 센서가 정상적으로 등록된 경우 이용 가능합니다.</span>
         </div>
+
+        <div class="col text-end pb-2" style="color:red; font-size: 0.8rem;" >
+            * 설정된 연간 배출 허용 기준 값은 [대시보드 - 연간 배출량 누적 모니터링]의 누적 배출량(%) 계산에 사용됩니다.
+        </div>
+
         <div class="col-xs-12 bg-light">
         <h4 class="mt-2 fs-5 fw-bold"style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
             <table class="table table-striped">

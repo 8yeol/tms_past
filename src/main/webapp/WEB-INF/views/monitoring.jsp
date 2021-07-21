@@ -143,7 +143,7 @@
                         <c:forEach items="${place.data}" var="sensor" varStatus="sStatus">
                             <c:set value="${pStatus.index}-${sStatus.index}" var="idx"/>
                             <div class='text-end' style='font-size: 0.8rem'>
-                                업데이트 : <span id='update-${pStatus.index}-${sStatus.index}'><c:out value="${sensor.recent_up_time}"/></span> <br>
+                                업데이트 : <span id='update-${pStatus.index}-${sStatus.index}'><c:out value="${sensor.recent_up_time}"/></span>
                                 <span id='unit-${pStatus.index}-${sStatus.index}'></span>
                             </div>
                             <table class="table table-bordered table-hover text-center mt-1">
@@ -181,6 +181,9 @@
                                 <fmt:parseNumber var="uptime_N" value="${uptime.time / (1000 * 60)}" integerOnly="true"/>
 
                                 <c:choose>
+                                    <c:when  test="${(now_N - uptime_N) lt 5}">
+                                        <tr class="bg-secondary text-light">
+                                    </c:when>
                                     <c:when  test="${sensor.recent_value gt sensor.legalStandard}">
                                         <tr class="bg-danger text-light">
                                     </c:when>
@@ -189,9 +192,6 @@
                                     </c:when>
                                     <c:when  test="${sensor.recent_value gt sensor.managementStandard}">
                                         <tr class="bg-success text-light">
-                                    </c:when>
-                                    <c:when  test="${now_N - uptime_N gt 5}">
-                                        <tr class="bg-secondary text-light">
                                     </c:when>
                                     <c:otherwise>
                                         <tr>
@@ -572,7 +572,7 @@
                     var standardExistStatus = data[z].standardExistStatus;
                     if(!standardExistStatus){
                         $('.'+i).append( //i:측정소idx z:센서idx
-                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span style='padding: 0' id=update-"+i+"-"+z+"></span>&nbsp;<span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
+                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 : <span style='padding: 0' id=update-"+i+"-"+z+"></span>&nbsp;<span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
                             "<table class='table table-bordered table-hover text-center mt-1'>" +
                             "<thead>" +
                             "<tr class='add-bg-color'>" +
@@ -592,7 +592,7 @@
                             "</div>");
                     }else{
                         $('.'+i).append(
-                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 :<span style='padding: 0' id=update-"+i+"-"+z+"></span>&nbsp;<span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
+                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 : <span style='padding: 0' id=update-"+i+"-"+z+"></span>&nbsp;<span style='padding: 0' id=unit-"+i+"-"+z+"></span></div>"+
                             "<table class='table table-bordered table-hover text-center mt-1'>" +
                             "<thead>" +
                             "<tr class='add-bg-color'>" +
