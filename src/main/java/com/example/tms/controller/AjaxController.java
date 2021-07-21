@@ -1789,8 +1789,14 @@ public class AjaxController {
         } else {
             //해당 그룹에 회원 추가
             MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(Integer.parseInt(group));
-            List<String> groupMember = monitoringGroup.getGroupMember();
-            groupMember.add(id);
+            List<String> groupMember;
+            if(monitoringGroup.getGroupMember() == null){
+                groupMember = new ArrayList<>();
+                groupMember.add(id);
+            }else {
+                groupMember = monitoringGroup.getGroupMember();
+                groupMember.add(id);
+            }
             monitoringGroup.setGroupMember(groupMember);
             monitoringGroupRepository.save(monitoringGroup);
 
