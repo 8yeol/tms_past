@@ -269,6 +269,24 @@ svg:hover {
 }
 
 /* 반응형 미디어쿼리 */
+@media all and (max-width: 1450px) and (min-width: 1400px) {
+    .tab {
+        width: 40px;
+        left:-50px;
+    }
+    .tab li {
+        width:40px;
+        height: 120px;
+    }
+    .tab li:nth-child(1) {
+        padding-top: 35px;
+        line-height: unset;
+    }
+    .tab li:nth-child(2) {
+        padding-top: 9px;
+    }
+}
+
 @media all and (max-width:989px) {
     .tab {
         left: unset;

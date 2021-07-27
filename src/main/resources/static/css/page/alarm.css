@@ -153,3 +153,16 @@ table thead {
         height: 800px;
     }
 }
+
+@media all and (max-width: 1450px) and (min-width: 1400px) {
+    .tab {
+        width: 40px;
+        left: -50px;
+    }
+
+    .tab li {
+        width: 40px;
+        height: 120px;
+        padding: 10px;
+    }
+}
