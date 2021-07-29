@@ -256,7 +256,7 @@
             <span class="text-primary" style="font-size: 0.9rem;">* 배출량 모니터링은 측정소에 <b>유량</b> 및 <b>질소산화물</b> 센서가 정상적으로 등록된 경우 이용 가능합니다.</span>
         </div>
 
-       <div class="col-xs-12 bg-light">
+       <div class="col-xs-12 bg-light" style="min-height: 400px;">
            <div class="pb-2 justify-content-between" style="display: flex">
                <h4 class="mt-2 fs-5 fw-bold" style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
            </div>
