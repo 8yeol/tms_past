@@ -116,7 +116,7 @@
     <div class="row" >
         <div class="col">
             <div class="row bg-white m-top" style="margin-left: 1px;">
-                <div class="row ms-2">
+                <div class="row" style="padding-left: 35px;">
                     <div class="col">
                         <table id="information" class="table table-striped table-bordered table-hover text-center" >
                             <thead class="add-bg-color">
