@@ -162,7 +162,7 @@
                             <span class="text-primary" style="font-size: 0.8rem; position: absolute; right: 15px;"> * 최근 1시간은 실시간, 최근 24시간은 5분평균 데이터로 실시간 업데이트됩니다.</span>
                         </div>
                         <div id="chart" style=" margin-right: 10px; margin-top: 20px;"></div>
-                        <div id="noData"><p style="text-align:center; padding-top:150px;"></p></div>
+                        <div id="noData" style="display: none"><p style="text-align:center; padding-top:150px;"></p></div>
                     </div>
                 </div>
                 <%-- 하단 테이블 --%>
@@ -215,9 +215,17 @@
             $("input:radio[name='chartRadio']:radio[value='off']").prop("checked", true);
 
         }
-
         const sensor_data_list = ${sensorData};
         const sensor_data = ${activeSensor};
+        if(sensor_data_list.length == 0){
+            $('#noData').css("height", "350px");
+            $('#noData').css("background-color", "#F2F2F3");
+            $('#noData p').text("최근 데이터가 없습니다.");
+            $('#noData').show();
+        }else{
+            $('#noData').css("height", "0px");
+            $('#noData').hide();
+        }
 
         draw_sensor_table(sensor_data_list, sensor_data);
         if (sensor_data_list.length == 0){
