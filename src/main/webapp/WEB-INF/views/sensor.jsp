@@ -113,6 +113,9 @@
                                         <c:if test="${sensorList.beforeValue < sensorList.value}">
                                             <i class="fas fa-sort-up fa-fw" style="color: red"></i><fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
                                         </c:if>
+                                        <c:if test="${sensorList.beforeValue == sensorList.value}">
+                                            <span style="font-weight: bold">- </span><fmt:formatNumber value="${sensorList.value}" pattern=".00"/>
+                                        </c:if>
                                     </c:if>
                                     <c:if test="${sensorList.value eq 0}">
                                         0.00
@@ -226,14 +229,14 @@
             $('#noData').css("height", "0px");
             $('#noData').hide();
         }
-
         draw_sensor_table(sensor_data_list, sensor_data);
-        if (sensor_data_list.length == 0){
-            getData2([]);
-            return;
-        }
         chart = new ApexCharts(document.querySelector("#chart"), setChartOption(JSON.parse(chartLabel))); //차트 틀 생성
         chart.render();
+        if (sensor_data_list.length == 0){
+            $('#chart').hide();
+            getData2(sensor_data);
+            return;
+        }
         updateChart(sensor_data_list, sensor_data);
         draw_frame();
     }); //ready
@@ -755,7 +758,9 @@
      *  차트 업데이트
      */
     function updateChart(sensor_data_list, sensor_data){
-        // chart.resetSeries();
+        if(sensor_data_list == null){
+            sensor_data_list = [];
+        }
         var arr =new Array();
         if(sensor_data_list.length != 0){
             for(var i in sensor_data_list){
@@ -774,6 +779,7 @@
         }else{
             sensor_data_list = [];
         }
+
         if(sensor_data.length != 0){
             managementStandard = sensor_data.managementStandard;
             companyStandard = sensor_data.companyStandard;
