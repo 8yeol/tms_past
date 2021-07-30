@@ -20,12 +20,10 @@ import java.io.IOException;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     final RankManagementRepository rank_managementRepository;
-    final PersistentTokenRepository repository;
     final MemberService memberService;
 
-    public SecurityConfig(RankManagementRepository rank_managementRepository, PersistentTokenRepository repository, MemberService memberService) {
+    public SecurityConfig(RankManagementRepository rank_managementRepository, MemberService memberService) {
         this.rank_managementRepository = rank_managementRepository;
-        this.repository = repository;
         this.memberService = memberService;
     }
 
@@ -47,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/dataInquiry","/dataStatistics").access("@authChecker.check(authentication , 'statistics')")
                 .antMatchers("/alarmManagement","/stationManagement","/sensorManagement","/emissionsManagement","/setting","/log").access("@authChecker.check(authentication , 'setting')");
         http.formLogin().loginPage("/login").permitAll();
-        http.logout().logoutSuccessUrl("/login");
+        http.logout().logoutSuccessUrl("/login").deleteCookies("JSESSIONID");
         http.csrf().disable();
         http.httpBasic();
         http.exceptionHandling().accessDeniedPage("/accessDenied");
@@ -59,10 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         });
 
         http.rememberMe()
-                .key("jpa")
+                .key("1")
                 .userDetailsService(memberService)
-                .tokenRepository(repository)
-                .tokenValiditySeconds(60*60*24*30);
+                .tokenValiditySeconds(60*60*24*365);
     }
 
     @Override
