@@ -86,6 +86,7 @@ table thead {
 .tab li {
     width: 100px;
     height: 80px;
+    line-height: 50px;
     background-color: #ccc;
     color: #999;
     text-align: center;
@@ -121,6 +122,7 @@ table thead {
     .tab li {
         width: 100px;
         height: 70px;
+        line-height: 40px;
         background-color: #ccc;
         color: #999;
         text-align: center;
@@ -164,5 +166,6 @@ table thead {
         width: 40px;
         height: 120px;
         padding: 10px;
+        line-height: unset;
     }
 }

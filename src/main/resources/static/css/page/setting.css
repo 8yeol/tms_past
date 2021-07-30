@@ -11,6 +11,10 @@ label {
 }
 
 /* 데이터테이블 */
+td {
+    line-height: 30px;
+}
+
 .toolbar > b {
     font-size: 1.25rem;
 }
