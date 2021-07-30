@@ -375,8 +375,8 @@
         }else{ //최근 24시간 선택 시
             sensor_time_length = 24;
             //$('#textUpdate').text("* 최근 24시간(실시간 업데이트) - 5분 평균데이터");
-            sensor_naming = $('#radio_text').text();
         }
+        sensor_naming = $('#radio_text').text();
         setCookie("sensor_time_length", sensor_time_length, 999);
         var temp = $("#place-tbody-table > tr > td:contains('" + sensor_naming + "')");
         if(temp.length != 0){
