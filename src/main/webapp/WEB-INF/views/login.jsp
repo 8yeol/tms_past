@@ -36,16 +36,26 @@
     #loginBtn{
         width:300px;
     }
+    .remember {
+        display: flex;
+        margin-left: 50px;
+    }
+    .remember label {
+        padding-left: 10px;
+    }
 
     @media all and  (max-width:1024px) {
         #div1{width: 100%;height: 100%;overflow: auto;}
         .emoji{width: 90%;margin: 100px auto;}
-        #id{width: 80%;height: 150px; margin: 0 auto 45px;font-size: 3rem;}
-        #password{width: 80%;height: 150px;;margin: 0 auto 45px;font-size: 3rem;}
+        #id{width: 80%;height: 150px; margin: 20px auto 100px;font-size: 3rem;}
+        #password{width: 80%;height: 150px;;margin: 20px auto 100px;font-size: 3rem;}
         #loginBtn{width: 80%;height: 130px;}
         #join{font-size: 3rem;margin-bottom: 100px;}
         #btnFont{font-size: 3rem;}
-        #btnDiv{margin-top: 35%;margin-bottom: 50px;}
+        #btnDiv{margin-top: 25%;margin-bottom: 50px;}
+        .remember {margin-left: 100px;}
+        .remember input {width: 3rem; height: 3rem; margin-top: 8px;}
+        .remember label {font-size: 2.6rem; padding-left: 15px;}
 
         .swal2-popup{width: 48rem;}
         #swal2-content{font-size: 2rem;}
@@ -68,12 +78,12 @@
                         <div class="">
                             <input class="form-control" type='password' name='password' value='' id="password" placeholder="비밀번호" onkeyup="enterkey()">
                         </div>
-                        <div class="form-group form-check">
-                            <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me" checked style="margin-left: 100px;">
-                            <label class="form-check-label" for="rememberMe" aria-describedby="rememberMeHelp">로그인 유지</label>
+                        <div class="form-group form-check remember">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me" checked>
+                            <label class="form-check-label" for="rememberMe" aria-describedby="rememberMeHelp">자동 로그인</label>
                         </div>
                         <div id="btnDiv">
-                            <button type="button" class="btn btn-primary mt-5 fs-4 px-5" onclick="login()" id="loginBtn" ><font id="btnFont">로그인</font></button>
+                            <button type="button" class="btn btn-primary fs-4 px-5" onclick="login()" id="loginBtn" style="margin-top: 2rem;"><font id="btnFont">로그인</font></button>
                         </div>
                         <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
                     </form>
