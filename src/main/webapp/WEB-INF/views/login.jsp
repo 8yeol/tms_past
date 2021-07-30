@@ -68,6 +68,10 @@
                         <div class="">
                             <input class="form-control" type='password' name='password' value='' id="password" placeholder="비밀번호" onkeyup="enterkey()">
                         </div>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe" name="remember-me" checked style="margin-left: 100px;">
+                            <label class="form-check-label" for="rememberMe" aria-describedby="rememberMeHelp">로그인 유지</label>
+                        </div>
                         <div id="btnDiv">
                             <button type="button" class="btn btn-primary mt-5 fs-4 px-5" onclick="login()" id="loginBtn" ><font id="btnFont">로그인</font></button>
                         </div>

@@ -1,5 +1,6 @@
 package com.example.tms.config;
 import com.example.tms.repository.RankManagementRepository;
+import com.example.tms.service.MemberService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -7,6 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,9 +20,13 @@ import java.io.IOException;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     final RankManagementRepository rank_managementRepository;
+    final PersistentTokenRepository repository;
+    final MemberService memberService;
 
-    public SecurityConfig(RankManagementRepository rank_managementRepository) {
+    public SecurityConfig(RankManagementRepository rank_managementRepository, PersistentTokenRepository repository, MemberService memberService) {
         this.rank_managementRepository = rank_managementRepository;
+        this.repository = repository;
+        this.memberService = memberService;
     }
 
     /**
@@ -51,6 +57,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 httpServletResponse.sendRedirect("/lghausys/logout");
             }
         });
+
+        http.rememberMe()
+                .key("jpa")
+                .userDetailsService(memberService)
+                .tokenRepository(repository)
+                .tokenValiditySeconds(60*60*24*30);
     }
 
     @Override
