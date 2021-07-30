@@ -472,8 +472,8 @@
         var sensorDataLength = sensorDataList.length;
         var realTime = {};
         if(sensorDataList.length == 0){
-            if($('#chart-'+chartIndex)[0].innerHTML.length ==0){
-                $('#chart-'+chartIndex).append("<p style='height: 50px; text-align:center; padding-top:12px; background-color: #e6e6e7'>최근 10분 데이터가 없습니다.</p>")
+            if($('#chart-'+chartIndex)[0].innerHTML.length == 0){
+                $('#chart-'+chartIndex).append("<p style='height: 200px; text-align:center; padding-top:80px; background-color: #e6e6e7'>최근 10분 데이터가 없습니다.</p>")
             }else{
                 $('#chart-'+chartIndex).find('p').remove();
             }
