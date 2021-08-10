@@ -226,4 +226,30 @@ public class MongoQuary {
         return result;
     }
 
+    public Object getCumulativeEmissionsAtTime(String table , LocalDate day, String time) {
+
+        ProjectionOperation dateProjection = Aggregation.project()
+                .and("up_time").as("x")
+                .and("value").as("y");
+
+        MatchOperation where = Aggregation.match(
+                new Criteria().andOperator(
+                        Criteria.where("x")
+                                .gte(LocalDateTime.parse(day + "T" + time + ":00:00"))
+                                .lte(LocalDateTime.parse(day + "T" + time + ":59:59"))
+                )
+        );
+
+        Aggregation agg = Aggregation.newAggregation(
+                dateProjection,
+                where
+        );
+
+        AggregationResults<ChartData> results = mongoTemplate.aggregate(agg, table, ChartData.class);
+
+        List<ChartData> result = results.getMappedResults();
+
+        return result;
+    }
+
 }

@@ -13,7 +13,10 @@ import com.example.tms.repository.SensorListRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -148,41 +151,130 @@ public class Schedule {
                 LocalDate yesterday = nowDate.minusDays(1);
 
                 // 질소산화물 전일 배출량
-                double emissions = getNOXYesterdayEmissions(yesterday, halfPast + noxTable, halfPast + fl1Table);
-
+                int emissions = getNOXYesterdayEmissions(yesterday, halfPast + noxTable, halfPast + fl1Table);
                 // [분석 및 통계 - 통계자료 조회] 월별 배출량 추이
                 setMonthlyEmissions(yesterday, noxTable, emissions);
             }
         }
     }
 
-    // nox 전일 배출량 계산 (계산식 확인 필요)
-    public double getNOXYesterdayEmissions(LocalDate yesterday, String nox, String fl1){
+    // nox 전일 배출량 계산
+    public int getNOXYesterdayEmissions(LocalDate yesterday, String nox, String fl1){
         List<ChartData> noxData = (List<ChartData>) mongoQuary.getCumulativeEmissions(nox, yesterday);
         List<ChartData> fl1Data = (List<ChartData>) mongoQuary.getCumulativeEmissions(fl1, yesterday);
-        double emissions = 0;
+        int emissions = 0;
 
-        // 데이터가 올바르게 들어오는지 체크하기 위한 로직 (정밀 계산시 BigDecimal 사용, 현재 일반 사칙연산으로도 연산 처리 문제 없음)
-        if(noxData.size()==48 && fl1Data.size()==48){
-            for(int i = 0 ; i < noxData.size(); i++){
-                // 마지막 /1000은 kg 으로 한산해주기 위함 (기존단위 g)
-                emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4 / 1000;
-            /*
-            BigDecimal noxValue = new BigDecimal(noxData.get(i).getY());
-            BigDecimal fl1Value = new BigDecimal(fl1Data.get(i).getY());
-            BigDecimal test = noxValue.multiply(fl1Value).divide(new BigDecimal(1000)).multiply(new BigDecimal(46));
-            BigDecimal test2 = test.divide(new BigDecimal(22.4), 2, BigDecimal.ROUND_CEILING);
-            */
+        // 데이터가 올바르게 들어오는지 체크하기 위한 로직
+        if(noxData.size()!=0 && fl1Data.size()!=0){
+            //전체 데이터 들어왔을때(정상로직)
+            if(noxData.size()==47 && fl1Data.size()==47){
+                for(int i=0 ; i < noxData.size(); i++){
+                    emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4;
+                }
+            }else{
+                List<Float> noxDataCalibration = dataCalibration(nox, yesterday);
+                List<Float> fl1DataCalibration = dataCalibration(fl1, yesterday);
+                for(int i=0 ; i < noxDataCalibration.size(); i++){
+                    emissions += noxDataCalibration.get(i) * fl1DataCalibration.get(i) / 1000 * 46 / 22.4;
+                }
             }
-        }else{
-
         }
 
         return emissions;
     }
 
+    public List<Float> dataCalibration(String collection, LocalDate localDate){
+        // 시간마다 돌려서 해당 시간에 데이터가 2개미만이면 누락으로 판단 (예외처리)
+        List<Float> calibrationData = new ArrayList<>();
+
+        for (int i=0; i<24; i++){
+            String time = String.format(String.format("%02d",i));
+            List<ChartData> noxDataAtTime = (List<ChartData>) mongoQuary.getCumulativeEmissionsAtTime(collection, localDate, time);
+
+            if(noxDataAtTime.size()!=2){
+                if(i==23 && noxDataAtTime.size()==1){
+                    calibrationData.add(noxDataAtTime.get(0).getY());
+                }else{
+                    int noxDataAtTimeSize = noxDataAtTime.size();
+                    if(noxDataAtTimeSize!=0){
+                        LocalDateTime getTime = Instant.ofEpochMilli(noxDataAtTime.get(0).getX().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                        LocalDateTime halfPast = LocalDateTime.of(localDate.getYear(), localDate.getMonth(), localDate.getDayOfMonth(), Integer.parseInt(time), 30);
+
+                        if(halfPast.isAfter(getTime)){
+                            // 30분 이전
+                            calibrationData.add(noxDataAtTime.get(0).getY());
+                            calibrationData.add(calibrationData.get(calibrationData.size()-1));
+                        }else{
+                            // 30분 이후
+                            // 00시 30분부터 데이터가 들어온 경우 예외처리 완료
+                            int minus = 1;
+                            if(i==0){
+                                List<ChartData> yesterdayLastData = (List<ChartData>) mongoQuary.getCumulativeEmissions(collection, localDate.minusDays(minus));
+
+                                if(yesterdayLastData.size()!=0){
+                                    calibrationData.add(yesterdayLastData.get(0).getY());
+                                }else{
+                                    // 최근 7일간 마지막데이터 조회하고 최근 7일 사이에 업데이트 된 데이터가없으면 0으로 처리
+                                    while (minus < 7){
+                                        yesterdayLastData = (List<ChartData>) mongoQuary.getCumulativeEmissions(collection, localDate.minusDays(minus));
+                                        minus++;
+
+                                        if(yesterdayLastData.size()!=0){
+                                            calibrationData.add(yesterdayLastData.get(0).getY());
+                                            break;
+                                        }
+
+                                        if(minus==7 && yesterdayLastData.size()==0){
+                                            calibrationData.add(0f);
+                                        }
+                                    }
+                                }
+                            }else{
+                                calibrationData.add(calibrationData.get(calibrationData.size()-1));
+                            }
+                            calibrationData.add(noxDataAtTime.get(0).getY());
+                        }
+                    }else{
+                        // 해당 시간에 데이터가 없는 경우
+                        if(i==0){
+                            // 데이터 개수가 0이고 00시 인경우, 전일 데이터 불러오기
+                            int minus = 1;
+
+                            while (minus < 7){
+                                List<ChartData> yesterdayLastData = (List<ChartData>) mongoQuary.getCumulativeEmissions(collection, localDate.minusDays(minus));
+                                minus++;
+
+                                if(yesterdayLastData.size()!=0){
+                                    calibrationData.add(yesterdayLastData.get(0).getY());
+                                    calibrationData.add(yesterdayLastData.get(0).getY());
+                                    break;
+                                }
+
+                                if(minus==7 && yesterdayLastData.size()==0){
+                                    calibrationData.add(0f);
+                                    calibrationData.add(0f);
+                                }
+                            }
+                        }else{
+                            if(i!=23){
+                                calibrationData.add(calibrationData.get(calibrationData.size()-1));
+                            }
+                            calibrationData.add(calibrationData.get(calibrationData.size()-1));
+                        }
+                    }
+                }
+            }else{
+                for(int j=0; j<noxDataAtTime.size(); j++){
+                    calibrationData.add(noxDataAtTime.get(j).getY());
+                }
+            }
+        }
+
+        return calibrationData;
+    }
+
     // [분석 및 통계 - 통계자료 조회] 월별 배출량 추이
-    public void setMonthlyEmissions(LocalDate yesterday, String table, double emissions){
+    public void setMonthlyEmissions(LocalDate yesterday, String table, int emissions){
         int year = yesterday.getYear();
 
         MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
@@ -194,42 +286,45 @@ public class Schedule {
             monthlyEmissions.setYear(year);
         }
 
+        // g > kg 환산
+        emissions = emissions / 1000;
+
         switch(yesterday.getMonthValue()) {
             case 1:
-                monthlyEmissions.setJan((monthlyEmissions.getJan() == null ? 0 : monthlyEmissions.getJan()) + emissions);
+                monthlyEmissions.setJan(monthlyEmissions.getJan() + emissions);
                 break;
             case 2:
-                monthlyEmissions.setFeb((monthlyEmissions.getFeb() == null ? 0 : monthlyEmissions.getFeb()) + emissions);
+                monthlyEmissions.setFeb(monthlyEmissions.getFeb() + emissions);
                 break;
             case 3:
-                monthlyEmissions.setMar((monthlyEmissions.getMar() == null ? 0 : monthlyEmissions.getMar()) + emissions);
+                monthlyEmissions.setMar(monthlyEmissions.getMar() + emissions);
                 break;
             case 4:
-                monthlyEmissions.setApr((monthlyEmissions.getApr() == null ? 0 : monthlyEmissions.getApr()) + emissions);
+                monthlyEmissions.setApr(monthlyEmissions.getApr() + emissions);
                 break;
             case 5:
-                monthlyEmissions.setMay((monthlyEmissions.getMay() == null ? 0 : monthlyEmissions.getMay()) + emissions);
+                monthlyEmissions.setMay(monthlyEmissions.getMay() + emissions);
                 break;
             case 6:
-                monthlyEmissions.setJun((monthlyEmissions.getJun() == null ? 0 : monthlyEmissions.getJun()) + emissions);
+                monthlyEmissions.setJun(monthlyEmissions.getJun() + emissions);
                 break;
             case 7:
-                monthlyEmissions.setJul((monthlyEmissions.getJul() == null ? 0 : monthlyEmissions.getJul()) + emissions);
+                monthlyEmissions.setJul(monthlyEmissions.getJul() + emissions);
                 break;
             case 8:
-                monthlyEmissions.setAug((monthlyEmissions.getAug() == null ? 0 : monthlyEmissions.getAug()) + emissions);
+                monthlyEmissions.setAug(monthlyEmissions.getAug() + emissions);
                 break;
             case 9:
-                monthlyEmissions.setSep((monthlyEmissions.getSep() == null ? 0 : monthlyEmissions.getSep()) + emissions);
+                monthlyEmissions.setSep(monthlyEmissions.getSep() + emissions);
                 break;
             case 10:
-                monthlyEmissions.setOct((monthlyEmissions.getOct() == null ? 0 : monthlyEmissions.getOct()) + emissions);
+                monthlyEmissions.setOct(monthlyEmissions.getOct() + emissions);
                 break;
             case 11:
-                monthlyEmissions.setNov((monthlyEmissions.getNov() == null ? 0 : monthlyEmissions.getNov()) + emissions);
+                monthlyEmissions.setNov(monthlyEmissions.getNov() + emissions);
                 break;
             case 12:
-                monthlyEmissions.setDec((monthlyEmissions.getDec() == null ? 0 : monthlyEmissions.getDec()) + emissions);
+                monthlyEmissions.setDec( monthlyEmissions.getDec() + emissions);
                 break;
         }
 
@@ -257,10 +352,10 @@ public class Schedule {
             annualEmissions.setYearlyValue(0);
         }else{
             MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
-            double total = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar() + monthlyEmissions.getApr() + monthlyEmissions.getMay()
+            int total = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar() + monthlyEmissions.getApr() + monthlyEmissions.getMay()
                     + monthlyEmissions.getJun() + monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep() + monthlyEmissions.getOct()
                     + monthlyEmissions.getNov() + monthlyEmissions.getDec();
-            annualEmissions.setYearlyValue((int) total);
+            annualEmissions.setYearlyValue(total);
         }
         annualEmissions.setUpdateTime(new Date());
         annualEmissionsRepository.save(annualEmissions);
@@ -269,55 +364,57 @@ public class Schedule {
     // 연간 배출량 추이 모니터링
     public void setEmissionsTransition(LocalDate yesterday, String table){
         int year = yesterday.getYear();
-        EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(table, year);
 
-        if(emissionsTransition==null){
-            SensorList sensorList = sensorListRepository.findByTableName(table);
+        for(int i=0; i<=1; i++){
+            EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(table, year-i);
+            if(emissionsTransition==null){
+                SensorList sensorList = sensorListRepository.findByTableName(table);
 
-            EmissionsTransition newEmissionsTransition = new EmissionsTransition();
-            newEmissionsTransition.setTableName(table);
-            newEmissionsTransition.setPlaceName(sensorList.getPlace());
-            newEmissionsTransition.setSensorName(sensorList.getNaming());
-            newEmissionsTransition.setYear(year);
-            newEmissionsTransition.setFirstQuarter(0);
-            newEmissionsTransition.setSecondQuarter(0);
-            newEmissionsTransition.setThirdQuarter(0);
-            newEmissionsTransition.setFourthQuarter(0);
-            newEmissionsTransition.setTotalEmissions(0);
+                EmissionsTransition newEmissionsTransition = new EmissionsTransition();
+                newEmissionsTransition.setTableName(table);
+                newEmissionsTransition.setPlaceName(sensorList.getPlace());
+                newEmissionsTransition.setSensorName(sensorList.getNaming());
+                newEmissionsTransition.setYear(year-i);
+                newEmissionsTransition.setFirstQuarter(0);
+                newEmissionsTransition.setSecondQuarter(0);
+                newEmissionsTransition.setThirdQuarter(0);
+                newEmissionsTransition.setFourthQuarter(0);
+                newEmissionsTransition.setTotalEmissions(0);
 
-            emissionsTransitionRepository.save(newEmissionsTransition);
-
-            emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(table, year);
+                emissionsTransitionRepository.save(newEmissionsTransition);
+            }
         }
+
+        EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(table, year);
 
         int quarter = (int) Math.ceil( yesterday.getMonthValue() / 3.0 );
 
         MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
-        double emissions = 0;
+        int emissions = 0;
         switch(quarter) {
             case 1:
-                double firstQuarter = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar();
-                emissionsTransition.setFirstQuarter((int) firstQuarter);
+                int firstQuarter = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar();
+                emissionsTransition.setFirstQuarter(firstQuarter);
                 emissions = firstQuarter;
                 break;
             case 2:
-                double secondQuarter = monthlyEmissions.getApr() + monthlyEmissions.getMay() + monthlyEmissions.getJun();
-                emissionsTransition.setSecondQuarter((int) secondQuarter);
+                int secondQuarter = monthlyEmissions.getApr() + monthlyEmissions.getMay() + monthlyEmissions.getJun();
+                emissionsTransition.setSecondQuarter(secondQuarter);
                 emissions = secondQuarter;
                 break;
             case 3:
-                double thirdQuarter = monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep();
-                emissionsTransition.setThirdQuarter((int) thirdQuarter);
+                int thirdQuarter = monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep();
+                emissionsTransition.setThirdQuarter(thirdQuarter);
                 emissions = thirdQuarter;
                 break;
             case 4:
-                double fourthQuarter = monthlyEmissions.getOct() + monthlyEmissions.getNov() + monthlyEmissions.getDec();
-                emissionsTransition.setFourthQuarter((int) fourthQuarter);
+                int fourthQuarter = monthlyEmissions.getOct() + monthlyEmissions.getNov() + monthlyEmissions.getDec();
+                emissionsTransition.setFourthQuarter(fourthQuarter);
                 emissions = fourthQuarter;
                 break;
         }
 
-        int totalEmissions = emissionsTransition.getTotalEmissions() + (int) emissions;
+        int totalEmissions = emissionsTransition.getTotalEmissions() + emissions;
 
         emissionsTransition.setTotalEmissions(totalEmissions);
         emissionsTransition.setUpdateTime(new Date());
