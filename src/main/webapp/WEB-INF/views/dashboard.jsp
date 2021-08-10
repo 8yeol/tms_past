@@ -111,7 +111,7 @@
                             <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(%)</h5>
-                                    <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
+                                    <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
                                             <c:choose>
@@ -155,7 +155,7 @@
                             <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(kg)</h5>
-                                    <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
+                                    <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
                                             <c:set var="totalNum" value="${present.totalEmissions - past.totalEmissions}"></c:set>
@@ -196,7 +196,7 @@
                             <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(%)</h5>
-                                    <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
+                                    <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
                                             <c:choose>
@@ -242,7 +242,7 @@
                             <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(kg)</h5>
-                                    <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
+                                    <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
                                             <c:set var="quaterNum" value="${presentQuater - pastQuater}"></c:set>

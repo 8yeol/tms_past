@@ -60,6 +60,18 @@
     cursor: pointer;
 }
 
+@media all and (max-width: 1199px) and (min-width: 1025px) {
+    .center-position {left: 18%;}
+    .m-fs {font-size: 0.7rem !important;}
+    .card-title {font-size:0.7rem !important;}
+    .m-fs>div:nth-child(2)>p:nth-child(2) {font-size: 1.2rem;}
+
+    h5 {font-size: 0.75rem;}
+
+    .re-pa {padding: .5rem .5rem 0 !important;}
+    .card-body {padding: .5rem .5rem !important;}
+}
+
 @media all and (max-width: 1399px) and (min-width: 1200px) {
     .center-position {left: 20%;}
 }
