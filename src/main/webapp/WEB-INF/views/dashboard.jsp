@@ -65,7 +65,7 @@
                 </c:choose>
                 </div>
             </c:when>
-            <c:when test="${fn:length(emissionList) > 0}">
+            <c:when test="${fn:length(emissionList.get(0)) eq 0}">
                 <div class="row pb-3 margin-l" style="height: 230px">
                     <div class="col align-self-center text-center" style="font-size: 1.2rem">
                         업데이트 된 데이터가 없습니다. <br>
@@ -121,7 +121,16 @@
                                                 </c:when>
                                                 <c:when test="${past.totalEmissions == present.totalEmissions }">0%</c:when>
                                                 <c:otherwise>
-                                                    <fmt:formatNumber value="${(present.totalEmissions - past.totalEmissions) / past.totalEmissions * 100}" pattern=".00"/>%
+                                                    <c:set var="totalPercent" value="${(present.totalEmissions - past.totalEmissions) / past.totalEmissions * 100}"></c:set>
+                                                    <fmt:formatNumber value="${totalPercent}" pattern=".0"/>%
+                                                    <c:choose>
+                                                        <c:when test="${totalPercent > 0}">
+                                                            <span style="font-size: 0.8rem" class="text-danger">증가</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span style="font-size: 0.8rem" class="text-primary">감소</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </c:otherwise>
                                             </c:choose>
                                         </p>
@@ -144,16 +153,25 @@
                         <div class="col-3">
                             <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
-                                    <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(mg/L)</h5>
+                                    <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(kg)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
+                                            <c:set var="totalNum" value="${present.totalEmissions - past.totalEmissions}"></c:set>
                                             <c:choose>
-                                                <c:when test="${present.totalEmissions - past.totalEmissions == 0}">
+                                                <c:when test="${totalNum == 0}">
                                                    0
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <fmt:formatNumber value="${present.totalEmissions - past.totalEmissions}" pattern=",000"/>
+                                                    <fmt:formatNumber value="${totalNum}" pattern=",000"/>
+                                                    <c:choose>
+                                                        <c:when test="${totalNum > 0}">
+                                                            <span style="font-size: 0.8rem" class="text-danger">증가</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span style="font-size: 0.8rem" class="text-primary">감소</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </c:otherwise>
                                             </c:choose>
                                         </p>
@@ -187,7 +205,17 @@
                                                 </c:when>
                                                 <c:when test="${pastQuater == presentQuater }">0%</c:when>
                                                 <c:otherwise>
-                                                    <fmt:formatNumber value="${(presentQuater - pastQuater) / pastQuater * 100}" pattern=".00"/>%
+                                                    <c:set var="quaterPercent" value="${(presentQuater - pastQuater) / pastQuater * 100}"></c:set>
+                                                    <fmt:formatNumber value="${quaterPercent}" pattern=".0"/>%
+
+                                                    <c:choose>
+                                                        <c:when test="${quaterPercent > 0}">
+                                                            <span style="font-size: 0.8rem" class="text-danger">증가</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span style="font-size: 0.8rem" class="text-primary">감소</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </c:otherwise>
 
                                             </c:choose>
@@ -211,16 +239,25 @@
                         <div class="col-3">
                             <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
-                                    <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(mg/L)</h5>
+                                    <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(kg)</h5>
                                     <div class="d-flex justify-content-center" style="padding: 1rem 1rem 0;">
                                         <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년대비</p>
                                         <p class="fw-bold fs-3">
+                                            <c:set var="quaterNum" value="${presentQuater - pastQuater}"></c:set>
                                             <c:choose>
-                                                <c:when test="${presentQuater - pastQuater == 0}">
+                                                <c:when test="${quaterNum == 0}">
                                                     0
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <fmt:formatNumber value="${presentQuater - pastQuaters}" pattern=",000"/>
+                                                    <fmt:formatNumber value="${quaterNum}" pattern=",000"/>
+                                                    <c:choose>
+                                                        <c:when test="${quaterNum > 0}">
+                                                            <span style="font-size: 0.8rem" class="text-danger">증가</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span style="font-size: 0.8rem" class="text-primary">감소</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </c:otherwise>
                                             </c:choose>
                                         </p>

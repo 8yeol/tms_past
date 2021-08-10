@@ -159,6 +159,9 @@ public class MainController {
                 EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(emissionsSettings.get(i).getSensor(),year-j);
                 emissionsSettingList.add(emissionsTransition);
             }
+            if(emissionsSettingList.get(0)==null&&emissionsSettingList.get(1)==null){
+                emissionsSettingList = new ArrayList<>();
+            }
             emissionList.add((ArrayList<EmissionsTransition>) emissionsSettingList);
         }
         model.addAttribute("emissionList", emissionList);
