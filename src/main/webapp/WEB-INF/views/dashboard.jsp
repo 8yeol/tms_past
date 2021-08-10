@@ -118,6 +118,7 @@
                                                 <c:when test="${past.totalEmissions == 0 and present.totalEmissions == 0}">0%</c:when>
                                                 <c:when test="${past.totalEmissions == 0}">
                                                     <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/>%
+                                                    <span style="font-size: 0.8rem" class="text-danger">증가</span>
                                                 </c:when>
                                                 <c:when test="${past.totalEmissions == present.totalEmissions }">0%</c:when>
                                                 <c:otherwise>
@@ -202,6 +203,7 @@
                                                 <c:when test="${pastQuater == 0 and presentQuater == 0}">0</c:when>
                                                 <c:when test="${pastQuater == 0}">
                                                     <fmt:formatNumber value="${presentQuater}" pattern=",000"/>%
+                                                    <span style="font-size: 0.8rem" class="text-danger">증가</span>
                                                 </c:when>
                                                 <c:when test="${pastQuater == presentQuater }">0%</c:when>
                                                 <c:otherwise>
