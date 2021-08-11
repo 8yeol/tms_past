@@ -112,7 +112,7 @@
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(%)</h5>
                                     <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
-                                        <span class="fw-bold me-3" style="margin-top: 0.8rem;">전년<p claas="m-d" style="display: inline-block;">대비</p></span>
+                                        <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년<span class="md">대비</span></p>
                                         <p class="fw-bold fs-3">
                                             <c:choose>
                                                 <c:when test="${past.totalEmissions == 0 and present.totalEmissions == 0}">0%</c:when>
@@ -158,7 +158,7 @@
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">연간 대기 배출량 추이(kg)</h5>
                                     <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
-                                        <span class="fw-bold me-3" style="margin-top: 0.8rem;">전년<p claas="m-d" style="display: inline-block;">대비</p></span>
+                                        <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년<span class="md">대비</span></p>
                                         <p class="fw-bold fs-3">
                                             <c:set var="totalNum" value="${present.totalEmissions - past.totalEmissions}"></c:set>
                                             <c:choose>
@@ -201,7 +201,7 @@
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(%)</h5>
                                     <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
-                                        <span class="fw-bold me-3" style="margin-top: 0.8rem;">전년<p claas="m-d" style="display: inline-block;">대비</p></span>
+                                        <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년<span class="md">대비</span></p>
                                         <p class="fw-bold fs-3">
                                             <c:choose>
                                                 <c:when test="${pastQuater == 0 and presentQuater == 0}">0</c:when>
@@ -247,7 +247,7 @@
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">분기별 대기 배출량 추이(kg)</h5>
                                     <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
-                                        <span class="fw-bold me-3" style="margin-top: 0.8rem;">전년<p claas="m-d" style="display: inline-block;">대비</p></span>
+                                        <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년<span class="md">대비</span></p>
                                         <p class="fw-bold fs-3">
                                             <c:set var="quaterNum" value="${presentQuater - pastQuater}"></c:set>
                                             <c:choose>
