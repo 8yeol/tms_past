@@ -74,8 +74,21 @@
     .year {display: block !important; margin-bottom: 0;}
 }
 
+@media all and (max-width: 1024px) and (min-width: 990px) {
+    .re-pa {padding: .5rem .5rem 0 !important;}
+    .card-body {padding: .5rem .5rem !important;}
+    .m-fs {font-size: 0.7rem !important;}
+    .card-title {font-size:0.7rem !important;}
+    .m-fs>div:nth-child(2)>p:nth-child(2) {font-size: 1.2rem;}
+    .year {display: block !important; margin-bottom: 0;}
+}
+
 @media all and (max-width: 1399px) and (min-width: 1200px) {
     .center-position {left: 20%;}
+    .year {display: block !important; margin-bottom: 0;}
+
+    .re-pa {padding: .5rem .5rem 0 !important;}
+    .card-body {padding: .5rem .5rem !important;}
 }
 
 @media all and (max-width: 1199px) and (min-width: 990px) {
