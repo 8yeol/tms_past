@@ -390,31 +390,31 @@ public class Schedule {
         int quarter = (int) Math.ceil( yesterday.getMonthValue() / 3.0 );
 
         MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
-        int emissions = 0;
+        int totalEmissions;
+
         switch(quarter) {
             case 1:
                 int firstQuarter = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar();
                 emissionsTransition.setFirstQuarter(firstQuarter);
-                emissions = firstQuarter;
                 break;
             case 2:
                 int secondQuarter = monthlyEmissions.getApr() + monthlyEmissions.getMay() + monthlyEmissions.getJun();
                 emissionsTransition.setSecondQuarter(secondQuarter);
-                emissions = secondQuarter;
                 break;
             case 3:
                 int thirdQuarter = monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep();
                 emissionsTransition.setThirdQuarter(thirdQuarter);
-                emissions = thirdQuarter;
                 break;
             case 4:
                 int fourthQuarter = monthlyEmissions.getOct() + monthlyEmissions.getNov() + monthlyEmissions.getDec();
                 emissionsTransition.setFourthQuarter(fourthQuarter);
-                emissions = fourthQuarter;
                 break;
         }
 
-        int totalEmissions = emissionsTransition.getTotalEmissions() + emissions;
+        totalEmissions = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar()
+                + monthlyEmissions.getApr() + monthlyEmissions.getMay() + monthlyEmissions.getJun()
+                + monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep()
+                + monthlyEmissions.getOct() + monthlyEmissions.getNov() + monthlyEmissions.getDec();
 
         emissionsTransition.setTotalEmissions(totalEmissions);
         emissionsTransition.setUpdateTime(new Date());
