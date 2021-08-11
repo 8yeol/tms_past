@@ -138,14 +138,16 @@
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
-                                        <div class="fw-bold">
+                                        <div class="fw-bold text-center">
                                             <p class="m-0 text-center text-primary">
-                                                <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/></p>${present.year}년 현재 배출량
+                                                <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/></p>
+                                            <p class="year" style="display: inline-block;">${present.year}년</p> 현재 배출량
                                         </div>
                                         <p class="fs-3" style="margin: 0 0.5rem 0;">/</p>
-                                        <div class="fw-bold">
+                                        <div class="fw-bold text-center">
                                             <p class="m-0 text-center">
-                                                <fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/></p>${past.year}년 총 배출량
+                                                <fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/></p>
+                                            <p class="year" style="display: inline-block;">${past.year}년</p> 총 배출량
                                         </div>
                                     </div>
                                 </div>
@@ -179,14 +181,16 @@
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
-                                        <div class="fw-bold">
+                                        <div class="fw-bold text-center">
                                             <p class="m-0 text-center text-primary">
-                                                <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/></p>${present.year}년 현재 배출량
+                                                <fmt:formatNumber value="${present.totalEmissions}" pattern=",000"/></p>
+                                            <p class="year" style="display: inline-block;">${present.year}년</p> 현재 배출량
                                         </div>
                                         <p class="fs-3 mx-2">/</p>
-                                        <div class="fw-bold">
+                                        <div class="fw-bold text-center">
                                             <p class="m-0 text-center">
-                                                <fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/></p>${past.year}년 총 배출량
+                                                <fmt:formatNumber value="${past.totalEmissions}" pattern=",000"/></p>
+                                            <p class="year" style="display: inline-block;">${past.year}년</p> 총 배출량
                                         </div>
                                     </div>
                                 </div>
@@ -225,14 +229,14 @@
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
-                                        <div class="fw-bold">
+                                        <div class="fw-bold text-center">
                                             <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>
-                                                ${present.year}년 ${quarter}분기
+                                            <p class="year" style="display: inline-block;">${present.year}년</p> ${quarter}분기
                                         </div>
                                         <p class="fs-3 mx-2">/</p>
-                                        <div class="fw-bold">
+                                        <div class="fw-bold text-center">
                                             <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>
-                                                ${past.year}년 ${quarter}분기
+                                            <p class="year" style="display: inline-block;">${past.year}년</p> ${quarter}분기
                                         </div>
                                     </div>
                                 </div>
@@ -266,12 +270,14 @@
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
-                                        <div class="fw-bold">
-                                            <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>${present.year}년 ${quarter}분기
+                                        <div class="fw-bold text-center">
+                                            <p class="m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",000"/></p>
+                                            <p class="year" style="display: inline-block;">${present.year}년</p> ${quarter}분기
                                         </div>
                                         <p class="fs-3 mx-2">/</p>
-                                        <div class="fw-bold">
-                                            <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>${past.year}년 ${quarter}분기
+                                        <div class="fw-bold text-center">
+                                            <p class="m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",000"/></p>
+                                            <p class="year" style="display: inline-block;">${past.year}년</p> ${quarter}분기
                                         </div>
                                     </div>
                                 </div>
