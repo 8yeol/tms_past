@@ -649,6 +649,7 @@ public class AjaxController {
                 jsonObject.put("place", sensorInfo.getPlace());
                 jsonObject.put("naming", sensorInfo.getNaming());
                 jsonObject.put("value", String.format("%.2f", value));
+                jsonObject.put("up_time", sensor.getUp_time());
                 jsonArray.add(jsonObject);
                 excess.put("excess", jsonArray);
             }

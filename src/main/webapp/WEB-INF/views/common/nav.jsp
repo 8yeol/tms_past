@@ -561,7 +561,7 @@
             intervalAlarmON = setInterval(function () {
                     getAlarm();
                 }
-                , 5000);
+                , 10000);
 
         }else{
             $('.alarm').attr('src', "static/images/bellOff.png");
@@ -574,7 +574,7 @@
                     alarmEmpty();
                     viewCount();
                 }
-                , 5000);
+                , 10000);
         }
     });
 
@@ -725,7 +725,7 @@
                    viewCount();
                    alarmEmpty();
                }
-               , 5000);
+               , 10000);
        }else{
            $('.alarm').attr('src', "static/images/bellOn.png");
            getAlarm();
@@ -733,7 +733,7 @@
            clearInterval(intervalAlarmOFF);
            intervalAlarmON = setInterval(function (){
                    getAlarm();}
-               , 5000);
+               , 10000);
        }
     }
 

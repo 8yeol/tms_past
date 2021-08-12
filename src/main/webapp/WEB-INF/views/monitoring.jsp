@@ -388,18 +388,21 @@
         var cookie_value = escape(value) + ((days == null) ? '' : '; expires=' + exdate.toUTCString());
         document.cookie = cookie_name + '=' + cookie_value;
     }
+
+
     /**
      * 페이지 로딩시 측정소 별로 테이블 틀 생성, 측정소 별, 센서별 데이터를 받아 대시보드, 테이블 데이터 입력
      */
     function getData() {
         setTimeout(function interval_getData() { // 반복 처리를 위한 setTimeout
+            console.log("get data " + moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
             const placeInfo = getPlaceInfo(); // 모니터링 On된 측정소의 모든 정보(센서의 최근, 5분, 30분, 기준값 등)
             const placeCount = placeInfo.length;
-            if(placeCount == 0){ // 측정소가 없을 때
+            if(placeCount == 0){ // 측정소에 등록된 센서가 없을때
                 Swal.fire({icon: 'warning',title: '경고',text: '모니터링 설정된 측정소의 데이터가 없습니다.'});
                 draw_place_table_frame(placeInfo);
-                INTERVAL = setTimeout(interval_getData, 60000);
-            }else{ //측정소가 있을 때
+                INTERVAL = setTimeout(interval_getData, 60000); //측정소에 등록된 센서가 없으면 처음 경고 띄우고 1분 후에 refresh
+            }else{
                 var newSensorList = new Array();
                 for (let i = 0; i < placeCount; i++) {
                     for(let z=0; z<placeInfo[i].sensorList.length; z++){
@@ -450,7 +453,7 @@
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }
                     }
-                    INTERVAL = setTimeout(interval_getData, 5000);
+                    INTERVAL = setTimeout(interval_getData, 10000);
                 }
             }
             setTimeout(function () {
@@ -483,6 +486,7 @@
                 recentData = getSensorData(sensorName);
                 updateChart(sensorDataList, recentData, chartIndex);
                 setTimeout(function realTime() {
+                    console.log("chart add " + moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
                     if($('#chart-'+chartIndex)[0].childNodes[0] != undefined){
                         var update = $('#update-'+chartIndex)[0].innerText;
                         var columnCount = $('#sensor-table-'+chartIndex).find('td').length;
@@ -567,6 +571,7 @@
      * 측정소의 갯수에 따라 테이블 틀 생성 (홀수 : 테이블 1개, 짝수: 테이블 2개 씩 출력)
      */
     function draw_place_table_frame(placeInfo) {
+        console.log('draw place table frame')
         $('#place_table').empty();
         var col_md_size;
         if(placeInfo.length != 0){

@@ -161,6 +161,8 @@
 
     $('#addpl').click(function () {
         document.getElementById('na1').value = '';
+        let addStyle = document.getElementById("na1");
+        addStyle.style.backgroundColor = "white";
         document.getElementById('lo1').value = '';
         document.getElementById('te1').value = '';
         document.getElementById('ad1').value = '';
@@ -381,6 +383,10 @@
         }
         $('#addup').text('측정소 수정');
         $('#saveBtn').text('수정');
+
+        let addStyle = document.getElementById("na1");
+        addStyle.style.backgroundColor = "rgba(239, 239, 239, 0.5)";
+
         const place = $("input:checkbox[name=place]:checked").attr('value');
         $.ajax({
             url: '<%=cp%>/getPlace',

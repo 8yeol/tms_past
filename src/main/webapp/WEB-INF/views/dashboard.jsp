@@ -478,9 +478,22 @@
 
     function excess() {
         addExcessData();
+
         setInterval(function () {
             addExcessData();
-        }, 5000)
+        }, 10000)
+
+        // 매 30초마다 실행되게 하는 함수
+        /*
+        const HALF_PAST = 30 * 1000;
+        const timeSinceBoundary = new Date() % HALF_PAST;
+        const timeToSetInterval = timeSinceBoundary === 0 ? 0 : (HALF_PAST - timeSinceBoundary);
+        setTimeout(function () {
+            setInterval(function () {
+                addExcessData();
+            }, HALF_PAST);
+        }, timeToSetInterval);
+        */
     }
 
     function addExcessData() {
@@ -495,7 +508,6 @@
             async: false,
             success: function (data) {
                 const arr = data.excess;
-
                 if(arr != undefined){
                     $("#excess_update").text(moment(arr[0].up_time).format('YYYY-MM-DD HH:mm:ss'));
 
