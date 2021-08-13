@@ -65,7 +65,7 @@
                 </c:choose>
                 </div>
             </c:when>
-            <c:when test="${fn:length(emissionList.get(0)) eq 0}">
+            <c:when test="${empty emissionList || fn:length(emissionList.get(0)) eq 0}">
                 <div class="row pb-3 margin-l" style="height: 230px">
                     <div class="col align-self-center text-center" style="font-size: 1.2rem">
                         업데이트 된 데이터가 없습니다. <br>

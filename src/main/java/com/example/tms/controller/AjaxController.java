@@ -282,6 +282,7 @@ public class AjaxController {
                 subObj.put("up_time", recentData.getUp_time());
                 subObj.put("status", recentData.isStatus());
                 Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorName);
+                //System.out.println(beforeData);
                 subObj.put("beforeValue", beforeData.getValue());
                 ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorName);
                 subObj.put("naming", sensorInfo.getNaming());
@@ -1344,7 +1345,8 @@ public class AjaxController {
                 emissionsStandardSettingRepository.save(ess);
                 inputLogSetting("'" + place + " - " + naming + "'" + " 센서 연간 배출 허용 기준 추가", "설정", principal);
             }
-
+            // 추가
+            saveNotifySetting(tableName,false,"00:00", "23:59");
             saveReference(place, tableName, naming,principal); //상세설정 항목 추가
             inputLogSetting( "'"+sensor.getNaming()+"'" + " 센서 추가", "설정", principal);
 
@@ -1480,7 +1482,6 @@ public class AjaxController {
                 groupSensorRemove(hiddenCode);
             }
         }
-
         sensorListRepository.save(sensor);
     }
 
