@@ -433,13 +433,13 @@
                         }else if(oldSensorList.length ==newSensorList.length && newSensorList.length != sensorCount){
                             dataChecking = true;
                         }
-
                         if(typeof placeInfoCopy == 'undefined') placeInfoCopy = placeInfo;
-
-                        for(let k=0; k<placeInfo.length; k++){
-                            for(let j=0; j<placeInfo[k].data.length; j++) {
-                                if (placeInfo[k].data[j].standardExistStatus != placeInfoCopy[k].data[j].standardExistStatus) {
-                                    dataChecking = true;
+                        if(placeInfoCopy.length >= placeInfo.length) {
+                            for (let k = 0; k < placeInfo.length; k++) {
+                                for (let j = 0; j < placeInfo[k].data.length; j++) {
+                                    if (placeInfo[k].data[j].standardExistStatus != placeInfoCopy[k].data[j].standardExistStatus) {
+                                        dataChecking = true;
+                                    }
                                 }
                             }
                         }
@@ -481,6 +481,7 @@
                 $('#chart-'+chartIndex).find('p').remove();
             }
         }else{
+            console.log("chart 생성");
             if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
                 draw_place_chart_frame(chartIndex);
                 recentData = getSensorData(sensorName);
