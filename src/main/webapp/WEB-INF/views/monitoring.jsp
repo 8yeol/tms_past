@@ -444,12 +444,12 @@
                             }
                         }
                         placeInfoCopy = placeInfo;
-
                         if(dataChecking){
                             oldSensorList = newSensorList;
                             draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }else{
+                            // draw_place_table_frame(placeInfo);
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }
                     }
@@ -472,7 +472,7 @@
         var chartIndex = tbodyId.substr(13,5);
         var sensorDataList = getSensor(sensorName, 10);
         var recentData;
-        var sensorDataLength = sensorDataList.length;
+
         var realTime = {};
         if(sensorDataList.length == 0){
             if($('#chart-'+chartIndex)[0].innerHTML.length == 0){
@@ -487,7 +487,7 @@
                 recentData = getSensorData(sensorName);
                 updateChart(sensorDataList, recentData, chartIndex);
                 setTimeout(function realTime() {
-                    console.log("chart add " + moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
+                    var sensorDataLength = sensorDataList.length;
                     if($('#chart-'+chartIndex)[0].childNodes[0] != undefined){
                         var update = $('#update-'+chartIndex)[0].innerText;
                         var columnCount = $('#sensor-table-'+chartIndex).find('td').length;
@@ -500,17 +500,18 @@
                         if(recentValue.indexOf("-") !== -1){
                             recentValue = recentValue.substr(2);
                         }
-                        // recentData = getSensorData(sensorName);
                         if(sensorDataList.length != 0){
-                            if(sensorDataList[sensorDataLength-1].x != update){
+                            var dataListTime = moment(sensorDataList[sensorDataLength-1].x).format("YYYY-MM-DD HH:mm:ss");
+                            if(dataListTime != update){
+                                console.log("chart add " + moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
                                 sensorDataList.push({x: update, y: recentValue});
+                                updateChart(sensorDataList, recentData, chartIndex);
                             }
-                            updateChart(sensorDataList, recentData, chartIndex);
-                            if(sensorDataList.length > sensorDataLength*2){
+                            if(sensorDataList.length > 1440){
                                 sensorDataList = getSensor(sensorName, 10);
                             }
                         }
-                        realTime['chart-'+chartIndex] = setTimeout(realTime, 5000);
+                        realTime['chart-'+chartIndex] = setTimeout(realTime, 1000);
                     }
                 }, 0);
             }else{
@@ -676,7 +677,11 @@
                         var recentData = data[z];
                         var standarExistStatus = data[z].standardExistStatus;
                         $('#sensor-table-' + i + '-' + z).empty();
-                        const tbody = document.getElementById('sensor-table-' + i + '-' + z);
+                        var  tbody = document.getElementById('sensor-table-' + i + '-' + z);
+                        if(tbody == null){
+                            draw_place_table_frame(placeInfo);
+                            tbody = document.getElementById('sensor-table-' + i + '-' + z);
+                        }
                         /* 기준 값 유무에 따라 split */
                         const newRow = tbody.insertRow(tbody.rows.length);
                         $("#update-"+i+'-'+z).text(moment(data[z].recent_up_time).format('YYYY-MM-DD HH:mm:ss'));
@@ -784,71 +789,75 @@
      *  대시보드 생성 (가동률, 통신 상태, 기준값 등)
      */
     function draw_sensor_info(placeInfo) {
-        var placeCount = placeInfo.length;
-        var sensorMonitoringOn=0, allMonitoringOFF=0,
-            sensorStatusSuccess=0, sensorStatusFail=0,
-            legalSCount=0, companySCount=0, managementSCount=0,
-            notexistLegalStandard=0, notexistCompanyStandard=0, notexistManagementStandard=0;
+        if(placeInfo.length != 0){
 
-        allMonitoringOFF = placeInfo[0].allMonitoringOFF;
-        for(var i=0; i<placeCount; i++){ //측정소별
-            var data = placeInfo[i].data;
-            var dataCount = data.length;
-            sensorMonitoringOn += placeInfo[i].monitoringOn;
-            for(var z=0; z<dataCount; z++){ //측정소의 센서별 조회
-                var sensorData = data[z];
-                value = sensorData.recent_value;
-                legalStandard = sensorData.legalStandard;
-                companyStandard = sensorData.companyStandard;
-                managementStandard = sensorData.managementStandard;
-                if(compareTime(sensorData.recent_up_time)){ // 최근데이터가 5분 이내 일때, 통신 정상, 알림음, 점멸효과
-                    sensorStatusSuccess +=1;
-                    if(legalStandard == 999999){
-                        notexistLegalStandard += 1;
+            var placeCount = placeInfo.length;
+            var sensorMonitoringOn=0, allMonitoringOFF=0,
+                sensorStatusSuccess=0, sensorStatusFail=0,
+                legalSCount=0, companySCount=0, managementSCount=0,
+                notexistLegalStandard=0, notexistCompanyStandard=0, notexistManagementStandard=0;
+
+            allMonitoringOFF = placeInfo[0].allMonitoringOFF;
+            for(var i=0; i<placeCount; i++){ //측정소별
+                var data = placeInfo[i].data;
+                var dataCount = data.length;
+                sensorMonitoringOn += placeInfo[i].monitoringOn;
+                for(var z=0; z<dataCount; z++){ //측정소의 센서별 조회
+                    var sensorData = data[z];
+                    value = sensorData.recent_value;
+                    legalStandard = sensorData.legalStandard;
+                    companyStandard = sensorData.companyStandard;
+                    managementStandard = sensorData.managementStandard;
+                    if(compareTime(sensorData.recent_up_time)){ // 최근데이터가 5분 이내 일때, 통신 정상, 알림음, 점멸효과
+                        sensorStatusSuccess +=1;
+                        if(legalStandard == 999999){
+                            notexistLegalStandard += 1;
+                        }
+                        if(companyStandard == 999999){
+                            notexistCompanyStandard += 1;
+                        }
+                        if(managementStandard == 999999){
+                            notexistManagementStandard += 1;
+                        }
+                        if(value > legalStandard){
+                            legalSCount +=1;
+                        }else if(value > companyStandard){
+                            companySCount +=1;
+                        }else if(value > managementStandard){
+                            managementSCount +=1;
+                        }
+                    }else{ // 최근데이터가 5분 이외일 때, 통신불량 처리
+                        sensorStatusFail += 1;
                     }
-                    if(companyStandard == 999999){
-                        notexistCompanyStandard += 1;
-                    }
-                    if(managementStandard == 999999){
-                        notexistManagementStandard += 1;
-                    }
-                    if(value > legalStandard){
-                        legalSCount +=1;
-                    }else if(value > companyStandard){
-                        companySCount +=1;
-                    }else if(value > managementStandard){
-                        managementSCount +=1;
-                    }
-                }else{ // 최근데이터가 5분 이외일 때, 통신불량 처리
-                    sensorStatusFail += 1;
+
                 }
-
             }
-        }
-        if(legalSCount > 0 ){
-            flashing(flashCheck, "bg-danger");
-            alarmTone('on');
-        }else if(companySCount > 0){
-            flashing(flashCheck, "bg-warning");
-            alarmTone('on');
-        }else if(managementSCount > 0){
-            flashing(flashCheck, "bg-success");
-            alarmTone('on');
+            if(legalSCount > 0 ){
+                flashing(flashCheck, "bg-danger");
+                alarmTone('on');
+            }else if(companySCount > 0){
+                flashing(flashCheck, "bg-warning");
+                alarmTone('on');
+            }else if(managementSCount > 0){
+                flashing(flashCheck, "bg-success");
+                alarmTone('on');
+            }else{
+                flashing(flashCheck, null);
+                alarmTone('off');
+            }
+            var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
+            var run = sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail);
+            if(runPercent == 'NaN'){ runPercent = 0; }
         }else{
-            flashing(flashCheck, null);
-            alarmTone('off');
+            runPercent = 0;
+            run = "0 / 0";
+            sensorStatusSuccess = 0;
+            sensorStatusFail = 0;
+            allMonitoringOFF = getMonitoringSensor();
+            legalSCount = 0;
+            companySCount = 0;
+            managementSCount = 0;
         }
-        var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
-        var run = sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail);
-        // var legalPercent = ((legalSCount / (sensorStatusSuccess - notexistLegalStandard)) * 100).toFixed(0); //법적기준 %
-        // var companyPercent = ((companySCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); //사내기준 %
-        // var managementPercent = ((managementSCount / (sensorStatusSuccess - notexistCompanyStandard)) * 100).toFixed(0); ////관리기준 %
-
-        /* NaN 처리 */
-        if(runPercent == 'NaN'){ runPercent = 0; }
-        // if(legalPercent == 'NaN'){ legalPercent = 0; }
-        // if(companyPercent == 'NaN'){ companyPercent = 0; }
-        // if(managementPercent == 'NaN'){ managementPercent = 0;}
 
         $("#sensorStatusP").text(runPercent + "%"); //가동률
         $("#operating").text(run); // 통신정상/전체
@@ -856,11 +865,8 @@
         $("#statusOff").text(sensorStatusFail); //통신불량
         $("#monitoringOff").text(allMonitoringOFF); //모니터링OFF 개수
         $("#legal_standard_text_A").text(legalSCount); //법적기준 Over
-        // $(".legal_standard_text_B").text(legalSCount + " / " + (sensorStatusSuccess - notexistLegalStandard)); //법적기준 Over 개수/전체
         $("#company_standard_text_A").text(companySCount); //사내기준 Over
-        // $(".company_standard_text_B").text(companySCount + " / " + (sensorStatusSuccess - notexistCompanyStandard)); //사내기준 Over 개수/전체
         $("#management_standard_text_A").text(managementSCount); //관리기준 Over
-        // $(".management_standard_text_B").text(managementSCount + " / " + (sensorStatusSuccess - notexistManagementStandard)); //관리기준 Over 개수/전체
     }
 
     /**
@@ -1160,6 +1166,23 @@
             async: false,
             success: function (data) {
                 result = data;
+            },
+            error: function (e) {
+            }
+        })
+        return result;
+    }
+    
+    function getMonitoringSensor() {
+        var username = "<sec:authentication property="principal.username" />";
+        let result = null;
+        $.ajax({
+            url:'<%=cp%>/getMonitoringSensor',
+            dataType: 'JSON',
+            data:  {"memberId": username},
+            async: false,
+            success: function (data) {
+                result = data["OFF"];
             },
             error: function (e) {
             }
