@@ -973,8 +973,6 @@
      * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
      */
     function draw_compareData(beforeData , nowData){
-        console.log("before : " + beforeData);
-        console.log("now : " + nowData)
         nowData = nowData.toFixed(2);
         if(beforeData > nowData ){
             return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' +nowData;
