@@ -572,7 +572,6 @@
      * 측정소의 갯수에 따라 테이블 틀 생성 (홀수 : 테이블 1개, 짝수: 테이블 2개 씩 출력)
      */
     function draw_place_table_frame(placeInfo) {
-        console.log('draw place table frame')
         $('#place_table').empty();
         var col_md_size;
         if(placeInfo.length != 0){

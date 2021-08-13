@@ -185,7 +185,8 @@
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    var interval1, interval2, interval3;
+    // 로직변경으로 interval1 지웠음
+    var interval2, interval3;
     var chart;
 
     /**
@@ -229,16 +230,19 @@
             $('#noData').css("height", "0px");
             $('#noData').hide();
         }
-        draw_sensor_table(sensor_data_list, sensor_data);
+        // draw_frame 에서 중복호출 (getPlaceAllSensorData > getData2) //draw_frame 이 초기한번 무조건 실행되는게 맞다면 지워주는게 맞을듯 (if문에서 sensor_data_list.length 가 0일때 필요하면 if문 안에 넣어줄것)
+        //draw_sensor_table(sensor_data_list, sensor_data);
         chart = new ApexCharts(document.querySelector("#chart"), setChartOption(JSON.parse(chartLabel))); //차트 틀 생성
         chart.render();
+
         if (sensor_data_list.length == 0){
             $('#chart').hide();
             getData2(sensor_data);
             return;
         }
+
+        draw_frame(); //초기 한번 실행?
         updateChart(sensor_data_list, sensor_data);
-        draw_frame();
     }); //ready
 
 
@@ -295,19 +299,19 @@
                     if(existPlace){
                         $("#"+placeName).addClass('active'); // 해당 측정소 선택됨 표시
                         $('#title').text(placeName); // 해당 측정소명 텍스트 출력
-                        getPlaceAllSensorData(placeName, sensorName); //측정소의 항목 전체 데이터
+                        getPlaceAllSensorData(sensorName); //측정소의 항목 전체 데이터
                     }else{
                         const place_name = $('#place_name > li').attr('id'); //기본값
                         $("#place_name li").eq(0).addClass('active');
                         $('#title').text(place_name);
-                        getPlaceAllSensorData(place_name); //측정소의 항목 전체 데이터
+                        getPlaceAllSensorData(); //측정소의 항목 전체 데이터
                     }
                 }else{ //파라미터가 없을 경우
                     const place_name = $('#place_name > li').attr('id'); //기본값
                     if(place_name != undefined){
                         $("#place_name li").eq(0).addClass('active');
                         $('#title').text(place_name);
-                        getPlaceAllSensorData(place_name); //측정소의 항목 전체 데이터
+                        getPlaceAllSensorData(); //측정소의 항목 전체 데이터
                     }
                 }
             }
@@ -317,23 +321,24 @@
     /**
      * 측정소명 클릭 이벤트(해당 측정소 조회)
      */
-    var debounce2 = null;
+    //var debounce2 = null; // 굳이 전역변수 선언해야할 이유 없을듯(삭제) 그 외에도 왠만하면 전역변수 사용X 함수로 전달하거나 등의 방법 이용해서 사용
     $("#place_name").on('click', 'li', function () {
         const place_name = $(this).attr('id'); //선택된 측정소명
         $('#title').text(place_name); // 해당 측정소명 텍스트 출력
         $("#place_name li").removeClass('active'); // 해당 측정소 외 선택됨 제거
         $(this).addClass('active'); // 해당 측정소 선택됨 표시
-        clearTimeout(debounce2);
-        debounce2 = setTimeout(() => {
-            getPlaceAllSensorData(place_name); //측정소의 항목 전체 데이터
-        }, 300)
+        // clearTimeout(debounce2); // 0.2초뒤에 setTimeout 한번 실행시킬건데 clearTimeout 할 필요 없을듯(삭제)
+        //debounce2 = //한번 실행시키고 말꺼기때문에 굳이 변수선언해서 대입안시켜줘도 될듯(삭제)
+        setTimeout(() => {
+            getPlaceAllSensorData(); //측정소의 항목 전체 데이터
+        }, 200)
 
     });
 
     /**
      * 센서명 클릭 이벤트 (해당 센서 조회)
      */
-    var debounce = null;
+    //var debounce = null;
     $("#place-tbody-table").on('click', 'tr', function(){
         const name = $(this).find('input').val(); //선택된 센서명
         var trParent = $(this).parent();
@@ -341,11 +346,13 @@
         parentChild.removeAttr('class');
         $(this).addClass('rowSelected');
         sensor_data = getSensorData(name); //해당 센서 데이터
-        clearTimeout(debounce);
-        debounce = setTimeout(() => {
+        //clearTimeout(debounce);
+        //debounce =
+        setTimeout(() => {
             getData2(sensor_data);
-        }, 300)
+        }, 200)
     });
+
     /**
      *  숫자 표시 On / Off
      */
@@ -409,12 +416,16 @@
     /**
      * 측정소의 항목 전체 데이터 조회 (최근데이터, 직전데이터, 기준값 등)
      */
-    function getPlaceAllSensorData(place_name, sensor_naming){
+    function getPlaceAllSensorData(sensor_naming){
         try{
-            const place_data = getPlaceData(place_name); // 센서 데이터 (최근, 직전, 기준값, 한글명 등) 저장
-            clearTimeout(interval1);
+            const place_data = getPlaceData(); // 센서 데이터 (최근, 직전, 기준값, 한글명 등) 저장
+
             if(place_data.length != 0){
+                // getData2에서 한번에 처리되게 이동
+                /*
                 setTimeout(function interval_getData() { // $초 마다 업데이트
+                    console.log('interval get data')
+                    console.log(place_name);
                     var recentData = getPlaceData(place_name);
                     for(var i=0; i<recentData.length; i++){
                         if(place_data[i].up_time != recentData[i].up_time){
@@ -423,8 +434,12 @@
                         }
                     }
                     draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
-                    interval1 = setTimeout(interval_getData, 5000);
+                    interval1 = setTimeout(interval_getData, 10000);
                 }, 0); //setTimeout
+                */
+                //interval_getData(place_data, place_name);
+                draw_place_table(place_data);
+
                 if (!sensor_naming) {  //파라미터 없을 경우
                     var sensor_data = place_data[0]; // 기본값
                 } else {   // 파라미터 있을 경우
@@ -444,6 +459,19 @@
         }
     }
 
+    function interval_getData(place_data) { // $초 마다 업데이트
+        var recentData = getPlaceData();
+        for(var i=0; i<recentData.length; i++){
+            if(place_data[i].up_time != recentData[i].up_time){
+                place_data[i].value = recentData[i].value;
+                place_data[i].beforeValue = recentData[i].beforeValue;
+                place_data[i].up_time = recentData[i].up_time;
+            }
+        }
+        //draw_place_table(place_data); //측정소 테이블 생성(센서 데이터)
+        return place_data;
+    }
+
     /**
      *  센서 데이터 (최근 1시간, 24시간)로 차트 및 테이블 생성
      */
@@ -461,13 +489,23 @@
             var sensor_data_list = getSensor(sensor_name, sensor_time_length); //센서 데이터 (최근 1시간, 24시간)
             var sensorDataLength = sensor_data_list.length;
             var dt = draw_sensor_table(sensor_data_list, sensor_data); // 센서 테이블 생성 (측정시간, 측정값, 관리등급)
+
+
             if(sensor_data_list.length != 0){
                 $('#chart').show();
                 $('#noData').css("height", "0px");
                 $('#noData').hide();
                 $("#radio_text").text(sensor_data.naming); // 선택된 센서명 텍스트 출력
+
+                updateChart(sensor_data_list, sensor_data); //차트 업데이트
+
+
+                let place_data = getPlaceData();
+
                 setTimeout(function interval_getData2() { //$초 마다 업데이트
                     // 센서의 최근데이터와 기존데이터 비교하여 기존데이터 업데이트
+                    place_data = interval_getData(place_data);
+
                     var sensor_data_list_recent = getSensorRecent(sensor_name);
                     $('#update').text("업데이트 : "+moment(sensor_data_list_recent.up_time).format('YYYY-MM-DD HH:mm:ss'));
                     if(sensor_data_list_recent.length != 0) { // null = []
@@ -476,9 +514,11 @@
                                 x: sensor_data_list_recent.up_time,
                                 y: sensor_data_list_recent.value
                             });
+                            draw_place_table(place_data); // 측정소 테이블 생성(센서 데이터)
+                            updateChart(sensor_data_list, sensor_data); //차트 업데이트
                             sensor_table_update(dt, sensor_data_list_recent, sensor_data); //테이블 업데이트
                         }
-                        updateChart(sensor_data_list, sensor_data); //차트 업데이트
+                        //updateChart(sensor_data_list, sensor_data);
                         if (sensor_data_list.length > sensorDataLength * 2) { //차트 초기화
                             sensor_data_list = getSensor(sensor_name, sensor_time_length);
                         }
@@ -494,7 +534,8 @@
                         $("#unit_text").text("");
                         draw_frame();
                     }
-                    interval2 = setTimeout(interval_getData2, 5000);
+
+                    interval2 = setTimeout(interval_getData2, 10000);
                 }, 0);
             }else{ // sensor_data_list (최근데이터) 가 없을 때
                 if(sensor_data){
@@ -551,7 +592,15 @@
     /**
      *  측정소명으로 센서데이터 (최근데이터, 직전데이터, 기준값 등) 리턴
      */
-    function getPlaceData(place){
+    function getPlaceData(){
+        let place;
+
+        $('#place_name > li').each(function() {
+            if ($(this).hasClass('active')) {
+                place = $(this).attr('id');
+            }
+        });
+
         var result = null;
         $.ajax({
             url:'<%=cp%>/getPlaceData',
@@ -571,8 +620,6 @@
             return [];
         }
     }
-
-
 
     /**
      * 센서의 모니터링 True인 최근, 직전, 기준 데이터 등을 리턴
@@ -615,9 +662,6 @@
         }
         return result;
     }
-
-
-
 
     /**
      * 센서의 최근 1시간 / 24시간 데이터 리턴
@@ -929,6 +973,8 @@
      * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
      */
     function draw_compareData(beforeData , nowData){
+        console.log("before : " + beforeData);
+        console.log("now : " + nowData)
         nowData = nowData.toFixed(2);
         if(beforeData > nowData ){
             return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' +nowData;
@@ -936,7 +982,7 @@
             return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' +nowData;
         } else if( nowData == beforeData ){
             return '<span style="font-weight: bold">- </span>' +nowData;
-        } else{
+        } else {
             return nowData;
         }
     }

@@ -282,7 +282,6 @@ public class AjaxController {
                 subObj.put("up_time", recentData.getUp_time());
                 subObj.put("status", recentData.isStatus());
                 Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorName);
-                //System.out.println(beforeData);
                 subObj.put("beforeValue", beforeData.getValue());
                 ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorName);
                 subObj.put("naming", sensorInfo.getNaming());
