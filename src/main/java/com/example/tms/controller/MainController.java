@@ -330,51 +330,50 @@ public class MainController {
         Member member =  memberRepository.findById(principal.getName());
         model.addAttribute("state", member.getState());
 
-        try{
-            JSONArray jsonArray = new JSONArray();
-            //모니터링 페이지에서 선택된 측정소의 센서들의 정보(최근,이전,기준값 등)들을 JSON 타입으로 저장하기위한 변수
-            JSONArray jsonArray2 = new JSONArray();
-            // 선택된 센서의 최근 1시간 데이터들을 JSON 타입으로 저장하기 위한 변수
-            List<String> placeNames = new ArrayList<>();
-            // 모니터링 True 인 측정소명을 저장하기 위한 변수
-            Map<String, List> gMS = ajaxController.getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
-            List<String> gMS_placeName = new ArrayList<>();
-            List<String> place = new ArrayList<>();
-            for(String key : gMS.keySet()){ //key(측정소명) 추출
-                gMS_placeName.add(key);
+        JSONArray jsonArray = new JSONArray();
+        //모니터링 페이지에서 선택된 측정소의 센서들의 정보(최근,이전,기준값 등)들을 JSON 타입으로 저장하기위한 변수
+        JSONArray jsonArray2 = new JSONArray();
+        // 선택된 센서의 최근 1시간 데이터들을 JSON 타입으로 저장하기 위한 변수
+        List<String> placeNames = new ArrayList<>();
+        // 모니터링 True 인 측정소명을 저장하기 위한 변수
+        Map<String, List> gMS = ajaxController.getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
+        List<String> gMS_placeName = new ArrayList<>();
+        for(String key : gMS.keySet()){ //key(측정소명) 추출
+            gMS_placeName.add(key);
+        }
+        String placeName = "";
+        List<String> sensorNames = new ArrayList<String>();
+        placeName = gMS_placeName.get(0);
+        List<String> temp = gMS.get(placeName);
+        for (int a=0; a<gMS_placeName.size()-1; a++){
+            int sensorSize = gMS.get(gMS_placeName.get(a)).size();
+            if(sensorSize != 0) {
+                placeNames.add(gMS_placeName.get(a));
             }
-            String placeName = "";
-            List<String> sensorNames = new ArrayList<String>();
-            placeName = gMS_placeName.get(0);
-            List<String> temp = gMS.get(placeName);
-            for (int a=0; a<gMS_placeName.size()-1; a++){
-                int sensorSize = gMS.get(gMS_placeName.get(a)).size();
-                if(sensorSize != 0) {
-                    placeNames.add(gMS_placeName.get(a));
-                }
-            }
-            for(int b=0; b<temp.size(); b++){
-                sensorNames.add(temp.get(b));
-            }
-            for(int i=0; i<sensorNames.size(); i++){
+        }
+        for(int b=0; b<temp.size(); b++){
+            sensorNames.add(temp.get(b));
+        }
+        if (sensorNames.size() != 0){
+            for(int i=0; i<sensorNames.size(); i++) {
                 JSONObject subObj = new JSONObject();
                 //센서의 정보들(최근, 이전, 기준값)을 JSON 타입으로 저장하기 위한 변수
                 boolean monitoring = reference_value_settingRepository.findByName(sensorNames.get(i)).getMonitoring(); //센서 모니터링 여부
-                if(monitoring){ //센서 모니터링 True
+                if (monitoring) { //센서 모니터링 True
                     String sensorName = sensorNames.get(i);
-                    try{
+                    try {
                         Sensor recentData = sensorCustomRepository.getSensorRecent(sensorName); //센서의 최근 데이터
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         subObj.put("value", numberTypeChange(recentData.getValue()));
                         subObj.put("up_time", simpleDateFormat.format(recentData.getUp_time()));
                         subObj.put("status", recentData.isStatus());
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         System.out.println(e);
                     }
                     try {
                         Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorName); //센서의 이전 데이터
                         subObj.put("beforeValue", numberTypeChange(beforeData.getValue()));
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         subObj.put("beforeValue", 0);
                     }
                     ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorName); //센서의 기타 정보(기준값 등)
@@ -384,35 +383,36 @@ public class MainController {
                     subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
                     subObj.put("name", sensorName);
                     jsonArray.add(subObj);
-                    if(sensorName.equals(sensor)){ //파라미터와 센서명이 일치할 경우
-                        model.addAttribute("activeSensor", subObj); //선택된 센서 데이터
-                    }else if(sensor.equals("") && i == 0){ //파라미터가 없을 경우
-                        model.addAttribute("activeSensor", subObj); //0번째 센서 데이터
+                    if(i==0) { //0번째 센서 데이터
+                        model.addAttribute("activeSensor", subObj);
                     }
-                }
-            }
-            List<Sensor> sensorData = new ArrayList<>();
-            // 센서의 최근 데이터들을 저장하기 위한 변수
-            if(sensor.equals("")){ //파라미터가 없을 경우
-                sensorData = sensorCustomRepository.getSenor(sensorNames.get(0),"1");
-            }else{ //파라미터가 있을 경우
-                sensorData = sensorCustomRepository.getSenor(sensor, "1");
-            }
-            for(int i=0; i<sensorData.size(); i++){
-                JSONObject subObj2 = new JSONObject();
-                //해당 센서의 최근 1시간 데이터들을 JSON 타입으로 차트 생성에 필요한 변수 x, y로 저장
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                subObj2.put("y", numberTypeChange(sensorData.get(i).getValue()));
-                subObj2.put("x",  simpleDateFormat.format(sensorData.get(i).getUp_time()));
-                jsonArray2.add(subObj2);
+                 }
             }
             model.addAttribute("activePlace", placeName); // 선택된 측정소
-            model.addAttribute("placeList", placeNames); //모니터링 Ture 인 측정소 리스트
-            model.addAttribute("sensor", jsonArray); //선택된 측정소의 센서 테이블
-            model.addAttribute("sensorData", jsonArray2); //선택된 센서의 최근 1시간 데이터
+        }else{ //sensorNames.Size == 0
+            JSONObject subObj = new JSONObject();
+            model.addAttribute("activeSensor", subObj); //0번째 센서 데이터
+            model.addAttribute("activePlace", ""); // 선택된 측정소
+        }
+        List<Sensor> sensorData = new ArrayList<>();
+        // 센서의 최근 데이터들을 저장하기 위한 변수
+        JSONObject subObj2 = new JSONObject();
+        try{
+            sensorData = sensorCustomRepository.getSenor(sensorNames.get(0),"1");
         }catch (Exception e){
             System.out.println(e);
+            model.addAttribute("sensorData", sensorData); //선택된 센서의 최근 1시간 데이터
         }
+        for(int i=0; i<sensorData.size(); i++){
+            //해당 센서의 최근 1시간 데이터들을 JSON 타입으로 차트 생성에 필요한 변수 x, y로 저장
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            subObj2.put("y", numberTypeChange(sensorData.get(i).getValue()));
+            subObj2.put("x",  simpleDateFormat.format(sensorData.get(i).getUp_time()));
+            jsonArray2.add(subObj2);
+        }
+        model.addAttribute("placeList", placeNames); //모니터링 Ture 인 측정소 리스트
+        model.addAttribute("sensor", jsonArray); //선택된 측정소의 센서 테이블
+        model.addAttribute("sensorData", jsonArray2); //선택된 센서의 최근 1시간 데이터
     }
 
     /**
