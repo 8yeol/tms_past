@@ -395,7 +395,7 @@
      */
     function getData() {
         setTimeout(function interval_getData() { // 반복 처리를 위한 setTimeout
-            console.log("get data " + moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
+            // console.log("get data " + moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
             const placeInfo = getPlaceInfo(); // 모니터링 On된 측정소의 모든 정보(센서의 최근, 5분, 30분, 기준값 등)
             const placeCount = placeInfo.length;
             if(placeCount == 0){ // 측정소에 등록된 센서가 없을때
@@ -481,7 +481,7 @@
                 $('#chart-'+chartIndex).find('p').remove();
             }
         }else{
-            console.log("chart 생성");
+            // console.log("chart 생성");
             if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
                 draw_place_chart_frame(chartIndex);
                 recentData = getSensorData(sensorName);
@@ -503,7 +503,7 @@
                         if(sensorDataList.length != 0){
                             var dataListTime = moment(sensorDataList[sensorDataLength-1].x).format("YYYY-MM-DD HH:mm:ss");
                             if(dataListTime != update){
-                                console.log("chart add " + moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
+                                // console.log("chart add " + moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
                                 sensorDataList.push({x: update, y: recentValue});
                                 updateChart(sensorDataList, recentData, chartIndex);
                             }

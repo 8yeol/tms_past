@@ -266,38 +266,45 @@ public class AjaxController {
      */
     @RequestMapping(value = "/getPlaceData")
     public JSONArray getPlaceData(String place, Principal principal) {
-        Map<String, List> gMS = getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
-        List<String> sensorNames = gMS.get(place);
-        JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < sensorNames.size(); i++) {
-            JSONObject subObj = new JSONObject();
-            String sensorName = sensorNames.get(i);
-            boolean monitoring = reference_value_settingRepository.findByName(sensorName).getMonitoring();
-            if (monitoring) { //monitoring true
-                String[] splitSensor = sensorName.split("_");
-                Item sensorItem = itemRepository.findByClassification(splitSensor[1]);
-                Sensor recentData = sensorCustomRepository.getSensorRecent(sensorName);
-                subObj.put("place", place);
-                subObj.put("value", recentData.getValue());
-                subObj.put("up_time", recentData.getUp_time());
-                subObj.put("status", recentData.isStatus());
-                Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorName);
-                subObj.put("beforeValue", beforeData.getValue());
-                ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorName);
-                subObj.put("naming", sensorInfo.getNaming());
-                subObj.put("legalStandard", numberTypeChange(sensorInfo.getLegalStandard()));
-                subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
-                subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
-                subObj.put("name", sensorName);
-                if(sensorItem != null) {
-                    subObj.put("unit", sensorItem.getUnit());
-                }else{
-                    subObj.put("unit", "");
+        try {
+            Map<String, List> gMS = getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
+            if(place != null){
+                List<String> sensorNames = gMS.get(place);
+                JSONArray jsonArray = new JSONArray();
+                for (int i = 0; i < sensorNames.size(); i++) {
+                    JSONObject subObj = new JSONObject();
+                    String sensorName = sensorNames.get(i);
+                    boolean monitoring = reference_value_settingRepository.findByName(sensorName).getMonitoring();
+                    if (monitoring) { //monitoring true
+                        String[] splitSensor = sensorName.split("_");
+                        Item sensorItem = itemRepository.findByClassification(splitSensor[1]);
+                        Sensor recentData = sensorCustomRepository.getSensorRecent(sensorName);
+                        subObj.put("place", place);
+                        subObj.put("value", recentData.getValue());
+                        subObj.put("up_time", recentData.getUp_time());
+                        subObj.put("status", recentData.isStatus());
+                        Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorName);
+                        subObj.put("beforeValue", beforeData.getValue());
+                        ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorName);
+                        subObj.put("naming", sensorInfo.getNaming());
+                        subObj.put("legalStandard", numberTypeChange(sensorInfo.getLegalStandard()));
+                        subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
+                        subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
+                        subObj.put("name", sensorName);
+                        if (sensorItem != null) {
+                            subObj.put("unit", sensorItem.getUnit());
+                        } else {
+                            subObj.put("unit", "");
+                        }
+                        jsonArray.add(subObj);
+                    }
                 }
-                jsonArray.add(subObj);
+                return jsonArray;
             }
+        }catch (Exception e){
+            //java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
         }
-        return jsonArray;
+        return null;
     }
 
     /**
@@ -775,7 +782,6 @@ public class AjaxController {
         for (int i = 0; i < placeList.size(); i++) {
             //삭제할 측정소의 센서 목록
             List<String> placeSensorList = placeRepository.findByName(placeList.get(i)).getSensor();
-
             //삭제될 측정소 그룹에서 삭제
             List<MonitoringGroup> group = monitoringGroupRepository.findByMonitoringPlaceIsIn(placeList.get(i));
             for (int k = 0; k<group.size(); k++){
@@ -2307,7 +2313,6 @@ public class AjaxController {
             }
             return jsonArray;
         }catch (Exception e){
-            System.out.println("ajax controller getPlaceInfo error");
             System.out.println(e);
         }
         return null;
