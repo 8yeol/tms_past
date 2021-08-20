@@ -738,7 +738,7 @@
     function updateChart(sensor_data_list, sensor_data){
         var timeRange;
         if(document.getElementsByName("chartRadio")[0].checked){
-            timeRange = 3600000;
+            timeRange = 3630000;
         }else{
             timeRange = 90000000;
         }
