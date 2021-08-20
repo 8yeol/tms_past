@@ -467,58 +467,89 @@
      */
     $("#place_table").on('click', 'tbody tr', function () {
         <%--location.replace("<%=cp%>/sensor?sensor=" + sensorName);--%>
-        var tbodyId = $(this).parent('tbody').attr('id');
-        const sensorName = $(this).find('td input')[0].value;
-        var chartIndex = tbodyId.substr(13,5);
-        var sensorDataList = getSensor(sensorName, 10);
-        var recentData;
-
-        var realTime = {};
-        if(sensorDataList.length == 0){
-            if($('#chart-'+chartIndex)[0].innerHTML.length == 0){
-                $('#chart-'+chartIndex).append("<p style='height: 200px; text-align:center; padding-top:80px; background-color: #e6e6e7'>최근 10분 데이터가 없습니다.</p>")
+            var tbodyId = $(this).parent('tbody').attr('id');
+            const sensorName = $(this).find('td input')[0].value;
+            var chartIndex = tbodyId.substr(13,5);
+            var firstExcute = true;
+        setTimeout(function chartInterval() {
+            var sensorDataList = getSensor(sensorName, 1);
+            var recentData;
+            var realTime = {};
+            if(sensorDataList.length == 0){
+                if($('#chart-'+chartIndex)[0].innerText != '최근 10분 데이터가 없습니다.'){
+                    if(firstExcute){
+                        $('#chart-' + chartIndex).append("<p style='height: 200px; text-align:center; padding-top:80px; background-color: #e6e6e7'>최근 10분 데이터가 없습니다.</p>");
+                        firstExcute = false;
+                    }
+                    setTimeout(chartInterval, 10000);
+                }else {
+                    if(firstExcute){
+                        $('#chart-'+chartIndex).find('p').remove();
+                    }else{
+                        setTimeout(chartInterval, 10000);
+                    }
+                }
             }else{
-                $('#chart-'+chartIndex).find('p').remove();
-            }
-        }else{
-            // console.log("chart 생성");
-            if ($('#chart-'+chartIndex)[0].innerHTML.length ==0){
-                draw_place_chart_frame(chartIndex);
-                recentData = getSensorData(sensorName);
-                updateChart(sensorDataList, recentData, chartIndex);
-                setTimeout(function realTime() {
-                    var sensorDataLength = sensorDataList.length;
-                    if($('#chart-'+chartIndex)[0].childNodes[0] != undefined){
-                        var update = $('#update-'+chartIndex)[0].innerText;
-                        var columnCount = $('#sensor-table-'+chartIndex).find('td').length;
-                        var recentValue;
-                        if(columnCount == 4){
-                            recentValue = $('#sensor-table-'+chartIndex).find('td')[1].innerText;
-                        }else if(columnCount == 7){
-                            recentValue = $('#sensor-table-'+chartIndex).find('td')[4].innerText;
-                        }
-                        if(recentValue.indexOf("-") !== -1){
-                            recentValue = recentValue.substr(2);
-                        }
-                        if(sensorDataList.length != 0){
+                // console.log("chart 생성");
+                if($('#chart-'+chartIndex)[0].innerHTML.length ==0){
+                    draw_place_chart_frame(chartIndex);
+                    recentData = getSensorData(sensorName);
+                    updateChart(sensorDataList, recentData, chartIndex);
+                    setTimeout(function realTime() {
+                        var sensorDataLength = sensorDataList.length;
+                        if($('#chart-'+chartIndex)[0].childNodes[0] != undefined){
+                            var update = $('#update-'+chartIndex)[0].innerText;
+                            var columnCount = $('#sensor-table-'+chartIndex).find('td').length;
+                            var recentValue;
+                            if(columnCount == 4){
+                                recentValue = $('#sensor-table-'+chartIndex).find('td')[1].innerText;
+                            }else if(columnCount == 7){
+                                recentValue = $('#sensor-table-'+chartIndex).find('td')[4].innerText;
+                            }
+                            if(recentValue.indexOf("-") !== -1){
+                                recentValue = recentValue.substr(2);
+                            }
                             var dataListTime = moment(sensorDataList[sensorDataLength-1].x).format("YYYY-MM-DD HH:mm:ss");
-                            if(dataListTime != update){
-                                // console.log("chart add " + moment(new Date()).format("YYYY-MM-DD HH:mm:ss"))
-                                sensorDataList.push({x: update, y: recentValue});
-                                updateChart(sensorDataList, recentData, chartIndex);
+                            var before10Min = new Date();
+                            var after1Min = new Date();
+                            if(document.getElementById('statusOff').innerText > 0){
+                                after1Min = after1Min.setMinutes(after1Min.getMinutes()+1);
+                                before10Min = before10Min.setMinutes(before10Min.getMinutes()-11);
+                                after1Min = moment(after1Min).format("YYYY-MM-DD HH:mm:ss");
+                                before10Min = moment(before10Min).format("YYYY-MM-DD HH:mm:ss");
+                                if(before10Min < dataListTime && dataListTime <= after1Min){
+                                    if(dataListTime < update){
+                                        sensorDataList.push({x: update, y: recentValue});
+                                        updateChart(sensorDataList, recentData, chartIndex);
+                                    }
+                                }else{
+                                    chart['chart-' + chartIndex].destroy();
+                                    $('#chart-' + chartIndex).append("<p style='height: 200px; text-align:center; padding-top:80px; background-color: #e6e6e7'>최근 10분 데이터가 없습니다.</p>");
+                                    setTimeout(chartInterval, 0);
+                                }
+                            }else{
+                                if(dataListTime < update){
+                                    sensorDataList.push({x: update, y: recentValue});
+                                    updateChart(sensorDataList, recentData, chartIndex);
+                                }
                             }
                             if(sensorDataList.length > 1440){
                                 sensorDataList = getSensor(sensorName, 10);
                             }
+                            realTime['chart-'+chartIndex] = setTimeout(realTime, 1000);
                         }
-                        realTime['chart-'+chartIndex] = setTimeout(realTime, 1000);
+                    }, 0);
+                }else{
+                    if($('#chart-'+chartIndex)[0].innerText == '최근 10분 데이터가 없습니다.'){
+                        $('#chart-'+chartIndex).find('p').remove();
+                        setTimeout(chartInterval, 0);
+                    }else {
+                        clearTimeout(realTime['chart-' + chartIndex]);
+                        chart['chart-' + chartIndex].destroy();
                     }
-                }, 0);
-            }else{
-                clearTimeout(realTime['chart-'+chartIndex]);
-                chart['chart-'+chartIndex].destroy();
+                }
             }
-        }
+        }, 0);
 
     });
 
@@ -926,12 +957,13 @@
                 type: 'line',
                 animations: {
                     enabled: true,
-                    easing: 'linear',
+                    easing: 'easein',
                     dynamicAnimation: {
                         enabled: true,
-                        speed: 500
+                        speed: 350
                     }
                 },
+                offsetX: -10,
                 toolbar: {
                     show: false,
                     tools: {
@@ -947,8 +979,8 @@
             },
             colors: ['#629cf4'],
             markers: { //점
-                size: 1,
-                strokeWidth:1,
+                size: 3,
+                strokeWidth: 1,
                 shape: "circle",
                 radius: 0,
                 colors: ["#629cf4"],
@@ -969,6 +1001,7 @@
                 width: 3
             },
             dataLabels: {
+                offsetY: -3,
                 enabled: true,
                 textAnchor: 'middle',
                 style: { //데이터 배경
@@ -986,6 +1019,7 @@
             },
             xaxis: {
                 type: 'datetime',
+                range: 600000,
                 labels: {
                     show: true,
                     datetimeUTC: false,
