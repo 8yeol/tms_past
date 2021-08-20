@@ -472,7 +472,7 @@
             var chartIndex = tbodyId.substr(13,5);
             var firstExcute = true;
         setTimeout(function chartInterval() {
-            var sensorDataList = getSensor(sensorName, 1);
+            var sensorDataList = getSensor(sensorName, 10);
             var recentData;
             var realTime = {};
             if(sensorDataList.length == 0){
@@ -1010,10 +1010,6 @@
                 background: { //데이터 글자
                     enabled: true,
                     foreColor: 'black',
-                    // padding: 1,
-                    // borderRadius: 1,
-                    // borderWidth: 0.3,
-                    // borderColor: 'green',
                     opacity: 0,
                 },
             },
@@ -1024,10 +1020,9 @@
                     show: true,
                     datetimeUTC: false,
                     datetimeFormatter: {
-                        year: 'yyyy년',
-                        month: 'MM월',
-                        day: 'dd일',
-                        hour: 'HH:mm:ss',
+                        day: 'dd일 HH시',
+                        hour: 'dd일 HH시',
+                        minute: 'HH시 mm분',
                     },
                 },
             },

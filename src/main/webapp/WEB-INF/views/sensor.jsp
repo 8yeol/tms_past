@@ -685,15 +685,15 @@
                 },
             },
             xaxis: {
+                tickPlacement: 'between',
                 type: 'datetime',
                 labels: {
                     show: true,
                     datetimeUTC: false,
                     datetimeFormatter: {
-                        year: 'yyyy년',
-                        month: 'MM월',
-                        day: 'dd일',
-                        hour: 'HH:mm:ss',
+                        day: 'dd일 HH시',
+                        hour: 'dd일 HH시',
+                        minute: 'HH시 mm분',
                     },
                 },
             },
@@ -713,6 +713,12 @@
      *  차트 업데이트
      */
     function updateChart(sensor_data_list, sensor_data){
+        var timeRange;
+        if(document.getElementsByName("chartRadio")[0].checked){
+            timeRange = 3600000;
+        }else{
+            timeRange = 90000000;
+        }
         var arr =new Array();
         if(sensor_data_list.length != 0){
             for(var i in sensor_data_list){
@@ -802,6 +808,10 @@
                     }
                 }
             },
+            xaxis: {
+                type: 'datetime',
+                range: timeRange
+            }
         })
     }
 
