@@ -979,26 +979,31 @@
             },
             colors: ['#629cf4'],
             markers: { //점
-                size: 3,
-                strokeWidth: 1,
+                size: 4,
+                strokeWidth: 2,
                 shape: "circle",
                 radius: 0,
                 colors: ["#629cf4"],
                 hover: {
-                    size: 5,
+                    size: 8,
                 }
             },
             tooltip:{
-                enbaled: true,
+                enabled: true,
+                style: {
+                    fontSize: '13px',
+                },
                 x: {
                     show: true,
                     format: 'HH:mm:ss',
-                    // formatter: undefined,
+                },
+                marker: {
+                    show: false,
                 },
             },
             stroke: {
                 show: true,
-                width: 3
+                width: 4
             },
             dataLabels: {
                 offsetY: -3,
@@ -1024,6 +1029,17 @@
                         hour: 'dd일 HH시',
                         minute: 'HH시 mm분',
                     },
+                },
+                crosshairs: {
+                    show: true,
+                    width: 1,
+                    position: 'back',
+                    stroke: {
+                        color: '#414142',
+                    },
+                },
+                tooltip: {
+                    enabled: false,
                 },
             },
             yaxis:{

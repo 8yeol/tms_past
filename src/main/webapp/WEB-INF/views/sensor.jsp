@@ -637,7 +637,7 @@
                     easing: 'linear',
                     dynamicAnimation: {
                         enabled: true,
-                        speed: 500
+                        speed: 350
                     }
                 },
                 toolbar: {
@@ -653,31 +653,43 @@
                     },
                 }
             },
-            colors: ['#97bef8'],
+            colors: ['#629cf4'],
             markers: { //점
-                size: 2,
-                strokeWidth:1,
-                shape: "square",
-                radius: 1,
+                size: 4,
+                strokeWidth: 2,
+                shape: "circle",
+                radius: 0,
                 colors: ["#629cf4"],
                 hover: {
-                    size: 5,
+                    color: ["#193af4"],
+                    size: 10,
                 }
             },
             tooltip:{
-                enbaled: true,
+                enabled: true,
+                style: {
+                    fontSize: '14px',
+                },
                 x: {
                     show: true,
                     format: 'HH:mm:ss',
-                    // formatter: undefined,
                 },
+                marker: {
+                    show: false,
+                },
+
             },
             stroke: {
                 show: true,
-                width: 3
+                width: 4,
             },
             dataLabels: {
+                offsetY: -6,
                 enabled: chartLabel,
+                textAnchor: 'middle',
+                style: { //데이터 배경
+                    fontSize: '13px',
+                },
                 background: { //데이터 글자
                     enabled: true,
                     foreColor: 'black',
@@ -696,8 +708,19 @@
                         minute: 'HH시 mm분',
                     },
                 },
+                crosshairs: {
+                    show: true,
+                    width: 1,
+                    position: 'back',
+                    stroke: {
+                        color: '#414142',
+                    },
+                },
+                tooltip: {
+                    enabled: false,
+                },
             },
-            yaxis:{
+            yaxis: {
                 labels: {
                     show: true,
                     formatter: function (val) {
@@ -1093,4 +1116,6 @@
         })
         return result;
     }
+
 </script>
+
