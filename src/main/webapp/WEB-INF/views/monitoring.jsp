@@ -1059,12 +1059,11 @@
      */
     function updateChart(sensor_data_list, sensor_data, chartIndex){
         var arr =new Array();
+        var unit = sensor_data.unit;
         if(sensor_data_list.length != 0){
             for(var i in sensor_data_list){
                 arr.push(sensor_data_list[i].y);
             }
-            // var max = Math.max.apply(null, arr);
-            // var min = Math.min.apply(null, arr);
             var max = arr.reduce(function (previousValue, currentValue) {
                 return parseInt(previousValue > currentValue ? previousValue:currentValue);
             })
@@ -1140,9 +1139,13 @@
                     show: true,
                     formatter: function (val) {
                         if (sensor_data_list == null || sensor_data_list.length == 0)
-                            return 'No data'
+                            return 'No data';
                         else
-                            return val;
+                            if(unit){
+                                return val + sensor_data.unit
+                            }else{
+                                return val;
+                            }
                     }
                 }
             },

@@ -737,6 +737,7 @@
      */
     function updateChart(sensor_data_list, sensor_data){
         var timeRange;
+        var unit = sensor_data.unit;
         if(document.getElementsByName("chartRadio")[0].checked){
             timeRange = 3630000;
         }else{
@@ -825,9 +826,13 @@
                     show: true,
                     formatter: function (val) {
                         if (sensor_data_list == null || sensor_data_list.length == 0)
-                            return 'No data'
+                            return 'No data';
                         else
+                        if(unit){
+                            return val + sensor_data.unit
+                        }else{
                             return val;
+                        }
                     }
                 }
             },
