@@ -1003,7 +1003,8 @@
             },
             stroke: {
                 show: true,
-                width: 4
+                width: 4,
+                curve: 'smooth',
             },
             dataLabels: {
                 offsetY: -3,

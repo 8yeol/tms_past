@@ -338,6 +338,7 @@
         // 단위 받아오는 로직 추가
         const str = item.split('_');
         const type = str[1];
+        let sensorUnit;
         $.ajax({
             url:'<%=cp%>/getUnit',
             dataType: 'text',
@@ -346,6 +347,7 @@
             success: function (data) {
                 if(data!='null' && data!=""){
                     $('#unit').text("[ 단위 : " + data +" ]");
+                    sensorUnit = data;
                 }else{
                     $('#unit').text("");
                 }
@@ -355,7 +357,6 @@
                 console.log(error);
             }
         });
-
         const reference = getReferenceValue(item);
 
         $.ajax({
@@ -383,6 +384,18 @@
                     return false;
                 }else{
                     addChart(data, category, reference, flag);
+                    if(sensorUnit != undefined){
+                        chart.updateOptions({
+                            yaxis: {
+                                labels: {
+                                    show: true,
+                                    formatter: function (val) {
+                                        return val.toFixed(2) + sensorUnit;
+                                    }
+                                }
+                            }}
+                        );
+                    }
                 }
                 if(flag==0){
                     inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place + '-'+ category + ' 측정자료 조회','조회');
@@ -545,11 +558,13 @@
                 },
                 colors: ['#546E7A'],
                 stroke: {
-                    width: 3
+                    width: 3,
+                    curve: 'smooth',
                 },
                 dataLabels: {
                     enabled: false
                 },
+                colors: ['#629cf4'],
                 fill: {
                     opacity: 1,
                 },
@@ -563,11 +578,12 @@
                     }
                 },
                 yaxis:{
+                    tickAmount: 4,
                     labels:{
                         formatter: function(value){
                             return value.toFixed(2);
                         }
-                    }
+                    },
                 },
                 annotations: {
                     yaxis: [
@@ -619,7 +635,10 @@
                     enabled : true,
                     x: {
                         format : 'yyyy-MM-dd HH:mm'
-                    }
+                    },
+                    marker: {
+                        show: false,
+                    },
                 },
                 xaxis: {
                     type: 'datetime',
@@ -630,8 +649,20 @@
                             year: 'yyyy년',
                             month: 'MM월',
                             day: 'dd일',
-                            hour: 'HH:mm:ss',
+                            hour: 'dd일 HH시',
+                            minute: 'HH시 mm분',
                         },
+                    },
+                    crosshairs: {
+                        show: true,
+                        width: 1,
+                        position: 'back',
+                        stroke: {
+                            color: '#414142',
+                        },
+                    },
+                    tooltip: {
+                        enabled: false,
                     },
                 },
             };
@@ -655,12 +686,12 @@
                         enabled: true
                     },
                 },
-                colors: ['#008FFB'],
+                colors: ['#629cf4'],
                 fill: {
                     type: 'gradient',
                     gradient: {
-                        opacityFrom: 0.91,
-                        opacityTo: 0.1,
+                        opacityFrom: 1,
+                        opacityTo: 0.8,
                     }
                 },
                 xaxis: {
@@ -670,7 +701,7 @@
                     },
                     tooltip: {
                         enabled: false
-                    }
+                    },
                 },
                 yaxis: {
                     tickAmount: 2,
@@ -689,7 +720,16 @@
                             year: 'yyyy년',
                             month: 'MM월',
                             day: 'dd일',
-                            hour: 'HH:mm:ss',
+                            hour: 'dd일 HH시',
+                            minute: 'HH시 mm분',
+                        },
+                    },
+                    crosshairs: {
+                        show: true,
+                        width: 1,
+                        position: 'back',
+                        stroke: {
+                            color: '#414142',
                         },
                     },
                 },

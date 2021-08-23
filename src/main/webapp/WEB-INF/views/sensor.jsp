@@ -655,10 +655,10 @@
             },
             colors: ['#629cf4'],
             markers: { //점
-                size: 4,
-                strokeWidth: 2,
+                size: 3,
+                strokeWidth: 1,
                 shape: "circle",
-                radius: 0,
+                radius: 1,
                 colors: ["#629cf4"],
                 hover: {
                     color: ["#193af4"],
@@ -682,6 +682,7 @@
             stroke: {
                 show: true,
                 width: 4,
+                curve: 'smooth',
             },
             dataLabels: {
                 offsetY: -6,
