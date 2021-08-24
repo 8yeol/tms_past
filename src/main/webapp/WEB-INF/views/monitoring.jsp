@@ -472,7 +472,7 @@
             var chartIndex = tbodyId.substr(13,5);
             var firstExcute = true;
         setTimeout(function chartInterval() {
-            var sensorDataList = getSensor(sensorName, 10);
+            var sensorDataList = getSensor(sensorName, 13);
             var recentData;
             var realTime = {};
             if(sensorDataList.length == 0){
@@ -534,7 +534,7 @@
                                 }
                             }
                             if(sensorDataList.length > 1440){
-                                sensorDataList = getSensor(sensorName, 10);
+                                sensorDataList = getSensor(sensorName, 13);
                             }
                             realTime['chart-'+chartIndex] = setTimeout(realTime, 1000);
                         }
@@ -963,7 +963,6 @@
                         speed: 350
                     }
                 },
-                offsetX: -5,
                 toolbar: {
                     show: false,
                     tools: {
@@ -1009,9 +1008,9 @@
             dataLabels: {
                 offsetY: -3,
                 enabled: true,
-                textAnchor: 'middle',
+                textAnchor: 'end',
                 style: { //데이터 배경
-                    fontSize: '11px',
+                    fontSize: '10px',
                 },
                 background: { //데이터 글자
                     enabled: true,
@@ -1021,7 +1020,7 @@
             },
             xaxis: {
                 type: 'datetime',
-                range: 570000,
+                range: 630000,
                 labels: {
                     show: true,
                     datetimeUTC: false,
@@ -1173,7 +1172,7 @@
     }
 
     /**
-     * 센서의 최근 1시간 / 24시간 데이터 리턴
+     * 센서의 최근 min 분 데이터 조회
      */
     function getSensor(sensor_name, min) {
         let result = new Array();

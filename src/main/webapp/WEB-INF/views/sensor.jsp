@@ -285,9 +285,9 @@
                 let sensorTime = 0;
                 /* 최근 1시간 / 24시간 데이터 조회 */
                 if(document.getElementsByName("chartRadio")[0].checked){ //최근 1시간
-                    sensorTime = 1;
+                    sensorTime = 63;
                 }else{ //최근 24시간
-                    sensorTime = 24;
+                    sensorTime = 1460;
                     newSensorName = "RM05_"+newSensorName;
                 }
                 let sensorData = getSensor(newSensorName, sensorTime); //센서 데이터 (최근 1시간, 24시간)
@@ -574,18 +574,18 @@
     }
 
     /**
-     * 센서의 최근 1시간 / 24시간 데이터 리턴
+     * 센서의 최근 60분 / 1440분(24시간) 데이터 리턴
      */
-    function getSensor(sensor_name, hour) {
+    function getSensor(sensor_name, min) {
         let result = new Array();
         if(sensor_name==undefined){
             return null;
         }else{
             $.ajax({
-                url:'<%=cp%>/getSensor',
+                url:'<%=cp%>/getSensor2',
                 dataType: 'JSON',
                 contentType: "application/json",
-                data: {"sensor": sensor_name, "hour": hour},
+                data: {"sensor": sensor_name, "min": min},
                 async: false,
                 success: function (data) {
                     if(data.length != 0){
@@ -687,9 +687,9 @@
             dataLabels: {
                 offsetY: -3,
                 enabled: chartLabel,
-                textAnchor: 'middle',
+                textAnchor: 'end',
                 style: { //데이터 배경
-                    fontSize: '13px',
+                    fontSize: '11px',
                 },
                 background: { //데이터 글자
                     enabled: true,
@@ -1062,7 +1062,7 @@
             standard =  "정상";
         }
         table.fnSort([0, 'desc']);
-        firstData = new Date(table.fnGetData()[0].x);1
+        firstData = new Date(table.fnGetData()[0].x);
         lastData = new Date(table.fnGetData()[table.fnGetData().length-2].x);
         timeDiff = lastData-firstData
         if(timeDiff > 3600000 && timeDiff < 3660000 || timeDiff > 86400000 && timeDiff < 86700000){

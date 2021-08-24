@@ -525,6 +525,27 @@
 
     let options = null, chart = null, optionsLine =null, chartLine =null;
     function addChart(data, category, reference, flag){
+        var unitText = $('#unit')[0].innerText;
+        if(unitText.length != 0){
+            unitText = unitText.replace("]", "");
+            unitText = unitText.split(":")[1];
+            unitText = unitText.trim();
+        }
+        var arr =new Array();
+        if(data.length != 0){
+            for(var i in data){
+                arr.push(data[i].y);
+            }
+            var max = arr.reduce(function (previousValue, currentValue) {
+                return parseFloat(previousValue > currentValue ? previousValue:currentValue);
+            });
+            var min = arr.reduce(function (previousValue, currentValue) {
+                return parseFloat(previousValue > currentValue ? currentValue:previousValue);
+            });
+            max = Math.ceil(max);
+            min = Math.floor(min);
+        }
+
         if (flag==0){
             options = {
                 series: [{
@@ -640,6 +661,8 @@
                 yaxis:{
                     tickAmount: 2,
                     decimalsInFloat: 2,
+                    max: max,
+                    min: min,
                 },
             };
 
@@ -682,6 +705,8 @@
                 yaxis: {
                     tickAmount: 2,
                     decimalsInFloat: 2,
+                    max: max,
+                    min: min,
                 },
                 xaxis: {
                     type: 'datetime',
@@ -724,6 +749,18 @@
                     yaxis:{
                         tickAmount: 2,
                         decimalsInFloat: 2,
+                        max: max,
+                        min: min,
+                        labels:{
+                            show: true,
+                            formatter: function(val){
+                                if(unitText){
+                                    return val+unitText;
+                                }else{
+                                    return val;
+                                }
+                            }
+                        }
                     },
                     annotations: {
                         yaxis: [
@@ -789,6 +826,8 @@
                 yaxis:{
                     tickAmount: 2,
                     decimalsInFloat: 2,
+                    max: max,
+                    min: min,
                 },
             })
         }
