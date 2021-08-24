@@ -963,7 +963,7 @@
                         speed: 350
                     }
                 },
-                offsetX: -10,
+                offsetX: -5,
                 toolbar: {
                     show: false,
                     tools: {
@@ -1021,7 +1021,7 @@
             },
             xaxis: {
                 type: 'datetime',
-                range: 600000,
+                range: 570000,
                 labels: {
                     show: true,
                     datetimeUTC: false,
@@ -1066,13 +1066,13 @@
                 arr.push(sensor_data_list[i].y);
             }
             var max = arr.reduce(function (previousValue, currentValue) {
-                return parseInt(previousValue > currentValue ? previousValue:currentValue);
-            })
+                return parseFloat(previousValue > currentValue ? previousValue:currentValue);
+            });
             var min = arr.reduce(function (previousValue, currentValue) {
-                return parseInt(previousValue > currentValue ? currentValue:previousValue);
-            })
-            max = max+1;
-            min = min-1;
+                return parseFloat(previousValue > currentValue ? currentValue:previousValue);
+            });
+            max = Math.ceil(max);
+            min = Math.floor(min);
         }else{
             sensor_data_list = [];
         }

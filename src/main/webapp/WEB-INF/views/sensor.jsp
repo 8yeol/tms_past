@@ -685,7 +685,7 @@
                 curve: 'smooth',
             },
             dataLabels: {
-                offsetY: -6,
+                offsetY: -3,
                 enabled: chartLabel,
                 textAnchor: 'middle',
                 style: { //데이터 배경
@@ -740,9 +740,9 @@
         var timeRange;
         var unit = sensor_data.unit;
         if(document.getElementsByName("chartRadio")[0].checked){
-            timeRange = 3630000;
+            timeRange = 3600000;
         }else{
-            timeRange = 90000000;
+            timeRange = 86000000;
         }
         var arr =new Array();
         if(sensor_data_list.length != 0){
@@ -750,13 +750,13 @@
                 arr.push(sensor_data_list[i].y);
             }
             var max = arr.reduce(function (previousValue, currentValue) {
-                return parseInt(previousValue > currentValue ? previousValue:currentValue);
-            })
+                return parseFloat(previousValue > currentValue ? previousValue:currentValue);
+            });
             var min = arr.reduce(function (previousValue, currentValue) {
-                return parseInt(previousValue > currentValue ? currentValue:previousValue);
-            })
-            max = max+1;
-            min = min-1;
+                return parseFloat(previousValue > currentValue ? currentValue:previousValue);
+            });
+            max = Math.ceil(max);
+            min = Math.floor(min);
         }
 
         if(sensor_data.length != 0){
@@ -826,13 +826,14 @@
                 labels: {
                     show: true,
                     formatter: function (val) {
-                        if (sensor_data_list == null || sensor_data_list.length == 0)
+                        if (sensor_data_list == null || sensor_data_list.length == 0) {
                             return 'No data';
-                        else
-                        if(unit){
-                            return val + sensor_data.unit
                         }else{
-                            return val;
+                            if(unit){
+                                return val + sensor_data.unit
+                            }else{
+                                return val;
+                            }
                         }
                     }
                 }

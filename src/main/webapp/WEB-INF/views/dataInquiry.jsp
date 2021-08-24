@@ -338,7 +338,6 @@
         // 단위 받아오는 로직 추가
         const str = item.split('_');
         const type = str[1];
-        let sensorUnit;
         $.ajax({
             url:'<%=cp%>/getUnit',
             dataType: 'text',
@@ -347,7 +346,6 @@
             success: function (data) {
                 if(data!='null' && data!=""){
                     $('#unit').text("[ 단위 : " + data +" ]");
-                    sensorUnit = data;
                 }else{
                     $('#unit').text("");
                 }
@@ -384,18 +382,6 @@
                     return false;
                 }else{
                     addChart(data, category, reference, flag);
-                    if(sensorUnit != undefined){
-                        chart.updateOptions({
-                            yaxis: {
-                                labels: {
-                                    show: true,
-                                    formatter: function (val) {
-                                        return val.toFixed(2) + sensorUnit;
-                                    }
-                                }
-                            }}
-                        );
-                    }
                 }
                 if(flag==0){
                     inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', place + '-'+ category + ' 측정자료 조회','조회');
@@ -571,20 +557,6 @@
                 markers: {
                     size: 0
                 },
-                xaxis: {
-                    type: 'datetime',
-                    labels:{
-                        datetimeUTC:false
-                    }
-                },
-                yaxis:{
-                    tickAmount: 4,
-                    labels:{
-                        formatter: function(value){
-                            return value.toFixed(2);
-                        }
-                    },
-                },
                 annotations: {
                     yaxis: [
                         {
@@ -665,6 +637,10 @@
                         enabled: false,
                     },
                 },
+                yaxis:{
+                    tickAmount: 2,
+                    decimalsInFloat: 2,
+                },
             };
 
             chart = new ApexCharts(document.querySelector("#chart-line2"), options);
@@ -705,11 +681,7 @@
                 },
                 yaxis: {
                     tickAmount: 2,
-                    labels:{
-                        formatter: function(value){
-                            return value.toFixed(2);
-                        }
-                    }
+                    decimalsInFloat: 2,
                 },
                 xaxis: {
                     type: 'datetime',
@@ -741,6 +713,7 @@
                 search(0);
             }
             chart.updateSeries([{
+                name: category,
                 data : data
             }])
 
@@ -748,6 +721,10 @@
 
             if(reference.length!=0){
                 chart.updateOptions({
+                    yaxis:{
+                        tickAmount: 2,
+                        decimalsInFloat: 2,
+                    },
                     annotations: {
                         yaxis: [
                             {
@@ -808,7 +785,11 @@
                        target: 'chart',
                        enabled: true
                    }
-               }
+               },
+                yaxis:{
+                    tickAmount: 2,
+                    decimalsInFloat: 2,
+                },
             })
         }
     }
