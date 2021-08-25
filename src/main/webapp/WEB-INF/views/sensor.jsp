@@ -656,15 +656,14 @@
                     },
                 }
             },
-            colors: ['#629cf4'],
+            colors: ['#97bef8'],
             markers: { //점
                 size: 3,
                 strokeWidth: 1,
                 shape: "circle",
                 radius: 1,
-                colors: ["#629cf4"],
+                colors: ["#0d6efd"],
                 hover: {
-                    color: ["#193af4"],
                     size: 10,
                 }
             },
@@ -675,7 +674,7 @@
                 },
                 x: {
                     show: true,
-                    format: 'HH:mm:ss',
+                    format : 'MM/dd HH:mm:ss'
                 },
                 marker: {
                     show: false,

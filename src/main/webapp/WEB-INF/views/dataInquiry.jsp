@@ -563,15 +563,14 @@
                         }
                     }
                 },
-                colors: ['#546E7A'],
+                colors: ['#0d6efd'],
                 stroke: {
-                    width: 3,
+                    width: 4,
                     curve: 'smooth',
                 },
                 dataLabels: {
                     enabled: false
                 },
-                colors: ['#556f7b'],
                 fill: {
                     opacity: 1,
                 },
@@ -685,12 +684,16 @@
                         enabled: true
                     },
                 },
-                colors: ['#629cf4'],
+                colors: ['#97bef8'],
+                stroke: {
+                    width: 0,
+                    curve: 'smooth',
+                },
                 fill: {
                     type: 'gradient',
                     gradient: {
-                        opacityFrom: 1,
-                        opacityTo: 0.8,
+                        opacityFrom: 0.9,
+                        opacityTo: 0.9,
                     }
                 },
                 xaxis: {
