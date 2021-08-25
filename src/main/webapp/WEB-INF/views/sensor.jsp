@@ -294,7 +294,10 @@
                 if(sensorData.length == 0){
                     chartFrameShow(false);
                 }
+                var table = $('#sensor-table').DataTable();
+                var pageNum = table.page.info().page;
                 let dt = draw_sensor_table(sensorData, sensorInfo); //하단 센서 상세 테이블 생성
+                dt.fnPageChange(pageNum); //페이지 번호 유지
                 updateChart(sensorData, sensorInfo); //차트 업데이트
                 /* 최근 데이터 업데이트 */
                 let recentSensorData = getSensorRecent(newSensorName);
@@ -704,9 +707,9 @@
                     show: true,
                     datetimeUTC: false,
                     datetimeFormatter: {
-                        day: 'dd일 HH시',
-                        hour: 'dd일 HH시',
-                        minute: 'HH시 mm분',
+                        day: 'HH:mm:ss',
+                        hour: 'HH:mm:ss',
+                        minute: 'HH:mm:ss',
                     },
                 },
                 crosshairs: {

@@ -1025,9 +1025,9 @@
                     show: true,
                     datetimeUTC: false,
                     datetimeFormatter: {
-                        day: 'dd일 HH시',
-                        hour: 'dd일 HH시',
-                        minute: 'HH시 mm분',
+                        day: 'dd, HH:mm:ss',
+                        hour: 'HH:mm:ss',
+                        minute: 'HH:mm:ss',
                     },
                 },
                 crosshairs: {

@@ -571,7 +571,7 @@
                 dataLabels: {
                     enabled: false
                 },
-                colors: ['#629cf4'],
+                colors: ['#556f7b'],
                 fill: {
                     opacity: 1,
                 },
@@ -639,11 +639,11 @@
                         show: true,
                         datetimeUTC: false,
                         datetimeFormatter: {
-                            year: 'yyyy년',
-                            month: 'MM월',
-                            day: 'dd일',
-                            hour: 'dd일 HH시',
-                            minute: 'HH시 mm분',
+                            year: 'yyyy',
+                            month: 'MM',
+                            day: 'MM/dd',
+                            hour: 'HH:mm:ss',
+                            minute: 'HH:mm:ss',
                         },
                     },
                     crosshairs: {
@@ -714,11 +714,11 @@
                         show: true,
                         datetimeUTC: false,
                         datetimeFormatter: {
-                            year: 'yyyy년',
-                            month: 'MM월',
-                            day: 'dd일',
-                            hour: 'dd일 HH시',
-                            minute: 'HH시 mm분',
+                            year: 'yyyy',
+                            month: 'MM',
+                            day: 'MM/dd',
+                            hour: 'HH:mm:ss',
+                            minute: 'HH:mm:ss',
                         },
                     },
                     crosshairs: {
