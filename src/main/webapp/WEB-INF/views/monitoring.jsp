@@ -995,7 +995,7 @@
                 },
                 x: {
                     show: true,
-                    format : 'MM/dd HH:mm:ss'
+                    format : 'MM-dd HH:mm:ss'
                 },
                 marker: {
                     show: false,
@@ -1151,7 +1151,7 @@
                     text: unit,
                     style:{
                         fontSize: '13px',
-                        fontWeight: 0
+                        fontWeight: 'bold'
                     }
                 },
                 tickAmount: 2,
@@ -1162,7 +1162,7 @@
                     show: true,
                     formatter: function (val) {
                         return val;
-                    }
+                    },
                 }
             },
             tooltip:{

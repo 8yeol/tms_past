@@ -754,7 +754,7 @@
                             text: unitText,
                             style:{
                                 fontSize: '13px',
-                                fontWeight: 0
+                                fontWeight: 'bold'
                             }
                         },
                         tickAmount: 2,
