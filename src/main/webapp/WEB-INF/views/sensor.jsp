@@ -240,6 +240,7 @@
 
 
     function getData(sensorName){
+        let sensorDataList = new Array();
         setTimeout(function getDataInterval() {
             clearTimeout(intervalData);
             /* 측정소 업데이트 */
@@ -291,6 +292,10 @@
                     newSensorName = "RM05_"+newSensorName;
                 }
                 let sensorData = getSensor(newSensorName, sensorTime); //센서 데이터 (최근 1시간, 24시간)
+                if(sensorDataList.length == 0){
+                    updateChart(sensorData, sensorInfo); //차트 업데이트
+                    sensorDataList = sensorData;
+                }
                 if(sensorData.length == 0){
                     chartFrameShow(false);
                 }
@@ -298,23 +303,21 @@
                 var pageNum = table.page.info().page;
                 let dt = draw_sensor_table(sensorData, sensorInfo); //하단 센서 상세 테이블 생성
                 dt.fnPageChange(pageNum); //페이지 번호 유지
-                updateChart(sensorData, sensorInfo); //차트 업데이트
                 /* 최근 데이터 업데이트 */
                 let recentSensorData = getSensorRecent(newSensorName);
                 $('#update').text("업데이트 : "+moment(recentSensorData.up_time).format('YYYY-MM-DD HH:mm:ss'));
-                if(recentSensorData.length != 0 && sensorData.length != 0){
-                    if(sensorData[sensorData.length-1].x != recentSensorData.up_time){
-                        sensorData.push({
+                if(sensorDataList.length != 0 && sensorData.length != 0){
+                    if(sensorDataList[sensorDataList.length-1].x != recentSensorData.up_time){
+                        sensorDataList.push({
                             x: recentSensorData.up_time,
                             y: recentSensorData.value
                         });
                         sensor_table_update(dt, recentSensorData, sensorInfo); //테이블 업데이트
-                        updateChart(sensorData, sensorInfo);
-                        if(sensorData.length > 1200){
-                            sensorData = getSensor(newSensorName, sensorTime);
+                        updateChart(sensorDataList, sensorInfo);
+                        if(sensorDataList.length > 1200){
+                            sensorDataList = getSensor(newSensorName, sensorTime);
                         }
                     }
-
                 }
 
 
