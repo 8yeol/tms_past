@@ -495,6 +495,15 @@
             xaxis: {
                 categories: day,
             },
+            yaxis:{
+                decimalsInFloat: 2,
+                labels:{
+                    show: true,
+                    formatter: function(val){
+                        return val;
+                    }
+                }
+            },
             fill: {
                 opacity: 1,
             },

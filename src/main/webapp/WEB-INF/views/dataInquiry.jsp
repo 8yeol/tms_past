@@ -626,7 +626,8 @@
                 tooltip: {
                     enabled : true,
                     x: {
-                        format : 'yyyy-MM-dd HH:mm'
+                        show: true,
+                        format : 'MM-dd HH:mm:ss'
                     },
                     marker: {
                         show: false,
@@ -662,6 +663,12 @@
                     decimalsInFloat: 2,
                     max: max,
                     min: min,
+                    labels:{
+                        show: true,
+                        formatter: function(val){
+                            return val;
+                        }
+                    }
                 },
             };
 
@@ -705,11 +712,17 @@
                         enabled: false
                     },
                 },
-                yaxis: {
+                yaxis:{
                     tickAmount: 2,
                     decimalsInFloat: 2,
                     max: max,
                     min: min,
+                    labels:{
+                        show: true,
+                        formatter: function(val){
+                            return val;
+                        }
+                    }
                 },
                 xaxis: {
                     type: 'datetime',
@@ -765,6 +778,17 @@
                             show: true,
                             formatter: function(val){
                                 return val;
+                            }
+                        }
+                    },
+                    tooltip:{
+                        y:{
+                            formatter: function (val) {
+                                if(unitText){
+                                    return val + " " + unitText;
+                                }else{
+                                    return val;
+                                }
                             }
                         }
                     },
@@ -834,6 +858,12 @@
                     decimalsInFloat: 2,
                     max: max,
                     min: min,
+                    labels:{
+                        show: true,
+                        formatter: function(val){
+                            return val;
+                        }
+                    }
                 },
             })
         }
