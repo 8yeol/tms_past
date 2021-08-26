@@ -473,6 +473,7 @@
             var firstExcute = true;
         setTimeout(function chartInterval() {
             var sensorDataList = getSensor(sensorName, 13);
+            console.log(sensorDataList);
             var recentData;
             var realTime = {};
             if(sensorDataList.length == 0){
@@ -514,7 +515,7 @@
                             var after1Min = new Date();
                             if(document.getElementById('statusOff').innerText > 0){
                                 after1Min = after1Min.setMinutes(after1Min.getMinutes()+1);
-                                before10Min = before10Min.setMinutes(before10Min.getMinutes()-11);
+                                before10Min = before10Min.setMinutes(before10Min.getMinutes()-14);
                                 after1Min = moment(after1Min).format("YYYY-MM-DD HH:mm:ss");
                                 before10Min = moment(before10Min).format("YYYY-MM-DD HH:mm:ss");
                                 if(before10Min < dataListTime && dataListTime <= after1Min){
