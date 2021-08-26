@@ -298,7 +298,7 @@
                 var pageNum = table.page.info().page;
                 let dt = draw_sensor_table(sensorData, sensorInfo); //하단 센서 상세 테이블 생성
                 dt.fnPageChange(pageNum); //페이지 번호 유지
-                updateChart(sensorData, sensorInfo); //차트 업데이트
+                // updateChart(sensorData, sensorInfo); //차트 업데이트
                 /* 최근 데이터 업데이트 */
                 let recentSensorData = getSensorRecent(newSensorName);
                 $('#update').text("업데이트 : "+moment(recentSensorData.up_time).format('YYYY-MM-DD HH:mm:ss'));
@@ -740,6 +740,7 @@
      *  차트 업데이트
      */
     function updateChart(sensor_data_list, sensor_data){
+        console.log("update");
         var dataLength = sensor_data_list.length;
         var timeRange;
         var unit = sensor_data.unit;
