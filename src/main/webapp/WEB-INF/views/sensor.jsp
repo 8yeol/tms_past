@@ -740,7 +740,6 @@
      *  차트 업데이트
      */
     function updateChart(sensor_data_list, sensor_data){
-        console.log("update");
         var dataLength = sensor_data_list.length;
         var timeRange;
         var unit = sensor_data.unit;
