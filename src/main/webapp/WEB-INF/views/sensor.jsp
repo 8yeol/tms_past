@@ -874,9 +874,6 @@
                         if(opts.dataPointIndex == dataLength-dataIndex[z]){
                             return val;
                         }
-                        if(opts.dataPointIndex == dataLength || opts.dataPointIndex == 0){
-                            return val;
-                        }
                     }
                 }
             }
