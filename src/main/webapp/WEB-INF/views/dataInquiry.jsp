@@ -764,11 +764,7 @@
                         labels:{
                             show: true,
                             formatter: function(val){
-                                if(unitText) {
-                                    return val + " " + unitText;
-                                }else {
-                                    return val;
-                                }
+                                return val;
                             }
                         }
                     },
