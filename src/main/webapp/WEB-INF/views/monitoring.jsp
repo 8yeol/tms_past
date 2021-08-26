@@ -954,6 +954,7 @@
             }],
             chart: {
                 height: '200px',
+                width: '100%',
                 type: 'line',
                 animations: {
                     enabled: true,
@@ -1008,7 +1009,7 @@
             dataLabels: {
                 offsetY: -3,
                 enabled: true,
-                textAnchor: 'end',
+                textAnchor: 'middle',
                 style: { //데이터 배경
                     fontSize: '10px',
                 },
@@ -1060,9 +1061,23 @@
     function updateChart(sensor_data_list, sensor_data, chartIndex){
         var arr =new Array();
         var unit = sensor_data.unit;
-        if(sensor_data_list.length != 0){
-            for(var i in sensor_data_list){
-                arr.push(sensor_data_list[i].y);
+        var dataLength = sensor_data_list.length;
+        var dataIndex = new Array();
+        if(unit == null || unit == undefined){
+            unit = "";
+        }
+        if(dataLength != 0){
+            if(dataLength > 10){
+                for(var i=1; i<=dataLength-4; i++){
+                    arr.push(sensor_data_list[dataLength-i].y);
+                    if((i-1)%3 ==0){
+                        dataIndex.push(i);
+                    }
+                }
+            }else {
+                for (var i in sensor_data_list) {
+                    arr.push(sensor_data_list[i].y);
+                }
             }
             var max = arr.reduce(function (previousValue, currentValue) {
                 return parseFloat(previousValue > currentValue ? previousValue:currentValue);
@@ -1070,8 +1085,8 @@
             var min = arr.reduce(function (previousValue, currentValue) {
                 return parseFloat(previousValue > currentValue ? currentValue:previousValue);
             });
-            max = Math.ceil(max);
-            min = Math.floor(min);
+            var maxCeil = Math.ceil(max);
+            var minFloor = Math.floor(min);
         }else{
             sensor_data_list = [];
         }
@@ -1131,24 +1146,48 @@
                     }]
             },
             yaxis: {
+                // opposite: true,
+                title:{
+                    text: unit,
+                    style:{
+                        fontSize: '13px',
+                        fontWeight: 0
+                    }
+                },
                 tickAmount: 2,
                 decimalsInFloat: 2,
-                min: min,
-                max: max,
+                min: minFloor,
+                max: maxCeil,
                 labels: {
                     show: true,
                     formatter: function (val) {
-                        if (sensor_data_list == null || sensor_data_list.length == 0)
-                            return 'No data';
-                        else
-                            if(unit){
-                                return val + sensor_data.unit
-                            }else{
-                                return val;
-                            }
+                        return val;
                     }
                 }
             },
+            tooltip:{
+                y:{
+                    formatter: function (val) {
+                        if(unit){
+                            return val + " " + sensor_data.unit
+                        }else{
+                            return val;
+                        }
+                    }
+                }
+            },
+            dataLabels: {
+                formatter: function (val, opts) {
+                    for(var z in dataIndex){
+                        if(opts.dataPointIndex == dataLength-dataIndex[z]){
+                            return val;
+                        }
+                        if(opts.dataPointIndex == dataLength || opts.dataPointIndex == 0){
+                            return val;
+                        }
+                    }
+                }
+            }
         })
     }
 

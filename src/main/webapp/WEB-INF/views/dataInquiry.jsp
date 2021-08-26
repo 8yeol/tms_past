@@ -750,6 +750,13 @@
             if(reference.length!=0){
                 chart.updateOptions({
                     yaxis:{
+                        title:{
+                            text: unitText,
+                            style:{
+                                fontSize: '13px',
+                                fontWeight: 0
+                            }
+                        },
                         tickAmount: 2,
                         decimalsInFloat: 2,
                         max: max,
@@ -757,9 +764,9 @@
                         labels:{
                             show: true,
                             formatter: function(val){
-                                if(unitText){
-                                    return val+unitText;
-                                }else{
+                                if(unitText) {
+                                    return val + " " + unitText;
+                                }else {
                                     return val;
                                 }
                             }

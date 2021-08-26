@@ -287,7 +287,7 @@
                 if(document.getElementsByName("chartRadio")[0].checked){ //최근 1시간
                     sensorTime = 63;
                 }else{ //최근 24시간
-                    sensorTime = 1460;
+                    sensorTime = 1450;
                     newSensorName = "RM05_"+newSensorName;
                 }
                 let sensorData = getSensor(newSensorName, sensorTime); //센서 데이터 (최근 1시간, 24시간)
@@ -634,6 +634,7 @@
             }],
             chart: {
                 height: '400px',
+                weight: '100%',
                 type: 'line',
                 animations: {
                     enabled: true,
@@ -689,7 +690,7 @@
             dataLabels: {
                 offsetY: -3,
                 enabled: chartLabel,
-                textAnchor: 'end',
+                textAnchor: 'middle',
                 style: { //데이터 배경
                     fontSize: '11px',
                 },
@@ -739,17 +740,31 @@
      *  차트 업데이트
      */
     function updateChart(sensor_data_list, sensor_data){
+        var dataLength = sensor_data_list.length;
         var timeRange;
         var unit = sensor_data.unit;
+        var arr =new Array();
+        var dataIndex = new Array();
+        if(unit == null || unit == undefined){
+            unit = "";
+        }
         if(document.getElementsByName("chartRadio")[0].checked){
             timeRange = 3600000;
         }else{
-            timeRange = 86000000;
+            timeRange = 3600000*24;
         }
-        var arr =new Array();
-        if(sensor_data_list.length != 0){
-            for(var i in sensor_data_list){
-                arr.push(sensor_data_list[i].y);
+        if(dataLength != 0){
+            if(dataLength > 10) {
+                for(var i=1; i<=dataLength-2; i++){
+                    arr.push(sensor_data_list[dataLength-i].y);
+                    if((i-1)%10 ==0){
+                        dataIndex.push(i);
+                    }
+                }
+            }else{
+                for(var i in sensor_data_list){
+                    arr.push(sensor_data_list[i].y);
+                }
             }
             var max = arr.reduce(function (previousValue, currentValue) {
                 return parseFloat(previousValue > currentValue ? previousValue:currentValue);
@@ -757,8 +772,8 @@
             var min = arr.reduce(function (previousValue, currentValue) {
                 return parseFloat(previousValue > currentValue ? currentValue:previousValue);
             });
-            max = Math.ceil(max);
-            min = Math.floor(min);
+            var maxCeil = Math.ceil(max);
+            var minFloor = Math.floor(min);
         }
 
         if(sensor_data.length != 0){
@@ -820,29 +835,50 @@
                         }
                     }]
             },
+            xaxis:{
+              range: timeRange
+            },
             yaxis: {
+                title:{
+                    text: unit,
+                    style:{
+                        fontSize: '13px',
+                        fontWeight: 0
+                    }
+                },
                 tickAmount: 2,
                 decimalsInFloat: 2,
-                min: min,
-                max: max,
+                min: minFloor,
+                max: maxCeil,
                 labels: {
                     show: true,
                     formatter: function (val) {
-                        if (sensor_data_list == null || sensor_data_list.length == 0) {
-                            return 'No data';
+                        return val;
+                    }
+                }
+            },
+            tooltip:{
+                y:{
+                    formatter: function (val) {
+                        if(unit){
+                            return val + " " + sensor_data.unit
                         }else{
-                            if(unit){
-                                return val + sensor_data.unit
-                            }else{
-                                return val;
-                            }
+                            return val;
                         }
                     }
                 }
             },
-            xaxis: {
-                type: 'datetime',
-                range: timeRange
+            dataLabels: {
+                formatter: function (val, opts) {
+                    for(var z in dataIndex){
+                        if(opts.dataPointIndex == dataLength-dataIndex[z]){
+                            return val;
+                        }
+                        if(opts.dataPointIndex == dataLength || opts.dataPointIndex == 0){
+                            return val;
+                        }
+                    }
+                }
             }
         })
     }

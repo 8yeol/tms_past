@@ -406,7 +406,7 @@ public class MainController {
         List<Sensor> sensorData = new ArrayList<>();
         // 센서의 최근 데이터들을 저장하기 위한 변수
         try{
-            sensorData = sensorCustomRepository.getSenor(sensorNames.get(0),"1");
+            sensorData = sensorCustomRepository.getSenor2(sensorNames.get(0),"63");
         }catch (Exception e){
             System.out.println(e);
             model.addAttribute("sensorData", sensorData); //선택된 센서의 최근 1시간 데이터
