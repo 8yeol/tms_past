@@ -314,12 +314,11 @@
                         });
                         sensor_table_update(dt, recentSensorData, sensorInfo); //테이블 업데이트
                         updateChart(sensorDataList, sensorInfo);
-                        if(sensorDataList.length > 1200){
+                        if(sensorDataList.length > 1260){
                             sensorDataList = getSensor(newSensorName, sensorTime);
                         }
                     }
                 }
-
 
                 /* 센서 업데이트 */
                 placeDataList = interval_getData(sensorInfo, placeDataList); //측정소 정보 업데이트
