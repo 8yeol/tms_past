@@ -654,11 +654,27 @@
                             color: '#414142',
                         },
                     },
-                    tooltip: {
-                        enabled: false,
+                    tooltip:{
+                        y:{
+                            formatter: function (val) {
+                                if(unitText){
+                                    return val + " " + unitText;
+                                }else{
+                                    return val;
+                                }
+                            }
+                        }
                     },
                 },
                 yaxis:{
+                    title:{
+                        text: unitText,
+                        offsetX: 6,
+                        style:{
+                            fontSize: '13px',
+                            fontWeight: 'bold'
+                        }
+                    },
                     tickAmount: 2,
                     decimalsInFloat: 2,
                     max: max,

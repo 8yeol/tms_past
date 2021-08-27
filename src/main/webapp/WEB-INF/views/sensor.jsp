@@ -844,6 +844,7 @@
             yaxis: {
                 title:{
                     text: unit,
+                    offsetX: 6,
                     style:{
                         fontSize: '13px',
                         fontWeight: 'bold'
