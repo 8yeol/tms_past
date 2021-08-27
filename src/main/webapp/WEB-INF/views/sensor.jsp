@@ -307,7 +307,7 @@
                 let recentSensorData = getSensorRecent(newSensorName);
                 $('#update').text("업데이트 : "+moment(recentSensorData.up_time).format('YYYY-MM-DD HH:mm:ss'));
                 if(sensorDataList.length != 0 && sensorData.length != 0){
-                    if(sensorDataList[sensorDataList.length-1].x != recentSensorData.up_time){
+                        if(sensorDataList[sensorDataList.length-1].x != recentSensorData.up_time){
                         sensorDataList.push({
                             x: recentSensorData.up_time,
                             y: recentSensorData.value
@@ -747,25 +747,26 @@
         var unit = sensor_data.unit;
         var arr =new Array();
         var dataIndex = new Array();
+        var minusTime;
         if(unit == null || unit == undefined){
             unit = "";
         }
         if(document.getElementsByName("chartRadio")[0].checked){
             timeRange = 3600000;
+            minusTime = 60;
         }else{
             timeRange = 3600000*24;
+            minusTime = 1440;
         }
         if(dataLength != 0){
-            if(dataLength > 10) {
-                for(var i=1; i<=dataLength-2; i++){
-                    arr.push(sensor_data_list[dataLength-i].y);
-                    if((i-1)%10 ==0){
-                        dataIndex.push(i);
-                    }
-                }
-            }else{
-                for(var i in sensor_data_list){
+            var recentDate = new Date(sensor_data_list[dataLength-1].x);
+            var before10Min = recentDate.setMinutes(recentDate.getMinutes()-minusTime);
+            before10Min = new Date(before10Min);
+            before10Min = moment(before10Min).format("YYYY-MM-DD HH:mm:ss");
+            for (var i in sensor_data_list) {
+                if(before10Min <=  moment(sensor_data_list[i].x).format("YYYY-MM-DD HH:mm:ss")){
                     arr.push(sensor_data_list[i].y);
+                    dataIndex.push(i);
                 }
             }
             var max = arr.reduce(function (previousValue, currentValue) {
@@ -872,8 +873,13 @@
             },
             dataLabels: {
                 formatter: function (val, opts) {
-                    for(var z in dataIndex){
-                        if(opts.dataPointIndex == dataLength-dataIndex[z]){
+                    for(var i in dataIndex){
+                        if(i%5 == 0){
+                            if(opts.dataPointIndex == dataIndex[i]){
+                                return val;
+                            }
+                        }
+                        if(opts.dataPointIndex == dataIndex[dataIndex.length-1]){
                             return val;
                         }
                     }
@@ -1099,11 +1105,13 @@
             standard =  "정상";
         }
         table.fnSort([0, 'desc']);
-        firstData = new Date(table.fnGetData()[0].x);
-        lastData = new Date(table.fnGetData()[table.fnGetData().length-2].x);
-        timeDiff = lastData-firstData
-        if(timeDiff > 3600000 && timeDiff < 3660000 || timeDiff > 86400000 && timeDiff < 86700000){
-            table.fnDeleteRow(0);
+        if(table.fnGetData().length >= 2){
+            firstData = new Date(table.fnGetData()[0].x);
+            lastData = new Date(table.fnGetData()[table.fnGetData().length-2].x);
+            timeDiff = lastData-firstData;
+            if(timeDiff > 3600000 && timeDiff < 3660000 || timeDiff > 86400000 && timeDiff < 86700000){
+                table.fnDeleteRow(0);
+            }
         }
         table.fnAddData([{'x':upDate, 'y': value, 'z':standard}]);
         table.fnPageChange(pageNum);
