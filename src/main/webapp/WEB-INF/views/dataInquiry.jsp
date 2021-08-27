@@ -556,6 +556,7 @@
                     id: 'chart',
                     type: 'line',
                     height: 350,
+                    weight: '98%',
                     toolbar: {
                         show: true,
                         tools: {
@@ -583,42 +584,40 @@
                             y: reference.get("management"),
                             borderColor: '#00E396',
                             label: {
-                                borderColor: '#00E396',
+                                borderColor: '#82e8b7',
                                 style: {
                                     color: '#fff',
-                                    background: '#00E396'
+                                    background: '#82e8b7'
                                 },
                                 text: '관리기준',
                                 position: 'left',
-                                offsetX: 0
+                                offsetX: 8
                             }
                         },
                         {
                             y: reference.get("company"),
-                            borderColor: '#FEB019',
                             label: {
-                                borderColor: '#FEB019',
+                                borderColor: '#ffd862',
                                 style: {
                                     color: '#fff',
-                                    background: '#FEB019'
+                                    background: '#ffd862'
                                 },
                                 text: '사내기준',
                                 position: 'left',
-                                offsetX: 0
+                                offsetX: 8
                             }
                         },
                         {
                             y: reference.get("legal"),
-                            borderColor: '#FF4560',
                             label: {
-                                borderColor: '#FF4560',
+                                borderColor: '#ed969e',
                                 style: {
                                     color: '#fff',
-                                    background: '#FF4560'
+                                    background: '#ed969e'
                                 },
                                 text: '법적기준',
                                 position: 'left',
-                                offsetX: 0
+                                offsetX: 8
                             }
                         }
                     ]
@@ -669,14 +668,14 @@
                 yaxis:{
                     title:{
                         text: unitText,
-                        offsetX: 6,
+                        offsetX: 7,
                         style:{
                             fontSize: '13px',
                             fontWeight: 'bold'
                         }
                     },
                     tickAmount: 2,
-                    decimalsInFloat: 2,
+                    decimalsInFloat: 3,
                     max: max,
                     min: min,
                     labels:{
@@ -812,44 +811,41 @@
                         yaxis: [
                             {
                                 y: reference.get("management"),
-                                borderColor: '#00E396',
                                 label: {
-                                    borderColor: '#00E396',
+                                    borderColor: '#82e8b7',
                                     style: {
                                         color: '#fff',
-                                        background: '#00E396'
+                                        background: '#82e8b7'
                                     },
                                     text: '관리기준',
                                     position: 'left',
-                                    offsetX: 0
+                                    offsetX: 8
                                 }
                             },
                             {
                                 y: reference.get("company"),
-                                borderColor: '#FEB019',
                                 label: {
-                                    borderColor: '#FEB019',
+                                    borderColor: '#ffd862',
                                     style: {
                                         color: '#fff',
-                                        background: '#FEB019'
+                                        background: '#ffd862'
                                     },
                                     text: '사내기준',
                                     position: 'left',
-                                    offsetX: 0
+                                    offsetX: 8
                                 }
                             },
                             {
                                 y: reference.get("legal"),
-                                borderColor: '#FF4560',
                                 label: {
-                                    borderColor: '#FF4560',
+                                    borderColor: '#ed969e',
                                     style: {
                                         color: '#fff',
-                                        background: '#FF4560'
+                                        background: '#ed969e'
                                     },
                                     text: '법적기준',
                                     position: 'left',
-                                    offsetX: 0
+                                    offsetX: 8
                                 }
                             }
                         ]
