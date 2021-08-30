@@ -954,7 +954,8 @@
             }],
             chart: {
                 height: '200px',
-                width: '100%',
+                width: '99%',
+                offsetX: 5,
                 type: 'line',
                 animations: {
                     enabled: true,
@@ -1147,7 +1148,7 @@
                 // opposite: true,
                 title:{
                     text: unit,
-                    offsetX: 6,
+                    offsetX: 2,
                     style:{
                         fontSize: '13px',
                         fontWeight: 'bold'

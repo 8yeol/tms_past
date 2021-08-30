@@ -636,7 +636,8 @@
             }],
             chart: {
                 height: '400px',
-                weight: '100%',
+                weight: '99%',
+                offsetX: 5,
                 type: 'line',
                 animations: {
                     enabled: true,
@@ -844,7 +845,7 @@
             yaxis: {
                 title:{
                     text: unit,
-                    offsetX: 6,
+                    offsetX: 2,
                     style:{
                         fontSize: '13px',
                         fontWeight: 'bold'

@@ -556,7 +556,8 @@
                     id: 'chart',
                     type: 'line',
                     height: 350,
-                    weight: '98%',
+                    width: '97%',
+                    offsetX: 30,
                     toolbar: {
                         show: true,
                         tools: {
@@ -668,7 +669,7 @@
                 yaxis:{
                     title:{
                         text: unitText,
-                        offsetX: 7,
+                        offsetX: 5,
                         style:{
                             fontSize: '13px',
                             fontWeight: 'bold'

@@ -249,7 +249,9 @@
                 }],
                 chart: {
                     type: 'bar',
-                    height: 500
+                    height: 500,
+                    width: '98%',
+                    offsetX: 5,
                 },
                 legend:{
                     position : 'top'
@@ -274,7 +276,11 @@
                 },
                 yaxis: {
                     title: {
-                        text: '(kg/월)'
+                        text: '(kg/월)',
+                        style:{
+                            fontSize: '13px',
+                            fontWeight: 'bold'
+                        }
                     },
                     labels:{
                         formatter: function(value){
