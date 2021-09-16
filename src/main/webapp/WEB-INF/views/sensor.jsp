@@ -636,8 +636,6 @@
             }],
             chart: {
                 height: '400px',
-                weight: '99%',
-                offsetX: 5,
                 type: 'line',
                 animations: {
                     enabled: true,
@@ -770,9 +768,13 @@
                     dataIndex.push(i);
                 }
             }
-            var max = arr.reduce(function (previousValue, currentValue) {
-                return parseFloat(previousValue > currentValue ? previousValue:currentValue);
-            });
+            if(sensor_data.max != 999999){
+                var max = sensor_data.max;
+            }else{
+                var max = arr.reduce(function (previousValue, currentValue) {
+                    return parseFloat(previousValue > currentValue ? previousValue:currentValue);
+                });
+            }
             var min = arr.reduce(function (previousValue, currentValue) {
                 return parseFloat(previousValue > currentValue ? currentValue:previousValue);
             });

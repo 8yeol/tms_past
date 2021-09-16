@@ -291,6 +291,7 @@ public class AjaxController {
                         subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
                         subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
                         subObj.put("name", sensorName);
+                        subObj.put("max", numberTypeChange(sensorInfo.getMax()));
                         if (sensorItem != null) {
                             subObj.put("unit", sensorItem.getUnit());
                         } else {
@@ -354,6 +355,7 @@ public class AjaxController {
             subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
             subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
             subObj.put("name", sensor);
+            subObj.put("max", numberTypeChange(sensorInfo.getMax()));
             if(sensorItem != null) {
                 subObj.put("unit", sensorItem.getUnit());
             }else{

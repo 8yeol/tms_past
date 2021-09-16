@@ -391,6 +391,7 @@ public class MainController {
                     subObj.put("companyStandard", numberTypeChange(sensorInfo.getCompanyStandard()));
                     subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
                     subObj.put("name", sensorName);
+                    subObj.put("max", numberTypeChange(sensorInfo.getMax()));
                     jsonArray.add(subObj);
                     if(i==0) { //0번째 센서 데이터
                         model.addAttribute("activeSensor", subObj);
