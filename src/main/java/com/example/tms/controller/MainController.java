@@ -101,15 +101,9 @@ public class MainController {
      * @return
      */
     @RequestMapping("/")
-    public String main(Principal principal){
+    public String main(){
 
-        Member member = memberRepository.findById(principal.getName());
-
-        if(!member.getState().equals("1")){
-            return "redirect:monitoring";
-        }
-
-        return "redirect:dashboard";
+        return "redirect:monitoring";
     }
 
     /**

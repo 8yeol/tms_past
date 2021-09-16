@@ -402,29 +402,20 @@
     <div class="container">
         <div class="d-flex justify-content-between">
             <div class="d-flex justify-content-around">
-                <c:choose>
-                    <c:when test="${state eq 1}">
-                        <a href="<%=cp%>/dashboard" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
-                            대기 TMS 관제 시스템
-                        </a>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="<%=cp%>/monitoring" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
-                            대기 TMS 관제 시스템
-                        </a>
-                    </c:otherwise>
-                </c:choose>
+                <a href="<%=cp%>/monitoring" class="mb-2 mb-lg-0 text-white text-decoration-none fs-3 pe-5 fw-bold">
+                    대기 TMS 관제 시스템
+                </a>
 
                 <nav id="topMenu">
                     <ul id="menu">
-                        <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/dashboard" id="dashboard">대시보드</a></li>
-                        <li class="topMenuLi"><a class="menuLink shortLink fw-bold" href="<%=cp%>/alarm" id="alarm">알림</a></li>
                         <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/monitoring" id="monitoring">모니터링</a>
                             <ul class="submenu short_sub">
                                 <li><a href="<%=cp%>/monitoring" class="submenuLink" style="margin-left: 20px;">실시간 모니터링</a></li>
                                 <li><a href="<%=cp%>/sensor" class="submenuLink" style="width: 130px;">상세화면</a></li>
                             </ul>
                         </li>
+                        <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/dashboard" id="dashboard">대시보드</a></li>
+                        <li class="topMenuLi"><a class="menuLink shortLink fw-bold" href="<%=cp%>/alarm" id="alarm">알림</a></li>
                         <li class="topMenuLi"><a class="menuLink fw-bold" href="<%=cp%>/dataInquiry" id="statistics">분석 및 통계</a>
                             <ul class="submenu short_sub">
                                 <li><a href="<%=cp%>/dataInquiry" class="submenuLink ">측정자료 조회</a></li>
