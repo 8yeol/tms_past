@@ -111,32 +111,39 @@
                             <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">연간 배출량 추이(% / Kg)</h5>
-                                    <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
-                                        <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년<span class="md">대비</span></p>
-                                        <p class="fw-bold fs-3">
-                                            <c:choose>
-                                                <c:when test="${past.totalEmissions == 0 and present.totalEmissions == 0}">0%</c:when>
-                                                <c:when test="${past.totalEmissions == 0}">
-                                                    <fmt:formatNumber value="${present.totalEmissions}" pattern=",###"/>%
-                                                    /
-                                                    <c:set var="totalNum" value="${present.totalEmissions - past.totalEmissions}"></c:set>
-                                                    <fmt:formatNumber value="${totalNum}" pattern=",###"/> Kg
-                                                    <span style="font-size: 0.8rem" class="text-danger">증가</span>
-                                                </c:when>
-                                                <c:when test="${past.totalEmissions == present.totalEmissions and totalNum == 0 }">0% / 0Kg</c:when>
-                                                <c:otherwise>
-                                                    <fmt:formatNumber value="${totalNum}" pattern=",###"/>
-                                                    <c:choose>
-                                                        <c:when test="${totalNum > 0}">
-                                                            <span style="font-size: 0.8rem" class="text-danger">증가</span>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <span style="font-size: 0.8rem" class="text-primary">감소</span>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </p>
+                                    <div class="d-flex justify-content-center" style="padding: 0.5rem 0.5rem 0;">
+                                        <p class="fw-bold" style="margin: 10px 20px;">전년대비</p>
+                                        <div class="fw-bold fs-3">
+                                            <p style="margin-bottom: 5px">
+                                                353Kg
+                                                <span style="font-size: 1rem; margin-left: 10px" class="text-danger">증가</span>
+                                            </p>
+                                            <p style="font-size: 0.9rem; width: 65px; text-align: center; height: 30px; margin-bottom: 10px; line-height: 30px; background-color: rgba(255,0,0,0.2);border-radius: 5px">
+                                                <i class="fas fa-sort-up fa-fw" style="color: red"></i>353%
+                                            </p>
+<%--                                            <c:choose>--%>
+<%--                                                <c:when test="${past.totalEmissions == 0 and present.totalEmissions == 0}">0%</c:when>--%>
+<%--                                                <c:when test="${past.totalEmissions == 0}">--%>
+<%--                                                    <fmt:formatNumber value="${present.totalEmissions}" pattern=",###"/>%--%>
+<%--                                                    /--%>
+<%--                                                    <c:set var="totalNum" value="${present.totalEmissions - past.totalEmissions}"></c:set>--%>
+<%--                                                    <fmt:formatNumber value="${totalNum}" pattern=",###"/> Kg--%>
+<%--                                                    <span style="font-size: 0.8rem" class="text-danger">증가</span>--%>
+<%--                                                </c:when>--%>
+<%--                                                <c:when test="${past.totalEmissions == present.totalEmissions and totalNum == 0 }">0% / 0Kg</c:when>--%>
+<%--                                                <c:otherwise>--%>
+<%--                                                    <fmt:formatNumber value="${totalNum}" pattern=",###"/>--%>
+<%--                                                    <c:choose>--%>
+<%--                                                        <c:when test="${totalNum > 0}">--%>
+<%--                                                            <span style="font-size: 0.8rem" class="text-danger">증가</span>--%>
+<%--                                                        </c:when>--%>
+<%--                                                        <c:otherwise>--%>
+<%--                                                            <span style="font-size: 0.8rem" class="text-primary">감소</span>--%>
+<%--                                                        </c:otherwise>--%>
+<%--                                                    </c:choose>--%>
+<%--                                                </c:otherwise>--%>
+<%--                                            </c:choose>--%>
+                                        </div>
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
@@ -160,32 +167,39 @@
                             <div class="card border-2 border-primary" style="height: 218px;">
                                 <div class="card-body m-fs">
                                     <h5 class="card-title small fw-bold fs-6">분기별 배출량 추이(% / Kg)</h5>
-                                    <div class="d-flex justify-content-center re-pa" style="padding: 1rem 1rem 0;">
-                                        <p class="fw-bold me-3" style="margin-top: 0.8rem;">전년<span class="md">대비</span></p>
-                                        <p class="fw-bold fs-3">
-                                            <c:choose>
-                                                <c:when test="${pastQuater == 0 and presentQuater == 0}">0%</c:when>
-                                                <c:when test="${pastQuater == 0}">
-                                                    <fmt:formatNumber value="${presentQuater}" pattern=",###"/>%
-                                                    /
-                                                    <c:set var="quaterNum" value="${presentQuater - pastQuater}"></c:set>
-                                                    <fmt:formatNumber value="${quaterNum}" pattern=",###"/> Kg
-                                                    <span style="font-size: 0.8rem" class="text-danger">증가</span>
-                                                </c:when>
-                                                <c:when test="${pastQuater == presentQuater and quaterNum == 0}">0% / 0Kg</c:when>
-                                                <c:otherwise>
-                                                    <fmt:formatNumber value="${quaterNum}" pattern=",###"/>
-                                                    <c:choose>
-                                                        <c:when test="${quaterNum > 0}">
-                                                            <span style="font-size: 0.8rem" class="text-danger">증가</span>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <span style="font-size: 0.8rem" class="text-primary">감소</span>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </p>
+                                    <div class="d-flex justify-content-center" style="padding: 0.5rem 0.5rem 0;">
+                                        <p class="fw-bold" style="margin: 10px 20px;">전년대비</p>
+                                        <div class="fw-bold fs-3">
+                                            <p style="margin-bottom: 5px">
+                                                353Kg
+                                                <span style="font-size: 1rem; margin-left: 10px" class="text-danger">증가</span>
+                                            </p>
+                                            <p style="font-size: 0.9rem; width: 65px; text-align: center; height: 30px; margin-bottom: 10px; line-height: 30px; background-color: rgba(255,0,0,0.2);border-radius: 5px">
+                                                <i class="fas fa-sort-up fa-fw" style="color: red"></i>353%
+                                            </p>
+<%--                                            <c:choose>--%>
+<%--                                                <c:when test="${pastQuater == 0 and presentQuater == 0}">0%</c:when>--%>
+<%--                                                <c:when test="${pastQuater == 0}">--%>
+<%--                                                    <fmt:formatNumber value="${presentQuater}" pattern=",###"/>%--%>
+<%--                                                    /--%>
+<%--                                                    <c:set var="quaterNum" value="${presentQuater - pastQuater}"></c:set>--%>
+<%--                                                    <fmt:formatNumber value="${quaterNum}" pattern=",###"/> Kg--%>
+<%--                                                    <span style="font-size: 0.8rem" class="text-danger">증가</span>--%>
+<%--                                                </c:when>--%>
+<%--                                                <c:when test="${pastQuater == presentQuater and quaterNum == 0}">0% / 0Kg</c:when>--%>
+<%--                                                <c:otherwise>--%>
+<%--                                                    <fmt:formatNumber value="${quaterNum}" pattern=",###"/>--%>
+<%--                                                    <c:choose>--%>
+<%--                                                        <c:when test="${quaterNum > 0}">--%>
+<%--                                                            <span style="font-size: 0.8rem" class="text-danger">증가</span>--%>
+<%--                                                        </c:when>--%>
+<%--                                                        <c:otherwise>--%>
+<%--                                                            <span style="font-size: 0.8rem" class="text-primary">감소</span>--%>
+<%--                                                        </c:otherwise>--%>
+<%--                                                    </c:choose>--%>
+<%--                                                </c:otherwise>--%>
+<%--                                            </c:choose>--%>
+                                        </div>
                                     </div>
                                     <hr class="text-primary m-0">
                                     <div class="d-flex justify-content-center mt-3" style="font-size: 13px">
