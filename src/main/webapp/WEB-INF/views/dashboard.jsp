@@ -27,7 +27,7 @@
         <span class="fs-4 fw-bold">대시보드</span>
     </div>
 
-    <div class="row m-3 mt-3 bg-white ms-1" style="width: 98%; height: 370px; overflow: auto;">
+    <div class="row m-3 mt-3 bg-white ms-1" style="width: 98%; height: 420px; overflow: auto;">
         <div class="row margin-l" style="padding: 1rem 1rem 0">
             <div class="col fs-5 fw-bold">
                 연간 배출량 추이 모니터링 <br>
@@ -101,25 +101,25 @@
                         </c:when>
                     </c:choose>
                     <div class="row pb-3 margin-l">
-                        <div class="row">
+                        <div class="row" style="margin-bottom: 5px">
                             <div style="display: flex;">
                                 <div class="fs-6 fw-bold" style="width: 50%">${present.placeName} - ${present.sensorName}</div>
                                 <span class="small" style="width: 50%; text-align: right">업데이트 : <span class="fw-bold"><fmt:formatDate value="${present.updateTime}" pattern="yyyy-MM-dd"/></span></span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="card border-2 border-primary" style="height: 218px;">
+                            <div class="card border-2 border-primary" style="height: 250px; background: url(static/images/cardbodyBg.png) no-repeat center / cover; ">
                                 <div class="card-body m-fs">
-                                    <h5 class="card-title small fw-bold fs-6">연간 배출량 추이(% / Kg)</h5>
-                                    <div class="d-flex justify-content-center">
-                                        <p class="fw-bold fs-5" style="margin: 10px 20px;">전년대비</p>
-                                        <div class="fw-bold fs-2">
-                                            <p style="margin-bottom: 5px">
-                                                353 <span class="fs-4">Kg</span>
+                                    <h5 class="small fw-bold fs-6" style="display: flex; justify-content: space-between; border-bottom: 1px solid #0d6efd; padding: .5rem 0;">연간 배출량 추이 <span style="text-align: right; font-weight: normal">단위 kg</span></h5>
+                                    <div class="d-flex" style="flex-wrap: wrap; border-bottom: 1px solid #0d6efd">
+                                        <p class="fw-bold fs-6" style="margin-left: 10px; margin-bottom: 0; height: fit-content">전년대비</p>
+                                        <div class="fw-bold fs-1 text-center" style="width: 100%">
+                                            <p style="margin-bottom: 0px">
+                                                353
                                                 <span style="font-size: 1.1rem; margin-left: 10px" class="text-danger">증가</span>
                                             </p>
-                                            <p style="font-size: 1rem; width: 80px; text-align: center; height: 30px; margin-bottom: 10px; line-height: 30px; background-color: rgba(255,0,0,0.2);border-radius: 5px">
-                                                <i class="fas fa-sort-up fa-fw" style="color: red"></i>353%
+                                            <p style="font-size: 1rem; width: 80px; text-align: center; height: 30px; margin: 0 auto 10px; line-height: 30px;">
+                                                ( <i class="fas fa-sort-up fa-fw" style="color: red"></i>353% )
                                             </p>
 <%--                                            <c:choose>--%>
 <%--                                                <c:when test="${past.totalEmissions == 0 and present.totalEmissions == 0}">0%</c:when>--%>
@@ -145,15 +145,13 @@
 <%--                                            </c:choose>--%>
                                         </div>
                                     </div>
-                                    <hr class="text-primary m-0">
-                                    <div class="d-flex justify-content-center" style="font-size: 14px; margin-top: 0.8rem">
-                                        <div class="fw-bold text-center">
+                                    <div class="d-flex justify-content-center" style="font-size: 14px; margin-top: 0.3rem">
+                                        <div class="fw-bold text-center w-50">
                                             <p class="fs-5 m-0 text-center text-primary">
                                                 <fmt:formatNumber value="${present.totalEmissions}" pattern=",###"/></p>
                                             <p class="year" style="display: inline-block;">${present.year}년 현재 배출량</p>
                                         </div>
-                                        <p class="fs-3" style="margin: 0 0.5rem 0;">/</p>
-                                        <div class="fw-bold text-center">
+                                        <div class="fw-bold text-center w-50">
                                             <p class="fs-5 m-0 text-center">
                                                 <fmt:formatNumber value="${past.totalEmissions}" pattern=",###"/></p>
                                             <p class="year" style="display: inline-block;">${past.year}년 총 배출량</p>
@@ -164,18 +162,18 @@
                         </div>
 
                         <div class="col-6">
-                            <div class="card border-2 border-primary" style="height: 218px;">
+                            <div class="card border-2 border-primary" style="height: 250px; background: url(static/images/cardbodyBg.png) no-repeat center / cover; ">
                                 <div class="card-body m-fs">
-                                    <h5 class="card-title small fw-bold fs-6">분기별 배출량 추이(% / Kg)</h5>
-                                    <div class="d-flex justify-content-center" style="padding: 0.5rem 0.5rem 0;">
-                                        <p class="fw-bold fs-5" style="margin: 10px 20px;">전년대비</p>
-                                        <div class="fw-bold fs-2">
-                                            <p style="margin-bottom: 5px">
-                                                353 <span class="fs-4">Kg</span>
+                                    <h5 class="small fw-bold fs-6" style="display: flex; justify-content: space-between; border-bottom: 1px solid #0d6efd; padding: .5rem 0;">연간 배출량 추이 <span style="text-align: right; font-weight: normal">단위 kg</span></h5>
+                                    <div class="d-flex" style="flex-wrap: wrap; border-bottom: 1px solid #0d6efd">
+                                        <p class="fw-bold fs-6" style="margin-left: 10px; margin-bottom: 0; height: fit-content">전년대비</p>
+                                        <div class="fw-bold fs-1 text-center" style="width: 100%">
+                                            <p style="margin-bottom: 0px">
+                                                353
                                                 <span style="font-size: 1.1rem; margin-left: 10px" class="text-danger">증가</span>
                                             </p>
-                                            <p style="font-size: 1rem; width: 80px; text-align: center; height: 30px; margin-bottom: 10px; line-height: 30px; background-color: rgba(255,0,0,0.2);border-radius: 5px">
-                                                <i class="fas fa-sort-up fa-fw" style="color: red"></i>353%
+                                            <p style="font-size: 1rem; width: 80px; text-align: center; height: 30px; margin: 0 auto 10px; line-height: 30px;">
+                                                ( <i class="fas fa-sort-up fa-fw" style="color: red"></i>353% )
                                             </p>
 <%--                                            <c:choose>--%>
 <%--                                                <c:when test="${pastQuater == 0 and presentQuater == 0}">0%</c:when>--%>
@@ -202,13 +200,12 @@
                                         </div>
                                     </div>
                                     <hr class="text-primary m-0">
-                                    <div class="d-flex justify-content-center" style="font-size: 14px; margin-top: 0.8rem">
-                                        <div class="fw-bold text-center">
+                                    <div class="d-flex justify-content-center" style="font-size: 14px; margin-top: 0.3rem">
+                                        <div class="fw-bold text-center w-50">
                                             <p class="fs-5 m-0 text-center text-primary"><fmt:formatNumber value="${presentQuater}" pattern=",###"/></p>
                                             <p class="year" style="display: inline-block;">${present.year}년 ${quarter}분기</p>
                                         </div>
-                                        <p class="fs-3 mx-2">/</p>
-                                        <div class="fw-bold text-center">
+                                        <div class="fw-bold text-center w-50">
                                             <p class="fs-5 m-0 text-center"><fmt:formatNumber value="${pastQuater}" pattern=",###"/></p>
                                             <p class="year" style="display: inline-block;">${past.year}년 ${quarter}분기</p>
                                         </div>
