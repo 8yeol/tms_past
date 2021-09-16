@@ -1121,10 +1121,11 @@ public class AjaxController {
         float legal = 999999.0f;
         float company = 999999.0f;
         float management = 999999.0f;
+        float max = 999999.0f;
         Boolean monitoring = false;
 
         //reference document 생성
-        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, monitoring);
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, max, monitoring);
         reference_value_settingRepository.save(saveReference);
 
     }
@@ -1175,6 +1176,23 @@ public class AjaxController {
         //측정항목 업데이트
         ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
         reference.setManagementStandard(value);
+        reference_value_settingRepository.save(reference);
+        //측정소 업데이트
+        placeUpTime(name);
+    }
+
+    /**
+     * 측정항목의 chartmax 업데이트
+     *
+     * @param name      측정소명
+     * @param value     사내기준 값
+     * @param tablename 테이블 명
+     */
+    @RequestMapping(value = "/chartmaxUpdate")
+    public void chartmaxUpdate(@RequestParam("place") String name, @RequestParam("value") Float value, @RequestParam("tablename") String tablename) {
+        //측정항목 업데이트
+        ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
+        reference.setMax(value);
         reference_value_settingRepository.save(reference);
         //측정소 업데이트
         placeUpTime(name);

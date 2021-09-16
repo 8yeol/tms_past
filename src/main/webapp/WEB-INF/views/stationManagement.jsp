@@ -86,9 +86,10 @@
                         <th width="2%"></th>
                         <th width="18%">측정항목</th>
                         <th width="25%">관리ID</th>
-                        <th width="14%">법적기준</th>
-                        <th width="14%">사내기준</th>
-                        <th width="14%">관리기준</th>
+                        <th width="10.5%">법적기준</th>
+                        <th width="10.5%">사내기준</th>
+                        <th width="10.5%">관리기준</th>
+                        <th width="10.5%">Chart Max</th>
                         <th width="20%">모니터링</th>
                     </tr>
                 </thead>
@@ -308,9 +309,10 @@
                                 "<td style='width: 2%;'></td>" +
                                 "<td style='width:18%;'><span id='naming" + i + "' >" + data[i].naming + "</span></td>" +
                                 "<td style='width:25%;'><span id='name" + i + "'>" + data[i].name + "</span></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
-                                "<td style='width:14%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
+                                "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
+                                "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
+                                "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
+                                "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='chartmax' type='text' id='chartmax" + i + "' value='" + data[i].max + "' onchange='chartmaxupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch' "+labelEvent+">" +
                                 "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdateCheck(this)' "+monitoringDisabled+">" +
                                 "<div class='slider round'></div>" +
@@ -445,6 +447,9 @@
             }
             if (data[i].managementStandard == 999999) {
                 data[i].managementStandard = "";
+            }
+            if (data[i].max == 999999) {
+                data[i].max = "";
             }
             if (data[i].monitoring == true) {
                 data[i].monitoring = "checked";
@@ -921,6 +926,47 @@
             name.value = "";
         } else {
             multiSelecterModal(pname, naming, "manage", value);
+            name.value = value;
+        }
+    }
+
+    //legal onchange
+    function chartmaxupdate(name) {
+        var id = name.id;
+        const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
+        const naming = $("#naming" + num).text(); //관리ID
+        var tablename = $("#name" + num).text(); //측정항목 명
+        var companyname = "company" + num;
+        var company = $("#" + companyname).val(); //사내기준 값
+        var managename = "management" + num;
+        var manage = $("#" + managename).val(); //관리기준 값
+        var value = strReplace(name.value); //수정값
+        var pname = $("#pname").text();
+        if (value == "" || value == "999999") {
+            value = "999999";
+        } else {
+
+            if (ifsum(value) == false) {
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
+        }
+        $.ajax({
+            url: '<%=cp%>/chartmaxUpdate',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "tablename": tablename,
+                "value": value,
+                "place": pname
+            }
+        })
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
+        if (value == "999999") {
+            name.value = "";
+        } else {
+            multiSelecterModal(pname, naming, "legal", value);
             name.value = value;
         }
     }

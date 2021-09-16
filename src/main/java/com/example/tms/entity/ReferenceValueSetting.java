@@ -16,15 +16,17 @@ public class ReferenceValueSetting {
     private Float legalStandard;//법적기준
     private Float companyStandard;//사내기준
     private Float managementStandard; //관리기준
+    private Float max; //
     private Boolean monitoring; //모니터링
 
     @Builder
-    public ReferenceValueSetting(String name, String naming, Float legalStandard, Float companyStandard, Float managementStandard, Boolean monitoring) {
+    public ReferenceValueSetting(String name, String naming, Float legalStandard, Float companyStandard, Float managementStandard, Float max, Boolean monitoring) {
         this.name = name;
         this.naming = naming;
         this.legalStandard = legalStandard;
         this.companyStandard = companyStandard;
         this.managementStandard = managementStandard;
         this.monitoring = monitoring;
+        this.max = max;
     }
 }
