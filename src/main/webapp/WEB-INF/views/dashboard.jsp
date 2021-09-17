@@ -108,7 +108,7 @@
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="card border-2 border-primary" style="height: 250px; background: url(static/images/cardbodyBg.png) no-repeat center / cover; ">
+                            <div class="card border-2 border-primary" style="height: 250px;  background: url(static/images/cardbody_bg.png) no-repeat center / cover; ">
                                 <div class="card-body m-fs">
                                     <h5 class="small fw-bold fs-6" style="display: flex; justify-content: space-between; border-bottom: 1px solid #0d6efd; padding: .5rem 0;">연간 배출량 추이 <span style="text-align: right; font-weight: normal">단위 kg</span></h5>
                                     <div class="d-flex" style="flex-wrap: wrap; border-bottom: 1px solid #0d6efd">
@@ -162,9 +162,9 @@
                         </div>
 
                         <div class="col-6">
-                            <div class="card border-2 border-primary" style="height: 250px; background: url(static/images/cardbodyBg.png) no-repeat center / cover; ">
+                            <div class="card border-2 border-primary" style="height: 250px; background: url(static/images/cardbody_bg.png) no-repeat center / cover; ">
                                 <div class="card-body m-fs">
-                                    <h5 class="small fw-bold fs-6" style="display: flex; justify-content: space-between; border-bottom: 1px solid #0d6efd; padding: .5rem 0;">연간 배출량 추이 <span style="text-align: right; font-weight: normal">단위 kg</span></h5>
+                                    <h5 class="small fw-bold fs-6" style="display: flex; justify-content: space-between; border-bottom: 1px solid #0d6efd; padding: .5rem 0;">분기별 배출량 추이 <span style="text-align: right; font-weight: normal">단위 kg</span></h5>
                                     <div class="d-flex" style="flex-wrap: wrap; border-bottom: 1px solid #0d6efd">
                                         <p class="fw-bold fs-6" style="margin-left: 10px; margin-bottom: 0; height: fit-content">전년대비</p>
                                         <div class="fw-bold fs-1 text-center" style="width: 100%">
