@@ -110,15 +110,15 @@
                         <div class="col-6">
                             <div class="card border-2 border-primary" style="height: 250px;  background: url(static/images/cardbodyBg.png) no-repeat center / cover; ">
                                 <div class="card-body m-fs" style="padding: 0.5rem 1rem;">
-                                    <h5 class="small fw-bold fs-6" style="display: flex; justify-content: space-between; border-bottom: 1px solid #0d6efd; padding: .5rem 0;">연간 배출량 추이 <span style="text-align: right; font-weight: normal">단위 kg</span></h5>
+                                    <h5 class="small fw-bold fs-6" style="display: flex; justify-content: space-between; border-bottom: 1px solid #0d6efd; padding: .5rem 0;">연간 배출량 추이 <span style="text-align: right; font-weight: normal; font-size: .8rem">단위 kg</span></h5>
                                     <div class="d-flex" style="flex-wrap: wrap; border-bottom: 1px solid #0d6efd">
                                         <p class="fw-bold fs-6" style="margin-left: 10px; margin-bottom: 0; height: fit-content">전년대비</p>
-                                        <div class="fw-bold fs-1 text-center" style="width: 100%">
-                                            <p style="margin-bottom: 0px">
+                                        <div class="fw-bold text-center" style="width: 100%; font-size: 3rem;">
+                                            <p style="margin-bottom: 0px; line-height: 1.2;">
                                                 353
-                                                <span style="font-size: 1.1rem; margin-left: 10px" class="text-danger">증가</span>
+                                                <span style="font-size: 1.2rem; margin-left: 10px" class="text-danger">증가</span>
                                             </p>
-                                            <p style="font-size: 1rem; width: 80px; text-align: center; height: 30px; margin: 0 auto 10px; line-height: 30px;">
+                                            <p style="font-size: 1.1rem; text-align: center; height: 30px; margin: 5px auto 10px; line-height: 30px;">
                                                 ( <i class="fas fa-sort-up fa-fw" style="color: red"></i>353% )
                                             </p>
 <%--                                            <c:choose>--%>
@@ -164,15 +164,15 @@
                         <div class="col-6">
                             <div class="card border-2 border-primary" style="height: 250px; background: url(static/images/cardbodyBg.png) no-repeat center / cover; ">
                                 <div class="card-body m-fs" style="padding: 0.5rem 1rem;">
-                                    <h5 class="small fw-bold fs-6" style="display: flex; justify-content: space-between; border-bottom: 1px solid #0d6efd; padding: .5rem 0;">분기별 배출량 추이 <span style="text-align: right; font-weight: normal">단위 kg</span></h5>
+                                    <h5 class="small fw-bold fs-6" style="display: flex; justify-content: space-between; border-bottom: 1px solid #0d6efd; padding: .5rem 0;">분기별 배출량 추이 <span style="text-align: right; font-weight: normal; font-size: .8rem">단위 kg</span></h5>
                                     <div class="d-flex" style="flex-wrap: wrap; border-bottom: 1px solid #0d6efd">
                                         <p class="fw-bold fs-6" style="margin-left: 10px; margin-bottom: 0; height: fit-content">전년대비</p>
-                                        <div class="fw-bold fs-1 text-center" style="width: 100%">
-                                            <p style="margin-bottom: 0px">
+                                        <div class="fw-bold text-center" style="width: 100%; font-size: 3rem; ">
+                                            <p style="margin-bottom: 0px; line-height: 1.2;">
                                                 353
-                                                <span style="font-size: 1.1rem; margin-left: 10px" class="text-danger">증가</span>
+                                                <span style="font-size: 1.2rem; margin-left: 10px" class="text-danger">증가</span>
                                             </p>
-                                            <p style="font-size: 1rem; width: 80px; text-align: center; height: 30px; margin: 0 auto 10px; line-height: 30px;">
+                                            <p style="font-size: 1.1rem; text-align: center; height: 30px; margin: 5px auto 10px; line-height: 30px;">
                                                 ( <i class="fas fa-sort-up fa-fw" style="color: red"></i>353% )
                                             </p>
 <%--                                            <c:choose>--%>
