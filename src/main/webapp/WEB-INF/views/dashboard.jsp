@@ -379,6 +379,7 @@
                     </div>
                 </div>
             </div>
+            <!-- 관리기준 임시삭제
             <div class="col">
                 <div class="card text-white bg-success mb-3" style="min-height: 100%;">
                     <div class="card-header">관리기준 초과</div>
@@ -386,6 +387,7 @@
                     </div>
                 </div>
             </div>
+            -->
             <div class="col">
                 <div class="card text-dark bg-warning mb-3" style="min-height: 100%;">
                     <div class="card-header">사내기준 초과</div>

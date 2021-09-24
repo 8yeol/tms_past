@@ -83,10 +83,20 @@
                 <span class="text-center fw-bold bg-warning">사내기준 초과</span>
                 <p id="company_standard_text_A" class="text-warning fs-1 bg-white" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
             </div>
+            <!-- 관리기준 임시삭제
+            <div class="topDash-r">
+                <span class="text-center fw-bold bg-danger">법적기준 초과</span>
+                <p id="legal_standard_text_A" class="text-danger fs-1 bg-white" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
+            </div>
+            <div class="topDash-r">
+                <span class="text-center fw-bold bg-warning">사내기준 초과</span>
+                <p id="company_standard_text_A" class="text-warning fs-1 bg-white" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
+            </div>
             <div class="topDash-r">
                 <span class="text-center fw-bold bg-success">관리기준 초과</span>
                 <p id="management_standard_text_A" class="text-success fs-1 bg-white" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>
             </div>
+            -->
         </div>
     </div>
     <%--상단 대시보드 end--%>
@@ -117,10 +127,16 @@
                     <table class='table table-bordered table-hover text-center mt-1'>
                         <thead>
                         <tr class="add-bg-color">
+                            <!--관리기준 임시삭제
                             <th width=28%'>항목</th>
                             <th width=17%'>법적기준</th>
                             <th width=17%'>사내기준</th>
                             <th width=17%'>관리기준</th>
+                            <th width=21%'>실시간</th>
+                            -->
+                            <th width=20%'>항목</th>
+                            <th width=17%'>법적기준</th>
+                            <th width=17%'>사내기준</th>
                             <th width=21%'>실시간</th>
                         </tr>
                         </thead>
@@ -166,6 +182,7 @@
                                     <c:otherwise>
                                         <thead>
                                         <tr class="add-bg-color">
+                                            <!-- 관리기준 임시삭제
                                             <th width=22%'>항목</th>
                                             <th width=10%'>법적기준</th>
                                             <th width=10%'>사내기준</th>
@@ -173,6 +190,13 @@
                                             <th width=16%'>실시간</th>
                                             <th width=16%'>5분</th>
                                             <th width=16%'>30분</th>
+                                            -->
+                                            <th width=18%'>항목</th>
+                                            <th width=12%'>법적기준</th>
+                                            <th width=12%'>사내기준</th>
+                                            <th width=15%'>실시간</th>
+                                            <th width=15%'>5분</th>
+                                            <th width=15%'>30분</th>
                                         </tr>
                                         </thead>
                                     </c:otherwise>
@@ -232,6 +256,7 @@
                                                     </c:choose>
                                                 </div>
                                             </td>
+                                            <!-- 관리기준 임시삭제
                                             <td>
                                                 <div class="bg-success text-light">
                                                     <c:choose>
@@ -244,6 +269,7 @@
                                                     </c:choose>
                                                 </div>
                                             </td>
+                                            -->
                                         </c:otherwise>
                                     </c:choose>
                                     <td>
@@ -506,7 +532,9 @@
                             var recentValue;
                             if(columnCount == 4){
                                 recentValue = $('#sensor-table-'+chartIndex).find('td')[1].innerText;
-                            }else if(columnCount == 7){
+                            // 관리기준 임시삭제
+                            // columnCount == 7 로 변경하세요
+                            }else if(columnCount == 6){
                                 recentValue = $('#sensor-table-'+chartIndex).find('td')[4].innerText;
                             }
                             if(recentValue.indexOf("-") !== -1){
@@ -652,13 +680,15 @@
                             "<table class='table table-bordered table-hover text-center mt-1'>" +
                             "<thead>" +
                             "<tr class='add-bg-color'>" +
-                            "<th width=22%'>항목</th>" +
-                            "<th width=10%'>법적기준</th>" +
-                            "<th width=10%'>사내기준</th>" +
+                            "<th width=18%'>항목</th>" +
+                            "<th width=12%'>법적기준</th>" +
+                            "<th width=12%'>사내기준</th>" +
+                            /* 관리기준 임시삭제
                             "<th width=10%'>관리기준</th>" +
-                            "<th width=16%'>실시간</th>" +
-                            "<th width=16%'>5분</th>" +
-                            "<th width=16%'>30분</th>" +
+                            */
+                            "<th width=15%'>실시간</th>" +
+                            "<th width=15%'>5분</th>" +
+                            "<th width=15%'>30분</th>" +
                             "</tr>" +
                             "</thead>"+
                             "<tbody id='sensor-table-"+i+"-"+z+"'>"+
@@ -681,7 +711,9 @@
                 "<th width=28%'>항목</th>" +
                 "<th width=17%'>법적기준</th>" +
                 "<th width=17%'>사내기준</th>" +
+                /* 관리기준 임시삭제
                 "<th width=17%'>관리기준</th>" +
+                */
                 "<th width=21%'>실시간</th>" +
                 "</tr>" +
                 "</thead>"+
@@ -732,7 +764,10 @@
                         const newCeil0 = newRow.insertCell(0);
                         const newCeil1 = newRow.insertCell(1);
                         const newCeil2 = newRow.insertCell(2);
-                        const newCeil3 = newRow.insertCell(3);
+                        // 관리기준 임시삭제 const newCeil3 = newRow.insertCell(3);
+                        // newceil4 = new Row.insertCell(4) -> newCeil4 = newRow.insertCell(3)
+                        const newCeil4 = newRow.insertCell(3);
+
                         newCeil0.innerHTML = data[z].naming+'<input type="hidden" value='+data[z].name+'>';
 
                         if(!standarExistStatus){
@@ -744,7 +779,7 @@
 
                             newCeil1.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
                             newCeil2.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
-                            newCeil3.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
+                            newCeil4.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
                         }else {
 
                             if (data[z].legalStandard == 999999) {
@@ -771,18 +806,23 @@
                                 $(newRow).attr('class', 'bg-danger text-light');
                             }else if(newValue > data[z].companyStandard){
                                 $(newRow).attr('class', 'bg-warning text-light');
-                            }else if(newValue > data[z].managementStandard){
+                            }
+                            /* 관리기준 임시삭제
+                            else if(newValue > data[z].managementStandard){
                                 $(newRow).attr('class', 'bg-success text-light');
-                            }else{
+                            }
+                            */
+                            else{
                                 $(newRow).attr('class', '');
                             }
 
-                            const newCeil4 = newRow.insertCell(4);
-                            const newCeil5 = newRow.insertCell(5);
-                            const newCeil6 = newRow.insertCell(6);
+                            const newCeil5 = newRow.insertCell(4);
+                            const newCeil6 = newRow.insertCell(5);
                             newCeil1.innerHTML = '<div class="bg-danger text-light">'+legalStandard+'</div>';
                             newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
+                            /* 관리기준 임시삭제
                             newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
+                             */
                             newCeil4.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
                             newCeil5.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
                             newCeil6.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);

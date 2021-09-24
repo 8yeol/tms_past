@@ -326,9 +326,12 @@
                                 notify = '법적기준 초과';
                             }else if(data[i].grade==2){
                                 notify = '사내기준 초과';
-                            }else if(data[i].grade==3){
+                            }
+                            /* 관리기준 임시삭제
+                            else if(data[i].grade==3){
                                 notify = '관리기준 초과';
                             }
+                             */
 
                             cell2.innerHTML = data[i].sensor + " 센서 " + notify;
                             cell3.innerHTML = data[i].value.toFixed(2);
@@ -337,9 +340,13 @@
                                 cell5.innerHTML = '<div class="bg-danger text-light">'+notify+'</div>'
                             }else if(data[i].grade==2){
                                 cell5.innerHTML = '<div class="bg-warning text-light">'+notify+'</div>'
-                            }else if(data[i].grade==3){
+                            }
+                            /* 관리기준 임시삭제
+                            else if(data[i].grade==3){
                                 cell5.innerHTML = '<div class="bg-success text-light">'+notify+'</div>'
                             }
+
+                             */
                         }
 
                         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 조회("+from+" ~ "+to+")","조회");
@@ -406,7 +413,11 @@
             data: {"place": place},
            success: function (data) {
                 if(data[1]!=null||data[2]!=null||data[3]!=null){
-                    getData.push({day: data[0], legalCount:data[1]==null?0:data[1], companyCount:data[2]==null?0:data[2], managementCount: data[3]==null?0:data[3]});
+                    getData.push({day: data[0], legalCount:data[1]==null?0:data[1], companyCount:data[2]==null?0:data[2]
+                        /*관리기준 임시삭제
+                         , managementCount: data[3]==null?0:data[3]
+                         */
+                        });
                 }
            }
         });
@@ -417,7 +428,11 @@
             async: false,
             success: function (data) {
                 for(let i=0; i<data.length; i++){
-                    getData.push({day: data[i].day, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});
+                    getData.push({day: data[i].day, legalCount:data[i].legalCount, companyCount:data[i].companyCount
+                        /* 관리기준 임시삭제
+                         , managementCount: data[i].managementCount
+                         */
+                        });
                 }
             }
         });
@@ -441,7 +456,11 @@
             data: {"place": place},
             success: function (data) {
                 for(let i=0; i<data.length; i++){
-                    getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount, managementCount: data[i].managementCount});
+                    getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount
+                        /* 관리기준 임시삭제
+                         , managementCount: data[i].managementCount
+                         */
+                        });
                 }
             },
             error: function (e) {
@@ -454,12 +473,16 @@
         const day = new Array();
         const legalCount = new Array();
         const companyCount = new Array();
-        const managementCount = new Array();
+        /*관리기준 임시삭제
+         const managementCount = new Array();
+         */
         for(let i=chartData.length-1; 0<=i; i--){
             day.push(chartData[i].day);
             legalCount.push(chartData[i].legalCount);
             companyCount.push(chartData[i].companyCount);
-            managementCount.push(chartData[i].managementCount);
+            /*관리기준 임시삭제
+             managementCount.push(chartData[i].managementCount);
+             */
         }
         const options = {
             series: [{
@@ -468,10 +491,14 @@
             }, {
                 name: '사내 기준 초과',
                 data: companyCount
-            }, {
+            }
+            /*관리기준 임시삭제
+            , {
                 name: '관리 기준 초과',
                 data: managementCount
-            }],
+            }
+             */
+            ],
             colors: ['#F44336', '#ffc107', '#198754'],
             chart: {
                 type: 'bar',

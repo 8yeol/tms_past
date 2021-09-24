@@ -54,7 +54,9 @@
                             <th width="20%">항목</th>
                             <th width="15%">법적기준</th>
                             <th width="15%">사내기준</th>
+                            <!--관리기준 임시삭제
                             <th width="15%">관리기준</th>
+                            -->
                             <th width="15%">측정값</th>
                             <th width="20%">관리등급</th>
                         </tr>
@@ -94,6 +96,7 @@
                                         </c:when>
                                     </c:choose>
                                 </td>
+                                <!-- 관리기준 임시삭제
                                 <td>
                                     <c:choose>
                                         <c:when test="${sensorList.managementStandard eq 999999}">
@@ -106,6 +109,7 @@
                                         </c:when>
                                     </c:choose>
                                 </td>
+                                -->
                                 <td>
                                     <c:if test="${sensorList.value != 0}">
                                         <c:if test="${sensorList.beforeValue > sensorList.value}">
@@ -911,9 +915,11 @@
                     const newCeil0 = newRow.insertCell(0);
                     const newCeil1 = newRow.insertCell(1);
                     const newCeil2 = newRow.insertCell(2);
-                    const newCeil3 = newRow.insertCell(3);
-                    const newCeil4 = newRow.insertCell(4);
-                    const newCeil5 = newRow.insertCell(5);
+                    /* 관리기준 임시삭제
+                      const newCeil3 = newRow.insertCell(3);
+                      */
+                    const newCeil4 = newRow.insertCell(3);
+                    const newCeil5 = newRow.insertCell(4);
 
                     if(data[i].legalStandard == 999999){
                         legalStandard = '-';
@@ -929,6 +935,7 @@
                         companyStandard = data[i].companyStandard;
                         newCeil2.innerHTML = '<div class="bg-warning text-light">'+companyStandard+'</div>';
                     }
+                    /* 관리기준 임시삭제
                     if(data[i].managementStandard == 999999){
                         managementStandard = '-';
                         newCeil3.innerHTML = managementStandard;
@@ -936,6 +943,7 @@
                         managementStandard = data[i].managementStandard;
                         newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
                     }
+                     */
                     var selectSensorName = $('#radio_text').text();
                     var sensorName = data[i].naming;
                     if(selectSensorName == sensorName){
@@ -1027,7 +1035,11 @@
                 $('#standard_text').css("padding-right", "10px");
             }
             if(legalStandard != '-' || companyStandard != '-' || managementStandard != '-'){
-                $("#standard_text").text("법적/사내/관리 기준 : "+legalStandard+"/"+companyStandard+"/"+managementStandard+" 이하");
+                $("#standard_text").text("법적/사내 기준 : "+legalStandard+"/"+companyStandard+
+                /* 관리기준 임시삭제
+                "/"+managementStandard
+                */
+                +" 이하");
             }
         }
 
