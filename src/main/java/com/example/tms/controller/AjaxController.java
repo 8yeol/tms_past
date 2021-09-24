@@ -98,7 +98,7 @@ public class AjaxController {
         for(String key : gMS.keySet()){ //key(측정소명) 추출
             gMS_placeName.add(key);
         }
-        int placeListSize = gMS.size()-1;
+        int placeListSize = gMS.size()-2;
         List<Place> placeAll = placeRepository.findAll();
         for(int a=0; a<placeListSize; a++){
             for(int b=0; b<placeAll.size(); b++){
@@ -2247,7 +2247,7 @@ public class AjaxController {
             for(String key : gMS.keySet()){ //key(측정소명) 추출
                 gMS_placeName.add(key);
             }
-            int placeListSize = gMS.size()-1;
+            int placeListSize = gMS.size()-2;
             JSONArray jsonArray = new JSONArray();
             for (int a = 0; a < placeListSize; a++) { //모니터링 On인 측정소
                 int sensorSize = 0;
@@ -2322,12 +2322,11 @@ public class AjaxController {
                     placeInfoList.put("standardNotExist", standardNotExist);
                     placeInfoList.put("data", placeInfoArray);
                 }
-                String allMonitoringOFF = String.valueOf(gMS.get("OFF").get(0));
                 if (sensorSize != 0) {
                     placeInfoList.put("place", placeName);
                     placeInfoList.put("sensorList", sensorNameList);
                     placeInfoList.put("monitoringOn", sensorSize);
-                    placeInfoList.put("allMonitoringOFF", Integer.parseInt(allMonitoringOFF));
+                    placeInfoList.put("allMonitoringOFFList", gMS.get("OffList"));
                     jsonArray.add(placeInfoList);
                 }
             }
@@ -2349,6 +2348,7 @@ public class AjaxController {
         MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(groupNum);
         List<String> memberPlaceList = monitoringGroup.getMonitoringPlace();
         List<String> memberSensorList= monitoringGroup.getSensor();
+        List<String> memberSensorOffList = new ArrayList<>();
 
         int allCount = 0;
         int allFalse = 0;
@@ -2370,6 +2370,7 @@ public class AjaxController {
                                 sensorList.add(pSensor);
                             }else{
                                 allFalse++;
+                                memberSensorOffList.add(place.getName()+"-"+referenceValueSetting.getNaming());
                             }
                             monitoringSensor.put(placeList.getName(), sensorList);
                         }
@@ -2387,6 +2388,9 @@ public class AjaxController {
                         for(String mSensor : memberSensorList){
                             if(mSensor.equals(pSensor)){
                                 sensorList.add(pSensor);
+                            }else{
+                                ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(pSensor);
+                                memberSensorOffList.add(place.getName()+"-"+referenceValueSetting.getNaming());
                             }
                         }
                     }
@@ -2404,7 +2408,7 @@ public class AjaxController {
             count.add(String.valueOf(allCount - memberSensorList.size()));
         }
         monitoringSensor.put("OFF", count);
-
+        monitoringSensor.put("OffList", memberSensorOffList);
         return monitoringSensor;
     }
 

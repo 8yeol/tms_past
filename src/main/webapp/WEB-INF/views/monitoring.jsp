@@ -56,18 +56,21 @@
             <div style="display: flex; flex-wrap: wrap; margin-left: 20px; border: 0px solid #a9a9a9">
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
-                    <p id="statusOn" class="text-success fs-3">0</p>
+                    <p id="statusOn" class="text-success fs-3" onmouseover="$('#normal2').css('display','block')" onmouseout="$('#normal2').css('display','none')">0</p>
                     <div class="Gcloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
+                    <div class="Gcloud" id="normal2" style="display: none"></div>
                 </div>
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
-                    <p id="statusOff" class="text-danger fs-3">0</p>
+                    <p id="statusOff" class="text-danger fs-3" onmouseover="$('#failure2').css('display','block')" onmouseout="$('#failure2').css('display','none')">0</p>
                     <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
+                    <div class="Gcloud" id="failure2" style="display: none"></div>
                 </div>
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
-                    <p id="monitoringOff" class="fs-3">0</p>
+                    <p id="monitoringOff" class="fs-3" onmouseover="$('#off2').css('display','block')" onmouseout="$('#off2').css('display','none')">0</p>
                     <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
+                    <div class="Gcloud line" id="off2" style="display: none"></div>
                 </div>
             </div>
         </div>
@@ -821,14 +824,14 @@
      */
     function draw_sensor_info(placeInfo) {
         if(placeInfo.length != 0){
-
             var placeCount = placeInfo.length;
             var sensorMonitoringOn=0, allMonitoringOFF=0,
                 sensorStatusSuccess=0, sensorStatusFail=0,
                 legalSCount=0, companySCount=0, managementSCount=0,
                 notexistLegalStandard=0, notexistCompanyStandard=0, notexistManagementStandard=0;
-
-            allMonitoringOFF = placeInfo[0].allMonitoringOFF;
+            allMonitoringOFF = placeInfo[0].allMonitoringOFFList.length;
+            var sensorStatusSuccessList = new Array();
+            var sensorStatusFailList = new Array();
             for(var i=0; i<placeCount; i++){ //측정소별
                 var data = placeInfo[i].data;
                 var dataCount = data.length;
@@ -857,7 +860,9 @@
                         }else if(value > managementStandard){
                             managementSCount +=1;
                         }
+                        sensorStatusSuccessList.push(placeInfo[i].place+"-"+sensorData.naming);
                     }else{ // 최근데이터가 5분 이외일 때, 통신불량 처리
+                        sensorStatusFailList.push(placeInfo[i].place+"-"+sensorData.naming);
                         sensorStatusFail += 1;
                     }
 
@@ -889,7 +894,27 @@
             companySCount = 0;
             managementSCount = 0;
         }
-
+        $("#normal2").empty();
+        $("#failure2").empty();
+        $("#off2").empty();
+        for(var a=0; a<sensorStatusSuccessList.length; a++){
+            $("#normal2").append("<p>"+ sensorStatusSuccessList[a] + "</p>");
+        }
+        if(sensorStatusSuccessList.length == 0){
+            $("#normal2").append("모니터링 On 된 센서가 없습니다.");
+        }
+        for(var a=0; a<sensorStatusFailList.length; a++){
+                $("#failure2").append("<p>" + sensorStatusFailList[a] + "</p>");
+        }
+        if(sensorStatusFailList.length == 0){
+            $("#failure2").append("통신불량 센서가 없습니다.");
+        }
+        for(var a=0; a<placeInfo[0].allMonitoringOFFList.length; a++){
+            $("#off2").append("<p>"+placeInfo[0].allMonitoringOFFList[a]+"</p>");
+        }
+        if(placeInfo[0].allMonitoringOFFList.length == 0){
+            $("#off2").append("모니터링 Off 된 센서가 없습니다.");
+        }
         $("#sensorStatusP").text(runPercent + "%"); //가동률
         $("#operating").text(run); // 통신정상/전체
         $("#statusOn").text(sensorStatusSuccess); //정상

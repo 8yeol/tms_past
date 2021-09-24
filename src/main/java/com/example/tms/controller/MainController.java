@@ -219,7 +219,7 @@ public class MainController {
             for(String key : gMS.keySet()){ //key(측정소명) 추출
                 gMS_placeName.add(key);
             }
-            int placeListSize = gMS.size()-1;
+            int placeListSize = gMS.size()-2;
             JSONArray jsonArray = new JSONArray();
             for (int a = 0; a < placeListSize; a++) { //모니터링 On인 측정소
                 int sensorSize = 0;
@@ -286,12 +286,11 @@ public class MainController {
                     placeInfoList.put("standardNotExist", standardNotExist);
                     placeInfoList.put("data", placeInfoArray);
                 }
-                String allMonitoringOFF = String.valueOf(gMS.get("OFF").get(0));
                 if (sensorSize != 0) {
                     placeInfoList.put("placeName", placeName);
                     placeInfoList.put("sensorList", sensorNameList);
                     placeInfoList.put("monitoringOn", sensorSize);
-                    placeInfoList.put("allMonitoringOFF", Integer.parseInt(allMonitoringOFF));
+                    placeInfoList.put("allMonitoringOFFList", gMS.get("OffList"));
                     jsonArray.add(placeInfoList);
                 }
             }
