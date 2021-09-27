@@ -1173,7 +1173,7 @@
             async: false,
             success: function (data) {
                 var keys = Object.keys(data);
-                for(var i=0; i<keys.length-1; i++){
+                for(var i=0; i<keys.length-2; i++){
                     if((data[keys[i]]).length != 0){
                         result.push(keys[i]);
                     }

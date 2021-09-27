@@ -336,7 +336,7 @@ public class MainController {
             gMS_placeName.add(key);
         }
         ArrayList<String> placeName = new ArrayList<String>(); // 키에서 측정소만 추출
-        for(int i=0; i<gMS_placeName.size()-1; i++){
+        for(int i=0; i<gMS_placeName.size()-2; i++){
             if(gMS_placeName.get(i).length() != 0){
                 placeName.add(gMS_placeName.get(i));
             }
