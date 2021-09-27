@@ -58,19 +58,19 @@
                     <span class="fw-bold fs-5" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
                     <p id="statusOn" class="text-success fs-3" onmouseover="$('#normal2').css('display','block')" onmouseout="$('#normal2').css('display','none')">0</p>
                     <div class="Gcloud-l" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
-                    <div class="Gcloud-r box" id="normal2" style="display: none"></div>
+                     <div class="Gcloud-r box" id="normal2" style="display: none"></div>
                 </div>
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
                     <p id="statusOff" class="text-danger fs-3" onmouseover="$('#failure2').css('display','block')" onmouseout="$('#failure2').css('display','none')">0</p>
                     <div class="Gcloud-l" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
-                    <div class="Gcloud-r line" id="failure2" style="display: none"></div>
+                    <div class="Gcloud-r box" id="failure2" style="display: none"></div>
                 </div>
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
                     <p id="monitoringOff" class="fs-3" onmouseover="$('#off2').css('display','block')" onmouseout="$('#off2').css('display','none')">0</p>
                     <div class="Gcloud-l line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
-                    <div class="Gcloud-r line" id="off2" style="display: none"></div>
+                    <div class="Gcloud-r box" id="off2" style="display: none"></div>
                 </div>
             </div>
         </div>
@@ -941,19 +941,19 @@
             $("#normal2").append("<p>"+ sensorStatusSuccessList[a] + "</p>");
         }
         if(sensorStatusSuccessList.length == 0){
-            $("#normal2").append("모니터링 On 된 센서가 없습니다.");
+            $("#normal2").append("<p>" + "모니터링 On 된 센서가 없습니다."+ "</p>");
         }
         for(var a=0; a<sensorStatusFailList.length; a++){
                 $("#failure2").append("<p>" + sensorStatusFailList[a] + "</p>");
         }
         if(sensorStatusFailList.length == 0){
-            $("#failure2").append("통신불량 센서가 없습니다.");
+            $("#failure2").append("<p>" + "통신불량 센서가 없습니다."+ "</p>");
         }
         for(var a=0; a<placeInfo[0].allMonitoringOFFList.length; a++){
             $("#off2").append("<p>"+placeInfo[0].allMonitoringOFFList[a]+"</p>");
         }
         if(placeInfo[0].allMonitoringOFFList.length == 0){
-            $("#off2").append("모니터링 Off 된 센서가 없습니다.");
+            $("#off2").append("<p>"+ "모니터링 Off 된 센서가 없습니다."+ "</p>");
         }
         $("#sensorStatusP").text(runPercent + "%"); //가동률
         $("#operating").text(run); // 통신정상/전체

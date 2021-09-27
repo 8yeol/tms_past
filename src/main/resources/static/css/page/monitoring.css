@@ -91,7 +91,7 @@ tr {
     background-color: #fff;
     border: 2px solid #33c124;
     padding: 10px 0px;
-    height: fit-content;
+    height: unset;
     top: 40px;
 }
 
