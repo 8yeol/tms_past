@@ -970,7 +970,7 @@
         if (value == "999999") {
             name.value = "";
         } else {
-            multiSelecterModal(pname, naming, "legal", value);
+            multiSelecterModal(pname, naming, "ChartMax", value);
             name.value = value;
         }
     }
@@ -984,6 +984,8 @@
             modal.html("'" + place + "-" + name + "'의 사내기준 값이 '" + value + "'(으)로 설정되었습니다.");
         } else if (standard == "manage") {
             modal.html("'" + place + "-" + name + "'의 관리기준 값이 '" + value + "'(으)로 설정되었습니다.");
+        } else if(standard == "ChartMax") {
+            modal.html("'" + place + "-" + name + "'의 Chart Max 값이 '" + value + "'(으)로 설정되었습니다.");
         } else {
             if (value == "ON") {
                 if (name == "") {
