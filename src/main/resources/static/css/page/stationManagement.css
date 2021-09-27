@@ -127,10 +127,6 @@ td>input {
     text-align: center;
 }
 
-#station2 td:nth-child(5),#station2 th:nth-child(5)  {
-    border-right: 2px solid #aaa;
-}
-
 /* 반응형 미디어쿼리 */
 @media all and (max-width: 1980px) and (min-width: 1400px) {
     #p_monitoring>div:nth-child(3) {

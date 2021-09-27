@@ -91,8 +91,8 @@
                         <!--관리기준 임시삭제
                         <th width="10.5%">관리기준</th>
                         -->
-                        <th width="10.5%">Chart Max</th>
-                        <th width="20%">모니터링</th>
+                        <th width="18%">Chart Max</th>
+                        <th width="15%">모니터링</th>
                     </tr>
                 </thead>
                 <tbody id="items">
@@ -314,7 +314,7 @@
                                 "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
                                 "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
                                //관리기준 임시삭제  "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
-                                "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='chartmax' type='text' id='chartmax" + i + "' value='" + data[i].max + "' onchange='chartmaxupdate(this)'></td>" +
+                                "<td style='width:10.5%;'><input style = 'width:60%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='chartmax' type='text' id='chartmax" + i + "' value='" + data[i].max + "' onchange='chartmaxupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch' "+labelEvent+">" +
                                 "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdateCheck(this)' "+monitoringDisabled+">" +
                                 "<div class='slider round'></div>" +
