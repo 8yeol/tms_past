@@ -698,6 +698,8 @@
                 chart: {
                     id: 'chart2',
                     height: 150,
+                    width: '96%',
+                    offsetX: 40,
                     type: 'area',
                     brush:{
                         target: 'chart',
