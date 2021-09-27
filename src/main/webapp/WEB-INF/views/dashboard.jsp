@@ -374,8 +374,8 @@
         <div class="row pb-3 h-75 pb-3 margin-l mt-2">
             <div class="col">
                 <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
-                    <div class="card-header">정상</div>
-                    <div class="card-body" id="normal" style="min-height: 180px;">
+                    <div class="card-header fs-5">정상</div>
+                    <div class="card-body fs-6" id="normal" style="min-height: 180px;">
                     </div>
                 </div>
             </div>
@@ -390,15 +390,15 @@
             -->
             <div class="col">
                 <div class="card text-dark bg-warning mb-3" style="min-height: 100%;">
-                    <div class="card-header">사내기준 초과</div>
-                    <div class="card-body" id="warning">
+                    <div class="card-header fs-5">사내기준 초과</div>
+                    <div class="card-body fs-6" id="warning">
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card text-white bg-danger mb-3" style="min-height: 100%;">
-                    <div class="card-header">법적기준 초과</div>
-                    <div class="card-body" id="danger">
+                    <div class="card-header fs-5">법적기준 초과</div>
+                    <div class="card-body fs-6" id="danger">
                     </div>
                 </div>
             </div>

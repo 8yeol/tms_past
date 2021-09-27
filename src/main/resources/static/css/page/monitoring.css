@@ -54,7 +54,7 @@ tr {
     font-size: 1.8rem;
 }
 
-.Gcloud {
+.Gcloud-l {
     width: 270px;
     height: 90px;
     position: absolute;
@@ -68,7 +68,39 @@ tr {
     z-index: 99;
 }
 
-.Gcloud.line {
+.Gcloud-l.line {
+    line-height: 40px;
+}
+
+.Gcloud-r {
+    width: 300px;
+    height: 100px;
+    position: absolute;
+    top: 30px;
+    left: 130px;
+    padding: 45px 20px 0px;
+    background: url('../../images/greencloud.png') no-repeat center / 100% 99%;
+    background-origin: padding-box;
+    text-align: center;
+    line-height: 5px;
+    z-index: 99;
+}
+
+.Gcloud-r.box {
+    background-image: unset;
+    background-color: #fff;
+    border: 2px solid #33c124;
+    padding: 10px 0px;
+    height: fit-content;
+    top: 40px;
+}
+
+.Gcloud-r.box > p {
+    margin-bottom: 0;
+    line-height: 25px;
+}
+
+.Gcloud-r.line {
     line-height: 40px;
 }
 
@@ -121,7 +153,7 @@ tr {
     padding-left: 10px;
 }
 
-.topDash-l p {
+.topDash-l > p {
     width: 100%;
     display: inline-block;
     margin: auto;
@@ -132,7 +164,8 @@ tr {
 
 .topDash-r {
     display: flex;
-    width: 33.3%;
+    /*width: 33.3%;*/
+    width: 45%;
     position: relative;
     padding: 0 15px;
     flex-wrap: wrap;

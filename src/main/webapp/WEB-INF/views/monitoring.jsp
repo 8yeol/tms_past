@@ -57,24 +57,24 @@
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#normal').css('display','block')" onmouseout="$('#normal').css('display','none')">정상</span>
                     <p id="statusOn" class="text-success fs-3" onmouseover="$('#normal2').css('display','block')" onmouseout="$('#normal2').css('display','none')">0</p>
-                    <div class="Gcloud" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
-                    <div class="Gcloud" id="normal2" style="display: none"></div>
+                    <div class="Gcloud-l" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
+                    <div class="Gcloud-r box" id="normal2" style="display: none"></div>
                 </div>
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#failure').css('display','block')" onmouseout="$('#failure').css('display','none')">통신불량</span>
                     <p id="statusOff" class="text-danger fs-3" onmouseover="$('#failure2').css('display','block')" onmouseout="$('#failure2').css('display','none')">0</p>
-                    <div class="Gcloud" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
-                    <div class="Gcloud" id="failure2" style="display: none"></div>
+                    <div class="Gcloud-l" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
+                    <div class="Gcloud-r line" id="failure2" style="display: none"></div>
                 </div>
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#off').css('display','block')" onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
                     <p id="monitoringOff" class="fs-3" onmouseover="$('#off2').css('display','block')" onmouseout="$('#off2').css('display','none')">0</p>
-                    <div class="Gcloud line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
-                    <div class="Gcloud line" id="off2" style="display: none"></div>
+                    <div class="Gcloud-l line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
+                    <div class="Gcloud-r line" id="off2" style="display: none"></div>
                 </div>
             </div>
         </div>
-        <div style="width: 50%; height: 80%; display: flex; margin: auto 0;">
+        <div style="width: 50%; height: 80%; display: flex; margin: auto 0; justify-content: space-around">
             <div class="topDash-r">
                 <span class="text-center fw-bold bg-danger">법적기준 초과</span>
                 <p id="legal_standard_text_A" class="text-danger fs-1 bg-white" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
