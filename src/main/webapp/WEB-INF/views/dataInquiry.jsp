@@ -557,7 +557,6 @@
                     type: 'line',
                     height: 350,
                     width: '97%',
-                    offsetX: 30,
                     toolbar: {
                         show: true,
                         tools: {
@@ -663,7 +662,7 @@
                                     return val;
                                 }
                             }
-                        }
+                        },
                     },
                 },
                 yaxis:{
@@ -691,6 +690,7 @@
             chart = new ApexCharts(document.querySelector("#chart-line2"), options);
             chart.render();
 
+
             optionsLine = {
                 series: [{
                     data : data
@@ -698,8 +698,7 @@
                 chart: {
                     id: 'chart2',
                     height: 150,
-                    width: '96%',
-                    offsetX: 40,
+                    width: '96.8%',
                     type: 'area',
                     brush:{
                         target: 'chart',
@@ -767,6 +766,7 @@
             };
             chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
             chartLine.render();
+
         }else{
             if(chart==null&&data.length!=0){
                 search(0);
@@ -882,6 +882,10 @@
                 },
             })
         }
+        $('#apexchartschart').css("float", "right");
+        $('#apexchartschart').css("margin-right", "10px");
+        $('#apexchartschart2').css("float", "right");
+        $('#apexchartschart2').css("margin-right", "11px");
     }
 </script>
 
