@@ -757,8 +757,6 @@
         var company = $("#" + companyname).val(); //사내기준 값
         //var managename = "management" + num;
         //var manage = $("#" + managename).val(); //관리기준 값
-        var chartminname = "chartmin" + num;
-        var chartmin = $("#" + chartminname).val(); //chartmin 값
         var value = strReplace(name.value); //수정값
         var pname = $("#pname").text();
         if (value == "" || value == "999999") {
@@ -791,15 +789,6 @@
                     icon: 'warning',
                     title: '경고',
                     text: '법적기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
-                })
-                placeChange(document.getElementById('nickname').value);
-                return;
-            }
-            if (parseFloat(chartmin) >= parseFloat(value)) {  //
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: 'Chart Max 값은 Chart Min 값보다 작거나 같을 수 없습니다.'
                 })
                 placeChange(document.getElementById('nickname').value);
                 return;
@@ -961,6 +950,8 @@
         var company = $("#" + companyname).val(); //사내기준 값
         var managename = "management" + num;
         var manage = $("#" + managename).val(); //관리기준 값
+        var chartminname = "chartmin" + num;
+        var chartmin = $("#" + chartminname).val(); //chartmin 값
         var value = strReplace(name.value); //수정값
         var pname = $("#pname").text();
         if (value == "" || value == "999999") {
@@ -968,6 +959,15 @@
         } else {
 
             if (ifsum(value) == false) {
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
+            if (parseFloat(chartmin) >= parseFloat(value)) {  //
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: 'Chart Max 값은 Chart Min 값보다 작거나 같을 수 없습니다.'
+                })
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
@@ -983,7 +983,7 @@
                 "place": pname
             }
         })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' Chart Max 값 변경 '" + value + "'", "설정");
         if (value == "999999") {
             name.value = "";
         } else {
