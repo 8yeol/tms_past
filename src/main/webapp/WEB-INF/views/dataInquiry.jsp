@@ -654,15 +654,7 @@
                         },
                     },
                     tooltip:{
-                        y:{
-                            formatter: function (val) {
-                                if(unitText){
-                                    return val + " " + unitText;
-                                }else{
-                                    return val;
-                                }
-                            }
-                        },
+                        enabled: false,
                     },
                 },
                 yaxis:{
