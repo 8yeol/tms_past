@@ -998,7 +998,7 @@
         if(sensor_data_list == null){
             arr = [];
         }else{
-            var arr = new Array();
+            var  arr = new Array();
             for(var i=0; i<sensor_data_list.length; i++){
                 if(sensor_data_list[i].y > sensor_data.legalStandard){
                     standard =  '<div class="bg-danger text-light">'+"법적기준 초과"+'</div>';
