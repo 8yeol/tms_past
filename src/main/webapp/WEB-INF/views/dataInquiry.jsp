@@ -553,6 +553,11 @@
                     data: data
                 }],
                 chart: {
+                    events:{
+                        click: function(event, chartContext, config) {
+                            chartPosition();
+                        },
+                    },
                     id: 'chart',
                     type: 'line',
                     height: 350,
@@ -688,6 +693,11 @@
                     data : data
                 }],
                 chart: {
+                    events:{
+                        mouseMove: function(event, chartContext, config) {
+                            chartPosition();
+                        },
+                    },
                     id: 'chart2',
                     height: 150,
                     width: '96.8%',
@@ -758,7 +768,7 @@
             };
             chartLine = new ApexCharts(document.querySelector("#chart-line"), optionsLine);
             chartLine.render();
-
+            chartPosition();
         }else{
             if(chart==null&&data.length!=0){
                 search(0);
@@ -874,6 +884,10 @@
                 },
             })
         }
+        chartPosition();
+    }
+
+    function chartPosition() {
         $('#apexchartschart').css("float", "right");
         $('#apexchartschart').css("margin-right", "10px");
         $('#apexchartschart2').css("float", "right");
