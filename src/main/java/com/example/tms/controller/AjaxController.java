@@ -292,6 +292,7 @@ public class AjaxController {
                         subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
                         subObj.put("name", sensorName);
                         subObj.put("max", numberTypeChange(sensorInfo.getMax()));
+                        subObj.put("min", numberTypeChange(sensorInfo.getMin()));
                         if (sensorItem != null) {
                             subObj.put("unit", sensorItem.getUnit());
                         } else {
@@ -356,6 +357,7 @@ public class AjaxController {
             subObj.put("managementStandard", numberTypeChange(sensorInfo.getManagementStandard()));
             subObj.put("name", sensor);
             subObj.put("max", numberTypeChange(sensorInfo.getMax()));
+            subObj.put("min", numberTypeChange(sensorInfo.getMin()));
             if(sensorItem != null) {
                 subObj.put("unit", sensorItem.getUnit());
             }else{
@@ -1124,10 +1126,11 @@ public class AjaxController {
         float company = 999999.0f;
         float management = 999999.0f;
         float max = 999999.0f;
+        float min = 999999.0f;
         Boolean monitoring = false;
 
         //reference document 생성
-        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, max, monitoring);
+        ReferenceValueSetting saveReference = new ReferenceValueSetting(name, naming, legal, company, management, min, max, monitoring);
         reference_value_settingRepository.save(saveReference);
 
     }
@@ -1187,7 +1190,7 @@ public class AjaxController {
      * 측정항목의 chartmax 업데이트
      *
      * @param name      측정소명
-     * @param value     사내기준 값
+     * @param value     chartmax 값
      * @param tablename 테이블 명
      */
     @RequestMapping(value = "/chartmaxUpdate")
@@ -1195,6 +1198,23 @@ public class AjaxController {
         //측정항목 업데이트
         ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
         reference.setMax(value);
+        reference_value_settingRepository.save(reference);
+        //측정소 업데이트
+        placeUpTime(name);
+    }
+
+    /**
+     * 측정항목의 chartmin 업데이트
+     *
+     * @param name      측정소명
+     * @param value     chartmin 값
+     * @param tablename 테이블 명
+     */
+    @RequestMapping(value = "/chartminUpdate")
+    public void chartminUpdate(@RequestParam("place") String name, @RequestParam("value") Float value, @RequestParam("tablename") String tablename) {
+        //측정항목 업데이트
+        ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
+        reference.setMin(value);
         reference_value_settingRepository.save(reference);
         //측정소 업데이트
         placeUpTime(name);
@@ -1391,6 +1411,8 @@ public class AjaxController {
                 reference.setLegalStandard(999999.0f);
                 reference.setCompanyStandard(999999.0f);
                 reference.setManagementStandard(999999.0f);
+                reference.setMin(999999.0f);
+                reference.setMax(999999.0f);
                 reference.setNaming(edit_naming);
                 reference.setMonitoring(false);
                 reference_value_settingRepository.save(reference);

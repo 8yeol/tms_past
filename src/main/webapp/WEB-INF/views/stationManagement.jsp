@@ -86,12 +86,13 @@
                         <th width="2%"></th>
                         <th width="18%">측정항목</th>
                         <th width="25%">관리ID</th>
-                        <th width="12.5%">법적기준</th>
-                        <th width="12.5%">사내기준</th>
+                        <th width="10.5%">법적기준</th>
+                        <th width="10.5%">사내기준</th>
                         <!--관리기준 임시삭제
                         <th width="10.5%">관리기준</th>
                         -->
-                        <th width="15%">Chart Max</th>
+                        <th width="10.5%">Chart Min</th>
+                        <th width="10.5%">Chart Max</th>
                         <th width="15%">모니터링</th>
                     </tr>
                 </thead>
