@@ -315,6 +315,7 @@
                                 "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off' name='legal' type='text' id='legal" + i + "' value='" + data[i].legalStandard + "' onchange='legalupdate(this)'></td>" +
                                 "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='company' type='text' id='company" + i + "' value='" + data[i].companyStandard + "' onchange='companyupdate(this)'></td>" +
                                //관리기준 임시삭제  "<td style='width:10.5%;'><input style = 'width:80%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='management' type='text' id='management" + i + "' value='" + data[i].managementStandard + "' onchange='managementupdate(this)'></td>" +
+                                "<td style='width:10.5%;'><input style = 'width:60%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='chartmin' type='text' id='chartmin" + i + "' value='" + data[i].min + "' onchange='chartminupdate(this)'></td>" +
                                 "<td style='width:10.5%;'><input style = 'width:60%; height: 34px; margin-bottom:5px;' class='form-check-input "+readonlyCSS+"' "+readonly+"  autocomplete='off'name='chartmax' type='text' id='chartmax" + i + "' value='" + data[i].max + "' onchange='chartmaxupdate(this)'></td>" +
                                 "<td style='width:13%;'><label class='switch' "+labelEvent+">" +
                                 "<input id='monitor" + i + "' type='checkbox' name='sensormonitor' value='" + data[i].name + "' " + data[i].monitoring + " onchange='monitoringupdateCheck(this)' "+monitoringDisabled+">" +
@@ -455,6 +456,9 @@
             */
             if (data[i].max == 999999) {
                 data[i].max = "";
+            }
+            if (data[i].min == 999999) {
+                data[i].min = "";
             }
             if (data[i].monitoring == true) {
                 data[i].monitoring = "checked";
@@ -751,8 +755,10 @@
         var tablename = $("#name" + num).text(); //측정항목 명
         var companyname = "company" + num;
         var company = $("#" + companyname).val(); //사내기준 값
-        var managename = "management" + num;
-        var manage = $("#" + managename).val(); //관리기준 값
+        //var managename = "management" + num;
+        //var manage = $("#" + managename).val(); //관리기준 값
+        var chartminname = "chartmin" + num;
+        var chartmin = $("#" + chartminname).val(); //chartmin 값
         var value = strReplace(name.value); //수정값
         var pname = $("#pname").text();
         if (value == "" || value == "999999") {
@@ -789,6 +795,15 @@
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
+            if (parseFloat(chartmin) >= parseFloat(value)) {  //
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: 'Chart Max 값은 Chart Min 값보다 작거나 같을 수 없습니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
         }
         $.ajax({
             url: '<%=cp%>/legalUpdate',
@@ -802,6 +817,7 @@
             }
         })
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' Chart Max 값 변경 '" + value + "'", "설정");
         if (value == "999999") {
             name.value = "";
         } else {
@@ -985,6 +1001,8 @@
             modal.html("'" + place + "-" + name + "'의 사내기준 값이 '" + value + "'(으)로 설정되었습니다.");
         } else if (standard == "manage") {
             modal.html("'" + place + "-" + name + "'의 관리기준 값이 '" + value + "'(으)로 설정되었습니다.");
+        } else if(standard == "ChartMin") {
+            modal.html("'" + place + "-" + name + "'의 Chart Min 값이 '" + value + "'(으)로 설정되었습니다.");
         } else if(standard == "ChartMax") {
             modal.html("'" + place + "-" + name + "'의 Chart Max 값이 '" + value + "'(으)로 설정되었습니다.");
         } else {
@@ -1016,6 +1034,56 @@
             text: text,
             timer: 1500
         });
+    }
+
+    //min onchange
+    function chartminupdate(name) {
+        var id = name.id;
+        const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
+        const naming = $("#naming" + num).text(); //관리ID
+        var tablename = $("#name" + num).text(); //측정항목 명
+        var companyname = "company" + num;
+        var company = $("#" + companyname).val(); //사내기준 값
+        var chartmaxname = "chartmax" + num;
+        var chartmax = $("#" + chartmaxname).val(); //chartmax 값
+        var value = strReplace(name.value); //수정값
+        var pname = $("#pname").text();
+        if (value == "" || value == "999999") {
+            value = "999999";
+        } else {
+
+            if (ifsum(value) == false) {
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
+            if (parseFloat(chartmax) <= parseFloat(value)) {  //
+                Swal.fire({
+                    icon: 'warning',
+                    title: '경고',
+                    text: 'Chart Min 값은 Chart Max 값보다 크거나 같을 수 없습니다.'
+                })
+                placeChange(document.getElementById('nickname').value);
+                return;
+            }
+        }
+        $.ajax({
+            url: '<%=cp%>/chartminUpdate',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "tablename": tablename,
+                "value": value,
+                "place": pname
+            }
+        })
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' Chart Min 값 변경 '" + value + "'", "설정");
+        if (value == "999999") {
+            name.value = "";
+        } else {
+            multiSelecterModal(pname, naming, "ChartMin", value);
+            name.value = value;
+        }
     }
 
 </script>
