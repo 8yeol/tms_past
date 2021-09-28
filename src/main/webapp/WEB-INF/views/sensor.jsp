@@ -772,18 +772,26 @@
                     dataIndex.push(i);
                 }
             }
+            var maxCeil;
+            var minFloor;
             if(sensor_data.max != 999999){
                 var max = sensor_data.max;
+                maxCeil = max;
             }else{
                 var max = arr.reduce(function (previousValue, currentValue) {
                     return parseFloat(previousValue > currentValue ? previousValue:currentValue);
                 });
+                maxCeil = Math.ceil(max);
             }
-            var min = arr.reduce(function (previousValue, currentValue) {
-                return parseFloat(previousValue > currentValue ? currentValue:previousValue);
-            });
-            var maxCeil = Math.ceil(max);
-            var minFloor = Math.floor(min);
+            if(sensor_data.min != 999999){
+                var min = sensor_data.min;
+                minFloor = min;
+            }else{
+                var min = arr.reduce(function (previousValue, currentValue) {
+                    return parseFloat(previousValue > currentValue ? currentValue:previousValue);
+                });
+                minFloor = Math.floor(min);
+            }
         }
 
         if(sensor_data.length != 0){
