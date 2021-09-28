@@ -1035,7 +1035,7 @@
                 $('#standard_text').css("padding-right", "10px");
             }
             if(legalStandard != '-' || companyStandard != '-' || managementStandard != '-'){
-                $("#standard_text").text("법적/사내 기준 : "+legalStandard+"/"+companyStandard+
+                $("#standard_text").text("법적/사내 기준 : "+legalStandard+"/"+companyStandard
                 /* 관리기준 임시삭제
                 "/"+managementStandard
                 */
