@@ -100,11 +100,11 @@
 
     .multiSelect {
         width: 275px;
-        height: 350px;
+        height: 250px;
     }
 
     .form-control {
-        height: 300px;
+        height: 200px;
         border: 3px solid rgb(99, 130, 255);
     }
 
@@ -219,7 +219,7 @@
         display: block;
     }
     .multiSelectBtn{
-        padding-top: 8rem;
+        padding-top: 5rem;
     }
     th{padding: 0;}
 
