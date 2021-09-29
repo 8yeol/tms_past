@@ -58,14 +58,12 @@
         margin:50px auto;
         display: flex;
         justify-content: center;
-        background-color: white;
     }
 
     .multiSelectParent {
         padding-left: 15px;
         padding-right: 15px;
         padding-top: 15px;
-        background-color: white;
         position: relative;
         display: block;
         min-width: 660px;
@@ -216,7 +214,7 @@
     }
 
     .dataTables_wrapper {
-        min-height: 350px;
+        min-height: 250px;
     }
     .moveBtn{
         display: block;
@@ -241,6 +239,17 @@
         pointer-events: none;
     }
 
+    .tableWrap {
+        min-height: 250px;
+    }
+
+    .tableWrap > table tr {
+        height: 40px;
+    }
+
+    .tableWrap > table > tbody tr:last-child {
+        border-bottom: 2px solid #212529;
+    }
 </style>
 
 <div class="container" id="container">
@@ -256,7 +265,7 @@
             <span class="text-primary" style="font-size: 0.9rem;">* 배출량 모니터링은 측정소에 <b>유량</b> 및 <b>질소산화물</b> 센서가 정상적으로 등록된 경우 이용 가능합니다.</span>
         </div>
 
-       <div class="col-xs-12 bg-light" style="min-height: 400px;">
+       <div class="col-xs-12 bg-light" style="min-height: 300px;">
            <div class="pb-2 justify-content-between" style="display: flex">
                <h4 class="mt-2 fs-5 fw-bold" style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
            </div>
@@ -319,15 +328,87 @@
                 </div>
             </c:if>
         </div>
+
+
+        <div class="col-xs-12 bg-light" style="margin-top: 20px; min-height: 300px;">
+            <div class="pb-2 justify-content-between" style="display: flex">
+                <h4 class="mt-2 fs-5 fw-bold" style="margin-left: 5px;">연간 배출량 추이 관리</h4>
+            </div>
+
+            <span class="text-end w-100" style="display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem">단위 : g</span>
+            <div class="tableWrap w-100">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>1월</th>
+                        <th>2월</th>
+                        <th>3월</th>
+                        <th>4월</th>
+                        <th>5월</th>
+                        <th>6월</th>
+                        <th>7월</th>
+                        <th>8월</th>
+                        <th>9월</th>
+                        <th>10월</th>
+                        <th>11월</th>
+                        <th>12월</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>2021</td>
+                        <td>159</td>
+                        <td>579</td>
+                        <td>654</td>
+                        <td>879</td>
+                        <td>718</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>수정</td>
+                    </tr>
+                    <tr>
+                        <td>2020</td>
+                        <td>879</td>
+                        <td>149</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td>...</td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div id="paging">
+
+                </div>
+            </div>
+
+        </div>
     </div>
+
 
 
 <div class="col" style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:40px;text-align: end" id="gradeText">
     * 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.
 </div>
 <!--멀티셀렉터 콤보박스 -->
-<div class="multiSelectComboBox" >
-    <div class="multiSelectParent">
+<div class="multiSelectComboBox bg-light">
+    <div class="multiSelectParent bg-light">
         <h4 class="fs-5 fw-bold emissionsh4">배출량 추이 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
@@ -366,7 +447,7 @@
         <div class="emissionsSpan">* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 측정소 통합 모니터링] 화면에 표시됩니다</div>
     </div>
 
-    <div class="multiSelectParent">
+    <div class="multiSelectParent bg-light">
         <h4 class="fs-5 fw-bold emissionsh4">연간 배출량 누적 모니터링 대상 설정</h4><br>
         <div class="multiSelect">
             <label><b>전체 항목</b></label>
