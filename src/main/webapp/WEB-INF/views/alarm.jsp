@@ -326,12 +326,9 @@
                                 notify = '법적기준 초과';
                             }else if(data[i].grade==2){
                                 notify = '사내기준 초과';
-                            }
-                            /* 관리기준 임시삭제
-                            else if(data[i].grade==3){
+                            }else if(data[i].grade==3){
                                 notify = '관리기준 초과';
                             }
-                             */
 
                             cell2.innerHTML = data[i].sensor + " 센서 " + notify;
                             cell3.innerHTML = data[i].value.toFixed(2);
@@ -340,13 +337,9 @@
                                 cell5.innerHTML = '<div class="bg-danger text-light">'+notify+'</div>'
                             }else if(data[i].grade==2){
                                 cell5.innerHTML = '<div class="bg-warning text-light">'+notify+'</div>'
-                            }
-                            /* 관리기준 임시삭제
-                            else if(data[i].grade==3){
+                            }else if(data[i].grade==3){
                                 cell5.innerHTML = '<div class="bg-success text-light">'+notify+'</div>'
                             }
-
-                             */
                         }
 
                         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "알림 목록 조회("+from+" ~ "+to+")","조회");
@@ -456,7 +449,7 @@
             data: {"place": place},
             success: function (data) {
                 for(let i=0; i<data.length; i++){
-                    getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount
+                    getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCou
                         /* 관리기준 임시삭제
                          , managementCount: data[i].managementCount
                          */
