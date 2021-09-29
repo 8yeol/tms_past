@@ -48,14 +48,13 @@
         }
     }
     .emissionsSpan{
-        margin-top: 15px;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         font-size: 0.85rem;
     }
 
     .multiSelectComboBox {
         width: 95%;
-        margin:50px auto;
+        margin:30px auto;
         display: flex;
         justify-content: center;
     }
@@ -403,7 +402,7 @@
 
 
 
-<div class="col" style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:40px;text-align: end" id="gradeText">
+<div class="col" style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:20px;text-align: end" id="gradeText">
     * 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.
 </div>
 <!--멀티셀렉터 콤보박스 -->
