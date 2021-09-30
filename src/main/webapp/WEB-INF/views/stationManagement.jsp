@@ -212,7 +212,6 @@
             $('#items').append('<tr><td colspan="7" style="height: 250px;line-height: 250px;">측정 가능한 측정소가 없습니다.</td></tr>');
             return;
         }
-
         const data = placeDiv1();
         let onoff = "";
         for (let i = 0; i < data.length; i++) {

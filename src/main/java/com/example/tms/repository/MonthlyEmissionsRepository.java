@@ -9,4 +9,5 @@ public interface MonthlyEmissionsRepository extends MongoRepository<MonthlyEmiss
     MonthlyEmissions findBySensorAndYear(String sensor, int year);
     MonthlyEmissions deleteBySensor(String sensor);
     MonthlyEmissions findBySensor(String sensor);
+    MonthlyEmissions findByYear(int year);
 }

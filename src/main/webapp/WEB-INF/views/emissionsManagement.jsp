@@ -356,42 +356,11 @@
                     </tr>
                     </thead>
 
-                    <tbody>
-                    <tr>
-                        <td>2021</td>
-                        <td>159</td>
-                        <td>579</td>
-                        <td>654</td>
-                        <td>879</td>
-                        <td>718</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>수정</td>
-                    </tr>
-                    <tr>
-                        <td>2020</td>
-                        <td>879</td>
-                        <td>149</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td></td>
-                    </tr>
+                    <tbody id="tbody1">
+
                     </tbody>
                 </table>
-
+                <div id="hiddendiv"></div>
                 <div id="paging">
 
                 </div>
@@ -399,8 +368,6 @@
 
         </div>
     </div>
-
-
 
 <div class="col" style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:20px;text-align: end" id="gradeText">
     * 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.
@@ -563,6 +530,9 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        selectMEmission();
+    });
     $(function () {
         if('${state}' != '1') optionDisabled();
 
@@ -603,8 +573,126 @@
         $('.multiSelectParent select').prop('disabled', true);
     }
 
+    //연간 배출량 추이 조회
+    function selectMEmission(){
+        $.ajax({
+            url: '<%=cp%>/getMonthlyEmission',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            success: function (data) {
+                $('#tbody1').empty();
+                if(data.length != 0){
+                    for(let i=0; i<data.length;i++){
+                        const innerHtml =
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].year+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].jan+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].feb+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].mar+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].apr+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].may+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].jun+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].jul+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].aug+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].sep+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].oct+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].nov+"</td>"+
+                            "<td name='m"+i+"' style='width: 7%'>"+data[i].dec+"</td>"+
+                            "<td><input type = 'button' id='b"+i+"' value='수정' onclick='dataUpdate(this)'></td>";
+                        const elem = document.createElement('tr');
+                        elem.setAttribute('id','data'+i);
+                        elem.innerHTML = innerHtml;
+                        document.getElementById('tbody1').append(elem);
+                    }
+                }else{
+                    const none =
+                        "<td colspan='14'>"+
+                        "<div class='fw-bold' style='padding-top : 20px;'>등록된 데이터가 없습니다.</div>"+
+                        "</td>";
+                    $('#tbody1').append(none);
+                }
+            },
+            error: function () {
+            }
+        });
+    }
 
-    // //기준 추가
+    //배출량 추이관리 수정
+    function dataUpdate(x) {
+        const dList = new Array();
+        const id = x.id;
+        const num = id.replace(/[^0-9]/g, '');
+        $('td[name=m'+num+']').each(function () {
+            dList.push($(this).text());
+        });
+        $('#data'+num).empty();
+        const innerHtml =
+            "<td name='n"+num+"' style='width: 7%'>"+dList[0]+"</td>"+
+            "<td style='width: 7%'><input id = 'n1' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[1]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n2' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[2]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n3' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[3]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n4' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[4]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n5' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[5]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n6' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[6]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n7' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[7]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n8' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[8]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n9' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[9]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n10' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[10]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n11' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[11]+"'></td>"+
+            "<td style='width: 7%'><input id = 'n12' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[12]+"'></td>"+
+            "<td><input type = 'button' value='확인' id='s"+num+"' onclick='savedata("+num+")'></td>";
+        $('#data'+num).append(innerHtml);
+    }
+    //수정데이터 저장
+    function savedata(num) {
+        const dList = new Array();
+        dList.push($('td[name=n' + num + ']').text());
+        $('input[name=n' + num + ']').each(function () {
+            dList.push($(this).attr('value'));
+        });
+        if ($('input[name=h' + num + ']').attr('value') != null) {
+            $('input[name=h' + num + ']').each(function () {
+                let id = $(this).attr('id');
+                let num = id.replace(/[^0-9]/g, '');
+                dList[num] = $(this).attr('value');
+                $(this).remove();
+            });
+        }
+        $.ajax({
+            url: '<%=cp%>/saveMEmission',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {"dList": dList},
+            success: function (data) {
+            },
+            error: function () {
+            }
+        })
+        selectMEmission();
+    }
+    //수정한 데이터
+    function hiddendata(x) {
+        const id = x.id;
+        const name = x.name;
+        const num = id.replace(/[^0-9]/g, '');
+        const namenum = name.replace(/[^0-9]/g, '');
+        const value = document.getElementById(id).value;
+        if(isNaN(value) == true){
+            Swal.fire({
+                icon: 'warning',
+                title: '경고',
+                text: '문자 데이터를 입력할수 없습니다.'
+            })
+            document.getElementById(id).value = null;
+            return false;
+        }
+        const innerHtml =
+            "<input type='hidden' name='h"+namenum+"' id='h"+num+"' value='"+value+"'>";
+        $('#hiddendiv').append(innerHtml);
+    }
+
+   // //기준 추가
     // function insert() {
     //
     //     var unComma = $("input[name='standard']").val().replace(/,/g, '');

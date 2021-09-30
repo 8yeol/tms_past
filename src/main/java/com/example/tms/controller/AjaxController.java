@@ -1616,6 +1616,42 @@ public class AjaxController {
     }
 
     /**
+     * 연간 배출량 추이 조회
+     *
+     * @return 연간 배출량 추이
+     */
+    @RequestMapping(value = "/getMonthlyEmission")
+    public List<MonthlyEmissions> getMonthlyEmission(){
+        List<MonthlyEmissions> data = monthlyEmissionsRepository.findAll();
+        return data;
+    }
+
+    /**
+     * 연간 배출량 추이 수정
+     *
+     * @param dList 월별 데이터
+     */
+    @RequestMapping(value = "/saveMEmission")
+    public void saveMEmission(@RequestParam("dList[]") List<Integer> dList){
+        MonthlyEmissions data = monthlyEmissionsRepository.findByYear(dList.get(0));
+        data.setJan(dList.get(1));
+        data.setFeb(dList.get(2));
+        data.setMar(dList.get(3));
+        data.setApr(dList.get(4));
+        data.setMay(dList.get(5));
+        data.setJun(dList.get(6));
+        data.setJul(dList.get(7));
+        data.setAug(dList.get(8));
+        data.setSep(dList.get(9));
+        data.setOct(dList.get(10));
+        data.setNov(dList.get(11));
+        data.setDec(dList.get(12));
+        data.setUpdateTime(new Date());
+
+        monthlyEmissionsRepository.save(data);
+    }
+
+    /**
      * 센서분류값으로 센서 네이밍 검색
      *
      * @param classification 센서분류
