@@ -2027,6 +2027,16 @@ public class AjaxController {
     }
 
     /**
+     * 테이블명으로 배출기준값 리턴
+     * @param tableName 테이블명
+     * @return 배출허용 기준치
+     */
+    @RequestMapping(value = "/getEmissionStandard")
+    public List<EmissionsStandardSetting> getEmissionStandard() {
+        return emissionsStandardSettingRepository.findAll();
+    }
+
+    /**
      * 입력받은 값을 바탕으로 DB에 저장되어있는 권한값을 리턴함
      *
      * @param principal

@@ -20,41 +20,48 @@
 <script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
 <script src="static/js/jquery-ui.js"></script>
+<script src="static/js/moment.min.js"></script>
 
 <style>
 
     @media screen and (max-width: 1024px) {
-        .multiSelectComboBox{
+        .multiSelectComboBox {
             flex-direction: column;
         }
-        .multiSelectParent{
+
+        .multiSelectParent {
             margin: auto;
             margin-bottom: 20px;
         }
-        .emissionsh4{
+
+        .emissionsh4 {
             text-align: center;
             margin-top: 10px;
         }
-        .emissionsSpan{
+
+        .emissionsSpan {
             margin-bottom: 1rem;
         }
-        .row2{
+
+        .row2 {
             margin-bottom: 20px;
             margin-left: -100px;
         }
-        #gradeText{
+
+        #gradeText {
             text-align: left !important;
             left: 20px;
         }
     }
-    .emissionsSpan{
+
+    .emissionsSpan {
         margin-bottom: 20px;
         font-size: 0.85rem;
     }
 
     .multiSelectComboBox {
         width: 95%;
-        margin:30px auto;
+        margin: 30px auto;
         display: flex;
         justify-content: center;
     }
@@ -138,17 +145,24 @@
         width: 800px;
         text-align: end;
     }
-    th{text-align: center;}
-    td{text-align: center;}
+
+    th {
+        text-align: center;
+    }
+
+    td {
+        text-align: center;
+    }
 
     /* 데이터테이블 */
     label {
         margin-bottom: 10px;
     }
 
-    .toolbar>b {
+    .toolbar > b {
         font-size: 1.25rem;
     }
+
     /*.toolbar:after {content:""; display: block; clear: both;}*/
 
     .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -207,6 +221,7 @@
         position: relative;
         margin-top: 2px;
     }
+
     .dt-buttons {
         margin: 0 10px;
         display: inline-block;
@@ -215,26 +230,34 @@
     .dataTables_wrapper {
         min-height: 250px;
     }
-    .moveBtn{
+
+    .moveBtn {
         display: block;
     }
-    .multiSelectBtn{
+
+    .multiSelectBtn {
         padding-top: 5rem;
     }
-    th{padding: 0;}
 
-    .inputColor{
-        background-color:  #DDDDDD;
+    th {
+        padding: 0;
     }
-    .scroll{
+
+    .inputColor {
+        background-color: #DDDDDD;
+    }
+
+    .scroll {
         overflow-x: auto;
     }
-    .scroll option{
+
+    .scroll option {
         padding-right: 35px;
     }
-    .inputDisabled{
+
+    .inputDisabled {
         background-color: rgba(239, 239, 239, 0.3);
-        border:1px solid rgba(118, 118, 118, 0.3);
+        border: 1px solid rgba(118, 118, 118, 0.3);
         pointer-events: none;
     }
 
@@ -264,11 +287,11 @@
             <span class="text-primary" style="font-size: 0.9rem;">* 배출량 모니터링은 측정소에 <b>유량</b> 및 <b>질소산화물</b> 센서가 정상적으로 등록된 경우 이용 가능합니다.</span>
         </div>
 
-       <div class="col-xs-12 bg-light" style="min-height: 300px;">
-           <div class="pb-2 justify-content-between" style="display: flex">
-               <h4 class="mt-2 fs-5 fw-bold" style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
-           </div>
-            <table class="table table-striped">
+        <div class="col-xs-12 bg-light tableWrap" style="min-height: 300px;">
+            <div class="pb-2 justify-content-between" style="display: flex">
+                <h4 class="mt-2 fs-5 fw-bold" style="margin-left: 5px;">연간 배출 허용 기준 설정</h4>
+            </div>
+            <table class="table">
                 <thead>
                 <tr>
                     <th>측정소명</th>
@@ -281,51 +304,54 @@
                 </tr>
                 </thead>
                 <tbody id="tbody" style="vertical-align: middle;">
-                <c:forEach items="${standard}" var="standard" varStatus="i">
+<%--                <c:forEach items="${standard}" var="standard" varStatus="i">--%>
 
-                    <tr>
-                        <td class="tableCode">${standard.place}</td>
-                        <td class="tableNaming">${standard.naming}</td>
+<%--                    <tr>--%>
+<%--                        <td class="tableCode">${standard.place}</td>--%>
+<%--                        <td class="tableNaming">${standard.naming}</td>--%>
 
-                        <c:choose>
-                            <c:when test="${standard.emissionsStandard eq 0}">
-                                <td></td>
-                            </c:when>
-                            <c:when test="${standard.emissionsStandard ne 0}">
-                                <td><fmt:formatNumber value="${standard.emissionsStandard}" groupingUsed="true"/></td>
-                            </c:when>
-                        </c:choose>
+<%--                        <c:choose>--%>
+<%--                            <c:when test="${standard.emissionsStandard eq 0}">--%>
+<%--                                <td></td>--%>
+<%--                            </c:when>--%>
+<%--                            <c:when test="${standard.emissionsStandard ne 0}">--%>
+<%--                                <td><fmt:formatNumber value="${standard.emissionsStandard}"/></td>--%>
+<%--                            </c:when>--%>
+<%--                        </c:choose>--%>
 
-                        <c:choose>
-                            <c:when test="${standard.densityStandard eq 0}">
-                                <td></td>
-                            </c:when>
-                            <c:when test="${standard.densityStandard ne 0}">
-                                <td>${standard.densityStandard}</td>
-                            </c:when>
-                        </c:choose>
+<%--                        <c:choose>--%>
+<%--                            <c:when test="${standard.densityStandard eq 0}">--%>
+<%--                                <td></td>--%>
+<%--                            </c:when>--%>
+<%--                            <c:when test="${standard.densityStandard ne 0}">--%>
+<%--                                <td>${standard.densityStandard}</td>--%>
+<%--                            </c:when>--%>
+<%--                        </c:choose>--%>
 
-                        <td>${standard.formula}</td>
-                        <td><fmt:formatDate value="${standard.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                        <td>
-                            <c:if test="${state == 1}">
-                            <i onclick="clickModal(this)" class="fas fa-edit me-2" data-bs-toggle="modal"
-                               data-bs-target="#addModal" id="${standard.tableName}"></i>
-                            <!--<i class="fas fa-times" onclick="deleteModal(${standard.tableName})"></i>-->
-                            </c:if>
-                        </td>
-                    </tr>
-                </c:forEach>
+<%--                        <td>${standard.formula}</td>--%>
+<%--                        <td><fmt:formatDate value="${standard.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>--%>
+<%--                        <td>--%>
+<%--                            <c:if test="${state == 1}">--%>
+<%--                                <i onclick="clickModal(this)" class="fas fa-edit me-2" data-bs-toggle="modal"--%>
+<%--                                   data-bs-target="#addModal" id="${standard.tableName}"></i>--%>
+<%--                                <!--<i class="fas fa-times" onclick="deleteModal(${standard.tableName})"></i>-->--%>
+<%--                            </c:if>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                </c:forEach>--%>
                 </tbody>
 
             </table>
-            <!--  Standard == null -->
-            <c:if test="${empty standard}">
-                <div class="pt-4" style="text-align: center;font-size: 1.2rem;position: relative;top: -150px;" id="nullStandard">
-                    연간 배출 허용 기준이 없습니다. <br>
-                    <b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요.
-                </div>
-            </c:if>
+<%--            <!--  Standard == null -->--%>
+<%--            <c:if test="${empty standard}">--%>
+<%--                <div class="pt-4" style="text-align: center;font-size: 1.2rem;position: relative;top: -150px;"--%>
+<%--                     id="nullStandard">--%>
+<%--                    연간 배출 허용 기준이 없습니다. <br>--%>
+<%--                    <b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요.--%>
+<%--                </div>--%>
+<%--            </c:if>--%>
+            <div id="paging1">
+            </div>
         </div>
 
 
@@ -334,7 +360,8 @@
                 <h4 class="mt-2 fs-5 fw-bold" style="margin-left: 5px;">연간 배출량 추이 관리</h4>
             </div>
 
-            <span class="text-end w-100" style="display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem">단위 : g</span>
+            <span class="text-end w-100"
+                  style="display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem">단위 : g</span>
             <div class="tableWrap w-100">
                 <table class="table">
                     <thead>
@@ -361,98 +388,100 @@
                     </tbody>
                 </table>
                 <div id="hiddendiv"></div>
-                <div id="paging">
-
+                <div id="paging2">
                 </div>
             </div>
 
         </div>
     </div>
 
-<div class="col" style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:20px;text-align: end" id="gradeText">
-    * 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.
-</div>
-<!--멀티셀렉터 콤보박스 -->
-<div class="multiSelectComboBox bg-light">
-    <div class="multiSelectParent bg-light">
-        <h4 class="fs-5 fw-bold emissionsh4">배출량 추이 모니터링 대상 설정</h4><br>
-        <div class="multiSelect">
-            <label><b>전체 항목</b></label>
-            <select multiple class="form-control scroll" id="lstBox1" >
-                <c:forEach items="${emissions}" var="target">
-                    <c:if test="${target.status eq 'false'}">
-                        <option id="${target.sensor}" class="lstBox1Option">${target.place} - ${target.sensorNaming}
-                        </option>
-                    </c:if>
-                </c:forEach>
-            </select>
-        </div>
-
-        <div class="multiSelectBtn">
-            <input type='button' id='btnRight' value='>' class="btn btn-default moveBtn"
-                   onclick="moveEvent('#lstBox1', '#lstBox2')"/>
-            <input type='button' id='btnLeft' value='<' class="btn btn-default moveBtn"
-                   onclick="moveEvent('#lstBox2', '#lstBox1')"/>
-        </div>
-
-        <div class="multiSelect">
-            <label><b>대상 가스</b></label>
-            <select multiple class="form-control scroll" id="lstBox2">
-                <c:forEach items="${emissions}" var="target">
-                    <c:if test="${target.status eq 'true'}">
-                        <option id="${target.sensor}" class="lstBox2Option">${target.place} - ${target.sensorNaming}
-                        </option>
-                    </c:if>
-                </c:forEach>
-            </select>
-        </div>
-        <div class="clearfix"></div>
-
-        <!-- MultiSelecter Modal-->
-        <div class="MultiSelecterModal" id="emissionsModal"></div>
-        <div class="emissionsSpan">* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 측정소 통합 모니터링] 화면에 표시됩니다</div>
+    <div class="col"
+         style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:20px;text-align: end"
+         id="gradeText">
+        * 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.
     </div>
+    <!--멀티셀렉터 콤보박스 -->
+    <div class="multiSelectComboBox bg-light">
+        <div class="multiSelectParent bg-light">
+            <h4 class="fs-5 fw-bold emissionsh4">배출량 추이 모니터링 대상 설정</h4><br>
+            <div class="multiSelect">
+                <label><b>전체 항목</b></label>
+                <select multiple class="form-control scroll" id="lstBox1">
+                    <c:forEach items="${emissions}" var="target">
+                        <c:if test="${target.status eq 'false'}">
+                            <option id="${target.sensor}" class="lstBox1Option">${target.place} - ${target.sensorNaming}
+                            </option>
+                        </c:if>
+                    </c:forEach>
+                </select>
+            </div>
 
-    <div class="multiSelectParent bg-light">
-        <h4 class="fs-5 fw-bold emissionsh4">연간 배출량 누적 모니터링 대상 설정</h4><br>
-        <div class="multiSelect">
-            <label><b>전체 항목</b></label>
-            <select multiple class="form-control scroll" id="lstBox3">
-                <c:forEach items="${yearlyEmissions}" var="target2">
-                    <c:if test="${target2.status eq 'false'}">
-                        <option id="${target2.sensor}" class="lstBox3Option">${target2.place} -
-                                ${target2.sensorNaming}
-                        </option>
-                    </c:if>
-                </c:forEach>
-            </select>
+            <div class="multiSelectBtn">
+                <input type='button' id='btnRight' value='>' class="btn btn-default moveBtn"
+                       onclick="moveEvent('#lstBox1', '#lstBox2')"/>
+                <input type='button' id='btnLeft' value='<' class="btn btn-default moveBtn"
+                       onclick="moveEvent('#lstBox2', '#lstBox1')"/>
+            </div>
+
+            <div class="multiSelect">
+                <label><b>대상 가스</b></label>
+                <select multiple class="form-control scroll" id="lstBox2">
+                    <c:forEach items="${emissions}" var="target">
+                        <c:if test="${target.status eq 'true'}">
+                            <option id="${target.sensor}" class="lstBox2Option">${target.place} - ${target.sensorNaming}
+                            </option>
+                        </c:if>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+
+            <!-- MultiSelecter Modal-->
+            <div class="MultiSelecterModal" id="emissionsModal"></div>
+            <div class="emissionsSpan">* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 측정소 통합 모니터링] 화면에 표시됩니다</div>
         </div>
 
-        <div class="multiSelectBtn">
-            <input type='button' id='btnRight2' value='>' class="btn btn-default moveBtn"
-                   onclick="moveEvent('#lstBox3', '#lstBox4')"/>
-            <input type='button' id='btnLeft2' value='<' class="btn btn-default moveBtn"
-                   onclick="moveEvent('#lstBox4', '#lstBox3')"/>
-        </div>
+        <div class="multiSelectParent bg-light">
+            <h4 class="fs-5 fw-bold emissionsh4">연간 배출량 누적 모니터링 대상 설정</h4><br>
+            <div class="multiSelect">
+                <label><b>전체 항목</b></label>
+                <select multiple class="form-control scroll" id="lstBox3">
+                    <c:forEach items="${yearlyEmissions}" var="target2">
+                        <c:if test="${target2.status eq 'false'}">
+                            <option id="${target2.sensor}" class="lstBox3Option">${target2.place} -
+                                    ${target2.sensorNaming}
+                            </option>
+                        </c:if>
+                    </c:forEach>
+                </select>
+            </div>
 
-        <div class="multiSelect">
-            <label><b>대상 가스</b></label>
-            <select multiple class="form-control scroll" id="lstBox4">
-                <c:forEach items="${yearlyEmissions}" var="target2">
-                    <c:if test="${target2.status eq 'true'}">
-                        <option id="${target2.sensor}" class="lstBox4Option"> ${target2.place} - ${target2.sensorNaming}
-                        </option>
-                    </c:if>
-                </c:forEach>
-            </select>
-        </div>
+            <div class="multiSelectBtn">
+                <input type='button' id='btnRight2' value='>' class="btn btn-default moveBtn"
+                       onclick="moveEvent('#lstBox3', '#lstBox4')"/>
+                <input type='button' id='btnLeft2' value='<' class="btn btn-default moveBtn"
+                       onclick="moveEvent('#lstBox4', '#lstBox3')"/>
+            </div>
 
-        <div class="clearfix"></div>
-        <!-- MultiSelecter Modal-->
-        <div class="MultiSelecterModal" id="yearlyEmissionsModal"></div>
-        <div class="emissionsSpan">* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 연간 배출량 누적모니터링] 화면에 표시됩니다</div>
+            <div class="multiSelect">
+                <label><b>대상 가스</b></label>
+                <select multiple class="form-control scroll" id="lstBox4">
+                    <c:forEach items="${yearlyEmissions}" var="target2">
+                        <c:if test="${target2.status eq 'true'}">
+                            <option id="${target2.sensor}" class="lstBox4Option"> ${target2.place}
+                                - ${target2.sensorNaming}
+                            </option>
+                        </c:if>
+                    </c:forEach>
+                </select>
+            </div>
+
+            <div class="clearfix"></div>
+            <!-- MultiSelecter Modal-->
+            <div class="MultiSelecterModal" id="yearlyEmissionsModal"></div>
+            <div class="emissionsSpan">* 설정된 배출량 추이 모니터링 대상가스는 [대시보드 - 연간 배출량 누적모니터링] 화면에 표시됩니다</div>
+        </div>
     </div>
-</div>
 </div>
 
 </div>
@@ -530,17 +559,24 @@
 </div>
 
 <script>
+
     $(document).ready(function () {
-        selectMEmission();
+        const dataPerpage = 3;
+        const pageCount = 3;
+        const currentPage = 1;
+        const total1 = selectEmissionStandard(currentPage, dataPerpage);
+        const total2 = selectMEmission(currentPage, dataPerpage);
+        paging(total1, dataPerpage, pageCount, currentPage, 1);
+        paging(total2, dataPerpage, pageCount, currentPage, 2);
     });
     $(function () {
-        if('${state}' != '1') optionDisabled();
+        if ('${state}' != '1') optionDisabled();
 
         //배출량 모니터링대상 스크롤 길이만큼 옵션길이 적용
-       $('.lstBox1Option').width(document.querySelector('#lstBox1').scrollWidth -32);
-       $('.lstBox2Option').width(document.querySelector('#lstBox2').scrollWidth -32);
-       $('.lstBox3Option').width(document.querySelector('#lstBox3').scrollWidth -32);
-       $('.lstBox4Option').width(document.querySelector('#lstBox4').scrollWidth -32);
+        $('.lstBox1Option').width(document.querySelector('#lstBox1').scrollWidth - 32);
+        $('.lstBox2Option').width(document.querySelector('#lstBox2').scrollWidth - 32);
+        $('.lstBox3Option').width(document.querySelector('#lstBox3').scrollWidth - 32);
+        $('.lstBox4Option').width(document.querySelector('#lstBox4').scrollWidth - 32);
 
         // modal drag and drop move
         if ($('#paramModalShow').val() != null) {
@@ -565,49 +601,117 @@
     });
 
     //그룹 추가,수정 모달에서 측정소 영역 비활성화
-    function optionDisabled(){
-        $('.multiSelectParent label').css('color','#999');
-        $('.multiSelectParent input[type=button]').css('color','#999');
-        $('.multiSelectParent select').css('border','3px solid #999');
+    function optionDisabled() {
+        $('.multiSelectParent label').css('color', '#999');
+        $('.multiSelectParent input[type=button]').css('color', '#999');
+        $('.multiSelectParent select').css('border', '3px solid #999');
         $('.multiSelectParent input[type=button]').prop('disabled', true);
         $('.multiSelectParent select').prop('disabled', true);
     }
 
+    //연간 배출 허용 기준 설정 조회
+    function selectEmissionStandard(currentPage, dataPerPage) {
+        const current = Number(currentPage);
+        const dataPer = Number(dataPerPage);
+        let total = 0;
+        let html = "";
+        $.ajax({
+            url: '<%=cp%>/getEmissionStandard',
+            dataType: 'json',
+            async: false,
+            cache: false,
+            success: function (data) {
+                total = data.length;
+                $('#tbody').empty();
+                if (data.length != 0) {
+                    let current1 = (current - 1) * dataPer;
+                    let dataPer1 = (current - 1) * dataPer + dataPer;
+                    if (data.length < dataPer1) {
+                        dataPer1 = data.length;
+                    }
+                    for (let i = current1; i < dataPer1; i++) {
+                        if (data[i].emissionsStandard == 0) {
+                            data[i].emissionsStandard = "";
+                        }
+                        if (data[i].densityStandard == 0) {
+                            data[i].densityStandard = "";
+                        }
+                        let date = moment(data[i].date).format('yyyy-MM-dd HH:mm:ss');
+                        html =
+                            "<td class='tableCode'>" + data[i].place + "</td>" +
+                            "<td class='tableNaming'>" + data[i].naming + "</td>" +
+                            "<td>" + data[i].emissionsStandard + "</td>" +
+                            "<td>" + data[i].densityStandard + "</td>" +
+                            "<td>" + data[i].formula + "</td>" +
+                            "<td>" + date + "</td>";
+                        if ('${state}' == '1') {
+                            html += "<td><i onclick='clickModal(this)' class='fas fa-edit me-2' data-bs-toggle='modal' data-bs-target='#addModal' id='" + data[i].tableName + "'></i></td>"
+                        } else {
+                            html += "<td></td>";
+                        }
+                        const elem = document.createElement('tr');
+                        elem.innerHTML = html;
+                        document.getElementById('tbody').append(elem);
+                    }
+                } else {
+                    html =
+                        "<td colspan='7' class='pt-4' style='text-align: center;font-size: 1.2rem;' id='nullStandard'>" +
+                        "연간 배출 허용 기준이 없습니다. <br>" +
+                        "<b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요." +
+                        "</td>";
+
+                    $('#tbody').append(html);
+                }
+            }, error: function () {
+            }
+        });
+        return total;
+    }
+
     //연간 배출량 추이 조회
-    function selectMEmission(){
+    function selectMEmission(currentPage, dataPerPage) {
+        const current = Number(currentPage);
+        const dataPer = Number(dataPerPage);
+        let total = 0;
         $.ajax({
             url: '<%=cp%>/getMonthlyEmission',
             dataType: 'json',
             async: false,
             cache: false,
             success: function (data) {
+                total = data.length;
                 $('#tbody1').empty();
-                if(data.length != 0){
-                    for(let i=0; i<data.length;i++){
+                if (data.length != 0) {
+                    let current1 = (current - 1) * dataPer;
+                    let dataPer1 = (current - 1) * dataPer + dataPer;
+                    if (data.length < dataPer1) {
+                        dataPer1 = data.length;
+                    }
+                    for (let i = current1; i < dataPer1; i++) {
                         const innerHtml =
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].year+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].jan+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].feb+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].mar+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].apr+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].may+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].jun+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].jul+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].aug+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].sep+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].oct+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].nov+"</td>"+
-                            "<td name='m"+i+"' style='width: 7%'>"+data[i].dec+"</td>"+
-                            "<td><input type = 'button' id='b"+i+"' value='수정' onclick='dataUpdate(this)'></td>";
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].year + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].jan + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].feb + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].mar + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].apr + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].may + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].jun + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].jul + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].aug + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].sep + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].oct + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].nov + "</td>" +
+                            "<td name='m" + i + "' style='width: 7%'>" + data[i].dec + "</td>" +
+                            "<td><input type = 'button' id='b" + i + "' value='수정' onclick='dataUpdate(this, " + current + "," + dataPer + ")'></td>";
                         const elem = document.createElement('tr');
-                        elem.setAttribute('id','data'+i);
+                        elem.setAttribute('id', 'data' + i);
                         elem.innerHTML = innerHtml;
                         document.getElementById('tbody1').append(elem);
                     }
-                }else{
+                } else {
                     const none =
-                        "<td colspan='14'>"+
-                        "<div class='fw-bold' style='padding-top : 20px;'>등록된 데이터가 없습니다.</div>"+
+                        "<td colspan='14'>" +
+                        "<div class='fw-bold' style='padding-top : 20px;'>등록된 데이터가 없습니다.</div>" +
                         "</td>";
                     $('#tbody1').append(none);
                 }
@@ -615,36 +719,38 @@
             error: function () {
             }
         });
+        return total;
     }
 
     //배출량 추이관리 수정
-    function dataUpdate(x) {
+    function dataUpdate(x, current, dataPer) {
         const dList = new Array();
         const id = x.id;
         const num = id.replace(/[^0-9]/g, '');
-        $('td[name=m'+num+']').each(function () {
+        $('td[name=m' + num + ']').each(function () {
             dList.push($(this).text());
         });
-        $('#data'+num).empty();
+        $('#data' + num).empty();
         const innerHtml =
-            "<td name='n"+num+"' style='width: 7%'>"+dList[0]+"</td>"+
-            "<td style='width: 7%'><input id = 'n1' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[1]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n2' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[2]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n3' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[3]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n4' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[4]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n5' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[5]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n6' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[6]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n7' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[7]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n8' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[8]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n9' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[9]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n10' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[10]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n11' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[11]+"'></td>"+
-            "<td style='width: 7%'><input id = 'n12' name='n"+num+"' style = 'width:80%; type='text' onchange='hiddendata(this)' value='"+dList[12]+"'></td>"+
-            "<td><input type = 'button' value='확인' id='s"+num+"' onclick='savedata("+num+")'></td>";
-        $('#data'+num).append(innerHtml);
+            "<td name='n" + num + "' style='width: 7%'>" + dList[0] + "</td>" +
+            "<td style='width: 7%'><input id = 'n1' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[1] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n2' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[2] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n3' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[3] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n4' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[4] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n5' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[5] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n6' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[6] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n7' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[7] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n8' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[8] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n9' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[9] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n10' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[10] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n11' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[11] + "'></td>" +
+            "<td style='width: 7%'><input id = 'n12' name='n" + num + "' style = 'width:80%; type='text' onchange='hiddendata(this)' value='" + dList[12] + "'></td>" +
+            "<td><input type = 'button' value='확인' id='s" + num + "' onclick='savedata(" + num + "," + current + "," + dataPer + ")'></td>";
+        $('#data' + num).append(innerHtml);
     }
+
     //수정데이터 저장
-    function savedata(num) {
+    function savedata(num, current, dataPer) {
         const dList = new Array();
         dList.push($('td[name=n' + num + ']').text());
         $('input[name=n' + num + ']').each(function () {
@@ -669,8 +775,9 @@
             error: function () {
             }
         })
-        selectMEmission();
+        selectMEmission(current, dataPer);
     }
+
     //수정한 데이터
     function hiddendata(x) {
         const id = x.id;
@@ -678,7 +785,7 @@
         const num = id.replace(/[^0-9]/g, '');
         const namenum = name.replace(/[^0-9]/g, '');
         const value = document.getElementById(id).value;
-        if(isNaN(value) == true){
+        if (isNaN(value) == true) {
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
@@ -688,11 +795,11 @@
             return false;
         }
         const innerHtml =
-            "<input type='hidden' name='h"+namenum+"' id='h"+num+"' value='"+value+"'>";
+            "<input type='hidden' name='h" + namenum + "' id='h" + num + "' value='" + value + "'>";
         $('#hiddendiv').append(innerHtml);
     }
 
-   // //기준 추가
+    // //기준 추가
     // function insert() {
     //
     //     var unComma = $("input[name='standard']").val().replace(/,/g, '');
@@ -719,13 +826,13 @@
             type: 'POST',
             async: false,
             cache: false,
-            data: {tableName:tableName},
+            data: {tableName: tableName},
             success: function (data) {
                 $("input[name='hiddenTableName']").val(tableName);
                 $("input[name='place']").val(data.place);
                 $("input[name='naming']").val(data.naming);
-                $("input[name='standard']").val((data.emissionsStandard == 0)?'':data.emissionsStandard);
-                $("input[name='percent']").val((data.densityStandard == 0)?'':data.densityStandard);
+                $("input[name='standard']").val((data.emissionsStandard == 0) ? '' : data.emissionsStandard);
+                $("input[name='percent']").val((data.densityStandard == 0) ? '' : data.densityStandard);
                 $("input[name='formula']").val(data.formula);
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
@@ -782,7 +889,7 @@
                 $('#paramModalShow').remove();
 
                 setTimeout(function () {
-                location.href = '<%=cp%>/emissionsManagement';
+                    location.href = '<%=cp%>/emissionsManagement';
                 }, 1500);
 
                 Swal.fire({
@@ -956,39 +1063,94 @@
         });
     }
 
-    $(".table").DataTable({
-        "columns" : [
-            { "width" : "7%" },
-            { "width" : "7%" },
-            { "width" : "11%" },
-            { "width" : "7%" },
-            { "width" : "9%" },
-            { "width" : "9%" },
-            { "width" : "3%" }
-        ],
-        autoWidth: false,
-        order: [[5, 'desc']],
-        ordering: true,
-        info: false,
-        lengthChange : false,
-        pageLength: 5,
-        language : {
-            "emptyTable": "데이터가 없어요.",
-            "lengthMenu": "페이지당 _MENU_ 개씩 보기",
-            "info": "현재 _START_ - _END_ / _TOTAL_건",
-            "infoEmpty": "데이터 없음",
-            "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
-            "search": "전체검색 : ",
-            "zeroRecords": "일치하는 데이터가 없어요.",
-            "loadingRecords": "로딩중...",
-            "processing": "잠시만 기다려 주세요...",
-            "paginate": {
-                "next": "다음",
-                "previous": "이전"
-            },
-        },
-    });
+    // $(".table").DataTable({
+    //     "columns" : [
+    //         { "width" : "7%" },
+    //         { "width" : "7%" },
+    //         { "width" : "11%" },
+    //         { "width" : "7%" },
+    //         { "width" : "9%" },
+    //         { "width" : "9%" },
+    //         { "width" : "3%" }
+    //     ],
+    //     autoWidth: false,
+    //     order: [[5, 'desc']],
+    //     ordering: true,
+    //     info: false,
+    //     lengthChange : false,
+    //     pageLength: 5,
+    //     language : {
+    //         "emptyTable": "데이터가 없어요.",
+    //         "lengthMenu": "페이지당 _MENU_ 개씩 보기",
+    //         "info": "현재 _START_ - _END_ / _TOTAL_건",
+    //         "infoEmpty": "데이터 없음",
+    //         "infoFiltered": "( _MAX_건의 데이터에서 필터링됨 )",
+    //         "search": "전체검색 : ",
+    //         "zeroRecords": "일치하는 데이터가 없어요.",
+    //         "loadingRecords": "로딩중...",
+    //         "processing": "잠시만 기다려 주세요...",
+    //         "paginate": {
+    //             "next": "다음",
+    //             "previous": "이전"
+    //         },
+    //     },
+    // });
+    function paging(totalData, dataPerPage, pageCount, currentPage, tableNum) {
+        const totalPage = Math.ceil(totalData / dataPerPage);    // 총 페이지 수
+        const pageGroup = Math.ceil(currentPage / pageCount);    // 페이지 그룹
+        let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
+        if (last > totalPage)
+            last = totalPage;
+        const first = last - (pageCount - 1);    // 화면에 보여질 첫번째 페이지 번호
+        const next = last + 1;
+        const prev = first - 1;
 
+        let html = "";
+
+        if (prev > 0) {
+            html += "<a href=javascript:; id='start" + tableNum + "'>시작</a> ";
+            html += "<a href=javascript:; id='prev" + tableNum + "'>이전</a> ";
+        }
+
+        for (let i = first; i <= last; i++) {
+            if (i > 0) {
+                html += "<a href='javascript:;' id=" + i + '_' + tableNum + ">" + i + "</a> ";  //href=javascript:; 페이지 이동없음
+            }
+        }
+
+        if (last < totalPage) {
+            html += "<a href=javascript:; id='next" + tableNum + "'>다음</a> ";
+            html += "<a href=javascript:; id='end" + tableNum + "'>끝</a>";
+        }
+
+        $("#paging" + tableNum).html(html);    // 페이지 목록 생성
+        $("#paging" + tableNum + " a").css("color", "#333");
+        $("#paging" + tableNum + " a#" + currentPage + "_" + tableNum).css({
+            "text-decoration": "none",
+            "background-color": "#97bef8",
+            "font-weight": "bold",
+            "color": "#fff !important"
+        });    // 현재 페이지 표시
+
+        $("#paging" + tableNum + " a").click(function () {
+            const $item = $(this);
+            const $id = $item.attr("id");
+            let selectedPage = $item.text();
+
+            if ($id == "start" + tableNum) selectedPage = 1;
+            if ($id == "next" + tableNum) selectedPage = next;
+            if ($id == "prev" + tableNum) selectedPage = prev;
+            if ($id == "end" + tableNum) selectedPage = totalPage;
+            paging(totalData, dataPerPage, pageCount, selectedPage, tableNum);
+            if (tableNum == 1) {
+                selectEmissionStandard(selectedPage, dataPerPage);
+            }else{
+                selectMEmission(selectedPage, dataPerPage);
+            }
+
+        });
+
+    }
 
 
 </script>
