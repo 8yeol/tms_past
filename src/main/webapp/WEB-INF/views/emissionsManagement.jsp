@@ -272,6 +272,50 @@
     .tableWrap > table > tbody tr:last-child {
         border-bottom: 2px solid #212529;
     }
+
+    #paging1, #paging2 {
+        text-align: right;
+    }
+
+    #paging1 a, #paging2 a {
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        margin-left: 2px;
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        color: #333 !important;
+        background-color: #fff !important;
+        border: 0px solid transparent !important;
+        border-radius: 50px !important;
+    }
+
+    #paging1 a.current, #paging2 a.current,
+    #paging1 a:hover, #paging2 a:hover {
+        color: #fff !important;
+        border: 0px !important;
+        background: #97bef8 !important;
+    }
+
+    .btnTable td:last-child > input[type=button] {
+        width: 55%;
+        height: 80%;
+        border: 2px solid #06357a;
+        background-color: #fff;
+        color: #06357a;
+    }
+
+    .btnTable td:last-child > input[type=button]:hover, .btnTable td:last-child > input[type=button].active {
+        background-color: #06357a;
+        color: #fff;
+    }
+
+    .btnTable td > input[type=text] {
+        text-align: center;
+        border: 1px solid #0d6efd;
+    }
 </style>
 
 <div class="container" id="container">
@@ -363,7 +407,7 @@
             <span class="text-end w-100"
                   style="display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem">단위 : g</span>
             <div class="tableWrap w-100">
-                <table class="table">
+                <table class="table btnTable">
                     <thead>
                     <tr>
                         <th></th>
