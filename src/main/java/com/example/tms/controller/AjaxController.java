@@ -28,6 +28,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
@@ -1623,6 +1624,7 @@ public class AjaxController {
     @RequestMapping(value = "/getMonthlyEmission")
     public List<MonthlyEmissions> getMonthlyEmission(){
         List<MonthlyEmissions> data = monthlyEmissionsRepository.findAll();
+        data = data.stream().sorted(Comparator.comparing(MonthlyEmissions::getYear).reversed()).collect(Collectors.toList());
         return data;
     }
 
