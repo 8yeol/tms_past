@@ -312,7 +312,7 @@
         color: #fff;
     }
 
-    .btnTable td > input[type=text] {
+    .btnTable td > input[type=number] {
         text-align: center;
         border: 1px solid #0d6efd;
     }
@@ -777,18 +777,18 @@
         $('#data' + num).empty();
         const innerHtml =
             "<td name='n" + num + "' style='width: 7%'>" + dList[0] + "</td>" +
-            "<td style='width: 7%'><input id = 'n1' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[1] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n2' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[2] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n3' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[3] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n4' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[4] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n5' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[5] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n6' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[6] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n7' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[7] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n8' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[8] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n9' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[9] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n10' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[10] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n11' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[11] + "'></td>" +
-            "<td style='width: 7%'><input id = 'n12' name='n" + num + "' style = 'width:80%;' type='text' onchange='hiddendata(this)' value='" + dList[12] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n1' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[1] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n2' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[2] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n3' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[3] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n4' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[4] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n5' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[5] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n6' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[6] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n7' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[7] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n8' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[8] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n9' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[9] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n10' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[10] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n11' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[11] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n12' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[12] + "'></td>" +
             "<td><input type = 'button' value='확인' id='s" + num + "' class='active' onclick='savedata(" + num + "," + current + "," + dataPer + ")'></td>";
         $('#data' + num).append(innerHtml);
     }
@@ -800,12 +800,13 @@
         $('input[name=n' + num + ']').each(function () {
             dList.push($(this).attr('value'));
         });
-        if ($('input[name=h' + num + ']').attr('value') != null) {
+        if ($('input[name=h' + num + ']').attr('value') != null && $('input[name=h' + num + ']').attr('value') != "") {
             $('input[name=h' + num + ']').each(function () {
                 let id = $(this).attr('id');
-                let num = id.replace(/[^0-9]/g, '');
-                dList[num] = $(this).attr('value');
-                $(this).remove();
+                let num = id.split('h');
+                const num2 = num[1];
+                dList[num2] = $(this).attr('value');
+                $('#hiddendiv').empty();
             });
         }
         $.ajax({
@@ -826,20 +827,22 @@
     function hiddendata(x) {
         const id = x.id;
         const name = x.name;
-        const num = id.replace(/[^0-9]/g, '');
+        const num = id.split('n');
+        const num1 = num[0];
+        const num2 = num[1];
         const namenum = name.replace(/[^0-9]/g, '');
         const value = document.getElementById(id).value;
-        if (isNaN(value) == true) {
+        if (value == "" || value == null) {
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
-                text: '문자 데이터를 입력할수 없습니다.'
+                text: '수정 데이터를 확인해주세요.'
             })
             document.getElementById(id).value = null;
             return false;
         }
         const innerHtml =
-            "<input type='hidden' name='h" + namenum + "' id='h" + num + "' value='" + value + "'>";
+            "<input type='hidden' name='h" + namenum + "' id='"+num1+"h" + num2 + "' value='" + value + "'>";
         $('#hiddendiv').append(innerHtml);
     }
 
@@ -1172,16 +1175,6 @@
         }
 
         $("#paging" + tableNum).html(html);    // 페이지 목록 생성
-        // $("#paging" + tableNum + " a").css("color", "#333");
-        // $("#paging" + tableNum + " a#" + currentPage + "_" + tableNum).css({
-        //     "text-decoration": "none",
-        //     "background-color": "#97bef8",
-        //     "font-weight": "bold",
-        //     "color": "#fff !important"
-        //     "color": "#fff !important",
-        //     "border": "0px !important",
-        //     "background": "#97bef8 !important"
-        // });    // 현재 페이지 표시
 
         $("#paging" + tableNum + " a").click(function () {
             const $item = $(this);
