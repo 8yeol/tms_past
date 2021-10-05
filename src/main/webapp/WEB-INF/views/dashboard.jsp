@@ -104,7 +104,7 @@
                         <div class="row" style="margin-bottom: 5px">
                             <div style="display: flex;">
                                 <div class="fs-6 fw-bold" style="width: 50%">${present.placeName} - ${present.sensorName}</div>
-                                <span class="small" style="width: 50%; text-align: right">업데이트 : <span class="fw-bold"><fmt:formatDate value="${present.updateTime}" pattern="yyyy-MM-dd"/></span></span>
+                                <span class="small" style="width: 50%; text-align: right">업데이트 : <span class="fw-bold">${present.updateTime}</span></span>
                             </div>
                         </div>
                         <div class="col-6">

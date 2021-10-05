@@ -7,6 +7,7 @@ import com.example.tms.repository.Sensor.SensorCustomRepository;
 import com.example.tms.repository.SensorListRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,9 @@ public class MainController {
     final SensorCustomRepository sensorCustomRepository;
     final MonitoringGroupRepository monitoringGroupRepository;
     final AjaxController ajaxController;
+    final MonthlyEmissionsRepository monthlyEmissionsRepository;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, ReferenceValueSettingRepository reference_value_settingRepository, SensorCustomRepository sensorCustomRepository, MonitoringGroupRepository monitoringGroupRepository, AjaxController ajaxController) {
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, ReferenceValueSettingRepository reference_value_settingRepository, SensorCustomRepository sensorCustomRepository, MonitoringGroupRepository monitoringGroupRepository, AjaxController ajaxController, MonthlyEmissionsRepository monthlyEmissionsRepository) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -48,6 +50,7 @@ public class MainController {
         this.sensorCustomRepository = sensorCustomRepository;
         this.monitoringGroupRepository = monitoringGroupRepository;
         this.ajaxController = ajaxController;
+        this.monthlyEmissionsRepository = monthlyEmissionsRepository;
     }
 
 
@@ -145,18 +148,46 @@ public class MainController {
         }
 
 
-        List<ArrayList<EmissionsTransition>> emissionList = new ArrayList<>();
+        List<ArrayList<Map>> emissionList = new ArrayList<>();
         for(int i = 0; i < emissionsSettings.size();i++){
-            int year = Calendar.getInstance().get(Calendar.YEAR);
-            List<EmissionsTransition> emissionsSettingList = new ArrayList<>();
-            for (int j = 0; j <= 1; j++) {
-                EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(emissionsSettings.get(i).getSensor(),year-j);
-                emissionsSettingList.add(emissionsTransition);
+            int year = Calendar.getInstance().get(Calendar.YEAR); // 현재년도
+            List<Map> emissionsSettingList = new ArrayList<>();
+            for (int j = 0; j <= 1; j++) { //2번반복
+                SensorList sensor = sensorListRepository.findByTableName(emissionsSettings.get(i).getSensor());
+                MonthlyEmissions monthlyEmission = monthlyEmissionsRepository.findBySensorAndYear(emissionsSettings.get(i).getSensor(),year-j);
+                int firstQuarter = monthlyEmission.jan + monthlyEmission.feb + monthlyEmission.mar;
+                int secondQuarter = monthlyEmission.apr + monthlyEmission.may + monthlyEmission.jun;
+                int thirdQuarter = monthlyEmission.jul + monthlyEmission.aug + monthlyEmission.sep;
+                int fourthQuarter = monthlyEmission.oct + monthlyEmission.nov + monthlyEmission.dec;
+                int totalEmissions = firstQuarter + secondQuarter + thirdQuarter + fourthQuarter;
+                String first = Integer.toString(firstQuarter);
+                String second = Integer.toString(secondQuarter);
+                String third = Integer.toString(thirdQuarter);
+                String fourth = Integer.toString(fourthQuarter);
+                String total = Integer.toString(totalEmissions);
+                String yearData = Integer.toString(monthlyEmission.year);
+                Date date = monthlyEmission.updateTime;
+                SimpleDateFormat trans = new SimpleDateFormat("yyyy-MM-dd");
+                String date1 = trans.format(date);
+
+                HashMap<String, String> map = new HashMap<>();
+                map.put("sensorName", monthlyEmission.sensor);
+                map.put("firstQuarter", first);
+                map.put("secondQuarter", second);
+                map.put("thirdQuarter", third);
+                map.put("fourthQuarter", fourth);
+                map.put("totalEmissions", total);
+                map.put("updateTime", date1);
+                map.put("year", yearData);
+                map.put("sensorName", sensor.naming);
+                map.put("placeName", sensor.place);
+
+                emissionsSettingList.add(map);
             }
             if(emissionsSettingList.get(0)==null&&emissionsSettingList.get(1)==null){
                 emissionsSettingList = new ArrayList<>();
             }
-            emissionList.add((ArrayList<EmissionsTransition>) emissionsSettingList);
+            emissionList.add((ArrayList<Map>) emissionsSettingList);
         }
         model.addAttribute("emissionList", emissionList);
 
