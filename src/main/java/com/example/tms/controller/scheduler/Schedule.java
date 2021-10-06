@@ -3,7 +3,6 @@ package com.example.tms.controller.scheduler;
 import com.example.tms.entity.*;
 import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.AnnualEmissionsRepository;
-import com.example.tms.repository.EmissionsTransitionRepository;
 import com.example.tms.repository.MonthlyEmissionsRepository;
 import com.example.tms.repository.NotificationStatistics.NotificationDayStatisticsRepository;
 import com.example.tms.repository.NotificationList.NotificationListCustomRepository;
@@ -31,9 +30,8 @@ public class Schedule {
     final PlaceRepository placeRepository;
     final MongoQuary mongoQuary;
     final AnnualEmissionsRepository annualEmissionsRepository;
-    final EmissionsTransitionRepository emissionsTransitionRepository;
 
-    public Schedule(NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, SensorListRepository sensorListRepository, PlaceRepository placeRepository, MongoQuary mongoQuary, AnnualEmissionsRepository annualEmissionsRepository, EmissionsTransitionRepository emissionsTransitionRepository) {
+    public Schedule(NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, NotificationListCustomRepository notificationListCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, SensorListRepository sensorListRepository, PlaceRepository placeRepository, MongoQuary mongoQuary, AnnualEmissionsRepository annualEmissionsRepository) {
         this.notificationDayStatisticsRepository = notificationDayStatisticsRepository;
         this.notificationMonthStatisticsRepository = notificationMonthStatisticsRepository;
         this.notificationListCustomRepository = notificationListCustomRepository;
@@ -42,7 +40,6 @@ public class Schedule {
         this.placeRepository = placeRepository;
         this.mongoQuary = mongoQuary;
         this.annualEmissionsRepository = annualEmissionsRepository;
-        this.emissionsTransitionRepository = emissionsTransitionRepository;
     }
 
     /**
@@ -334,8 +331,6 @@ public class Schedule {
         // [대시보드] 연간 배출량 누적 모니터링
         setAnnualEmissions(table);
 
-        // [대시보드] 연간 배출량 추이 모니터링
-        setEmissionsTransition(yesterday, table);
     }
 
     // 연간 배출량 누적 모니터링
@@ -359,67 +354,6 @@ public class Schedule {
         }
         annualEmissions.setUpdateTime(new Date());
         annualEmissionsRepository.save(annualEmissions);
-    }
-
-    // 연간 배출량 추이 모니터링
-    public void setEmissionsTransition(LocalDate yesterday, String table){
-        int year = yesterday.getYear();
-
-        for(int i=0; i<=1; i++){
-            EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(table, year-i);
-            if(emissionsTransition==null){
-                SensorList sensorList = sensorListRepository.findByTableName(table);
-
-                EmissionsTransition newEmissionsTransition = new EmissionsTransition();
-                newEmissionsTransition.setTableName(table);
-                newEmissionsTransition.setPlaceName(sensorList.getPlace());
-                newEmissionsTransition.setSensorName(sensorList.getNaming());
-                newEmissionsTransition.setYear(year-i);
-                newEmissionsTransition.setFirstQuarter(0);
-                newEmissionsTransition.setSecondQuarter(0);
-                newEmissionsTransition.setThirdQuarter(0);
-                newEmissionsTransition.setFourthQuarter(0);
-                newEmissionsTransition.setTotalEmissions(0);
-
-                emissionsTransitionRepository.save(newEmissionsTransition);
-            }
-        }
-
-        EmissionsTransition emissionsTransition = emissionsTransitionRepository.findByTableNameAndYearEquals(table, year);
-
-        int quarter = (int) Math.ceil( yesterday.getMonthValue() / 3.0 );
-
-        MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
-        int totalEmissions;
-
-        switch(quarter) {
-            case 1:
-                int firstQuarter = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar();
-                emissionsTransition.setFirstQuarter(firstQuarter);
-                break;
-            case 2:
-                int secondQuarter = monthlyEmissions.getApr() + monthlyEmissions.getMay() + monthlyEmissions.getJun();
-                emissionsTransition.setSecondQuarter(secondQuarter);
-                break;
-            case 3:
-                int thirdQuarter = monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep();
-                emissionsTransition.setThirdQuarter(thirdQuarter);
-                break;
-            case 4:
-                int fourthQuarter = monthlyEmissions.getOct() + monthlyEmissions.getNov() + monthlyEmissions.getDec();
-                emissionsTransition.setFourthQuarter(fourthQuarter);
-                break;
-        }
-
-        totalEmissions = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar()
-                + monthlyEmissions.getApr() + monthlyEmissions.getMay() + monthlyEmissions.getJun()
-                + monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep()
-                + monthlyEmissions.getOct() + monthlyEmissions.getNov() + monthlyEmissions.getDec();
-
-        emissionsTransition.setTotalEmissions(totalEmissions);
-        emissionsTransition.setUpdateTime(new Date());
-
-        emissionsTransitionRepository.save(emissionsTransition);
     }
 
 }

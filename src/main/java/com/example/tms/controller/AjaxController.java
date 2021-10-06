@@ -1606,7 +1606,7 @@ public class AjaxController {
 
         String sensor = data.sensor;
         SensorList sensorList = sensorListRepository.findByTableName(sensor);
-        inputLogSetting("'"+sensorList.place + " - " + sensorList.naming+"'" + " 센서 월별 배출량 수정", "설정", principal);
+        inputLogSetting("'"+sensorList.place + " - " + sensorList.naming+"'" + " 센서 "+dList.get(0)+"년 연간 배출량 추이 수정", "설정", principal);
 
         monthlyEmissionsRepository.save(data);
     }

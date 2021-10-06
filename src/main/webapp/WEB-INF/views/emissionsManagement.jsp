@@ -405,7 +405,7 @@
             </div>
 
             <span class="text-end w-100"
-                  style="display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem">단위 : kg</span>
+                  style="display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem">단위 : g</span>
             <div class="tableWrap w-100">
                 <table class="table btnTable">
                     <thead>
