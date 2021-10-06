@@ -680,7 +680,7 @@
                         if (data[i].densityStandard == 0) {
                             data[i].densityStandard = "";
                         }
-                        let date = moment(data[i].date).format('yyyy-MM-dd HH:mm:ss');
+                        let date = moment(data[i].date).format('yyyy-MM-DD HH:mm:ss');
                         html =
                             "<td class='tableCode'>" + data[i].place + "</td>" +
                             "<td class='tableNaming'>" + data[i].naming + "</td>" +

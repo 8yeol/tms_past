@@ -28,14 +28,13 @@ public class MainController {
     final SensorListRepository sensorListRepository;
     final MongoQuary mongoQuary;
     final LogRepository logRepository;
-    final EmissionsTransitionRepository emissionsTransitionRepository;
     final ReferenceValueSettingRepository reference_value_settingRepository;
     final SensorCustomRepository sensorCustomRepository;
     final MonitoringGroupRepository monitoringGroupRepository;
     final AjaxController ajaxController;
     final MonthlyEmissionsRepository monthlyEmissionsRepository;
 
-    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, EmissionsTransitionRepository emissionsTransitionRepository, ReferenceValueSettingRepository reference_value_settingRepository, SensorCustomRepository sensorCustomRepository, MonitoringGroupRepository monitoringGroupRepository, AjaxController ajaxController, MonthlyEmissionsRepository monthlyEmissionsRepository) {
+    public MainController(PlaceRepository placeRepository, MemberRepository memberRepository, EmissionsSettingRepository emissionsSettingRepository, AnnualEmissionsRepository annualEmissionsRepository, RankManagementRepository rankManagementRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, MongoQuary mongoQuary, LogRepository logRepository, ReferenceValueSettingRepository reference_value_settingRepository, SensorCustomRepository sensorCustomRepository, MonitoringGroupRepository monitoringGroupRepository, AjaxController ajaxController, MonthlyEmissionsRepository monthlyEmissionsRepository) {
         this.placeRepository = placeRepository;
         this.memberRepository = memberRepository;
         this.emissionsSettingRepository = emissionsSettingRepository;
@@ -45,7 +44,6 @@ public class MainController {
         this.sensorListRepository = sensorListRepository;
         this.mongoQuary = mongoQuary;
         this.logRepository = logRepository;
-        this.emissionsTransitionRepository = emissionsTransitionRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.monitoringGroupRepository = monitoringGroupRepository;

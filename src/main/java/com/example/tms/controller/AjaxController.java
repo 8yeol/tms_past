@@ -51,7 +51,6 @@ public class AjaxController {
     final ItemRepository itemRepository;
     final MongoQuary mongoQuary;
     final LogRepository logRepository;
-    final EmissionsTransitionRepository emissionsTransitionRepository;
     final MemberRepository memberRepository;
     final MemberService memberService;
     final RankManagementRepository rankManagementRepository;
@@ -59,7 +58,7 @@ public class AjaxController {
     final PasswordEncoder passwordEncoder;
     final MonitoringGroupRepository monitoringGroupRepository;
 
-    public AjaxController(PlaceRepository placeRepository, EmissionsTransitionRepository emissionsTransitionRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService, PasswordEncoder passwordEncoder, MonitoringGroupRepository monitoringGroupRepository) {
+    public AjaxController(PlaceRepository placeRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService, PasswordEncoder passwordEncoder, MonitoringGroupRepository monitoringGroupRepository) {
         this.placeRepository = placeRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
@@ -82,7 +81,6 @@ public class AjaxController {
         this.rankManagementRepository = rankManagementRepository;
         this.rankManagementService = rankManagementService;
         this.passwordEncoder = passwordEncoder;
-        this.emissionsTransitionRepository = emissionsTransitionRepository;
         this.monitoringGroupRepository = monitoringGroupRepository;
     }
 
@@ -738,12 +736,7 @@ public class AjaxController {
                 inputLogSetting("'" + hiddenCode + " - " + es.get(i).getSensorNaming() + "'" + " 배출량 모니터링 측정소명 '" + name + "' 수정", "설정", principal);
                 emissionsSettingRepository.save(es.get(i));
             }
-            List<EmissionsTransition> et = emissionsTransitionRepository.findByPlaceName(hiddenCode);
-            for (int i = 0; i < et.size(); i++) {
-                et.get(i).setPlaceName(name);
-                inputLogSetting("'" + hiddenCode + " - " + et.get(i).getSensorName() + "'" + " 분기별 배출량 측정소명 '" + name + "' 수정", "설정", principal);
-                emissionsTransitionRepository.save(et.get(i));
-            }
+
             inputLogSetting("'" + hiddenCode + "' > '" + name + "' 측정소명 수정", "설정", principal);
 
             List<MonitoringGroup> group = monitoringGroupRepository.findByMonitoringPlaceIsIn(hiddenCode);
@@ -887,16 +880,6 @@ public class AjaxController {
                 emissionsStandardSettingRepository.save(ess);
             }
 
-            //분기별 배출량 측정소 변경
-            List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(sensor.get(i));
-            if (et != null) {
-                for (int k = 0; k < et.size(); k++) {
-                    et.get(k).setPlaceName("");
-                    emissionsTransitionRepository.save(et.get(k));
-                }
-                inputLogSetting("'"+sensorname+"'"+" 분기별 배출량 등록 측정소 '"+place +"' 삭제" ,"설정",principal);
-            }
-
         }
         //측정소 삭제
         inputLogSetting("'"+place+"' 삭제" ,"설정",principal);
@@ -933,9 +916,6 @@ public class AjaxController {
 
             emissionsStandardSettingRepository.deleteByTableName(sensor.get(i));
             inputLogSetting("'"+sensorname+"'"+" 배출 관리 기준 삭제" ,"설정",principal);
-
-            emissionsTransitionRepository.deleteByTableName(sensor.get(i));
-            inputLogSetting("'"+sensorname+"'"+" 분기별 배출량 정보 삭제" ,"설정",principal);
 
             sensorListRepository.deleteByTableName(sensor.get(i));
             inputLogSetting("'"+sensorname+"'"+" 센서 삭제" ,"설정",principal);
@@ -1448,16 +1428,6 @@ public class AjaxController {
                     inputLogSetting("'" + oldPlace + " - " + sensor.getNaming() + "'" + " 센서 연간 배출 허용 기준 항목명 수정", "설정", principal);
                 }
 
-                //분기별 배출량 데이터 수정
-                List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(hiddenCode);
-                if (et.size() != 0) {
-                    for (int i = 0; i<et.size(); i++) {
-                        et.get(i).setSensorName(edit_naming);
-                        emissionsTransitionRepository.save(et.get(i));
-                    }
-                    inputLogSetting("'"+et.get(0).getPlaceName() + " - " + sensor.getNaming()+"'" + " 센서 분기별 배출량 항목명 수정", "설정", principal);
-                }
-
                 inputLogSetting("'"+oldNaming+"' 센서의 항목명 "+"'"+oldNaming+"'" + " > " + "'"+edit_naming+"'" + " 수정 ", "설정", principal);
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
                 reference.setNaming(edit_naming);
@@ -1492,16 +1462,6 @@ public class AjaxController {
                     ess.setDate(new Date());
                     emissionsStandardSettingRepository.save(ess);
                     inputLogSetting("'" + oldPlace + " - " + oldNaming + "'" + " 센서 연간 배출 허용 기준 수정", "설정", principal);
-                }
-
-                //분기별 배출량 데이터 수정
-                List<EmissionsTransition> et = emissionsTransitionRepository.findByTableName(hiddenCode);
-                if (et.size() != 0) {
-                    for (int i = 0; i<et.size(); i++) {
-                        et.get(i).setPlaceName(place);
-                        emissionsTransitionRepository.save(et.get(i));
-                    }
-                    inputLogSetting("'"+oldPlace + " - " +oldNaming+"'" + " 센서 분기별 배출량 측정소명 수정", "설정", principal);
                 }
 
                 //측정소 센서 삭제
@@ -1562,12 +1522,6 @@ public class AjaxController {
         //상세설정 값 삭제
         reference_value_settingRepository.deleteByName(tableName);
         inputLogSetting("'"+ place + " - " + naming+"'" + " 관리 기준 값 삭제", "설정", principal);
-
-        //분기별 배출량 정보 삭제
-        if (emissionsTransitionRepository.findByTableName(tableName) != null) {
-            emissionsTransitionRepository.deleteByTableName(tableName);
-            inputLogSetting("'"+place + " - " + naming+"'" + " 분기별 배출량 삭제", "설정", principal);
-        }
 
         //알림설정값 삭제
         if (notification_settingsRepository.findByName(tableName) != null) {
@@ -1634,7 +1588,7 @@ public class AjaxController {
      * @param dList 월별 데이터
      */
     @RequestMapping(value = "/saveMEmission")
-    public void saveMEmission(@RequestParam("dList[]") List<Integer> dList){
+    public void saveMEmission(@RequestParam("dList[]") List<Integer> dList, Principal principal){
         MonthlyEmissions data = monthlyEmissionsRepository.findByYear(dList.get(0));
         data.setJan(dList.get(1));
         data.setFeb(dList.get(2));
@@ -1649,6 +1603,10 @@ public class AjaxController {
         data.setNov(dList.get(11));
         data.setDec(dList.get(12));
         data.setUpdateTime(new Date());
+
+        String sensor = data.sensor;
+        SensorList sensorList = sensorListRepository.findByTableName(sensor);
+        inputLogSetting("'"+sensorList.place + " - " + sensorList.naming+"'" + " 센서 월별 배출량 수정", "설정", principal);
 
         monthlyEmissionsRepository.save(data);
     }
