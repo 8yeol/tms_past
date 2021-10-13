@@ -314,7 +314,13 @@
 
     .btnTable td > input[type=number] {
         text-align: center;
-        border: 1px solid #0d6efd;
+        border: 1px solid #06357a;
+    }
+
+    .btnTable td > input[type=number]::-webkit-outer-spin-button,
+    .btnTable td > input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 </style>
 
