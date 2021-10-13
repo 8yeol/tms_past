@@ -189,9 +189,7 @@ public class Schedule {
             List<ChartData> noxDataAtTime = (List<ChartData>) mongoQuary.getCumulativeEmissionsAtTime(collection, localDate, time);
 
             if(noxDataAtTime.size()!=2){
-                if(i==23 && noxDataAtTime.size()==1){
-                    calibrationData.add(noxDataAtTime.get(0).getY());
-                }else{
+
                     int noxDataAtTimeSize = noxDataAtTime.size();
                     if(noxDataAtTimeSize!=0){
                         LocalDateTime getTime = Instant.ofEpochMilli(noxDataAtTime.get(0).getX().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
@@ -253,13 +251,10 @@ public class Schedule {
                                 }
                             }
                         }else{
-                            if(i!=23){
-                                calibrationData.add(calibrationData.get(calibrationData.size()-1));
-                            }
+                            calibrationData.add(calibrationData.get(calibrationData.size()-1));
                             calibrationData.add(calibrationData.get(calibrationData.size()-1));
                         }
                     }
-                }
             }else{
                 for(int j=0; j<noxDataAtTime.size(); j++){
                     calibrationData.add(noxDataAtTime.get(j).getY());
