@@ -777,18 +777,18 @@
         $('#data' + num).empty();
         const innerHtml =
             "<td name='n" + num + "' style='width: 7%'>" + dList[0] + "</td>" +
-            "<td style='width: 7%'><input id = '"+num+"n1' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[1] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n2' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[2] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n3' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[3] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n4' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[4] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n5' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[5] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n6' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[6] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n7' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[7] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n8' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[8] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n9' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[9] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n10' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[10] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n11' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[11] + "'></td>" +
-            "<td style='width: 7%'><input id = '"+num+"n12' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this)' value='" + dList[12] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n1' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[1] + ")' value='" + dList[1] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n2' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[2] + ")' value='" + dList[2] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n3' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[3] + ")' value='" + dList[3] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n4' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[4] + ")' value='" + dList[4] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n5' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[5] + ")' value='" + dList[5] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n6' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[6] + ")' value='" + dList[6] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n7' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[7] + ")' value='" + dList[7] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n8' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[8] + ")' value='" + dList[8] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n9' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[9] + ")' value='" + dList[9] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n10' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[10] + ")' value='" + dList[10] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n11' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[11] + ")' value='" + dList[11] + "'></td>" +
+            "<td style='width: 7%'><input id = '"+num+"n12' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[12] + ")' value='" + dList[12] + "'></td>" +
             "<td><input type = 'button' value='확인' id='s" + num + "' class='active' onclick='savedata(" + num + "," + current + "," + dataPer + ")'></td>";
         $('#data' + num).append(innerHtml);
     }
@@ -804,8 +804,11 @@
             $('input[name=h' + num + ']').each(function () {
                 let id = $(this).attr('id');
                 let num = id.split('h');
-                const num2 = num[1];
-                dList[num2] = $(this).attr('value');
+                const num2 = num[1]; //몇월 input 박스인지
+                const id2 = num[0]+"n"+num[1]; //기존 input 박스 id
+                if($(this).attr('value') == document.getElementById(id2).value){ //수정할 데이터(onchange를 통해 생성된 hidden box)와 수정input박스에 입력되어있는 데이터 비교(다를시 수정 X)
+                    dList[num2] = $(this).attr('value');
+                }
                 $('#hiddendiv').empty();
             });
         }
@@ -824,7 +827,7 @@
     }
 
     //수정한 데이터
-    function hiddendata(x) {
+    function hiddendata(x, y) {
         const id = x.id;
         const name = x.name;
         const num = id.split('n');
@@ -838,7 +841,7 @@
                 title: '경고',
                 text: '수정 데이터를 확인해주세요.'
             })
-            document.getElementById(id).value = null;
+            document.getElementById(id).value = y;
             return false;
         }
         const innerHtml =
