@@ -754,8 +754,8 @@
         var tablename = $("#name" + num).text(); //측정항목 명
         var companyname = "company" + num;
         var company = $("#" + companyname).val(); //사내기준 값
-        var managename = "management" + num;
-        var manage = $("#" + managename).val(); //관리기준 값
+        // var managename = "management" + num;
+        // var manage = $("#" + managename).val(); //관리기준 값
         var value = strReplace(name.value); //수정값
         var pname = $("#pname").text();
         if (value == "" || value == "999999") {
@@ -783,15 +783,15 @@
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
-            if (parseFloat(value) <= parseFloat(manage)) { //법적기준 값이 관리기준 값보다 작을때
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '법적기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
-                })
-                placeChange(document.getElementById('nickname').value);
-                return;
-            }
+            // if (parseFloat(value) <= parseFloat(manage)) { //법적기준 값이 관리기준 값보다 작을때
+            //     Swal.fire({
+            //         icon: 'warning',
+            //         title: '경고',
+            //         text: '법적기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
+            //     })
+            //     placeChange(document.getElementById('nickname').value);
+            //     return;
+            // }
         }
         $.ajax({
             url: '<%=cp%>/legalUpdate',
@@ -822,8 +822,8 @@
         var tablename = $("#name" + num).text(); //측정항목 명
         var legalname = "legal" + num;
         var legal = $("#" + legalname).val(); //법적기준 값
-        var managename = "management" + num;
-        var manage = $("#" + managename).val(); //관리기준 값
+        // var managename = "management" + num;
+        // var manage = $("#" + managename).val(); //관리기준 값
         var value = strReplace(name.value);
         var pname = $("#pname").text();
         if (value == "" || value == "999999") {
@@ -843,15 +843,15 @@
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
-            if (parseFloat(value) <= parseFloat(manage)) {  //
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '사내기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
-                })
-                placeChange(document.getElementById('nickname').value);
-                return;
-            }
+            // if (parseFloat(value) <= parseFloat(manage)) {  //
+            //     Swal.fire({
+            //         icon: 'warning',
+            //         title: '경고',
+            //         text: '사내기준 값은 관리기준 값보다 작거나 같을 수 없습니다.'
+            //     })
+            //     placeChange(document.getElementById('nickname').value);
+            //     return;
+            // }
             if (parseFloat(legal) <= parseFloat(value)) {  //
                 Swal.fire({
                     icon: 'warning',
@@ -882,62 +882,62 @@
         }
     }
     //management onchange
-    function managementupdate(name) {
-        var id = name.id;
-        const num = id.replace(/[^0-9]/g, ''); //place0 -> 0
-        const naming = $("#naming" + num).text(); //관리ID
-        var tablename = $("#name" + num).text(); //측정항목 명
-        var legalname = "legal" + num;
-        var legal = $("#" + legalname).val(); //법적기준 값
-        var companyname = "company" + num;
-        var company = $("#" + companyname).val(); //사내기준 값
-        var value = strReplace(name.value); //관리기준
-        var pname = $("#pname").text();
-        if (value == "" || value == "999999") {
-            value = "999999";
-        } else {
-            if (ifsum(value) == false) {
-                placeChange(document.getElementById('nickname').value);
-                return;
-            }
-            if (parseFloat(company) <= parseFloat(value)) {  //
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '관리기준 값은 사내기준 값보다 크거나 같을 수 없습니다.'
-                })
-                placeChange(document.getElementById('nickname').value);
-                return;
-            }
-            if (parseFloat(legal) <= parseFloat(value)) {  //
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '관리기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
-                })
-                placeChange(document.getElementById('nickname').value);
-                return;
-            }
-        }
-        $.ajax({
-            url: '<%=cp%>/managementUpdate',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: {
-                "tablename": tablename,
-                "value": value,
-                "place": pname
-            }
-        });
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
-        if (value == "999999") {
-            name.value = "";
-        } else {
-            multiSelecterModal(pname, naming, "manage", value);
-            name.value = value;
-        }
-    }
+    <%--function managementupdate(name) {--%>
+    <%--    var id = name.id;--%>
+    <%--    const num = id.replace(/[^0-9]/g, ''); //place0 -> 0--%>
+    <%--    const naming = $("#naming" + num).text(); //관리ID--%>
+    <%--    var tablename = $("#name" + num).text(); //측정항목 명--%>
+    <%--    var legalname = "legal" + num;--%>
+    <%--    var legal = $("#" + legalname).val(); //법적기준 값--%>
+    <%--    var companyname = "company" + num;--%>
+    <%--    var company = $("#" + companyname).val(); //사내기준 값--%>
+    <%--    var value = strReplace(name.value); //관리기준--%>
+    <%--    var pname = $("#pname").text();--%>
+    <%--    if (value == "" || value == "999999") {--%>
+    <%--        value = "999999";--%>
+    <%--    } else {--%>
+    <%--        if (ifsum(value) == false) {--%>
+    <%--            placeChange(document.getElementById('nickname').value);--%>
+    <%--            return;--%>
+    <%--        }--%>
+    <%--        if (parseFloat(company) <= parseFloat(value)) {  //--%>
+    <%--            Swal.fire({--%>
+    <%--                icon: 'warning',--%>
+    <%--                title: '경고',--%>
+    <%--                text: '관리기준 값은 사내기준 값보다 크거나 같을 수 없습니다.'--%>
+    <%--            })--%>
+    <%--            placeChange(document.getElementById('nickname').value);--%>
+    <%--            return;--%>
+    <%--        }--%>
+    <%--        if (parseFloat(legal) <= parseFloat(value)) {  //--%>
+    <%--            Swal.fire({--%>
+    <%--                icon: 'warning',--%>
+    <%--                title: '경고',--%>
+    <%--                text: '관리기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'--%>
+    <%--            })--%>
+    <%--            placeChange(document.getElementById('nickname').value);--%>
+    <%--            return;--%>
+    <%--        }--%>
+    <%--    }--%>
+    <%--    $.ajax({--%>
+    <%--        url: '<%=cp%>/managementUpdate',--%>
+    <%--        type: 'POST',--%>
+    <%--        async: false,--%>
+    <%--        cache: false,--%>
+    <%--        data: {--%>
+    <%--            "tablename": tablename,--%>
+    <%--            "value": value,--%>
+    <%--            "place": pname--%>
+    <%--        }--%>
+    <%--    });--%>
+    <%--    inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");--%>
+    <%--    if (value == "999999") {--%>
+    <%--        name.value = "";--%>
+    <%--    } else {--%>
+    <%--        multiSelecterModal(pname, naming, "manage", value);--%>
+    <%--        name.value = value;--%>
+    <%--    }--%>
+    <%--}--%>
 
     //legal onchange
     function chartmaxupdate(name) {
@@ -947,8 +947,8 @@
         var tablename = $("#name" + num).text(); //측정항목 명
         var companyname = "company" + num;
         var company = $("#" + companyname).val(); //사내기준 값
-        var managename = "management" + num;
-        var manage = $("#" + managename).val(); //관리기준 값
+        // var managename = "management" + num;
+        // var manage = $("#" + managename).val(); //관리기준 값
         var chartminname = "chartmin" + num;
         var chartmin = $("#" + chartminname).val(); //chartmin 값
         var value = strReplace(name.value); //수정값
