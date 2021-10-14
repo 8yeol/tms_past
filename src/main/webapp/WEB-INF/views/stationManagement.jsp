@@ -805,7 +805,6 @@
             }
         })
         inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' Chart Max 값 변경 '" + value + "'", "설정");
         if (value == "999999") {
             name.value = "";
         } else {
@@ -873,7 +872,7 @@
                 "place": pname
             }
         })
-        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 법적 기준 값 변경 '" + value + "'", "설정");
+        inputLog('${sessionScope.SPRING_SECURITY_CONTEXT.authentication.principal.username}', "'" + pname + "-" + naming + "' 사내 기준 값 변경 '" + value + "'", "설정");
         if (value == "999999") {
             name.value = "";
         } else {
