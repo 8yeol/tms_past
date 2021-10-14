@@ -1589,6 +1589,8 @@ public class AjaxController {
      */
     @RequestMapping(value = "/saveMEmission")
     public void saveMEmission(@RequestParam("dList[]") List<Integer> dList, Principal principal){
+        LocalDate nowDate = LocalDate.now();
+        int year = nowDate.getYear();
         MonthlyEmissions data= monthlyEmissionsRepository.findByYear(dList.get(0));
         data.setJan(dList.get(1));
         data.setFeb(dList.get(2));
@@ -1608,13 +1610,15 @@ public class AjaxController {
             total += dList.get(i);
         }
         String sensor = data.sensor;
-        AnnualEmissions annual = annualEmissionsRepository.findBySensor(sensor);
-        annual.setYearlyValue(total);
-        annual.setUpdateTime(new Date());
+        if(dList.get(0)==year){
+            AnnualEmissions annual = annualEmissionsRepository.findBySensor(sensor);
+            annual.setYearlyValue(total);
+            annual.setUpdateTime(new Date());
+            annualEmissionsRepository.save(annual);
+        }
+
         SensorList sensorList = sensorListRepository.findByTableName(sensor);
         inputLogSetting("'"+sensorList.place + " - " + sensorList.naming+"'" + " 센서 "+dList.get(0)+"년 연간 배출량 추이 수정", "설정", principal);
-
-        annualEmissionsRepository.save(annual);
         monthlyEmissionsRepository.save(data);
     }
 
