@@ -277,7 +277,7 @@
             "<input type='hidden' id='nickname' value='" + name + "'>";
         $('#p_monitoring').append(innerHTMLPlace); //측정소 명  div
 
-        let none = "<tr><td colspan='7' class='p-3'><br> 등록된 센서 데이터가 없습니다. <br> 센서 등록 후 이용 가능합니다. <br><br>";
+        let none = "<tr><td colspan='8' class='p-3'><br> 등록된 센서 데이터가 없습니다. <br> 센서 등록 후 이용 가능합니다. <br><br>";
 
         if(${state == 1}){
             none += " <a href='<%=cp%>/sensorManagement'>센서 등록 바로가기</a></td></tr>";
