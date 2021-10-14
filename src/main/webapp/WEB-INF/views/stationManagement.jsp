@@ -754,8 +754,8 @@
         var tablename = $("#name" + num).text(); //측정항목 명
         var companyname = "company" + num;
         var company = $("#" + companyname).val(); //사내기준 값
-        //var managename = "management" + num;
-        //var manage = $("#" + managename).val(); //관리기준 값
+        var managename = "management" + num;
+        var manage = $("#" + managename).val(); //관리기준 값
         var value = strReplace(name.value); //수정값
         var pname = $("#pname").text();
         if (value == "" || value == "999999") {
