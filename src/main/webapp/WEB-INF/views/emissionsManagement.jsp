@@ -817,18 +817,18 @@
                 }
                 $('#hiddendiv').empty();
             });
+            $.ajax({
+                url: '<%=cp%>/saveMEmission',
+                type: 'POST',
+                async: false,
+                cache: false,
+                data: {"dList": dList},
+                success: function (data) {
+                },
+                error: function () {
+                }
+            })
         }
-        $.ajax({
-            url: '<%=cp%>/saveMEmission',
-            type: 'POST',
-            async: false,
-            cache: false,
-            data: {"dList": dList},
-            success: function (data) {
-            },
-            error: function () {
-            }
-        })
         selectMEmission(current, dataPer);
     }
 
