@@ -331,7 +331,8 @@
                             }
 
                             cell2.innerHTML = data[i].sensor + " 센서 " + notify;
-                            cell3.innerHTML = data[i].value.toFixed(2);
+                            //cell3.innerHTML = data[i].value.toFixed(2);
+                            cell3.innerHTML = data[i].value;
                             cell4.innerHTML = moment(data[i].up_time).format('YYYY-MM-DD HH:mm:ss');
                             if(data[i].grade==1){
                                 cell5.innerHTML = '<div class="bg-danger text-light">'+notify+'</div>'
@@ -449,7 +450,7 @@
             data: {"place": place},
             success: function (data) {
                 for(let i=0; i<data.length; i++){
-                    getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCou
+                    getData.push({day: data[i].month, legalCount:data[i].legalCount, companyCount:data[i].companyCount
                         /* 관리기준 임시삭제
                          , managementCount: data[i].managementCount
                          */
