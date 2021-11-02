@@ -97,16 +97,16 @@ public class AjaxController {
         Map<String, List> gMS = getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
         List<String> gMS_placeName = new ArrayList<>();
         List<Place> newList = new ArrayList<>();
-        for(String key : gMS.keySet()){ //key(측정소명) 추출
+        for (String key : gMS.keySet()) { //key(측정소명) 추출
             gMS_placeName.add(key);
         }
-        int placeListSize = gMS.size()-2;
+        int placeListSize = gMS.size() - 2;
         List<Place> placeAll = placeRepository.findAll();
-        for(int a=0; a<placeListSize; a++){
-            for(int b=0; b<placeAll.size(); b++){
-                if(gMS_placeName.get(a).equals(placeAll.get(b).getName())){
+        for (int a = 0; a < placeListSize; a++) {
+            for (int b = 0; b < placeAll.size(); b++) {
+                if (gMS_placeName.get(a).equals(placeAll.get(b).getName())) {
                     int sensorSize = gMS.get(gMS_placeName.get(a)).size();
-                    if(sensorSize != 0) {
+                    if (sensorSize != 0) {
                         newList.add(placeAll.get(b));
                     }
                 }
@@ -116,7 +116,7 @@ public class AjaxController {
     }
 
     @RequestMapping(value = "/getPlaceList2")
-    public Object getPlaceList2()  {
+    public Object getPlaceList2() {
         List<Place> placeName = placeRepository.findAll();
         JSONArray array = new JSONArray();
         for (int i = 0; i < placeName.size(); i++) {
@@ -158,8 +158,8 @@ public class AjaxController {
     /**
      * 측정소명과 센서명으로 중복체크
      *
-     * @param place   측정소명
-     * @param naming  중복 체크할 센서명  --추가
+     * @param place       측정소명
+     * @param naming      중복 체크할 센서명  --추가
      * @param edit_naming 중복 체크할 센서명  -- 수정
      * @return 해당 측정소에 등록된 센서 값
      */
@@ -168,7 +168,7 @@ public class AjaxController {
         Place placeObject = placeRepository.findByName(place);
 
         if (null == edit_naming) {  //추가
-            if(placeObject.getSensor().size() != 0) {
+            if (placeObject.getSensor().size() != 0) {
                 for (int i = 0; i < placeObject.getSensor().size(); i++) {
                     if (sensorListRepository.findByTableName(placeObject.getSensor().get(i) + "").getNaming().equals(naming))
                         return "addFalse";
@@ -177,7 +177,7 @@ public class AjaxController {
         }
 
         if (null == naming) {  //수정
-            if(placeObject.getSensor().size() != 0) {
+            if (placeObject.getSensor().size() != 0) {
                 for (int i = 0; i < placeObject.getSensor().size(); i++) {
                     if (sensorListRepository.findByTableName(placeObject.getSensor().get(i) + "").getNaming().equals(edit_naming))
                         return "editFalse";
@@ -219,7 +219,7 @@ public class AjaxController {
      * @return 센서의 법적기준,사내기준,관리기준,모니터링 값
      */
     @RequestMapping(value = "/getPlaceSensorValue")
-    public Object getPlaceSensorValue(String place,Principal principal) {
+    public Object getPlaceSensorValue(String place, Principal principal) {
         List<String> sensorName = placeRepository.findByName(place).getSensor();
         List<ReferenceValueSetting> valueList = new ArrayList();
         List<ReferenceValueSetting> valueListCopy = new ArrayList();
@@ -234,17 +234,17 @@ public class AjaxController {
         }
 
         //관리자 그룹은 실제 ReferenceValueSetting 반환
-        if(group.getGroupNum() == 1) return valueList;
+        if (group.getGroupNum() == 1) return valueList;
 
         List<String> sensorList = group.getSensor();
 
         //해당 그룹의 센서목록이 하나도 없다면 모두 false
-        if(sensorList == null || sensorList.size() == 0) {
+        if (sensorList == null || sensorList.size() == 0) {
             for (int i = 0; i < valueList.size(); i++)
                 valueList.get(i).setMonitoring(false);
             return valueList;
 
-        }else {
+        } else {
             //복사본 모두 false하고 원본으로 검사후 복사본 설정 및 리턴
             for (int i = 0; i < valueList.size(); i++) {
                 valueListCopy.get(i).setMonitoring(false);
@@ -270,7 +270,7 @@ public class AjaxController {
     public JSONArray getPlaceData(String place, Principal principal) {
         try {
             Map<String, List> gMS = getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
-            if(place != null){
+            if (place != null) {
                 List<String> sensorNames = gMS.get(place);
                 JSONArray jsonArray = new JSONArray();
                 for (int i = 0; i < sensorNames.size(); i++) {
@@ -305,7 +305,7 @@ public class AjaxController {
                 }
                 return jsonArray;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             //java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
         }
         return null;
@@ -328,6 +328,7 @@ public class AjaxController {
 
     /**
      * 해당 센서의 모터링이 True 인 센서 데이터(최근,이전,기준값 등) Json형태로 리턴하는 메소드
+     *
      * @param sensor 센서명
      * @return 센서의 최근, 이전, 정보
      */
@@ -360,9 +361,9 @@ public class AjaxController {
             subObj.put("name", sensor);
             subObj.put("max", numberTypeChange(sensorInfo.getMax()));
             subObj.put("min", numberTypeChange(sensorInfo.getMin()));
-            if(sensorItem != null) {
+            if (sensorItem != null) {
                 subObj.put("unit", sensorItem.getUnit());
-            }else{
+            } else {
                 subObj.put("unit", "");
             }
         }
@@ -396,10 +397,11 @@ public class AjaxController {
         placeRepository.save(savePlace);
         return savePlace.getUp_time();
     }
-    public void groupSensorRemove(String sensorName){
+
+    public void groupSensorRemove(String sensorName) {
         //삭제될 센서를 포함하는 그룹 검색하여 센서 삭제
         List<MonitoringGroup> groups = monitoringGroupRepository.findBySensorIsIn(sensorName);
-        if(groups != null && groups.size() != 0) {
+        if (groups != null && groups.size() != 0) {
             for (int i = 0; i < groups.size(); i++) {
                 List<String> sensorList = groups.get(i).getSensor();
                 if (sensorList != null && sensorList.size() != 0) {
@@ -421,12 +423,12 @@ public class AjaxController {
      * @param tablename 센서명
      */
     @RequestMapping(value = "/referenceMonitoringUpdate")
-    public String referenceMonitoringUpdate(@RequestParam("sensor") String tablename,Principal principal)  {
+    public String referenceMonitoringUpdate(@RequestParam("sensor") String tablename, Principal principal) {
         MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(principal.getName());
         List<String> sensorList = group.getSensor();
 
         //관리자 그룹이라면 실제 reference_value_setting 을 조작
-        if(group.getGroupNum() == 1) {
+        if (group.getGroupNum() == 1) {
             ReferenceValueSetting reference = reference_value_settingRepository.findByName(tablename);
             reference.setMonitoring(!reference.getMonitoring());
             reference_value_settingRepository.save(reference);
@@ -434,12 +436,12 @@ public class AjaxController {
             return "";
         }
 
-        if(reference_value_settingRepository.findByName(tablename).getMonitoring() == false){
-            return "permissionError" ;
+        if (reference_value_settingRepository.findByName(tablename).getMonitoring() == false) {
+            return "permissionError";
         }
 
         //센서목록 하나도 없다면
-        if(sensorList == null || sensorList.size() == 0){
+        if (sensorList == null || sensorList.size() == 0) {
             sensorList = new ArrayList<>();
             sensorList.add(tablename);
             group.setSensor(sensorList);
@@ -448,7 +450,7 @@ public class AjaxController {
         }
 
         //설정된 센서가 그룹의 센서목록에 있다면 On -> Off로 간주하고 목록에서 삭제 후 리턴
-        for (int i=0; i<sensorList.size(); i++){
+        for (int i = 0; i < sensorList.size(); i++) {
             if (sensorList.get(i).equals(tablename)) {
                 sensorList.remove(tablename);
                 group.setSensor(sensorList);
@@ -474,7 +476,7 @@ public class AjaxController {
 
         List<SensorList> sensorList = sensorListRepository.findAll();
 
-        for(SensorList sensor : sensorList){
+        for (SensorList sensor : sensorList) {
             sensor.getTableName();
 
             Sensor sensorData = sensorCustomRepository.getSensorRecent(sensor.getTableName());
@@ -483,9 +485,9 @@ public class AjaxController {
             long diff = now.getTime() - sensorData.getUp_time().getTime();
             long sec = diff / 60000;
 
-            if(sec < 5){
+            if (sec < 5) {
                 sensor.setStatus(true);
-            }else{
+            } else {
                 sensor.setStatus(false);
             }
         }
@@ -510,45 +512,46 @@ public class AjaxController {
         JSONObject excess = new JSONObject();
 
         List<String> sensorList = new ArrayList<>();
-        if(memberGroup != 1){
+        if (memberGroup != 1) {
             MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(memberGroup);
             sensorList = monitoringGroup.getSensor();
-        }else{
+        } else {
             List<ReferenceValueSetting> monitoringOn = reference_value_settingRepository.findByMonitoringIsTrue();
-            for(ReferenceValueSetting referenceValueSetting : monitoringOn){
+            for (ReferenceValueSetting referenceValueSetting : monitoringOn) {
                 sensorList.add(referenceValueSetting.getName());
             }
         }
 
-        if(sensorList != null){
+        if (sensorList != null) {
             excess = getExcessList(sensorList);
         }
         return excess;
     }
 
-    public JSONObject getExcessList(List<String> sensorList){
+    public JSONObject getExcessList(List<String> sensorList) {
         JSONObject excess = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        for(String sensorName : sensorList){
+        for (String sensorName : sensorList) {
             Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName);
             ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(sensorName);
             Date now = new Date();
             long diff = now.getTime() - sensor.getUp_time().getTime();
             long sec = diff / 60000;
 
-            if(sec < 5){
+            if (sec < 5) {
                 float value = sensor.getValue();
-                SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());;
+                SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());
+                ;
                 JSONObject jsonObject = new JSONObject();
 
-                if( value > referenceValueSetting.getLegalStandard() ){
+                if (value > referenceValueSetting.getLegalStandard()) {
                     jsonObject.put("classification", "danger");
-                }else if( value > referenceValueSetting.getCompanyStandard() ){
+                } else if (value > referenceValueSetting.getCompanyStandard()) {
                     jsonObject.put("classification", "warning");
-                }else if( value > referenceValueSetting.getManagementStandard() ){
+                } else if (value > referenceValueSetting.getManagementStandard()) {
                     jsonObject.put("classification", "caution");
-                }else{
+                } else {
                     jsonObject.put("classification", "normal");
                 }
 
@@ -565,13 +568,14 @@ public class AjaxController {
 
     /**
      * 그룹마다 허용된 센서 리스트 검색하여 기준초과 데이터 가져오기
+     *
      * @param principal 로그인 객체
      * @return 기준 초과데이터
      */
     @RequestMapping(value = "/getAlarmData", produces = MediaType.APPLICATION_JSON_VALUE)
     public Object getAlarmData(Principal principal, @RequestParam("num") String num) throws ParseException {
         //로그인 객체 없다면 null 리턴하여 login.jsp로 이동
-        if(principal == null) {
+        if (principal == null) {
             JSONObject memberIsNull = new JSONObject();
             memberIsNull.put("null", "null");
             return memberIsNull;
@@ -583,29 +587,29 @@ public class AjaxController {
         JSONArray array = new JSONArray();
 
         List<String> sensorList = new ArrayList<>();
-        if(memberGroup != 1){ //디폴트 그룹이 아닐때
+        if (memberGroup != 1) { //디폴트 그룹이 아닐때
             MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(memberGroup); //모니터링 그룹
             List<String> placeList = monitoringGroup.getMonitoringPlace(); //측정소리스트
-            for (int i=0; i<placeList.size(); i++){
+            for (int i = 0; i < placeList.size(); i++) {
                 Place place = placeRepository.findByName(placeList.get(i));//측정소 정보
                 List<String> placeSensor = place.getSensor();//측정소 센서
-                for (int k=0; k<placeSensor.size(); k++){
-                    if(notification_settingsRepository.findByName(placeSensor.get(k)).isStatus() == true){ //측정소센서 알림 on 확인
+                for (int k = 0; k < placeSensor.size(); k++) {
+                    if (notification_settingsRepository.findByName(placeSensor.get(k)).isStatus() == true) { //측정소센서 알림 on 확인
                         sensorList.add(placeSensor.get(k));
                     }
                 }
             }
-        }else{ //디폴트그룹일때
+        } else { //디폴트그룹일때
             List<NotificationSettings> monitoringOn = notification_settingsRepository.findByStatusIsTrue(); //알림 on 확인
-            for(NotificationSettings notificationSettings : monitoringOn){
+            for (NotificationSettings notificationSettings : monitoringOn) {
                 sensorList.add(notificationSettings.getName());
             }
         }
-        if(sensorList != null){
-            if(num.equals("1")){
+        if (sensorList != null) {
+            if (num.equals("1")) {
                 getAlarmDataCheck(sensorList);
                 array = getAlarmNotificationList(sensorList);
-            }else{
+            } else {
                 array = getAlarmNotificationList(sensorList);
             }
         }
@@ -614,17 +618,18 @@ public class AjaxController {
 
     /**
      * 모니터링그룹에 해당되는 센서의 알림리스트 가져오기
+     *
      * @param sensorList 해당 관리자가 포함된 모니터링 그룹의 센서리스트
      * @return 알림리스트 데이터
      */
     @RequestMapping(value = "/getAlarmNotificationList")
-    public JSONArray getAlarmNotificationList(List<String> sensorList){
+    public JSONArray getAlarmNotificationList(List<String> sensorList) {
         JSONArray array = new JSONArray();
-        for(int i=0; i<sensorList.size(); i++){
-            List<NotificationList> notificationList = notificationListRepository.findByNameAndCheck(sensorList.get(i),false);
+        for (int i = 0; i < sensorList.size(); i++) {
+            List<NotificationList> notificationList = notificationListRepository.findByNameAndCheck(sensorList.get(i), false);
             List<NotificationList> falseCount = notificationListRepository.findByCheck(false);
-            if(notificationList.size() > 1){
-                for(int j=0; j<notificationList.size(); j++){
+            if (notificationList.size() > 1) {
+                for (int j = 0; j < notificationList.size(); j++) {
                     JSONObject excess = new JSONObject();
                     excess.put("name", notificationList.get(j).getName());
                     excess.put("sensor", notificationList.get(j).getSensor());
@@ -633,11 +638,11 @@ public class AjaxController {
                     excess.put("grade", notificationList.get(j).getGrade());
                     excess.put("status", notificationList.get(j).getStatus());
                     excess.put("up_time", notificationList.get(j).getUp_time());
-                    if(array.size()<falseCount.size()){
+                    if (array.size() < falseCount.size()) {
                         array.add(excess);
                     }
                 }
-            }else if(notificationList.size()==1){
+            } else if (notificationList.size() == 1) {
                 JSONObject excess = new JSONObject();
                 excess.put("name", notificationList.get(0).getName());
                 excess.put("sensor", notificationList.get(0).getSensor());
@@ -646,7 +651,7 @@ public class AjaxController {
                 excess.put("grade", notificationList.get(0).getGrade());
                 excess.put("status", notificationList.get(0).getStatus());
                 excess.put("up_time", notificationList.get(0).getUp_time());
-                if(array.size()<falseCount.size()){
+                if (array.size() < falseCount.size()) {
                     array.add(excess);
                 }
             }
@@ -656,55 +661,57 @@ public class AjaxController {
 
     /**
      * 기준초과 알람에 필요한 데이터 설정
+     *
      * @param sensorList 센서 리스트
      * @return 기준초과 데이터
      */
     public void getAlarmDataCheck(List<String> sensorList) throws ParseException {
         JSONArray jsonArray = new JSONArray();
 
-        for(String sensorName : sensorList){
+        for (String sensorName : sensorList) {
             Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName); //최근 입력된 센서
             ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(sensorName);
 
-                float value = sensor.getValue(); //센서 값
-                SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());;
-                JSONObject jsonObject = new JSONObject();
+            float value = sensor.getValue(); //센서 값
+            SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());
+            ;
+            JSONObject jsonObject = new JSONObject();
 
-                if( value > referenceValueSetting.getLegalStandard() ){
-                    jsonObject.put("classification", "danger");
-                }else if( value > referenceValueSetting.getCompanyStandard() ){
-                    jsonObject.put("classification", "warning");
-                }else if( value > referenceValueSetting.getManagementStandard() ){
-                    jsonObject.put("classification", "caution");
-                }else{
-                    jsonObject.put("classification", "normal");
-                }
+            if (value > referenceValueSetting.getLegalStandard()) {
+                jsonObject.put("classification", "danger");
+            } else if (value > referenceValueSetting.getCompanyStandard()) {
+                jsonObject.put("classification", "warning");
+            } else if (value > referenceValueSetting.getManagementStandard()) {
+                jsonObject.put("classification", "caution");
+            } else {
+                jsonObject.put("classification", "normal");
+            }
 
-                SensorList sensorData = sensorListRepository.findByPlaceAndNaming(sensorInfo.getPlace(), sensorInfo.getNaming());
-                NotificationSettings setting = notification_settingsRepository.findByName(sensorData.getTableName());
-                if (setting != null) {
-                    Date date = new Date(System.currentTimeMillis());
-                    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+            SensorList sensorData = sensorListRepository.findByPlaceAndNaming(sensorInfo.getPlace(), sensorInfo.getNaming());
+            NotificationSettings setting = notification_settingsRepository.findByName(sensorData.getTableName());
+            if (setting != null) {
+                Date date = new Date(System.currentTimeMillis());
+                SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 
-                    Date startDate = format.parse(setting.getStart());
-                    Date endDate = format.parse(setting.getEnd());
-                    Date nowDate = format.parse(format.format(date));
+                Date startDate = format.parse(setting.getStart());
+                Date endDate = format.parse(setting.getEnd());
+                Date nowDate = format.parse(format.format(date));
 
-                    if(nowDate.after(startDate) && endDate.after(nowDate) && setting.isStatus() == true){
-                        jsonObject.put("state", true);
-                    }else{
-                        jsonObject.put("state", false);
-                    }
-                }else{
+                if (nowDate.after(startDate) && endDate.after(nowDate) && setting.isStatus() == true) {
+                    jsonObject.put("state", true);
+                } else {
                     jsonObject.put("state", false);
                 }
+            } else {
+                jsonObject.put("state", false);
+            }
 
-                jsonObject.put("place", sensorInfo.getPlace());
-                jsonObject.put("naming", sensorInfo.getNaming());
-                jsonObject.put("tableName", sensorInfo.getTableName());
-                jsonObject.put("value", String.format("%.2f", value));
-                jsonObject.put("up_time", sensor.getUp_time());
-                jsonArray.add(jsonObject);
+            jsonObject.put("place", sensorInfo.getPlace());
+            jsonObject.put("naming", sensorInfo.getNaming());
+            jsonObject.put("tableName", sensorInfo.getTableName());
+            jsonObject.put("value", String.format("%.2f", value));
+            jsonObject.put("up_time", sensor.getUp_time());
+            jsonArray.add(jsonObject);
 
         }
         saveNotificationList(jsonArray);
@@ -712,17 +719,18 @@ public class AjaxController {
 
     /**
      * notification_list 저장 메소드
+     *
      * @param jsonArray 센서별 최근 데이터 리스트
      */
-    public void saveNotificationList(JSONArray jsonArray){
-        for(int i=0; i<jsonArray.size(); i++){
-            JSONObject jsonObject = (JSONObject)jsonArray.get(i);
+    public void saveNotificationList(JSONArray jsonArray) {
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
             int grade = 0;
             String classification = jsonObject.get("classification").toString();
-            if(classification == "danger" || classification == "warning"){
-                if(classification == "danger"){
+            if (classification == "danger" || classification == "warning") {
+                if (classification == "danger") {
                     grade = 1;
-                }else {
+                } else {
                     grade = 2;
                 }
                 String place = jsonObject.get("place").toString();
@@ -732,23 +740,23 @@ public class AjaxController {
                 String status = jsonObject.get("state").toString();
                 boolean check = false;
                 String checkName = "";
-                Date time = (Date)jsonObject.get("up_time");
+                Date time = (Date) jsonObject.get("up_time");
 
                 List<NotificationList> tf = notificationListRepository.findBySensor(sensor);
-                if(tf.size() != 0){ //데이터 중복 확인(센서확인)
+                if (tf.size() != 0) { //데이터 중복 확인(센서확인)
                     int count = 0;
-                    for(int j=0; j<tf.size(); j++){
+                    for (int j = 0; j < tf.size(); j++) {
                         Date a = tf.get(j).up_time;
-                        if(a.equals(time)){
-                            count ++;
+                        if (a.equals(time)) {
+                            count++;
                         }
                     }
-                    if(grade>=1 && count==0){
+                    if (grade >= 1 && count == 0) {
                         NotificationList list = new NotificationList(place, sensor, name, value, grade, status, check, checkName, time);
                         notificationListRepository.save(list);
                     }
-                }else{
-                    if(grade>=1){
+                } else {
+                    if (grade >= 1) {
                         NotificationList list = new NotificationList(place, sensor, name, value, grade, status, check, checkName, time);
                         notificationListRepository.save(list);
                     }
@@ -756,6 +764,7 @@ public class AjaxController {
             }
         }
     }
+
     /**
      * 측정소 추가, 수정
      * 수정시 센서 상세설정에서 측정소명도 같이 변경
@@ -769,22 +778,22 @@ public class AjaxController {
     @RequestMapping(value = "/saveCheck")
     public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "sensor") String sensor, @RequestParam(value = "uptime") String up_time, Principal principal) {
         List<NotificationList> notificationList = notificationListRepository.findBySensor(sensor);
-        for(int i=0; i<notificationList.size(); i++){
+        for (int i = 0; i < notificationList.size(); i++) {
             Date date = notificationList.get(i).up_time;
             SimpleDateFormat trans = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String transDate = trans.format(date);
-            if(transDate.equals(up_time)){
+            if (transDate.equals(up_time)) {
                 String value = notificationList.get(i).value;
                 notificationList.get(i).setCheck(true);
                 notificationList.get(i).setCheckName(name);
                 notificationListRepository.save(notificationList.get(i));
 
-                if(notificationList.get(i).grade == 1){
-                    inputLogSetting("'" + sensor + "'" + " 법적기준 초과("+value+") 알림 확인('"+name+"')", "설정", principal);
-                }else if(notificationList.get(i).grade == 2){
-                    inputLogSetting("'" + sensor + "'" + " 사내기준 초과("+value+") 알림 확인('"+name+"')", "설정", principal);
-                }else {
-                    inputLogSetting("'" + sensor + "'" + " 관리기준 초과("+value+") 알림 확인('"+name+"')", "설정", principal);
+                if (notificationList.get(i).grade == 1) {
+                    inputLogSetting("'" + sensor + "'" + " 법적기준 초과(" + value + ") 알림 확인('" + name + "')", "설정", principal);
+                } else if (notificationList.get(i).grade == 2) {
+                    inputLogSetting("'" + sensor + "'" + " 사내기준 초과(" + value + ") 알림 확인('" + name + "')", "설정", principal);
+                } else {
+                    inputLogSetting("'" + sensor + "'" + " 관리기준 초과(" + value + ") 알림 확인('" + name + "')", "설정", principal);
                 }
             }
         }
@@ -837,7 +846,7 @@ public class AjaxController {
                 SensorList sensor = sensorlist.get(i);
                 sensor.setPlace(name);
                 sensor.setUpTime(date);
-                inputLogSetting("'"+hiddenCode+" - "+sensorlist.get(i).naming+"'"+" 센서 측정소명 '"+name+"' 수정","설정",principal);
+                inputLogSetting("'" + hiddenCode + " - " + sensorlist.get(i).naming + "'" + " 센서 측정소명 '" + name + "' 수정", "설정", principal);
                 sensorListRepository.save(sensor);
             }
 
@@ -864,8 +873,8 @@ public class AjaxController {
             inputLogSetting("'" + hiddenCode + "' > '" + name + "' 측정소명 수정", "설정", principal);
 
             List<MonitoringGroup> group = monitoringGroupRepository.findByMonitoringPlaceIsIn(hiddenCode);
-            if(group != null) {
-                for (int i=0; i<group.size(); i++){
+            if (group != null) {
+                for (int i = 0; i < group.size(); i++) {
                     List<String> groupPlaceList = group.get(i).getMonitoringPlace();
                     int index = groupPlaceList.indexOf(hiddenCode);
                     groupPlaceList.set(index, name);
@@ -879,25 +888,26 @@ public class AjaxController {
 
     /**
      * 측정소에있는 센서 개수 확인
+     *
      * @param placeList 측정소 배열
      * @return
      */
     @RequestMapping(value = "/countPlaceSensor")
     public int countPlaceSensor(@RequestParam(value = "placeList[]") List<String> placeList) {
         int count = 0;
-        for(int i=0; i<placeList.size(); i++){
+        for (int i = 0; i < placeList.size(); i++) {
             List<String> placeSensorList = placeRepository.findByName(placeList.get(i)).getSensor();
             count += placeSensorList.size();
         }
         return count;
     }
 
-        /**
-         * 측정소 +센서 삭제, 측정소만 삭제를 판별
-         *
-         * @param placeList 측정소 배열
-         * @param flag      어떻게 삭제할지 판별할 데이터
-         */
+    /**
+     * 측정소 +센서 삭제, 측정소만 삭제를 판별
+     *
+     * @param placeList 측정소 배열
+     * @param flag      어떻게 삭제할지 판별할 데이터
+     */
     @RequestMapping(value = "/removePlace")
     public void removePlace(@RequestParam(value = "placeList[]") List<String> placeList, boolean flag, Principal principal) {
 
@@ -906,19 +916,19 @@ public class AjaxController {
             List<String> placeSensorList = placeRepository.findByName(placeList.get(i)).getSensor();
             //삭제될 측정소 그룹에서 삭제
             List<MonitoringGroup> group = monitoringGroupRepository.findByMonitoringPlaceIsIn(placeList.get(i));
-            for (int k = 0; k<group.size(); k++){
+            for (int k = 0; k < group.size(); k++) {
                 List<String> groupPlaceList = group.get(k).getMonitoringPlace();
                 groupPlaceList.remove(placeList.get(i));
                 group.get(k).setMonitoringPlace(groupPlaceList);
                 monitoringGroupRepository.save(group.get(k));
-                if(!group.get(k).getMonitoringPlace().get(0).equals("모든 측정소")) {
+                if (!group.get(k).getMonitoringPlace().get(0).equals("모든 측정소")) {
                     inputLogSetting("'" + group.get(k).getGroupName() + "'그룹의 측정소 '" + placeList.get(i) + "' 삭제", "삭제", principal);
                 }
 
                 //삭체할 측정소가 포함된 그룹의 센서 목록
                 List<String> groupSensorList = group.get(k).getSensor();
 
-                if(groupSensorList != null && groupSensorList.size() != 0) {
+                if (groupSensorList != null && groupSensorList.size() != 0) {
                     //그룹의 센서 목록에서 삭제될 센서 삭제
                     for (int j = 0; j < placeSensorList.size(); j++) {
                         for (int p = 0; p < groupSensorList.size(); p++) {
@@ -1006,7 +1016,7 @@ public class AjaxController {
 
         }
         //측정소 삭제
-        inputLogSetting("'"+place+"' 삭제" ,"설정",principal);
+        inputLogSetting("'" + place + "' 삭제", "설정", principal);
         placeRepository.deleteByName(place);
     }
 
@@ -1015,34 +1025,34 @@ public class AjaxController {
      *
      * @param place 측정소명
      */
-    public void removePlaceRemoveSensor(String place,Principal principal) {
+    public void removePlaceRemoveSensor(String place, Principal principal) {
         Place placeInfo = placeRepository.findByName(place);
 
         //측정소 삭제
         placeRepository.deleteByName(place);
-        inputLogSetting("'"+place+"' 삭제" ,"설정",principal);
+        inputLogSetting("'" + place + "' 삭제", "설정", principal);
 
         List<String> sensor = placeInfo.getSensor();
         for (int i = 0; i < sensor.size(); i++) {
-            SensorList sen = sensorListRepository.findByTableName(sensor.get(i),"");
+            SensorList sen = sensorListRepository.findByTableName(sensor.get(i), "");
             String sensorname = sen.getNaming();
             reference_value_settingRepository.deleteByName(sensor.get(i));
-            inputLogSetting("'"+sensorname+"'"+" 상세설정 값 삭제" ,"설정",principal);
+            inputLogSetting("'" + sensorname + "'" + " 상세설정 값 삭제", "설정", principal);
 
             notification_settingsRepository.deleteByName(sensor.get(i));
-            inputLogSetting("'"+sensorname+"'"+" 알림설정 값 삭제" ,"설정",principal);
+            inputLogSetting("'" + sensorname + "'" + " 알림설정 값 삭제", "설정", principal);
 
             emissionsSettingRepository.deleteBySensor(sensor.get(i));
-            inputLogSetting("'"+sensorname+"'"+" 배출량 모니터링 대상 삭제" ,"설정",principal);
+            inputLogSetting("'" + sensorname + "'" + " 배출량 모니터링 대상 삭제", "설정", principal);
 
             annualEmissionsRepository.deleteBySensor(sensor.get(i));
-            inputLogSetting("'"+sensorname+"'"+" 배출량 연간 모니터링 대상 삭제" ,"설정",principal);
+            inputLogSetting("'" + sensorname + "'" + " 배출량 연간 모니터링 대상 삭제", "설정", principal);
 
             emissionsStandardSettingRepository.deleteByTableName(sensor.get(i));
-            inputLogSetting("'"+sensorname+"'"+" 배출 관리 기준 삭제" ,"설정",principal);
+            inputLogSetting("'" + sensorname + "'" + " 배출 관리 기준 삭제", "설정", principal);
 
             sensorListRepository.deleteByTableName(sensor.get(i));
-            inputLogSetting("'"+sensorname+"'"+" 센서 삭제" ,"설정",principal);
+            inputLogSetting("'" + sensorname + "'" + " 센서 삭제", "설정", principal);
         }
     }
 
@@ -1125,7 +1135,7 @@ public class AjaxController {
 
     @RequestMapping(value = "/getSensor2")
     public List<Sensor> getSensor2(@RequestParam("sensor") String sensor,
-                                  @RequestParam("min") String min) {
+                                   @RequestParam("min") String min) {
         return sensorCustomRepository.getSenor2(sensor, min);
     }
 
@@ -1212,8 +1222,8 @@ public class AjaxController {
      * @param name      센서명
      * @param naming    센서 네이밍
      */
-    public void saveReference(String placename, String name, String naming,Principal principal) {
-        inputLogSetting("'"+placename + " - " + naming+"'" + " 센서 관리 기준 값 설정", "설정", principal);
+    public void saveReference(String placename, String name, String naming, Principal principal) {
+        inputLogSetting("'" + placename + " - " + naming + "'" + " 센서 관리 기준 값 설정", "설정", principal);
 
         if (placeRepository.findBySensorIsIn(name) != null) { //기존 센서가 존재
             //place 업데이트 시간 수정
@@ -1224,7 +1234,7 @@ public class AjaxController {
             sensor.add(name);
             placesensor.setSensor(sensor);
             placeRepository.save(placesensor);
-            inputLogSetting("'"+placename + " - " + naming+"'" + " 센서 추가", "설정", principal);
+            inputLogSetting("'" + placename + " - " + naming + "'" + " 센서 추가", "설정", principal);
 
         }
         float legal = 999999.0f;
@@ -1363,7 +1373,6 @@ public class AjaxController {
     }
 
 
-
     /**
      * 일별 알림 현황 조회 - 최근 일주일 (limit:7)
      *
@@ -1404,7 +1413,7 @@ public class AjaxController {
         setting.setDate(new Date());
         emissionsStandardSettingRepository.save(setting);
 
-        inputLogSetting("'"+setting.getPlace()+" - "+setting.getNaming()+"'"+" 센서 연간 배출 허용 기준 변경 ","설정",principal);
+        inputLogSetting("'" + setting.getPlace() + " - " + setting.getNaming() + "'" + " 센서 연간 배출 허용 기준 변경 ", "설정", principal);
 
         List<EmissionsStandardSetting> standardList = emissionsStandardSettingRepository.findAll();
         return standardList;
@@ -1412,12 +1421,13 @@ public class AjaxController {
 
     /**
      * 로그 셋팅해서 입력하는 메소드
-     * @param content 내용
-     * @param type    타입
+     *
+     * @param content   내용
+     * @param type      타입
      * @param principal id
      */
-    public void inputLogSetting(String content,String type,Principal principal){
-        inputLog( new Log(principal.getName(),content,type) );
+    public void inputLogSetting(String content, String type, Principal principal) {
+        inputLog(new Log(principal.getName(), content, type));
     }
 
     /**
@@ -1469,7 +1479,7 @@ public class AjaxController {
                            @RequestParam(value = "edit_naming", required = false) String edit_naming,
                            @RequestParam(value = "tableName", required = false) String tableName,
                            @RequestParam(value = "hiddenCode", required = false) String hiddenCode,
-                           @RequestParam(value = "isValueDelete", required = false) String isValueDelete,Principal principal) {
+                           @RequestParam(value = "isValueDelete", required = false) String isValueDelete, Principal principal) {
 
         SensorList sensor;
         //hidden 값이 있는지로 추가와 수정을 판별
@@ -1479,7 +1489,7 @@ public class AjaxController {
 
             //질소산화물만 배출 기준, 모니터링 대상 에 추가
             String sensorCode = tableName.split("_")[1]; //-> NOX, IRS ..
-            if(sensorCode.equals("NOX")) {
+            if (sensorCode.equals("NOX")) {
                 //연간 배출량 누적 모니터랑 대상 && 배출량 추이 모니터링 대상   설정에도 추가합니다.
                 AnnualEmissions aEmissions = new AnnualEmissions(place, tableName, naming, 0, false, new Date());
                 annualEmissionsRepository.save(aEmissions);
@@ -1496,9 +1506,9 @@ public class AjaxController {
                 inputLogSetting("'" + place + " - " + naming + "'" + " 센서 연간 배출 허용 기준 추가", "설정", principal);
             }
             // 추가
-            saveNotifySetting(tableName,false,"00:00", "23:59");
-            saveReference(place, tableName, naming,principal); //상세설정 항목 추가
-            inputLogSetting( "'"+sensor.getNaming()+"'" + " 센서 추가", "설정", principal);
+            saveNotifySetting(tableName, false, "00:00", "23:59");
+            saveReference(place, tableName, naming, principal); //상세설정 항목 추가
+            inputLogSetting("'" + sensor.getNaming() + "'" + " 센서 추가", "설정", principal);
 
         } else { //수정
             sensor = sensorListRepository.findByTableName(hiddenCode, "");
@@ -1508,7 +1518,7 @@ public class AjaxController {
             sensor.setNaming(edit_naming);
             sensor.setUpTime(new Date());
 
-            if(oldPlace.equals("")) oldPlace = "측정소 없음";
+            if (oldPlace.equals("")) oldPlace = "측정소 없음";
 
             //센서관련 법적기준,사내기준,관리기준값 사용자 동의하에 초기화
             if (isValueDelete.equals("delete")) {
@@ -1521,15 +1531,15 @@ public class AjaxController {
                 reference.setNaming(edit_naming);
                 reference.setMonitoring(false);
                 reference_value_settingRepository.save(reference);
-                inputLogSetting("'"+oldPlace + " - " + sensor.getNaming()+"'" + " 관리 기준 초기화", "설정", principal);
+                inputLogSetting("'" + oldPlace + " - " + sensor.getNaming() + "'" + " 관리 기준 초기화", "설정", principal);
             }
 
             //항목명 변경
-            if(!oldNaming.equals(edit_naming)){
+            if (!oldNaming.equals(edit_naming)) {
 
                 //질소산화물만 수정
                 String sensorCode = hiddenCode.split("_")[1]; //-> NOX, IRS ..
-                if(sensorCode.equals("NOX")) {
+                if (sensorCode.equals("NOX")) {
                     //연간 배출 모니터링 대상 수정
                     AnnualEmissions aemis = annualEmissionsRepository.findBySensor(hiddenCode);
                     aemis.setSensorNaming(edit_naming);
@@ -1552,7 +1562,7 @@ public class AjaxController {
                     inputLogSetting("'" + oldPlace + " - " + sensor.getNaming() + "'" + " 센서 연간 배출 허용 기준 항목명 수정", "설정", principal);
                 }
 
-                inputLogSetting("'"+oldNaming+"' 센서의 항목명 "+"'"+oldNaming+"'" + " > " + "'"+edit_naming+"'" + " 수정 ", "설정", principal);
+                inputLogSetting("'" + oldNaming + "' 센서의 항목명 " + "'" + oldNaming + "'" + " > " + "'" + edit_naming + "'" + " 수정 ", "설정", principal);
                 ReferenceValueSetting reference = reference_value_settingRepository.findByName(hiddenCode);
                 reference.setNaming(edit_naming);
                 reference_value_settingRepository.save(reference);
@@ -1560,12 +1570,12 @@ public class AjaxController {
             }
 
             //측정소 변경
-            if(!oldPlace.equals(place)){
-                inputLogSetting("'"+oldPlace + " - " + oldNaming+"'" + " 센서 삭제 ", "설정", principal);
+            if (!oldPlace.equals(place)) {
+                inputLogSetting("'" + oldPlace + " - " + oldNaming + "'" + " 센서 삭제 ", "설정", principal);
 
                 //질소산화물만 수정
                 String sensorCode = hiddenCode.split("_")[1]; //-> NOX, IRS ..
-                if(sensorCode.equals("NOX")) {
+                if (sensorCode.equals("NOX")) {
                     //연간 배출 모니터링 대상 수정
                     AnnualEmissions aemis = annualEmissionsRepository.findBySensor(hiddenCode);
                     aemis.setPlace(place);
@@ -1606,9 +1616,9 @@ public class AjaxController {
 
                 //센서 관련 notification 값 제거
                 notification_settingsRepository.deleteByName(hiddenCode);
-                inputLogSetting("'"+oldPlace + " - " + oldNaming+"'" + " 센서 알림설정 값 삭제", "설정", principal);
-                inputLogSetting("'"+place + " - " + oldNaming+"'" + " 센서 등록", "설정", principal);
-                inputLogSetting("'"+oldNaming+"'"+" 센서의 측정소명 "+"'"+oldPlace+"'" + " > " + "'"+place+"'" + " 수정 ", "설정", principal);
+                inputLogSetting("'" + oldPlace + " - " + oldNaming + "'" + " 센서 알림설정 값 삭제", "설정", principal);
+                inputLogSetting("'" + place + " - " + oldNaming + "'" + " 센서 등록", "설정", principal);
+                inputLogSetting("'" + oldNaming + "'" + " 센서의 측정소명 " + "'" + oldPlace + "'" + " > " + "'" + place + "'" + " 수정 ", "설정", principal);
 
                 //측정소 수정할 센서를 포함하는 그룹 검색하여 센서 삭제
                 groupSensorRemove(hiddenCode);
@@ -1623,11 +1633,11 @@ public class AjaxController {
      * @param tableName 테이블 명
      */
     @RequestMapping(value = "/deleteSensor")
-    public void deleteSensor(String tableName,String place, String naming, Principal principal) {
+    public void deleteSensor(String tableName, String place, String naming, Principal principal) {
 
         //질소산화물만 배출 기준, 모니터링 대상 삭제
         String sensorCode = tableName.split("_")[1]; //-> NOX, IRS ..
-        if(sensorCode.equals("NOX")) {
+        if (sensorCode.equals("NOX")) {
             //배출량 관리 기준 삭제
             EmissionsStandardSetting ess = emissionsStandardSettingRepository.findByTableNameIsIn(tableName);
             emissionsStandardSettingRepository.deleteByTableName(tableName);
@@ -1645,12 +1655,12 @@ public class AjaxController {
 
         //상세설정 값 삭제
         reference_value_settingRepository.deleteByName(tableName);
-        inputLogSetting("'"+ place + " - " + naming+"'" + " 관리 기준 값 삭제", "설정", principal);
+        inputLogSetting("'" + place + " - " + naming + "'" + " 관리 기준 값 삭제", "설정", principal);
 
         //알림설정값 삭제
         if (notification_settingsRepository.findByName(tableName) != null) {
             notification_settingsRepository.deleteByName(tableName);
-            inputLogSetting("'"+place + " - " + naming+"'" + " 알림 설정값 삭제", "설정", principal);
+            inputLogSetting("'" + place + " - " + naming + "'" + " 알림 설정값 삭제", "설정", principal);
         }
 
         //삭제될 센서를 포함하는 그룹 검색하여 센서 삭제
@@ -1668,8 +1678,8 @@ public class AjaxController {
         //센서 삭제
         SensorList sensor = sensorListRepository.findByTableName(tableName, "");
         sensorListRepository.delete(sensor);
-        inputLogSetting("'"+place+" - "+naming+"'"+" 센서 삭제", "설정", principal);
-        inputLogSetting("'"+naming+"'"+" 센서 삭제", "설정", principal);
+        inputLogSetting("'" + place + " - " + naming + "'" + " 센서 삭제", "설정", principal);
+        inputLogSetting("'" + naming + "'" + " 센서 삭제", "설정", principal);
 
 
     }
@@ -1677,15 +1687,15 @@ public class AjaxController {
     /**
      * 센서와 년도를 넣고 월별 데이터를 추출
      *
-     * @param sensor 센서명
-     * @param thisYear   현재년도
-     * @return 올해,작년 월별 데이터
+     * @param sensor   센서명
+     * @param thisYear 현재년도
+     * @return 올해, 작년 월별 데이터
      */
     @RequestMapping(value = "/getStatisticsData", method = RequestMethod.POST)
     public List getStatisticsData(String sensor, int thisYear) {
 
         MonthlyEmissions thisMe = monthlyEmissionsRepository.findBySensorAndYear(sensor, thisYear);
-        MonthlyEmissions prevMe = monthlyEmissionsRepository.findBySensorAndYear(sensor, thisYear-1);
+        MonthlyEmissions prevMe = monthlyEmissionsRepository.findBySensorAndYear(sensor, thisYear - 1);
         List monthlyList = new ArrayList();
 
         monthlyList.add(thisMe);
@@ -1700,7 +1710,7 @@ public class AjaxController {
      * @return 연간 배출량 추이
      */
     @RequestMapping(value = "/getMonthlyEmission")
-    public List<MonthlyEmissions> getMonthlyEmission(){
+    public List<MonthlyEmissions> getMonthlyEmission() {
         List<MonthlyEmissions> data = monthlyEmissionsRepository.findAll();
         data = data.stream().sorted(Comparator.comparing(MonthlyEmissions::getYear).reversed()).collect(Collectors.toList());
         return data;
@@ -1712,10 +1722,10 @@ public class AjaxController {
      * @param dList 월별 데이터
      */
     @RequestMapping(value = "/saveMEmission")
-    public void saveMEmission(@RequestParam("dList[]") List<Integer> dList, Principal principal){
+    public void saveMEmission(@RequestParam("dList[]") List<Integer> dList, Principal principal) {
         LocalDate nowDate = LocalDate.now();
         int year = nowDate.getYear();
-        MonthlyEmissions data= monthlyEmissionsRepository.findByYear(dList.get(0));
+        MonthlyEmissions data = monthlyEmissionsRepository.findByYear(dList.get(0));
         data.setJan(dList.get(1));
         data.setFeb(dList.get(2));
         data.setMar(dList.get(3));
@@ -1730,11 +1740,11 @@ public class AjaxController {
         data.setDec(dList.get(12));
         data.setUpdateTime(new Date());
         int total = 0;
-        for(int i=1; i<=12; i++){
+        for (int i = 1; i <= 12; i++) {
             total += dList.get(i);
         }
         String sensor = data.sensor;
-        if(dList.get(0)==year){
+        if (dList.get(0) == year) {
             AnnualEmissions annual = annualEmissionsRepository.findBySensor(sensor);
             annual.setYearlyValue(total);
             annual.setUpdateTime(new Date());
@@ -1742,7 +1752,7 @@ public class AjaxController {
         }
 
         SensorList sensorList = sensorListRepository.findByTableName(sensor);
-        inputLogSetting("'"+sensorList.place + " - " + sensorList.naming+"'" + " 센서 "+dList.get(0)+"년 연간 배출량 추이 수정", "설정", principal);
+        inputLogSetting("'" + sensorList.place + " - " + sensorList.naming + "'" + " 센서 " + dList.get(0) + "년 연간 배출량 추이 수정", "설정", principal);
         monthlyEmissionsRepository.save(data);
     }
 
@@ -1764,21 +1774,21 @@ public class AjaxController {
      * @param isCollection 배출량 추이 모니터링 <->연간 배출량 누적 모니터링   판별할 데이터
      */
     @RequestMapping("emissionsState")
-    public void emissionsState(String sensor, boolean isCollection,Principal principal) {
+    public void emissionsState(String sensor, boolean isCollection, Principal principal) {
 
         if (isCollection) {   //배출량 설정
             EmissionsSetting target = emissionsSettingRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
             emissionsSettingRepository.save(target);
-            String onOff = (target.isStatus()?"ON":"OFF");
-            inputLogSetting("'"+target.getPlace() + " - " + target.getSensorNaming()+"'" + " 센서 배출량 추이 모니터링 대상 "+onOff, "설정", principal);
+            String onOff = (target.isStatus() ? "ON" : "OFF");
+            inputLogSetting("'" + target.getPlace() + " - " + target.getSensorNaming() + "'" + " 센서 배출량 추이 모니터링 대상 " + onOff, "설정", principal);
 
         } else {     //연간 배출량 설정
             AnnualEmissions target = annualEmissionsRepository.findBySensor(sensor);
             target.setStatus(!target.isStatus());
             annualEmissionsRepository.save(target);
-            String onOff = (target.isStatus()?"ON":"OFF");
-            inputLogSetting("'"+target.getPlace() + " - " + target.getSensorNaming()+"'" + " 센서 연간 배출량 누적 모니터링 대상 "+onOff, "설정", principal);
+            String onOff = (target.isStatus() ? "ON" : "OFF");
+            inputLogSetting("'" + target.getPlace() + " - " + target.getSensorNaming() + "'" + " 센서 연간 배출량 누적 모니터링 대상 " + onOff, "설정", principal);
         }
     }
 
@@ -1818,6 +1828,7 @@ public class AjaxController {
 
     /**
      * 회원정보 업데이트
+     *
      * @param member 입력한 회원의 정보객체
      * @return 업데이트 성공여부
      */
@@ -1830,7 +1841,8 @@ public class AjaxController {
 
     /**
      * 회원 그룹 업데이트
-     * @param id 멤버 아이디
+     *
+     * @param id              멤버 아이디
      * @param monitoringGroup 모니터링그룹 명
      * @return
      */
@@ -1845,6 +1857,7 @@ public class AjaxController {
 
     /**
      * 그룹명 가져오기
+     *
      * @param group 그룹번호
      * @return
      */
@@ -1855,21 +1868,22 @@ public class AjaxController {
 
     /**
      * 그룹 변경
-     * @param id 멤버 아이디
+     *
+     * @param id              멤버 아이디
      * @param monitoringGroup 그룹번호
      */
-    public void groupChange(String id, int monitoringGroup){
+    public void groupChange(String id, int monitoringGroup) {
         MonitoringGroup memberRemove = monitoringGroupRepository.findByGroupMemberIsIn(id);
-        if(memberRemove != null){
+        if (memberRemove != null) {
             memberRemove.getGroupMember().remove(id);
             monitoringGroupRepository.save(memberRemove);
         }
         MonitoringGroup group = monitoringGroupRepository.findByGroupNum(monitoringGroup);
         List<String> member = null;
-        if(group.getGroupMember() != null) {
+        if (group.getGroupMember() != null) {
             member = group.getGroupMember();
             member.add(id);
-        }else{
+        } else {
             member = new ArrayList();
             member.add(id);
         }
@@ -1889,9 +1903,9 @@ public class AjaxController {
         if (passwordEncoder.matches(password, member.getPassword())) {
             memberService.deleteById(id);
             MonitoringGroup group = monitoringGroupRepository.findByGroupMemberIsIn(id);
-            if(group != null){
-               group.getGroupMember().remove(id);
-               monitoringGroupRepository.save(group);
+            if (group != null) {
+                group.getGroupMember().remove(id);
+                monitoringGroupRepository.save(group);
             }
             return "success";
         } else {
@@ -1918,6 +1932,7 @@ public class AjaxController {
 
     /**
      * 모니터링 그룹정보 가져오기
+     *
      * @return
      */
     @RequestMapping(value = "/getMonitoringGroup")
@@ -1959,7 +1974,7 @@ public class AjaxController {
      * @return 안내메시지를 리턴
      */
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
-    public String memberSignUp(String id, String iNumber,String state,String group) {
+    public String memberSignUp(String id, String iNumber, String state, String group) {
         String msg = "";
         Member newMember = memberRepository.findById(id);
 
@@ -1970,10 +1985,10 @@ public class AjaxController {
             //해당 그룹에 회원 추가
             MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(Integer.parseInt(group));
             List<String> groupMember;
-            if(monitoringGroup.getGroupMember() == null){
+            if (monitoringGroup.getGroupMember() == null) {
                 groupMember = new ArrayList<>();
                 groupMember.add(id);
-            }else {
+            } else {
                 groupMember = monitoringGroup.getGroupMember();
                 groupMember.add(id);
             }
@@ -2010,11 +2025,11 @@ public class AjaxController {
             monitoringGroupRepository.save(group);
 
             MonitoringGroup allGroup = monitoringGroupRepository.findByGroupNum(1);
-            if(allGroup.getGroupMember() == null){
+            if (allGroup.getGroupMember() == null) {
                 List memList = new ArrayList();
                 memList.add(id);
                 allGroup.setGroupMember(memList);
-            }else {
+            } else {
                 List allGroupMember = allGroup.getGroupMember();
                 allGroupMember.add(id);
                 allGroup.setGroupMember(allGroupMember);
@@ -2026,7 +2041,7 @@ public class AjaxController {
 
         newMember.setState(value);
         memberRepository.save(newMember);
-        return newMember.getName()+" 회원의 권한이 변경되었습니다.";
+        return newMember.getName() + " 회원의 권한이 변경되었습니다.";
     }
 
     /**
@@ -2047,6 +2062,7 @@ public class AjaxController {
 
     /**
      * 입력받은 값으로 유저를 추방
+     *
      * @param id 제명할 유저의 id
      * @return 안내메시지 리턴
      */
@@ -2066,15 +2082,16 @@ public class AjaxController {
 
     /**
      * 변경한 권한관리 값들을 저장
+     *
      * @param rankManagement 변경한 값들을 담고있는 객체
-     * @throws Exception 예외처리
      * @return
+     * @throws Exception 예외처리
      */
     @RequestMapping(value = "/rankSettingSave", method = RequestMethod.POST)
     public List<String> rankSettingSave(@RequestBody RankManagement rankManagement) throws Exception {
         RankManagement newRankManagement = rankManagementRepository.findByName(rankManagement.getName());
         List<String> stringList = new ArrayList<>();
-        stringList.add((rankManagement.isDashboard() == newRankManagement.isDashboard()) ? "" : (rankManagement.isDashboard()) ? "대시보드 메뉴열람 권한부여  " : "대시보드 메뉴열람 권한해제  ") ;
+        stringList.add((rankManagement.isDashboard() == newRankManagement.isDashboard()) ? "" : (rankManagement.isDashboard()) ? "대시보드 메뉴열람 권한부여  " : "대시보드 메뉴열람 권한해제  ");
         stringList.add((rankManagement.isAlarm() == newRankManagement.isAlarm()) ? "" : (rankManagement.isAlarm()) ? "알림 메뉴열람 권한부여  " : "알림 메뉴열람 권한해제  ");
         stringList.add((rankManagement.isMonitoring() == newRankManagement.isMonitoring()) ? "" : (rankManagement.isMonitoring()) ? "모니터링 메뉴열람 권한부여  " : "모니터링 메뉴열람 권한해제  ");
         stringList.add((rankManagement.isStatistics() == newRankManagement.isStatistics()) ? "" : (rankManagement.isStatistics()) ? "분석및통계 메뉴열람 권한부여  " : "분석및통계 메뉴열람 권한해제  ");
@@ -2113,6 +2130,7 @@ public class AjaxController {
 
     /**
      * 테이블명으로 배출기준값 리턴
+     *
      * @param tableName 테이블명
      * @return 배출허용 기준치
      */
@@ -2123,6 +2141,7 @@ public class AjaxController {
 
     /**
      * 테이블명으로 배출기준값 리턴
+     *
      * @param tableName 테이블명
      * @return 배출허용 기준치
      */
@@ -2156,35 +2175,37 @@ public class AjaxController {
 
     /**
      * 페이징 쿼리로 반환되는 로그 데이터
-     * @param pageNo 몇페이지 인지
-     * @param id 로그아이디
-     * @param searchKey 검색키
+     *
+     * @param pageNo     몇페이지 인지
+     * @param id         로그아이디
+     * @param searchKey  검색키
      * @param searchType 검색타입
      * @return
      */
     @RequestMapping(value = "/logPagination", method = RequestMethod.POST)
     public Object logPagination(int pageNo, String id, String searchKey, String searchType) {
-        if(searchKey.equals("")) searchKey = null;
+        if (searchKey.equals("")) searchKey = null;
         return mongoQuary.pagination(pageNo, id, searchKey, searchType);
     }
 
 
     /**
      * 검색어로 반환되는 로그데이터 Count
-     * @param id 로그를 구별할 id
-     * @param searchKey 로그 구별할 검색어
+     *
+     * @param id         로그를 구별할 id
+     * @param searchKey  로그 구별할 검색어
      * @param searchType 로그 구별할 검색타입
      * @return 로그 카운트
      */
     @RequestMapping(value = "/getLogCountBySearchKey", method = RequestMethod.POST)
-    public long getLogCountBySearchKey(String id,String searchKey,String searchType) {
-        if(searchType.equals("type")){
+    public long getLogCountBySearchKey(String id, String searchKey, String searchType) {
+        if (searchType.equals("type")) {
             return logRepository.countByIdAndType(id, searchKey);
 
-        }else if(searchType.equals("content")){
+        } else if (searchType.equals("content")) {
             return logRepository.countByIdAndContentLike(id, searchKey);
 
-        }else if(searchType.equals("date")){
+        } else if (searchType.equals("date")) {
             return mongoQuary.getDateCount(id, searchKey);
 
         }
@@ -2193,19 +2214,20 @@ public class AjaxController {
 
     /**
      * 그룹 저장, 수정
-     * @param name 그룹명
-     * @param memList 그룹에 포함될 멤버
+     *
+     * @param name      그룹명
+     * @param memList   그룹에 포함될 멤버
      * @param placeList 그룹에 포함될 측정소
-     * @param flag 저장, 수정 식별키
-     * @param groupNum 수정시 그룹을 식별할 키
+     * @param flag      저장, 수정 식별키
+     * @param groupNum  수정시 그룹을 식별할 키
      */
     @RequestMapping(value = "/saveGroup", method = RequestMethod.POST)
-    public String saveGroup(String name, @RequestParam(value="memList[]", required = false)List<String> memList,
-                            @RequestParam(value="placeList[]",required = false)List<String> placeList, String flag,
-                            @RequestParam(value = "groupNum",required = false)int groupNum, Principal principal) {
+    public String saveGroup(String name, @RequestParam(value = "memList[]", required = false) List<String> memList,
+                            @RequestParam(value = "placeList[]", required = false) List<String> placeList, String flag,
+                            @RequestParam(value = "groupNum", required = false) int groupNum, Principal principal) {
         //중복 이름 리턴 fail
-        if(monitoringGroupRepository.findByGroupName(name) != null &&
-                monitoringGroupRepository.findByGroupName(name).getGroupNum() != groupNum){
+        if (monitoringGroupRepository.findByGroupName(name) != null &&
+                monitoringGroupRepository.findByGroupName(name).getGroupNum() != groupNum) {
             return "fail";
         }
 
@@ -2216,26 +2238,26 @@ public class AjaxController {
         List<String> groupSensorList = new ArrayList();
 
         //그룹 Num +1하여 생성
-        if(flag.equals("insert")) {
+        if (flag.equals("insert")) {
             group = new MonitoringGroup();
-            if(monitoringGroupRepository.findTopByOrderByGroupNumDesc() != null) {
+            if (monitoringGroupRepository.findTopByOrderByGroupNumDesc() != null) {
                 newGroupNum = monitoringGroupRepository.findTopByOrderByGroupNumDesc().getGroupNum() + 1;
-            }else{
+            } else {
                 newGroupNum = 1;
             }
             group.setGroupNum(newGroupNum);
             group.setMonitoringPlace(placeList);
 
-            inputLogSetting("'"+ name +"'그룹 생성", "설정", principal);
+            inputLogSetting("'" + name + "'그룹 생성", "설정", principal);
             setMemberPreviousGroup(memList, group, name);
 
-        //수정
-        }else if(flag.equals("edit")){
+            //수정
+        } else if (flag.equals("edit")) {
             group = monitoringGroupRepository.findByGroupNum(groupNum);
             groupLogPrint(name, group, placeList, memList, principal);
 
             //기존 회원 모두 default로 초기화 & default그룹으로 이동
-            if(group.getGroupMember() != null) {
+            if (group.getGroupMember() != null) {
                 for (int i = 0; i < group.getGroupMember().size(); i++) {
                     defaultMember = memberRepository.findById((String) group.getGroupMember().get(i));
                     defaultMember.setMonitoringGroup(1);
@@ -2244,26 +2266,26 @@ public class AjaxController {
                     defaultGroup = monitoringGroupRepository.findByGroupNum(1);
                     List defaultGroupMember = defaultGroup.getGroupMember();
                     defaultGroupMember.add(group.getGroupMember().get(i));
-                     monitoringGroupRepository.save(defaultGroup);
+                    monitoringGroupRepository.save(defaultGroup);
                 }
                 group.setGroupMember(null);
                 monitoringGroupRepository.save(group);
             }
 
-            if(group.getSensor() != null && group.getSensor().size() != 0)
+            if (group.getSensor() != null && group.getSensor().size() != 0)
                 groupSensorList = group.getSensor();
 
-            if(placeList == null){
+            if (placeList == null) {
                 group.setMonitoringPlace(null);
                 group.setSensor(null);
             }
 
-            if(placeList != null && group.getSensor() != null && group.getSensor().size() != 0 && !placeList.get(0).equals("모든 측정소")){
+            if (placeList != null && group.getSensor() != null && group.getSensor().size() != 0 && !placeList.get(0).equals("모든 측정소")) {
                 //기존 그룹에서 삭제될 측정소의 센서 삭제
-                for (int i=0; i<group.getMonitoringPlace().size(); i++){
-                    if(!placeList.contains(group.getMonitoringPlace().get(i))){
+                for (int i = 0; i < group.getMonitoringPlace().size(); i++) {
+                    if (!placeList.contains(group.getMonitoringPlace().get(i))) {
                         Place place = placeRepository.findByName((String) group.getMonitoringPlace().get(i));
-                        for (int k=0; k<place.getSensor().size(); k++) {
+                        for (int k = 0; k < place.getSensor().size(); k++) {
                             groupSensorList.remove(place.getSensor().get(k));
                         }
                     }
@@ -2282,34 +2304,36 @@ public class AjaxController {
     }
 
     /**
-     *  수정시 그룹로그 출력
-     * @param name 적용될 이름
-     * @param group 수정할 그룹 객체
+     * 수정시 그룹로그 출력
+     *
+     * @param name      적용될 이름
+     * @param group     수정할 그룹 객체
      * @param placeList 적용될 측정소 목록
-     * @param memList 적용될 멤버 목록
+     * @param memList   적용될 멤버 목록
      * @param principal log에 필요한 로그인 객체
      */
-    public void groupLogPrint(String name, MonitoringGroup group, List placeList, List memList, Principal principal){
-        if(!name.equals(group.getGroupName()))
-            inputLogSetting("'"+ group.getGroupName() + "' -> '" + name +"'으로 그룹명 수정", "수정", principal);
-        if(isEqualsList(placeList, group.getMonitoringPlace()))
+    public void groupLogPrint(String name, MonitoringGroup group, List placeList, List memList, Principal principal) {
+        if (!name.equals(group.getGroupName()))
+            inputLogSetting("'" + group.getGroupName() + "' -> '" + name + "'으로 그룹명 수정", "수정", principal);
+        if (isEqualsList(placeList, group.getMonitoringPlace()))
             inputLogSetting("'" + group.getGroupName() + "'그룹 모니터링 측정소 수정", "수정", principal);
-        if(isEqualsList(memList, group.getGroupMember()))
+        if (isEqualsList(memList, group.getGroupMember()))
             inputLogSetting("'" + group.getGroupName() + "'그룹 회원목록 수정", "수정", principal);
     }
 
     /**
      * 그룹에 적용될 멤버 이전그룹에서 삭제 & 멤버의 그룹명 변경
+     *
      * @param memList 그룹을 수정한 멤버 리스트
-     * @param group 멤버들이 적용될 그룹
-     * @param name 멤버들이 적용될 그룹 이름
+     * @param group   멤버들이 적용될 그룹
+     * @param name    멤버들이 적용될 그룹 이름
      */
-    public void setMemberPreviousGroup(List<String> memList, MonitoringGroup group, String name){
-        if(memList != null && memList.size() != 0) {
+    public void setMemberPreviousGroup(List<String> memList, MonitoringGroup group, String name) {
+        if (memList != null && memList.size() != 0) {
             for (int i = 0; i < memList.size(); i++) {
                 //이전그룹에서 멤버 삭제
                 MonitoringGroup prevGroup = monitoringGroupRepository.findByGroupMemberIsIn(memList.get(i));
-                List prevGroupMember =  prevGroup.getGroupMember();
+                List prevGroupMember = prevGroup.getGroupMember();
                 prevGroupMember.remove(memList.get(i));
                 prevGroup.setGroupMember(prevGroupMember);
                 monitoringGroupRepository.save(prevGroup);
@@ -2321,7 +2345,7 @@ public class AjaxController {
             }
             //현재 그룹에 멤버 적용
             group.setGroupMember(memList);
-        }else{
+        } else {
             group.setGroupMember(null);
         }
     }
@@ -2329,31 +2353,33 @@ public class AjaxController {
     /**
      * 그룹 수정시 어떤걸 수정하는지 판별하기위해 정의한 리스트 비교 메소드
      * 두개 리스트가 null 일수도 아닐수도 있기에 조건문으로 비교
-     * @param list 수정될 멤버 혹은 수정될 측정소
+     *
+     * @param list  수정될 멤버 혹은 수정될 측정소
      * @param group 그룹의 멤버 혹은 그룹의 측정소
      * @return boolean
      */
-    public boolean isEqualsList(List<String> list, List<String> group){
-        if(list != null && group != null && ( !list.containsAll(group) || !group.containsAll(list) )){
+    public boolean isEqualsList(List<String> list, List<String> group) {
+        if (list != null && group != null && (!list.containsAll(group) || !group.containsAll(list))) {
             return true;
-        }else if(list == null && group != null){
+        } else if (list == null && group != null) {
             return true;
-        }else if(list != null && group == null){
+        } else if (list != null && group == null) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     /**
      * 그룹 삭제 하면서 멤버의 그룹명도 default로 변경
+     *
      * @param key 식별 키
      */
     @RequestMapping(value = "/deleteGroup", method = RequestMethod.POST)
     public void deleteGroup(int key, Principal principal) {
 
         MonitoringGroup group = monitoringGroupRepository.findByGroupNum(key);
-        if(group.getGroupMember() != null) {
+        if (group.getGroupMember() != null) {
             for (int i = 0; i < group.getGroupMember().size(); i++) {
                 Member saveMember = memberRepository.findById((String) group.getGroupMember().get(i));
                 saveMember.setMonitoringGroup(1);
@@ -2364,22 +2390,23 @@ public class AjaxController {
                 defaultGroupMember.add(group.getGroupMember().get(i));
                 defaultGroup.setGroupMember(defaultGroupMember);
                 monitoringGroupRepository.save(defaultGroup);
-                inputLogSetting("'"+ group.getGroupName() +"'그룹 삭제에 의한 '"+group.getGroupMember().get(i)+"' 유저 default 그룹으로 이동", "수정", principal);
+                inputLogSetting("'" + group.getGroupName() + "'그룹 삭제에 의한 '" + group.getGroupMember().get(i) + "' 유저 default 그룹으로 이동", "수정", principal);
             }
         }
-        inputLogSetting("'"+ group.getGroupName() +"'그룹 삭제", "삭제", principal);
+        inputLogSetting("'" + group.getGroupName() + "'그룹 삭제", "삭제", principal);
         monitoringGroupRepository.delete(group);
     }
 
     /**
      * 그룹 생성, 수정등에 필요한 멤버, 측정소 리스트
+     *
      * @return 두개를 포함한 하나의 리스트 반환
      */
     @RequestMapping(value = "/getMemberAndPlaceList", method = RequestMethod.POST)
     public List getMemberAndPlaceList() {
         List<Place> pList = placeRepository.findAll();
         List placeName = new ArrayList();
-        for (int i=0; i<pList.size(); i++){
+        for (int i = 0; i < pList.size(); i++) {
             placeName.add(pList.get(i).getName());
         }
 
@@ -2392,25 +2419,26 @@ public class AjaxController {
 
     /**
      * 모든 측정소의 모니터링 On인 정보를 Json 형태로 가져오는 메소드
+     *
      * @return jsonArray
      * [{"place": , "monitoringOn": , "monitoringOff": ,
-     *     "standardExist": , "standardNotExist": , "sensorList": ["센서명1","센서명2", ...],
-     *     "data": [{"rm05_up_time": , "rm05_status": , "rm05_beforeValue": , "rm05_value": ,
-     *               "rm30_up_time": , "rm30_status": , "rm30_beforeValue": , "rm30_value": ,
-     *               "recent_up_time": , "recent_status": , "recent_beforeValue": , "recent_value": ,
-     *               "legalStandard": ,"companyStandard": , "managementStandard": ,
-     *               "standardExistStatus": true, "naming": , "name": },{...},...]
+     * "standardExist": , "standardNotExist": , "sensorList": ["센서명1","센서명2", ...],
+     * "data": [{"rm05_up_time": , "rm05_status": , "rm05_beforeValue": , "rm05_value": ,
+     * "rm30_up_time": , "rm30_status": , "rm30_beforeValue": , "rm30_value": ,
+     * "recent_up_time": , "recent_status": , "recent_beforeValue": , "recent_value": ,
+     * "legalStandard": ,"companyStandard": , "managementStandard": ,
+     * "standardExistStatus": true, "naming": , "name": },{...},...]
      * },{...},...]
      */
     @RequestMapping(value = "/placeInfo", method = RequestMethod.GET)
-    public JSONArray getPlaceInfo(Principal principal){
+    public JSONArray getPlaceInfo(Principal principal) {
         try {
             Map<String, List> gMS = getMonitoringSensor(principal.getName()); //사용자 권한에 해당하는 모니터링 On인 측정소, 센서 정보
             List<String> gMS_placeName = new ArrayList<>();
-            for(String key : gMS.keySet()){ //key(측정소명) 추출
+            for (String key : gMS.keySet()) { //key(측정소명) 추출
                 gMS_placeName.add(key);
             }
-            int placeListSize = gMS.size()-2;
+            int placeListSize = gMS.size() - 2;
             JSONArray jsonArray = new JSONArray();
             for (int a = 0; a < placeListSize; a++) { //모니터링 On인 측정소
                 int sensorSize = 0;
@@ -2420,7 +2448,7 @@ public class AjaxController {
                 List<String> sensorNames = new ArrayList<String>();
                 placeName = gMS_placeName.get(a);
                 List<String> temp = gMS.get(placeName);
-                for(int b=0; b<temp.size(); b++){
+                for (int b = 0; b < temp.size(); b++) {
                     sensorNames.add(temp.get(b));
                 }
                 List<String> sensorNameList = new ArrayList<>();
@@ -2429,57 +2457,57 @@ public class AjaxController {
                 for (int i = 0; i < sensorNames.size(); i++) { //측정소의 센서조회
                     //센서명
                     JSONObject sensorObj = new JSONObject();
-                        boolean monitoring = reference_value_settingRepository.findByName(sensorNames.get(i)).getMonitoring();  //센서 모니터링 여부
-                        boolean standardExistStatus = false;
-                        if (monitoring) {
-                            String sensorName = sensorNames.get(i);
-                            String[] splitSensor = sensorName.split("_");
-                            Item sensorItem = itemRepository.findByClassification(splitSensor[1]);
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i)); //센서의 최근 데이터
-                            sensorObj.put("recent_value", recentData.getValue());
-                            sensorObj.put("recent_up_time", simpleDateFormat.format(recentData.getUp_time()));
-                            sensorObj.put("recent_status", recentData.isStatus());
-                            Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorNames.get(i)); //센서의 이전 데이터
-                            sensorObj.put("recent_beforeValue", beforeData.getValue());
-                            Sensor recentDataRM05 = sensorCustomRepository.getSensorRecentRM05(sensorNames.get(i)); //센서의 최근 데이터
-                            sensorObj.put("rm05_value", recentDataRM05.getValue());
-                            sensorObj.put("rm05_up_time", simpleDateFormat.format(recentDataRM05.getUp_time()));
-                            sensorObj.put("rm05_status", recentDataRM05.isStatus());
-                            Sensor beforeDataRM05 = sensorCustomRepository.getSensorBeforeDataRM05(sensorNames.get(i)); //센서의 최근 데이터
-                            sensorObj.put("rm05_beforeValue", beforeDataRM05.getValue());
-                            Sensor recentDataRM30 = sensorCustomRepository.getSensorRecentRM30(sensorNames.get(i));
-                            sensorObj.put("rm30_value", recentDataRM30.getValue());
-                            sensorObj.put("rm30_up_time", simpleDateFormat.format(recentDataRM30.getUp_time()));
-                            sensorObj.put("rm30_status", recentDataRM30.isStatus());
-                            Sensor beforeDataRM30 = sensorCustomRepository.getSensorBeforeDataRM30(sensorNames.get(i)); //센서의 최근 데이터
-                            sensorObj.put("rm30_beforeValue", beforeDataRM30.getValue());
-                            ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorNames.get(i)); //센서의 기타 정보(기준값 등)
-                            sensorObj.put("naming", sensorInfo.getNaming());
-                            Object legalStandard = numberTypeChange(sensorInfo.getLegalStandard());
-                            Object companyStandard = numberTypeChange(sensorInfo.getCompanyStandard());
-                            Object managementStandard = numberTypeChange(sensorInfo.getManagementStandard());
-                            sensorObj.put("legalStandard", legalStandard);
-                            sensorObj.put("companyStandard", companyStandard);
-                            sensorObj.put("managementStandard", managementStandard);
-                            sensorObj.put("name", sensorNames.get(i));
-                            if(sensorItem != null) {
-                                sensorObj.put("unit", sensorItem.getUnit());
-                            }else{
-                                sensorObj.put("unit", "");
-                            }
-                            sensorNameList.add(sensorNames.get(i));
-                            if (legalStandard.equals(999999) && companyStandard.equals(999999) && managementStandard.equals(999999)) {
-                                standardNotExist += 1;
-                                standardExistStatus = false;
-                                sensorObj.put("standardExistStatus", standardExistStatus);
-                            } else {
-                                standardExist += 1;
-                                standardExistStatus = true;
-                                sensorObj.put("standardExistStatus", standardExistStatus);
-                            }
-                            placeInfoArray.add(sensorObj);
-                            sensorSize += 1;
+                    boolean monitoring = reference_value_settingRepository.findByName(sensorNames.get(i)).getMonitoring();  //센서 모니터링 여부
+                    boolean standardExistStatus = false;
+                    if (monitoring) {
+                        String sensorName = sensorNames.get(i);
+                        String[] splitSensor = sensorName.split("_");
+                        Item sensorItem = itemRepository.findByClassification(splitSensor[1]);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        Sensor recentData = sensorCustomRepository.getSensorRecent(sensorNames.get(i)); //센서의 최근 데이터
+                        sensorObj.put("recent_value", recentData.getValue());
+                        sensorObj.put("recent_up_time", simpleDateFormat.format(recentData.getUp_time()));
+                        sensorObj.put("recent_status", recentData.isStatus());
+                        Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorNames.get(i)); //센서의 이전 데이터
+                        sensorObj.put("recent_beforeValue", beforeData.getValue());
+                        Sensor recentDataRM05 = sensorCustomRepository.getSensorRecentRM05(sensorNames.get(i)); //센서의 최근 데이터
+                        sensorObj.put("rm05_value", recentDataRM05.getValue());
+                        sensorObj.put("rm05_up_time", simpleDateFormat.format(recentDataRM05.getUp_time()));
+                        sensorObj.put("rm05_status", recentDataRM05.isStatus());
+                        Sensor beforeDataRM05 = sensorCustomRepository.getSensorBeforeDataRM05(sensorNames.get(i)); //센서의 최근 데이터
+                        sensorObj.put("rm05_beforeValue", beforeDataRM05.getValue());
+                        Sensor recentDataRM30 = sensorCustomRepository.getSensorRecentRM30(sensorNames.get(i));
+                        sensorObj.put("rm30_value", recentDataRM30.getValue());
+                        sensorObj.put("rm30_up_time", simpleDateFormat.format(recentDataRM30.getUp_time()));
+                        sensorObj.put("rm30_status", recentDataRM30.isStatus());
+                        Sensor beforeDataRM30 = sensorCustomRepository.getSensorBeforeDataRM30(sensorNames.get(i)); //센서의 최근 데이터
+                        sensorObj.put("rm30_beforeValue", beforeDataRM30.getValue());
+                        ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorNames.get(i)); //센서의 기타 정보(기준값 등)
+                        sensorObj.put("naming", sensorInfo.getNaming());
+                        Object legalStandard = numberTypeChange(sensorInfo.getLegalStandard());
+                        Object companyStandard = numberTypeChange(sensorInfo.getCompanyStandard());
+                        Object managementStandard = numberTypeChange(sensorInfo.getManagementStandard());
+                        sensorObj.put("legalStandard", legalStandard);
+                        sensorObj.put("companyStandard", companyStandard);
+                        sensorObj.put("managementStandard", managementStandard);
+                        sensorObj.put("name", sensorNames.get(i));
+                        if (sensorItem != null) {
+                            sensorObj.put("unit", sensorItem.getUnit());
+                        } else {
+                            sensorObj.put("unit", "");
+                        }
+                        sensorNameList.add(sensorNames.get(i));
+                        if (legalStandard.equals(999999) && companyStandard.equals(999999) && managementStandard.equals(999999)) {
+                            standardNotExist += 1;
+                            standardExistStatus = false;
+                            sensorObj.put("standardExistStatus", standardExistStatus);
+                        } else {
+                            standardExist += 1;
+                            standardExistStatus = true;
+                            sensorObj.put("standardExistStatus", standardExistStatus);
+                        }
+                        placeInfoArray.add(sensorObj);
+                        sensorSize += 1;
                     }
                     placeInfoList.put("standardExist", standardExist);
                     placeInfoList.put("standardNotExist", standardNotExist);
@@ -2494,7 +2522,7 @@ public class AjaxController {
                 }
             }
             return jsonArray;
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         return null;
@@ -2502,62 +2530,62 @@ public class AjaxController {
 
     // memberID = 로그인 된 회원의 ID
     @RequestMapping(value = "/getMonitoringSensor", method = RequestMethod.GET)
-    public LinkedHashMap<String, List> getMonitoringSensor(String memberId){
+    public LinkedHashMap<String, List> getMonitoringSensor(String memberId) {
         Member member = memberRepository.findById(memberId);
         int groupNum = member.getMonitoringGroup();
 
-        LinkedHashMap <String, List> monitoringSensor = new LinkedHashMap <>();
+        LinkedHashMap<String, List> monitoringSensor = new LinkedHashMap<>();
 
         MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(groupNum);
         List<String> memberPlaceList = monitoringGroup.getMonitoringPlace();
-        List<String> memberSensorList= monitoringGroup.getSensor();
+        List<String> memberSensorList = monitoringGroup.getSensor();
         List<String> memberSensorOffList = new ArrayList<>();
 
         int allCount = 0;
         int allFalse = 0;
 
-        for(String placeName : memberPlaceList) {
+        for (String placeName : memberPlaceList) {
             Place place;
-            if(placeName.equals("모든 측정소")){
-                for(Place placeList : placeRepository.findAll()){
+            if (placeName.equals("모든 측정소")) {
+                for (Place placeList : placeRepository.findAll()) {
                     place = placeRepository.findByName(placeList.getName());
                     List<String> placeSensorList = place.getSensor();
                     List<String> sensorList = new ArrayList<>();
 
                     allCount += placeSensorList.size();
 
-                    if(placeSensorList.size()!=0){
-                        for(String pSensor : placeSensorList){
+                    if (placeSensorList.size() != 0) {
+                        for (String pSensor : placeSensorList) {
                             ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(pSensor);
-                            if(referenceValueSetting.getMonitoring()){
+                            if (referenceValueSetting.getMonitoring()) {
                                 sensorList.add(pSensor);
-                            }else{
+                            } else {
                                 allFalse++;
-                                memberSensorOffList.add(place.getName()+"-"+referenceValueSetting.getNaming());
+                                memberSensorOffList.add(place.getName() + "-" + referenceValueSetting.getNaming());
                             }
                             monitoringSensor.put(placeList.getName(), sensorList);
                         }
                     }
                 }
-            }else{
+            } else {
                 place = placeRepository.findByName(placeName);
                 List<String> placeSensorList = place.getSensor();
                 List<String> sensorList = new ArrayList<>();
 
                 allCount += placeSensorList.size();
 
-                if(placeSensorList.size()!=0){
-                    for(String pSensor : placeSensorList){
-                        for(String mSensor : memberSensorList){
-                            if(mSensor.equals(pSensor)){
+                if (placeSensorList.size() != 0) {
+                    for (String pSensor : placeSensorList) {
+                        for (String mSensor : memberSensorList) {
+                            if (mSensor.equals(pSensor)) {
                                 sensorList.add(pSensor);
-                            }else{
+                            } else {
                                 ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(pSensor);
-                                memberSensorOffList.add(place.getName()+"-"+referenceValueSetting.getNaming());
+                                memberSensorOffList.add(place.getName() + "-" + referenceValueSetting.getNaming());
                             }
                         }
                     }
-                    if(sensorList.size()!=0){
+                    if (sensorList.size() != 0) {
                         monitoringSensor.put(placeName, sensorList);
                     }
                 }
@@ -2565,9 +2593,9 @@ public class AjaxController {
         }
 
         List<String> count = new ArrayList<>();
-        if(memberPlaceList.get(0).equals("모든 측정소")){
+        if (memberPlaceList.get(0).equals("모든 측정소")) {
             count.add(String.valueOf(allFalse));
-        }else{
+        } else {
             count.add(String.valueOf(allCount - memberSensorList.size()));
         }
         monitoringSensor.put("OFF", count);
@@ -2579,9 +2607,9 @@ public class AjaxController {
     public String getUnit(String type) {
         Item item = itemRepository.findByClassification(type);
         String unit;
-        try{
+        try {
             unit = item.getUnit();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             unit = "null";
         }
         return unit;

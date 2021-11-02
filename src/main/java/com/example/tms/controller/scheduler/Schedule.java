@@ -48,19 +48,19 @@ public class Schedule {
      * (알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산)
      */
     @Scheduled(cron = "0 1 0 * * *") //0 1 0 * * * 매일 00시 01분에 처리 */5 * * * * *
-    public void saveNotificationStatistics(){
+    public void saveNotificationStatistics() {
         // 일
         LocalDate nowDate = LocalDate.now();
         // 어제 날짜 불러오기
         LocalDate yesterday = nowDate.minusDays(1);
 
         List<Place> placeList = placeRepository.findAll();
-        for(Place place : placeList){
+        for (Place place : placeList) {
             String placeName = place.getName();
             NotificationDayStatistics yesterdayData = notificationDayStatisticsRepository.findByDayAndPlace(String.valueOf(yesterday), placeName);
 
             // 어제 날짜 데이터가 없는 경우 new 객체 생성 후 데이터 set
-            if(yesterdayData == null){
+            if (yesterdayData == null) {
                 yesterdayData = new NotificationDayStatistics();
             }
             yesterdayData.setDay(String.valueOf(yesterday));
@@ -88,7 +88,7 @@ public class Schedule {
             String year_month = formatter.format(nowDate);
 
             NotificationMonthStatistics monthData = notificationMonthStatisticsRepository.findByMonthAndPlace(year_month, placeName);
-            if(monthData == null){
+            if (monthData == null) {
                 monthData = new NotificationMonthStatistics();
             }
             monthData.setMonth(year_month);
@@ -102,9 +102,9 @@ public class Schedule {
         }
     }
 
-    public int[] getReferenceValueCount(String from, String to, String place){
+    public int[] getReferenceValueCount(String from, String to, String place) {
         int[] arr = new int[3];
-        for(int grade=1; grade<=3; grade++) {
+        for (int grade = 1; grade <= 3; grade++) {
             List<HashMap> list = notificationListCustomRepository.getCount(grade, from, to, place);
             if (list.size() != 0) {
                 arr[grade - 1] = (int) list.get(0).get("count");
@@ -117,29 +117,29 @@ public class Schedule {
 
     /**
      * [대시보드 - 연간 배출량 누적 모니터링]
-     *
+     * <p>
      * (알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산)
      */
     @Scheduled(cron = "0 0 0 * * *") //매일 자정 실행(0 0 0 * * *) 5초마다 (*/5 * * * * *)
-    public void saveCumulativeEmissions(){
+    public void saveCumulativeEmissions() {
         // 질소산화물(NOX) : Map<측정소명, 테이블명> 형식
         Map<String, String> noxList = new HashMap<>();
-        for( SensorList sensorList : sensorListRepository.findByClassification("NOX")){
+        for (SensorList sensorList : sensorListRepository.findByClassification("NOX")) {
             noxList.put(sensorList.getPlace(), sensorList.getTableName());
         }
 
         // 유량(FL1) : Map<측정소명, 테이블명> 형식
         Map<String, String> fl1List = new HashMap<>();
-        for( SensorList sensorList : sensorListRepository.findByClassification("FL1")){
+        for (SensorList sensorList : sensorListRepository.findByClassification("FL1")) {
             fl1List.put(sensorList.getPlace(), sensorList.getTableName());
         }
 
         // 전체 측정소 리스트를 불러와서 30분 평균 데이터가 저장되는 DB 조회(실시간 데이터 테이블 앞에 RM30_ 붙여주면 30분 평균데이터 조회 가능)
         String halfPast = "RM30_";
-        for( Place place : placeRepository.findAll()){
+        for (Place place : placeRepository.findAll()) {
             String placeName = place.getName();
             // 해당 측정소에 nox 데이터와 fl1 데이터가 있는경우 아래로직 실행 (측정소에 맵핑 되어 있지않은경우 해당 질소산화물 데이터와 유량값이 어떤 측정소에 해당하는 데이터인지 알수없기때문에 구현X)
-            if(noxList.get(placeName)!=null && fl1List.get(placeName)!=null){
+            if (noxList.get(placeName) != null && fl1List.get(placeName) != null) {
                 //계산하려면 질소산화물 값이랑 유량값 둘다 필요하기때문에 둘다 null 이 아닌경우 계산식 실행
                 String noxTable = noxList.get(placeName);
                 String fl1Table = fl1List.get(placeName);
@@ -156,22 +156,22 @@ public class Schedule {
     }
 
     // nox 전일 배출량 계산
-    public int getNOXYesterdayEmissions(LocalDate yesterday, String nox, String fl1){
+    public int getNOXYesterdayEmissions(LocalDate yesterday, String nox, String fl1) {
         List<ChartData> noxData = (List<ChartData>) mongoQuary.getCumulativeEmissions(nox, yesterday);
         List<ChartData> fl1Data = (List<ChartData>) mongoQuary.getCumulativeEmissions(fl1, yesterday);
         int emissions = 0;
 
         // 데이터가 올바르게 들어오는지 체크하기 위한 로직
-        if(noxData.size()!=0 && fl1Data.size()!=0){
+        if (noxData.size() != 0 && fl1Data.size() != 0) {
             //전체 데이터 들어왔을때(정상로직)
-            if(noxData.size()==47 && fl1Data.size()==47){
-                for(int i=0 ; i < noxData.size(); i++){
+            if (noxData.size() == 47 && fl1Data.size() == 47) {
+                for (int i = 0; i < noxData.size(); i++) {
                     emissions += noxData.get(i).getY() * fl1Data.get(i).getY() / 1000 * 46 / 22.4;
                 }
-            }else{
+            } else {
                 List<Float> noxDataCalibration = dataCalibration(nox, yesterday);
                 List<Float> fl1DataCalibration = dataCalibration(fl1, yesterday);
-                for(int i=0 ; i < noxDataCalibration.size(); i++){
+                for (int i = 0; i < noxDataCalibration.size(); i++) {
                     emissions += noxDataCalibration.get(i) * fl1DataCalibration.get(i) / 1000 * 46 / 22.4;
                 }
             }
@@ -180,83 +180,83 @@ public class Schedule {
         return emissions;
     }
 
-    public List<Float> dataCalibration(String collection, LocalDate localDate){
+    public List<Float> dataCalibration(String collection, LocalDate localDate) {
         // 시간마다 돌려서 해당 시간에 데이터가 2개미만이면 누락으로 판단 (예외처리)
         List<Float> calibrationData = new ArrayList<>();
 
-        for (int i=0; i<24; i++){
-            String time = String.format(String.format("%02d",i));
+        for (int i = 0; i < 24; i++) {
+            String time = String.format(String.format("%02d", i));
             List<ChartData> noxDataAtTime = (List<ChartData>) mongoQuary.getCumulativeEmissionsAtTime(collection, localDate, time);
 
-            if(noxDataAtTime.size()!=2){
+            if (noxDataAtTime.size() != 2) {
 
-                    int noxDataAtTimeSize = noxDataAtTime.size();
-                    if(noxDataAtTimeSize!=0){
-                        LocalDateTime getTime = Instant.ofEpochMilli(noxDataAtTime.get(0).getX().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-                        LocalDateTime halfPast = LocalDateTime.of(localDate.getYear(), localDate.getMonth(), localDate.getDayOfMonth(), Integer.parseInt(time), 30);
+                int noxDataAtTimeSize = noxDataAtTime.size();
+                if (noxDataAtTimeSize != 0) {
+                    LocalDateTime getTime = Instant.ofEpochMilli(noxDataAtTime.get(0).getX().getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    LocalDateTime halfPast = LocalDateTime.of(localDate.getYear(), localDate.getMonth(), localDate.getDayOfMonth(), Integer.parseInt(time), 30);
 
-                        if(halfPast.isAfter(getTime)){
-                            // 30분 이전
-                            calibrationData.add(noxDataAtTime.get(0).getY());
-                            calibrationData.add(calibrationData.get(calibrationData.size()-1));
-                        }else{
-                            // 30분 이후
-                            // 00시 30분부터 데이터가 들어온 경우 예외처리 완료
-                            int minus = 1;
-                            if(i==0){
-                                List<ChartData> yesterdayLastData = (List<ChartData>) mongoQuary.getCumulativeEmissions(collection, localDate.minusDays(minus));
+                    if (halfPast.isAfter(getTime)) {
+                        // 30분 이전
+                        calibrationData.add(noxDataAtTime.get(0).getY());
+                        calibrationData.add(calibrationData.get(calibrationData.size() - 1));
+                    } else {
+                        // 30분 이후
+                        // 00시 30분부터 데이터가 들어온 경우 예외처리 완료
+                        int minus = 1;
+                        if (i == 0) {
+                            List<ChartData> yesterdayLastData = (List<ChartData>) mongoQuary.getCumulativeEmissions(collection, localDate.minusDays(minus));
 
-                                if(yesterdayLastData.size()!=0){
-                                    calibrationData.add(yesterdayLastData.get(0).getY());
-                                }else{
-                                    // 최근 7일간 마지막데이터 조회하고 최근 7일 사이에 업데이트 된 데이터가없으면 0으로 처리
-                                    while (minus < 7){
-                                        yesterdayLastData = (List<ChartData>) mongoQuary.getCumulativeEmissions(collection, localDate.minusDays(minus));
-                                        minus++;
+                            if (yesterdayLastData.size() != 0) {
+                                calibrationData.add(yesterdayLastData.get(0).getY());
+                            } else {
+                                // 최근 7일간 마지막데이터 조회하고 최근 7일 사이에 업데이트 된 데이터가없으면 0으로 처리
+                                while (minus < 7) {
+                                    yesterdayLastData = (List<ChartData>) mongoQuary.getCumulativeEmissions(collection, localDate.minusDays(minus));
+                                    minus++;
 
-                                        if(yesterdayLastData.size()!=0){
-                                            calibrationData.add(yesterdayLastData.get(0).getY());
-                                            break;
-                                        }
+                                    if (yesterdayLastData.size() != 0) {
+                                        calibrationData.add(yesterdayLastData.get(0).getY());
+                                        break;
+                                    }
 
-                                        if(minus==7 && yesterdayLastData.size()==0){
-                                            calibrationData.add(0f);
-                                        }
+                                    if (minus == 7 && yesterdayLastData.size() == 0) {
+                                        calibrationData.add(0f);
                                     }
                                 }
-                            }else{
-                                calibrationData.add(calibrationData.get(calibrationData.size()-1));
                             }
-                            calibrationData.add(noxDataAtTime.get(0).getY());
+                        } else {
+                            calibrationData.add(calibrationData.get(calibrationData.size() - 1));
                         }
-                    }else{
-                        // 해당 시간에 데이터가 없는 경우
-                        if(i==0){
-                            // 데이터 개수가 0이고 00시 인경우, 전일 데이터 불러오기
-                            int minus = 1;
-
-                            while (minus < 7){
-                                List<ChartData> yesterdayLastData = (List<ChartData>) mongoQuary.getCumulativeEmissions(collection, localDate.minusDays(minus));
-                                minus++;
-
-                                if(yesterdayLastData.size()!=0){
-                                    calibrationData.add(yesterdayLastData.get(0).getY());
-                                    calibrationData.add(yesterdayLastData.get(0).getY());
-                                    break;
-                                }
-
-                                if(minus==7 && yesterdayLastData.size()==0){
-                                    calibrationData.add(0f);
-                                    calibrationData.add(0f);
-                                }
-                            }
-                        }else{
-                            calibrationData.add(calibrationData.get(calibrationData.size()-1));
-                            calibrationData.add(calibrationData.get(calibrationData.size()-1));
-                        }
+                        calibrationData.add(noxDataAtTime.get(0).getY());
                     }
-            }else{
-                for(int j=0; j<noxDataAtTime.size(); j++){
+                } else {
+                    // 해당 시간에 데이터가 없는 경우
+                    if (i == 0) {
+                        // 데이터 개수가 0이고 00시 인경우, 전일 데이터 불러오기
+                        int minus = 1;
+
+                        while (minus < 7) {
+                            List<ChartData> yesterdayLastData = (List<ChartData>) mongoQuary.getCumulativeEmissions(collection, localDate.minusDays(minus));
+                            minus++;
+
+                            if (yesterdayLastData.size() != 0) {
+                                calibrationData.add(yesterdayLastData.get(0).getY());
+                                calibrationData.add(yesterdayLastData.get(0).getY());
+                                break;
+                            }
+
+                            if (minus == 7 && yesterdayLastData.size() == 0) {
+                                calibrationData.add(0f);
+                                calibrationData.add(0f);
+                            }
+                        }
+                    } else {
+                        calibrationData.add(calibrationData.get(calibrationData.size() - 1));
+                        calibrationData.add(calibrationData.get(calibrationData.size() - 1));
+                    }
+                }
+            } else {
+                for (int j = 0; j < noxDataAtTime.size(); j++) {
                     calibrationData.add(noxDataAtTime.get(j).getY());
                 }
             }
@@ -266,13 +266,13 @@ public class Schedule {
     }
 
     // [분석 및 통계 - 통계자료 조회] 월별 배출량 추이
-    public void setMonthlyEmissions(LocalDate yesterday, String table, int emissions){
+    public void setMonthlyEmissions(LocalDate yesterday, String table, int emissions) {
         int year = yesterday.getYear();
 
         MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
 
         // 당해년도 데이터가 없는경우 새로 생성
-        if(monthlyEmissions == null){
+        if (monthlyEmissions == null) {
             monthlyEmissions = new MonthlyEmissions();
             monthlyEmissions.setSensor(table);
             monthlyEmissions.setYear(year);
@@ -281,7 +281,7 @@ public class Schedule {
         // g > kg 환산
         emissions = emissions / 1000;
 
-        switch(yesterday.getMonthValue()) {
+        switch (yesterday.getMonthValue()) {
             case 1:
                 monthlyEmissions.setJan(monthlyEmissions.getJan() + emissions);
                 break;
@@ -316,7 +316,7 @@ public class Schedule {
                 monthlyEmissions.setNov(monthlyEmissions.getNov() + emissions);
                 break;
             case 12:
-                monthlyEmissions.setDec( monthlyEmissions.getDec() + emissions);
+                monthlyEmissions.setDec(monthlyEmissions.getDec() + emissions);
                 break;
         }
 
@@ -329,7 +329,7 @@ public class Schedule {
     }
 
     // 연간 배출량 누적 모니터링
-    public void setAnnualEmissions(String table){
+    public void setAnnualEmissions(String table) {
         LocalDate nowDate = LocalDate.now();
         LocalDate yesterday = nowDate.minusDays(1);
         int year = yesterday.getYear();
@@ -338,9 +338,9 @@ public class Schedule {
         String format = nowDate.format(DateTimeFormatter.ofPattern("MMdd"));
 
         // 오늘 날짜가 1월 1일인 경우 데이터 초기화 하고 전일 데이터는 저장(분석 및 통계 - 통계자료 조회에 활용)
-        if(format.equals("0101")){
+        if (format.equals("0101")) {
             annualEmissions.setYearlyValue(0);
-        }else{
+        } else {
             MonthlyEmissions monthlyEmissions = monthlyEmissionsRepository.findBySensorAndYear(table, year);
             int total = monthlyEmissions.getJan() + monthlyEmissions.getFeb() + monthlyEmissions.getMar() + monthlyEmissions.getApr() + monthlyEmissions.getMay()
                     + monthlyEmissions.getJun() + monthlyEmissions.getJul() + monthlyEmissions.getAug() + monthlyEmissions.getSep() + monthlyEmissions.getOct()
