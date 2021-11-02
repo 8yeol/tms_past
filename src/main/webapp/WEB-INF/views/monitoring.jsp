@@ -1579,9 +1579,9 @@
             $('#legal_1').css('display', 'none');
             $('#company_1').css('display', 'none');
             $('#management_1').css('display', 'none');
-            let innerHTML1 = "<div style='font-weight:bold;' id='l'>법적기준 초과<button style='margin-left: 190px;' onclick=\"$('#legal_1').css('display','none')\">X</button></div>";
-            let innerHTML2 = "<div style='font-weight:bold;' id='c'>사내기준 초과<button style='margin-left: 190px;' onclick=\"$('#company_1').css('display','none')\">X</button></div>";
-            let innerHTML3 = "<div style='font-weight:bold;' id='m'>관리기준 초과<button style='margin-left: 190px;' onclick=\"$('#management_1').css('display','none')\">X</button></div>";
+            let innerHTML1 = "<div style='font-weight:bold;' id='l'>법적기준 초과<button style='margin-left: 190px; background: white; border: solid white; font-weight: bold;' onclick=\"$('#legal_1').css('display','none')\">X</button></div>";
+            let innerHTML2 = "<div style='font-weight:bold;' id='c'>사내기준 초과<button style='margin-left: 190px; background: white; border: solid white; font-weight: bold;' onclick=\"$('#company_1').css('display','none')\">X</button></div>";
+            let innerHTML3 = "<div style='font-weight:bold;' id='m'>관리기준 초과<button style='margin-left: 190px; background: white; border: solid white; font-weight: bold;' onclick=\"$('#management_1').css('display','none')\">X</button></div>";
 
             //그룹 측정소에서 ON된 센서 추출
             $.ajax({
@@ -1614,29 +1614,29 @@
                                 if (arr[i].grade == grade) {
                                     if (excess == "danger") {
                                         if (document.getElementById('l') == null) {
-                                            innerHTML1 += "<div><span  id='dangerInner" + i + "' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>" + uptime + " " + place + " - " + naming + "<br> 법적기준 초과( " + value + " )";
+                                            innerHTML1 += "<div><span  id='dangerInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 법적기준 초과( " + value + " )";
                                         } else {
-                                            innerHTML1 = "<div><span  id='dangerInner" + i + "' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>" + uptime + " " + place + " - " + naming + "<br> 법적기준 초과( " + value + " )";
+                                            innerHTML1 = "<div><span  id='dangerInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 법적기준 초과( " + value + " )";
                                         }
-                                        innerHTML1 += "<button data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
+                                        innerHTML1 += "<button class='btn btn-primary' style='margin-left:10px; padding:1px 7px;' data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
                                         $('#legal_1').append(innerHTML1);
                                         $('#legal_1').css('display', 'block');
                                     } else if (excess == "warning") {
                                         if (document.getElementById('c') == null) {
-                                            innerHTML2 += "<div><span  id='warningInner" + i + "' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>" + uptime + " " + place + " - " + naming + "<br> 사내기준 초과( " + value + " )";
+                                            innerHTML2 += "<div><span  id='warningInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 사내기준 초과( " + value + " )";
                                         } else {
-                                            innerHTML2 = "<div><span  id='warningInner" + i + "' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>" + uptime + " " + place + " - " + naming + "<br> 사내기준 초과( " + value + " )";
+                                            innerHTML2 = "<div><span  id='warningInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 사내기준 초과( " + value + " )";
                                         }
-                                        innerHTML2 += "<button data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
+                                        innerHTML2 += "<button class='btn btn-primary' style='margin-left:10px; padding:1px 7px;' data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
                                         $('#company_1').append(innerHTML2);
                                         $('#company_1').css('display', 'block');
                                     } else if (excess == "caution") {
                                         if (document.getElementById('m') == null) {
-                                            innerHTML3 += "<div><span  id='cautionInner" + i + "' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>" + uptime + " " + place + " - " + naming + "<br> 관리기준 초과( " + value + " )";
+                                            innerHTML3 += "<div><span  id='cautionInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 관리기준 초과( " + value + " )";
                                         } else {
-                                            innerHTML3 = "<div><span  id='cautionInner" + i + "' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>" + uptime + " " + place + " - " + naming + "<br> 관리기준 초과( " + value + " )";
+                                            innerHTML3 = "<div><span  id='cautionInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 관리기준 초과( " + value + " )";
                                         }
-                                        innerHTML3 += "<button data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
+                                        innerHTML3 += "<button class='btn btn-primary' style='margin-left:10px; padding:1px 7px;' data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
                                         $('#management_1').append(innerHTML3);
                                         $('#management_1').css('display', 'block');
                                     }
