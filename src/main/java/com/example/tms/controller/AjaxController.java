@@ -5,6 +5,7 @@ import com.example.tms.mongo.MongoQuary;
 import com.example.tms.repository.*;
 import com.example.tms.repository.DataInquiry.DataInquiryRepository;
 import com.example.tms.repository.MonthlyEmissionsRepository;
+import com.example.tms.repository.NotificationList.NotificationListRepository;
 import com.example.tms.repository.NotificationStatistics.NotificationDayStatisticsRepository;
 import com.example.tms.repository.NotificationList.NotificationListCustomRepository;
 import com.example.tms.repository.NotificationStatistics.NotificationMonthStatisticsRepository;
@@ -57,8 +58,9 @@ public class AjaxController {
     final RankManagementService rankManagementService;
     final PasswordEncoder passwordEncoder;
     final MonitoringGroupRepository monitoringGroupRepository;
+    final NotificationListRepository notificationListRepository;
 
-    public AjaxController(PlaceRepository placeRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService, PasswordEncoder passwordEncoder, MonitoringGroupRepository monitoringGroupRepository) {
+    public AjaxController(PlaceRepository placeRepository, LogRepository logRepository, SensorCustomRepository sensorCustomRepository, ReferenceValueSettingRepository reference_value_settingRepository, NotificationSettingsRepository notification_settingsRepository, NotificationListCustomRepository notificationListCustomRepository, EmissionsStandardSettingRepository emissionsStandardSettingRepository, SensorListRepository sensorListRepository, NotificationStatisticsCustomRepository notificationStatisticsCustomRepository, NotificationDayStatisticsRepository notificationDayStatisticsRepository, NotificationMonthStatisticsRepository notificationMonthStatisticsRepository, AnnualEmissionsRepository annualEmissionsRepository, EmissionsSettingRepository emissionsSettingRepository, DataInquiryRepository dataInquiryCustomRepository, MonthlyEmissionsRepository monthlyEmissionsRepository, ItemRepository itemRepository, MongoQuary mongoQuary, MemberRepository memberRepository, MemberService memberService, RankManagementRepository rankManagementRepository, RankManagementService rankManagementService, PasswordEncoder passwordEncoder, MonitoringGroupRepository monitoringGroupRepository, NotificationListRepository notificationListRepository) {
         this.placeRepository = placeRepository;
         this.sensorCustomRepository = sensorCustomRepository;
         this.reference_value_settingRepository = reference_value_settingRepository;
@@ -82,6 +84,7 @@ public class AjaxController {
         this.rankManagementService = rankManagementService;
         this.passwordEncoder = passwordEncoder;
         this.monitoringGroupRepository = monitoringGroupRepository;
+        this.notificationListRepository = notificationListRepository;
     }
 
     /**
@@ -520,115 +523,8 @@ public class AjaxController {
         if(sensorList != null){
             excess = getExcessList(sensorList);
         }
-
         return excess;
     }
-
-    /**
-     * 그룹마다 허용된 센서 리스트 검색하여 기준초과 데이터 가져오기
-     * @param principal 로그인 객체
-     * @return 기준 초과데이터
-     */
-    @RequestMapping(value = "/getAlarmData", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getAlarmData(Principal principal) throws ParseException {
-        //로그인 객체 없다면 null 리턴하여 login.jsp로 이동
-        if(principal == null) {
-            JSONObject memberIsNull = new JSONObject();
-            memberIsNull.put("null", "null");
-            return memberIsNull;
-        }
-
-        Member member = memberRepository.findById(principal.getName());
-        int memberGroup = member.getMonitoringGroup();
-        JSONObject excess = new JSONObject();
-
-        List<String> sensorList = new ArrayList<>();
-        if(memberGroup != 1){
-            MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(memberGroup);
-            List<String> placeList = monitoringGroup.getMonitoringPlace();
-            for (int i=0; i<placeList.size(); i++){
-                Place place = placeRepository.findByName(placeList.get(i));
-                List<String> placeSensor = place.getSensor();
-                for (int k=0; k<placeSensor.size(); k++){
-                    if(notification_settingsRepository.findByName(placeSensor.get(k)).isStatus() == true){
-                        sensorList.add(placeSensor.get(k));
-                    }
-                }
-            }
-        }else{
-            List<NotificationSettings> monitoringOn = notification_settingsRepository.findByStatusIsTrue();
-            for(NotificationSettings notificationSettings : monitoringOn){
-                sensorList.add(notificationSettings.getName());
-            }
-        }
-        if(sensorList != null){
-            excess = getAlarmDataCheck(sensorList);
-        }
-
-        return excess;
-    }
-
-    /**
-     * 기준초과 알람에 필요한 데이터 설정
-     * @param sensorList 센서 리스트
-     * @return 기준초과 데이터
-     */
-    public JSONObject getAlarmDataCheck(List<String> sensorList) throws ParseException {
-        JSONObject excess = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-
-        for(String sensorName : sensorList){
-            Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName);
-            ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(sensorName);
-            Date now = new Date();
-            long diff = now.getTime() - sensor.getUp_time().getTime();
-            long sec = diff / 60000;
-
-            if(sec < 5){
-                float value = sensor.getValue();
-                SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());;
-                JSONObject jsonObject = new JSONObject();
-
-                if( value > referenceValueSetting.getLegalStandard() ){
-                    jsonObject.put("classification", "danger");
-                }else if( value > referenceValueSetting.getCompanyStandard() ){
-                    jsonObject.put("classification", "warning");
-                }else if( value > referenceValueSetting.getManagementStandard() ){
-                    jsonObject.put("classification", "caution");
-                }else{
-                    jsonObject.put("classification", "normal");
-                }
-
-                SensorList sensorData = sensorListRepository.findByPlaceAndNaming(sensorInfo.getPlace(), sensorInfo.getNaming());
-                NotificationSettings setting = notification_settingsRepository.findByName(sensorData.getTableName());
-                if (setting != null) {
-                    Date date = new Date(System.currentTimeMillis());
-                    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-
-                    Date startDate = format.parse(setting.getStart());
-                    Date endDate = format.parse(setting.getEnd());
-                    Date nowDate = format.parse(format.format(date));
-
-                    if(nowDate.after(startDate) && endDate.after(nowDate) && setting.isStatus() == true){
-                        jsonObject.put("state", true);
-                    }else{
-                        jsonObject.put("state", false);
-                    }
-                }else{
-                    jsonObject.put("state", false);
-                }
-
-                jsonObject.put("place", sensorInfo.getPlace());
-                jsonObject.put("naming", sensorInfo.getNaming());
-                jsonObject.put("value", String.format("%.2f", value));
-                jsonArray.add(jsonObject);
-                excess.put("excess", jsonArray);
-            }
-        }
-        return excess;
-    }
-
-
 
     public JSONObject getExcessList(List<String> sensorList){
         JSONObject excess = new JSONObject();
@@ -666,6 +562,234 @@ public class AjaxController {
         }
         return excess;
     }
+
+    /**
+     * 그룹마다 허용된 센서 리스트 검색하여 기준초과 데이터 가져오기
+     * @param principal 로그인 객체
+     * @return 기준 초과데이터
+     */
+    @RequestMapping(value = "/getAlarmData", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getAlarmData(Principal principal, @RequestParam("num") String num) throws ParseException {
+        //로그인 객체 없다면 null 리턴하여 login.jsp로 이동
+        if(principal == null) {
+            JSONObject memberIsNull = new JSONObject();
+            memberIsNull.put("null", "null");
+            return memberIsNull;
+        }
+
+        Member member = memberRepository.findById(principal.getName()); //아이디 확인
+        int memberGroup = member.getMonitoringGroup();
+
+        JSONArray array = new JSONArray();
+
+        List<String> sensorList = new ArrayList<>();
+        if(memberGroup != 1){ //디폴트 그룹이 아닐때
+            MonitoringGroup monitoringGroup = monitoringGroupRepository.findByGroupNum(memberGroup); //모니터링 그룹
+            List<String> placeList = monitoringGroup.getMonitoringPlace(); //측정소리스트
+            for (int i=0; i<placeList.size(); i++){
+                Place place = placeRepository.findByName(placeList.get(i));//측정소 정보
+                List<String> placeSensor = place.getSensor();//측정소 센서
+                for (int k=0; k<placeSensor.size(); k++){
+                    if(notification_settingsRepository.findByName(placeSensor.get(k)).isStatus() == true){ //측정소센서 알림 on 확인
+                        sensorList.add(placeSensor.get(k));
+                    }
+                }
+            }
+        }else{ //디폴트그룹일때
+            List<NotificationSettings> monitoringOn = notification_settingsRepository.findByStatusIsTrue(); //알림 on 확인
+            for(NotificationSettings notificationSettings : monitoringOn){
+                sensorList.add(notificationSettings.getName());
+            }
+        }
+        if(sensorList != null){
+            if(num.equals("1")){
+                getAlarmDataCheck(sensorList);
+                array = getAlarmNotificationList(sensorList);
+            }else{
+                array = getAlarmNotificationList(sensorList);
+            }
+        }
+        return array;
+    }
+
+    /**
+     * 모니터링그룹에 해당되는 센서의 알림리스트 가져오기
+     * @param sensorList 해당 관리자가 포함된 모니터링 그룹의 센서리스트
+     * @return 알림리스트 데이터
+     */
+    @RequestMapping(value = "/getAlarmNotificationList")
+    public JSONArray getAlarmNotificationList(List<String> sensorList){
+        JSONArray array = new JSONArray();
+        for(int i=0; i<sensorList.size(); i++){
+            List<NotificationList> notificationList = notificationListRepository.findByNameAndCheck(sensorList.get(i),false);
+            List<NotificationList> falseCount = notificationListRepository.findByCheck(false);
+            if(notificationList.size() > 1){
+                for(int j=0; j<notificationList.size(); j++){
+                    JSONObject excess = new JSONObject();
+                    excess.put("name", notificationList.get(j).getName());
+                    excess.put("sensor", notificationList.get(j).getSensor());
+                    excess.put("value", notificationList.get(j).getValue());
+                    excess.put("place", notificationList.get(j).getPlace());
+                    excess.put("grade", notificationList.get(j).getGrade());
+                    excess.put("status", notificationList.get(j).getStatus());
+                    excess.put("up_time", notificationList.get(j).getUp_time());
+                    if(array.size()<falseCount.size()){
+                        array.add(excess);
+                    }
+                }
+            }else if(notificationList.size()==1){
+                JSONObject excess = new JSONObject();
+                excess.put("name", notificationList.get(0).getName());
+                excess.put("sensor", notificationList.get(0).getSensor());
+                excess.put("value", notificationList.get(0).getValue());
+                excess.put("place", notificationList.get(0).getPlace());
+                excess.put("grade", notificationList.get(0).getGrade());
+                excess.put("status", notificationList.get(0).getStatus());
+                excess.put("up_time", notificationList.get(0).getUp_time());
+                if(array.size()<falseCount.size()){
+                    array.add(excess);
+                }
+            }
+        }
+        return array;
+    }
+
+    /**
+     * 기준초과 알람에 필요한 데이터 설정
+     * @param sensorList 센서 리스트
+     * @return 기준초과 데이터
+     */
+    public void getAlarmDataCheck(List<String> sensorList) throws ParseException {
+        JSONArray jsonArray = new JSONArray();
+
+        for(String sensorName : sensorList){
+            Sensor sensor = sensorCustomRepository.getSensorRecent(sensorName); //최근 입력된 센서
+            ReferenceValueSetting referenceValueSetting = reference_value_settingRepository.findByName(sensorName);
+
+                float value = sensor.getValue(); //센서 값
+                SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());;
+                JSONObject jsonObject = new JSONObject();
+
+                if( value > referenceValueSetting.getLegalStandard() ){
+                    jsonObject.put("classification", "danger");
+                }else if( value > referenceValueSetting.getCompanyStandard() ){
+                    jsonObject.put("classification", "warning");
+                }else if( value > referenceValueSetting.getManagementStandard() ){
+                    jsonObject.put("classification", "caution");
+                }else{
+                    jsonObject.put("classification", "normal");
+                }
+
+                SensorList sensorData = sensorListRepository.findByPlaceAndNaming(sensorInfo.getPlace(), sensorInfo.getNaming());
+                NotificationSettings setting = notification_settingsRepository.findByName(sensorData.getTableName());
+                if (setting != null) {
+                    Date date = new Date(System.currentTimeMillis());
+                    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+
+                    Date startDate = format.parse(setting.getStart());
+                    Date endDate = format.parse(setting.getEnd());
+                    Date nowDate = format.parse(format.format(date));
+
+                    if(nowDate.after(startDate) && endDate.after(nowDate) && setting.isStatus() == true){
+                        jsonObject.put("state", true);
+                    }else{
+                        jsonObject.put("state", false);
+                    }
+                }else{
+                    jsonObject.put("state", false);
+                }
+
+                jsonObject.put("place", sensorInfo.getPlace());
+                jsonObject.put("naming", sensorInfo.getNaming());
+                jsonObject.put("tableName", sensorInfo.getTableName());
+                jsonObject.put("value", String.format("%.2f", value));
+                jsonObject.put("up_time", sensor.getUp_time());
+                jsonArray.add(jsonObject);
+
+        }
+        saveNotificationList(jsonArray);
+    }
+
+    /**
+     * notification_list 저장 메소드
+     * @param jsonArray 센서별 최근 데이터 리스트
+     */
+    public void saveNotificationList(JSONArray jsonArray){
+        for(int i=0; i<jsonArray.size(); i++){
+            JSONObject jsonObject = (JSONObject)jsonArray.get(i);
+            int grade = 0;
+            String classification = jsonObject.get("classification").toString();
+            if(classification == "danger" || classification == "warning"){
+                if(classification == "danger"){
+                    grade = 1;
+                }else {
+                    grade = 2;
+                }
+                String place = jsonObject.get("place").toString();
+                String sensor = jsonObject.get("naming").toString();
+                String name = jsonObject.get("tableName").toString();
+                String value = jsonObject.get("value").toString();
+                String status = jsonObject.get("state").toString();
+                boolean check = false;
+                String checkName = "";
+                Date time = (Date)jsonObject.get("up_time");
+
+                List<NotificationList> tf = notificationListRepository.findBySensor(sensor);
+                if(tf.size() != 0){ //데이터 중복 확인(센서확인)
+                    int count = 0;
+                    for(int j=0; j<tf.size(); j++){
+                        Date a = tf.get(j).up_time;
+                        if(a.equals(time)){
+                            count ++;
+                        }
+                    }
+                    if(grade>=1 && count==0){
+                        NotificationList list = new NotificationList(place, sensor, name, value, grade, status, check, checkName, time);
+                        notificationListRepository.save(list);
+                    }
+                }else{
+                    if(grade>=1){
+                        NotificationList list = new NotificationList(place, sensor, name, value, grade, status, check, checkName, time);
+                        notificationListRepository.save(list);
+                    }
+                }
+            }
+        }
+    }
+    /**
+     * 측정소 추가, 수정
+     * 수정시 센서 상세설정에서 측정소명도 같이 변경
+     *
+     * @param name       측정소명
+     * @param location   위치
+     * @param admin      담당자 명
+     * @param tel        연락처
+     * @param hiddenCode 수정하고 싶은 측정소명
+     */
+    @RequestMapping(value = "/saveCheck")
+    public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "sensor") String sensor, @RequestParam(value = "uptime") String up_time, Principal principal) {
+        List<NotificationList> notificationList = notificationListRepository.findBySensor(sensor);
+        for(int i=0; i<notificationList.size(); i++){
+            Date date = notificationList.get(i).up_time;
+            SimpleDateFormat trans = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String transDate = trans.format(date);
+            if(transDate.equals(up_time)){
+                String value = notificationList.get(i).value;
+                notificationList.get(i).setCheck(true);
+                notificationList.get(i).setCheckName(name);
+                notificationListRepository.save(notificationList.get(i));
+
+                if(notificationList.get(i).grade == 1){
+                    inputLogSetting("'" + sensor + "'" + " 법적기준 초과("+value+") 알림 확인('"+name+"')", "설정", principal);
+                }else if(notificationList.get(i).grade == 2){
+                    inputLogSetting("'" + sensor + "'" + " 사내기준 초과("+value+") 알림 확인('"+name+"')", "설정", principal);
+                }else {
+                    inputLogSetting("'" + sensor + "'" + " 관리기준 초과("+value+") 알림 확인('"+name+"')", "설정", principal);
+                }
+            }
+        }
+    }
+
 
     /**
      * 넘겨받은 센서명이 포함된 측정소 이름 받아오기

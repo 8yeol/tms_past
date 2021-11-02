@@ -22,7 +22,7 @@ public class NotificationListCustomRepository {
     }
 
     /** 기준별 초과 카운팅
-     * @param grade  기준 초과 등급 1~3
+     * @param grade  기준 초과 등급 1~3(1 법적,2 사내)
      * @param from_date
      * @param to_date
      * @return int 기준별, 날짜별 카운팅된 숫자

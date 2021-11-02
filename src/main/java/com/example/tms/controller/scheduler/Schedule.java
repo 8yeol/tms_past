@@ -47,7 +47,7 @@ public class Schedule {
      * 기준 초과 알림 목록을 읽어와 기준별 카운트하여 일별/월별로 해당 컬렉션에 저장
      * (알림 현황 전날(day) 이번달(month) 데이터 입력 ※매달 1일은 지난달로 계산)
      */
-    @Scheduled(cron = "0 1 0 * * *") //매일 00시 01분에 처리
+    @Scheduled(cron = "0 1 0 * * *") //0 1 0 * * * 매일 00시 01분에 처리 */5 * * * * *
     public void saveNotificationStatistics(){
         // 일
         LocalDate nowDate = LocalDate.now();

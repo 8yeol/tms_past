@@ -3,6 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 
@@ -13,10 +14,12 @@
 %>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/page/monitoring.css">
+<script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/moment.min.js"></script>
 <script src="static/js/apexcharts.min.js"></script>
 <script src="static/js/vue-apexcharts.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/jquery-ui.js"></script>
+
 
 <div class="container"  id="container">
     <div class="row m-3 mt-3 mb-2">
@@ -75,14 +78,48 @@
             </div>
         </div>
         <div style="width: 50%; height: 80%; display: flex; margin: auto 0; justify-content: space-around">
-            <div class="topDash-r">
-                <span class="text-center fw-bold bg-danger">법적기준 초과</span>
-                <p id="legal_standard_text_A" class="text-danger fs-1 bg-white" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
-            </div>
-            <div class="topDash-r">
-                <span class="text-center fw-bold bg-warning">사내기준 초과</span>
-                <p id="company_standard_text_A" class="text-warning fs-1 bg-white" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
-            </div>
+            <c:choose>
+                <c:when test="${state == '1'}">
+                    <div class="topDash-r">
+                        <span class="text-center fw-bold bg-danger">법적기준 초과</span>
+                        <p id="legal_standard_text_A" style="cursor: pointer" class="text-danger fs-1 bg-white" onclick="getAlarmList(1)">0</p>
+                        <div id="legal_1" class="alarmList" style="display: none; background-color: white;color: black;border: 2px solid black; position: absolute; z-index: 99; width: 320px; left: 130px; top: 110px;">
+
+                        </div>
+
+                    </div>
+
+                    <div class="topDash-r">
+                        <span class="text-center fw-bold bg-warning">사내기준 초과</span>
+                        <p id="company_standard_text_A" style="cursor: pointer" class="text-warning fs-1 bg-white" onclick="getAlarmList(2)">0</p>
+                        <div id="company_1" class="alarmList" style="display: none; background-color: white;color: black;border: 2px solid black; position: absolute; z-index: 99; width: 320px; left: 130px; top: 110px;">
+
+                        </div>
+                    </div>
+
+<%--                    관리기준 임시삭제--%>
+<%--                    <div class="topDash-r">--%>
+<%--                        <span class="text-center fw-bold bg-success">관리기준 초과</span>--%>
+<%--                        <p id="management_standard_text_A" style="cursor: pointer" class="text-success fs-1 bg-white" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>--%>
+<%--                        <div id="management_1" class="alarmList" style="display: none"></div>--%>
+<%--                    </div>--%>
+                </c:when>
+                <c:otherwise>
+                    <div class="topDash-r">
+                        <span class="text-center fw-bold bg-danger">법적기준 초과</span>
+                        <p id="legal_standard_text_B" class="text-danger fs-1 bg-white">0</p>
+                    </div>
+                    <div class="topDash-r">
+                        <span class="text-center fw-bold bg-warning">사내기준 초과</span>
+                        <p id="company_standard_text_B" class="text-warning fs-1 bg-white">0</p>
+                    </div>
+<%--                    관리기준 임시삭제--%>
+<%--                    <div class="topDash-r">--%>
+<%--                        <span class="text-center fw-bold bg-success">관리기준 초과</span>--%>
+<%--                        <p id="management_standard_text_B" class="text-success fs-1 bg-white">0</p>--%>
+<%--                    </div>--%>
+                </c:otherwise>
+            </c:choose>
             <!-- 관리기준 임시삭제
             <div class="topDash-r">
                 <span class="text-center fw-bold bg-danger">법적기준 초과</span>
@@ -100,6 +137,74 @@
         </div>
     </div>
     <%--상단 대시보드 end--%>
+
+    <div class="row m-3 mt-3 bg-light" style="margin: 0.2rem; height: 340px; overflow: auto;">
+        <div class="row pb-0 margin-l"  style="padding: 1rem 1rem 0">
+            <div class="col fs-5 fw-bold">
+                관리등급 초과 모니터링
+            </div>
+            <div class="col text-end">
+                <span class="small">업데이트 : <span class="fw-bold" id="excess_update"></span></span><br>
+                <span class="text-primary" style="font-size: 0.8rem"> * 실시간으로 업데이트 됩니다.</span>
+            </div>
+        </div>
+        <div class="row pb-3 h-75 pb-3 margin-l mt-2">
+            <div class="col">
+                <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
+                    <div class="card-header fs-5">정상</div>
+                    <div class="card-body fs-6" id="normal3" style="min-height: 180px;">
+                    </div>
+                </div>
+            </div>
+            <!-- 관리기준 임시삭제
+            <div class="col">
+                <div class="card text-white bg-success mb-3" style="min-height: 100%;">
+                    <div class="card-header">관리기준 초과</div>
+                    <div class="card-body" id="caution">
+                    </div>
+                </div>
+            </div>
+            -->
+            <div class="col">
+                <div class="card text-dark bg-warning mb-3" style="min-height: 100%;">
+                    <div class="card-header fs-5">사내기준 초과</div>
+                    <div class="card-body fs-6" id="warning">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card text-white bg-danger mb-3" style="min-height: 100%;">
+                    <div class="card-header fs-5">법적기준 초과</div>
+                    <div class="card-body fs-6" id="danger">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- checkName 추가 -->
+    <div class="modal" id="addCheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header justify-content-center">
+                    <h5 class="modal-title fw-bold" id="addup">알림 확인자 입력</h5>
+                </div>
+                <div class="modal-body d-flex" style="flex-wrap: wrap;">
+                    <form id="checkInfo" method="post" style="width:70%; margin: 10px auto;">
+                        <div style="margin-bottom:7px; margin-top: 10px; display: flex; justify-content: space-between;">
+                            <span>확인자 명</span>
+                            <input type="text" class="modal-input" name="name" id="na1" style="border: 1px solid black;" autocomplete="off">
+                        </div>
+                        <input type="hidden" name="hiddenCode" id="hi1">
+                        <input type="hidden" name="hiddenCode" id="hi2">
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button id="saveBtn" class="btn btn-primary" onclick="saveCheck()">입력</button>
+                    <button id="cancelBtn" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <%-- 하단 대시보드 --%>
     <div class="row m-3 mt-3 bg-light">
@@ -355,6 +460,15 @@
 </div> <%-- 컨테이너 end --%>
 
 <script>
+    //팝업창 드래그로 이동 가능
+    $(function () {
+        $('.modal-dialog').draggable({handle: ".modal-header"});
+    });
+
+    //modal 팝업창 close시 form에 남아있던 데이터 리셋
+    $('.modal').on('hidden.bs.modal', function (e) {
+        $(this).find('form')[0].reset()
+    });
     let INTERVAL; let flashCheck; let alarmCheck;
     var oldSensorList; var chart = {};
     let placeInfoCopy;let audioInnerHTML;
@@ -387,6 +501,7 @@
         setTimeout(function () {
             getData();
         }, 0);
+        excess();
     });
 
     /**
@@ -863,6 +978,7 @@
      *  대시보드 생성 (가동률, 통신 상태, 기준값 등)
      */
     function draw_sensor_info(placeInfo) {
+        let state = ${state};
         if(placeInfo.length != 0){
             var placeCount = placeInfo.length;
             var sensorMonitoringOn=0, allMonitoringOFF=0,
@@ -960,9 +1076,15 @@
         $("#statusOn").text(sensorStatusSuccess); //정상
         $("#statusOff").text(sensorStatusFail); //통신불량
         $("#monitoringOff").text(allMonitoringOFF); //모니터링OFF 개수
-        $("#legal_standard_text_A").text(legalSCount); //법적기준 Over
-        $("#company_standard_text_A").text(companySCount); //사내기준 Over
-        $("#management_standard_text_A").text(managementSCount); //관리기준 Over
+        if(state == "1"){
+            $("#legal_standard_text_A").text(legalSCount); //법적기준 Over
+            $("#company_standard_text_A").text(companySCount); //사내기준 Over
+            $("#management_standard_text_A").text(managementSCount); //관리기준 Over
+        }else{
+            $("#legal_standard_text_B").text(legalSCount); //법적기준 Over
+            $("#company_standard_text_B").text(companySCount); //사내기준 Over
+            $("#management_standard_text_B").text(managementSCount); //관리기준 Over
+        }
     }
 
     /**
@@ -1342,6 +1464,205 @@
             }
         })
         return result;
+    }
+
+    function excess() {
+        addExcessData();
+
+        setInterval(function () {
+            addExcessData();
+        }, 10000)
+
+        // 매 30초마다 실행되게 하는 함수
+        /*
+        const HALF_PAST = 30 * 1000;
+        const timeSinceBoundary = new Date() % HALF_PAST;
+        const timeToSetInterval = timeSinceBoundary === 0 ? 0 : (HALF_PAST - timeSinceBoundary);
+        setTimeout(function () {
+            setInterval(function () {
+                addExcessData();
+            }, HALF_PAST);
+        }, timeToSetInterval);
+        */
+    }
+
+    function addExcessData() {
+        $("#normal3").empty();
+        $("#caution").empty();
+        $("#warning").empty();
+        $("#danger").empty();
+
+        $.ajax({
+            url: '<%=cp%>/getExcessSensor',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                const arr = data.excess;
+                if(arr != undefined){
+                    $("#excess_update").text(moment(arr[0].up_time).format('YYYY-MM-DD HH:mm:ss'));
+
+                    for(let i=0; i<arr.length; i++){
+                        const excess = arr[i].classification;
+                        const place = arr[i].place;
+                        const naming = arr[i].naming;
+                        const value = arr[i].value;
+
+                        if(excess == "danger" ){
+                            $("#danger").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                        }else if(excess == "warning"){
+                            $("#warning").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                        }else if(excess == "caution"){
+                            $("#caution").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                        }else if(excess == "normal"){
+                            $("#normal3").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
+                        }
+                    }
+                } else{
+                    $("#excess_update").text("최근 5분 이내로 업데이트 된 데이터가 없습니다.");
+                }
+
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
+
+    //알림리스트 불러오기
+    function getAlarmList(grade){
+        $("#legal_1").empty();
+        $("#company_1").empty();
+        $("#management_1").empty();
+        $('#legal_1').css('display', 'none');
+        $('#company_1').css('display', 'none');
+        $('#management_1').css('display', 'none');
+        let innerHTML1 = "<div style='font-weight:bold;' id='l'>법적기준 초과<button style='margin-left: 190px;' onclick=\"$('#legal_1').css('display','none')\">X</button></div>";
+        let innerHTML2 = "<div style='font-weight:bold;' id='c'>사내기준 초과<button style='margin-left: 190px;' onclick=\"$('#company_1').css('display','none')\">X</button></div>";
+        let innerHTML3 = "<div style='font-weight:bold;' id='m'>관리기준 초과<button style='margin-left: 190px;' onclick=\"$('#management_1').css('display','none')\">X</button></div>";
+
+        //그룹 측정소에서 ON된 센서 추출
+        $.ajax({
+            url: '<%=cp%>/getAlarmData',
+            dataType: 'json',
+            data:{"num":"2"},
+            async: false,
+            success: function (data) {
+                const arr = data;
+                arr.sort(function(a,b){
+                    var c= new Date(a.up_time);
+                    var d= new Date(b.up_time);
+                    return c-d;
+                });
+                if(arr != undefined){
+                    for(let i=arr.length-1; i>=0; i--){
+                        if(arr[i].status == "true"){
+                            let excess = arr[i].grade;
+                            const place = arr[i].place;
+                            const naming = arr[i].sensor;
+                            const value = arr[i].value;
+                            const uptime = moment(arr[i].up_time).format('YYYY-MM-DD HH:mm:ss');
+                            if(excess == 1){
+                                excess = "danger";
+                            }else if(excess == 2){
+                                excess = "warning";
+                            }else{
+                                excess = "caution";
+                            }
+                            if(arr[i].grade == grade) {
+                                if (excess == "danger") {
+                                    if(document.getElementById('l') == null){
+                                        innerHTML1 += "<div><span  id='dangerInner"+i+"' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>"+uptime+" "+ place +" - "+ naming +"<br> 법적기준 초과( "+ value +" )";
+                                    }else{
+                                        innerHTML1 = "<div><span  id='dangerInner"+i+"' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>"+uptime+" "+ place +" - "+ naming +"<br> 법적기준 초과( "+ value +" )";
+                                    }
+                                    innerHTML1 += "<button data-bs-toggle='modal' data-bs-target='#addCheck' id='b"+i+"' onclick=\"insertCheckName('"+naming+"','"+uptime+"')\">확인</button></span></div>";
+                                    $('#legal_1').append(innerHTML1);
+                                    $('#legal_1').css('display', 'block');
+                                } else if (excess == "warning") {
+                                    if(document.getElementById('c') == null){
+                                        innerHTML2 += "<div><span  id='warningInner"+i+"' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>"+uptime+" "+ place +" - "+ naming +"<br> 사내기준 초과( "+ value +" )";
+                                    }else{
+                                        innerHTML2 = "<div><span  id='warningInner"+i+"' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>"+uptime+" "+ place +" - "+ naming +"<br> 사내기준 초과( "+ value +" )";
+                                    }
+                                    innerHTML2 += "<button data-bs-toggle='modal' data-bs-target='#addCheck' id='b"+i+"' onclick=\"insertCheckName('"+naming+"','"+uptime+"')\">확인</button></span></div>";
+                                    $('#company_1').append(innerHTML2);
+                                    $('#company_1').css('display', 'block');
+                                } else if (excess == "caution") {
+                                    if(document.getElementById('m') == null){
+                                        innerHTML3 += "<div><span  id='cautionInner"+i+"' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>"+uptime+" "+ place +" - "+ naming +"<br> 관리기준 초과( "+ value +" )";
+                                    }else{
+                                        innerHTML3 = "<div><span  id='cautionInner"+i+"' style='display: block;font-size: 1rem; padding: 5px 5px 5px 5px;'>"+uptime+" "+ place +" - "+ naming +"<br> 관리기준 초과( "+ value +" )";
+                                    }
+                                    innerHTML3 += "<button data-bs-toggle='modal' data-bs-target='#addCheck' id='b"+i+"' onclick=\"insertCheckName('"+naming+"','"+uptime+"')\">확인</button></span></div>";
+                                    $('#management_1').append(innerHTML3);
+                                    $('#management_1').css('display', 'block');
+                                }
+                            }
+                        }
+                    }
+                }
+
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        });
+    }
+
+    function insertCheckName(sensor, uptime) {
+        document.getElementById('na1').value = '';
+        $('input[id=hi1]').attr('value', sensor);
+        $('input[id=hi2]').attr('value', uptime);
+
+    }
+    function saveCheck() {
+        const na = $("#na1").val();
+        const name = na.replace(/(\s*)/g, ""); //공백제거
+        const sensor = $("#hi1").val();
+        const uptime = $("#hi2").val();
+        const pattern = /[`~.!@#$%^&*()_+=|<>?:;`,{}\-\]\[/\'\"\\\']/;
+
+        if (name == "") {
+            customSwal('확인자 명을 입력해주세요.');
+            return false;
+        }
+        if (pattern.test(name) == true) { //특수문자
+            customSwal('특수문자를 입력할 수 없습니다.');
+            return false;
+        }
+        $.ajax({
+            url: '<%=cp%>/saveCheck',
+            type: 'POST',
+            async: false,
+            cache: false,
+            data: {
+                "name": name,
+                "sensor": sensor,
+                "uptime": uptime
+            }, success: function (data) {
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        })
+        Swal.fire({
+            icon: 'success',
+            title: '알림 확인',
+            text: '확인자 명이 입력되었습니다.',
+            timer: 1500
+        })
+        document.getElementById("cancelBtn").click();
+        $('#legal_1').css('display', 'none');
+        $('#company_1').css('display', 'none');
+        $('#management_1').css('display', 'none');
+    }
+    function customSwal(text) {
+        Swal.fire({
+            icon: 'warning',
+            title: '경고',
+            text: text,
+            timer: 1500
+        });
     }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

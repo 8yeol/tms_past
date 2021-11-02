@@ -360,50 +360,6 @@
         </div>
     </div>
 
-
-    <div class="row mt-4 bg-light margin-l" style="width: 98%; margin: 0.2rem; height: 340px; overflow: auto;">
-        <div class="row pb-0 margin-l"  style="padding: 1rem 1rem 0">
-            <div class="col fs-5 fw-bold">
-                관리등급 초과 모니터링
-            </div>
-            <div class="col text-end">
-                <span class="small">업데이트 : <span class="fw-bold" id="excess_update"></span></span><br>
-                <span class="text-primary" style="font-size: 0.8rem"> * 실시간으로 업데이트 됩니다.</span>
-            </div>
-        </div>
-        <div class="row pb-3 h-75 pb-3 margin-l mt-2">
-            <div class="col">
-                <div class="card text-white bg-primary mb-3" style="min-height: 100%;">
-                    <div class="card-header fs-5">정상</div>
-                    <div class="card-body fs-6" id="normal" style="min-height: 180px;">
-                    </div>
-                </div>
-            </div>
-            <!-- 관리기준 임시삭제
-            <div class="col">
-                <div class="card text-white bg-success mb-3" style="min-height: 100%;">
-                    <div class="card-header">관리기준 초과</div>
-                    <div class="card-body" id="caution">
-                    </div>
-                </div>
-            </div>
-            -->
-            <div class="col">
-                <div class="card text-dark bg-warning mb-3" style="min-height: 100%;">
-                    <div class="card-header fs-5">사내기준 초과</div>
-                    <div class="card-body fs-6" id="warning">
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-white bg-danger mb-3" style="min-height: 100%;">
-                    <div class="card-header fs-5">법적기준 초과</div>
-                    <div class="card-body fs-6" id="danger">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
@@ -414,7 +370,6 @@
             $('#line' + i).css({"margin-top": ($('#div' + i).height() - $('#line' + i).height()) / 2 + "px"});
         }
         if(placeListSize==2) $('#line1').remove();
-        excess();
     });
 
     function standardModal(obj) {
@@ -433,66 +388,6 @@
         });
     }
 
-    function excess() {
-        addExcessData();
 
-        setInterval(function () {
-            addExcessData();
-        }, 10000)
-
-        // 매 30초마다 실행되게 하는 함수
-        /*
-        const HALF_PAST = 30 * 1000;
-        const timeSinceBoundary = new Date() % HALF_PAST;
-        const timeToSetInterval = timeSinceBoundary === 0 ? 0 : (HALF_PAST - timeSinceBoundary);
-        setTimeout(function () {
-            setInterval(function () {
-                addExcessData();
-            }, HALF_PAST);
-        }, timeToSetInterval);
-        */
-    }
-
-    function addExcessData() {
-        $("#normal").empty();
-        $("#caution").empty();
-        $("#warning").empty();
-        $("#danger").empty();
-
-        $.ajax({
-            url: '<%=cp%>/getExcessSensor',
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                const arr = data.excess;
-                if(arr != undefined){
-                    $("#excess_update").text(moment(arr[0].up_time).format('YYYY-MM-DD HH:mm:ss'));
-
-                    for(let i=0; i<arr.length; i++){
-                        const excess = arr[i].classification;
-                        const place = arr[i].place;
-                        const naming = arr[i].naming;
-                        const value = arr[i].value;
-
-                        if(excess == "danger" ){
-                            $("#danger").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
-                        }else if(excess == "warning"){
-                            $("#warning").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
-                        }else if(excess == "caution"){
-                            $("#caution").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
-                        }else if(excess == "normal"){
-                            $("#normal").append("<h5>" + place + " - " + naming + " [" + value + "] </h5>");
-                        }
-                    }
-                } else{
-                    $("#excess_update").text("최근 5분 이내로 업데이트 된 데이터가 없습니다.");
-                }
-
-            },
-            error: function (request, status, error) {
-                console.log(error)
-            }
-        });
-    }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

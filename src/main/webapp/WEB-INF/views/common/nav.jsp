@@ -592,21 +592,32 @@
         $.ajax({
             url: '<%=cp%>/getAlarmData',
             dataType: 'json',
+            data:{"num":"1"},
             async: false,
             success: function (data) {
                 //로그인 객체 없으면 로그인페이지로 이동
                 if(data.null == "null") window.location.href = '<%=cp%>/login';
-
-                const arr = data.excess;
-                let message;
+                const arr = data;
+                arr.sort(function(a,b){
+                    var c= new Date(a.up_time);
+                    var d= new Date(b.up_time);
+                    return c-d;
+                });
                 count = 0;
                 if(arr != undefined){
-                    for(let i=0; i<arr.length; i++){
-                        if(arr[i].state == true){
-                            const excess = arr[i].classification;
+                    for(let i=arr.length-1; i>=0; i--){
+                        if(arr[i].status == "true"){
+                            let excess = arr[i].grade;
                             const place = arr[i].place;
-                            const naming = arr[i].naming;
+                            const naming = arr[i].sensor;
                             const value = arr[i].value;
+                            if(excess == 1){
+                                excess = "danger";
+                            }else if(excess == 2){
+                                excess = "warning";
+                            }else{
+                                excess = "caution";
+                            }
                             let innerHTML ;
 
                             if(excess == "danger" ){
@@ -625,7 +636,7 @@
                                 count++;
                             }else if(excess == "caution"){
                                 innerHTML =  '<span class="messageText caution" style="background-color:rgb(25, 135, 84);">'
-                                innerHTML += '<span id="warningInner" style="margin-right: 10px;display: block">관리기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
+                                innerHTML += '<span id="cautionInner" style="margin-right: 10px;display: block">관리기준 초과</span>'+place +' - '+naming+' ('+value+')<br></span>';
                                 $('.cautionOuter').append(innerHTML);
                                 $('.caution').css('display', 'block');
                                 $('.message').css('display', 'block');
