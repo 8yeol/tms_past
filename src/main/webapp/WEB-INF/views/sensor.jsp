@@ -813,6 +813,8 @@
                 yaxis: [{
                     y: managementStandard,
                     borderColor: '#00E396',
+                    borderWidth: 3,
+                    strokeDashArray:0,
                     label: {
                         borderColor: '#00E396',
                         style: {
@@ -827,6 +829,8 @@
                     {
                         y: companyStandard,
                         borderColor: '#FEB019',
+                        borderWidth: 3,
+                        strokeDashArray:0,
                         label: {
                             borderColor: '#FEB019',
                             style: {
@@ -841,6 +845,8 @@
                     {
                         y: legalStandard,
                         borderColor: '#FF4560',
+                        borderWidth: 3,
+                        strokeDashArray:0,
                         label: {
                             borderColor: '#FF4560',
                             style: {

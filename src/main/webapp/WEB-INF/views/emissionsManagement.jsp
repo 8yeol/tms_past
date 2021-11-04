@@ -611,9 +611,9 @@
 <script>
 
     $(document).ready(function () {
-        const dataPerpage = 3;
-        const pageCount = 3;
-        const currentPage = 1;
+        const dataPerpage = 3; //한페이지당 컬럼수
+        const pageCount = 3; // 표시 페이지 이전 1,2,3 다음
+        const currentPage = 1; //현재페이지
         const total1 = selectEmissionStandard(currentPage, dataPerpage);
         const total2 = selectMEmission(currentPage, dataPerpage);
         paging(total1, dataPerpage, pageCount, currentPage, 1);
