@@ -8,6 +8,6 @@ import java.util.List;
 public interface MonthlyEmissionsRepository extends MongoRepository<MonthlyEmissions, Long> {
     MonthlyEmissions findBySensorAndYear(String sensor, int year);
     MonthlyEmissions deleteBySensor(String sensor);
-    MonthlyEmissions findBySensor(String sensor);
+    List<MonthlyEmissions> findBySensor(String sensor);
     MonthlyEmissions findByYear(int year);
 }

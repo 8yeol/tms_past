@@ -409,9 +409,7 @@
             <div class="pb-2 justify-content-between" style="display: flex">
                 <h4 class="mt-2 fs-5 fw-bold" style="margin-left: 5px;">연간 배출량 추이 관리</h4>
             </div>
-
-            <span class="text-end w-100"
-                  style="display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem">단위 : kg</span>
+                <span class="text-end w-100"style="display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem">단위 : kg</span>
             <div class="tableWrap w-100">
                 <table class="table btnTable">
                     <thead>

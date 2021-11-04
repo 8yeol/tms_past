@@ -1034,6 +1034,7 @@ public class AjaxController {
 
         List<String> sensor = placeInfo.getSensor();
         for (int i = 0; i < sensor.size(); i++) {
+            String sensorCode = sensor.get(i).split("_")[1]; //-> NOX, IRS ..
             SensorList sen = sensorListRepository.findByTableName(sensor.get(i), "");
             String sensorname = sen.getNaming();
             reference_value_settingRepository.deleteByName(sensor.get(i));
@@ -1053,6 +1054,15 @@ public class AjaxController {
 
             sensorListRepository.deleteByTableName(sensor.get(i));
             inputLogSetting("'" + sensorname + "'" + " 센서 삭제", "설정", principal);
+
+            if(sensorCode.equals("NOX")){
+                //배출량 관리 - 연간 배출량 추이 삭제
+                List<MonthlyEmissions> list = monthlyEmissionsRepository.findBySensor(sensor.get(i));
+                for(int j=0; j<list.size(); j++){
+                    monthlyEmissionsRepository.deleteBySensor(sensor.get(i));
+                }
+            }
+            inputLogSetting("'" + sensorname + "'" + " 연간 배출량 추이 삭제", "설정", principal);
         }
     }
 
@@ -1651,6 +1661,13 @@ public class AjaxController {
             //배출량 관리 - 연간 모니터링 대상 삭제
             annualEmissionsRepository.deleteBySensor(tableName);
             inputLogSetting("'" + ess.getPlace() + " - " + ess.getNaming() + "'" + " 연간 배출량 모니터링 대상 삭제", "설정", principal);
+
+            //배출량 관리 - 연간 배출량 추이 삭제
+            List<MonthlyEmissions> list = monthlyEmissionsRepository.findBySensor(tableName);
+            for(int i=0; i<list.size(); i++){
+                monthlyEmissionsRepository.deleteBySensor(tableName);
+            }
+            inputLogSetting("'" + ess.getPlace() + " - " + ess.getNaming() + "'" + " 연간 배출량 추이 삭제", "설정", principal);
         }
 
         //상세설정 값 삭제
