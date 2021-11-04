@@ -172,7 +172,7 @@ tr {
     color: #fff;
 }
 
-.topDash-r span {
+.topDash-r > span {
     width: 100%;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -181,7 +181,7 @@ tr {
     font-size: 1.1rem;
 }
 
-.topDash-r p {
+.topDash-r > p {
     width: 100%;
     display: inline-block;
     margin: auto;
@@ -189,6 +189,48 @@ tr {
     text-align: center;
     height: 70%;
     line-height: 80px;
+}
+
+.alarmTitle {
+    display: flex;
+    justify-content: space-between;
+}
+
+.alarmTitle > p {
+    margin: 0 !important;
+    line-height: 36px;
+}
+
+#legal_1 .alarmTitle {
+    border-bottom: 1px solid #dc3545;
+}
+
+#legal_1 > div:not(.alarmTitle) {
+    position: relative;
+    background-color: rgba(220, 53, 69, 0.1);
+    margin: 5px 0px;
+}
+
+#legal_1 > div:not(.alarmTitle) > span > button {
+    position: absolute;
+    right: 5px;
+    top: calc(50% - 14px);
+}
+
+#company_1 .alarmTitle {
+    border-bottom: #ffc107;
+}
+
+#company_1 > div:not(.alarmTitle) {
+    position: relative;
+    background-color: rgba(255,193,7,0.1);
+    margin: 5px 0px;
+}
+
+#company_1 > div:not(.alarmTitle) > span > button {
+    position: absolute;
+    right: 5px;
+    top: calc(50% - 14px);
 }
 
 @media all and (max-width: 1399px) and (min-width: 1001px) {

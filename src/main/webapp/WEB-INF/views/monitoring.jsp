@@ -97,7 +97,7 @@
                         <p id="legal_standard_text_A" style="cursor: pointer" class="text-danger fs-1 bg-white"
                            onclick="getAlarmList(1)">0</p>
                         <div id="legal_1" class="alarmList"
-                             style="display: none; background-color: white;color: black;border: 2px solid black; position: absolute; z-index: 99; width: 320px; left: 130px; top: 110px;">
+                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #dc3545; box-shadow:5px 5px 20px 0 rgba(220,53,69,0.1), -5px -5px 20px 0 rgba(220,53,69,0.1); position: absolute; z-index: 99; width: 385px; left: 15px; top: 130px;">
 
                         </div>
 
@@ -108,7 +108,7 @@
                         <p id="company_standard_text_A" style="cursor: pointer" class="text-warning fs-1 bg-white"
                            onclick="getAlarmList(2)">0</p>
                         <div id="company_1" class="alarmList"
-                             style="display: none; background-color: white;color: black;border: 2px solid black; position: absolute; z-index: 99; width: 320px; left: 130px; top: 110px;">
+                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #ffc107; box-shadow:5px 5px 20px 0 rgba(255,193,7,0.1), -5px -5px 20px 0 rgba(255,193,7,0.1); position: absolute; z-index: 99; width: 385px; left: 15px; top: 130px;">
 
                         </div>
                     </div>
@@ -1640,9 +1640,9 @@
             $('#legal_1').css('display', 'none');
             $('#company_1').css('display', 'none');
             $('#management_1').css('display', 'none');
-            let innerHTML1 = "<div style='font-weight:bold;' id='l'>법적기준 초과<button style='margin-left: 190px; background: white; border: solid white; font-weight: bold;' onclick=\"$('#legal_1').css('display','none')\">X</button></div>";
-            let innerHTML2 = "<div style='font-weight:bold;' id='c'>사내기준 초과<button style='margin-left: 190px; background: white; border: solid white; font-weight: bold;' onclick=\"$('#company_1').css('display','none')\">X</button></div>";
-            let innerHTML3 = "<div style='font-weight:bold;' id='m'>관리기준 초과<button style='margin-left: 190px; background: white; border: solid white; font-weight: bold;' onclick=\"$('#management_1').css('display','none')\">X</button></div>";
+            let innerHTML1 = "<div style='font-weight:bold;' id='l' class='alarmTitle'><p>법적기준 초과</p><button style='background: white; border: solid white; font-weight: bold; font-size: 1.2rem;' onclick=\"$('#legal_1').css('display','none')\">X</button></div>";
+            let innerHTML2 = "<div style='font-weight:bold;' id='c' class='alarmTitle'><p>사내기준 초과</p><button style='background: white; border: solid white; font-weight: bold; font-size: 1.2rem;' onclick=\"$('#company_1').css('display','none')\">X</button></div>";
+            let innerHTML3 = "<div style='font-weight:bold;' id='m' class='alarmTitle'><p>관리기준 초과</p><button style='background: white; border: solid white; font-weight: bold; font-size: 1.2rem;' onclick=\"$('#management_1').css('display','none')\">X</button></div>";
 
             //그룹 측정소에서 ON된 센서 추출
             $.ajax({
@@ -1675,27 +1675,27 @@
                                 if (arr[i].grade == grade) {
                                     if (excess == "danger") {
                                         if (document.getElementById('l') == null) {
-                                            innerHTML1 += "<div><span  id='dangerInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 법적기준 초과( " + value + " )";
+                                            innerHTML1 += "<div><span  id='dangerInner" + i + "' style='display: inline-block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 법적기준 초과( " + value + " )";
                                         } else {
-                                            innerHTML1 = "<div><span  id='dangerInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 법적기준 초과( " + value + " )";
+                                            innerHTML1 = "<div><span  id='dangerInner" + i + "' style='display: inline-block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 법적기준 초과( " + value + " )";
                                         }
                                         innerHTML1 += "<button class='btn btn-primary' style='margin-left:10px; padding:1px 7px;' data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
                                         $('#legal_1').append(innerHTML1);
                                         $('#legal_1').css('display', 'block');
                                     } else if (excess == "warning") {
                                         if (document.getElementById('c') == null) {
-                                            innerHTML2 += "<div><span  id='warningInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 사내기준 초과( " + value + " )";
+                                            innerHTML2 += "<div><span  id='warningInner" + i + "' style='display: inline-block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 사내기준 초과( " + value + " )";
                                         } else {
-                                            innerHTML2 = "<div><span  id='warningInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 사내기준 초과( " + value + " )";
+                                            innerHTML2 = "<div><span  id='warningInner" + i + "' style='display: inline-block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 사내기준 초과( " + value + " )";
                                         }
                                         innerHTML2 += "<button class='btn btn-primary' style='margin-left:10px; padding:1px 7px;' data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
                                         $('#company_1').append(innerHTML2);
                                         $('#company_1').css('display', 'block');
                                     } else if (excess == "caution") {
                                         if (document.getElementById('m') == null) {
-                                            innerHTML3 += "<div><span  id='cautionInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 관리기준 초과( " + value + " )";
+                                            innerHTML3 += "<div><span  id='cautionInner" + i + "' style='display: inline-block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 관리기준 초과( " + value + " )";
                                         } else {
-                                            innerHTML3 = "<div><span  id='cautionInner" + i + "' style='display: block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 관리기준 초과( " + value + " )";
+                                            innerHTML3 = "<div><span  id='cautionInner" + i + "' style='display: inline-block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 관리기준 초과( " + value + " )";
                                         }
                                         innerHTML3 += "<button class='btn btn-primary' style='margin-left:10px; padding:1px 7px;' data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
                                         $('#management_1').append(innerHTML3);
