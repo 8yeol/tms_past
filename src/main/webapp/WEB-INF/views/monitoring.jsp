@@ -1065,19 +1065,19 @@
 
                     }
                 }
-                if (legalSCount > 0) {
-                    flashing(flashCheck, "bg-danger");
-                    alarmTone('on');
-                } else if (companySCount > 0) {
-                    flashing(flashCheck, "bg-warning");
-                    alarmTone('on');
-                } else if (managementSCount > 0) {
-                    flashing(flashCheck, "bg-success");
-                    alarmTone('on');
-                } else {
-                    flashing(flashCheck, null);
-                    alarmTone('off');
-                }
+                // if (legalSCount > 0) {
+                //     flashing(flashCheck, "bg-danger");
+                //     alarmTone('on');
+                // } else if (companySCount > 0) {
+                //     flashing(flashCheck, "bg-warning");
+                //     alarmTone('on');
+                // } else if (managementSCount > 0) {
+                //     flashing(flashCheck, "bg-success");
+                //     alarmTone('on');
+                // } else {
+                //     flashing(flashCheck, null);
+                //     alarmTone('off');
+                // }
                 var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
                 var run = sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail);
                 if (runPercent == 'NaN') {
@@ -1119,15 +1119,15 @@
             $("#statusOn").text(sensorStatusSuccess); //정상
             $("#statusOff").text(sensorStatusFail); //통신불량
             $("#monitoringOff").text(allMonitoringOFF); //모니터링OFF 개수
-            if (state == "1") {
-                $("#legal_standard_text_A").text(legalSCount); //법적기준 Over
-                $("#company_standard_text_A").text(companySCount); //사내기준 Over
-                $("#management_standard_text_A").text(managementSCount); //관리기준 Over
-            } else {
-                $("#legal_standard_text_B").text(legalSCount); //법적기준 Over
-                $("#company_standard_text_B").text(companySCount); //사내기준 Over
-                $("#management_standard_text_B").text(managementSCount); //관리기준 Over
-            }
+            // if (state == "1") {
+            //     $("#legal_standard_text_A").text(legalSCount); //법적기준 Over
+            //     $("#company_standard_text_A").text(companySCount); //사내기준 Over
+            //     $("#management_standard_text_A").text(managementSCount); //관리기준 Over
+            // } else {
+            //     $("#legal_standard_text_B").text(legalSCount); //법적기준 Over
+            //     $("#company_standard_text_B").text(companySCount); //사내기준 Over
+            //     $("#management_standard_text_B").text(managementSCount); //관리기준 Over
+            // }
         }
 
         /**
@@ -1511,10 +1511,14 @@
 
         function excess() {
             addExcessData();
+            getAlarmListNum();
 
             setInterval(function () {
                 addExcessData();
-            }, 10000)
+            }, 10000);
+            setInterval(function () {
+                getAlarmListNum();
+            }, 10000);
 
             // 매 30초마다 실행되게 하는 함수
             /*
@@ -1570,6 +1574,63 @@
                 }
             });
         }
+        function getAlarmListNum() {
+            let state = ${state};
+            let legalSCount = 0, companySCount = 0, managementSCount = 0;
+            $.ajax({
+                url: '<%=cp%>/getAlarmData',
+                dataType: 'json',
+                data: {"num": "2"},
+                async: false,
+                success: function (data) {
+                    const arr = data;
+                    if (arr != undefined) {
+                        for (let i = 0; i < arr.length; i++) {
+                            if (arr[i].status == "true") {
+                                let excess = arr[i].grade;
+                                if (excess == 1) {
+                                    excess = "danger";
+                                    legalSCount +=1;
+                                } else if (excess == 2) {
+                                    excess = "warning";
+                                    companySCount +=1;
+                                } else {
+                                    excess = "caution";
+                                    managementSCount+=1;
+                                }
+                            }
+                        }
+                        if (legalSCount > 0) {
+                            flashing(flashCheck, "bg-danger");
+                            alarmTone('on');
+                        } else if (companySCount > 0) {
+                            flashing(flashCheck, "bg-warning");
+                            alarmTone('on');
+                        } else if (managementSCount > 0) {
+                            flashing(flashCheck, "bg-success");
+                            alarmTone('on');
+                        } else {
+                            flashing(flashCheck, null);
+                            alarmTone('off');
+                        }
+                    }
+                    if (state == "1") {
+                        $("#legal_standard_text_A").text(legalSCount); //법적기준 Over
+                        $("#company_standard_text_A").text(companySCount); //사내기준 Over
+                        $("#management_standard_text_A").text(managementSCount); //관리기준 Over
+                    } else {
+                        $("#legal_standard_text_B").text(legalSCount); //법적기준 Over
+                        $("#company_standard_text_B").text(companySCount); //사내기준 Over
+                        $("#management_standard_text_B").text(managementSCount); //관리기준 Over
+                    }
+                },
+                error: function (request, status, error) {
+                    console.log(error)
+                }
+            });
+
+        }
+
 
         //알림리스트 불러오기
         function getAlarmList(grade) {
