@@ -645,7 +645,10 @@
         });
         $("input[name='percent']").bind('keyup', function (e) {
             var rgx1 = /\D/g;
+            var rgx2 = /(\d+)(\d{3})/;
             var num = this.value.replace(rgx1, "");
+
+            while (rgx2.test(num)) num = num.replace(rgx2, '$1' + ',' + '$2');
             this.value = num;
         });
     });
@@ -687,11 +690,15 @@
                             data[i].densityStandard = "";
                         }
                         let date = moment(data[i].date).format('yyyy-MM-DD HH:mm:ss');
+                        let emission = data[i].emissionsStandard;
+                        let density = data[i].densityStandard;
+                        const em = emission.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                        const de = density.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                         html =
                             "<td class='tableCode'>" + data[i].place + "</td>" +
                             "<td class='tableNaming'>" + data[i].naming + "</td>" +
-                            "<td>" + data[i].emissionsStandard + "</td>" +
-                            "<td>" + data[i].densityStandard + "</td>" +
+                            "<td>" + em + "</td>" +
+                            "<td>" + de + "</td>" +
                             "<td>" + data[i].formula + "</td>" +
                             "<td>" + date + "</td>";
                         if ('${state}' == '1') {
@@ -923,7 +930,9 @@
         valueCheck();
 
         var unComma = $("input[name='standard']").val().replace(/,/g, '');
+        var unComma2 = $("input[name='percent']").val().replace(/,/g, '');
         $("input[name='standard']").val(unComma);
+        $("input[name='percent']").val(unComma2);
 
         var form = $('#addStandard').serialize();
         standardAjax(form);
