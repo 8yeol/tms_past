@@ -548,7 +548,7 @@
         if (getCookie('isAlarm') == 'true') {
             $('.alarm').attr('src', "static/images/bellOn.png");
             getAlarm();
-            clearInterval(intervalAlarmOFF)
+            clearInterval(intervalAlarmOFF);
             intervalAlarmON = setInterval(function () {
                     getAlarm();
                 }

@@ -1760,6 +1760,16 @@
             $('#legal_1').css('display', 'none');
             $('#company_1').css('display', 'none');
             $('#management_1').css('display', 'none');
+            if (getCookie('isAlarm') == 'true') {
+                $('.alarm').attr('src', "static/images/bellOn.png");
+                getAlarm();
+            }else{
+                $('.alarm').attr('src', "static/images/bellOff.png");
+                getAlarm();
+                alarmEmpty();
+                viewCount();
+            }
+            getAlarmListNum();
         }
 
         function customSwal(text) {
