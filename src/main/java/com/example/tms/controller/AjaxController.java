@@ -1514,6 +1514,18 @@ public class AjaxController {
                 EmissionsStandardSetting ess = new EmissionsStandardSetting(place, naming, 0, 0, tableName, "", new Date());
                 emissionsStandardSettingRepository.save(ess);
                 inputLogSetting("'" + place + " - " + naming + "'" + " 센서 연간 배출 허용 기준 추가", "설정", principal);
+
+                //연간 배출량 추이 생성
+                LocalDate date = LocalDate.now();
+                int year = date.getYear();
+                int pyear = year-1;
+
+                MonthlyEmissions mon = new MonthlyEmissions(tableName, year, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, new Date());
+                MonthlyEmissions pmon = new MonthlyEmissions(tableName, pyear, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, new Date());
+                monthlyEmissionsRepository.save(mon);
+                monthlyEmissionsRepository.save(pmon);
+                inputLogSetting("'" + place + " - " + naming + "'" + " 센서 "+year+"년 연간 배출량 추이 추가", "설정", principal);
+                inputLogSetting("'" + place + " - " + naming + "'" + " 센서 "+pyear+"년 연간 배출량 추이 추가", "설정", principal);
             }
             // 추가
             saveNotifySetting(tableName, false, "00:00", "23:59");
@@ -1720,6 +1732,12 @@ public class AjaxController {
 
         return monthlyList;
     }
+    @RequestMapping(value = "/getSen")
+    public List<SensorList> getSen() {
+        List<SensorList> data = sensorListRepository.findByClassification("NOX");
+        return data;
+    }
+
 
     /**
      * 연간 배출량 추이 조회
@@ -1727,8 +1745,8 @@ public class AjaxController {
      * @return 연간 배출량 추이
      */
     @RequestMapping(value = "/getMonthlyEmission")
-    public List<MonthlyEmissions> getMonthlyEmission() {
-        List<MonthlyEmissions> data = monthlyEmissionsRepository.findAll();
+    public List<MonthlyEmissions> getMonthlyEmission(@RequestParam("sensor") String sensor) {
+        List<MonthlyEmissions> data = monthlyEmissionsRepository.findBySensor(sensor);
         data = data.stream().sorted(Comparator.comparing(MonthlyEmissions::getYear).reversed()).collect(Collectors.toList());
         return data;
     }
@@ -1739,10 +1757,10 @@ public class AjaxController {
      * @param dList 월별 데이터
      */
     @RequestMapping(value = "/saveMEmission")
-    public void saveMEmission(@RequestParam("dList[]") List<Integer> dList, Principal principal) {
+    public void saveMEmission(@RequestParam("dList[]") List<Integer> dList, @RequestParam("sensor") String sensorname,Principal principal) {
         LocalDate nowDate = LocalDate.now();
         int year = nowDate.getYear();
-        MonthlyEmissions data = monthlyEmissionsRepository.findByYear(dList.get(0));
+        MonthlyEmissions data = monthlyEmissionsRepository.findBySensorAndYear(sensorname, dList.get(0));
         data.setJan(dList.get(1));
         data.setFeb(dList.get(2));
         data.setMar(dList.get(3));

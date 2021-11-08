@@ -27,4 +27,22 @@ public class MonthlyEmissions {
     public int nov;
     public int dec;
     public Date updateTime;
+
+    public MonthlyEmissions(String sensor, int year, int jan, int feb, int mar, int apr, int may, int jun, int jul, int aug, int sep, int oct, int nov, int dec, Date updateTime) {
+        this.sensor= sensor;
+        this.year =year;
+        this.jan= jan;
+        this.feb = feb;
+        this.mar = mar;
+        this.apr = apr;
+        this.may = may;
+        this.jun = jun;
+        this.jul = jul;
+        this.aug = aug;
+        this.sep = sep;
+        this.oct = oct;
+        this.nov = nov;
+        this.dec = dec;
+        this.updateTime = updateTime;
+    }
 }

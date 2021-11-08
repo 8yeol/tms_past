@@ -273,9 +273,7 @@ public class Schedule {
 
         // 당해년도 데이터가 없는경우 새로 생성
         if (monthlyEmissions == null) {
-            monthlyEmissions = new MonthlyEmissions();
-            monthlyEmissions.setSensor(table);
-            monthlyEmissions.setYear(year);
+            monthlyEmissions = new MonthlyEmissions(table, year, 0,0,0,0,0,0,0,0,0,0,0,0, new Date());
         }
 
         // g > kg 환산

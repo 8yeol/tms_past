@@ -273,11 +273,11 @@
         border-bottom: 2px solid #212529;
     }
 
-    #paging1, #paging2 {
+    #paging1000, .pppp {
         text-align: right;
     }
 
-    #paging1 a, #paging2 a {
+    #paging1000 a, .pppp a {
         display: inline-block;
         min-width: 1.5em;
         padding: 0.5em 1em;
@@ -292,8 +292,8 @@
         border-radius: 50px !important;
     }
 
-    #paging1 a.current, #paging2 a.current,
-    #paging1 a:hover, #paging2 a:hover {
+    #paging1000 a.current, .pppp a.current,
+    #paging1000 a:hover, .pppp a:hover {
         color: #fff !important;
         border: 0px !important;
         background: #97bef8 !important;
@@ -400,7 +400,7 @@
 <%--                    <b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요.--%>
 <%--                </div>--%>
 <%--            </c:if>--%>
-            <div id="paging1">
+            <div id="paging1000">
             </div>
         </div>
 
@@ -409,42 +409,10 @@
             <div class="pb-2 justify-content-between" style="display: flex">
                 <h4 class="mt-2 fs-5 fw-bold" style="margin-left: 5px;">연간 배출량 추이 관리</h4>
             </div>
-                <span class="text-end w-100"style="display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem">단위 : kg</span>
-            <div class="tableWrap w-100">
-                <table class="table btnTable">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th>1월</th>
-                        <th>2월</th>
-                        <th>3월</th>
-                        <th>4월</th>
-                        <th>5월</th>
-                        <th>6월</th>
-                        <th>7월</th>
-                        <th>8월</th>
-                        <th>9월</th>
-                        <th>10월</th>
-                        <th>11월</th>
-                        <th>12월</th>
-                        <th>관리</th>
-                    </tr>
-                    </thead>
-
-                    <tbody id="tbody1">
-
-                    </tbody>
-                </table>
-                <div id="hiddendiv"></div>
-                <div id="paging2">
-                </div>
-            </div>
-
+            <div id="me"></div>
         </div>
-    </div>
 
-    <div class="col"
-         style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:20px;text-align: end"
+    <div style="color:red; font-size: 0.8rem; font-weight: normal;position: relative;top:20px;text-align: end"
          id="gradeText">
         * 배출량 모니터링 대상 설정은 '최고 관리자' 권한을 가진 회원만 가능합니다.
     </div>
@@ -612,10 +580,13 @@
         const dataPerpage = 3; //한페이지당 컬럼수
         const pageCount = 3; // 표시 페이지 이전 1,2,3 다음
         const currentPage = 1; //현재페이지
+        const table = 10000;
         const total1 = selectEmissionStandard(currentPage, dataPerpage);
-        const total2 = selectMEmission(currentPage, dataPerpage);
-        paging(total1, dataPerpage, pageCount, currentPage, 1);
-        paging(total2, dataPerpage, pageCount, currentPage, 2);
+        const total = selectMEmission(currentPage, dataPerpage ,table);
+        paging(total1, dataPerpage, pageCount, currentPage, 1000);
+        for(let i=0; i<total.length;i++){
+            paging(total[i], dataPerpage, pageCount, currentPage, i);
+        }
     });
     $(function () {
         if ('${state}' != '1') optionDisabled();
@@ -711,8 +682,8 @@
                 } else {
                     html =
                         "<td colspan='7' class='pt-4' style='text-align: center;font-size: 1.2rem;' id='nullStandard'>" +
-                        "연간 배출 허용 기준이 없습니다. <br>" +
-                        "<b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요." +
+                        "연간 배출 허용 기준 데이터가 없습니다. <br>" +
+                        "<b>환경 설정 - 센서 관리</b>에서 센서를 추가 해주세요." +
                         "</td>";
 
                     $('#tbody').append(html);
@@ -722,66 +693,148 @@
         });
         return total;
     }
-
-    //연간 배출량 추이 조회
-    function selectMEmission(currentPage, dataPerPage) {
-        const current = Number(currentPage);
-        const dataPer = Number(dataPerPage);
-        let total = 0;
+    //질소산화물 센서정보
+    function sen() {
+        let a="";
         $.ajax({
-            url: '<%=cp%>/getMonthlyEmission',
+            url: '<%=cp%>/getSen',
             dataType: 'json',
             async: false,
             cache: false,
             success: function (data) {
-                total = data.length;
-                $('#tbody1').empty();
-                if (data.length != 0) {
-                    let current1 = (current - 1) * dataPer;
-                    let dataPer1 = (current - 1) * dataPer + dataPer;
-                    if (data.length < dataPer1) {
-                        dataPer1 = data.length;
-                    }
-                    for (let i = current1; i < dataPer1; i++) {
-                        const innerHtml =
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].year + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].jan + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].feb + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].mar + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].apr + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].may + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].jun + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].jul + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].aug + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].sep + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].oct + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].nov + "</td>" +
-                            "<td name='m" + i + "' style='width: 7%'>" + data[i].dec + "</td>" +
-                            "<td><input type = 'button' id='b" + i + "' value='수정' onclick='dataUpdate(this, " + current + "," + dataPer + ")'></td>";
-                        const elem = document.createElement('tr');
-                        elem.setAttribute('id', 'data' + i);
-                        elem.innerHTML = innerHtml;
-                        document.getElementById('tbody1').append(elem);
-                    }
-                } else {
-                    const none =
-                        "<td colspan='14'>" +
-                        "<div class='fw-bold' style='padding-top : 20px;'>등록된 데이터가 없습니다.</div>" +
-                        "</td>";
-                    $('#tbody1').append(none);
-                }
+                a = data;
             },
             error: function () {
             }
         });
+        return a;
+    }
+
+    //연간 배출량 추이 조회
+    function selectMEmission(currentPage, dataPerPage, tableNum) {
+        const a = sen();
+        let total = [];
+        if(a.length !=0){
+            if(tableNum == 10000){
+                $('#me').empty();
+                for(let j=0; j<a.length;j++) {
+                    const sensor = a[j].tableName;
+                    let innerHtml =
+                        "<div id = 't"+j+"'>"+
+                        "<div id = 'u"+j+"'>"+
+                        "<div class='fs-6 fw-bold'>" + a[j].place + " - " + a[j].naming + "</div>" +
+                        "<span class='text-end w-100' style='display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem'>단위 : kg</span>" +
+                        "<div class='table' ><table class='table btnTable'><thead><tr>" +
+                        "<th></th><th>1월</th><th>2월</th><th>3월</th><th>4월</th><th>5월</th><th>6월</th><th>7월</th><th>8월</th><th>9월</th><th>10월</th><th>11월</th><th>12월</th><th>관리</th>" +
+                        "</tr></thead><tbody id='tbody" + j + "'></tbody></table></div><div id='hiddendiv" + j + "'></div></div><div style='margin-bottom:30px;' class='pppp' id='paging" + j + "'>" +
+                        "</div></div>";
+                    $('#me').append(innerHtml);
+                    $.ajax({
+                        url: '<%=cp%>/getMonthlyEmission',
+                        dataType: 'json',
+                        async: false,
+                        cache: false,
+                        data: {"sensor": sensor},
+                        success: function (data) {
+                            total.push(data.length);
+                            let current1 = (Number(currentPage) - 1) * Number(dataPerPage);
+                            let dataPer1 = (Number(currentPage) - 1) * Number(dataPerPage) + Number(dataPerPage);
+                            if (data.length < dataPer1) {
+                                dataPer1 = data.length;
+                            }
+                            for (let i = current1; i < dataPer1; i++) {
+                                const innerHTML =
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].year + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].jan + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].feb + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].mar + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].apr + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].may + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].jun + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].jul + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].aug + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].sep + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].oct + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].nov + "</td>" +
+                                    "<td name='m"+j+"_"+i+"' style='width: 7%'>" + data[i].dec + "</td>" +
+                                    "<td><input type = 'button' id='b"+j+"_"+i+"' value='수정' onclick='dataUpdate(this, " + Number(currentPage) + "," + Number(dataPerPage) + ","+sensor+")'></td>";
+                                const elem = document.createElement('tr');
+                                elem.setAttribute('id', 'data'+j+'_'+i);
+                                elem.innerHTML = innerHTML;
+                                document.getElementById('tbody'+j).append(elem);
+                            }
+                        },
+                        error: function () {
+                        }
+                    });
+                }
+            }else{
+                const t = tableNum;
+                $('#u'+t).empty();
+                const sensor = a[t].tableName;
+                let innerHtml =
+                    "<div class='fs-6 fw-bold'>" + a[t].place + " - " + a[t].naming + "</div>" +
+                    "<span class='text-end w-100' style='display: inline-block; margin-bottom: 5px; margin-right: 5px; font-size: .8rem'>단위 : kg</span>" +
+                    "<div class='table' ><table class='table btnTable'><thead><tr>" +
+                    "<th></th><th>1월</th><th>2월</th><th>3월</th><th>4월</th><th>5월</th><th>6월</th><th>7월</th><th>8월</th><th>9월</th><th>10월</th><th>11월</th><th>12월</th><th>관리</th>" +
+                    "</tr></thead><tbody id='tbody" + t + "'></tbody></table></div><div id='hiddendiv" + t + "'></div>";
+                $('#u'+t).append(innerHtml);
+                $.ajax({
+                    url: '<%=cp%>/getMonthlyEmission',
+                    dataType: 'json',
+                    async: false,
+                    cache: false,
+                    data: {"sensor": sensor},
+                    success: function (data) {
+                        total.push(data.length);
+                        let current1 = (Number(currentPage) - 1) * Number(dataPerPage);
+                        let dataPer1 = (Number(currentPage) - 1) * Number(dataPerPage) + Number(dataPerPage);
+                        if (data.length < dataPer1) {
+                            dataPer1 = data.length;
+                        }
+                        for (let i = current1; i < dataPer1; i++) {
+                            const innerHTML =
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].year + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].jan + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].feb + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].mar + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].apr + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].may + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].jun + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].jul + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].aug + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].sep + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].oct + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].nov + "</td>" +
+                                "<td name='m"+t+"_"+i+"' style='width: 7%'>" + data[i].dec + "</td>" +
+                                "<td><input type = 'button' id='b"+t+"_"+i+"' value='수정' onclick='dataUpdate(this, " + Number(currentPage) + "," + Number(dataPerPage) + ","+sensor+")'></td>";
+                            const elem = document.createElement('tr');
+                            elem.setAttribute('id', 'data'+t+'_'+i);
+                            elem.innerHTML = innerHTML;
+                            document.getElementById('tbody'+t).append(elem);
+                        }
+                    },
+                    error: function () {
+                    }
+                });
+            }
+        }else {
+            const none =
+                //"<td colspan='14'>" +
+                "<div style='padding-top : 50px;text-align: center;font-size: 1.2rem;'>연간 배출량 추이 데이터가 없습니다. <br> <b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요.</div>" ;
+                //"</td>";
+            $('#me').append(none);
+        }
         return total;
     }
 
     //배출량 추이관리 수정
-    function dataUpdate(x, current, dataPer) {
+    function dataUpdate(x, current, dataPer, sensor) {
+        const arr = Array.from(sensor);
+        const sensor1 = arr[0].id;
         const dList = new Array();
         const id = x.id;
-        const num = id.replace(/[^0-9]/g, '');
+        const num = id.replace('b','');
         $('td[name=m' + num + ']').each(function () {
             dList.push($(this).text());
         });
@@ -800,12 +853,16 @@
             "<td style='width: 7%'><input id = '"+num+"n10' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[10] + ")' value='" + dList[10] + "'></td>" +
             "<td style='width: 7%'><input id = '"+num+"n11' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[11] + ")' value='" + dList[11] + "'></td>" +
             "<td style='width: 7%'><input id = '"+num+"n12' name='n" + num + "' style = 'width:80%;' type='number' min='0' onchange='hiddendata(this," + dList[12] + ")' value='" + dList[12] + "'></td>" +
-            "<td><input type = 'button' value='확인' id='s" + num + "' class='active' onclick='savedata(" + num + "," + current + "," + dataPer + ")'></td>";
+            "<td><input type = 'button' value='확인' id='s" + num + "' class='active' onclick='savedata(s" + num + "," + current + "," + dataPer + ","+sensor1+")'></td>";
         $('#data' + num).append(innerHtml);
     }
 
     //수정데이터 저장
-    function savedata(num, current, dataPer) {
+    function savedata(num1, current, dataPer, sensor) {
+        const arr = Array.from(sensor);
+        const sensor1 = arr[0].id;
+        const num = num1.id.replace('s','');
+        const tableNum = num.split('_');
         const dList = new Array();
         dList.push($('td[name=n' + num + ']').text());
         $('input[name=n' + num + ']').each(function () {
@@ -827,24 +884,35 @@
                 type: 'POST',
                 async: false,
                 cache: false,
-                data: {"dList": dList},
+                data: {"dList": dList,
+                        "sensor": sensor1
+                },
                 success: function (data) {
                 },
                 error: function () {
                 }
             })
         }
-        selectMEmission(current, dataPer);
+        Swal.fire({
+            icon: 'success',
+            title: '수정 완료',
+            text: '연간 배출량 추이가 수정 되었습니다.',
+            timer: 1500
+        })
+        selectMEmission(current, dataPer, tableNum[0]);
     }
 
     //수정한 데이터
     function hiddendata(x, y) {
+
         const id = x.id;
         const name = x.name;
         const num = id.split('n');
         const num1 = num[0];
         const num2 = num[1];
-        const namenum = name.replace(/[^0-9]/g, '');
+        const namenum = name.replace('n', '');
+        const namenum1 = namenum.split('_');
+        const namenum2 = namenum1[0];
         const value = document.getElementById(id).value;
         if (value == "" || value == null) {
             Swal.fire({
@@ -857,7 +925,7 @@
         }
         const innerHtml =
             "<input type='hidden' name='h" + namenum + "' id='"+num1+"h" + num2 + "' value='" + value + "'>";
-        $('#hiddendiv').append(innerHtml);
+        $('#hiddendiv'+namenum2).append(innerHtml);
     }
 
     // //기준 추가
@@ -1158,7 +1226,7 @@
     //         },
     //     },
     // });
-    function paging(totalData, dataPerPage, pageCount, currentPage, tableNum) {
+    function paging(totalData, dataPerPage, pageCount, currentPage, tableNum) { //tableNum 테이블 페이징 번호
         const totalPage = Math.ceil(totalData / dataPerPage);    // 총 페이지 수
         const pageGroup = Math.ceil(currentPage / pageCount);    // 페이지 그룹
         let last = pageGroup * pageCount;    // 화면에 보여질 마지막 페이지 번호
@@ -1201,12 +1269,12 @@
             if ($id == "next" + tableNum) selectedPage = next;
             if ($id == "prev" + tableNum) selectedPage = prev;
             if ($id == "end" + tableNum) selectedPage = totalPage;
-            paging(totalData, dataPerPage, pageCount, selectedPage, tableNum);
-            if (tableNum == 1) {
+            if (tableNum == 1000) {
                 selectEmissionStandard(selectedPage, dataPerPage);
             }else{
-                selectMEmission(selectedPage, dataPerPage);
+                selectMEmission(selectedPage, dataPerPage, tableNum);
             }
+            paging(totalData, dataPerPage, pageCount, selectedPage, tableNum);
 
         });
 
