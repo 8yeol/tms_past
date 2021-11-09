@@ -463,8 +463,7 @@
 <header class="p-4 bg-primary text-white" id="mobile">
     <div id="mySidebar" class="sidebar">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a class="fw-bold mt-5" href="<%=cp%>/dashboard">대시보드</a>
-        <a class="fw-bold mt-1" href="<%=cp%>/alarm">알림</a>
+
         <div class="dropdown">
             <button class="dropbtn fw-bold mt-1 d-block">모니터링</button>
             <div class="dropdown-content ms-4">
@@ -472,6 +471,9 @@
                 <a href="<%=cp%>/sensor" class="fs-6 fw-bold">상세화면</a>
             </div>
         </div>
+
+        <a class="fw-bold mt-5" href="<%=cp%>/dashboard">대시보드</a>
+        <a class="fw-bold mt-1" href="<%=cp%>/alarm">알림</a>
         <div class="dropdown">
             <button class="dropbtn fw-bold mt-1 d-block">분석 및 통계</button>
             <div class="dropdown-content ms-4">
