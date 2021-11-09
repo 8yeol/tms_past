@@ -97,7 +97,7 @@
                         <p id="legal_standard_text_A" style="cursor: pointer" class="text-danger fs-1 bg-white"
                            onclick="getAlarmList(1)">0</p>
                         <div id="legal_1" class="alarmList"
-                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #dc3545; box-shadow:5px 5px 20px 0 rgba(220,53,69,0.1), -5px -5px 20px 0 rgba(220,53,69,0.1); position: absolute; z-index: 99; width: 385px; left: 15px; top: 130px;">
+                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #dc3545; box-shadow:5px 5px 20px 0 rgba(220,53,69,0.1), -5px -5px 20px 0 rgba(220,53,69,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
 
                         </div>
 
@@ -108,7 +108,7 @@
                         <p id="company_standard_text_A" style="cursor: pointer" class="text-warning fs-1 bg-white"
                            onclick="getAlarmList(2)">0</p>
                         <div id="company_1" class="alarmList"
-                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #ffc107; box-shadow:5px 5px 20px 0 rgba(255,193,7,0.1), -5px -5px 20px 0 rgba(255,193,7,0.1); position: absolute; z-index: 99; width: 385px; left: 15px; top: 130px;">
+                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #ffc107; box-shadow:5px 5px 20px 0 rgba(255,193,7,0.1), -5px -5px 20px 0 rgba(255,193,7,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
 
                         </div>
                     </div>
@@ -136,20 +136,6 @@
                     <%--                    </div>--%>
                 </c:otherwise>
             </c:choose>
-            <!-- 관리기준 임시삭제
-            <div class="topDash-r">
-                <span class="text-center fw-bold bg-danger">법적기준 초과</span>
-                <p id="legal_standard_text_A" class="text-danger fs-1 bg-white" onmouseover="$('#legal').css('display','block')" onmouseout="$('#legal').css('display','none')">0</p>
-            </div>
-            <div class="topDash-r">
-                <span class="text-center fw-bold bg-warning">사내기준 초과</span>
-                <p id="company_standard_text_A" class="text-warning fs-1 bg-white" onmouseover="$('#company').css('display','block')" onmouseout="$('#company').css('display','none')">0</p>
-            </div>
-            <div class="topDash-r">
-                <span class="text-center fw-bold bg-success">관리기준 초과</span>
-                <p id="management_standard_text_A" class="text-success fs-1 bg-white" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>
-            </div>
-            -->
         </div>
     </div>
     <%--상단 대시보드 end--%>

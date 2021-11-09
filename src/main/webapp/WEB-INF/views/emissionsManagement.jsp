@@ -354,52 +354,11 @@
                 </tr>
                 </thead>
                 <tbody id="tbody" style="vertical-align: middle;">
-<%--                <c:forEach items="${standard}" var="standard" varStatus="i">--%>
 
-<%--                    <tr>--%>
-<%--                        <td class="tableCode">${standard.place}</td>--%>
-<%--                        <td class="tableNaming">${standard.naming}</td>--%>
-
-<%--                        <c:choose>--%>
-<%--                            <c:when test="${standard.emissionsStandard eq 0}">--%>
-<%--                                <td></td>--%>
-<%--                            </c:when>--%>
-<%--                            <c:when test="${standard.emissionsStandard ne 0}">--%>
-<%--                                <td><fmt:formatNumber value="${standard.emissionsStandard}"/></td>--%>
-<%--                            </c:when>--%>
-<%--                        </c:choose>--%>
-
-<%--                        <c:choose>--%>
-<%--                            <c:when test="${standard.densityStandard eq 0}">--%>
-<%--                                <td></td>--%>
-<%--                            </c:when>--%>
-<%--                            <c:when test="${standard.densityStandard ne 0}">--%>
-<%--                                <td>${standard.densityStandard}</td>--%>
-<%--                            </c:when>--%>
-<%--                        </c:choose>--%>
-
-<%--                        <td>${standard.formula}</td>--%>
-<%--                        <td><fmt:formatDate value="${standard.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>--%>
-<%--                        <td>--%>
-<%--                            <c:if test="${state == 1}">--%>
-<%--                                <i onclick="clickModal(this)" class="fas fa-edit me-2" data-bs-toggle="modal"--%>
-<%--                                   data-bs-target="#addModal" id="${standard.tableName}"></i>--%>
-<%--                                <!--<i class="fas fa-times" onclick="deleteModal(${standard.tableName})"></i>-->--%>
-<%--                            </c:if>--%>
-<%--                        </td>--%>
-<%--                    </tr>--%>
-<%--                </c:forEach>--%>
                 </tbody>
 
             </table>
-<%--            <!--  Standard == null -->--%>
-<%--            <c:if test="${empty standard}">--%>
-<%--                <div class="pt-4" style="text-align: center;font-size: 1.2rem;position: relative;top: -150px;"--%>
-<%--                     id="nullStandard">--%>
-<%--                    연간 배출 허용 기준이 없습니다. <br>--%>
-<%--                    <b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요.--%>
-<%--                </div>--%>
-<%--            </c:if>--%>
+
             <div id="paging1000">
             </div>
         </div>
@@ -820,9 +779,7 @@
             }
         }else {
             const none =
-                //"<td colspan='14'>" +
                 "<div style='padding-top : 50px;text-align: center;font-size: 1.2rem;'>연간 배출량 추이 데이터가 없습니다. <br> <b>환경 설정 - 센서 관리</b> 에서 센서를 추가 해주세요.</div>" ;
-                //"</td>";
             $('#me').append(none);
         }
         return total;
