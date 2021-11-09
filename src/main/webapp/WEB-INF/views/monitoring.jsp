@@ -97,7 +97,7 @@
                         <p id="legal_standard_text_A" style="cursor: pointer" class="text-danger fs-1 bg-white"
                            onclick="getAlarmList(1)">0</p>
                         <div id="legal_1" class="alarmList"
-                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #dc3545; box-shadow:5px 5px 20px 0 rgba(220,53,69,0.1), -5px -5px 20px 0 rgba(220,53,69,0.1); position: absolute; z-index: 99; width: 385px; left: 15px; top: 130px;">
+                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #dc3545; box-shadow:5px 5px 20px 0 rgba(220,53,69,0.1), -5px -5px 20px 0 rgba(220,53,69,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
 
                         </div>
 
@@ -108,7 +108,7 @@
                         <p id="company_standard_text_A" style="cursor: pointer" class="text-warning fs-1 bg-white"
                            onclick="getAlarmList(2)">0</p>
                         <div id="company_1" class="alarmList"
-                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #ffc107; box-shadow:5px 5px 20px 0 rgba(255,193,7,0.1), -5px -5px 20px 0 rgba(255,193,7,0.1); position: absolute; z-index: 99; width: 385px; left: 15px; top: 130px;">
+                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #ffc107; box-shadow:5px 5px 20px 0 rgba(255,193,7,0.1), -5px -5px 20px 0 rgba(255,193,7,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
 
                         </div>
                     </div>
