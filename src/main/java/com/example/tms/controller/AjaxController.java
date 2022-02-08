@@ -636,7 +636,7 @@ public class AjaxController {
                     excess.put("value", notificationList.get(j).getValue());
                     excess.put("place", notificationList.get(j).getPlace());
                     excess.put("grade", notificationList.get(j).getGrade());
-                    excess.put("status", notificationList.get(j).getStatus());
+                    excess.put("status", notificationList.get(j).isStatus());
                     excess.put("up_time", notificationList.get(j).getUp_time());
                     if (array.size() < falseCount.size()) {
                         array.add(excess);
@@ -649,7 +649,7 @@ public class AjaxController {
                 excess.put("value", notificationList.get(0).getValue());
                 excess.put("place", notificationList.get(0).getPlace());
                 excess.put("grade", notificationList.get(0).getGrade());
-                excess.put("status", notificationList.get(0).getStatus());
+                excess.put("status", notificationList.get(0).isStatus());
                 excess.put("up_time", notificationList.get(0).getUp_time());
                 if (array.size() < falseCount.size()) {
                     array.add(excess);
@@ -737,7 +737,7 @@ public class AjaxController {
                 String sensor = jsonObject.get("naming").toString();
                 String name = jsonObject.get("tableName").toString();
                 String value = jsonObject.get("value").toString();
-                String status = jsonObject.get("state").toString();
+                boolean status = (boolean) jsonObject.get("state");
                 boolean check = false;
                 String checkName = "";
                 Date time = (Date) jsonObject.get("up_time");
@@ -765,16 +765,6 @@ public class AjaxController {
         }
     }
 
-    /**
-     * 측정소 추가, 수정
-     * 수정시 센서 상세설정에서 측정소명도 같이 변경
-     *
-     * @param name       측정소명
-     * @param location   위치
-     * @param admin      담당자 명
-     * @param tel        연락처
-     * @param hiddenCode 수정하고 싶은 측정소명
-     */
     @RequestMapping(value = "/saveCheck")
     public void savePlace(@RequestParam(value = "name") String name, @RequestParam(value = "sensor") String sensor, @RequestParam(value = "uptime") String up_time, Principal principal) {
         List<NotificationList> notificationList = notificationListRepository.findBySensor(sensor);

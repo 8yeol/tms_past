@@ -19,14 +19,14 @@ public class NotificationList {
     public String name;
     public String value;
     public int grade;
-    public String status;
+    public boolean status;
     public boolean check;
     public String checkName;
     @JsonFormat(timezone = "Asia/Seoul")
     public Date up_time;
 
     @Builder
-    public NotificationList(String place, String sensor, String name, String value, int grade, String status, boolean check, String checkName,Date up_time) {
+    public NotificationList(String place, String sensor, String name, String value, int grade, boolean status, boolean check, String checkName,Date up_time) {
         this.place = place;
         this.sensor = sensor;
         this.name = name;

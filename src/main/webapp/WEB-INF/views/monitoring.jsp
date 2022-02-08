@@ -1572,7 +1572,7 @@
                     const arr = data;
                     if (arr != undefined) {
                         for (let i = 0; i < arr.length; i++) {
-                            if (arr[i].status == "true") {
+                            if (arr[i].status == true) {
                                 let excess = arr[i].grade;
                                 if (excess == 1) {
                                     excess = "danger";
@@ -1645,7 +1645,7 @@
                     });
                     if (arr != undefined) {
                         for (let i = arr.length - 1; i >= 0; i--) {
-                            if (arr[i].status == "true") {
+                            if (arr[i].status == true) {
                                 let excess = arr[i].grade;
                                 const place = arr[i].place;
                                 const naming = arr[i].sensor;
