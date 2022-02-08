@@ -2,7 +2,7 @@ package com.example.tms.mongo;
 
 import com.example.tms.entity.ChartData;
 import com.example.tms.entity.Log;
-import com.example.tms.entity.NotificationList;
+import com.example.tms.entity.NotificationList1;
 import com.example.tms.entity.Sensor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -98,9 +98,9 @@ public class MongoQuary {
                 sort
         );
 
-        AggregationResults<NotificationList> results = mongoTemplate.aggregate(agg, "notification_list", NotificationList.class);
+        AggregationResults<NotificationList1> results = mongoTemplate.aggregate(agg, "notification_list", NotificationList1.class);
 
-        List<NotificationList> result = results.getMappedResults();
+        List<NotificationList1> result = results.getMappedResults();
 
         return result;
     }
