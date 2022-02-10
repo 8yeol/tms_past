@@ -53,25 +53,21 @@ public class Schedule {
         LocalDate nowDate = LocalDate.now();
         // 어제 날짜 불러오기
         LocalDate yesterday = nowDate.minusDays(1);
-
         List<Place> placeList = placeRepository.findAll();
         for (Place place : placeList) {
             String placeName = place.getName();
-            NotificationDayStatistics yesterdayData = notificationDayStatisticsRepository.findByDayAndPlace(String.valueOf(yesterday), placeName);
-
+            NotificationDayStatistics yesterdayData = notificationDayStatisticsRepository.findByDayAndPlace(String.valueOf(yesterday), placeName); //전날 알림 현황 조회
             // 어제 날짜 데이터가 없는 경우 new 객체 생성 후 데이터 set
             if (yesterdayData == null) {
                 yesterdayData = new NotificationDayStatistics();
             }
             yesterdayData.setDay(String.valueOf(yesterday));
-
             int[] dayValue = getReferenceValueCount(String.valueOf(yesterday), String.valueOf(yesterday), placeName);
             yesterdayData.setLegalCount(dayValue[0]);
             yesterdayData.setCompanyCount(dayValue[1]);
             yesterdayData.setManagementCount(dayValue[2]);
             yesterdayData.setPlace(placeName);
             notificationDayStatisticsRepository.save(yesterdayData);
-
             // 월
             // 오늘 날짜 체크 (1일인 경우 전일데이터로 계산)
             int getDay = nowDate.getDayOfMonth();
@@ -84,7 +80,7 @@ public class Schedule {
             LocalDate to = nowDate.withDayOfMonth(nowDate.lengthOfMonth());
 
             // nowDate 날짜 포맷변경 DB 저장용(YYYY-MM)
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
             String year_month = formatter.format(nowDate);
 
             NotificationMonthStatistics monthData = notificationMonthStatisticsRepository.findByMonthAndPlace(year_month, placeName);
@@ -92,7 +88,6 @@ public class Schedule {
                 monthData = new NotificationMonthStatistics();
             }
             monthData.setMonth(year_month);
-
             int[] monthValue = getReferenceValueCount(String.valueOf(from), String.valueOf(to), placeName);
             monthData.setLegalCount(monthValue[0]);
             monthData.setCompanyCount(monthValue[1]);
