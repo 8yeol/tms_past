@@ -618,8 +618,8 @@ public class AjaxController {
     public JSONArray getAlarmNotificationList(List<String> sensorList) {
         JSONArray array = new JSONArray();
         for (int i = 0; i < sensorList.size(); i++) {
-            List<NotificationList> notificationList = notificationListRepository.findByNameAndCheck(sensorList.get(i), false);
-            List<NotificationList> falseCount = notificationListRepository.findByCheck(false);
+            List<NotificationList> notificationList = notificationListRepository.findByNameAndCheck(sensorList.get(i), "false");
+            List<NotificationList> falseCount = notificationListRepository.findByCheck("false");
             if (notificationList.size() > 1) {
                 for (int j = 0; j < notificationList.size(); j++) {
                     JSONObject excess = new JSONObject();
@@ -628,7 +628,7 @@ public class AjaxController {
                     excess.put("value", notificationList.get(j).getValue());
                     excess.put("place", notificationList.get(j).getPlace());
                     excess.put("grade", notificationList.get(j).getGrade());
-                    excess.put("status", notificationList.get(j).isStatus());
+                    excess.put("status", notificationList.get(j).getStatus());
                     excess.put("up_time", notificationList.get(j).getUp_time());
                     if (array.size() < falseCount.size()) {
                         array.add(excess);
@@ -641,7 +641,7 @@ public class AjaxController {
                 excess.put("value", notificationList.get(0).getValue());
                 excess.put("place", notificationList.get(0).getPlace());
                 excess.put("grade", notificationList.get(0).getGrade());
-                excess.put("status", notificationList.get(0).isStatus());
+                excess.put("status", notificationList.get(0).getStatus());
                 excess.put("up_time", notificationList.get(0).getUp_time());
                 if (array.size() < falseCount.size()) {
                     array.add(excess);
@@ -679,8 +679,7 @@ public class AjaxController {
                 jsonObject.put("classification", "normal");
             }
 
-            SensorList sensorData = sensorListRepository.findByPlaceAndNaming(sensorInfo.getPlace(), sensorInfo.getNaming());
-            NotificationSettings setting = notification_settingsRepository.findByName(sensorData.getTableName());
+            NotificationSettings setting = notification_settingsRepository.findByName(sensorInfo.getTableName());
             if (setting != null) {
                 Date date = new Date(System.currentTimeMillis());
                 SimpleDateFormat format = new SimpleDateFormat("HH:mm");
@@ -690,12 +689,12 @@ public class AjaxController {
                 Date nowDate = format.parse(format.format(date));
 
                 if (nowDate.after(startDate) && endDate.after(nowDate) && setting.isStatus() == true) {
-                    jsonObject.put("state", true);
+                    jsonObject.put("status", true);
                 } else {
-                    jsonObject.put("state", false);
+                    jsonObject.put("status", false);
                 }
             } else {
-                jsonObject.put("state", false);
+                jsonObject.put("status", false);
             }
 
             jsonObject.put("place", sensorInfo.getPlace());
@@ -729,8 +728,8 @@ public class AjaxController {
                 String sensor = jsonObject.get("naming").toString();
                 String name = jsonObject.get("tableName").toString();
                 String value = jsonObject.get("value").toString();
-                boolean status = (boolean) jsonObject.get("state");
-                boolean check = false;
+                String status = jsonObject.get("status").toString();
+                String check = "false";
                 String checkName = "";
                 Date time = (Date) jsonObject.get("up_time");
 
@@ -766,7 +765,7 @@ public class AjaxController {
             String transDate = trans.format(date);
             if (transDate.equals(up_time)) {
                 String value = notificationList.get(i).value;
-                notificationList.get(i).setCheck(true);
+                notificationList.get(i).setCheck("true");
                 notificationList.get(i).setCheckName(name);
                 notificationListRepository.save(notificationList.get(i));
 
@@ -2159,7 +2158,6 @@ public class AjaxController {
     /**
      * 테이블명으로 배출기준값 리턴
      *
-     * @param tableName 테이블명
      * @return 배출허용 기준치
      */
     @RequestMapping(value = "/getEmissionStandard")

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NotificationListRepository extends MongoRepository<NotificationList, Long> {
     List<NotificationList> findBySensor(String sensor);
-    List<NotificationList> findByNameAndCheck(String name, boolean check);
-    List<NotificationList> findByCheck(boolean check);
+    List<NotificationList> findByNameAndCheck(String name, String check);
+    List<NotificationList> findByCheck(String check);
 
 }
