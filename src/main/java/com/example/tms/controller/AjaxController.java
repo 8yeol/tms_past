@@ -473,25 +473,17 @@ public class AjaxController {
      */
     @RequestMapping(value = "getSensorList")
     public List<SensorList> getSensorList() {
-
         List<SensorList> sensorList = sensorListRepository.findAll();
-
         for (SensorList sensor : sensorList) {
-            sensor.getTableName();
-
-            SensorList sensorData = sensorCustomRepository.getSensorList(sensor.getTableName());
-
-            Date now = new Date();
-            long diff = now.getTime() - sensorData.getUpTime().getTime();
-            long sec = diff / 60000;
-
-            if (sec < 5) {
+            Sensor sensorData = sensorCustomRepository.getSensorRecent(sensor.getTableName());
+            long diff = new Date().getTime() - sensorData.getUp_time().getTime();
+            long min = diff / 60000;
+            if (min < 5) {
                 sensor.setStatus(true);
             } else {
                 sensor.setStatus(false);
             }
         }
-
         return sensorList;
     }
 
@@ -674,7 +666,7 @@ public class AjaxController {
 
             float value = sensor.getValue(); //센서 값
             SensorList sensorInfo = sensorListRepository.findByTableName(referenceValueSetting.getName());
-            ;
+
             JSONObject jsonObject = new JSONObject();
 
             if (value > referenceValueSetting.getLegalStandard()) {
