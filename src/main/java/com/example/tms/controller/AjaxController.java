@@ -479,10 +479,10 @@ public class AjaxController {
         for (SensorList sensor : sensorList) {
             sensor.getTableName();
 
-            Sensor sensorData = sensorCustomRepository.getSensorRecent(sensor.getTableName());
+            SensorList sensorData = sensorCustomRepository.getSensorList(sensor.getTableName());
 
             Date now = new Date();
-            long diff = now.getTime() - sensorData.getUp_time().getTime();
+            long diff = now.getTime() - sensorData.getUpTime().getTime();
             long sec = diff / 60000;
 
             if (sec < 5) {
