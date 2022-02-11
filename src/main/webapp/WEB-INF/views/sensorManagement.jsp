@@ -290,7 +290,13 @@
             cache: false,
             data: {tableName: tableName, place: place, naming: naming},
             success: function () {
-                customSwal('삭제 완료','삭제 되었습니다.');
+                Swal.fire({
+                    icon: 'success',
+                    title: "삭제 완료",
+                    text: "삭제 되었습니다.",
+                    showConfirmButton: false
+                })
+
                 setTimeout(function () {
                     location.reload();
                 }, 2000);
@@ -304,7 +310,7 @@
     function updateSensor(){
         if(saveSensorCheck(2)) {
             let form = $('#editForm').serialize();
-            let content = '센서 측정소가 수정 되었습니다.';
+            let content = '센서 측정소가 변경 되었습니다.';
             let title = '센서 수정';
             Swal.fire({
                 icon: 'warning',
@@ -427,10 +433,11 @@
                     icon: 'success',
                     title: title,
                     text: content,
+                    showConfirmButton: false
                 })
                 setTimeout(function () {
                     location.reload();
-                }, 1500);
+                }, 2000);
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);
@@ -483,8 +490,7 @@
         Swal.fire({
             icon: 'warning',
             title: title,
-            text: text,
-            timer: 1500
+            text: text
         })
     }
 </script>

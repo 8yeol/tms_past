@@ -854,7 +854,8 @@
             icon: 'success',
             title: '수정 완료',
             text: '연간 배출량 추이가 수정 되었습니다.',
-            timer: 1500
+            showConfirmButton: false,
+            timer: 2000
         })
         selectMEmission(current, dataPer, tableNum[0]);
     }
@@ -875,7 +876,7 @@
             Swal.fire({
                 icon: 'warning',
                 title: '경고',
-                text: '수정 데이터를 확인해주세요.'
+                text: '수정할 데이터를 확인해주세요.'
             })
             document.getElementById(id).value = y;
             return false;
@@ -978,12 +979,14 @@
 
                 setTimeout(function () {
                     location.href = '<%=cp%>/emissionsManagement';
-                }, 1500);
+                }, 2000);
 
                 Swal.fire({
                     icon: 'success',
                     title: '수정 완료',
-                    text: '연간 배출 허용 기준이 수정 되었습니다.'
+                    text: '연간 배출 허용 기준이 수정 되었습니다.',
+                    showConfirmButton: false,
+                    timer: 2000
                 })
             },
             error: function (request, status, error) { // 결과 에러 콜백함수

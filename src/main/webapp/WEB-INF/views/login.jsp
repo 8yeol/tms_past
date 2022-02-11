@@ -146,8 +146,7 @@
         Swal.fire({
             icon: 'warning',
             title: title,
-            text: text,
-            timer: 1500
+            text: text
         })
     }
 </script>

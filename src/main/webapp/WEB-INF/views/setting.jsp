@@ -583,7 +583,8 @@
         if (user_state > value) {
             Swal.fire({
                 icon: 'warning',
-                title: '권한이 없습니다.',
+                title: '변경 실패',
+                text: '변경 권한이 없습니다.',
             })
             return;
         }
@@ -760,7 +761,13 @@
     }
 
     function success(str) {
-        Swal.fire('확인', str, 'success');
+
+        Swal.fire({
+            icon: 'success',
+            title: '확인',
+            text: str,
+            showConfirmButton: false,
+        })
     }
 
 
@@ -813,7 +820,7 @@
                     success('그룹이 저장 되었습니다.');
                     setTimeout(() => {
                         location.reload()
-                    }, 1500);
+                    }, 2000);
                 }
             },
             error: function (request, status, error) {
@@ -895,7 +902,7 @@
                 success('삭제 되었습니다.');
                 setTimeout(() => {
                     location.reload()
-                }, 1500);
+                }, 2000);
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -1137,9 +1144,6 @@
                     inputLog(id, content, "회원");
                     inputLog(user_id, id + " 계정 " + content + " 처리", "회원");
                     swal('success', '수정완료', '성공적으로 수정되었습니다.');
-                    setTimeout(function () {
-                        location.reload();
-                    }, 2000);
                 } else {
                     swal('warning', '수정실패');
                 }
@@ -1157,6 +1161,7 @@
             icon: icon,
             title: title,
             text: text,
+            showConfirmButton: false,
             timer: 2000
         })
     }

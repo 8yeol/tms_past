@@ -249,7 +249,10 @@
         }
         Swal.fire({
             icon: 'success',
-            title: '저장완료'
+            title: '저장 완료',
+            text: '성공적으로 저장되었습니다.',
+            showConfirmButton: false,
+            timer: 2000
         })
     }
 

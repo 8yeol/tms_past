@@ -503,14 +503,14 @@
             }
         }
         if (idx == 2) {
-            content = '측정소가 수정 되었습니다.';
             title = '측정소 수정';
+            content = '측정소 정보가 수정 되었습니다.';
             const pnum = $("input:checkbox[name=place]:checked").attr('id');
             const num = pnum.replace(/[^0-9]/g, ''); //place0 -> 0
             send = 'p' + num;
         } else {
-            content = '측정소가 추가 되었습니다.';
             title = '측정소 추가';
+            content = '측정소가 추가 되었습니다.';
             if ($("#nickname").val() == undefined) {
                 send = "p0";
             } else {
@@ -540,7 +540,8 @@
             icon: 'success',
             title: title,
             text: content,
-            timer: 1500
+            showConfirmButton: false,
+            timer: 2000
         })
         document.getElementById("cancelBtn").click();
         placeDiv(${groupPlace});
@@ -590,7 +591,6 @@
             if (result.isConfirmed) {
                 const count = countPlaceSensor(placeList);
                 if(count == 0){
-
                     $.ajax({
                         url: '<%=cp%>/removePlace',
                         type: 'POST',
@@ -600,8 +600,10 @@
                         success: function () {
                             swal.fire({
                                 title: '삭제 완료',
+                                text: placeList + ' 측정소가 정상적으로 삭제되었습니다.',
                                 icon: 'success',
-                                timer: 1500
+                                showConfirmButton: false,
+                                timer: 2000
                             });
                         },
                         error: function (request, status, error) { // 결과 에러 콜백함수
@@ -640,11 +642,21 @@
                             cache: false,
                             data: {"placeList": placeList, "flag": flag},
                             success: function () {
-                                swal.fire({
-                                    title: '삭제 완료',
-                                    icon: 'success',
-                                    timer: 1500
-                                });
+                                if (flag){
+                                    swal.fire({
+                                        title: '삭제 완료',
+                                        text: placeList + ' 측정소와 등록된 센서가 모두 삭제되었습니다.',
+                                        icon: 'success',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                }else{
+                                    swal.fire({
+                                        title: '삭제 완료',
+                                        html: placeList + ' 측정소 삭제 완료 <br>등록된 센서는 [환경설정 - 센서 관리]에서 관리 가능합니다.',
+                                        icon: 'success'
+                                    });
+                                }
                             },
                             error: function (request, status, error) { // 결과 에러 콜백함수
                                 console.log(error)
@@ -727,20 +739,12 @@
         if (value.indexOf('.') != -1) {
             var value_dot = value.substring(value.indexOf('.') + 1);
             if (value_dot.length > 2) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '소수점 2자리까지만 입력 가능합니다.'
-                })
+                customSwal("소수점 2자리까지만 입력 가능합니다.")
                 return false;
             }
         }
         if (isNaN(value) == true) {
-            Swal.fire({
-                icon: 'warning',
-                title: '경고',
-                text: '입력 데이터를 체크해주세요.'
-            })
+            customSwal("입력 데이터를 체크해주세요.")
             return false;
         }
         return true;
@@ -762,11 +766,7 @@
             value = "999999";
         } else {
             if (value == 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: "법적기준은 '0'을 입력할 수 없습니다."
-                })
+                customSwal("법적기준은 '0'을 입력할 수 없습니다.")
                 placeChange(document.getElementById('nickname').value);
                 return false;
             }
@@ -775,11 +775,7 @@
                 return;
             }
             if (parseFloat(value) <= parseFloat(company)) { //법적기준 값이 사내기준 값보다 작을때
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '법적기준 값은 사내기준 값보다 작거나 같을 수 없습니다.'
-                })
+                customSwal("법적기준 값은 사내기준 값보다 작거나 같을 수 없습니다.")
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
@@ -829,12 +825,7 @@
             value = "999999";
         } else {
             if (value == 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: "사내기준은 '0'을 입력할 수 없습니다."
-
-                })
+                customSwal("사내기준은 '0'을 입력할 수 없습니다.")
                 placeChange(document.getElementById('nickname').value);
                 return false;
             }
@@ -852,11 +843,7 @@
             //     return;
             // }
             if (parseFloat(legal) <= parseFloat(value)) {  //
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: '사내기준 값은 법적기준 값보다 크거나 같을 수 없습니다.'
-                })
+                customSwal('사내기준 값은 법적기준 값보다 크거나 같을 수 없습니다.')
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
@@ -961,11 +948,7 @@
                 return;
             }
             if (parseFloat(chartmin) >= parseFloat(value)) {  //
-                Swal.fire({
-                    icon: 'warning',
-                    title: '경고',
-                    text: 'Chart Max 값은 Chart Min 값보다 작거나 같을 수 없습니다.'
-                })
+                customSwal('Chart Max 값은 Chart Min 값보다 작거나 같을 수 없습니다.')
                 placeChange(document.getElementById('nickname').value);
                 return;
             }
@@ -1029,8 +1012,7 @@
         Swal.fire({
             icon: 'warning',
             title: '경고',
-            text: text,
-            timer: 1500
+            text: text
         });
     }
 

@@ -158,7 +158,7 @@
 
             if ($("#password").val() !== $("#passwordCheck").val()) {
                 $("#password").focus();
-                swal('warning', '비밀번호를 확인 하세요.');
+                warningSwal('warning', '비밀번호를 확인 하세요.');
                 return;
             }
             $.ajax({
@@ -179,26 +179,26 @@
                 },
                 success: function (data) {
                     if (data == "success") {
-                        swal('success', '회원가입 성공')
+                        successSwal('회원가입 성공')
                         setTimeout(function () {
                             inputLog($("#id").val(), "가입 신청", "회원");
                             location.href = '<%=cp%>/login';
                         }, 1800);
                     } else if (data == "failed") {
                         $("#id").focus();
-                        swal('warning', '회원가입 실패', '중복되는 ID 입니다.')
+                        warningSwal('회원가입 실패', '중복되는 ID 입니다.')
                     } else if (data == "root") {
-                        swal('success', '회원가입 성공', '최초 가입 계정으로 최고관리자 계정으로 지정됩니다.')
+                        successSwal('회원가입 성공', '최초 가입 계정으로 최고관리자 계정으로 지정됩니다.')
                         setTimeout(function () {
                             inputLog($("#id").val(), "가입 신청", "회원");
                             location.href = '<%=cp%>/login';
                         }, 1800);
                     } else {
-                        swal('warning', '회원가입 실패')
+                        warningSwal('회원가입 실패')
                     }
                 },
                 error: function (request, status, error) {
-                    swal('warning', '회원가입 실패')
+                    warningSwal('회원가입 실패')
                     console.log('member join error');
                     console.log(error);
                 }
@@ -212,7 +212,7 @@
             $("#email").val() != "" && $("#tel").val() != "" && $("#tel").val() != "" && $("#department").val() != "" && $("#grade").val() != "") {
             return true;
         } else {
-            swal('warning', '가입신청실패', '빈칸 없이 입력해주세요.')
+            warningSwal('가입신청실패', '빈칸 없이 입력해주세요.')
             return false;
         }
     }
@@ -233,23 +233,32 @@
         var enCheck = RegExp(/^[0-9a-z]+$/);
         if (!enCheck.test($('#id').val())) {
             $("#id").focus();
-            swal('warning', '가입신청실패', '숫자와 영문만 사용할수있습니다.');
+            warningSwal('가입신청실패', '숫자와 영문만 사용할수있습니다.');
             return false;
         } else if($('#id').val().length < 5 || $('#id').val().length > 15){
             $("#id").focus();
-            swal('warning', '가입신청실패', '5자리 이상 15자리 미만 아이디를 설정해주세요.');
+            warningSwal('가입신청실패', '5자리 이상 15자리 미만 아이디를 설정해주세요.');
             return false;
         } else {
            return true;
         }
     }
 
-    function swal(icon, title, text) {
+    function warningSwal(title, text) {
         Swal.fire({
-            icon: icon,
+            icon: 'warning',
+            title: title,
+            text: text
+        })
+    }
+
+    function successSwal(title, text) {
+        Swal.fire({
+            icon: 'success',
             title: title,
             text: text,
-            timer: 1500
+            showConfirmButton: false,
+            timer: 2000
         })
     }
 </script>

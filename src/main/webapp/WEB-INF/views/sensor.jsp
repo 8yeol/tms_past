@@ -346,7 +346,7 @@
                         return getData(sensorInfo.name);
                     }
                 }else{ //측정소 정보 업데이트 시, 모니터링이 모두 OFF 인 경우
-                    Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 센서의 데이터가 없습니다.'});
+                    Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 센서 데이터가 없습니다.'});
                 }
 
             }else{
@@ -376,7 +376,7 @@
         }else{
             $('#noData').css("height", "350px");
             $('#noData').css("background-color", "#F2F2F3");
-            $('#noData p').text("최근 데이터가 없습니다.");
+            $('#noData p').text("최근 업데이트된 데이터가 없습니다.");
             $('#noData').show();
             $('#chart').hide();
         }
@@ -918,7 +918,7 @@
             $('#place-tbody-table').empty();
             if(data == null){
                 const innerHtml = '<tr><td colspan="6">'
-                    +'<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서의 데이터가 없습니다.'
+                    +'<div onclick='+'event.cancelBubble=true'+'>'+'모니터링 설정된 센서 데이터가 없습니다.'
                     +'</div></td></tr>';
                 $('#place-tbody-table').append(innerHtml);
             }else{
@@ -1072,7 +1072,7 @@
             "ordering": true,
             "pagingType": 'numbers',
             "language": {
-                "emptyTable": "최근 데이터가 없습니다.",
+                "emptyTable": "최근 업데이트된 데이터가 없습니다.",
                 "lengthMenu": "페이지당 _MENU_ 개씩 보기",
                 "info": "현재 _START_ - _END_ / _TOTAL_건",
                 "infoEmpty": "데이터 없음",
