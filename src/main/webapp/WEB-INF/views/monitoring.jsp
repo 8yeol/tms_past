@@ -459,6 +459,19 @@
         </div> <%-- 측정소 ALL end--%>
     </div> <%-- 하단 대시보드 end --%>
 </div> <%--컨테이너 end--%>
+
+<%-- status message --%>
+<div class="status">
+    <div>
+        <p>측정기</p>
+        <p id="measuring">정상</p>
+    </div>
+    <div>
+        <p>자료수집기</p>
+        <p id="dataLogger">정상</p>
+    </div>
+</div>
+
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>

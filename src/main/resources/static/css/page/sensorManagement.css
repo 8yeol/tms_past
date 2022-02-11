@@ -103,35 +103,6 @@ table thead {
     pointer-events: none;
 }
 
-.status {
-    width: 200px;
-    height: 100px;
-    background-color: #fff;
-    border: 5px solid #00186d;
-    box-shadow: 1px 1px 10px 0px rgba(0, 24, 109, 0.26);
-    position: absolute;
-    padding: 10px 15px;
-    font-weight: bold;
-    top: 0;
-    left: 0;
-    display: none;
-}
-.status > div {
-    display: flex;
-}
-.status > div > p {
-    width: 50%;
-    margin: 5px 0px;
-}
-.status > div > p:first-child {
-    font-size: 1rem;
-}
-.status > div > p:last-child {
-    font-size: 1.1rem;
-    text-align: right;
-}
-
-
 @media all and  (max-width:989px) {
     .label {text-align: center; margin: 0 !important;}
     .m-margin {margin: 15px 0 15px 35px !important;}
