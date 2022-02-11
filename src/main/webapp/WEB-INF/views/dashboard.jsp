@@ -19,8 +19,8 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp"/>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/page/dashboard.css">
-<script src="static/js/moment.min.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/lib/moment.min.js"></script>
+<script src="static/js/lib/sweetalert2.min.js"></script>
 
 <div class="container"  id="container">
     <div class="row m-3 mt-3 ms-1">

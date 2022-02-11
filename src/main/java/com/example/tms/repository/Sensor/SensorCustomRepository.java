@@ -105,23 +105,6 @@ public class SensorCustomRepository {
     }
 
     /**
-     * 센서 목록 데이터 리턴
-     * @param sensor 센서명
-     * @return SensorList
-     */
-    public SensorList getSensorList(String sensor){
-        try{
-            Query query = new Query();
-            query.with(Sort.by(Sort.Direction.DESC,"_id"));
-            query.limit(1);
-            return mongoTemplate.findOne(query , SensorList.class, "sensor");
-        }catch (Exception e){
-            log.info("getSensorRecent error" + e.getMessage());
-        }
-        return null;
-    }
-
-    /**
      * 최근 5분 센서 데이터 리턴
      * @param sensor 센서명
      * @return Sensor

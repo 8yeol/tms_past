@@ -1,7 +1,6 @@
 package com.example.tms.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
@@ -22,6 +21,8 @@ public class SensorList {
     public Date upTime;
     public String place;
     public boolean status;
+    public int status1;
+    public int status2;
 
     public SensorList(String classification, String naming, String managementId, String tableName, Date date, String place, boolean b) {
         this.classification = classification;

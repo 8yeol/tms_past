@@ -13,6 +13,8 @@ public class Sensor {
     private ObjectId _id;
     private float value;
     private boolean status;
+    private int status1;
+    private int status2;
     @JsonFormat(timezone = "Asia/Seoul")
     private Date up_time;
 }

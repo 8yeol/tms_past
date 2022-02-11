@@ -21,17 +21,16 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/page/dataInquiry.css">
 <script src="static/js/common/common.js"></script>
-<script src="static/js/datepicker.min.js"></script>
-<script src="static/js/datepicker.ko.js"></script>
-<script src="static/js/apexcharts.min.js"></script>
-<script src="static/js/jquery.dataTables.min.js"></script>
-<script src="static/js/moment.min.js"></script>
-<script src="static/js/common/common.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/lib/datepicker.min.js"></script>
+<script src="static/js/lib/datepicker.ko.js"></script>
+<script src="static/js/lib/apexcharts.min.js"></script>
+<script src="static/js/lib/jquery.dataTables.min.js"></script>
+<script src="static/js/lib/moment.min.js"></script>
+<script src="static/js/lib/sweetalert2.min.js"></script>
 <%-- export excel --%>
-<script src="static/js/jszip.min.js"></script>
-<script src="static/js/dataTables.buttons.min.js"></script>
-<script src="static/js/buttons.html5.min.js"></script>
+<script src="static/js/lib/jszip.min.js"></script>
+<script src="static/js/lib/dataTables.buttons.min.js"></script>
+<script src="static/js/lib/buttons.html5.min.js"></script>
 
 
 <div class="container" id="container">

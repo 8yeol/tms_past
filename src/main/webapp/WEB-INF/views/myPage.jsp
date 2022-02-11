@@ -12,10 +12,10 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/page/myPage.css">
 
-<script src="static/js/jquery-ui.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
 <script src="static/js/common/member.js"></script>
+<script src="static/js/lib/jquery-ui.js"></script>
+<script src="static/js/lib/sweetalert2.min.js"></script>
 
 <div class="container" id="container" >
     <div class="row bg-light rounded p-5 mt-5 mypage-bg">

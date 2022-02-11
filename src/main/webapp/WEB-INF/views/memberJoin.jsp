@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="static/css/sweetalert2.min.css">
     <link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
     <script src="static/js/common/common.js"></script>
-    <script src="static/js/jquery-3.6.0.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>
-    <script src="static/js/jquery-ui.js"></script>
-    <script src="static/js/sweetalert2.min.js"></script>
     <script src="static/js/common/member.js"></script>
+    <script src="static/js/lib/jquery-3.6.0.min.js"></script>
+    <script src="static/js/lib/bootstrap.min.js"></script>
+    <script src="static/js/lib/jquery-ui.js"></script>
+    <script src="static/js/lib/sweetalert2.min.js"></script>
 </head>
 
 <%

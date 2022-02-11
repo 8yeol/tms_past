@@ -474,6 +474,7 @@ public class AjaxController {
     @RequestMapping(value = "getSensorList")
     public List<SensorList> getSensorList() {
         List<SensorList> sensorList = sensorListRepository.findAll();
+        /*
         for (SensorList sensor : sensorList) {
             Sensor sensorData = sensorCustomRepository.getSensorRecent(sensor.getTableName());
             long diff = new Date().getTime() - sensorData.getUp_time().getTime();
@@ -484,6 +485,7 @@ public class AjaxController {
                 sensor.setStatus(false);
             }
         }
+        */
         return sensorList;
     }
 

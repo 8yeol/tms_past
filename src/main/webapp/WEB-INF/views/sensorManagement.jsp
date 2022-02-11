@@ -17,10 +17,10 @@
 <link rel="stylesheet" href="static/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="static/css/page/sensorManagement.css">
 
-<script src="static/js/sweetalert2.min.js"></script>
 <script src="static/js/common/common.js"></script>
-<script src="static/js/moment.min.js"></script>
-<script src="static/js/jquery.dataTables.min.js"></script>
+<script src="static/js/lib/sweetalert2.min.js"></script>
+<script src="static/js/lib/moment.min.js"></script>
+<script src="static/js/lib/jquery.dataTables.min.js"></script>
 
 <div class="container" id="container">
     <div class="row">
@@ -188,10 +188,17 @@
                 const tbody = document.getElementById('tbody');
                 let status;
                 for (let i = 0; i < data.length; i++) {
-                    if (data[i].status == false) {
-                        status = '<i class="fas fa-circle text-danger"></i>'
-                    } else {
-                        status = '<i class="fas fa-circle text-success"></i>'
+                    const type = data[i].status1;
+                    if (type == 0) {
+                        status = '<i class="fas fa-circle" color="#50e400"></i>'
+                    } else if ( type == 1 ) {
+                        status = '<i class="fas fa-circle" color="#fcd521"></i>'
+                    } else if ( type == 2 ) {
+                        status = '<i class="fas fa-circle" color="#8600e4"></i>'
+                    } else if ( type == 4 ) {
+                        status = '<i class="fas fa-circle" color="#ff1c1c"></i>'
+                    } else if ( type == 8 ) {
+                        status = '<i class="fas fa-circle" color="#f49206"></i>'
                     }
 
                     const row = tbody.insertRow(tbody.rows.length);

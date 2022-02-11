@@ -14,11 +14,11 @@
 %>
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/page/monitoring.css">
-<script src="static/js/sweetalert2.min.js"></script>
-<script src="static/js/moment.min.js"></script>
-<script src="static/js/apexcharts.min.js"></script>
-<script src="static/js/vue-apexcharts.js"></script>
-<script src="static/js/jquery-ui.js"></script>
+<script src="static/js/lib/sweetalert2.min.js"></script>
+<script src="static/js/lib/moment.min.js"></script>
+<script src="static/js/lib/apexcharts.min.js"></script>
+<script src="static/js/lib/vue-apexcharts.js"></script>
+<script src="static/js/lib/jquery-ui.js"></script>
 
 
 <div class="container" id="container">
@@ -94,22 +94,15 @@
                 <c:when test="${state == '1'}">
                     <div class="topDash-r">
                         <span class="text-center fw-bold bg-danger">법적기준 초과</span>
-                        <p id="legal_standard_text_A" style="cursor: pointer" class="text-danger fs-1 bg-white"
-                           onclick="getAlarmList(1)">0</p>
-                        <div id="legal_1" class="alarmList"
-                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #dc3545; box-shadow:5px 5px 20px 0 rgba(220,53,69,0.1), -5px -5px 20px 0 rgba(220,53,69,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
-
+                        <p id="legal_standard_text_A" style="cursor: pointer" class="text-danger fs-1 bg-white" onclick="getAlarmList(1)">0</p>
+                        <div id="legal_1" class="alarmList" style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #dc3545; box-shadow:5px 5px 20px 0 rgba(220,53,69,0.1), -5px -5px 20px 0 rgba(220,53,69,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
                         </div>
-
                     </div>
 
                     <div class="topDash-r">
                         <span class="text-center fw-bold bg-warning">사내기준 초과</span>
-                        <p id="company_standard_text_A" style="cursor: pointer" class="text-warning fs-1 bg-white"
-                           onclick="getAlarmList(2)">0</p>
-                        <div id="company_1" class="alarmList"
-                             style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #ffc107; box-shadow:5px 5px 20px 0 rgba(255,193,7,0.1), -5px -5px 20px 0 rgba(255,193,7,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
-
+                        <p id="company_standard_text_A" style="cursor: pointer" class="text-warning fs-1 bg-white" onclick="getAlarmList(2)">0</p>
+                        <div id="company_1" class="alarmList" style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #ffc107; box-shadow:5px 5px 20px 0 rgba(255,193,7,0.1), -5px -5px 20px 0 rgba(255,193,7,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
                         </div>
                     </div>
 
@@ -235,17 +228,10 @@
                     <table class='table table-bordered table-hover text-center mt-1'>
                         <thead>
                         <tr class="add-bg-color">
-                            <!--관리기준 임시삭제
-                            <th width=28%'>항목</th>
-                            <th width=17%'>법적기준</th>
-                            <th width=17%'>사내기준</th>
-                            <th width=17%'>관리기준</th>
-                            <th width=21%'>실시간</th>
-                            -->
                             <th width=20%'>항목</th>
-                            <th width=17%'>법적기준</th>
-                            <th width=17%'>사내기준</th>
-                            <th width=21%'>실시간</th>
+                            <th width=17%'>실시간</th>
+                            <th width=17%'>5분</th>
+                            <th width=21%'>30분</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -851,12 +837,12 @@
                     "<thead>" +
                     "<tr class='add-bg-color'>" +
                     "<th width=28%'>항목</th>" +
-                    "<th width=17%'>법적기준</th>" +
-                    "<th width=17%'>사내기준</th>" +
+                    "<th width=17%'>실시간</th>" +
+                    "<th width=17%'>5분</th>" +
                     /* 관리기준 임시삭제
                     "<th width=17%'>관리기준</th>" +
                     */
-                    "<th width=21%'>실시간</th>" +
+                    "<th width=21%'>30분</th>" +
                     "</tr>" +
                     "</thead>" +
                     "<tbody>" +

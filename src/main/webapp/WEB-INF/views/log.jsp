@@ -10,12 +10,12 @@
 
 <link rel="stylesheet" href="static/css/datepicker.min.css">
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
-<script src="static/js/moment.min.js"></script>
 <script src="static/js/common/common.js"></script>
-<script src="static/js/jquery-ui.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
-<script src="static/js/datepicker.min.js"></script>
-<script src="static/js/datepicker.ko.js"></script>
+<script src="static/js/lib/moment.min.js"></script>
+<script src="static/js/lib/jquery-ui.js"></script>
+<script src="static/js/lib/sweetalert2.min.js"></script>
+<script src="static/js/lib/datepicker.min.js"></script>
+<script src="static/js/lib/datepicker.ko.js"></script>
 
 <style>
     .toolbar>b {

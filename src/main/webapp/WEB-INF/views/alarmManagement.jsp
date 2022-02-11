@@ -20,8 +20,8 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" type="text/css" href="static/css/page/alarmManagement.css">
 <script src="static/js/common/common.js"></script>
-<script src="static/js/timepicker.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/lib/timepicker.js"></script>
+<script src="static/js/lib/sweetalert2.min.js"></script>
 
 <div class="container" id="container">
     <div class="row m-3 mt-3 ms-1" style="padding-left: 10px;">

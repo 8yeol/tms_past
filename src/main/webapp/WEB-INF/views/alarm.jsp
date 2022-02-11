@@ -21,12 +21,12 @@
 <link rel="stylesheet" href="static/css/page/alarm.css">
 
 <script src="static/js/common/common.js"></script>
-<script src="static/js/moment.min.js"></script>
-<script src="static/js/apexcharts.min.js"></script>
-<script src="static/js/jquery.dataTables.min.js"></script>
-<script src="static/js/datepicker.min.js"></script>
-<script src="static/js/datepicker.ko.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/lib/moment.min.js"></script>
+<script src="static/js/lib/apexcharts.min.js"></script>
+<script src="static/js/lib/jquery.dataTables.min.js"></script>
+<script src="static/js/lib/datepicker.min.js"></script>
+<script src="static/js/lib/datepicker.ko.js"></script>
+<script src="static/js/lib/sweetalert2.min.js"></script>
 
 <div class="container" id="container">
     <div class="row m-3 mt-3 ms-1">

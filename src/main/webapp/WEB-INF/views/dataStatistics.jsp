@@ -19,9 +19,9 @@
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 
 <script src="static/js/common/common.js"></script>
-<script src="static/js/apexcharts.min.js"></script>
-<script src="static/js/moment.min.js"></script>
-<script src="static/js/sweetalert2.min.js"></script>
+<script src="static/js/lib/apexcharts.min.js"></script>
+<script src="static/js/lib/moment.min.js"></script>
+<script src="static/js/lib/sweetalert2.min.js"></script>
 
 <style>
     .add-bg {
