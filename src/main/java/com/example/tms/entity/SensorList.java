@@ -20,17 +20,15 @@ public class SensorList {
     @JsonFormat(timezone = "Asia/Seoul")
     public Date upTime;
     public String place;
-    public boolean status;
     public int status1;
     public int status2;
 
-    public SensorList(String classification, String naming, String managementId, String tableName, Date date, String place, boolean b) {
+    public SensorList(String classification, String naming, String managementId, String tableName, Date date, String place) {
         this.classification = classification;
         this.naming= naming;
         this.managementId =managementId;
         this.tableName= tableName;
         this.upTime = date;
         this.place = place;
-        this.status = b;
     }
 }

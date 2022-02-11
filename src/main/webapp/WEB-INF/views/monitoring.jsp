@@ -293,6 +293,7 @@
                                         </c:choose>
                                         </tr>
                                     </thead>
+
                                     <tbody id="sensor-table-${idx}">
                                             <%-- 현재시간 - 업데이트 시간 해서 업데이트 시간이 5분 이상이면 회색으로 --%>
                                         <jsp:useBean id="now" class="java.util.Date"/>
@@ -301,23 +302,22 @@
                                         <fmt:parseNumber var="uptime_N" value="${uptime.time / (1000 * 60)}" integerOnly="true"/>
 
                                         <c:choose>
-                                        <c:when test="${now_N - uptime_N gt 5}">
-                                        <tr class="bg-secondary text-light">
+                                            <c:when test="${now_N - uptime_N gt 5}">
+                                                <tr class="bg-secondary text-light">
                                             </c:when>
                                             <c:when test="${sensor.recent_value gt sensor.legalStandard}">
-                                        <tr class="bg-danger text-light">
+                                                <tr class="bg-danger text-light">
                                             </c:when>
                                             <c:when test="${sensor.recent_value gt sensor.companyStandard}">
-                                        <tr class="bg-warning text-light">
+                                                <tr class="bg-warning text-light">
                                             </c:when>
                                             <c:when test="${sensor.recent_value gt sensor.managementStandard}">
-                                        <tr class="bg-success text-light">
+                                                <tr class="bg-success text-light">
                                             </c:when>
                                             <c:otherwise>
-                                        <tr>
+                                                <tr>
                                             </c:otherwise>
-                                            </c:choose>
-
+                                        </c:choose>
                                             <td>${sensor.naming}<input type="hidden" value="${sensor.name}"></td>
                                             <c:choose>
                                                 <c:when test="${sensor.managementStandard eq 999999 && sensor.companyStandard eq 999999 && sensor.legalStandard eq 999999}">
@@ -448,7 +448,6 @@
                                                 </c:choose>
                                             </td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                                 <div id="chart-${pStatus.index}-${sStatus.index}"></div>

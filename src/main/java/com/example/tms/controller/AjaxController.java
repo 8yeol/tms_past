@@ -474,9 +474,9 @@ public class AjaxController {
     @RequestMapping(value = "getSensorList")
     public List<SensorList> getSensorList() {
         List<SensorList> sensorList = sensorListRepository.findAll();
-        /*
         for (SensorList sensor : sensorList) {
             Sensor sensorData = sensorCustomRepository.getSensorRecent(sensor.getTableName());
+            /*
             long diff = new Date().getTime() - sensorData.getUp_time().getTime();
             long min = diff / 60000;
             if (min < 5) {
@@ -484,8 +484,10 @@ public class AjaxController {
             } else {
                 sensor.setStatus(false);
             }
+            */
+            sensor.setStatus1(sensorData.getStatus1());
+            sensor.setStatus2(sensorData.getStatus2());
         }
-        */
         return sensorList;
     }
 
@@ -1478,7 +1480,7 @@ public class AjaxController {
         //hidden 값이 있는지로 추가와 수정을 판별
         //생성
         if (hiddenCode == null) {
-            sensor = new SensorList(classification, naming, managementId, tableName, new Date(), place, true);
+            sensor = new SensorList(classification, naming, managementId, tableName, new Date(), place);
 
             //질소산화물만 배출 기준, 모니터링 대상 에 추가
             String sensorCode = tableName.split("_")[1]; //-> NOX, IRS ..

@@ -100,11 +100,11 @@
 <div class="status">
     <div>
         <p>측정기</p>
-        <p>정상</p>
+        <p id="measuring">정상</p>
     </div>
     <div>
         <p>자료수집기</p>
-        <p>정상</p>
+        <p id="dataLogger">정상</p>
     </div>
 </div>
 
@@ -187,6 +187,54 @@
         });
     });
 
+    function mouseOn(status1, status2){
+        let status1_color, status2_color, status1_txt, status2_txt;
+
+        if (status1 == 0) {
+            status1_color = "#50e400";
+            status1_txt = "정상";
+        } else if ( status1 == 1 ) {
+            status1_color = "#fcd521";
+            status1_txt = "교정중";
+        } else if ( status1 == 2 ) {
+            status1_color = "#8600e4";
+            status1_txt = "동작불량";
+        } else if ( status1 == 4) {
+            status1_color = "#ff1c1c";
+            status1_txt = "전원단절";
+        } else if ( status1 == 8 ) {
+            status1_color = "#f49206";
+            status1_txt = "보수중";
+        }
+
+        if (status2 == 0) {
+            status2_color = "#50e400";
+            status2_txt = "정상";
+        } else if ( status2 == 1 ) {
+            status2_color = "#8600e4";
+            status2_txt = "동작불량";
+        } else if ( status2 == 4) {
+            status2_color = "#ff1c1c";
+            status2_txt = "전원단절";
+        }
+
+        $("#measuring").text(status1_txt);
+        $("#measuring").css('color', status1_color);
+        $("#dataLogger").text(status2_txt);
+        $("#dataLogger").css('color', status2_color);
+
+        $(".status").show();
+        const status = document.querySelector(".status");
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+        status.style.left = mouseX + 'px';
+        status.style.top = mouseY + 'px';
+    }
+
+    function mouseOut(){
+        $(".status").hide();
+    }
+
     //데이터 가져와서 그리기
     function getSensor() {
         $('#tbody').children().remove();  //테이블 비우기
@@ -197,20 +245,26 @@
             async: false,
             cache: false,
             success: function (data) {
+                console.log(data);
                 const tbody = document.getElementById('tbody');
                 let status;
                 for (let i = 0; i < data.length; i++) {
-                    const type = data[i].status1;
-                    if (type == 0) {
-                        status = '<i class="fas fa-circle" color="#50e400"></i>'
-                    } else if ( type == 1 ) {
-                        status = '<i class="fas fa-circle" color="#fcd521"></i>'
-                    } else if ( type == 2 ) {
-                        status = '<i class="fas fa-circle" color="#8600e4"></i>'
-                    } else if ( type == 4 ) {
-                        status = '<i class="fas fa-circle" color="#ff1c1c"></i>'
-                    } else if ( type == 8 ) {
-                        status = '<i class="fas fa-circle" color="#f49206"></i>'
+                    const status1 = data[i].status1;
+                    const status2 = data[i].status2;
+                    if (status1 == 0 || status2 == 0) {
+                        status = '<i class="fas fa-circle" color="#50e400" onmouseover="mouseOn(\''+status1+'\', \''+status2+'\')" onmouseout="mouseOut();"></i>'
+                    }
+                    if ( status1 == 1 ) {
+                        status = '<i class="fas fa-circle" color="#fcd521" onmouseover="mouseOn(\''+status1+'\', \''+status2+'\')" onmouseout="mouseOut();"></i>'
+                    }
+                    if ( status1 == 2 || status2 == 1) {
+                        status = '<i class="fas fa-circle" color="#8600e4" onmouseover="mouseOn(\''+status1+'\', \''+status2+'\')"></i>'
+                    }
+                    if ( status1 == 4 || status2 == 4) {
+                        status = '<i class="fas fa-circle" color="#ff1c1c" onmouseover="mouseOn(\''+status1+'\', \''+status2+'\')" onmouseout="mouseOut();"></i>'
+                    }
+                    if ( status1 == 8 ) {
+                        status = '<i class="fas fa-circle" color="#f49206" onmouseover="mouseOn(\''+status1+'\', \''+status2+'\')" onmouseout="mouseOut();"></i>'
                     }
 
                     const row = tbody.insertRow(tbody.rows.length);
