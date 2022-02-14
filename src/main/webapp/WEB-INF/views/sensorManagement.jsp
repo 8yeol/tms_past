@@ -96,18 +96,6 @@
     </div>
 </div>
 
-<%-- status message --%>
-<div class="status">
-    <div>
-        <p>측정기</p>
-        <p id="measuring">정상</p>
-    </div>
-    <div>
-        <p>자료수집기</p>
-        <p id="dataLogger">정상</p>
-    </div>
-</div>
-
 <!-- editModal -->
 <div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -175,7 +163,9 @@
     </div>
 </div>
 
+<jsp:include page="/WEB-INF/views/common/sensorStatus.jsp"/>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
+
 <script>
     $(function () {
         getSensor();

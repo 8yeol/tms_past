@@ -2487,18 +2487,33 @@ public class AjaxController {
                         sensorObj.put("recent_value", recentData.getValue());
                         sensorObj.put("recent_up_time", simpleDateFormat.format(recentData.getUp_time()));
                         sensorObj.put("recent_status", recentData.isStatus());
+                        // 통신 상태 출력
+                        sensorObj.put("recent_color", getStatusColor(recentData.getStatus1(), recentData.getStatus2()));
+                        sensorObj.put("recent_status1", recentData.getStatus1());
+                        sensorObj.put("recent_status2", recentData.getStatus2());
+
                         Sensor beforeData = sensorCustomRepository.getSensorBeforeData(sensorNames.get(i)); //센서의 이전 데이터
                         sensorObj.put("recent_beforeValue", beforeData.getValue());
                         Sensor recentDataRM05 = sensorCustomRepository.getSensorRecentRM05(sensorNames.get(i)); //센서의 최근 데이터
                         sensorObj.put("rm05_value", recentDataRM05.getValue());
                         sensorObj.put("rm05_up_time", simpleDateFormat.format(recentDataRM05.getUp_time()));
                         sensorObj.put("rm05_status", recentDataRM05.isStatus());
+                        // 통신 상태 출력
+                        sensorObj.put("rm05_color", getStatusColor(recentDataRM05.getStatus1(), recentDataRM05.getStatus2()));
+                        sensorObj.put("rm05_status1", recentDataRM05.getStatus1());
+                        sensorObj.put("rm05_status2", recentDataRM05.getStatus2());
+
                         Sensor beforeDataRM05 = sensorCustomRepository.getSensorBeforeDataRM05(sensorNames.get(i)); //센서의 최근 데이터
                         sensorObj.put("rm05_beforeValue", beforeDataRM05.getValue());
                         Sensor recentDataRM30 = sensorCustomRepository.getSensorRecentRM30(sensorNames.get(i));
                         sensorObj.put("rm30_value", recentDataRM30.getValue());
                         sensorObj.put("rm30_up_time", simpleDateFormat.format(recentDataRM30.getUp_time()));
                         sensorObj.put("rm30_status", recentDataRM30.isStatus());
+                        // 통신 상태 출력
+                        sensorObj.put("rm30_color", getStatusColor(recentDataRM30.getStatus1(), recentDataRM30.getStatus2()));
+                        sensorObj.put("rm30_status1", recentDataRM05.getStatus1());
+                        sensorObj.put("rm30_status2", recentDataRM05.getStatus2());
+
                         Sensor beforeDataRM30 = sensorCustomRepository.getSensorBeforeDataRM30(sensorNames.get(i)); //센서의 최근 데이터
                         sensorObj.put("rm30_beforeValue", beforeDataRM30.getValue());
                         ReferenceValueSetting sensorInfo = reference_value_settingRepository.findByName(sensorNames.get(i)); //센서의 기타 정보(기준값 등)
@@ -2545,6 +2560,28 @@ public class AjaxController {
             System.out.println(e);
         }
         return null;
+    }
+
+    public String getStatusColor(int status1, int status2){
+        String color = "#FFFFFF";
+
+        if(status1 == 0 || status2 == 0){
+            color = "#50e400";
+        }
+        if(status1 == 1){
+            color = "#fcd521";
+        }
+        if(status1 == 2 || status2 == 1){
+            color = "#8600e4";
+        }
+        if(status1 == 4 || status2 == 4){
+            color = "#ff1c1c";
+        }
+        if(status1 == 8){
+            color = "#f49206";
+        }
+
+        return color;
     }
 
     // memberID = 로그인 된 회원의 ID

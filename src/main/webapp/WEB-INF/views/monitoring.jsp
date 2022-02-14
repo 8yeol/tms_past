@@ -15,6 +15,9 @@
 
 <link rel="stylesheet" href="static/css/sweetalert2.min.css">
 <link rel="stylesheet" href="static/css/page/monitoring.css">
+
+<script src="static/js/common/cookie.js"></script>
+
 <script src="static/js/lib/sweetalert2.min.js"></script>
 <script src="static/js/lib/moment.min.js"></script>
 <script src="static/js/lib/apexcharts.min.js"></script>
@@ -460,55 +463,49 @@
     </div> <%-- 하단 대시보드 end --%>
 </div> <%--컨테이너 end--%>
 
-<%-- status message --%>
-<div class="status">
-    <div>
-        <p>측정기</p>
-        <p id="measuring">정상</p>
-    </div>
-    <div>
-        <p>자료수집기</p>
-        <p id="dataLogger">정상</p>
-    </div>
-</div>
-
+<jsp:include page="/WEB-INF/views/common/sensorStatus.jsp"/>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
 
 <script>
-    //팝업창 드래그로 이동 가능
-    $(function () {
-        $('.modal-dialog').draggable({handle: ".modal-header"});
-    });
-
-    //modal 팝업창 close시 form에 남아있던 데이터 리셋
+    // 알림 확인 모달 팝업창 close event (form 영역 초기화)
     $('.modal').on('hidden.bs.modal', function (e) {
         $(this).find('form')[0].reset()
     });
+
     let INTERVAL;
     let flashCheck;
     let alarmCheck;
-    var oldSensorList;
-    var chart = {};
+    let oldSensorList;
+    const chart = {};
     let placeInfoCopy;
     let audioInnerHTML;
 
     $(document).ready(function () {
-        if (getCookie("flashCheck") == undefined) {
+        // get cookie 중복 호출 제거
+        let flashCookie = getCookie("flashCheck");
+        let alarmCookie = getCookie("alarmCheck");
+
+        // flashCheck, alarmCheck 초기데이터 설정
+        if (flashCookie == undefined) {
             setCookie("flashCheck", "on", 999);
+            flashCookie = "on";
         }
-        if (getCookie("alarmCheck") == undefined) {
+        if (alarmCookie == undefined) {
             setCookie("alarmCheck", "on", 999);
+            alarmCookie = "on";
         }
-        flashCheck = getCookie("flashCheck");
+
+        // flashCheck 데이터 불러오기 (radio 버튼 이기때문에 같은 name을 가진 radio 버튼 하나밖에 checked 안됨. checked false 삭제)
+        flashCheck = flashCookie;
         if (flashCheck == "on") {
             $("input:radio[name='flashing']:radio[value='on']").prop("checked", true);
-            $("input:radio[name='flashing']:radio[value='off']").prop("checked", false);
+            //$("input:radio[name='flashing']:radio[value='off']").prop("checked", false);
         } else {
-            $("input:radio[name='flashing']:radio[value='on']").prop("checked", false);
+            //$("input:radio[name='flashing']:radio[value='on']").prop("checked", false);
             $("input:radio[name='flashing']:radio[value='off']").prop("checked", true);
-
         }
-        alarmCheck = getCookie("alarmCheck");
+
+        alarmCheck = alarmCookie;
         if (alarmCheck == "on") {
             $("input:radio[name='alarmTone']:radio[value='on']").prop("checked", true);
             //$('#alarmOn').trigger('click');
@@ -517,41 +514,15 @@
             // $('#alarmOff').trigger('click');
         }
 
+        // set time out 0 초로 즉시실행 시킬거면 굳이 setTimeout 설정한 이유있나요?
+        /*
         setTimeout(function () {
             getData();
         }, 0);
+        */
+        getData();
         excess();
     });
-
-    /**
-     * 쿠키 값 가져오는 메소드
-     */
-    function getCookie(cookie_name) {
-        var x, y;
-        var val = document.cookie.split(';');
-
-        for (var i = 0; i < val.length; i++) {
-            x = val[i].substr(0, val[i].indexOf('='));
-            y = val[i].substr(val[i].indexOf('=') + 1);
-            x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
-            if (x == cookie_name) {
-                return unescape(y); // unescape로 디코딩 후 값 리턴
-            }
-        }
-    }
-
-    /**
-     * 쿠키 값 저장하는 메소드 (이름, 값, 저장일수)
-     */
-    function setCookie(cookie_name, value, days) {
-        var exdate = new Date();
-        exdate.setDate(exdate.getDate() + days);
-        // 설정 일수만큼 현재시간에 만료값으로 지정
-
-        var cookie_value = escape(value) + ((days == null) ? '' : '; expires=' + exdate.toUTCString());
-        document.cookie = cookie_name + '=' + cookie_value;
-    }
-
 
     /**
      * 페이지 로딩시 측정소 별로 테이블 틀 생성, 측정소 별, 센서별 데이터를 받아 대시보드, 테이블 데이터 입력
@@ -562,11 +533,11 @@
             const placeInfo = getPlaceInfo(); // 모니터링 On된 측정소의 모든 정보(센서의 최근, 5분, 30분, 기준값 등)
             const placeCount = placeInfo.length;
             if (placeCount == 0) { // 측정소에 등록된 센서가 없을때
-                Swal.fire({icon: 'warning', title: '경고', text: '모니터링 설정된 측정소 데이터가 없습니다.'});
+                customSwal('모니터링 설정된 측정소 데이터가 없습니다.');
                 draw_place_table_frame(placeInfo);
                 INTERVAL = setTimeout(interval_getData, 60000); //측정소에 등록된 센서가 없으면 처음 경고 띄우고 1분 후에 refresh
             } else {
-                var newSensorList = new Array();
+                const newSensorList = new Array();
                 for (let i = 0; i < placeCount; i++) {
                     for (let z = 0; z < placeInfo[i].sensorList.length; z++) {
                         newSensorList.push(placeInfo[i].sensorList[z]);
@@ -579,7 +550,8 @@
                         draw_place_table_frame(placeInfo); // 측정소별 테이블 틀 생성 (개수에 따른 유동적으로 크기 변환)
                         draw_place_table(placeInfo); // 측정소별 테이블 생성
                     } else {
-                        var sensorCount = 0;
+                        // 여기서부터 체크
+                        let sensorCount = 0;
                         for (var x = 0; x < newSensorList.length; x++) {
                             for (var y = 0; y < oldSensorList.length; y++) {
                                 if (newSensorList[x] == oldSensorList[y]) {
@@ -588,7 +560,7 @@
                             }
                         }
 
-                        var dataChecking = false;
+                        let dataChecking = false;
                         if (oldSensorList.length < newSensorList.length && newSensorList.length != sensorCount) {
                             dataChecking = true;
                         } else if (oldSensorList.length > newSensorList.length && oldSensorList.length != sensorCount) {
@@ -615,14 +587,248 @@
                             // draw_place_table_frame(placeInfo);
                             draw_place_table(placeInfo); // 측정소별 테이블 생성
                         }
+                        // 여기까지
                     }
                     INTERVAL = setTimeout(interval_getData, 10000);
                 }
             }
+            // 얘도 마찬가지로 즉시 호출할거면 setTimeout 사용하는 이유가?
+            /*
             setTimeout(function () {
                 draw_sensor_info(placeInfo); // 대시보드 생성(가동률, 법적기준 정보 등)
             }, 0);
+            */
+            draw_sensor_info(placeInfo); // 대시보드 생성(가동률, 법적기준 정보 등)
         }, 0);
+    }
+
+    /**
+     * 테이블 프레임 생성 (홀수 : 테이블 1개, 짝수: 테이블 2개 씩 한 row에 출력)
+     */
+    function draw_place_table_frame(placeInfo) {
+        $('#place_table').empty();
+        let col_md_size;
+        if (placeInfo.length != 0) {
+            for (let i = 0; i < placeInfo.length; i++) {
+                const placeName = placeInfo[i].place; //측정소명
+                const dataLength = placeInfo[i].monitoringOn; //모니터링On된 센서수
+                const data = placeInfo[i].data; //모니터링On된 센서수
+                if (placeInfo.length == 1) { // 측정소 1개 width 100%
+                    col_md_size = 12;
+                } else { // 측정소 1개 width 50%
+                    col_md_size = 6;
+                }
+                /* 기준 값 유무에 따라 split */
+                $('#place_table').append(
+                    "<div class='col-md-" + col_md_size + " mb-3 mt-2 place_border " + i + "'>" +
+                    "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>" +
+                    "<span class='fs-5' id='placeName'>" + placeName + "</span></div>");
+                for (let z = 0; z < dataLength; z++) {
+                    const standardExistStatus = data[z].standardExistStatus; // 모니터링 on 되어있는 센서의 법적기준, 사내기준 등의 기준값이 설정되어있느냐 체크
+
+                    // i:측정소idx, z:센서idx
+                    let innerHtml =
+                        "<div class='text-end' style='font-size: 0.8rem'>업데이트 : <span style='padding: 0' id=update-" + i + "-" + z + "></span>&nbsp;<span style='padding: 0' id=unit-" + i + "-" + z + "></span></div>" +
+                        "<table class='table table-bordered table-hover text-center mt-1'>" +
+                        "<thead>" +
+                        "<tr class='add-bg-color'>";
+                    if (!standardExistStatus) {
+                        innerHtml +=
+                            "<th width=22%'>항목</th>" +
+                            "<th width=26%'><i class='fas fa-circle fa-xs' color='"+data[z].recent_color+"' onmouseover='statusMouseOn(\""+data[z].recent_status1+"\", \""+ data[z].recent_status2+"\")' onmouseout='statusMouseOut()'></i> 실시간</th>" +
+                            "<th width=26%'><i class='fas fa-circle fa-xs' color='"+data[z].rm05_color+"' onmouseover='statusMouseOn(\""+data[z].rm05_status1+"\", \""+ data[z].rm05_status2+"\")' onmouseout='statusMouseOut()'></i> 5분</th>" +
+                            "<th width=26%'><i class='fas fa-circle fa-xs' color='"+data[z].rm30_color+"' onmouseover='statusMouseOn(\""+data[z].rm30_status1+"\", \""+ data[z].rm30_status2+"\")' onmouseout='statusMouseOut()'></i> 30분</th>" +
+                            "</tr>" +
+                            "</thead>" +
+                            "<tbody id='sensor-table-" + i + "-" + z + "'>" +
+                            "<tr>" +
+                            "<td colspan='2'></td>";
+                    } else {
+                        innerHtml +=
+                            "<th width=18%'>항목</th>" +
+                            "<th width=12%'>법적기준</th>" +
+                            "<th width=12%'>사내기준</th>" +
+                            // 관리기준 임시삭제
+                            //"<th width=10%'>관리기준</th>" +
+                            "<th width=15%'><i class='fas fa-circle fa-xs' color='"+data[z].recent_color+"' onmouseover='statusMouseOn(\""+data[z].recent_status1+"\", \""+ data[z].recent_status2+"\")' onmouseout='statusMouseOut()'></i> 실시간</th>" +
+                            "<th width=15%'><i class='fas fa-circle fa-xs' color='"+data[z].rm05_color+"' onmouseover='statusMouseOn(\""+data[z].rm05_status1+"\", \""+ data[z].rm05_status2+"\")' onmouseout='statusMouseOut()'></i> 5분</th>" +
+                            "<th width=15%'><i class='fas fa-circle fa-xs' color='"+data[z].rm30_color+"' onmouseover='statusMouseOn(\""+data[z].rm30_status1+"\", \""+ data[z].rm30_status2+"\")' onmouseout='statusMouseOut()'></i> 30분</th>" +
+                            "</tr>" +
+                            "</thead>" +
+                            "<tbody id='sensor-table-" + i + "-" + z + "'>" +
+                            "<tr>" +
+                            "<td colspan='4'></td>";
+                    }
+                    innerHtml +=
+                        "</tr>" +
+                        "</tbody>" +
+                        "</table>" +
+                        "<div id='chart-" + i + "-" + z + "'></div>" +
+                        "</div>";
+
+                    $('.' + i).append(innerHtml);
+                }
+            }
+        } else {
+            $('#place_table').append(
+                "<div class='col-md-12 mb-3 mt-2 place_border'>" +
+                "<table class='table table-bordered table-hover text-center mt-1'>" +
+                "<thead>" +
+                "<tr class='add-bg-color'>" +
+                "<th width=22%'>항목</th>" +
+                "<th width=26%'>실시간</th>" +
+                "<th width=26%'>5분</th>" +
+                "<th width=26%'>30분</th>" +
+                "</tr>" +
+                "</thead>" +
+                "<tbody>" +
+                "<tr>" +
+                "<td colspan='5'>모니터링 설정된 센서 데이터가 없습니다.</td>" +
+                "</tr>" +
+                "</tbody>" +
+                "</table>" +
+                "</div>");
+        }
+    }
+
+    /*
+    //호출되는 곳 없음 (삭제)
+    function noData() {
+        const tbody = document.getElementsByTagName('tbody');
+        const newRow = tbody.insertRow(tbody.rows);
+        const newCeil0 = newRow.insertCell();
+        newCeil0.innerHTML = '<div onclick=' + 'window.event.cancelBubble=true' + '>' + '모니터링 설정된 센서 데이터가 없습니다.'
+            + '</div>';
+        newCeil0.colSpan = 5;
+    }
+    */
+
+    /**
+     * 측정소 테이블 생성
+     */
+    function draw_place_table(placeInfo) {
+        // i:측정소idx, z:센서idx
+        for (let i = 0; i < placeInfo.length; i++) {
+            const data = placeInfo[i].data;
+            for (let z = 0; z < data.length; z++) {
+                $('#sensor-table-' + i + '-' + z).empty();
+                let tbody = document.getElementById('sensor-table-' + i + '-' + z);
+                if (tbody == null) {
+                    draw_place_table_frame(placeInfo);
+                    tbody = document.getElementById('sensor-table-' + i + '-' + z);
+                }
+
+                // 날짜 표시
+                $("#update-" + i + '-' + z).text(moment(data[z].recent_up_time).format('YYYY-MM-DD HH:mm:ss'));
+
+                // 센서 데이터 단위 표시
+                const unit = data[z].unit;
+                if (unit != "" && unit != null) {
+                    $("#unit-" + i + '-' + z).text("[단위 : " + unit + "]");
+                }
+
+                // 현재시간 -5분 후 현재시간이 더 크다면 css 적용
+                /*
+                let dataTime = new Date(data[z].recent_up_time);
+                let nowTime = new Date();
+                nowTime.setMinutes(nowTime.getMinutes() - 5);
+                */
+
+                // 만들어진 함수 활용하게 변경 true = 5분 이내, false = 5분 지남
+                const timeCheck = compareTime(data[z].recent_up_time);
+
+                /* 기준 값 유무에 따라 split */
+                const newRow = tbody.insertRow(tbody.rows.length);
+                const newCeil0 = newRow.insertCell(0); //항목
+                const newCeil1 = newRow.insertCell(1); //실시간
+                const newCeil2 = newRow.insertCell(2); //5분
+                const newCeil4 = newRow.insertCell(3); //30분
+
+                newCeil0.innerHTML = data[z].naming + '<input type="hidden" value=' + data[z].name + '>';
+
+                // 설정된 기준값이 있나
+                if (!data[z].standardExistStatus) {
+                    if (!timeCheck) {
+                        $(newRow).attr('class', 'bg-secondary text-light');
+                    } else {
+                        $(newRow).attr('class', '');
+                    }
+
+                    newCeil1.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
+                    newCeil2.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
+                    newCeil4.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
+                } else {
+                    let legalStandard, companyStandard, managementStandard;
+
+                    if (data[z].legalStandard == 999999) {
+                        legalStandard = '-';
+                    } else {
+                        legalStandard = data[z].legalStandard;
+                    }
+
+                    if (data[z].companyStandard == 999999) {
+                        companyStandard = '-';
+                    } else {
+                        companyStandard = data[z].companyStandard;
+                    }
+
+                    /*
+                    // 관리기준 임시 삭제
+                    if (data[z].managementStandard == 999999) {
+                        managementStandard = '-';
+                    } else {
+                        managementStandard = data[z].managementStandard;
+                    }
+                    */
+
+                    // 5분이내에 데이터 없을 경우 : bg-secondary, 법적기준 값 초과시 : bg-danger, 사내기준 값 초과시 : bg-warning
+                    let newValue = data[z].recent_value;
+                    if (!timeCheck) {
+                        $(newRow).attr('class', 'bg-secondary text-light');
+                    } else if (newValue > data[z].legalStandard) {
+                        $(newRow).attr('class', 'bg-danger text-light');
+                    } else if (newValue > data[z].companyStandard) {
+                        $(newRow).attr('class', 'bg-warning text-light');
+                    }
+                    /* 관리기준 임시삭제
+                    else if(newValue > data[z].managementStandard){
+                        $(newRow).attr('class', 'bg-success text-light');
+                    }
+                    */
+                    else {
+                        $(newRow).attr('class', '');
+                    }
+
+                    const newCeil5 = newRow.insertCell(4);
+                    const newCeil6 = newRow.insertCell(5);
+                    newCeil1.innerHTML = '<div class="bg-danger text-light">' + legalStandard + '</div>';
+                    newCeil2.innerHTML = '<div class="bg-warning text-light">' + companyStandard + '</div>';
+                    /* 관리기준 임시삭제
+                    newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
+                     */
+                    newCeil4.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
+                    newCeil5.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
+                    newCeil6.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
+                }
+            }
+        }
+    }
+
+    /**
+     * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
+     */
+    function draw_compareData(beforeData, nowData) {
+        beforeData = beforeData.toFixed(2);
+        nowData = nowData.toFixed(2);
+        if (beforeData > nowData) {
+            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData;
+        } else if (nowData > beforeData) {
+            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData;
+        } else if (nowData == beforeData) {
+            return '<span style="font-weight: bold">- </span>' + nowData;
+        } else {
+            return nowData;
+        }
     }
 
     /**
@@ -630,14 +836,16 @@
      */
     $("#place_table").on('click', 'tbody tr', function () {
         <%--location.replace("<%=cp%>/sensor?sensor=" + sensorName);--%>
-        var tbodyId = $(this).parent('tbody').attr('id');
+        const tbodyId = $(this).parent('tbody').attr('id');
         const sensorName = $(this).find('td input')[0].value;
-        var chartIndex = tbodyId.substr(13, 5);
-        var firstExcute = true;
+        const chartIndex = tbodyId.substr(13, 5);
+
+        let firstExcute = true;
         setTimeout(function chartInterval() {
-            var sensorDataList = getSensor(sensorName, 13);
-            var recentData;
-            var realTime = {};
+            let sensorDataList = getSensor(sensorName, 13);
+            let recentData;
+            let realTime = {};
+
             if (sensorDataList.length == 0) {
                 if ($('#chart-' + chartIndex)[0].innerText != '최근 10분 데이터가 없습니다.') {
                     if (firstExcute) {
@@ -647,13 +855,15 @@
                     setTimeout(chartInterval, 10000);
                 } else {
                     if (firstExcute) {
+                        // 이 부분 언제 타는지 체크
                         $('#chart-' + chartIndex).find('p').remove();
                     } else {
                         setTimeout(chartInterval, 10000);
                     }
                 }
             } else {
-                // console.log("chart 생성");
+
+                // chart 생성 (여기서부터 확인할 것)
                 if ($('#chart-' + chartIndex)[0].innerHTML.length == 0) {
                     draw_place_chart_frame(chartIndex);
                     recentData = getSensorData(sensorName);
@@ -714,13 +924,24 @@
                     }
                 }
             }
-        }, 0);
+            //
 
+        }, 0);
     });
 
+    /**
+     * 차트 영역 그리기
+     * @param index 차트 영역 id
+     */
+    function draw_place_chart_frame(index) {
+        chart['chart-' + index] = new ApexCharts(document.querySelector("#chart-" + index), setChartOption());
+        chart['chart-' + index].render();
+        // $('#chart-'+i+'-'+z).hide();
+    }
 
     /**
-     * 알림음
+     * 알람음 설정
+     * @param onOff on/off 여부
      */
     function alarmTone(onOff) {
         if (onOff == 'on' && $('input:radio[name=alarmTone]:checked').val() == 'on') {
@@ -732,6 +953,21 @@
         $('#audioDiv').append(audioInnerHTML);
     }
 
+    /**
+     * 현재시간과 비교하여 5분이내면 true, 외외면 false
+     */
+    function compareTime(dateTime) {
+        const dt = moment(dateTime, 'YYYY-MM-DD HH:mm:ss');
+        const now = moment();
+        const diffTime = moment.duration(now.diff(dt)).asMinutes();
+        if (diffTime > 5) { //5분 차이
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // 여기서부터 체크
     /**
      *  점멸 효과
      */
@@ -756,240 +992,6 @@
             if (typeof flIn1 !== "undefined") {
                 clearTimeout(flIn1);
             }
-        }
-    }
-
-    function draw_place_chart_frame(index) {
-        chart['chart-' + index] = new ApexCharts(document.querySelector("#chart-" + index), setChartOption());
-        chart['chart-' + index].render();
-        // $('#chart-'+i+'-'+z).hide();
-    }
-
-    /**
-     * 측정소의 갯수에 따라 테이블 틀 생성 (홀수 : 테이블 1개, 짝수: 테이블 2개 씩 출력)
-     */
-    function draw_place_table_frame(placeInfo) {
-        $('#place_table').empty();
-        var col_md_size;
-        if (placeInfo.length != 0) {
-            for (let i = 0; i < placeInfo.length; i++) {
-                var placeName = placeInfo[i].place; //측정소명
-                var dataLength = placeInfo[i].monitoringOn; //모니터링On된 센서수
-                var data = placeInfo[i].data; //모니터링On된 센서수
-                if (placeInfo.length == 1) { // 측정소 1개 width 100%
-                    col_md_size = 12;
-                } else { // 측정소 1개 width 50%
-                    col_md_size = 6;
-                }
-                /* 기준 값 유무에 따라 split */
-                $('#place_table').append(
-                    "<div class='col-md-" + col_md_size + " mb-3 mt-2 place_border " + i + "'>" +
-                    "<div class='m-2 text-center' style='background-color: #0d6efd; color: #fff;'>" +
-                    "<span class='fs-5' id='placeName'>" + placeName + "</span></div>");
-                for (var z = 0; z < dataLength; z++) {
-                    var standardExistStatus = data[z].standardExistStatus;
-                    if (!standardExistStatus) {
-                        $('.' + i).append( //i:측정소idx z:센서idx
-                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 : <span style='padding: 0' id=update-" + i + "-" + z + "></span>&nbsp;<span style='padding: 0' id=unit-" + i + "-" + z + "></span></div>" +
-                            "<table class='table table-bordered table-hover text-center mt-1'>" +
-                            "<thead>" +
-                            "<tr class='add-bg-color'>" +
-                            "<th width=22%'>항목</th>" +
-                            "<th width=26%'>실시간</th>" +
-                            "<th width=26%'>5분</th>" +
-                            "<th width=26%'>30분</th>" +
-                            "</tr>" +
-                            "</thead>" +
-                            "<tbody id='sensor-table-" + i + "-" + z + "'>" +
-                            "<tr>" +
-                            "<td colspan='2'></td>" +
-                            "</tr>" +
-                            "</tbody>" +
-                            "</table>" +
-                            "<div id='chart-" + i + "-" + z + "'></div>" +
-                            "</div>");
-                    } else {
-                        $('.' + i).append(
-                            "<div class='text-end' style='font-size: 0.8rem'>업데이트 : <span style='padding: 0' id=update-" + i + "-" + z + "></span>&nbsp;<span style='padding: 0' id=unit-" + i + "-" + z + "></span></div>" +
-                            "<table class='table table-bordered table-hover text-center mt-1'>" +
-                            "<thead>" +
-                            "<tr class='add-bg-color'>" +
-                            "<th width=18%'>항목</th>" +
-                            "<th width=12%'>법적기준</th>" +
-                            "<th width=12%'>사내기준</th>" +
-                            /* 관리기준 임시삭제
-                            "<th width=10%'>관리기준</th>" +
-                            */
-                            "<th width=15%'>실시간</th>" +
-                            "<th width=15%'>5분</th>" +
-                            "<th width=15%'>30분</th>" +
-                            "</tr>" +
-                            "</thead>" +
-                            "<tbody id='sensor-table-" + i + "-" + z + "'>" +
-                            "<tr>" +
-                            "<td colspan='4'></td>" +
-                            "</tr>" +
-                            "</tbody>" +
-                            "</table>" +
-                            "<div id='chart-" + i + "-" + z + "'></div>" +
-                            "</div>");
-                    }
-                }
-            }
-        } else {
-            $('#place_table').append(
-                "<div class='col-md-12 mb-3 mt-2 place_border'>" +
-                "<table class='table table-bordered table-hover text-center mt-1'>" +
-                "<thead>" +
-                "<tr class='add-bg-color'>" +
-                "<th width=28%'>항목</th>" +
-                "<th width=17%'>실시간</th>" +
-                "<th width=17%'>5분</th>" +
-                /* 관리기준 임시삭제
-                "<th width=17%'>관리기준</th>" +
-                */
-                "<th width=21%'>30분</th>" +
-                "</tr>" +
-                "</thead>" +
-                "<tbody>" +
-                "<tr>" +
-                "<td colspan='5'>데이터가 없습니다.</td>" +
-                "</tr>" +
-                "</tbody>" +
-                "</table>" +
-                "</div>");
-        }
-    }
-
-
-    /**
-     * 측정소 테이블 생성
-     */
-    function draw_place_table(placeInfo) {
-        var placeCount = placeInfo.length;
-        if (placeCount != 0) {
-            for (var i = 0; i < placeCount; i++) {
-                var data = placeInfo[i].data;
-                var dataCount = data.length;
-                if (dataCount != 0) {
-                    for (let z = 0; z < dataCount; z++) {
-                        var unit;
-                        var recentData = data[z];
-                        var standarExistStatus = data[z].standardExistStatus;
-                        $('#sensor-table-' + i + '-' + z).empty();
-                        var tbody = document.getElementById('sensor-table-' + i + '-' + z);
-                        if (tbody == null) {
-                            draw_place_table_frame(placeInfo);
-                            tbody = document.getElementById('sensor-table-' + i + '-' + z);
-                        }
-                        /* 기준 값 유무에 따라 split */
-                        const newRow = tbody.insertRow(tbody.rows.length);
-                        $("#update-" + i + '-' + z).text(moment(data[z].recent_up_time).format('YYYY-MM-DD HH:mm:ss'));
-                        if (data[z].unit != "" && data[z].unit != null) {
-                            unit = data[z].unit;
-                            $("#unit-" + i + '-' + z).text("[ 단위 : " + unit + " ]");
-                        }
-
-                        //현재시간 -5분 후 현재시간이 더 크다면 css 적용
-                        let dataTime = new Date(data[z].recent_up_time);
-                        let nowTime = new Date();
-                        nowTime.setMinutes(nowTime.getMinutes() - 5);
-
-                        const newCeil0 = newRow.insertCell(0);
-                        const newCeil1 = newRow.insertCell(1);
-                        const newCeil2 = newRow.insertCell(2);
-                        // 관리기준 임시삭제 const newCeil3 = newRow.insertCell(3);
-                        // newceil4 = new Row.insertCell(4) -> newCeil4 = newRow.insertCell(3)
-                        const newCeil4 = newRow.insertCell(3);
-
-                        newCeil0.innerHTML = data[z].naming + '<input type="hidden" value=' + data[z].name + '>';
-
-                        if (!standarExistStatus) {
-                            if (dataTime < nowTime) {
-                                $(newRow).attr('class', 'bg-secondary text-light');
-                            } else {
-                                $(newRow).attr('class', '');
-                            }
-
-                            newCeil1.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
-                            newCeil2.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
-                            newCeil4.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
-                        } else {
-
-                            if (data[z].legalStandard == 999999) {
-                                legalStandard = '-';
-                            } else {
-                                legalStandard = data[z].legalStandard;
-                            }
-                            if (data[z].companyStandard == 999999) {
-                                companyStandard = '-';
-                            } else {
-                                companyStandard = data[z].companyStandard;
-                            }
-                            if (data[z].managementStandard == 999999) {
-                                managementStandard = '-';
-                            } else {
-                                managementStandard = data[z].managementStandard;
-                            }
-
-                            //시간비교후 css 적용, 그외 기준값 비교후 css 적용
-                            let newValue = data[z].recent_value;
-                            if (dataTime < nowTime) {
-                                $(newRow).attr('class', 'bg-secondary text-light');
-                            } else if (newValue > data[z].legalStandard) {
-                                $(newRow).attr('class', 'bg-danger text-light');
-                            } else if (newValue > data[z].companyStandard) {
-                                $(newRow).attr('class', 'bg-warning text-light');
-                            }
-                            /* 관리기준 임시삭제
-                            else if(newValue > data[z].managementStandard){
-                                $(newRow).attr('class', 'bg-success text-light');
-                            }
-                            */
-                            else {
-                                $(newRow).attr('class', '');
-                            }
-
-                            const newCeil5 = newRow.insertCell(4);
-                            const newCeil6 = newRow.insertCell(5);
-                            newCeil1.innerHTML = '<div class="bg-danger text-light">' + legalStandard + '</div>';
-                            newCeil2.innerHTML = '<div class="bg-warning text-light">' + companyStandard + '</div>';
-                            /* 관리기준 임시삭제
-                            newCeil3.innerHTML = '<div class="bg-success text-light">'+managementStandard+'</div>';
-                             */
-                            newCeil4.innerHTML = draw_compareData(data[z].recent_beforeValue, data[z].recent_value);
-                            newCeil5.innerHTML = draw_compareData(data[z].rm05_beforeValue, data[z].rm05_value);
-                            newCeil6.innerHTML = draw_compareData(data[z].rm30_beforeValue, data[z].rm30_value);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    function noData() {
-        const tbody = document.getElementsByTagName('tbody');
-        const newRow = tbody.insertRow(tbody.rows);
-        const newCeil0 = newRow.insertCell();
-        newCeil0.innerHTML = '<div onclick=' + 'window.event.cancelBubble=true' + '>' + '모니터링 설정된 센서 데이터가 없습니다.'
-            + '</div>';
-        newCeil0.colSpan = 5;
-    }
-
-    /**
-     * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
-     */
-    function draw_compareData(beforeData, nowData) {
-        beforeData = beforeData.toFixed(2);
-        nowData = nowData.toFixed(2);
-        if (beforeData > nowData) {
-            return '<i class="fas fa-sort-down fa-fw" style="color: blue"></i>' + nowData;
-        } else if (nowData > beforeData) {
-            return '<i class="fas fa-sort-up fa-fw" style="color: red"></i>' + nowData;
-        } else if (nowData == beforeData) {
-            return '<span style="font-weight: bold">- </span>' + nowData;
-        } else {
-            return nowData;
         }
     }
 
@@ -1109,24 +1111,9 @@
     }
 
     /**
-     * 현재시간과 비교하여 5분이내면 true, 외외면 false
-     */
-    function compareTime(dateTime) {
-        const dt = moment(dateTime, 'YYYY-MM-DD HH:mm:ss');
-        const now = moment();
-        const diffTime = moment.duration(now.diff(dt)).asMinutes();
-        if (diffTime > 5) { //5분 차이
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * 알림음 On / Off 이벤트
      */
     $('input:radio[name=alarmTone]').click(function () {
-
         if ($('input:radio[name=alarmTone]:checked').val() == 'on') {
             alarmCheck = "on";
         } else {
@@ -1137,6 +1124,7 @@
         }
         setCookie("alarmCheck", alarmCheck, 999);
     });
+    
     /**
      * 점멸 효과 On / Off 이벤트
      */
@@ -1487,6 +1475,7 @@
         return result;
     }
 
+    // 용도 체크
     function excess() {
         addExcessData();
         getAlarmListNum();
@@ -1750,6 +1739,7 @@
         }
         getAlarmListNum();
     }
+    //여기까지
 
     function customSwal(text) {
         Swal.fire({
