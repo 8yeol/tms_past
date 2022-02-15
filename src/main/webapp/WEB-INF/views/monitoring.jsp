@@ -69,26 +69,26 @@
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#normal').css('display','block')"
                           onmouseout="$('#normal').css('display','none')">정상</span>
-                    <p id="statusOn" class="text-success fs-3" onmouseover="$('#normal2').css('display','block')"
-                       onmouseout="$('#normal2').css('display','none')">0</p>
+                    <p id="statusOn" class="text-success fs-3" onmouseover="$('#normalInfo').css('display','block')"
+                       onmouseout="$('#normalInfo').css('display','none')">0</p>
                     <div class="Gcloud-l" id="normal" style="display: none">모니터링 ON 되어있고, 정상적으로 데이터가 통신되고 있는 상태</div>
-                    <div class="Gcloud-r box" id="normal2" style="display: none"></div>
+                    <div class="Gcloud-r box" id="normalInfo" style="display: none"></div>
                 </div>
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#failure').css('display','block')"
                           onmouseout="$('#failure').css('display','none')">통신불량</span>
-                    <p id="statusOff" class="text-danger fs-3" onmouseover="$('#failure2').css('display','block')"
-                       onmouseout="$('#failure2').css('display','none')">0</p>
+                    <p id="statusOff" class="text-danger fs-3" onmouseover="$('#failureInfo').css('display','block')"
+                       onmouseout="$('#failureInfo').css('display','none')">0</p>
                     <div class="Gcloud-l" id="failure" style="display: none">센서 데이터가 5분이상 통신되고 있지 않은 상태</div>
-                    <div class="Gcloud-r box" id="failure2" style="display: none"></div>
+                    <div class="Gcloud-r box" id="failureInfo" style="display: none"></div>
                 </div>
                 <div class="topDash-l text-center">
                     <span class="fw-bold fs-5" onmouseover="$('#off').css('display','block')"
                           onmouseout="$('#off').css('display','none')">모니터링 OFF</span>
-                    <p id="monitoringOff" class="fs-3" onmouseover="$('#off2').css('display','block')"
-                       onmouseout="$('#off2').css('display','none')">0</p>
+                    <p id="monitoringOff" class="fs-3" onmouseover="$('#monitoringOffInfo').css('display','block')"
+                       onmouseout="$('#monitoringOffInfo').css('display','none')">0</p>
                     <div class="Gcloud-l line" id="off" style="display: none">모니터링 OFF 설정 되어있는 상태</div>
-                    <div class="Gcloud-r box" id="off2" style="display: none"></div>
+                    <div class="Gcloud-r box" id="monitoringOffInfo" style="display: none"></div>
                 </div>
             </div>
         </div>
@@ -97,14 +97,14 @@
                 <c:when test="${state == '1'}">
                     <div class="topDash-r">
                         <span class="text-center fw-bold bg-danger">법적기준 초과</span>
-                        <p id="legal_standard_text_A" style="cursor: pointer" class="text-danger fs-1 bg-white" onclick="getAlarmList(1)">0</p>
+                        <p style="cursor: pointer" class="text-danger fs-1 bg-white legal_standard_text" onclick="getAlarmList(1)">0</p>
                         <div id="legal_1" class="alarmList" style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #dc3545; box-shadow:5px 5px 20px 0 rgba(220,53,69,0.1), -5px -5px 20px 0 rgba(220,53,69,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
                         </div>
                     </div>
 
                     <div class="topDash-r">
                         <span class="text-center fw-bold bg-warning">사내기준 초과</span>
-                        <p id="company_standard_text_A" style="cursor: pointer" class="text-warning fs-1 bg-white" onclick="getAlarmList(2)">0</p>
+                        <p style="cursor: pointer" class="text-warning fs-1 bg-white company_standard_text" onclick="getAlarmList(2)">0</p>
                         <div id="company_1" class="alarmList" style="display: none; padding: 5px 10px 10px; background-color: white; color: black; border: 2px solid #ffc107; box-shadow:5px 5px 20px 0 rgba(255,193,7,0.1), -5px -5px 20px 0 rgba(255,193,7,0.1); position: absolute; z-index: 99; width: 400px; left: 15px; top: 130px;">
                         </div>
                     </div>
@@ -112,23 +112,23 @@
                     <%--                    관리기준 임시삭제--%>
                     <%--                    <div class="topDash-r">--%>
                     <%--                        <span class="text-center fw-bold bg-success">관리기준 초과</span>--%>
-                    <%--                        <p id="management_standard_text_A" style="cursor: pointer" class="text-success fs-1 bg-white" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>--%>
+                    <%--                        <p style="cursor: pointer" class="text-success fs-1 bg-white management_standard_text" onmouseover="$('#management').css('display','block')" onmouseout="$('#management').css('display','none')">0</p>--%>
                     <%--                        <div id="management_1" class="alarmList" style="display: none"></div>--%>
                     <%--                    </div>--%>
                 </c:when>
                 <c:otherwise>
                     <div class="topDash-r">
                         <span class="text-center fw-bold bg-danger">법적기준 초과</span>
-                        <p id="legal_standard_text_B" class="text-danger fs-1 bg-white">0</p>
+                        <p class="text-danger fs-1 bg-white legal_standard_text">0</p>
                     </div>
                     <div class="topDash-r">
                         <span class="text-center fw-bold bg-warning">사내기준 초과</span>
-                        <p id="company_standard_text_B" class="text-warning fs-1 bg-white">0</p>
+                        <p class="text-warning fs-1 bg-white company_standard_text">0</p>
                     </div>
                     <%--                    관리기준 임시삭제--%>
                     <%--                    <div class="topDash-r">--%>
                     <%--                        <span class="text-center fw-bold bg-success">관리기준 초과</span>--%>
-                    <%--                        <p id="management_standard_text_B" class="text-success fs-1 bg-white">0</p>--%>
+                    <%--                        <p class="text-success fs-1 bg-white management_standard_text">0</p>--%>
                     <%--                    </div>--%>
                 </c:otherwise>
             </c:choose>
@@ -521,7 +521,7 @@
         }, 0);
         */
         getData();
-        excess();
+        excess(); // 상단 대시보드 초과 모니터링
     });
 
     /**
@@ -691,18 +691,6 @@
         }
     }
 
-    /*
-    //호출되는 곳 없음 (삭제)
-    function noData() {
-        const tbody = document.getElementsByTagName('tbody');
-        const newRow = tbody.insertRow(tbody.rows);
-        const newCeil0 = newRow.insertCell();
-        newCeil0.innerHTML = '<div onclick=' + 'window.event.cancelBubble=true' + '>' + '모니터링 설정된 센서 데이터가 없습니다.'
-            + '</div>';
-        newCeil0.colSpan = 5;
-    }
-    */
-
     /**
      * 측정소 테이블 생성
      */
@@ -814,6 +802,32 @@
         }
     }
 
+    /*
+    //호출되는 곳 없음 (삭제)
+    function noData() {
+        const tbody = document.getElementsByTagName('tbody');
+        const newRow = tbody.insertRow(tbody.rows);
+        const newCeil0 = newRow.insertCell();
+        newCeil0.innerHTML = '<div onclick=' + 'window.event.cancelBubble=true' + '>' + '모니터링 설정된 센서 데이터가 없습니다.'
+            + '</div>';
+        newCeil0.colSpan = 5;
+    }
+    */
+
+    /**
+     * 현재시간과 비교하여 5분이내면 true, 외외면 false
+     */
+    function compareTime(dateTime) {
+        const dt = moment(dateTime, 'YYYY-MM-DD HH:mm:ss');
+        const now = moment();
+        const diffTime = moment.duration(now.diff(dt)).asMinutes();
+        if (diffTime > 5) { //5분 차이
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     /**
      * 직전값 현재값 비교하여 UP/DOWN 현재값 리턴
      */
@@ -855,45 +869,50 @@
                     setTimeout(chartInterval, 10000);
                 } else {
                     if (firstExcute) {
-                        // 이 부분 언제 타는지 체크
+                        // getSensor로 조회한 최근 데이터가 없고, 최근 10분 데이터가 없습니다 라고 표시되어 있을때 (p 영역이 열려있을때 닫는 경우)
                         $('#chart-' + chartIndex).find('p').remove();
                     } else {
                         setTimeout(chartInterval, 10000);
                     }
                 }
             } else {
-
-                // chart 생성 (여기서부터 확인할 것)
+                // chart 생성
                 if ($('#chart-' + chartIndex)[0].innerHTML.length == 0) {
-                    draw_place_chart_frame(chartIndex);
-                    recentData = getSensorData(sensorName);
-                    updateChart(sensorDataList, recentData, chartIndex);
+                    draw_place_chart_frame(chartIndex); // 차트 index로 차트 영역 생성
+                    recentData = getSensorData(sensorName); // 관리 기준값, 차트 기준값(min, max), 이전데이터 등 리턴
+                    updateChart(sensorDataList, recentData, chartIndex); //초기 차트 세팅
+
                     setTimeout(function realTime() {
-                        var sensorDataLength = sensorDataList.length;
                         if ($('#chart-' + chartIndex)[0].childNodes[0] != undefined) {
-                            var update = $('#update-' + chartIndex)[0].innerText;
-                            var columnCount = $('#sensor-table-' + chartIndex).find('td').length;
-                            var recentValue;
+                            const columnCount = $('#sensor-table-' + chartIndex).find('td').length; //기준값 표시 되어있는지 여부 체크
+                            let recentValue;
                             if (columnCount == 4) {
                                 recentValue = $('#sensor-table-' + chartIndex).find('td')[1].innerText;
-                                // 관리기준 임시삭제
-                                // columnCount == 7 로 변경하세요
+                                // 관리기준 임시삭제(추가시 columnCount == 7, ('td')[4]로 변경)
                             } else if (columnCount == 6) {
-                                recentValue = $('#sensor-table-' + chartIndex).find('td')[4].innerText;
+                                recentValue = $('#sensor-table-' + chartIndex).find('td')[3].innerText;
                             }
+
+                            /*
+                            // 사용안함
                             if (recentValue.indexOf("-") !== -1) {
                                 recentValue = recentValue.substr(2);
                             }
-                            var dataListTime = moment(sensorDataList[sensorDataLength - 1].x).format("YYYY-MM-DD HH:mm:ss");
+                            */
+
+                            const lastChartTime = moment(sensorDataList[sensorDataList.length - 1].x).format("YYYY-MM-DD HH:mm:ss"); // 차트에 마지막 업데이트 된 시간
+                            // 여기서부터 확인
                             var before10Min = new Date();
                             var after1Min = new Date();
+
+                            const update = $('#update-' + chartIndex)[0].innerText; // 테이블 위에 update 표시 된 시간
                             if (document.getElementById('statusOff').innerText > 0) {
                                 after1Min = after1Min.setMinutes(after1Min.getMinutes() + 1);
                                 before10Min = before10Min.setMinutes(before10Min.getMinutes() - 14);
                                 after1Min = moment(after1Min).format("YYYY-MM-DD HH:mm:ss");
                                 before10Min = moment(before10Min).format("YYYY-MM-DD HH:mm:ss");
-                                if (before10Min < dataListTime && dataListTime <= after1Min) {
-                                    if (dataListTime < update) {
+                                if (before10Min < lastChartTime && lastChartTime <= after1Min) {
+                                    if (lastChartTime < update) {
                                         sensorDataList.push({x: update, y: recentValue});
                                         updateChart(sensorDataList, recentData, chartIndex);
                                     }
@@ -903,7 +922,7 @@
                                     setTimeout(chartInterval, 0);
                                 }
                             } else {
-                                if (dataListTime < update) {
+                                if (lastChartTime < update) {
                                     sensorDataList.push({x: update, y: recentValue});
                                     updateChart(sensorDataList, recentData, chartIndex);
                                 }
@@ -913,6 +932,7 @@
                             }
                             realTime['chart-' + chartIndex] = setTimeout(realTime, 1000);
                         }
+                        // 여기까지
                     }, 0);
                 } else {
                     if ($('#chart-' + chartIndex)[0].innerText == '최근 10분 데이터가 없습니다.') {
@@ -923,9 +943,8 @@
                         chart['chart-' + chartIndex].destroy();
                     }
                 }
-            }
-            //
 
+            }
         }, 0);
     });
 
@@ -940,208 +959,7 @@
     }
 
     /**
-     * 알람음 설정
-     * @param onOff on/off 여부
-     */
-    function alarmTone(onOff) {
-        if (onOff == 'on' && $('input:radio[name=alarmTone]:checked').val() == 'on') {
-            audioInnerHTML = '<audio id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>';
-        } else {
-            audioInnerHTML = '<audio muted id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>';
-        }
-        $('#audioDiv').empty();
-        $('#audioDiv').append(audioInnerHTML);
-    }
-
-    /**
-     * 현재시간과 비교하여 5분이내면 true, 외외면 false
-     */
-    function compareTime(dateTime) {
-        const dt = moment(dateTime, 'YYYY-MM-DD HH:mm:ss');
-        const now = moment();
-        const diffTime = moment.duration(now.diff(dt)).asMinutes();
-        if (diffTime > 5) { //5분 차이
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    // 여기서부터 체크
-    /**
-     *  점멸 효과
-     */
-    function flashing(onOff, bg) {
-        const element = $("body");
-        if (onOff == 'on' && bg != null) {
-            if (typeof flIn1 !== "undefined") {
-                clearTimeout(flIn1);
-            }
-            setTimeout(function flashInterval() {
-                setTimeout(function () {
-                    element.removeClass("bg-lightBlue");
-                    element.addClass(bg);
-                }, 0);
-                setTimeout(function () {
-                    element.removeClass(bg);
-                    element.addClass("bg-lightBlue");
-                }, 400); //0.4초 숨김
-                flIn1 = setTimeout(flashInterval, 1000); //0.6초 보여줌
-            }, 0)
-        } else {
-            if (typeof flIn1 !== "undefined") {
-                clearTimeout(flIn1);
-            }
-        }
-    }
-
-    /**
-     *  대시보드 생성 (가동률, 통신 상태, 기준값 등)
-     */
-    function draw_sensor_info(placeInfo) {
-        let state = ${state};
-        if (placeInfo.length != 0) {
-            var placeCount = placeInfo.length;
-            var sensorMonitoringOn = 0, allMonitoringOFF = 0,
-                sensorStatusSuccess = 0, sensorStatusFail = 0,
-                legalSCount = 0, companySCount = 0, managementSCount = 0,
-                notexistLegalStandard = 0, notexistCompanyStandard = 0, notexistManagementStandard = 0;
-            allMonitoringOFF = placeInfo[0].allMonitoringOFFList.length;
-            var sensorStatusSuccessList = new Array();
-            var sensorStatusFailList = new Array();
-            for (var i = 0; i < placeCount; i++) { //측정소별
-                var data = placeInfo[i].data;
-                var dataCount = data.length;
-                sensorMonitoringOn += placeInfo[i].monitoringOn;
-                for (var z = 0; z < dataCount; z++) { //측정소의 센서별 조회
-                    var sensorData = data[z];
-                    value = sensorData.recent_value;
-                    legalStandard = sensorData.legalStandard;
-                    companyStandard = sensorData.companyStandard;
-                    managementStandard = sensorData.managementStandard;
-                    if (compareTime(sensorData.recent_up_time)) { // 최근데이터가 5분 이내 일때, 통신 정상, 알림음, 점멸효과
-                        sensorStatusSuccess += 1;
-                        if (legalStandard == 999999) {
-                            notexistLegalStandard += 1;
-                        }
-                        if (companyStandard == 999999) {
-                            notexistCompanyStandard += 1;
-                        }
-                        if (managementStandard == 999999) {
-                            notexistManagementStandard += 1;
-                        }
-                        if (value > legalStandard) {
-                            legalSCount += 1;
-                        } else if (value > companyStandard) {
-                            companySCount += 1;
-                        } else if (value > managementStandard) {
-                            managementSCount += 1;
-                        }
-                        sensorStatusSuccessList.push(placeInfo[i].place + "-" + sensorData.naming);
-                    } else { // 최근데이터가 5분 이외일 때, 통신불량 처리
-                        sensorStatusFailList.push(placeInfo[i].place + "-" + sensorData.naming);
-                        sensorStatusFail += 1;
-                    }
-
-                }
-            }
-            // if (legalSCount > 0) {
-            //     flashing(flashCheck, "bg-danger");
-            //     alarmTone('on');
-            // } else if (companySCount > 0) {
-            //     flashing(flashCheck, "bg-warning");
-            //     alarmTone('on');
-            // } else if (managementSCount > 0) {
-            //     flashing(flashCheck, "bg-success");
-            //     alarmTone('on');
-            // } else {
-            //     flashing(flashCheck, null);
-            //     alarmTone('off');
-            // }
-            var runPercent = ((sensorStatusSuccess / (sensorStatusSuccess + sensorStatusFail)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
-            var run = sensorStatusSuccess + " / " + (sensorStatusSuccess + sensorStatusFail);
-            if (runPercent == 'NaN') {
-                runPercent = 0;
-            }
-        } else {
-            runPercent = 0;
-            run = "0 / 0";
-            sensorStatusSuccess = 0;
-            sensorStatusFail = 0;
-            allMonitoringOFF = getMonitoringSensor();
-            legalSCount = 0;
-            companySCount = 0;
-            managementSCount = 0;
-        }
-        $("#normal2").empty();
-        $("#failure2").empty();
-        $("#off2").empty();
-        for (var a = 0; a < sensorStatusSuccessList.length; a++) {
-            $("#normal2").append("<p>" + sensorStatusSuccessList[a] + "</p>");
-        }
-        if (sensorStatusSuccessList.length == 0) {
-            $("#normal2").append("<p>" + "모니터링 On 된 센서가 없습니다." + "</p>");
-        }
-        for (var a = 0; a < sensorStatusFailList.length; a++) {
-            $("#failure2").append("<p>" + sensorStatusFailList[a] + "</p>");
-        }
-        if (sensorStatusFailList.length == 0) {
-            $("#failure2").append("<p>" + "통신불량 센서가 없습니다." + "</p>");
-        }
-        for (var a = 0; a < placeInfo[0].allMonitoringOFFList.length; a++) {
-            $("#off2").append("<p>" + placeInfo[0].allMonitoringOFFList[a] + "</p>");
-        }
-        if (placeInfo[0].allMonitoringOFFList.length == 0) {
-            $("#off2").append("<p>" + "모니터링 Off 된 센서가 없습니다." + "</p>");
-        }
-        $("#sensorStatusP").text(runPercent + "%"); //가동률
-        $("#operating").text(run); // 통신정상/전체
-        $("#statusOn").text(sensorStatusSuccess); //정상
-        $("#statusOff").text(sensorStatusFail); //통신불량
-        $("#monitoringOff").text(allMonitoringOFF); //모니터링OFF 개수
-        // if (state == "1") {
-        //     $("#legal_standard_text_A").text(legalSCount); //법적기준 Over
-        //     $("#company_standard_text_A").text(companySCount); //사내기준 Over
-        //     $("#management_standard_text_A").text(managementSCount); //관리기준 Over
-        // } else {
-        //     $("#legal_standard_text_B").text(legalSCount); //법적기준 Over
-        //     $("#company_standard_text_B").text(companySCount); //사내기준 Over
-        //     $("#management_standard_text_B").text(managementSCount); //관리기준 Over
-        // }
-    }
-
-    /**
-     * 알림음 On / Off 이벤트
-     */
-    $('input:radio[name=alarmTone]').click(function () {
-        if ($('input:radio[name=alarmTone]:checked').val() == 'on') {
-            alarmCheck = "on";
-        } else {
-            $('#audioDiv').empty();
-            audioInnerHTML = '<audio muted id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>';
-            $('#audioDiv').append(audioInnerHTML);
-            alarmCheck = "off";
-        }
-        setCookie("alarmCheck", alarmCheck, 999);
-    });
-    
-    /**
-     * 점멸 효과 On / Off 이벤트
-     */
-    document.querySelector('input[name="flashing"]:checked').value;
-    $('input:radio[name=flashing]').click(function () {
-        if ($('input:radio[name=flashing]:checked').val() == 'on') {
-            flashCheck = "on";
-        } else {
-            flashCheck = "off";
-            if (typeof flIn1 !== "undefined")
-                clearTimeout(flIn1);
-        }
-        setCookie("flashCheck", flashCheck, 999);
-    });
-
-    /**
-     * 차트 기본 옵션
+     * 차트 기본 옵션 설정
      */
     function setChartOption() {
         options = {
@@ -1256,35 +1074,40 @@
      *  차트 업데이트
      */
     function updateChart(sensor_data_list, sensor_data, chartIndex) {
-        var arr = new Array();
-        var unit = sensor_data.unit;
-        var dataLength = sensor_data_list.length;
-        var dataIndex = new Array();
+        let unit = sensor_data.unit;
         if (unit == null || unit == undefined) {
             unit = "";
         }
+
+        const arr = new Array();
+        const dataIndex = new Array();
+        const dataLength = sensor_data_list.length;
+        let maxCeil, minFloor;
         if (dataLength != 0) {
-            var recentDate = new Date(sensor_data_list[dataLength - 1].x);
-            var before10Min = recentDate.setMinutes(recentDate.getMinutes() - 10);
+            const recentDate = new Date(sensor_data_list[dataLength - 1].x);
+            let before10Min = recentDate.setMinutes(recentDate.getMinutes() - 10);
             before10Min = new Date(before10Min);
             before10Min = moment(before10Min).format("YYYY-MM-DD HH:mm:ss");
-            for (var i in sensor_data_list) {
+            for (let i in sensor_data_list) {
                 if (before10Min <= moment(sensor_data_list[i].x).format("YYYY-MM-DD HH:mm:ss")) {
                     arr.push(sensor_data_list[i].y);
                     dataIndex.push(i);
                 }
             }
-            var max = arr.reduce(function (previousValue, currentValue) {
+            const max = arr.reduce(function (previousValue, currentValue) {
                 return parseFloat(previousValue > currentValue ? previousValue : currentValue);
             });
-            var min = arr.reduce(function (previousValue, currentValue) {
+            const min = arr.reduce(function (previousValue, currentValue) {
                 return parseFloat(previousValue > currentValue ? currentValue : previousValue);
             });
-            var maxCeil = Math.ceil(max);
-            var minFloor = Math.floor(min);
+            maxCeil = Math.ceil(max);
+            minFloor = Math.floor(min);
         } else {
             sensor_data_list = [];
         }
+
+        // 관리기준, 사내기준, 법적기준 불러오기
+        let managementStandard, companyStandard, legalStandard;
         if (sensor_data.length != 0) {
             managementStandard = sensor_data.managementStandard;
             companyStandard = sensor_data.companyStandard;
@@ -1294,6 +1117,7 @@
             companyStandard = 999999;
             legalStandard = 999999;
         }
+
         chart['chart-' + chartIndex].updateOptions({
             series: [{
                 name: sensor_data.naming,
@@ -1365,7 +1189,7 @@
                 y: {
                     formatter: function (val) {
                         if (unit) {
-                            return val + " " + sensor_data.unit
+                            return val + " " + unit
                         } else {
                             return val;
                         }
@@ -1389,93 +1213,82 @@
         })
     }
 
-
     /**
-     * 모니터링On된 측정소, 센서 모든 정보 Get
+     *  상단 대시보드 - 가동률 (정상, 통신불량, 모니터링 OFF 표시)
      */
-    function getPlaceInfo() {
-        var getData = null;
-        $.ajax({  //측정소의 센서명을 구함
-            url: '<%=cp%>/placeInfo',
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                getData = data;
-            },
-            error: function () {
-            }
-        });
-        return getData;
-    }
+    function draw_sensor_info(placeInfo) {
+        const sensorStatusSuccessList = new Array();
+        const sensorStatusFailList = new Array();
 
-    /**
-     * 센서의 최근 min 분 데이터 조회
-     */
-    function getSensor(sensor_name, min) {
-        let result = new Array();
-        if (sensor_name == undefined) {
-            return null;
-        } else {
-            $.ajax({
-                url: '<%=cp%>/getSensor2',
-                dataType: 'JSON',
-                contentType: "application/json",
-                data: {"sensor": sensor_name, "min": min},
-                async: false,
-                success: function (data) {
-                    if (data.length != 0) {
-                        $.each(data, function (index, item) {
-                            result.push({x: item.up_time, y: (item.value).toFixed(2)});
-                        })
-                    } else {
-                        // 조회 결과 없을 때 return [];
-                        result = [];
+        let runPercent, runCount, monitoringOffCount;
+        let sensorSuccessCount = 0, sensorFailCount = 0;
+
+        if (placeInfo.length != 0) {
+            monitoringOffCount = placeInfo[0].allMonitoringOFFList.length;
+            for (let i = 0; i < placeInfo.length; i++) { //측정소별
+                const placeSensorData = placeInfo[i].data;
+                for (let j = 0; j < placeSensorData.length; j++) { //측정소의 센서별 조회
+                    const sensorData = placeSensorData[j];
+                    const placeName = placeInfo[i].place;
+                    const sensorName = sensorData.naming;
+                    if (compareTime(sensorData.recent_up_time)) { // 최근데이터가 5분 이내 일때, 통신 정상, 알림음, 점멸효과
+                        sensorStatusSuccessList.push(placeName + "-" + sensorName);
+                        sensorSuccessCount++;
+                    } else { // 최근데이터가 5분 이외일 때, 통신불량 처리
+                        sensorStatusFailList.push(placeName + "-" + sensorName);
+                        sensorFailCount++;
                     }
-                },
-                error: function (e) {
                 }
-            });
+            }
+            runPercent = ((sensorSuccessCount / (sensorSuccessCount + sensorFailCount)).toFixed(2) * 100).toFixed(0); //가동률(통신상태 기반)
+            runCount = sensorSuccessCount + " / " + (sensorSuccessCount + sensorFailCount);
+            if (runPercent == 'NaN') {
+                runPercent = 0;
+            }
+        } else {
+            runPercent = 0;
+            runCount = "0 / 0";
+            monitoringOffCount = getMonitoringSensor();
         }
-        return result;
+
+        $("#normalInfo").empty();
+        $("#failureInfo").empty();
+        $("#monitoringOffInfo").empty();
+
+        if (sensorStatusSuccessList.length == 0) {
+            $("#normalInfo").append("<p>" + "모니터링 On 된 센서가 없습니다." + "</p>");
+        }else{
+            for (let i = 0; i < sensorStatusSuccessList.length; i++) {
+                $("#normalInfo").append("<p>" + sensorStatusSuccessList[i] + "</p>");
+            }
+        }
+
+        if (sensorStatusFailList.length == 0) {
+            $("#failureInfo").append("<p>" + "통신불량 센서가 없습니다." + "</p>");
+        }else{
+            for (let i = 0; i < sensorStatusFailList.length; i++) {
+                $("#failureInfo").append("<p>" + sensorStatusFailList[i] + "</p>");
+            }
+        }
+
+        if(placeInfo.length == 0){
+            $("#monitoringOffInfo").append("<p>" + "등록된 모든 센서 OFF." + "<br>[환경설정 > 측정소 관리] 페이지에서 모니터링 ON 설정 가능합니다.</p>");
+        }else{
+            for (let i = 0; i < placeInfo[0].allMonitoringOFFList.length; i++) {
+                $("#monitoringOffInfo").append("<p>" + placeInfo[0].allMonitoringOFFList[i] + "</p>");
+            }
+        }
+
+        $("#sensorStatusP").text(runPercent + "%"); //가동률
+        $("#operating").text(runCount); // 통신 정상/전체
+        $("#statusOn").text(sensorSuccessCount); //정상
+        $("#statusOff").text(sensorFailCount); //통신불량
+        $("#monitoringOff").text(monitoringOffCount); //모니터링OFF 개수
     }
 
     /**
-     * 센서의 모니터링 True인 최근, 직전, 기준 데이터 등을 리턴
+     * 상단 대시보드 interval
      */
-    function getSensorData(sensor) {
-        let result = null;
-        $.ajax({
-            url: '<%=cp%>/getSensorData',
-            dataType: 'JSON',
-            data: {"sensor": sensor},
-            async: false,
-            success: function (data) {
-                result = data;
-            },
-            error: function (e) {
-            }
-        })
-        return result;
-    }
-
-    function getMonitoringSensor() {
-        var username = "<sec:authentication property="principal.username" />";
-        let result = null;
-        $.ajax({
-            url: '<%=cp%>/getMonitoringSensor',
-            dataType: 'JSON',
-            data: {"memberId": username},
-            async: false,
-            success: function (data) {
-                result = data["OFF"];
-            },
-            error: function (e) {
-            }
-        })
-        return result;
-    }
-
-    // 용도 체크
     function excess() {
         addExcessData();
         getAlarmListNum();
@@ -1500,6 +1313,9 @@
         */
     }
 
+    /**
+     * 상단 대시보드 - 관리등급 초과 모니터링 표시
+     */
     function addExcessData() {
         $("#normal3").empty();
         $("#caution").empty();
@@ -1541,39 +1357,39 @@
             }
         });
     }
+
+    /**
+     * 법적기준 초과, 사내기준 초과 확인하지 되지 않은 알람 목록 확인
+     */
     function getAlarmListNum() {
-        let state = ${state};
-        let legalSCount = 0, companySCount = 0, managementSCount = 0;
+        let legalCount = 0, companyCount = 0, managementCount = 0;
         $.ajax({
             url: '<%=cp%>/getAlarmData',
             dataType: 'json',
             data: {"num": "2"},
             async: false,
             success: function (data) {
-                const arr = data;
-                if (arr != undefined) {
-                    for (let i = 0; i < arr.length; i++) {
-                        if (arr[i].status == "true") {
-                            let excess = arr[i].grade;
+                const alarmList = data;
+                if (alarmList != undefined) {
+                    for (let i = 0; i < alarmList.length; i++) {
+                        if (alarmList[i].status == "true") {
+                            let excess = alarmList[i].grade;
                             if (excess == 1) {
-                                excess = "danger";
-                                legalSCount +=1;
+                                legalCount++;
                             } else if (excess == 2) {
-                                excess = "warning";
-                                companySCount +=1;
+                                companyCount++;
                             } else {
-                                excess = "caution";
-                                managementSCount+=1;
+                                managementCount++;
                             }
                         }
                     }
-                    if (legalSCount > 0) {
+                    if (legalCount > 0) {
                         flashing(flashCheck, "bg-danger");
                         alarmTone('on');
-                    } else if (companySCount > 0) {
+                    } else if (companyCount > 0) {
                         flashing(flashCheck, "bg-warning");
                         alarmTone('on');
-                    } else if (managementSCount > 0) {
+                    } else if (managementCount > 0) {
                         flashing(flashCheck, "bg-success");
                         alarmTone('on');
                     } else {
@@ -1581,24 +1397,96 @@
                         alarmTone('off');
                     }
                 }
-                if (state == "1") {
-                    $("#legal_standard_text_A").text(legalSCount); //법적기준 Over
-                    $("#company_standard_text_A").text(companySCount); //사내기준 Over
-                    $("#management_standard_text_A").text(managementSCount); //관리기준 Over
-                } else {
-                    $("#legal_standard_text_B").text(legalSCount); //법적기준 Over
-                    $("#company_standard_text_B").text(companySCount); //사내기준 Over
-                    $("#management_standard_text_B").text(managementSCount); //관리기준 Over
-                }
+
+                $(".legal_standard_text").text(legalCount); //법적기준 초과
+                $(".company_standard_text").text(companyCount); //사내기준 초과
+                //$(".management_standard_texA").text(managementCount); //관리기준 초과
             },
             error: function (request, status, error) {
                 console.log(error)
             }
         });
+    }
 
+    /**
+     * 알림음 On / Off 이벤트
+     */
+    $('input:radio[name=alarmTone]').click(function () {
+        if ($('input:radio[name=alarmTone]:checked').val() == 'on') {
+            alarmCheck = "on";
+        } else {
+            $('#audioDiv').empty();
+            audioInnerHTML = '<audio muted id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>';
+            $('#audioDiv').append(audioInnerHTML);
+            alarmCheck = "off";
+        }
+        setCookie("alarmCheck", alarmCheck, 999);
+    });
+
+    /**
+     * 알람음 설정
+     * @param onOff on/off 여부
+     */
+    function alarmTone(onOff) {
+        if (onOff == 'on' && $('input:radio[name=alarmTone]:checked').val() == 'on') {
+            audioInnerHTML = '<audio id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>';
+        } else {
+            audioInnerHTML = '<audio muted id="audio" autoplay="autoplay" loop><source src="static/audio/alarm.mp3" type="audio/mp3"></audio>';
+        }
+        $('#audioDiv').empty();
+        $('#audioDiv').append(audioInnerHTML);
+    }
+
+    /**
+     * 점멸 효과 On / Off 이벤트
+     */
+    $('input:radio[name=flashing]').click(function () {
+        if ($('input:radio[name=flashing]:checked').val() == 'on') {
+            flashCheck = "on";
+        } else {
+            flashCheck = "off";
+        }
+        setCookie("flashCheck", flashCheck, 999);
+    });
+
+    /**
+     *  점멸 효과
+     */
+    let flashOn;
+    function flashing(onOff, bg) {
+        const element = $("body");
+        if (onOff == 'on' && bg != null) {
+            if (typeof flashOn !== "undefined") {
+                clearTimeout(flashOn);
+            }
+            setTimeout(function flashInterval() {
+                setTimeout(function () {
+                    element.removeClass("bg-lightBlue");
+                    element.addClass(bg);
+                }, 0);
+                setTimeout(function () {
+                    element.removeClass(bg);
+                    element.addClass("bg-lightBlue");
+                }, 400); //0.4초 숨김
+                flashOn = setTimeout(flashInterval, 1000); //0.6초 보여줌
+            }, 0)
+        } else {
+            if (typeof flashOn !== "undefined") {
+                clearTimeout(flashOn);
+            }
+        }
+    }
+
+    function customSwal(text) {
+        Swal.fire({
+            icon: 'warning',
+            title: '경고',
+            text: text,
+        });
     }
 
 
+    // 이거 체크
     //알림리스트 불러오기
     function getAlarmList(grade) {
         $("#legal_1").empty();
@@ -1632,15 +1520,8 @@
                             const naming = arr[i].sensor;
                             const value = arr[i].value;
                             const uptime = moment(arr[i].up_time).format('YYYY-MM-DD HH:mm:ss');
-                            if (excess == 1) {
-                                excess = "danger";
-                            } else if (excess == 2) {
-                                excess = "warning";
-                            } else {
-                                excess = "caution";
-                            }
                             if (arr[i].grade == grade) {
-                                if (excess == "danger") {
+                                if (excess == 1) {
                                     if (document.getElementById('l') == null) {
                                         innerHTML1 += "<div><span  id='dangerInner" + i + "' style='display: inline-block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 법적기준 초과( " + value + " )";
                                     } else {
@@ -1649,7 +1530,7 @@
                                     innerHTML1 += "<button class='btn btn-primary' style='margin-left:10px; padding:1px 7px;' data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
                                     $('#legal_1').append(innerHTML1);
                                     $('#legal_1').css('display', 'block');
-                                } else if (excess == "warning") {
+                                } else if (excess == 2) {
                                     if (document.getElementById('c') == null) {
                                         innerHTML2 += "<div><span  id='warningInner" + i + "' style='display: inline-block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 사내기준 초과( " + value + " )";
                                     } else {
@@ -1658,7 +1539,7 @@
                                     innerHTML2 += "<button class='btn btn-primary' style='margin-left:10px; padding:1px 7px;' data-bs-toggle='modal' data-bs-target='#addCheck' id='b" + i + "' onclick=\"insertCheckName('" + naming + "','" + uptime + "')\">확인</button></span></div>";
                                     $('#company_1').append(innerHTML2);
                                     $('#company_1').css('display', 'block');
-                                } else if (excess == "caution") {
+                                } else {
                                     if (document.getElementById('m') == null) {
                                         innerHTML3 += "<div><span  id='cautionInner" + i + "' style='display: inline-block;font-size: 1rem; padding: 5px;'>" + uptime + " " + place + " - " + naming + "<br> 관리기준 초과( " + value + " )";
                                     } else {
@@ -1672,7 +1553,6 @@
                         }
                     }
                 }
-
             },
             error: function (request, status, error) {
                 console.log(error)
@@ -1739,13 +1619,90 @@
         }
         getAlarmListNum();
     }
-    //여기까지
 
-    function customSwal(text) {
-        Swal.fire({
-            icon: 'warning',
-            title: '경고',
-            text: text,
+    /**
+     * 모니터링On된 측정소, 센서 모든 정보 Get
+     */
+    function getPlaceInfo() {
+        let getData = null;
+        $.ajax({  //측정소의 센서명을 구함
+            url: '<%=cp%>/placeInfo',
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                getData = data;
+            },
+            error: function () {
+            }
         });
+        return getData;
     }
+
+    /**
+     * 센서의 최근 min 분 데이터 조회
+     */
+    function getSensor(sensor_name, min) {
+        let result = new Array();
+        if (sensor_name == undefined) {
+            return null;
+        } else {
+            $.ajax({
+                url: '<%=cp%>/getSensor2',
+                dataType: 'JSON',
+                contentType: "application/json",
+                data: {"sensor": sensor_name, "min": min},
+                async: false,
+                success: function (data) {
+                    if (data.length != 0) {
+                        $.each(data, function (index, item) {
+                            result.push({x: item.up_time, y: (item.value).toFixed(2)});
+                        })
+                    } else {
+                        // 조회 결과 없을 때 return [];
+                        result = [];
+                    }
+                },
+                error: function (e) {
+                }
+            });
+        }
+        return result;
+    }
+
+    /**
+     * 센서의 모니터링 True인 최근, 직전, 기준 데이터 등을 리턴
+     */
+    function getSensorData(sensor) {
+        let result = null;
+        $.ajax({
+            url: '<%=cp%>/getSensorData',
+            dataType: 'JSON',
+            data: {"sensor": sensor},
+            async: false,
+            success: function (data) {
+                result = data;
+            },
+            error: function (e) {
+            }
+        })
+        return result;
+    }
+
+    function getMonitoringSensor() {
+        const username = "<sec:authentication property="principal.username" />";
+        let result = null;
+        $.ajax({
+            url: '<%=cp%>/getMonitoringSensor',
+            dataType: 'JSON',
+            data: {"memberId": username},
+            async: false,
+            success: function (data) {
+                result = data["OFF"];
+            },
+            error: function (e) {
+            }
+        })
+        return result;
+    }
+    //여기까지
 </script>
