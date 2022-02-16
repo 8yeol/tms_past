@@ -2511,8 +2511,8 @@ public class AjaxController {
                         sensorObj.put("rm30_status", recentDataRM30.isStatus());
                         // 통신 상태 출력
                         sensorObj.put("rm30_color", getStatusColor(recentDataRM30.getStatus1(), recentDataRM30.getStatus2()));
-                        sensorObj.put("rm30_status1", recentDataRM05.getStatus1());
-                        sensorObj.put("rm30_status2", recentDataRM05.getStatus2());
+                        sensorObj.put("rm30_status1", recentDataRM30.getStatus1());
+                        sensorObj.put("rm30_status2", recentDataRM30.getStatus2());
 
                         Sensor beforeDataRM30 = sensorCustomRepository.getSensorBeforeDataRM30(sensorNames.get(i)); //센서의 최근 데이터
                         sensorObj.put("rm30_beforeValue", beforeDataRM30.getValue());
