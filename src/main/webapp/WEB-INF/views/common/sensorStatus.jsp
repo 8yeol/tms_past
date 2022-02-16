@@ -51,8 +51,8 @@
 
         $(".status").show();
         const status = document.querySelector(".status");
-        const mouseX = event.clientX;
-        const mouseY = event.clientY;
+        const mouseX = event.pageX;
+        const mouseY = event.pageY;
         status.style.left = mouseX + 'px';
         status.style.top = mouseY + 'px';
     }
