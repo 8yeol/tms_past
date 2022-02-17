@@ -600,7 +600,7 @@
                 success: function (data) {
                     if(data.length != 0){
                         $.each(data, function (index, item) {
-                            result.push({x: item.up_time, y: (item.value).toFixed(2)});
+                            result.push({x: item.up_time, y: Number((item.value).toFixed(2))});
                         })
                     }else{
                         // 조회 결과 없을 때 return [];

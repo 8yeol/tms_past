@@ -884,7 +884,6 @@
                         draw_place_chart_frame(chartIndex); // 차트 index로 차트 영역 생성
                         recentData = getSensorData(sensorName); // 관리 기준값, 차트 기준값(min, max), 이전데이터 등 리턴
                         updateChart(sensorDataList, recentData, chartIndex); //초기 차트 세팅
-
                         setTimeout(function realTime() {
                             if ($('#chart-' + chartIndex)[0].childNodes[0] != undefined) {
                                 const columnCount = $('#sensor-table-' + chartIndex).find('td').length; //기준값 표시 되어있는지 여부 체크
@@ -926,7 +925,7 @@
                                     }
                                 } else {
                                     if (lastChartTime < update) {
-                                        sensorDataList.push({x: update, y: recentValue});
+                                        sensorDataList.push({x: update, y: Number(recentValue)});
                                         updateChart(sensorDataList, recentData, chartIndex);
                                     }
                                 }
@@ -1658,7 +1657,7 @@
                     success: function (data) {
                         if (data.length != 0) {
                             $.each(data, function (index, item) {
-                                result.push({x: item.up_time, y: (item.value).toFixed(2)});
+                                result.push({x: item.up_time, y: Number((item.value).toFixed(2))});
                             })
                         } else {
                             // 조회 결과 없을 때 return [];
