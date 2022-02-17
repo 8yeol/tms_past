@@ -889,10 +889,10 @@
                                 const columnCount = $('#sensor-table-' + chartIndex).find('td').length; //기준값 표시 되어있는지 여부 체크
                                 let recentValue;
                                 if (columnCount == 4) {
-                                    recentValue = $('#sensor-table-' + chartIndex).find('td')[1].innerText;
+                                    recentValue = Number($('#sensor-table-' + chartIndex).find('td')[1].innerText);
                                     // 관리기준 임시삭제(추가시 columnCount == 7, ('td')[4]로 변경)
                                 } else if (columnCount == 6) {
-                                    recentValue = $('#sensor-table-' + chartIndex).find('td')[3].innerText;
+                                    recentValue = Number($('#sensor-table-' + chartIndex).find('td')[3].innerText);
                                 }
 
                                 /*
@@ -924,8 +924,8 @@
                                         setTimeout(chartInterval, 0);
                                     }
                                 } else {
-                                    if (lastChartTime < update) {
-                                        sensorDataList.push({x: update, y: Number(recentValue)});
+                                    if (!isNaN(recentValue) && lastChartTime < update) {
+                                        sensorDataList.push({x: update, y: recentValue});
                                         updateChart(sensorDataList, recentData, chartIndex);
                                     }
                                 }
